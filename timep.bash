@@ -82,8 +82,8 @@ timep() {
     #    For both scripts and functions, if stdin is not a terminal then it is passed to the stdin of the code being profiled.
     #
     ################################################################################################################################################################
-
 (
+    declare -F "$1" &>/dev/null && export -f "$1"
 
     # check that basic requirements to run timep are met
     # to disable this check, call timep via 'timep_DISABLE_CHECKS=1 timep <...>'
@@ -1333,8 +1333,9 @@ _timep_getFuncSrc() {
                 ((kk++))
             done
         done
-    } {fd_sleep}<><(:)
-    exec {fd_sleep}>&-
+    } 
+
+    read -r -u "${fd_sleep}" -t 0.01
 
     printf '\n\n' >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}"
@@ -1345,6 +1346,8 @@ _timep_getFuncSrc() {
         printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_runTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}"
         printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_runTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.combined"
     done
+
+    read -r -u "${fd_sleep}" -t 0.01
 
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | tr -d '\n') ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
@@ -1388,12 +1391,7 @@ _timep_getFuncSrc() {
         }
     }
 
-    ${timep_deleteFlag} && {
-        \rm -rf "${timep_TMPDIR}/.log"
-        for nn in "${timep_TMPDIR}"/*; do
-            [[ -f "$nn" ]] && \rm -f "$nn"
-        done
-    }
+    read -r -u "${fd_sleep}" -t 0.01
 
     [[ "${timep_outType}" == *' ff '* ]] && {
         printf '\n\nFLAMEGRAPH FULL STACK TRACE\n\n' >&2
@@ -1414,9 +1412,20 @@ _timep_getFuncSrc() {
         printf '\n\nOUTPUT LOG (COMBINED)\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile"
     }
-
+    
+    read -r -u "${fd_sleep}" -t 0.01
+    
+    ${timep_deleteFlag} && {
+        \rm -rf "${timep_TMPDIR}/.log"
+        for nn in "${timep_TMPDIR}"/*; do
+            [[ -f "$nn" ]] && \rm -f "$nn"
+        done
+    }
+   
+    read -r -u "${fd_sleep}" -t 0.01
+    
     [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
     type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles
 
-    ) {timep_FD0}<&0 {timep_FD1}>&1 {timep_FD2}>&2
+    ) {timep_FD0}<&0 {timep_FD1}>&1 {timep_FD2}>&2 {fd_sleep}<><(:)
 }
