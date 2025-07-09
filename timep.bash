@@ -9,9 +9,7 @@ timep() {
     # USAGE:     timep [-s|-f|-c] [-r] [-o <type>] [--flame] [--] _______          --OR--
     #    [...] | timep [-s|-f|-c] [--] _______ | [...]
     #
-    # TO DO: UPDATE "OUTPUT" SECTION DOCUMENTATION. THE BELOW SECTION APPLIES TO AN OLDER VERSION OF timep
-    # OUTPUT:
-    #    timep generates 4 types of outputs that will be saved to disk in the "profiles" dir in timep's tmpdir directory (by default: /dev/shm.timep-XXXXXXXX -- printed to stderr at the end):
+    # OUTPUT: timep generates 4-6 types of outputs that will be saved to disk in the "profiles" dir in timep's tmpdir directory (by default: /dev/shm.timep-XXXXXXXX -- printed to stderr at the end):
     #        2 are time profiles: "out.profile.full" and "out.profile"
     #             out.profile.full:    contains all individual commands and metadata info like the chain of FUNCNAME's and the chain of subshell PIDs
     #             out.profile:         commands repeated by loops have been collapsed into combined entries that show the number of times the command was repeated and the total run time from all of them
@@ -19,6 +17,7 @@ timep() {
     #             out.flamegraph.full: contains stack traces from all commands
     #             out.flamegraph:      contains "folded" stack traces where the times from otherwise identical stack traces have been summed together in a single stack trace
     #              ("Flamegraph.pl" from Brendan Gregg's "FlameGraph" repo at "https://github.com/brendangregg/FlameGraph")
+    #         if "--flame" is passed as a flag: 2 are the flamegraph SVGs from the above two "out.flamegraph" files: "flamegraph.svg" and "flamegraph.full.svg"
     #
     #        NOTE: timep will create a symbolic link to the "profiles" dir in your PWD called 'timep.profiles'
     #
@@ -913,7 +912,7 @@ _timep_getFuncSrc() {
         local tDiff d d6
 
         { [[ ${endTimesA[$1]} ]] && [[ ${startTimesA[$1]} ]]; } || return
-        (( tDiff = 10#${endTimesA[$1]//./} - 10#${startTimesA[$1]//./} ))
+        (( tDiff = 10#${endTimesA[$1]//[^0-9]/} - 10#${startTimesA[$1]//[^0-9]/} ))
         printf -v d '%0.7d' "${tDiff#-}"
         (( d6 = ${#d} - 6 ))
         printf -v runTime '%s.%s' "${d:0:$d6}" "${d:$d6}"
@@ -924,7 +923,7 @@ _timep_getFuncSrc() {
         local tDiff d d6
 
         { (( ${#} >= 2 )) && [[ $1 ]] && [[ $2 ]]; } || return
-        (( tDiff = 10#${2//./} - 10#${1//./} ))
+        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} ))
         printf -v d '%0.7d' "${tDiff#-}"
         (( d6 = ${#d} - 6 ))
         printf '%s.%s' "${d:0:$d6}" "${d:$d6}"
@@ -940,7 +939,7 @@ _timep_getFuncSrc() {
             return
         }
 
-        printf -v tSum '+10#%s' ${runTimesA[@]//./}
+        printf -v tSum '+10#%s' ${runTimesA[@]//[^0-9]/}
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
         until [[ "${tSum}" == "${tSum0}" ]]; do
@@ -964,7 +963,7 @@ _timep_getFuncSrc() {
             return
         }
 
-        printf -v tSum '+10#%s' ${@//./}
+        printf -v tSum '+10#%s' ${@//[^0-9]/}
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
         until [[ "${tSum}" == "${tSum0}" ]]; do
@@ -988,7 +987,7 @@ _timep_getFuncSrc() {
             return
         }
 
-        printf -v tSum '+10#%s' ${@//./}
+        printf -v tSum '+10#%s' ${@//[^0-9]/}
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
         until [[ "${tSum}" == "${tSum0}" ]]; do
@@ -1052,18 +1051,18 @@ _timep_getFuncSrc() {
                 normalCmdFlag=false
 
                 # record which log to merge up and where
-                mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]##* }"
+                mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
 
                 # read in the endtime + runtime from the log
                 [[ "${cmdA[$kk]#"'"}" == '<< (BACKGROUND FORK): '*' >>'* ]] || {
-                    [[ -s "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]##* }" ]] && {
-                        read -r runTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]##* }"
+                    [[ -s "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }" ]] && {
+                        read -r runTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
                         [[ ${runTime} ]] && runTimesA[$kk]="${runTime}"
                     }
                 }
                 [[ "${endTimesA[$kk]}" == '-' ]] && {
-                    [[ -s "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]##* }" ]] && {
-                        read -r endTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]##* }"
+                    [[ -s "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }" ]] && {
+                        read -r endTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"
                         [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && endTimesA[$kk]="${endTime}"
                     }
                 }
@@ -1376,10 +1375,16 @@ _timep_getFuncSrc() {
             (( timep_WIDTH <= 0 )) && timep_WIDTH=1200
             (( timep_WIDTH > 4096 )) && timep_WIDTH=4096
 
-            [[ "${timep_runType}" == 'f' ]] || timep_funcName="${1}"
-
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_funcName% *} (FULL)" --minwidth 0.05 --width "${timep_WIDTH}" --height 24 --flamechart --countname "us" --fontsize 10  --nametype "CMD:" <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_funcName% *}" --minwidth 0.05 --width "${timep_WIDTH}" --height 24 --flamechart --countname "us" --fontsize 10  --nametype "CMD:" <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
+            if [[ "${timep_runType}" == 'f' ]]; then
+                timep_TITLE="${timep_funcName}"
+            elif [[ "${timep_runType}" == 's' ]]; then
+                timep_TITLE="${timep_runCmdPath}"
+            else
+                timep_TITLE='Various Commands'
+            fi
+            
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (FULL)" --minwidth 0.05 --width "${timep_WIDTH}" --height 24 --flamechart --countname "us" --fontsize 10  --nametype "CMD:" <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --minwidth 0.05 --width "${timep_WIDTH}" --height 24 --flamechart --countname "us" --fontsize 10  --nametype "CMD:" <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
         }
     }
 
@@ -1391,27 +1396,26 @@ _timep_getFuncSrc() {
     }
 
     [[ "${timep_outType}" == *' ff '* ]] && {
-        printf '\n\nFLAMEGRAPH STACK TRACE\n\n'
+        printf '\n\nFLAMEGRAPH FULL STACK TRACE\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.flamegraph.full"
     }
 
     [[ "${timep_outType}" == *' f '* ]] && {    
-        printf '\n\nFLAMEGRAPH FOLDED STACK TRACE\n\n'
+        printf '\n\nFLAMEGRAPH FOLDED STACK TRACE\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.flamegraph"
     }
 
     [[ "${timep_outType}" == *' pf '* ]] && {    
-        printf '\n\nOUTPUT LOG (FULL)\n\n'
+        printf '\n\nOUTPUT LOG (FULL)\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile.full"
     }
 
     [[ "${timep_outType}" == *' p '* ]] && {    
-        printf '\n\nOUTPUT LOG (COMBINED)\n\n'
+        printf '\n\nOUTPUT LOG (COMBINED)\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile"
     }
 
     [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
-
     type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles
 
     ) {timep_FD0}<&0 {timep_FD1}>&1 {timep_FD2}>&2
