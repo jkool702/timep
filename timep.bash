@@ -6,7 +6,7 @@ timep() {
     ## TIME Profile - timep efficiently produces an accurate per-command execution time profile for shell scripts and functions using DEBUG, EXIT and RETURN traps.
     # timep logs command times+metadata hierarchically based on both function and subshell nesting depth, recreating the complete call-stack tree in its logs.
     #
-    # USAGE:     timep [-s|-f|-c] [-o <type>] [--flame] [--] _______          --OR--
+    # USAGE:     timep [-s|-f|-c] [-r] [-o <type>] [--flame] [--] _______          --OR--
     #    [...] | timep [-s|-f|-c] [--] _______ | [...]
     #
     # TO DO: UPDATE "OUTPUT" SECTION DOCUMENTATION. THE BELOW SECTION APPLIES TO AN OLDER VERSION OF timep
@@ -20,6 +20,8 @@ timep() {
     #             out.flamegraph:      contains "folded" stack traces where the times from otherwise identical stack traces have been summed together in a single stack trace
     #              ("Flamegraph.pl" from Brendan Gregg's "FlameGraph" repo at "https://github.com/brendangregg/FlameGraph")
     #
+    #        NOTE: timep will create a symbolic link to the "profiles" dir in your PWD called 'timep.profiles'
+    #
     # FLAGS:
     #    Flags must be given before the command being profiled. if multiple [-s|-f|-c] flags are given, the last one is used.
     #        -s | --shell         : force timep to treat the code being profiled as a bash script
@@ -31,13 +33,16 @@ timep() {
     #        2. if $1 is not a function but exists as a file in the filestystem that ut executable and containsa ascii text, then treat as a script
     #        3. if neither of the above are true, then treat as raw command[s]
     #
+    #   [+d] -d | --delete        : remove all the intermediate logs and scripts in timep's trmpdir (everything except the "profiles" dir) after timep is finished running
+    #                               [ -d | --delete ] enables removal, [ +d ] disables removal. DEFAULT is no NOT remove (+r behavior) 
+    #
     # -o <type> | --output=<type> : tell timep which type of profile(s) to print to stdout. 
     #                                   pass a comma-seperated list to output more than one profile type. 
     #                                   set <type> as empty ('') to not print any profiles. 
     #                      <type> : p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
     #                               NOTE: all 4 profiles will always be available on disk after profiling is finished in timep's tmpdir 
     #
-    #   --flame | --flamegraph    : automatically generate a flamegraph using Flamegraph.pl. 
+    #   --flame | --flamegraph    : automatically generate a flamegraph using Flamegraph.pl and save them in the "profiles" dir 
     #                                   Will attempt to download Flamegraph.pl from "https://github.com/brendangregg/FlameGraph" if not available locally.
     #
     #           --                : stop arg parsing (allows profiling something with the same name as a flag)
@@ -99,11 +104,14 @@ timep() {
 
     # parse flags
     timep_flameGraphFlag=false
+    timep_deleteFlag=false
     while true; do
         case "${1}" in
             -s|--shell)  timep_runType=s  ;;
             -f|--function)  timep_runType=f  ;;
             -c|--command)  timep_runType=c  ;;
+            -d|--delete)  timep_deleteFlag=true ;;
+            +d|+delete|++delete) timep_deleteFlag=false ;;
             --flame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
             -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"  ;;
             -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"  ;;
@@ -1333,6 +1341,12 @@ _timep_getFuncSrc() {
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}"
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.combined"
 
+    for nn in "${timep_TMPDIR}"/.log/.runtimes/log.*; do
+        read -r timep_runTimeCur <"${nn}"
+        printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_runTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}"
+        printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_runTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.combined"
+    done
+
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | tr -d '\n') ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     cat "${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
@@ -1369,6 +1383,13 @@ _timep_getFuncSrc() {
         }
     }
 
+    ${timep_deleteFlag} && {
+        \rm -rf "${timep_TMPDIR}/.log"
+        for nn in "${timep_TMPDIR}"/*; do
+            [[ -f "$nn" ]] && \rm -f "$nn"
+        done
+    }
+
     [[ "${timep_outType}" == *' ff '* ]] && {
         printf '\n\nFLAMEGRAPH STACK TRACE\n\n'
         cat "${timep_TMPDIR}/profiles/out.flamegraph.full"
@@ -1388,6 +1409,8 @@ _timep_getFuncSrc() {
         printf '\n\nOUTPUT LOG (COMBINED)\n\n'
         cat "${timep_TMPDIR}/profiles/out.profile"
     }
+
+    [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
 
     type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles
 
