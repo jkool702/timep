@@ -9,7 +9,7 @@ timep() {
     # USAGE:     timep [-s|-f|-c] [-r] [-o <type>] [--flame] [--] _______          --OR--
     #    [...] | timep [-s|-f|-c] [--] _______ | [...]
     #
-    # OUTPUT: timep generates 4-6 types of outputs that will be saved to disk in the "profiles" dir in timep's tmpdir directory (by default: /dev/shm.timep-XXXXXXXX -- printed to stderr at the end):
+    # OUTPUT: timep generates 4-6 types of outputs that will be saved to disk in the "profiles" dir in timep's tmpdir directory (by default: /dev/shm/.timep/timep-XXXXXXXX -- printed to stderr at the end):
     #        2 are time profiles: "out.profile.full" and "out.profile"
     #             out.profile.full:    contains all individual commands and metadata info like the chain of FUNCNAME's and the chain of subshell PIDs
     #             out.profile:         commands repeated by loops have been collapsed into combined entries that show the number of times the command was repeated and the total run time from all of them
