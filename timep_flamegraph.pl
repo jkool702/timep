@@ -482,13 +482,15 @@ sub color {
 		} else {			# system
 			$type = "red";
 		}
+		# fall-through to color palettes
+	}
 	if (defined $type and $type eq "timep") {
 		if ($name =~ m:_\[f\]$:) {	# function
-			$type = "aqua";
-		} elsif ($name =~ m:_\[s\]$:) {	# subshell
 			$type = "blue";
+		} elsif ($name =~ m:_\[s\]$:) {	# subshell
+			$type = "aqua";
 		} else {			# command
-			$type = "hot";
+			$type = "red";
 		}
 		# fall-through to color palettes
 	}
@@ -533,9 +535,10 @@ sub color {
 
 	# color palettes
 	if (defined $type and $type eq "red") {
-		my $r = 200 + int(55 * $v1);
-		my $x = 50 + int(80 * $v1);
-		return "rgb($r,$x,$x)";
+		my $r = 205 + int(50 * $v1);
+		my $g = 0 + int(230 * $v1);
+		my $b = 0 + int(55 * $v1);
+		return "rgb($r,$g,$b)";
 	}
 	if (defined $type and $type eq "green") {
 		my $g = 200 + int(55 * $v1);

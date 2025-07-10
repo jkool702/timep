@@ -1144,10 +1144,10 @@ _timep_getFuncSrc() {
                     nf=1
                     for nn in "${eA[@]}"; do 
                         if [[ "${nn}" == *'{'*'}' ]]; then
-                            [[ ${sA[$ns]} ]] && fgA+=("SUBSHELL (${sA[$ns]})")
+                            [[ ${sA[$ns]} ]] && fgA+=("SUBSHELL (${sA[$ns]})_[s]")
                             ((ns++))
                         else
-                            [[ ${fA[$nf]} ]] && fgA+=("FUNCTION (${fA[$nf]})")
+                            [[ ${fA[$nf]} ]] && fgA+=("FUNCTION (${fA[$nf]})_[f]")
                             ((nf++))
                         fi
                     done
@@ -1346,45 +1346,47 @@ _timep_getFuncSrc() {
 
     read -r -u "${fd_sleep}" -t 0.01
 
+    # reverse flamegraph input so it starts at the parent and ends at the depest child
+    echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^([0-9]+)\:'/'\1 '/ | sort -nr -k1,1 | sed -E s/'^[0-9]+ '//)" >"${timep_TMPDIR}/.log/out.flamegraph.full" 
+
+    read -r -u "${fd_sleep}" -t 0.01
+
+    # fold flamegrapoh stack traces
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | tr -d '\n') ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
+    # copy final outputs to profiles dir
     cat "${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
     cat "${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
     cat "${timep_LOG_NESTING[0]%$'\n'}" >"${timep_TMPDIR}/profiles/out.profile.full"
     cat "${timep_LOG_NESTING[0]%$'\n'}.combined" >"${timep_TMPDIR}/profiles/out.profile"
 
+    # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
-        export PATH="${PATH}${PATH:+:}${timep_TMPDIR}"
-        if type -p flamegraph.pl &>/dev/null; then
-            timep_flameGraphPath="$(type -p flamegraph.pl)"
+        export PATH="${PATH}${PATH:+:}${timep_TMPDIR%/*}"
+        if type -p timep_flamegraph.pl &>/dev/null; then
+            timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
+        elif [[ -f "${PWD}/timep_flamegraph.pl" ]]; then
+            cat "${PWD}/timep_flamegraph.pl" >"${timep_TMPDIR%/*}/timep_flamegraph.pl"
+            timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
         else
-            type -p wget &>/dev/null && wget https://raw.githubusercontent.com/brendangregg/FlameGraph/master/flamegraph.pl -O "${timep_TMPDIR}/flamegraph.pl" 2>/dev/null
-            type -p flamegraph.pl &>/dev/null || {
-                type -p curl &>/dev/null && curl https://raw.githubusercontent.com/brendangregg/FlameGraph/master/flamegraph.pl >"${timep_TMPDIR}/flamegraph.pl" 2>/dev/null
+            type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl -O "${timep_TMPDIR%/*}/timep_flamegraph.pl" 2>/dev/null
+            type -p timep_flamegraph.pl &>/dev/null || {
+                type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl >"${timep_TMPDIR%/*}/timep_flamegraph.pl" 2>/dev/null
             }
-            type -p flamegraph.pl &>/dev/null && timep_flameGraphPath="${timep_TMPDIR}/flamegraph.pl"
+            type -p timep_flamegraph.pl &>/dev/null && timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
         fi
 
         [[ ${timep_flameGraphPath} ]] && {
             chmod +x "${timep_flameGraphPath}"
 
-            timep_WIDTH=0
-            type -p xrandr &>/dev/null && (( timep_WIDTH = ( 5 * $(xrandr | fgrep '*' | sed -E 's/^[[:space:]]*([0-9])/\1/; s/x.*$//') ) / 8 ))
-            (( timep_WIDTH <= 0 )) && type -p xdpyinfo &>/dev/null && (( timep_WIDTH = ( 5 * $(xdpyinfo | grep dimensions | sed -E 's/^[[:space:]]*dimensions\:[[:space:]]*([0-9])/\1/; s/x.*$//') ) / 8 ))
-            (( timep_WIDTH <= 0 )) && timep_WIDTH=1200
-            (( timep_WIDTH <= 0 )) && timep_WIDTH=1200
-            (( timep_WIDTH > 4096 )) && timep_WIDTH=4096
-
-            if [[ "${timep_runType}" == 'f' ]]; then
-                timep_TITLE="${timep_funcName}"
-            elif [[ "${timep_runType}" == 's' ]]; then
-                timep_TITLE="${timep_runCmdPath}"
-            else
-                timep_TITLE='Various Commands'
-            fi
+            case "${timep_runType}" in
+                f) timep_TITLE="${timep_funcName}" ;;
+                s) timep_TITLE="${timep_runCmdPath}" ;;
+                c) timep_TITLE='Various Commands' ;;
+            esac
             
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (FULL)" --minwidth 0.05 --width "${timep_WIDTH}" --height 24 --flamechart --countname "us" --fontsize 10  --nametype "CMD:" <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --minwidth 0.05 --width "${timep_WIDTH}" --height 24 --flamechart --countname "us" --fontsize 10  --nametype "CMD:" <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (FULL)" --minwidth 0.01 --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --minwidth 0.01 --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
         }
     }
 
