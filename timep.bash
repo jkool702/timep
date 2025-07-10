@@ -1002,13 +1002,14 @@ _timep_getFuncSrc() {
     local -g timep_LOG_NESTING_MAX timep_LOG_NESTING_CUR
     shopt -s extglob
     _timep_PROCESS_LOG() {
-        local kk kk1 runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime runTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf normalCmdFlag IFS0
+        local kk kk1 nn r runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime runTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf normalCmdFlag nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0
         local -a logA nPipeA startTimesA endTimesA runTimesA runTimesPA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA
         local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA
 
         [[ -e "${1}" ]] || return 1
 
         inPipeFlag=false
+        nPipeNextIgnoreFlag=false
 
         # load current log (sorted by NEXEC) into array
         mapfile -t logA < <(sort -V -k9,9 <"${1}")
@@ -1042,6 +1043,21 @@ _timep_getFuncSrc() {
             cmd="$(eval echo "${cmd}")"
             cmd="${cmd//$'\n'/\$"'"\\n"'"}"
             cmdA[$kk]="${cmd}"
+
+            # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
+            if ${nPipeNextIgnoreFlag}; then
+                nPipe=1
+                nPipeA[$kk]=1
+                nPipeNextIgnoreFlag=false
+            elif (( nPipe > 1 )) && [[ "${cmd}" == '(('*@([<>=])*'))' ]]; then
+                (( kk1 = kk - 1 ))
+                IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
+               (( nPipe0 > 1 )) && [[ "${cmd0}" == @([[:print:]])'(('*=*'))'@([[:print:]])*([[:space:]]) ]] && {
+                    nPipe=1
+                    nPipeA[$kk]=1
+                    nPipeNextIgnoreFlag=true
+                }
+            fi
 
             # check if cmd is a subshell/bg fork/function that needs to be merged up
             if [[ "${cmdA[$kk]#"'"}" == '<< ('*'): '*' >>'* ]]; then
@@ -1264,7 +1280,6 @@ _timep_getFuncSrc() {
             (( kk++ ))
         done >"${1}"
 
-
         # write out new combined (uniq lineno) merged-upward log
         inPipeFlag=false
         for kk in "${!linenoUniqA[@]}"; do
@@ -1274,12 +1289,12 @@ _timep_getFuncSrc() {
             else
                 # add line to log
                 (( kk == 0  )) || printf '\n\n'
-                printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%sx) %s' "${linenoUniqA[$kk]}" '' "${linenoUniqTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${cmdA[$kk]/%: * >>"'"/ >>"'"}"
+                printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%sx) %s' "${linenoUniqA[$kk]}" '' "${linenoUniqTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}"
 
                 # check if this is the start of a pipeline
                 [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
             fi
-            (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
+            # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
             # add merged up log to log, including for "in the middle of a pipeline" commands
             logMergeAll="$(merge_init_flag=true
@@ -1296,14 +1311,18 @@ _timep_getFuncSrc() {
                     merge_init_flag=false
                 }
             done)"
-            mapfile -t lineUA < <(r=''; sed -E 's/^([^\:]+\:[[:space:]]+)[0-9\|\(\)\.s%]+[[:space:]]*'/'\1\t'/ <<<"${logMergeAll}" | while read -r nn; do [[ ${nn##*(\|   |\|-- )} ]] || continue; [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; echo "$nn"; }; done)
+            mapfile -t lineUA < <(r=''; sed -E 's/^([^\:]+\:[[:space:]]+)[0-9\|\(\)\.s%]+[[:space:]]*'/'\1\t'/ <<<"${logMergeAll}"| while read -r nn; do [[ ${nn##+(\|   |\|-- |\|)} ]] || continue; [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; printf '%s\n' "$nn"; }; done)
             (( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]}"; do  
                 mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" |  sed -E 's/^([^\:]+\:[[:space:]]+)\(([0-9\.s]+)\|([0-9\.%]+)\)[[:space:]]*(.*)$'/'\2 \3'/)
-                printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM_ALT "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG_ALT "${timeUA[@]#* }")" "${#timeUA[@]}" "${lineU#*$'\t'* }"
+                count0="${lineU#*$'\t'}"
+                count0="${count0%% *}"
+                (( count0 = ${count0//[^0-9]/} * ${#timeUA[@]} ))
+                printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM_ALT "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG_ALT "${timeUA[@]#* }")" "${count0}" "${lineU#*$'\t'* }"
             done
 
             (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
         done >"${1}.combined"
+
     }
 
     # get log names
@@ -1361,10 +1380,14 @@ _timep_getFuncSrc() {
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | tr -d '\n') ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
-    cat "${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'\t([0-9]+)$'/'\t \1'/ >"${timep_TMPDIR}/profiles/out.flamegraph.full"
-    cat "${timep_TMPDIR}/.log/out.flamegraph" | sed -E s/'\t([0-9]+)$'/'\t \1'/ >"${timep_TMPDIR}/profiles/out.flamegraph"
-    cat "${timep_LOG_NESTING[0]%$'\n'}" >"${timep_TMPDIR}/profiles/out.profile.full"
-    cat "${timep_LOG_NESTING[0]%$'\n'}.combined" >"${timep_TMPDIR}/profiles/out.profile"
+    sed -E s/'\t([0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
+    sed -E s/'\t([0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
+    sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' <"${timep_LOG_NESTING[0]%$'\n'}" >"${timep_TMPDIR}/profiles/out.profile.full"
+    if [[ "${timep_runType}" == 'f' ]]; then
+        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]%$'\n'}.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
+    else
+        cat "${timep_LOG_NESTING[0]%$'\n'}.combined" >"${timep_TMPDIR}/profiles/out.profile"
+    fi
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
