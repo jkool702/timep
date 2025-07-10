@@ -21,16 +21,16 @@ timep() {
     #
     #        NOTE: timep will create a symbolic link to the "profiles" dir in your PWD called 'timep.profiles'
     #
-    # FLAGS:
-    #    Flags must be given before the command being profiled. if multiple [-s|-f|-c] flags are given, the last one is used.
-    #        -s | --shell         : force timep to treat the code being profiled as a bash script
+    # FLAGS: Flags must be given before the command being profiled. All flags are optional. 
+    #        -s | --script         : force timep to treat the code being profiled as a bash script
     #        -f | --function      : force timep to treat the code being profiled as a bash function
     #        -c | --command       : force timep to treat the code being profiled as raw bash command[s]
+    #    NOTE: If multiple [-s|-f|-c] flags are given, the last one is used.
     #
     #    DEFAULT: Attempt to detect type automatically. Detection roughly follows the following decision tree:
-    #        1. if $1 matches a loaded function (tested via declare -F), then treat as a function
-    #        2. if $1 is not a function but exists as a file in the filestystem that ut executable and containsa ascii text, then treat as a script
-    #        3. if neither of the above are true, then treat as raw command[s]
+    #        1. if $1 matches a loaded function (tested via declare -F), then treat as a function (f)
+    #        2. if $1 is not a function but exists as a file in the filestystem that ut executable and containsa ascii text, then treat as a script (s)
+    #        3. if neither of the above are true, then treat as raw command[s] (c)
     #
     #   [+d] -d | --delete        : remove all the intermediate logs and scripts in timep's trmpdir (everything except the "profiles" dir) after timep is finished running
     #                               [ -d | --delete ] enables removal, [ +d ] disables removal. DEFAULT is no NOT remove (+r behavior) 
@@ -45,7 +45,6 @@ timep() {
     #                                   Will attempt to download Flamegraph.pl from "https://github.com/brendangregg/FlameGraph" if not available locally.
     #
     #           --                : stop arg parsing (allows profiling something with the same name as a flag)
-
     #
     # RUNTIME CONDITIONS/REQUIREMENTS:
     #    timep adds a several variables (all which start with "timep_") + function(s) to the runtime env of whatever is being profiled. The code being profiled must NOT modify these.
@@ -53,33 +52,31 @@ timep() {
     #        VARIABLES:  timep_*
     #
     #    timep works by using DEBUG, EXIT and RETURN traps.
-    #    To allow profiling bash code which *also* sets these traps, timep defines a `trap` function to overload the builtin `trap`. This function will incorporate the traps required by timep into the traps set by the bash code.
-    #    For timep to work correctly, any EXIT/RETURN/DEBUG traps set by the code being profiled must NOT be set using `builtin trap` - the overloaded `trap` function must be used (i.e., just call `trap ...`)
+    #
+    #    To allow profiling bash code which *also* sets these traps, timep defines a `trap` function to overload the builtin `trap` and will automatically change any `builtin trap ...` commands into `trap ...`
+    #        This function will incorporate the traps required by timep into the traps set by the bash code.
+    #        For timep to work correctly, any EXIT/RETURN/DEBUG traps set by the code being profiled must NOT be set using `builtin trap` - the overloaded `trap` function must be used 
     #
     #    for timep to properly reconstruct the true call-stack tree, job control (set -m) MUST be enabled.
-    #    timep will automaticaly enable job control and, should the code being profiled disable it, timep will automatically re-enable it. Codes that require job control to be disabled cannot be profiled with timep.
+    #        timep will automaticaly enable job control and, should the code being profiled disable it, timep will automatically re-enable it. 
+    #        Codes that require job control to be disabled cannot be profiled with timep.
     #
     # DEPENDENCIES:
     #    1) bash 5.0+ (required to support the $EPOCHREALTIME variable)
-    #    2) sed, grep, sort, mkdir, tail, file*
+    #    2) sed, grep, sort, mkdir, tail, cat, file*
     #    3) mounted proc filesystem at '/proc'
     #
     # NOTES:
     #    1. timep attempts to find the raw source code for functions being profiled, but in some instances (example: functions defined via `. <(...)` or functions defined in terminal when historyis off) this isnt possible.
     #         In these cases,  `declare -f <func>` will be treated as the source, and the line numbers may not correspond exactly to the line numbers in the original code. Commamds are, however, still ordered correctly.
-    #    2. Any shell scripts called by the top-level script/function being profiled will NOT have their runtimes profiled, since the DEBUG trap doesnt propogate to sripts.
-    #         To profile these, either source them (instead of calling them) or call them via `timep -s <script>`. However, shell functions that are called WILL automatically be profiled.
-    #    3. To define a custom TMPDIR (other than /dev/shm/.timep.XXXXXX), pass `timep_TMPDIR` as an environment variable. e.g., timep_TMPDIR=/path/to/tmpdir timep codeToProfile
+    #    2. To define a custom TMPDIR (other than /dev/shm/.timep.XXXXXX), pass `timep_TMPDIR` as an environment variable. e.g., timep_TMPDIR=/path/to/tmpdir timep codeToProfile
     #
-    # DIFFERENCES IN HOW SCRIPTS AND FUNCTIONS ARE HANDLED
-    #    If the command being profiled is a shell script, timep will create a new script file under
-    #        $timep_TMPDIR that defines our DEBUG trap followed by the contents of the original script.
-    #        this new script is called with any arguments passed on the timep commandline (if no flags: ${2}+).
-    #    If the command being profiled is a shell function (or, in general, NOT a shell script), timep will create a new
-    #        shell function (runFunc) that defines our DEBUG trap and then calls whatever commandline was passed to timep.
-    #        this then gets saved to a file (main.bash) and sourced to make $LINENO give meaningful line numbers. runFunc is then called directly.
-    #    The intent is to run scripts as scripts and functions as functions, so that things like $0 and $BASH_SOURCE work as expected.
-    #    For both scripts and functions, if stdin is not a terminal then it is passed to the stdin of the code being profiled.
+    # KNOWN LIMITATIONS / BUGS: timep handles *almost* every aspect of the bash execution model, but there are a few edge cases where, due to the limitations or trap-based profiling, the output is slightly off.
+    #    1. in process sunstitutions containing only a single simple command (e.g., the `<(ls)` in `cat <(ls)`), 
+    #       the parent command (`cat <(ls)`) is erroniously marked a simple fork (`(&)` added after the command).
+    #       this is strictly a visual error - it has no effect on how the output is structured or how times sum.
+    #    2. In some deeply nested chains of combined subshells + background forks with multiple subshells + forks before
+    #        the 1st command in the sequence, some commands may have an incorrect subshell PID and will be grouped seperately.
     #
     ################################################################################################################################################################
 (
