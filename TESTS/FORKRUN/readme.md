@@ -38,4 +38,4 @@ sys     1m37.100s
 
 This is a total CPU time (usr + sys) of 8 min 20 sec = 500 seconds
 
-`timep` recorded a total combined time of 543 seconds, indicating the total profiling overhead in the timep profile is under 10%. This is in all liklihood due to forkrun achieving near 10-0% cpu utilization in this test and the debug trap instrumentation causing, for example, increased contexrt switching.
+`timep` recorded a total combined time of 543 seconds, indicating the total profiling overhead in the timep profile is under 10%. This is in all liklihood due to forkrun achieving near 100% cpu utilization in this test and the debug trap instrumentation causing, for example, increased contexrt switching.
