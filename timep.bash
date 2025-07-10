@@ -108,7 +108,7 @@ timep() {
             -c|--command)  timep_runType=c  ;;
             -d|--delete)  timep_deleteFlag=true ;;
             +d|+delete|++delete) timep_deleteFlag=false ;;
-            --flame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
+            -flame|--flame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
             -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"  ;;
             -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"  ;;
             --)  shift 1 && break  ;;
@@ -134,36 +134,36 @@ timep() {
 
     # try /dev/shm
     [[ -z "$timep_TMPDIR" ]] && [[ -d /dev/shm ]] && {
-        timep_TMPDIR=/dev/shm/.timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+        timep_TMPDIR=/dev/shm/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         until ! [[ -d "$timep_TMPDIR" ]]; do
-            timep_TMPDIR=/dev/shm/.timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+            timep_TMPDIR=/dev/shm/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
         mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
 
     # try $TMPDIR, if set
     [[ -z "$timep_TMPDIR" ]] && [[ "${TMPDIR}" ]] && {
-        timep_TMPDIR="${TMPDIR}"/.timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+        timep_TMPDIR="${TMPDIR}"/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         until ! [[ -d "$timep_TMPDIR" ]]; do
-            timep_TMPDIR="${TMPDIR}"/.timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+            timep_TMPDIR="${TMPDIR}"/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
         mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
 
     # try /tmp
     [[ "$timep_TMPDIR" ]] || {
-        timep_TMPDIR=/tmp/.timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+        timep_TMPDIR=/tmp/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         until ! [[ -d "$timep_TMPDIR" ]]; do
-            timep_TMPDIR=/tmp/.timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+            timep_TMPDIR=/tmp/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
         mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
 
     # try $PWD
     [[ "$timep_TMPDIR" ]] || {
-        timep_TMPDIR="$PWD/.timep.$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+        timep_TMPDIR="$PWD/.timep/timep.$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         until ! [[ -d "$timep_TMPDIR" ]]; do
-            timep_TMPDIR="$PWD/.timep.$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
+            timep_TMPDIR="$PWD/.timep/timep.$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
         mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
