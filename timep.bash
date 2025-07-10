@@ -80,8 +80,6 @@ timep() {
     #
     ################################################################################################################################################################
 (
-    declare -F "$1" &>/dev/null && export -f "$1"
-
     # check that basic requirements to run timep are met
     # to disable this check, call timep via 'timep_DISABLE_CHECKS=1 timep <...>'
     [[ ${timep_DISABLE_CHECKS} ]] || { [[ -d /proc/self ]] && mount | grep -qE '^proc ' && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
@@ -109,7 +107,7 @@ timep() {
             -c|--command)  timep_runType=c  ;;
             -d|--delete)  timep_deleteFlag=true ;;
             +d|+delete|++delete) timep_deleteFlag=false ;;
-            -flame|--flame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
+            -F|-[Ff]lame|--[Ff]lame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
             -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"; [[ -z ${timep_outTypeA} ]] && timep_noOutFlag=true ;;
             -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"  ;;
             --)  shift 1 && break  ;;
@@ -666,7 +664,7 @@ _timep_getFuncSrc() {
                 timep_runFuncSrc="${timep_runCmd1}"$'\n'
             ;;
             c)
-                printf -v timep_runCmd '"${@}"\n'
+                printf -v timep_runCmd '%s\n' "${@}"
                 timep_runCmd1='#!'"${BASH}"
 
                 # start of wrapper code
@@ -674,6 +672,7 @@ _timep_getFuncSrc() {
             ;;
             f)
                 timep_funcName="${1}"
+                export -f "${timep_funcName}"
                 shift 1
                 _timep_getFuncSrc -r "${timep_funcName}" >>"${timep_TMPDIR}/functions.bash"
                 timep_runCmd1='#!'"${BASH}"
