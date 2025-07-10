@@ -535,9 +535,9 @@ sub color {
 
 	# color palettes
 	if (defined $type and $type eq "red") {
-		my $r = 205 + int(50 * $v1);
+		my $r = 205 + int(50 * $v3);
 		my $g = 0 + int(230 * $v1);
-		my $b = 0 + int(55 * $v1);
+		my $b = 0 + int(55 * $v2);
 		return "rgb($r,$g,$b)";
 	}
 	if (defined $type and $type eq "green") {

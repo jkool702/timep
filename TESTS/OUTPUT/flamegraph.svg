@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" width="2400" height="228" onload="init(evt)" viewBox="0 0 2400 228" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg version="1.1" width="4096" height="228" onload="init(evt)" viewBox="0 0 4096 228" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
 <!-- NOTES:  -->
 <defs>
@@ -79,7 +79,7 @@
 	// show
 	window.addEventListener("mouseover", function(e) {
 		var target = find_group(e.target);
-		if (target) details.nodeValue = "CMD: " + g_to_text(target);
+		if (target) details.nodeValue = "Function: " + g_to_text(target);
 	}, false)
 
 	// clear
@@ -422,717 +422,721 @@
 	}
 ]]>
 </script>
-<rect x="0.0" y="0" width="2400.0" height="228.0" fill="url(#background)"  />
-<text id="title" x="1200.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/timep.tests.bash</text>
+<rect x="0.0" y="0" width="4096.0" height="228.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/timep.tests.bash</text>
 <text id="details" x="10.00" y="213" > </text>
 <text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
-<text id="search" x="2290.00" y="20" >Search</text>
-<text id="ignorecase" x="2374.00" y="20" >ic</text>
-<text id="matched" x="2290.00" y="213" > </text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="213" > </text>
 <g id="frames">
 <g >
-<title>echo 9.1b (65 us, 0.03%)</title><rect x="834.4" y="103" width="0.7" height="23.0" fill="rgb(211,27,6)" rx="2" ry="2" />
-<text  x="837.43" y="117.5" ></text>
+<title>SUBSHELL (1708557)_[s] (8,533 us, 3.71%)</title><rect x="3571.7" y="127" width="151.0" height="23.0" fill="rgb(60,175,175)" rx="2" ry="2" />
+<text  x="3574.66" y="141.5" >SUBSHELL (1708557)_[s]</text>
 </g>
 <g >
-<title>SUBSHELL (928403) (91 us, 0.04%)</title><rect x="1410.3" y="127" width="1.0" height="23.0" fill="rgb(214,44,10)" rx="2" ry="2" />
-<text  x="1413.34" y="141.5" ></text>
+<title>((i++))	 (186 us, 0.08%)</title><rect x="324.1" y="127" width="3.2" height="23.0" fill="rgb(225,92,22)" rx="2" ry="2" />
+<text  x="327.05" y="141.5" ></text>
 </g>
 <g >
-<title>arr=(one two three) (73 us, 0.03%)</title><rect x="61.7" y="127" width="0.8" height="23.0" fill="rgb(205,2,0)" rx="2" ry="2" />
-<text  x="64.73" y="141.5" ></text>
+<title>SUBSHELL (1708552)_[s] (95 us, 0.04%)</title><rect x="2437.0" y="127" width="1.7" height="23.0" fill="rgb(99,210,210)" rx="2" ry="2" />
+<text  x="2440.00" y="141.5" ></text>
 </g>
 <g >
-<title>seq 1 (1,377 us, 0.61%; +0.61%)</title><rect x="1439.3" y="103" width="14.5" height="23.0" fill="rgb(255,152,152)" rx="2" ry="2" />
-<text  x="1442.29" y="117.5" ></text>
+<title>:	 (67 us, 0.03%)</title><rect x="2350.3" y="103" width="1.2" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
+<text  x="2353.27" y="117.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928420) (455 us, 0.20%)</title><rect x="2188.0" y="79" width="4.8" height="23.0" fill="rgb(221,74,17)" rx="2" ry="2" />
-<text  x="2191.01" y="93.5" ></text>
+<title>trap 'echo got USR1: sleep .01' USR1	 (14,676 us, 6.37%)</title><rect x="3734.6" y="127" width="259.7" height="23.0" fill="rgb(232,125,30)" rx="2" ry="2" />
+<text  x="3737.57" y="141.5" >trap 'echo got USR1: sleep .01' USR1	</text>
 </g>
 <g >
-<title>echo 9.2b (&amp;) (323 us, 0.14%)</title><rect x="835.1" y="103" width="3.4" height="23.0" fill="rgb(229,110,26)" rx="2" ry="2" />
-<text  x="838.11" y="117.5" ></text>
+<title>echo 9.1	 (161 us, 0.07%)</title><rect x="1379.3" y="103" width="2.8" height="23.0" fill="rgb(235,142,34)" rx="2" ry="2" />
+<text  x="1382.27" y="117.5" ></text>
 </g>
 <g >
-<title>echo 9.1c (&amp;) (488 us, 0.22%)</title><rect x="838.5" y="103" width="5.1" height="23.0" fill="rgb(229,110,26)" rx="2" ry="2" />
-<text  x="841.50" y="117.5" ></text>
+<title>SUBSHELL (1708517)_[s] (76 us, 0.03%)</title><rect x="1341.6" y="103" width="1.4" height="23.0" fill="rgb(91,203,203)" rx="2" ry="2" />
+<text  x="1344.64" y="117.5" ></text>
 </g>
 <g >
-<title>echo nested (64 us, 0.03%)</title><rect x="941.0" y="79" width="0.6" height="23.0" fill="rgb(222,79,18)" rx="2" ry="2" />
-<text  x="943.98" y="93.5" ></text>
+<title>echo &quot;$i&quot;	 (213 us, 0.09%)</title><rect x="198.9" y="127" width="3.7" height="23.0" fill="rgb(217,58,13)" rx="2" ry="2" />
+<text  x="201.86" y="141.5" ></text>
 </g>
 <g >
-<title>echo b (91 us, 0.04%)</title><rect x="805.3" y="79" width="0.9" height="23.0" fill="rgb(242,174,41)" rx="2" ry="2" />
-<text  x="808.27" y="93.5" ></text>
+<title>:	 (69 us, 0.03%)</title><rect x="2393.8" y="103" width="1.3" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
+<text  x="2396.83" y="117.5" ></text>
 </g>
 <g >
-<title>: (4,922 us, 2.17%)</title><rect x="10.0" y="127" width="51.7" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="13.00" y="141.5" >:</text>
+<title>echo 14	 (135 us, 0.06%)</title><rect x="1548.5" y="103" width="2.4" height="23.0" fill="rgb(215,47,11)" rx="2" ry="2" />
+<text  x="1551.46" y="117.5" ></text>
 </g>
 <g >
-<title>echo A3 (98 us, 0.04%)</title><rect x="806.2" y="79" width="1.1" height="23.0" fill="rgb(226,99,23)" rx="2" ry="2" />
-<text  x="809.23" y="93.5" ></text>
+<title>SUBSHELL (1708558)_[s] (671 us, 0.29%)</title><rect x="3722.7" y="127" width="11.9" height="23.0" fill="rgb(53,167,167)" rx="2" ry="2" />
+<text  x="3725.69" y="141.5" ></text>
 </g>
 <g >
-<title>echo odd &quot;$x&quot; (69 us, 0.03%)</title><rect x="1437.6" y="103" width="0.7" height="23.0" fill="rgb(213,37,9)" rx="2" ry="2" />
-<text  x="1440.56" y="117.5" ></text>
+<title>exit	 (147 us, 0.06%)</title><rect x="2654.5" y="103" width="2.6" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
+<text  x="2657.53" y="117.5" ></text>
 </g>
 <g >
-<title>cat &lt;&lt;EOF$'\n'foo$'\n'bar$'\n'baz$'\n'EOF (4,625 us, 2.04%)</title><rect x="62.5" y="127" width="48.6" height="23.0" fill="rgb(247,195,46)" rx="2" ry="2" />
-<text  x="65.50" y="141.5" >cat &lt;&lt;..</text>
+<title>SUBSHELL (12650-1708514)_[s] (80 us, 0.03%)</title><rect x="1343.0" y="127" width="1.4" height="23.0" fill="rgb(77,190,190)" rx="2" ry="2" />
+<text  x="1345.98" y="141.5" ></text>
 </g>
 <g >
-<title>ff (56 us, 0.02%; +0.02%)</title><rect x="179.2" y="103" width="0.6" height="23.0" fill="rgb(255,208,208)" rx="2" ry="2" />
-<text  x="182.24" y="117.5" ></text>
+<title>echo 9.999	 (5,510 us, 2.39%)</title><rect x="1418.7" y="103" width="97.5" height="23.0" fill="rgb(247,196,47)" rx="2" ry="2" />
+<text  x="1421.69" y="117.5" >echo 9.999	</text>
 </g>
 <g >
-<title>diff &lt;(ls /) &lt;(ls /tmp) (&amp;) (445 us, 0.20%)</title><rect x="111.7" y="127" width="4.7" height="23.0" fill="rgb(232,124,29)" rx="2" ry="2" />
-<text  x="114.74" y="141.5" ></text>
+<title>SUBSHELL (1708553)_[s] (12,195 us, 5.30%)</title><rect x="2438.7" y="127" width="215.8" height="23.0" fill="rgb(91,203,203)" rx="2" ry="2" />
+<text  x="2441.68" y="141.5" >SUBSHELL (1708553)_[s]</text>
 </g>
 <g >
-<title>SUBSHELL (928405) (2,361 us, 1.04%)</title><rect x="1412.0" y="127" width="24.8" height="23.0" fill="rgb(251,214,51)" rx="2" ry="2" />
-<text  x="1415.02" y="141.5" >SU..</text>
+<title>exit	 (65 us, 0.03%)</title><rect x="3571.7" y="103" width="1.1" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
+<text  x="3574.66" y="117.5" ></text>
 </g>
 <g >
-<title>echo (1,389 us, 0.61%; +0.03%)</title><rect x="119.5" y="127" width="14.5" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="122.45" y="141.5" ></text>
+<title>echo 0	 (66 us, 0.03%)</title><rect x="202.6" y="127" width="1.2" height="23.0" fill="rgb(207,12,3)" rx="2" ry="2" />
+<text  x="205.63" y="141.5" ></text>
 </g>
 <g >
-<title>let &quot;x = 5 + 6&quot; (71 us, 0.03%)</title><rect x="330.2" y="127" width="0.7" height="23.0" fill="rgb(253,220,52)" rx="2" ry="2" />
-<text  x="333.20" y="141.5" ></text>
+<title>FUNCTION (ff)_[f] (122 us, 0.05%)</title><rect x="312.9" y="103" width="2.2" height="23.0" fill="rgb(119,119,238)" rx="2" ry="2" />
+<text  x="315.90" y="117.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928412) (68 us, 0.03%)</title><rect x="1455.1" y="127" width="0.7" height="23.0" fill="rgb(214,44,10)" rx="2" ry="2" />
-<text  x="1458.05" y="141.5" ></text>
+<title>SUBSHELL (1708475)_[s] (230,283 us, 100.00%)</title><rect x="10.0" y="151" width="4076.0" height="23.0" fill="rgb(68,182,182)" rx="2" ry="2" />
+<text  x="13.00" y="165.5" >SUBSHELL (1708475)_[s]</text>
 </g>
 <g >
-<title>SUBSHELL (928350) (71 us, 0.03%; 0.00%)</title><rect x="810.9" y="127" width="0.8" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="813.95" y="141.5" ></text>
+<title>SUBSHELL (1708494)_[s] (191 us, 0.08%)</title><rect x="1370.2" y="127" width="3.3" height="23.0" fill="rgb(60,175,175)" rx="2" ry="2" />
+<text  x="1373.15" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928343) (74 us, 0.03%)</title><rect x="808.2" y="127" width="0.8" height="23.0" fill="rgb(245,185,44)" rx="2" ry="2" />
-<text  x="811.23" y="141.5" ></text>
+<title>SUBSHELL (1708551)_[s] (71 us, 0.03%)</title><rect x="2435.7" y="127" width="1.3" height="23.0" fill="rgb(107,217,217)" rx="2" ry="2" />
+<text  x="2438.74" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928375) (912 us, 0.40%)</title><rect x="914.9" y="127" width="9.6" height="23.0" fill="rgb(212,36,8)" rx="2" ry="2" />
-<text  x="917.89" y="141.5" ></text>
+<title>SUBSHELL (1708498)_[s] (409 us, 0.18%)</title><rect x="1402.0" y="127" width="7.2" height="23.0" fill="rgb(89,201,201)" rx="2" ry="2" />
+<text  x="1404.96" y="141.5" ></text>
 </g>
 <g >
-<title>echo B (88 us, 0.04%)</title><rect x="809.0" y="103" width="0.9" height="23.0" fill="rgb(249,205,49)" rx="2" ry="2" />
-<text  x="812.01" y="117.5" ></text>
+<title>echo 5	 (71 us, 0.03%)</title><rect x="1350.1" y="103" width="1.3" height="23.0" fill="rgb(225,94,22)" rx="2" ry="2" />
+<text  x="1353.10" y="117.5" ></text>
 </g>
 <g >
-<title> sleep .01' USR1 (14,499 us, 6.40%)</title><rect x="2192.8" y="103" width="152.4" height="23.0" fill="rgb(217,56,13)" rx="2" ry="2" />
-<text  x="2195.79" y="117.5" > sleep .01' USR1</text>
+<title>gg 1	 (55 us, 0.02%)</title><rect x="2964.5" y="79" width="1.0" height="23.0" fill="rgb(251,213,51)" rx="2" ry="2" />
+<text  x="2967.55" y="93.5" ></text>
 </g>
 <g >
-<title>eval &quot;eval \&quot;$cmd\&quot;&quot; (66 us, 0.03%)</title><rect x="164.1" y="127" width="0.7" height="23.0" fill="rgb(232,127,30)" rx="2" ry="2" />
-<text  x="167.08" y="141.5" ></text>
+<title>SUBSHELL (12650-1708483)_[s] (73 us, 0.03%)</title><rect x="1340.3" y="127" width="1.3" height="23.0" fill="rgb(98,209,209)" rx="2" ry="2" />
+<text  x="1343.35" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928392) (2,019 us, 0.89%)</title><rect x="965.3" y="127" width="21.2" height="23.0" fill="rgb(219,66,15)" rx="2" ry="2" />
-<text  x="968.33" y="141.5" >S..</text>
+<title>echo &quot;${*}&quot;	 (121 us, 0.05%)</title><rect x="2659.1" y="79" width="2.1" height="23.0" fill="rgb(222,81,19)" rx="2" ry="2" />
+<text  x="2662.08" y="93.5" ></text>
 </g>
 <g >
-<title>date +%Y-%m-%d (1,570 us, 0.69%)</title><rect x="924.5" y="103" width="16.5" height="23.0" fill="rgb(231,120,28)" rx="2" ry="2" />
-<text  x="927.48" y="117.5" ></text>
+<title>echo 9.2a	 (117 us, 0.05%)</title><rect x="1399.9" y="103" width="2.1" height="23.0" fill="rgb(252,220,52)" rx="2" ry="2" />
+<text  x="1402.89" y="117.5" ></text>
 </g>
 <g >
-<title>FUNCTION (ff) (184 us, 0.08%)</title><rect x="1559.3" y="79" width="2.0" height="23.0" fill="rgb(249,204,48)" rx="2" ry="2" />
-<text  x="1562.32" y="93.5" ></text>
+<title>:	 (91 us, 0.04%)</title><rect x="2414.5" y="103" width="1.6" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
+<text  x="2417.52" y="117.5" ></text>
 </g>
 <g >
-<title>: (73 us, 0.03%)</title><rect x="1412.0" y="103" width="0.8" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="1415.02" y="117.5" ></text>
+<title>eval &quot;$cmd&quot;	 (68 us, 0.03%)</title><rect x="278.7" y="127" width="1.2" height="23.0" fill="rgb(248,198,47)" rx="2" ry="2" />
+<text  x="281.69" y="141.5" ></text>
 </g>
 <g >
-<title>((i=0)) (67 us, 0.03%)</title><rect x="189.1" y="127" width="0.7" height="23.0" fill="rgb(234,136,32)" rx="2" ry="2" />
-<text  x="192.08" y="141.5" ></text>
+<title>SUBSHELL (1708555)_[s] (22,779 us, 9.89%)</title><rect x="2956.6" y="127" width="403.2" height="23.0" fill="rgb(76,189,189)" rx="2" ry="2" />
+<text  x="2959.62" y="141.5" >SUBSHELL (1708555)_[s]</text>
 </g>
 <g >
-<title>trap 'echo bye' EXIT (9,471 us, 4.18%)</title><rect x="1457.2" y="103" width="99.5" height="23.0" fill="rgb(227,102,24)" rx="2" ry="2" />
-<text  x="1460.20" y="117.5" >trap 'echo bye..</text>
+<title>SUBSHELL (1708490)_[s] (71 us, 0.03%)</title><rect x="1350.1" y="127" width="1.3" height="23.0" fill="rgb(91,203,203)" rx="2" ry="2" />
+<text  x="1353.10" y="141.5" ></text>
 </g>
 <g >
-<title>seq 1 (2,288 us, 1.01%; +1.01%)</title><rect x="1412.8" y="103" width="24.0" height="23.0" fill="rgb(255,114,114)" rx="2" ry="2" />
-<text  x="1415.79" y="117.5" >se..</text>
+<title>SUBSHELL (1708508)_[s] (104 us, 0.05%)</title><rect x="1546.6" y="127" width="1.9" height="23.0" fill="rgb(91,203,203)" rx="2" ry="2" />
+<text  x="1549.62" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928413) (9,607 us, 4.24%)</title><rect x="1455.8" y="127" width="100.9" height="23.0" fill="rgb(208,14,3)" rx="2" ry="2" />
-<text  x="1458.77" y="141.5" >SUBSHELL (928413)</text>
+<title>SUBSHELL (1708483)_[s] (140 us, 0.06%)</title><rect x="1344.4" y="127" width="2.5" height="23.0" fill="rgb(76,189,189)" rx="2" ry="2" />
+<text  x="1347.40" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928419) (544 us, 0.24%)</title><rect x="2187.1" y="103" width="5.7" height="23.0" fill="rgb(219,66,15)" rx="2" ry="2" />
-<text  x="2190.07" y="117.5" ></text>
+<title>((i=0))	 (72 us, 0.03%)</title><rect x="327.3" y="127" width="1.3" height="23.0" fill="rgb(226,98,23)" rx="2" ry="2" />
+<text  x="330.34" y="141.5" ></text>
 </g>
 <g >
-<title>echo &quot;${*}&quot; (80 us, 0.04%)</title><rect x="178.4" y="103" width="0.8" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
-<text  x="181.40" y="117.5" ></text>
+<title>echo 1	 (1,326 us, 0.58%)</title><rect x="203.8" y="127" width="23.5" height="23.0" fill="rgb(251,212,50)" rx="2" ry="2" />
+<text  x="206.80" y="141.5" >e..</text>
 </g>
 <g >
-<title>SUBSHELL (928396) (36,332 us, 16.04%)</title><rect x="1002.8" y="127" width="381.8" height="23.0" fill="rgb(243,177,42)" rx="2" ry="2" />
-<text  x="1005.79" y="141.5" >SUBSHELL (928396)</text>
+<title>SUBSHELL (1708513)_[s] (350 us, 0.15%)</title><rect x="1550.9" y="127" width="6.1" height="23.0" fill="rgb(62,176,176)" rx="2" ry="2" />
+<text  x="1553.85" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928414) (16,348 us, 7.22%)</title><rect x="1556.7" y="127" width="171.9" height="23.0" fill="rgb(251,214,51)" rx="2" ry="2" />
-<text  x="1559.74" y="141.5" >SUBSHELL (928414)</text>
+<title>echo B	 (77 us, 0.03%)</title><rect x="1346.9" y="103" width="1.3" height="23.0" fill="rgb(241,167,40)" rx="2" ry="2" />
+<text  x="1349.88" y="117.5" ></text>
 </g>
 <g >
-<title>gg (56 us, 0.02%; +0.02%)</title><rect x="1733.2" y="79" width="0.6" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="1736.23" y="93.5" ></text>
+<title>SUBSHELL (1708559)_[s] (460 us, 0.20%)</title><rect x="3726.4" y="103" width="8.2" height="23.0" fill="rgb(105,215,215)" rx="2" ry="2" />
+<text  x="3729.43" y="117.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928388) (132 us, 0.06%)</title><rect x="941.0" y="127" width="1.4" height="23.0" fill="rgb(237,147,35)" rx="2" ry="2" />
-<text  x="943.98" y="141.5" ></text>
+<title>trap 'echo bye' EXIT	 (12,055 us, 5.23%)</title><rect x="2441.2" y="103" width="213.3" height="23.0" fill="rgb(219,64,15)" rx="2" ry="2" />
+<text  x="2444.16" y="117.5" >trap 'echo bye' EXIT	</text>
 </g>
 <g >
-<title>echo (68 us, 0.03%; +0.02%)</title><rect x="909.0" y="103" width="0.8" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="912.05" y="117.5" ></text>
+<title>SUBSHELL (1708501)_[s] (840 us, 0.36%)</title><rect x="1516.2" y="127" width="14.9" height="23.0" fill="rgb(86,198,198)" rx="2" ry="2" />
+<text  x="1519.21" y="141.5" ></text>
 </g>
 <g >
-<title>echo 6 (&amp;) (731 us, 0.32%)</title><rect x="811.7" y="103" width="7.7" height="23.0" fill="rgb(251,214,51)" rx="2" ry="2" />
-<text  x="814.69" y="117.5" ></text>
+<title>sed 's/^/&gt;&gt;/' &gt; /dev/null	 (1,553 us, 0.67%)</title><rect x="1681.6" y="103" width="27.5" height="23.0" fill="rgb(247,197,47)" rx="2" ry="2" />
+<text  x="1684.57" y="117.5" >se..</text>
 </g>
 <g >
-<title> echo subshell ) | grep sub) (656 us, 0.29%)</title><rect x="2345.2" y="103" width="6.9" height="23.0" fill="rgb(207,13,3)" rx="2" ry="2" />
-<text  x="2348.17" y="117.5" ></text>
+<title>trap 'echo exit' EXIT	 (12,742 us, 5.53%)</title><rect x="2965.5" y="103" width="225.6" height="23.0" fill="rgb(230,119,28)" rx="2" ry="2" />
+<text  x="2968.52" y="117.5" >trap 'echo exit' EXIT	</text>
 </g>
 <g >
-<title>echo a (&amp;) (333 us, 0.15%)</title><rect x="911.4" y="103" width="3.5" height="23.0" fill="rgb(223,87,20)" rx="2" ry="2" />
-<text  x="914.39" y="117.5" ></text>
+<title>seq 1 4	 (2,223 us, 0.97%)</title><rect x="2351.5" y="103" width="39.3" height="23.0" fill="rgb(214,42,10)" rx="2" ry="2" />
+<text  x="2354.46" y="117.5" >seq ..</text>
 </g>
 <g >
-<title>echo 12 (&amp;) (617 us, 0.27%)</title><rect x="134.0" y="127" width="6.5" height="23.0" fill="rgb(211,27,6)" rx="2" ry="2" />
-<text  x="137.05" y="141.5" ></text>
+<title>x=$( ( echo nested: echo subshell ) | grep sub)	 (672 us, 0.29%)</title><rect x="3994.3" y="127" width="11.9" height="23.0" fill="rgb(251,215,51)" rx="2" ry="2" />
+<text  x="3997.33" y="141.5" ></text>
 </g>
 <g >
-<title>echo &quot;$i&quot; (210 us, 0.09%)</title><rect x="117.2" y="127" width="2.3" height="23.0" fill="rgb(225,95,22)" rx="2" ry="2" />
-<text  x="120.24" y="141.5" ></text>
+<title>ff &quot;$@&quot;	 (94 us, 0.04%)</title><rect x="2665.3" y="55" width="1.7" height="23.0" fill="rgb(245,186,44)" rx="2" ry="2" />
+<text  x="2668.31" y="69.5" ></text>
 </g>
 <g >
-<title>echo A5 (&amp;) (430 us, 0.19%)</title><rect x="920.0" y="55" width="4.5" height="23.0" fill="rgb(238,153,36)" rx="2" ry="2" />
-<text  x="922.96" y="69.5" ></text>
+<title>echo &quot;${*}&quot;	 (67 us, 0.03%)</title><rect x="312.9" y="79" width="1.2" height="23.0" fill="rgb(222,81,19)" rx="2" ry="2" />
+<text  x="315.90" y="93.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928377) (98 us, 0.04%)</title><rect x="806.2" y="103" width="1.1" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
-<text  x="809.23" y="117.5" ></text>
+<title>SUBSHELL (1708527)_[s] (1,617 us, 0.70%)</title><rect x="1574.0" y="127" width="28.6" height="23.0" fill="rgb(84,196,196)" rx="2" ry="2" />
+<text  x="1576.99" y="141.5" >SU..</text>
 </g>
 <g >
-<title>FUNCTION (gg) (365 us, 0.16%)</title><rect x="1730.0" y="103" width="3.8" height="23.0" fill="rgb(236,144,34)" rx="2" ry="2" />
-<text  x="1732.98" y="117.5" ></text>
+<title>SUBSHELL (1708484)_[s] (77 us, 0.03%)</title><rect x="1346.9" y="127" width="1.3" height="23.0" fill="rgb(68,182,182)" rx="2" ry="2" />
+<text  x="1349.88" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (12650-928373) (98 us, 0.04%)</title><rect x="806.2" y="127" width="1.1" height="23.0" fill="rgb(244,181,43)" rx="2" ry="2" />
-<text  x="809.23" y="141.5" ></text>
+<title>echo a (&amp;)	 (350 us, 0.15%)</title><rect x="1550.9" y="103" width="6.1" height="23.0" fill="rgb(215,49,11)" rx="2" ry="2" />
+<text  x="1553.85" y="117.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928361) (541 us, 0.24%)</title><rect x="897.9" y="127" width="5.6" height="23.0" fill="rgb(245,185,44)" rx="2" ry="2" />
-<text  x="900.86" y="141.5" ></text>
+<title>SUBSHELL (1708549)_[s] (1,199 us, 0.52%)</title><rect x="2414.5" y="127" width="21.2" height="23.0" fill="rgb(53,167,167)" rx="2" ry="2" />
+<text  x="2417.52" y="141.5" >S..</text>
 </g>
 <g >
-<title>SUBSHELL (928417) (8,575 us, 3.79%)</title><rect x="2095.8" y="127" width="90.1" height="23.0" fill="rgb(232,125,30)" rx="2" ry="2" />
-<text  x="2098.79" y="141.5" >SUBSHELL (928..</text>
+<title>SUBSHELL (1708496)_[s] (557 us, 0.24%)</title><rect x="1379.3" y="127" width="9.8" height="23.0" fill="rgb(105,215,215)" rx="2" ry="2" />
+<text  x="1382.27" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928376) (91 us, 0.04%)</title><rect x="805.3" y="103" width="0.9" height="23.0" fill="rgb(206,6,1)" rx="2" ry="2" />
-<text  x="808.27" y="117.5" ></text>
+<title>SUBSHELL (1708495)_[s] (324 us, 0.14%)</title><rect x="1373.5" y="127" width="5.8" height="23.0" fill="rgb(53,167,167)" rx="2" ry="2" />
+<text  x="1376.53" y="141.5" ></text>
 </g>
 <g >
-<title>x=$( ( echo nested (656 us, 0.29%)</title><rect x="2345.2" y="127" width="6.9" height="23.0" fill="rgb(240,162,38)" rx="2" ry="2" />
-<text  x="2348.17" y="141.5" ></text>
+<title>SUBSHELL (12650-1708513)_[s] (76 us, 0.03%)</title><rect x="1341.6" y="127" width="1.4" height="23.0" fill="rgb(85,197,197)" rx="2" ry="2" />
+<text  x="1344.64" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928368) (68 us, 0.03%; 0.00%)</title><rect x="909.0" y="127" width="0.8" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="912.05" y="141.5" ></text>
+<title>echo $BASHPID	 (93 us, 0.04%)</title><rect x="3731.0" y="55" width="1.7" height="23.0" fill="rgb(210,23,5)" rx="2" ry="2" />
+<text  x="3734.01" y="69.5" ></text>
 </g>
 <g >
-<title>((i++)) (185 us, 0.08%)</title><rect x="187.1" y="127" width="2.0" height="23.0" fill="rgb(233,129,31)" rx="2" ry="2" />
-<text  x="190.14" y="141.5" ></text>
+<title>echo 9.1b	 (69 us, 0.03%)</title><rect x="1402.0" y="103" width="1.2" height="23.0" fill="rgb(252,220,52)" rx="2" ry="2" />
+<text  x="1404.96" y="117.5" ></text>
 </g>
 <g >
-<title>echo 9 (&amp;) (327 us, 0.14%)</title><rect x="820.8" y="103" width="3.5" height="23.0" fill="rgb(232,125,30)" rx="2" ry="2" />
-<text  x="823.84" y="117.5" ></text>
+<title>echo A3	 (80 us, 0.03%)</title><rect x="1343.0" y="79" width="1.4" height="23.0" fill="rgb(218,62,14)" rx="2" ry="2" />
+<text  x="1345.98" y="93.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928416) (11,740 us, 5.18%)</title><rect x="1972.4" y="127" width="123.4" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="1975.41" y="141.5" >SUBSHELL (928416)</text>
+<title>SUBSHELL (1708491)_[s] (992 us, 0.43%)</title><rect x="1351.4" y="127" width="17.5" height="23.0" fill="rgb(84,196,196)" rx="2" ry="2" />
+<text  x="1354.36" y="141.5" ></text>
 </g>
 <g >
-<title>echo (95 us, 0.04%; +0.04%)</title><rect x="908.0" y="103" width="1.0" height="23.0" fill="rgb(255,206,206)" rx="2" ry="2" />
-<text  x="911.05" y="117.5" ></text>
+<title>SUBSHELL (1708560)_[s] (201 us, 0.09%)</title><rect x="3731.0" y="79" width="3.6" height="23.0" fill="rgb(107,217,217)" rx="2" ry="2" />
+<text  x="3734.01" y="93.5" ></text>
 </g>
 <g >
-<title>echo 3 (&amp;) (333 us, 0.15%)</title><rect x="140.5" y="127" width="3.5" height="23.0" fill="rgb(221,73,17)" rx="2" ry="2" />
-<text  x="143.53" y="141.5" ></text>
+<title>echo $BASHPID	 (108 us, 0.05%)</title><rect x="3732.7" y="31" width="1.9" height="23.0" fill="rgb(210,23,5)" rx="2" ry="2" />
+<text  x="3735.66" y="45.5" ></text>
 </g>
 <g >
-<title>echo inside-eval (140 us, 0.06%)</title><rect x="155.7" y="127" width="1.5" height="23.0" fill="rgb(237,150,36)" rx="2" ry="2" />
-<text  x="158.69" y="141.5" ></text>
+<title>SUBSHELL (1708509)_[s] (135 us, 0.06%)</title><rect x="1548.5" y="127" width="2.4" height="23.0" fill="rgb(84,196,196)" rx="2" ry="2" />
+<text  x="1551.46" y="141.5" ></text>
 </g>
 <g >
-<title>trap 'echo return' RETURN (9,470 us, 4.18%)</title><rect x="1872.9" y="103" width="99.5" height="23.0" fill="rgb(230,119,28)" rx="2" ry="2" />
-<text  x="1875.88" y="117.5" >trap 'echo ret..</text>
+<title>echo A5 (&amp;)	 (496 us, 0.22%)</title><rect x="1565.2" y="55" width="8.8" height="23.0" fill="rgb(230,115,27)" rx="2" ry="2" />
+<text  x="1568.21" y="69.5" ></text>
 </g>
 <g >
-<title>echo &quot;${*}&quot; (75 us, 0.03%)</title><rect x="180.6" y="79" width="0.8" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
-<text  x="183.58" y="93.5" ></text>
+<title>echo 9.4	 (119 us, 0.05%)</title><rect x="1544.5" y="103" width="2.1" height="23.0" fill="rgb(216,53,12)" rx="2" ry="2" />
+<text  x="1547.52" y="117.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928377) (93 us, 0.04%)</title><rect x="807.3" y="103" width="0.9" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
-<text  x="810.26" y="117.5" ></text>
+<title>SUBSHELL (1708536)_[s] (36,227 us, 15.73%)</title><rect x="1709.1" y="127" width="641.2" height="23.0" fill="rgb(84,196,196)" rx="2" ry="2" />
+<text  x="1712.05" y="141.5" >SUBSHELL (1708536)_[s]</text>
 </g>
 <g >
-<title>read -r n &lt;&amp;${CO[0]} (38,599 us, 17.05%)</title><rect x="333.4" y="127" width="405.7" height="23.0" fill="rgb(234,136,32)" rx="2" ry="2" />
-<text  x="336.42" y="141.5" >read -r n &lt;&amp;${CO[0]}</text>
+<title>echo &quot;today is $(date +%Y-%m-%d)&quot;	 (472 us, 0.20%)</title><rect x="270.3" y="127" width="8.4" height="23.0" fill="rgb(235,138,33)" rx="2" ry="2" />
+<text  x="273.33" y="141.5" ></text>
 </g>
 <g >
-<title>for i in {1..3} (&amp;) (1,297 us, 0.57%)</title><rect x="164.8" y="127" width="13.6" height="23.0" fill="rgb(246,188,45)" rx="2" ry="2" />
-<text  x="167.77" y="141.5" ></text>
+<title>SUBSHELL (1708556)_[s] (11,969 us, 5.20%)</title><rect x="3359.8" y="127" width="211.9" height="23.0" fill="rgb(68,182,182)" rx="2" ry="2" />
+<text  x="3362.81" y="141.5" >SUBSHELL (1708556)_[s]</text>
 </g>
 <g >
-<title>SUBSHELL (928358) (388 us, 0.17%)</title><rect x="834.4" y="127" width="4.1" height="23.0" fill="rgb(206,6,1)" rx="2" ry="2" />
-<text  x="837.43" y="141.5" ></text>
+<title>echo &quot;$*&quot;	 (64 us, 0.03%)</title><rect x="2958.9" y="79" width="1.1" height="23.0" fill="rgb(224,90,21)" rx="2" ry="2" />
+<text  x="2961.90" y="93.5" ></text>
 </g>
 <g >
-<title>echo (102 us, 0.05%; +0.04%)</title><rect x="824.3" y="103" width="1.0" height="23.0" fill="rgb(255,206,206)" rx="2" ry="2" />
-<text  x="827.27" y="117.5" ></text>
+<title>FUNCTION (ff)_[f] (325 us, 0.14%)</title><rect x="2661.2" y="79" width="5.8" height="23.0" fill="rgb(119,119,238)" rx="2" ry="2" />
+<text  x="2664.22" y="93.5" ></text>
 </g>
 <g >
-<title>echo &quot;$*&quot; (71 us, 0.03%)</title><rect x="179.8" y="103" width="0.8" height="23.0" fill="rgb(232,128,30)" rx="2" ry="2" />
-<text  x="182.83" y="117.5" ></text>
+<title>SUBSHELL (1708517)_[s] (496 us, 0.22%)</title><rect x="1565.2" y="103" width="8.8" height="23.0" fill="rgb(91,203,203)" rx="2" ry="2" />
+<text  x="1568.21" y="117.5" ></text>
 </g>
 <g >
-<title>exit (136 us, 0.06%)</title><rect x="1728.6" y="103" width="1.4" height="23.0" fill="rgb(208,15,3)" rx="2" ry="2" />
-<text  x="1731.55" y="117.5" ></text>
+<title>ls /	 (2,231 us, 0.97%)</title><rect x="1605.1" y="103" width="39.5" height="23.0" fill="rgb(254,227,54)" rx="2" ry="2" />
+<text  x="1608.12" y="117.5" >ls /	</text>
 </g>
 <g >
-<title>trap 'echo got USR1 (14,499 us, 6.40%)</title><rect x="2192.8" y="127" width="152.4" height="23.0" fill="rgb(211,29,7)" rx="2" ry="2" />
-<text  x="2195.79" y="141.5" >trap 'echo got USR1</text>
+<title>SUBSHELL (1708547)_[s] (104 us, 0.05%)</title><rect x="2411.3" y="127" width="1.8" height="23.0" fill="rgb(68,182,182)" rx="2" ry="2" />
+<text  x="2414.27" y="141.5" ></text>
 </g>
 <g >
-<title>echo (69 us, 0.03%; +0.03%)</title><rect x="819.4" y="103" width="0.7" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="822.38" y="117.5" ></text>
+<title>echo 10 (&amp;)	 (840 us, 0.36%)</title><rect x="1516.2" y="103" width="14.9" height="23.0" fill="rgb(215,49,11)" rx="2" ry="2" />
+<text  x="1519.21" y="117.5" ></text>
 </g>
 <g >
-<title>echo odd &quot;$x&quot; (69 us, 0.03%)</title><rect x="1411.3" y="103" width="0.7" height="23.0" fill="rgb(213,37,9)" rx="2" ry="2" />
-<text  x="1414.30" y="117.5" ></text>
+<title>SUBSHELL (1708545)_[s] (985 us, 0.43%)</title><rect x="2393.8" y="127" width="17.5" height="23.0" fill="rgb(84,196,196)" rx="2" ry="2" />
+<text  x="2396.83" y="141.5" ></text>
 </g>
 <g >
-<title>ff &quot;$@&quot; (55 us, 0.02%)</title><rect x="1560.7" y="55" width="0.6" height="23.0" fill="rgb(253,224,53)" rx="2" ry="2" />
-<text  x="1563.68" y="69.5" ></text>
+<title>SUBSHELL (1708517)_[s] (80 us, 0.03%)</title><rect x="1343.0" y="103" width="1.4" height="23.0" fill="rgb(91,203,203)" rx="2" ry="2" />
+<text  x="1345.98" y="117.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928391) (2,185 us, 0.96%)</title><rect x="942.4" y="127" width="22.9" height="23.0" fill="rgb(225,96,22)" rx="2" ry="2" />
-<text  x="945.36" y="141.5" >S..</text>
+<title>seq 1 4	 (916 us, 0.40%)</title><rect x="2395.1" y="103" width="16.2" height="23.0" fill="rgb(214,42,10)" rx="2" ry="2" />
+<text  x="2398.05" y="117.5" ></text>
 </g>
 <g >
-<title>eval &quot;echo inside-eval&quot; (64 us, 0.03%)</title><rect x="163.4" y="127" width="0.7" height="23.0" fill="rgb(252,219,52)" rx="2" ry="2" />
-<text  x="166.40" y="141.5" ></text>
+<title>echo &quot;${*}&quot;	 (63 us, 0.03%)</title><rect x="2960.0" y="79" width="1.1" height="23.0" fill="rgb(222,81,19)" rx="2" ry="2" />
+<text  x="2963.03" y="93.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928360) (5,092 us, 2.25%; 0.00%)</title><rect x="844.3" y="127" width="53.6" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="847.35" y="141.5" >SUBSHEL..</text>
+<title>echo ${arr[@]}	 (79 us, 0.03%)</title><rect x="197.5" y="127" width="1.4" height="23.0" fill="rgb(231,122,29)" rx="2" ry="2" />
+<text  x="200.46" y="141.5" ></text>
 </g>
 <g >
-<title>echo $BASHPID (237 us, 0.10%)</title><rect x="2190.3" y="31" width="2.5" height="23.0" fill="rgb(218,60,14)" rx="2" ry="2" />
-<text  x="2193.30" y="45.5" ></text>
+<title>SUBSHELL (1708486)_[s] (105 us, 0.05%)</title><rect x="1348.2" y="127" width="1.9" height="23.0" fill="rgb(53,167,167)" rx="2" ry="2" />
+<text  x="1351.24" y="141.5" ></text>
 </g>
 <g >
-<title>cmd=&quot;echo inside-eval&quot; (60 us, 0.03%)</title><rect x="111.1" y="127" width="0.6" height="23.0" fill="rgb(214,45,10)" rx="2" ry="2" />
-<text  x="114.11" y="141.5" ></text>
+<title>echo A2 (&amp;)	 (337 us, 0.15%)</title><rect x="1559.2" y="103" width="6.0" height="23.0" fill="rgb(249,204,48)" rx="2" ry="2" />
+<text  x="1562.24" y="117.5" ></text>
 </g>
 <g >
-<title>exit (136 us, 0.06%)</title><rect x="1455.8" y="103" width="1.4" height="23.0" fill="rgb(208,15,3)" rx="2" ry="2" />
-<text  x="1458.77" y="117.5" ></text>
+<title>SUBSHELL (1708548)_[s] (80 us, 0.03%)</title><rect x="2413.1" y="127" width="1.4" height="23.0" fill="rgb(60,175,175)" rx="2" ry="2" />
+<text  x="2416.11" y="141.5" ></text>
 </g>
 <g >
-<title>seq 1 (2,378 us, 1.05%; +1.05%)</title><rect x="1385.3" y="103" width="25.0" height="23.0" fill="rgb(255,110,110)" rx="2" ry="2" />
-<text  x="1388.35" y="117.5" >se..</text>
+<title>echo odd &quot;$x&quot;	 (101 us, 0.04%)</title><rect x="2392.0" y="103" width="1.8" height="23.0" fill="rgb(205,0,0)" rx="2" ry="2" />
+<text  x="2395.04" y="117.5" ></text>
 </g>
 <g >
-<title>echo 9.2c (68 us, 0.03%)</title><rect x="843.6" y="103" width="0.7" height="23.0" fill="rgb(248,198,47)" rx="2" ry="2" />
-<text  x="846.63" y="117.5" ></text>
+<title>exit	 (129 us, 0.06%)</title><rect x="2956.6" y="103" width="2.3" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
+<text  x="2959.62" y="117.5" ></text>
 </g>
 <g >
-<title>echo 4 (&amp;) (606 us, 0.27%)</title><rect x="144.0" y="127" width="6.4" height="23.0" fill="rgb(214,44,10)" rx="2" ry="2" />
-<text  x="147.03" y="141.5" ></text>
+<title>echo &quot;${*}&quot;	 (137 us, 0.06%)</title><rect x="2961.1" y="55" width="2.5" height="23.0" fill="rgb(222,81,19)" rx="2" ry="2" />
+<text  x="2964.15" y="69.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928335) (226,451 us, 100.00%)</title><rect x="10.0" y="151" width="2380.0" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="13.00" y="165.5" >SUBSHELL (928335)</text>
-</g>
-<g >
-<title>echo $BASHPID (89 us, 0.04%)</title><rect x="2187.1" y="79" width="0.9" height="23.0" fill="rgb(218,60,14)" rx="2" ry="2" />
-<text  x="2190.07" y="93.5" ></text>
-</g>
-<g >
-<title>sleep .01 (35,898 us, 15.85%)</title><rect x="1007.3" y="103" width="377.3" height="23.0" fill="rgb(214,41,10)" rx="2" ry="2" />
-<text  x="1010.35" y="117.5" >sleep .01</text>
-</g>
-<g >
-<title>sed 's/^/&gt;&gt;/' &gt; /dev/null (1,545 us, 0.68%)</title><rect x="986.5" y="103" width="16.3" height="23.0" fill="rgb(206,4,1)" rx="2" ry="2" />
-<text  x="989.55" y="117.5" ></text>
-</g>
-<g >
-<title>echo &quot;${*}&quot; (130 us, 0.06%)</title><rect x="1731.3" y="55" width="1.4" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
-<text  x="1734.30" y="69.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928401) (2,446 us, 1.08%)</title><rect x="1384.6" y="127" width="25.7" height="23.0" fill="rgb(227,103,24)" rx="2" ry="2" />
-<text  x="1387.63" y="141.5" >SU..</text>
-</g>
-<g >
-<title>(( x % 2 == 0 )) (3,609 us, 1.59%)</title><rect x="2352.1" y="127" width="37.9" height="23.0" fill="rgb(241,167,40)" rx="2" ry="2" />
-<text  x="2355.07" y="141.5" >(( x..</text>
-</g>
-<g >
-<title>echo (96 us, 0.04%; +0.04%)</title><rect x="809.9" y="103" width="1.0" height="23.0" fill="rgb(255,206,206)" rx="2" ry="2" />
-<text  x="812.94" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928408) (69 us, 0.03%)</title><rect x="1437.6" y="127" width="0.7" height="23.0" fill="rgb(232,125,30)" rx="2" ry="2" />
-<text  x="1440.56" y="141.5" ></text>
-</g>
-<g >
-<title>echo &quot;$*&quot; (63 us, 0.03%)</title><rect x="1558.0" y="79" width="0.7" height="23.0" fill="rgb(232,128,30)" rx="2" ry="2" />
-<text  x="1561.01" y="93.5" ></text>
-</g>
-<g >
-<title>echo &quot;${*}&quot; (129 us, 0.06%)</title><rect x="1559.3" y="55" width="1.4" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
-<text  x="1562.32" y="69.5" ></text>
-</g>
-<g >
-<title>trap - EXIT (8,517 us, 3.76%)</title><rect x="2096.4" y="103" width="89.5" height="23.0" fill="rgb(245,184,44)" rx="2" ry="2" />
-<text  x="2099.40" y="117.5" >trap - EXIT</text>
-</g>
-<g >
-<title>echo &quot;${*}&quot; (63 us, 0.03%)</title><rect x="1730.6" y="79" width="0.7" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
-<text  x="1733.63" y="93.5" ></text>
-</g>
-<g >
-<title>: (68 us, 0.03%)</title><rect x="1384.6" y="103" width="0.7" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="1387.63" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928357) (377 us, 0.17%)</title><rect x="830.5" y="127" width="3.9" height="23.0" fill="rgb(212,36,8)" rx="2" ry="2" />
-<text  x="833.46" y="141.5" ></text>
-</g>
-<g >
-<title>exit (58 us, 0.03%)</title><rect x="2095.8" y="103" width="0.6" height="23.0" fill="rgb(208,15,3)" rx="2" ry="2" />
-<text  x="2098.79" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928387) (1,570 us, 0.69%)</title><rect x="924.5" y="127" width="16.5" height="23.0" fill="rgb(243,177,42)" rx="2" ry="2" />
-<text  x="927.48" y="141.5" ></text>
-</g>
-<g >
-<title>trap 'echo bye' RETURN EXIT (15,863 us, 7.01%)</title><rect x="1561.8" y="103" width="166.8" height="23.0" fill="rgb(219,67,16)" rx="2" ry="2" />
-<text  x="1564.83" y="117.5" >trap 'echo bye' RETURN EXIT</text>
-</g>
-<g >
-<title>SUBSHELL (928407) (69 us, 0.03%)</title><rect x="1436.8" y="127" width="0.8" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="1439.84" y="141.5" ></text>
-</g>
-<g >
-<title>echo odd &quot;$x&quot; (91 us, 0.04%)</title><rect x="1410.3" y="103" width="1.0" height="23.0" fill="rgb(213,37,9)" rx="2" ry="2" />
-<text  x="1413.34" y="117.5" ></text>
-</g>
-<g >
-<title>echo A4 (93 us, 0.04%)</title><rect x="807.3" y="55" width="0.9" height="23.0" fill="rgb(220,69,16)" rx="2" ry="2" />
-<text  x="810.26" y="69.5" ></text>
-</g>
-<g >
-<title>echo (155 us, 0.07%; +0.06%)</title><rect x="909.8" y="103" width="1.6" height="23.0" fill="rgb(255,204,204)" rx="2" ry="2" />
-<text  x="912.76" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928394) (1,545 us, 0.68%)</title><rect x="986.5" y="127" width="16.3" height="23.0" fill="rgb(206,6,1)" rx="2" ry="2" />
-<text  x="989.55" y="141.5" ></text>
-</g>
-<g >
-<title>FUNCTION (gg) (364 us, 0.16%)</title><rect x="1558.0" y="103" width="3.8" height="23.0" fill="rgb(236,144,34)" rx="2" ry="2" />
-<text  x="1561.01" y="117.5" ></text>
-</g>
-<g >
-<title>echo A2 (&amp;) (388 us, 0.17%)</title><rect x="915.9" y="103" width="4.1" height="23.0" fill="rgb(207,12,2)" rx="2" ry="2" />
-<text  x="918.88" y="117.5" ></text>
-</g>
-<g >
-<title>((i&lt;3)) (254 us, 0.11%)</title><rect x="189.8" y="127" width="2.7" height="23.0" fill="rgb(221,76,18)" rx="2" ry="2" />
-<text  x="192.78" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928346) (96 us, 0.04%; 0.00%)</title><rect x="809.9" y="127" width="1.0" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="812.94" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928369) (155 us, 0.07%; 0.00%)</title><rect x="909.8" y="127" width="1.6" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="912.76" y="141.5" ></text>
-</g>
-<g >
-<title>FUNCTION (ff) (130 us, 0.06%)</title><rect x="180.6" y="103" width="1.3" height="23.0" fill="rgb(249,204,48)" rx="2" ry="2" />
-<text  x="183.58" y="117.5" ></text>
-</g>
-<g >
-<title>gg (55 us, 0.02%; +0.02%)</title><rect x="1561.3" y="79" width="0.5" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="1564.25" y="93.5" ></text>
-</g>
-<g >
-<title>echo $BASHPID (110 us, 0.05%)</title><rect x="2185.9" y="103" width="1.2" height="23.0" fill="rgb(218,60,14)" rx="2" ry="2" />
-<text  x="2188.92" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928382) (93 us, 0.04%)</title><rect x="807.3" y="79" width="0.9" height="23.0" fill="rgb(225,96,22)" rx="2" ry="2" />
-<text  x="810.26" y="93.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928356) (589 us, 0.26%; 0.00%)</title><rect x="824.3" y="127" width="6.2" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="827.27" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928351) (731 us, 0.32%)</title><rect x="811.7" y="127" width="7.7" height="23.0" fill="rgb(251,214,51)" rx="2" ry="2" />
-<text  x="814.69" y="141.5" ></text>
-</g>
-<g >
-<title>echo 10 (&amp;) (541 us, 0.24%)</title><rect x="897.9" y="103" width="5.6" height="23.0" fill="rgb(223,87,20)" rx="2" ry="2" />
-<text  x="900.86" y="117.5" ></text>
-</g>
-<g >
-<title>echo (5,092 us, 2.25%; +0.03%)</title><rect x="844.3" y="103" width="53.6" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="847.35" y="117.5" >echo</text>
-</g>
-<g >
-<title>echo &quot;today is $(date +%Y-%m-%d)&quot; (530 us, 0.23%)</title><rect x="157.2" y="127" width="5.5" height="23.0" fill="rgb(243,176,42)" rx="2" ry="2" />
-<text  x="160.16" y="141.5" ></text>
-</g>
-<g >
-<title>echo odd &quot;$x&quot; (69 us, 0.03%)</title><rect x="1436.8" y="103" width="0.8" height="23.0" fill="rgb(213,37,9)" rx="2" ry="2" />
-<text  x="1439.84" y="117.5" ></text>
-</g>
-<g >
-<title>echo (70 us, 0.03%; +0.03%)</title><rect x="820.1" y="103" width="0.7" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="823.10" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928353) (69 us, 0.03%; 0.00%)</title><rect x="819.4" y="127" width="0.7" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="822.38" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928411) (123 us, 0.05%)</title><rect x="1453.8" y="127" width="1.3" height="23.0" fill="rgb(221,74,17)" rx="2" ry="2" />
-<text  x="1456.76" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928344) (88 us, 0.04%)</title><rect x="809.0" y="127" width="0.9" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="812.01" y="141.5" ></text>
-</g>
-<g >
-<title>echo ${arr[@]} (79 us, 0.03%)</title><rect x="116.4" y="127" width="0.8" height="23.0" fill="rgb(239,160,38)" rx="2" ry="2" />
-<text  x="119.41" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928355) (327 us, 0.14%)</title><rect x="820.8" y="127" width="3.5" height="23.0" fill="rgb(225,96,22)" rx="2" ry="2" />
-<text  x="823.84" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928359) (556 us, 0.25%)</title><rect x="838.5" y="127" width="5.8" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
-<text  x="841.50" y="141.5" ></text>
-</g>
-<g >
-<title>trap 'echo exit' EXIT (13,231 us, 5.84%)</title><rect x="1733.8" y="103" width="139.1" height="23.0" fill="rgb(239,156,37)" rx="2" ry="2" />
-<text  x="1736.82" y="117.5" >trap 'echo exit' EXIT</text>
-</g>
-<g >
-<title>echo 9.2 (&amp;) (487 us, 0.22%)</title><rect x="825.3" y="103" width="5.2" height="23.0" fill="rgb(212,32,7)" rx="2" ry="2" />
-<text  x="828.34" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928409) (1,472 us, 0.65%)</title><rect x="1438.3" y="127" width="15.5" height="23.0" fill="rgb(225,96,22)" rx="2" ry="2" />
-<text  x="1441.29" y="141.5" ></text>
-</g>
-<g >
-<title>echo odd &quot;$x&quot; (68 us, 0.03%)</title><rect x="1455.1" y="103" width="0.7" height="23.0" fill="rgb(213,37,9)" rx="2" ry="2" />
-<text  x="1458.05" y="117.5" ></text>
-</g>
-<g >
-<title>echo &quot;$i&quot; (222 us, 0.10%)</title><rect x="1002.8" y="103" width="2.3" height="23.0" fill="rgb(225,95,22)" rx="2" ry="2" />
-<text  x="1005.79" y="117.5" ></text>
-</g>
-<g >
-<title>gg (56 us, 0.02%; +0.02%)</title><rect x="181.9" y="103" width="0.6" height="23.0" fill="rgb(255,208,208)" rx="2" ry="2" />
-<text  x="184.94" y="117.5" ></text>
-</g>
-<g >
-<title>trap '' RETURN EXIT (11,677 us, 5.16%)</title><rect x="1973.1" y="103" width="122.7" height="23.0" fill="rgb(224,89,21)" rx="2" ry="2" />
-<text  x="1976.07" y="117.5" >trap '' RETURN EXIT</text>
-</g>
-<g >
-<title>SUBSHELL (928377) (430 us, 0.19%)</title><rect x="920.0" y="103" width="4.5" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
-<text  x="922.96" y="117.5" ></text>
-</g>
-<g >
-<title>echo A1 (94 us, 0.04%)</title><rect x="914.9" y="103" width="1.0" height="23.0" fill="rgb(239,158,38)" rx="2" ry="2" />
-<text  x="917.89" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928404) (69 us, 0.03%)</title><rect x="1411.3" y="127" width="0.7" height="23.0" fill="rgb(208,14,3)" rx="2" ry="2" />
-<text  x="1414.30" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928373) (333 us, 0.15%)</title><rect x="911.4" y="127" width="3.5" height="23.0" fill="rgb(225,96,22)" rx="2" ry="2" />
-<text  x="914.39" y="141.5" ></text>
-</g>
-<g >
-<title>echo 9.1a (&amp;) (308 us, 0.14%)</title><rect x="830.5" y="103" width="3.2" height="23.0" fill="rgb(242,170,40)" rx="2" ry="2" />
-<text  x="833.46" y="117.5" ></text>
-</g>
-<g >
-<title>kill -USR1 $BASHPID (13,106 us, 5.79%)</title><rect x="192.5" y="127" width="137.7" height="23.0" fill="rgb(205,1,0)" rx="2" ry="2" />
-<text  x="195.45" y="141.5" >kill -USR1 $BASHPID</text>
-</g>
-<g >
-<title>SUBSHELL (928354) (70 us, 0.03%; 0.00%)</title><rect x="820.1" y="127" width="0.7" height="23.0" fill="rgb(255,255,255)" rx="2" ry="2" />
-<text  x="823.10" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928421) (237 us, 0.10%)</title><rect x="2190.3" y="55" width="2.5" height="23.0" fill="rgb(214,44,10)" rx="2" ry="2" />
-<text  x="2193.30" y="69.5" ></text>
-</g>
-<g >
-<title>echo (71 us, 0.03%; +0.03%)</title><rect x="810.9" y="103" width="0.8" height="23.0" fill="rgb(255,207,207)" rx="2" ry="2" />
-<text  x="813.95" y="117.5" ></text>
-</g>
-<g >
-<title>echo &quot;${*}&quot; (62 us, 0.03%)</title><rect x="1558.7" y="79" width="0.6" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
-<text  x="1561.67" y="93.5" ></text>
-</g>
-<g >
-<title>echo 9.3 (&amp;) (428 us, 0.19%)</title><rect x="903.5" y="103" width="4.5" height="23.0" fill="rgb(205,3,0)" rx="2" ry="2" />
-<text  x="906.55" y="117.5" ></text>
-</g>
-<g >
-<title>FUNCTION (gg) (257 us, 0.11%)</title><rect x="179.8" y="127" width="2.7" height="23.0" fill="rgb(236,144,34)" rx="2" ry="2" />
-<text  x="182.83" y="141.5" ></text>
-</g>
-<g >
-<title>ls /tmp (2,019 us, 0.89%)</title><rect x="965.3" y="103" width="21.2" height="23.0" fill="rgb(235,141,33)" rx="2" ry="2" />
-<text  x="968.33" y="117.5" >l..</text>
-</g>
-<g >
-<title>echo (74 us, 0.03%)</title><rect x="808.2" y="103" width="0.8" height="23.0" fill="rgb(232,127,30)" rx="2" ry="2" />
-<text  x="811.23" y="117.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928418) (654 us, 0.29%)</title><rect x="2185.9" y="127" width="6.9" height="23.0" fill="rgb(225,96,22)" rx="2" ry="2" />
-<text  x="2188.92" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928389) (132 us, 0.06%)</title><rect x="941.0" y="103" width="1.4" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
-<text  x="943.98" y="117.5" ></text>
-</g>
-<g >
-<title>ff &quot;$@&quot; (55 us, 0.02%)</title><rect x="181.4" y="79" width="0.5" height="23.0" fill="rgb(253,224,53)" rx="2" ry="2" />
-<text  x="184.37" y="93.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928415) (23,202 us, 10.25%)</title><rect x="1728.6" y="127" width="243.8" height="23.0" fill="rgb(245,185,44)" rx="2" ry="2" />
-<text  x="1731.55" y="141.5" >SUBSHELL (928415)</text>
-</g>
-<g >
-<title>ff &quot;$@&quot; (54 us, 0.02%)</title><rect x="1732.7" y="55" width="0.5" height="23.0" fill="rgb(253,224,53)" rx="2" ry="2" />
-<text  x="1735.66" y="69.5" ></text>
-</g>
-<g >
-<title>echo even &quot;$x&quot; (406 us, 0.18%)</title><rect x="151.4" y="127" width="4.3" height="23.0" fill="rgb(244,181,43)" rx="2" ry="2" />
-<text  x="154.42" y="141.5" ></text>
-</g>
-<g >
-<title>echo &quot;$*&quot; (62 us, 0.03%)</title><rect x="1730.0" y="79" width="0.6" height="23.0" fill="rgb(232,128,30)" rx="2" ry="2" />
-<text  x="1732.98" y="93.5" ></text>
-</g>
-<g >
-<title>for i in {1..3} (212 us, 0.09%)</title><rect x="1005.1" y="103" width="2.2" height="23.0" fill="rgb(221,75,18)" rx="2" ry="2" />
-<text  x="1008.12" y="117.5" ></text>
-</g>
-<g >
-<title>read x (6,296 us, 2.78%)</title><rect x="739.1" y="127" width="66.2" height="23.0" fill="rgb(220,69,16)" rx="2" ry="2" />
-<text  x="742.10" y="141.5" >read x</text>
-</g>
-<g >
-<title>SUBSHELL (12650-928343) (91 us, 0.04%)</title><rect x="805.3" y="127" width="0.9" height="23.0" fill="rgb(213,40,9)" rx="2" ry="2" />
-<text  x="808.27" y="141.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (928364) (523 us, 0.23%)</title><rect x="903.5" y="127" width="5.5" height="23.0" fill="rgb(225,96,22)" rx="2" ry="2" />
-<text  x="906.55" y="141.5" ></text>
-</g>
-<g >
-<title>exit (63 us, 0.03%)</title><rect x="1972.4" y="103" width="0.7" height="23.0" fill="rgb(208,15,3)" rx="2" ry="2" />
-<text  x="1975.41" y="117.5" ></text>
-</g>
-<g >
-<title>exit (121 us, 0.05%)</title><rect x="1556.7" y="103" width="1.3" height="23.0" fill="rgb(208,15,3)" rx="2" ry="2" />
-<text  x="1559.74" y="117.5" ></text>
-</g>
-<g >
-<title>echo odd &quot;$x&quot; (123 us, 0.05%)</title><rect x="1453.8" y="103" width="1.3" height="23.0" fill="rgb(213,37,9)" rx="2" ry="2" />
-<text  x="1456.76" y="117.5" ></text>
-</g>
-<g >
-<title>echo 9.2a (69 us, 0.03%)</title><rect x="833.7" y="103" width="0.7" height="23.0" fill="rgb(211,27,6)" rx="2" ry="2" />
-<text  x="836.70" y="117.5" ></text>
-</g>
-<g >
-<title>all (226,451 us, 100%)</title><rect x="10.0" y="175" width="2380.0" height="23.0" fill="rgb(213,39,9)" rx="2" ry="2" />
+<title>all (230,283 us, 100%)</title><rect x="10.0" y="175" width="4076.0" height="23.0" fill="rgb(213,39,9)" rx="2" ry="2" />
 <text  x="13.00" y="189.5" ></text>
 </g>
 <g >
-<title>: (95 us, 0.04%)</title><rect x="1438.3" y="103" width="1.0" height="23.0" fill="rgb(238,155,37)" rx="2" ry="2" />
-<text  x="1441.29" y="117.5" ></text>
+<title>SUBSHELL (1708544)_[s] (101 us, 0.04%)</title><rect x="2392.0" y="127" width="1.8" height="23.0" fill="rgb(91,203,203)" rx="2" ry="2" />
+<text  x="2395.04" y="141.5" ></text>
 </g>
 <g >
-<title>echo subshell (68 us, 0.03%)</title><rect x="941.6" y="79" width="0.8" height="23.0" fill="rgb(231,122,29)" rx="2" ry="2" />
-<text  x="944.65" y="93.5" ></text>
+<title>echo $BASHPID	 (259 us, 0.11%)</title><rect x="3726.4" y="79" width="4.6" height="23.0" fill="rgb(210,23,5)" rx="2" ry="2" />
+<text  x="3729.43" y="93.5" ></text>
 </g>
 <g >
-<title>echo after-signal (97 us, 0.04%)</title><rect x="150.4" y="127" width="1.0" height="23.0" fill="rgb(240,161,38)" rx="2" ry="2" />
-<text  x="153.40" y="141.5" ></text>
+<title>echo subshell	 (73 us, 0.03%)</title><rect x="1603.8" y="79" width="1.3" height="23.0" fill="rgb(223,85,20)" rx="2" ry="2" />
+<text  x="1606.83" y="93.5" ></text>
 </g>
 <g >
-<title>grep pattern &lt;(sed 's/^/&gt;&gt;/' &gt; /dev/null) (&amp;) (438 us, 0.19%)</title><rect x="182.5" y="127" width="4.6" height="23.0" fill="rgb(230,116,27)" rx="2" ry="2" />
-<text  x="185.53" y="141.5" ></text>
+<title>FUNCTION (gg)_[f] (374 us, 0.16%)</title><rect x="2958.9" y="103" width="6.6" height="23.0" fill="rgb(104,104,225)" rx="2" ry="2" />
+<text  x="2961.90" y="117.5" ></text>
 </g>
 <g >
-<title>FUNCTION (ff) (136 us, 0.06%)</title><rect x="178.4" y="127" width="1.4" height="23.0" fill="rgb(249,204,48)" rx="2" ry="2" />
-<text  x="181.40" y="141.5" ></text>
+<title>grep pattern &lt;(sed 's/^/&gt;&gt;/' &gt; /dev/null) (&amp;)	 (454 us, 0.20%)</title><rect x="316.0" y="127" width="8.1" height="23.0" fill="rgb(222,78,18)" rx="2" ry="2" />
+<text  x="319.01" y="141.5" ></text>
 </g>
 <g >
-<title>printf &quot;got %s\n&quot; &quot;$n&quot; (236 us, 0.10%)</title><rect x="330.9" y="127" width="2.5" height="23.0" fill="rgb(246,188,45)" rx="2" ry="2" />
-<text  x="333.94" y="141.5" ></text>
+<title>SUBSHELL (1708541)_[s] (2,290 us, 0.99%)</title><rect x="2350.3" y="127" width="40.5" height="23.0" fill="rgb(55,169,169)" rx="2" ry="2" />
+<text  x="2353.27" y="141.5" >SUBS..</text>
 </g>
 <g >
-<title>eval &quot;$cmd&quot; (64 us, 0.03%)</title><rect x="162.7" y="127" width="0.7" height="23.0" fill="rgb(206,6,1)" rx="2" ry="2" />
-<text  x="165.73" y="141.5" ></text>
+<title>FUNCTION (gg)_[f] (649 us, 0.28%)</title><rect x="2657.1" y="103" width="11.5" height="23.0" fill="rgb(104,104,225)" rx="2" ry="2" />
+<text  x="2660.14" y="117.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (12650-928382) (93 us, 0.04%)</title><rect x="807.3" y="127" width="0.9" height="23.0" fill="rgb(244,181,43)" rx="2" ry="2" />
-<text  x="810.26" y="141.5" ></text>
+<title>echo 4 (&amp;)	 (593 us, 0.26%)</title><rect x="245.5" y="127" width="10.5" height="23.0" fill="rgb(206,6,1)" rx="2" ry="2" />
+<text  x="248.50" y="141.5" ></text>
 </g>
 <g >
-<title>echo $BASHPID (218 us, 0.10%)</title><rect x="2188.0" y="55" width="2.3" height="23.0" fill="rgb(218,60,14)" rx="2" ry="2" />
-<text  x="2191.01" y="69.5" ></text>
+<title>FUNCTION (ff)_[f] (126 us, 0.05%)</title><rect x="309.5" y="127" width="2.2" height="23.0" fill="rgb(119,119,238)" rx="2" ry="2" />
+<text  x="312.52" y="141.5" ></text>
 </g>
 <g >
-<title>FUNCTION (ff) (184 us, 0.08%)</title><rect x="1731.3" y="79" width="1.9" height="23.0" fill="rgb(249,204,48)" rx="2" ry="2" />
-<text  x="1734.30" y="93.5" ></text>
+<title>date +%Y-%m-%d	 (1,617 us, 0.70%)</title><rect x="1574.0" y="103" width="28.6" height="23.0" fill="rgb(223,82,19)" rx="2" ry="2" />
+<text  x="1576.99" y="117.5" >da..</text>
 </g>
 <g >
-<title>ls / (2,185 us, 0.96%)</title><rect x="942.4" y="103" width="22.9" height="23.0" fill="rgb(212,35,8)" rx="2" ry="2" />
-<text  x="945.36" y="117.5" >l..</text>
+<title>diff &lt;(ls /) &lt;(ls /tmp) (&amp;)	 (451 us, 0.20%)</title><rect x="189.5" y="127" width="8.0" height="23.0" fill="rgb(223,87,20)" rx="2" ry="2" />
+<text  x="192.48" y="141.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (928378) (430 us, 0.19%)</title><rect x="920.0" y="79" width="4.5" height="23.0" fill="rgb(243,177,42)" rx="2" ry="2" />
-<text  x="922.96" y="93.5" ></text>
+<title>SUBSHELL (1708522)_[s] (76 us, 0.03%)</title><rect x="1341.6" y="79" width="1.4" height="23.0" fill="rgb(62,176,176)" rx="2" ry="2" />
+<text  x="1344.64" y="93.5" ></text>
+</g>
+<g >
+<title>echo &quot;$*&quot;	 (65 us, 0.03%)</title><rect x="311.7" y="103" width="1.2" height="23.0" fill="rgb(224,90,21)" rx="2" ry="2" />
+<text  x="314.75" y="117.5" ></text>
+</g>
+<g >
+<title>arr=(one two three)	 (70 us, 0.03%)</title><rect x="118.0" y="127" width="1.2" height="23.0" fill="rgb(247,195,46)" rx="2" ry="2" />
+<text  x="121.01" y="141.5" ></text>
+</g>
+<g >
+<title>ff &quot;$@&quot;	 (55 us, 0.02%)</title><rect x="2963.6" y="55" width="0.9" height="23.0" fill="rgb(245,186,44)" rx="2" ry="2" />
+<text  x="2966.57" y="69.5" ></text>
+</g>
+<g >
+<title>echo 3 (&amp;)	 (330 us, 0.14%)</title><rect x="239.7" y="127" width="5.8" height="23.0" fill="rgb(212,36,8)" rx="2" ry="2" />
+<text  x="242.66" y="141.5" ></text>
+</g>
+<g >
+<title>echo odd &quot;$x&quot;	 (95 us, 0.04%)</title><rect x="2437.0" y="103" width="1.7" height="23.0" fill="rgb(205,0,0)" rx="2" ry="2" />
+<text  x="2440.00" y="117.5" ></text>
+</g>
+<g >
+<title>trap 'echo return' RETURN	 (9,534 us, 4.14%)</title><rect x="3191.1" y="103" width="168.7" height="23.0" fill="rgb(222,82,19)" rx="2" ry="2" />
+<text  x="3194.05" y="117.5" >trap 'echo return' RETURN	</text>
+</g>
+<g >
+<title>for i in {1..3}	 (289 us, 0.13%)</title><rect x="1714.5" y="103" width="5.1" height="23.0" fill="rgb(213,38,9)" rx="2" ry="2" />
+<text  x="1717.45" y="117.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708515)_[s] (957 us, 0.42%)</title><rect x="1557.0" y="127" width="17.0" height="23.0" fill="rgb(107,217,217)" rx="2" ry="2" />
+<text  x="1560.05" y="141.5" ></text>
+</g>
+<g >
+<title>ff 15	 (56 us, 0.02%)</title><rect x="310.8" y="103" width="0.9" height="23.0" fill="rgb(221,78,18)" rx="2" ry="2" />
+<text  x="313.76" y="117.5" ></text>
+</g>
+<g >
+<title>echo 9.2b (&amp;)	 (340 us, 0.15%)</title><rect x="1403.2" y="103" width="6.0" height="23.0" fill="rgb(220,73,17)" rx="2" ry="2" />
+<text  x="1406.18" y="117.5" ></text>
+</g>
+<g >
+<title>echo 9.2 (&amp;)	 (396 us, 0.17%)</title><rect x="1382.1" y="103" width="7.0" height="23.0" fill="rgb(254,225,53)" rx="2" ry="2" />
+<text  x="1385.12" y="117.5" ></text>
+</g>
+<g >
+<title>(( x % 2 == 0 ))	 (4,507 us, 1.96%)</title><rect x="4006.2" y="127" width="79.8" height="23.0" fill="rgb(233,129,31)" rx="2" ry="2" />
+<text  x="4009.23" y="141.5" >(( x % 2 ==..</text>
+</g>
+<g >
+<title>echo 9.5	 (108 us, 0.05%)</title><rect x="1416.8" y="103" width="1.9" height="23.0" fill="rgb(210,23,5)" rx="2" ry="2" />
+<text  x="1419.78" y="117.5" ></text>
+</g>
+<g >
+<title>ff &quot;$@&quot;	 (55 us, 0.02%)</title><rect x="314.1" y="79" width="1.0" height="23.0" fill="rgb(245,186,44)" rx="2" ry="2" />
+<text  x="317.09" y="93.5" ></text>
+</g>
+<g >
+<title>read -r n &lt;&amp;${CO[0]}	 (41,242 us, 17.91%)</title><rect x="545.3" y="127" width="730.0" height="23.0" fill="rgb(226,99,23)" rx="2" ry="2" />
+<text  x="548.30" y="141.5" >read -r n &lt;&amp;${CO[0]}	</text>
+</g>
+<g >
+<title>SUBSHELL (1708543)_[s] (70 us, 0.03%)</title><rect x="2390.8" y="127" width="1.2" height="23.0" fill="rgb(99,210,210)" rx="2" ry="2" />
+<text  x="2393.80" y="141.5" ></text>
+</g>
+<g >
+<title>echo 9.1a (&amp;)	 (608 us, 0.26%)</title><rect x="1389.1" y="103" width="10.8" height="23.0" fill="rgb(233,132,31)" rx="2" ry="2" />
+<text  x="1392.13" y="117.5" ></text>
+</g>
+<g >
+<title>sleep .01	 (35,633 us, 15.47%)</title><rect x="1719.6" y="103" width="630.7" height="23.0" fill="rgb(205,4,1)" rx="2" ry="2" />
+<text  x="1722.57" y="117.5" >sleep .01	</text>
+</g>
+<g >
+<title>SUBSHELL (1708493)_[s] (70 us, 0.03%)</title><rect x="1368.9" y="127" width="1.3" height="23.0" fill="rgb(68,182,182)" rx="2" ry="2" />
+<text  x="1371.91" y="141.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708554)_[s] (17,067 us, 7.41%)</title><rect x="2654.5" y="127" width="302.1" height="23.0" fill="rgb(84,196,196)" rx="2" ry="2" />
+<text  x="2657.53" y="141.5" >SUBSHELL (1708554)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (1708561)_[s] (108 us, 0.05%)</title><rect x="3732.7" y="55" width="1.9" height="23.0" fill="rgb(99,210,210)" rx="2" ry="2" />
+<text  x="3735.66" y="69.5" ></text>
+</g>
+<g >
+<title>echo b	 (73 us, 0.03%)</title><rect x="1340.3" y="79" width="1.3" height="23.0" fill="rgb(234,136,32)" rx="2" ry="2" />
+<text  x="1343.35" y="93.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708529)_[s] (142 us, 0.06%)</title><rect x="1602.6" y="103" width="2.5" height="23.0" fill="rgb(68,182,182)" rx="2" ry="2" />
+<text  x="1605.61" y="117.5" ></text>
+</g>
+<g >
+<title>echo 12 (&amp;)	 (634 us, 0.28%)</title><rect x="228.4" y="127" width="11.3" height="23.0" fill="rgb(252,220,52)" rx="2" ry="2" />
+<text  x="231.44" y="141.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708516)_[s] (73 us, 0.03%)</title><rect x="1340.3" y="103" width="1.3" height="23.0" fill="rgb(99,210,210)" rx="2" ry="2" />
+<text  x="1343.35" y="117.5" ></text>
+</g>
+<g >
+<title>echo &quot;$*&quot;	 (110 us, 0.05%)</title><rect x="2657.1" y="79" width="2.0" height="23.0" fill="rgb(224,90,21)" rx="2" ry="2" />
+<text  x="2660.14" y="93.5" ></text>
+</g>
+<g >
+<title>exit	 (69 us, 0.03%)</title><rect x="3359.8" y="103" width="1.2" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
+<text  x="3362.81" y="117.5" ></text>
+</g>
+<g >
+<title>echo $BASHPID	 (211 us, 0.09%)</title><rect x="3722.7" y="103" width="3.7" height="23.0" fill="rgb(210,23,5)" rx="2" ry="2" />
+<text  x="3725.69" y="117.5" ></text>
+</g>
+<g >
+<title>echo 2	 (105 us, 0.05%)</title><rect x="1348.2" y="103" width="1.9" height="23.0" fill="rgb(244,183,43)" rx="2" ry="2" />
+<text  x="1351.24" y="117.5" ></text>
+</g>
+<g >
+<title>echo 7	 (70 us, 0.03%)</title><rect x="1368.9" y="103" width="1.3" height="23.0" fill="rgb(212,34,8)" rx="2" ry="2" />
+<text  x="1371.91" y="117.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708504)_[s] (878 us, 0.38%)</title><rect x="1531.1" y="127" width="15.5" height="23.0" fill="rgb(62,176,176)" rx="2" ry="2" />
+<text  x="1534.08" y="141.5" ></text>
+</g>
+<g >
+<title>let &quot;x = 5 + 6&quot;	 (67 us, 0.03%)</title><rect x="539.6" y="127" width="1.2" height="23.0" fill="rgb(244,183,43)" rx="2" ry="2" />
+<text  x="542.58" y="141.5" ></text>
+</g>
+<g >
+<title>read x	 (3,676 us, 1.60%)</title><rect x="1275.3" y="127" width="65.0" height="23.0" fill="rgb(212,32,7)" rx="2" ry="2" />
+<text  x="1278.28" y="141.5" >read x	</text>
+</g>
+<g >
+<title>FUNCTION (gg)_[f] (241 us, 0.10%)</title><rect x="311.7" y="127" width="4.3" height="23.0" fill="rgb(104,104,225)" rx="2" ry="2" />
+<text  x="314.75" y="141.5" ></text>
+</g>
+<g >
+<title>((i&lt;3))	 (261 us, 0.11%)</title><rect x="328.6" y="127" width="4.6" height="23.0" fill="rgb(213,39,9)" rx="2" ry="2" />
+<text  x="331.62" y="141.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708532)_[s] (2,088 us, 0.91%)</title><rect x="1644.6" y="127" width="37.0" height="23.0" fill="rgb(55,169,169)" rx="2" ry="2" />
+<text  x="1647.61" y="141.5" >SUBS..</text>
+</g>
+<g >
+<title>SUBSHELL (1708500)_[s] (5,618 us, 2.44%)</title><rect x="1416.8" y="127" width="99.4" height="23.0" fill="rgb(94,205,205)" rx="2" ry="2" />
+<text  x="1419.78" y="141.5" >SUBSHELL (1708..</text>
+</g>
+<g >
+<title>cmd=&quot;echo inside-eval&quot;	 (61 us, 0.03%)</title><rect x="188.4" y="127" width="1.1" height="23.0" fill="rgb(206,7,1)" rx="2" ry="2" />
+<text  x="191.40" y="141.5" ></text>
+</g>
+<g >
+<title>kill -USR1 $BASHPID	 (11,658 us, 5.06%)</title><rect x="333.2" y="127" width="206.4" height="23.0" fill="rgb(247,194,46)" rx="2" ry="2" />
+<text  x="336.24" y="141.5" >kill -USR1 $BASHPID	</text>
+</g>
+<g >
+<title>cat &lt;&lt;EOF$'\n'foo$'\n'bar$'\n'baz$'\n'EOF	 (3,907 us, 1.70%)</title><rect x="119.2" y="127" width="69.2" height="23.0" fill="rgb(239,157,37)" rx="2" ry="2" />
+<text  x="122.24" y="141.5" >cat &lt;&lt;EOF..</text>
+</g>
+<g >
+<title>echo A4	 (76 us, 0.03%)</title><rect x="1341.6" y="55" width="1.4" height="23.0" fill="rgb(212,32,7)" rx="2" ry="2" />
+<text  x="1344.64" y="69.5" ></text>
+</g>
+<g >
+<title>echo &quot;${*}&quot;	 (231 us, 0.10%)</title><rect x="2661.2" y="55" width="4.1" height="23.0" fill="rgb(222,81,19)" rx="2" ry="2" />
+<text  x="2664.22" y="69.5" ></text>
+</g>
+<g >
+<title>:	 (6,102 us, 2.65%)</title><rect x="10.0" y="127" width="108.0" height="23.0" fill="rgb(230,118,28)" rx="2" ry="2" />
+<text  x="13.00" y="141.5" >:	</text>
+</g>
+<g >
+<title>echo inside-eval	 (137 us, 0.06%)</title><rect x="267.9" y="127" width="2.4" height="23.0" fill="rgb(229,113,27)" rx="2" ry="2" />
+<text  x="270.91" y="141.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (192 us, 0.08%)</title><rect x="2961.1" y="79" width="3.4" height="23.0" fill="rgb(119,119,238)" rx="2" ry="2" />
+<text  x="2964.15" y="93.5" ></text>
+</g>
+<g >
+<title>trap - EXIT	 (8,468 us, 3.68%)</title><rect x="3572.8" y="103" width="149.9" height="23.0" fill="rgb(236,147,35)" rx="2" ry="2" />
+<text  x="3575.81" y="117.5" >trap - EXIT	</text>
+</g>
+<g >
+<title>echo 9.3 (&amp;)	 (759 us, 0.33%)</title><rect x="1531.1" y="103" width="13.4" height="23.0" fill="rgb(247,195,46)" rx="2" ry="2" />
+<text  x="1534.08" y="117.5" ></text>
+</g>
+<g >
+<title>echo 8	 (191 us, 0.08%)</title><rect x="1370.2" y="103" width="3.3" height="23.0" fill="rgb(206,4,1)" rx="2" ry="2" />
+<text  x="1373.15" y="117.5" ></text>
+</g>
+<g >
+<title>echo even &quot;$x&quot;	 (412 us, 0.18%)</title><rect x="260.6" y="127" width="7.3" height="23.0" fill="rgb(236,144,34)" rx="2" ry="2" />
+<text  x="263.61" y="141.5" ></text>
+</g>
+<g >
+<title>echo odd &quot;$x&quot;	 (70 us, 0.03%)</title><rect x="2390.8" y="103" width="1.2" height="23.0" fill="rgb(205,0,0)" rx="2" ry="2" />
+<text  x="2393.80" y="117.5" ></text>
+</g>
+<g >
+<title>echo	 (140 us, 0.06%)</title><rect x="1344.4" y="103" width="2.5" height="23.0" fill="rgb(224,89,21)" rx="2" ry="2" />
+<text  x="1347.40" y="117.5" ></text>
+</g>
+<g >
+<title>echo 11	 (66 us, 0.03%)</title><rect x="227.3" y="127" width="1.1" height="23.0" fill="rgb(234,136,32)" rx="2" ry="2" />
+<text  x="230.27" y="141.5" ></text>
+</g>
+<g >
+<title>printf &quot;got %s\n&quot; &quot;$n&quot;	 (256 us, 0.11%)</title><rect x="540.8" y="127" width="4.5" height="23.0" fill="rgb(237,151,36)" rx="2" ry="2" />
+<text  x="543.77" y="141.5" ></text>
+</g>
+<g >
+<title>exit	 (140 us, 0.06%)</title><rect x="2438.7" y="103" width="2.5" height="23.0" fill="rgb(250,207,49)" rx="2" ry="2" />
+<text  x="2441.68" y="117.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708518)_[s] (496 us, 0.22%)</title><rect x="1565.2" y="79" width="8.8" height="23.0" fill="rgb(84,196,196)" rx="2" ry="2" />
+<text  x="1568.21" y="93.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708534)_[s] (1,553 us, 0.67%)</title><rect x="1681.6" y="127" width="27.5" height="23.0" fill="rgb(99,210,210)" rx="2" ry="2" />
+<text  x="1684.57" y="141.5" >SU..</text>
+</g>
+<g >
+<title>eval &quot;echo inside-eval&quot;	 (65 us, 0.03%)</title><rect x="279.9" y="127" width="1.1" height="23.0" fill="rgb(244,182,43)" rx="2" ry="2" />
+<text  x="282.89" y="141.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708531)_[s] (2,231 us, 0.97%)</title><rect x="1605.1" y="127" width="39.5" height="23.0" fill="rgb(62,176,176)" rx="2" ry="2" />
+<text  x="1608.12" y="141.5" >SUBS..</text>
+</g>
+<g >
+<title>seq 1 4	 (1,108 us, 0.48%)</title><rect x="2416.1" y="103" width="19.6" height="23.0" fill="rgb(214,42,10)" rx="2" ry="2" />
+<text  x="2419.13" y="117.5" >s..</text>
+</g>
+<g >
+<title>for i in {1..3} (&amp;)	 (1,543 us, 0.67%)</title><rect x="282.2" y="127" width="27.3" height="23.0" fill="rgb(237,151,36)" rx="2" ry="2" />
+<text  x="285.21" y="141.5" >fo..</text>
+</g>
+<g >
+<title>echo odd &quot;$x&quot;	 (80 us, 0.03%)</title><rect x="2413.1" y="103" width="1.4" height="23.0" fill="rgb(205,0,0)" rx="2" ry="2" />
+<text  x="2416.11" y="117.5" ></text>
+</g>
+<g >
+<title>echo &quot;$i&quot;	 (305 us, 0.13%)</title><rect x="1709.1" y="103" width="5.4" height="23.0" fill="rgb(217,58,13)" rx="2" ry="2" />
+<text  x="1712.05" y="117.5" ></text>
+</g>
+<g >
+<title>echo A1	 (124 us, 0.05%)</title><rect x="1557.0" y="103" width="2.2" height="23.0" fill="rgb(231,121,29)" rx="2" ry="2" />
+<text  x="1560.05" y="117.5" ></text>
+</g>
+<g >
+<title>echo &quot;${*}&quot;	 (70 us, 0.03%)</title><rect x="309.5" y="103" width="1.3" height="23.0" fill="rgb(222,81,19)" rx="2" ry="2" />
+<text  x="312.52" y="117.5" ></text>
+</g>
+<g >
+<title>echo 9 (&amp;)	 (324 us, 0.14%)</title><rect x="1373.5" y="103" width="5.8" height="23.0" fill="rgb(224,88,21)" rx="2" ry="2" />
+<text  x="1376.53" y="117.5" ></text>
+</g>
+<g >
+<title>echo 9.1c (&amp;)	 (338 us, 0.15%)</title><rect x="1409.2" y="103" width="6.0" height="23.0" fill="rgb(220,73,17)" rx="2" ry="2" />
+<text  x="1412.20" y="117.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708497)_[s] (725 us, 0.31%)</title><rect x="1389.1" y="127" width="12.9" height="23.0" fill="rgb(97,208,208)" rx="2" ry="2" />
+<text  x="1392.13" y="141.5" ></text>
+</g>
+<g >
+<title>echo odd &quot;$x&quot;	 (104 us, 0.05%)</title><rect x="2411.3" y="103" width="1.8" height="23.0" fill="rgb(205,0,0)" rx="2" ry="2" />
+<text  x="2414.27" y="117.5" ></text>
+</g>
+<g >
+<title>echo after-signal	 (261 us, 0.11%)</title><rect x="256.0" y="127" width="4.6" height="23.0" fill="rgb(231,124,29)" rx="2" ry="2" />
+<text  x="258.99" y="141.5" ></text>
+</g>
+<g >
+<title>gg 16	 (54 us, 0.02%)</title><rect x="315.1" y="103" width="0.9" height="23.0" fill="rgb(252,218,52)" rx="2" ry="2" />
+<text  x="318.06" y="117.5" ></text>
+</g>
+<g >
+<title>echo 13	 (104 us, 0.05%)</title><rect x="1546.6" y="103" width="1.9" height="23.0" fill="rgb(221,77,18)" rx="2" ry="2" />
+<text  x="1549.62" y="117.5" ></text>
+</g>
+<g >
+<title>trap 'echo bye' RETURN EXIT	 (16,271 us, 7.07%)</title><rect x="2668.6" y="103" width="288.0" height="23.0" fill="rgb(211,30,7)" rx="2" ry="2" />
+<text  x="2671.62" y="117.5" >trap 'echo bye' RETURN EXIT	</text>
+</g>
+<g >
+<title>echo 9.2c	 (90 us, 0.04%)</title><rect x="1415.2" y="103" width="1.6" height="23.0" fill="rgb(239,160,38)" rx="2" ry="2" />
+<text  x="1418.18" y="117.5" ></text>
+</g>
+<g >
+<title>ls /tmp	 (2,088 us, 0.91%)</title><rect x="1644.6" y="103" width="37.0" height="23.0" fill="rgb(227,103,24)" rx="2" ry="2" />
+<text  x="1647.61" y="117.5" >ls /..</text>
+</g>
+<g >
+<title>SUBSHELL (1708528)_[s] (142 us, 0.06%)</title><rect x="1602.6" y="127" width="2.5" height="23.0" fill="rgb(76,189,189)" rx="2" ry="2" />
+<text  x="1605.61" y="141.5" ></text>
+</g>
+<g >
+<title>echo odd &quot;$x&quot;	 (71 us, 0.03%)</title><rect x="2435.7" y="103" width="1.3" height="23.0" fill="rgb(205,0,0)" rx="2" ry="2" />
+<text  x="2438.74" y="117.5" ></text>
+</g>
+<g >
+<title>echo 6 (&amp;)	 (992 us, 0.43%)</title><rect x="1351.4" y="103" width="17.5" height="23.0" fill="rgb(243,177,42)" rx="2" ry="2" />
+<text  x="1354.36" y="117.5" ></text>
+</g>
+<g >
+<title>eval &quot;eval \&quot;$cmd\&quot;&quot;	 (66 us, 0.03%)</title><rect x="281.0" y="127" width="1.2" height="23.0" fill="rgb(224,90,21)" rx="2" ry="2" />
+<text  x="284.04" y="141.5" ></text>
+</g>
+<g >
+<title>trap '' RETURN EXIT	 (11,900 us, 5.17%)</title><rect x="3361.0" y="103" width="210.7" height="23.0" fill="rgb(216,52,12)" rx="2" ry="2" />
+<text  x="3364.03" y="117.5" >trap '' RETURN EXIT	</text>
+</g>
+<g >
+<title>echo nested	 (69 us, 0.03%)</title><rect x="1602.6" y="79" width="1.2" height="23.0" fill="rgb(214,41,10)" rx="2" ry="2" />
+<text  x="1605.61" y="93.5" ></text>
+</g>
+<g >
+<title>gg 1	 (93 us, 0.04%)</title><rect x="2667.0" y="79" width="1.6" height="23.0" fill="rgb(251,213,51)" rx="2" ry="2" />
+<text  x="2669.98" y="93.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (1708499)_[s] (428 us, 0.19%)</title><rect x="1409.2" y="127" width="7.6" height="23.0" fill="rgb(82,194,194)" rx="2" ry="2" />
+<text  x="1412.20" y="141.5" ></text>
 </g>
 </g>
 </svg>

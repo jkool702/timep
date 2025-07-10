@@ -88,7 +88,7 @@ timep() {
 
     shopt -s extglob
 
-    local timep_runType timep_DEBUG_FLAG timep_flameGraphFlag IFS0 kk nn
+    local timep_runType timep_DEBUG_FLAG timep_flameGraphFlag timep_deleteFlag timep_noOutFlag IFS0 kk nn
     local -a timep_outTypeA
     local -gx timep_TMPDIR
 
@@ -101,6 +101,7 @@ timep() {
     # parse flags
     timep_flameGraphFlag=false
     timep_deleteFlag=false
+    timep_noOutFlag=false
     while true; do
         case "${1}" in
             -s|--shell)  timep_runType=s  ;;
@@ -109,7 +110,7 @@ timep() {
             -d|--delete)  timep_deleteFlag=true ;;
             +d|+delete|++delete) timep_deleteFlag=false ;;
             -flame|--flame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
-            -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"  ;;
+            -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"; [[ -z ${timep_outTypeA} ]] && timep_noOutFlag=true ;;
             -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"  ;;
             --)  shift 1 && break  ;;
              *)  break  ;;
@@ -120,7 +121,7 @@ timep() {
     (( ${#timep_outTypeA[@]} > 0 )) && for kk in "${timep_outTypeA[@]}"; do
         [[ "${timep_outTypeA[$kk]}" == [pf] ]] || [[ "${timep_outTypeA[$kk]}" == [pf]f ]] || unset "timep_outTypeA[$kk]"
     done
-    (( ${#timep_outTypeA[@]} > 0 )) || {
+    (( ${#timep_outTypeA[@]} > 0 )) || ${timep_noOutFlag} || {
         if ${timep_DEBUG_FLAG}; then
             timep_outTypeA=('p' 'pf' 'f' 'ff')
         else
@@ -1156,7 +1157,7 @@ _timep_getFuncSrc() {
 
                 # print stack trace for flamegraph
                 runTime="${runTimesA[$kk]//./}"
-                printf '%s%s\t%s\n' "${fg0}" "${cmd}" "${runTime##+(0)}"  >>"${1%\/*}/out.flamegraph.full"
+                printf '%s%s\t%s\n' "${fg0}" "${cmd//\;/\:}" "${runTime##+(0)}"  >>"${1%\/*}/out.flamegraph.full"
             }
 
         done
@@ -1323,6 +1324,12 @@ _timep_getFuncSrc() {
     { 
         for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING[@]}; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
             mapfile -t timep_LOGS_CUR < <(echo "${timep_LOG_NESTING[$timep_LOG_NESTING_CUR]%$'\n'}" | sort -Vr)
+#            declare -F forkrun &>/dev/null && {
+#                timep_LOGS_CUR_last="${timep_LOGS_CUR[-1]}"
+#                unset "timep_LOGS_CUR[-1]"
+#                printf '%s\n' "${timep_LOGS_CUR[@]}" | forkrun -l 1 _timep_PROCESS_LOG
+#                timep_LOGS_CUR=("${timep_LOGS_CUR_last}")
+#            }
             for nn in "${timep_LOGS_CUR[@]}"; do
                 printf '\rPROCESSING TIMEP LOG #%s of %s' "$kk" "${#timep_LOG_NAME[@]}" >&2
                 [[ ${nn} ]] && _timep_PROCESS_LOG "${nn}"
@@ -1355,8 +1362,8 @@ _timep_getFuncSrc() {
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | tr -d '\n') ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
-    cat "${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
-    cat "${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
+    cat "${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'\t([0-9]+)$'/'\t \1'/ >"${timep_TMPDIR}/profiles/out.flamegraph.full"
+    cat "${timep_TMPDIR}/.log/out.flamegraph" | sed -E s/'\t([0-9]+)$'/'\t \1'/ >"${timep_TMPDIR}/profiles/out.flamegraph"
     cat "${timep_LOG_NESTING[0]%$'\n'}" >"${timep_TMPDIR}/profiles/out.profile.full"
     cat "${timep_LOG_NESTING[0]%$'\n'}.combined" >"${timep_TMPDIR}/profiles/out.profile"
 
