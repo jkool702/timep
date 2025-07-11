@@ -1325,6 +1325,8 @@ _timep_getFuncSrc() {
 
     }
 
+    #sed -E s'/^([^0-9]*)([0-9]+)(\.[0-9]+[^0-9]+)([0-9\.]+)(s[^%]+%..)(.*)$'/'\1\n\2\n\3\n\4\n\5\n\6\n\n\0'/
+
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log*' | grep -vE '\.init_[csr]$' | sort -V)
 
