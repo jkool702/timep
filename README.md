@@ -26,22 +26,28 @@ NOTE: when finished running, `timep` will create a symbolic link called `./timep
      
 if `--flame` is passed as a flag there are 2 addition outputs -- the flamegraph .svg files from the above two "out.flamegraph" files: "flamegraph.full.svg" and "flamegraph.svg" 
 
-NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE: the total runtimes represent the combined sum of the "wall-clock time" from the main process being profiled + all of its descendents. If it has no descendents (i.e., it never spawn a background fork) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is somewhere between "wall-clock time" and "total CPU time (sys+user)"
+**NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE**: the total runtimes represent the combined sum of the "wall-clock time" from the main process being profiled + all of its descendents. If it has no descendents (i.e., it never spawn a background fork) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is somewhere between "wall-clock time" and "total CPU time (sys+user)"
 
 ***
 
 FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can be used in any order, but all timep flags must come before listing what to profile.
 
-Use flags `-f`, `-s`, and `-c` to force timep to treat the input as a function, script, or list of raw commands (respectively). There is builtin logic to automatically detect this...these flags let you override that logic.
+`-f`, `-s`, and `-c`: Use these flags to force timep to treat the input as a function, script, or list of raw commands (respectively). There is builtin logic to automatically detect this...these flags let you override that logic.
 
-Use flag `-d` to have `timep` "clean up" and delete all the intermediate logs and script files, leaving only the "profiles" directory with the final output. 
+`-k` or `--keep`: Use this flag to prevent `timep` from "cleaning up" and deleting all the intermediate logs and script files it generated. Without this flag, only the "profiles" directory with the final output will remain in the timep tmpdir.
 
-Use flag `-o <type>` to control which outputs are printed to stdout after timep is finished. `<type>` is a comma-seperated list of `p`, `pf`, `f` and `ff`. use `-o ''` to not print any of these to stdout.
-    p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
+`-o <type>`: Use this flag to control which outputs are printed to stdout after timep is finished. `<type>` is a comma-seperated list of `p`, `pf`, `f` and `ff`. use `-o ''` to not print any of these to stdout.
+   `<type>`: p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
 
-Use flag `--flame` to have `timep` automatically generate flamegraphs (both with and without folding/merging commands)
+ `-F` or `--flame`: Use this flag to have `timep` automatically generate flamegraphs (both with and without folding/merging commands)
 
-NOTE: all 4/6 outputs 2 time profiles, 2 stack trace lists for generatingflamegraphs, and (if `--flame` is given) 2 flamegraph .svg images) are always saved to disk in the "profiles" directory in the timep tmpdir. Upon finishing, `timep` will create a symlink to this directory in your PWD at `./timep.profiles`
+ `--`: prevents cmdline args after this from being interpreted as `timep` flags.
+
+NOTE: in total there are either 4 or 6 outputs:
+* 2 time profiles,
+* 2 stack trace lists for generatingflamegraphs, and
+* (if `--flame` is given) 2 flamegraph .svg images)
+These outputs are always saved to disk in the "profiles" directory in the timep tmpdir. Upon finishing, `timep` will create a symlink to this directory in your PWD at `./timep.profiles`
 
 ***
 
@@ -64,3 +70,13 @@ I spent a considerable amount of time and effort ensuring that all valid bash co
 To actually run the code, `timep` gathers all required function definitions and saves them in the tmpdir at `functions.bash`, then generates a `main.bash` script that initializes the requires timep metadata variables, sets the DEBUG / EXIT / RETURN traps, then runs whatever is being profiled. When profiling scripts / raw commands - their contents are added here directly. When profiling functions - the function to profile is defined and then called.
 
 After the profiled code has finished running, `timep` goes through the logs and post-processes them. It starts at the deepest nested logs and merges them up (using the indicator lines we logged in the parent logs on ever subshell/function init). for each indicator line in the parent logs, the runtime used is the sum of the runtimes in the child log the indicator specifies...it is not computed from the start/end timestamps. As it does this merging it generates 2 logs - one with all the commands + full metadata (the "full" logs) and one with commands repeated in loops merged into a single entry with that shows count + totaltime. It also generates the "full" call-stack trace for use in timep_flamegraph.pl. finally it moves the top-level merged up logs + flamegraph inputs into the profiles dir, and (if `--flame` was passed) generates the flamegraph .svg files.
+
+***
+
+**KNOWN ISSUES**
+
+Due to some of the quirks related to how bash internally works and limitations regarding when bash fires (or doesnt fire) a DEBUG trap, there are a handful of situations where the profile generated by `timep` is slightly off:
+* incorrectly adds `(&)` to 1 command near a process substitution that contains only a single command without brace groups
+* in some deeply nested subshell + background fork sequences, some commands that should be grouped together are split between multiple groups.
+* incorrect line numbers on functions that immediately spawn a subshell (e.g., `func() ( ... )`)
+* trap and signal handlers record a line in the profile that has the incorrect command shown. The command will be a copy of the command immediately above it and the LINENO will (often) be negative.
