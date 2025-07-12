@@ -6,8 +6,8 @@ timep() {
     ## TIME Profile - timep efficiently produces an accurate per-command execution time profile for shell scripts and functions using DEBUG, EXIT and RETURN traps.
     # timep logs command times+metadata hierarchically based on both function and subshell nesting depth, recreating the complete call-stack tree in its logs.
     #
-    # USAGE:     timep [-s|-f|-c] [-r] [-o <type>] [--flame] [--] _______          --OR--
-    #    [...] | timep [-s|-f|-c] [--] _______ | [...]
+    # USAGE:            timep [-s|-f|-c] [-k] [-o <type>] [--flame] [--] _______            --OR--
+    #           [...] | timep [-s|-f|-c] [-k] [-o <type>] [--flame] [--] _______ | [...]
     #
     # OUTPUT: timep generates 4-6 types of outputs that will be saved to disk in the "profiles" dir in timep's tmpdir directory (by default: /dev/shm/.timep/timep-XXXXXXXX -- printed to stderr at the end):
     #        2 are time profiles: "out.profile.full" and "out.profile"
@@ -98,15 +98,14 @@ timep() {
 
     # parse flags
     timep_flameGraphFlag=false
-    timep_deleteFlag=false
+    timep_deleteFlag=true
     timep_noOutFlag=false
     while true; do
         case "${1}" in
             -s|--shell)  timep_runType=s  ;;
             -f|--function)  timep_runType=f  ;;
             -c|--command)  timep_runType=c  ;;
-            -d|--delete)  timep_deleteFlag=true ;;
-            +d|+delete|++delete) timep_deleteFlag=false ;;
+            -k|--keep)  timep_deleteFlag=false ;;
             -F|-[Ff]lame|--[Ff]lame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
             -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"; [[ -z ${timep_outTypeA} ]] && timep_noOutFlag=true ;;
             -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"  ;;
