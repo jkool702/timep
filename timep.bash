@@ -21,7 +21,7 @@ timep() {
     #
     #        NOTE: timep will create a symbolic link to the "profiles" dir in your PWD called 'timep.profiles'
     #
-    # FLAGS: Flags must be given before the command being profiled. All flags are optional. 
+    # FLAGS: Flags must be given before the command being profiled. All flags are optional.
     #        -s | --script         : force timep to treat the code being profiled as a bash script
     #        -f | --function      : force timep to treat the code being profiled as a bash function
     #        -c | --command       : force timep to treat the code being profiled as raw bash command[s]
@@ -34,13 +34,15 @@ timep() {
     #
     #        -k | --keep          : do not remove all the intermediate logs and scripts in timep's trmpdir (everything except the "profiles" dir) after timep is finished running. (DEFAULT is to delete everything except the final output profiles + flamegraph files)
     #
-    # -o <type> | --output=<type> : tell timep which type of profile(s) to print to stdout. 
-    #                                   pass a comma-seperated list to output more than one profile type. 
-    #                                   set <type> as empty ('') to not print any profiles. 
-    #                      <type> : p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
-    #                               NOTE: all 4 profiles will always be available on disk after profiling is finished in timep's tmpdir 
+    #        -t | --time          : Run the code being profiled through `time` to get the standard wallclock / user / sys times for the code that was profiles (in addition to all the timep-generated profiles)
     #
-    #   --flame | --flamegraph    : automatically generate a flamegraph using Flamegraph.pl and save them in the "profiles" dir 
+    # -o <type> | --output=<type> : tell timep which type of profile(s) to print to stdout.
+    #                                   pass a comma-seperated list to output more than one profile type.
+    #                                   set <type> as empty ('') to not print any profiles.
+    #                      <type> : p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
+    #                               NOTE: all 4 profiles will always be available on disk after profiling is finished in timep's tmpdir
+    #
+    #   --flame | --flamegraph    : automatically generate a flamegraph using Flamegraph.pl and save them in the "profiles" dir
     #                                   Will attempt to download Flamegraph.pl from "https://github.com/brendangregg/FlameGraph" if not available locally.
     #
     #           --                : stop arg parsing (allows profiling something with the same name as a flag)
@@ -54,16 +56,17 @@ timep() {
     #
     #    To allow profiling bash code which *also* sets these traps, timep defines a `trap` function to overload the builtin `trap` and will automatically change any `builtin trap ...` commands into `trap ...`
     #        This function will incorporate the traps required by timep into the traps set by the bash code.
-    #        For timep to work correctly, any EXIT/RETURN/DEBUG traps set by the code being profiled must NOT be set using `builtin trap` - the overloaded `trap` function must be used 
+    #        For timep to work correctly, any EXIT/RETURN/DEBUG traps set by the code being profiled must NOT be set using `builtin trap` - the overloaded `trap` function must be used
     #
     #    for timep to properly reconstruct the true call-stack tree, job control (set -m) MUST be enabled.
-    #        timep will automaticaly enable job control and, should the code being profiled disable it, timep will automatically re-enable it. 
+    #        timep will automaticaly enable job control and, should the code being profiled disable it, timep will automatically re-enable it.
     #        Codes that require job control to be disabled cannot be profiled with timep.
     #
     # DEPENDENCIES:
     #    1) bash 5.0+ (required to support the $EPOCHREALTIME variable)
-    #    2) sed, grep, sort, mkdir, tail, cat, file*
-    #    3) mounted proc filesystem at '/proc'
+    #    2) mounted proc filesystem at '/proc'
+    #    3) REQUIRED binaries: cat chmod find grep mkdir mv rm sed sort tail
+    #    4) OPTIONAL binaries (needed for enhanced/optional functionality): ln file [realpath|readlink] [wget|curl]
     #
     # NOTES:
     #    1. timep attempts to find the raw source code for functions being profiled, but in some instances (example: functions defined via `. <(...)` or functions defined in terminal when historyis off) this isnt possible.
@@ -71,7 +74,7 @@ timep() {
     #    2. To define a custom TMPDIR (other than /dev/shm/.timep.XXXXXX), pass `timep_TMPDIR` as an environment variable. e.g., timep_TMPDIR=/path/to/tmpdir timep codeToProfile
     #
     # KNOWN LIMITATIONS / BUGS: timep handles *almost* every aspect of the bash execution model, but there are a few edge cases where, due to the limitations or trap-based profiling, the output is slightly off.
-    #    1. in process sunstitutions containing only a single simple command (e.g., the `<(ls)` in `cat <(ls)`), 
+    #    1. in process sunstitutions containing only a single simple command (e.g., the `<(ls)` in `cat <(ls)`),
     #       the parent command (`cat <(ls)`) is erroniously marked a simple fork (`(&)` added after the command).
     #       this is strictly a visual error - it has no effect on how the output is structured or how times sum.
     #    2. In some deeply nested chains of combined subshells + background forks with multiple subshells + forks before
@@ -81,11 +84,11 @@ timep() {
 (
     # check that basic requirements to run timep are met
     # to disable this check, call timep via 'timep_DISABLE_CHECKS=1 timep <...>'
-    [[ ${timep_DISABLE_CHECKS} ]] || { [[ -d /proc/self ]] && mount | grep -qE '^proc ' && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
+    [[ ${timep_DISABLE_CHECKS} ]] || { [[ -d /proc/${BASHPID}/stat ]] && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
 
     shopt -s extglob
 
-    local timep_runType timep_DEBUG_FLAG timep_flameGraphFlag timep_deleteFlag timep_noOutFlag IFS0 kk nn
+    local timep_runType timep_DEBUG_FLAG timep_flameGraphFlag timep_deleteFlag timep_noOutFlag timep_timeFlag IFS0 kk nn
     local -a timep_outTypeA
     local -gx timep_TMPDIR
 
@@ -99,12 +102,14 @@ timep() {
     timep_flameGraphFlag=false
     timep_deleteFlag=true
     timep_noOutFlag=false
+    timep_timeFlag=false
     while true; do
         case "${1}" in
             -s|--shell)  timep_runType=s  ;;
             -f|--function)  timep_runType=f  ;;
             -c|--command)  timep_runType=c  ;;
             -k|--keep)  timep_deleteFlag=false ;;
+            -t|--time)  timep_timeFlag=true ;;
             -F|-[Ff]lame|--[Ff]lame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
             -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"; [[ -z ${timep_outTypeA} ]] && timep_noOutFlag=true ;;
             -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"  ;;
@@ -698,7 +703,7 @@ _timep_getFuncSrc() {
 
         builtin trap - DEBUG EXIT RETURN
 
-        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_BASH_PATH timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 
+        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_BASH_PATH timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0
         declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_0 timep_LINENO_OFFSET_PREV timep_BASHPID_ADD
 
         set -mT
@@ -753,41 +758,27 @@ _timep_getFuncSrc() {
 
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 
-        {
-            '"${timep_runCmd}"'
-        }  0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
+        '"$(${timep_timeFlag} && echo 'time {')"'
+            {
+                '"${timep_runCmd}"'
+            } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
+        '"$(${timep_timeFlag} && echo '} 1>&${timep_FD2}')"'
 
         builtin trap - DEBUG EXIT RETURN;
         exec {timep_LOCK_FD}>&-
     )'
-         [[ "${timep_runType}" == 'f' ]] && {
-            timep_runFuncSrc+=$'\n\n''timep_runFunc "${@}"'
-            [[ -t 0 ]] && timep_runFuncSrc+=' <&0'
-            timep_runFuncSrc+=$'\n\n'
-         }
 
-        # save script/function (with added debug trap) in new script file and make it executable
-        echo "${timep_runFuncSrc}" >"${timep_TMPDIR}/main.bash"
-        chmod +x "${timep_TMPDIR}/main.bash"
+    [[ "${timep_runType}" == 'f' ]] && {
+        timep_runFuncSrc+=$'\n\n''timep_runFunc "${@}"'
+        [[ -t 0 ]] && timep_runFuncSrc+=' <&0'
+        timep_runFuncSrc+=$'\n\n'
+    }
 
-       [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
+    # save script/function (with added debug trap) in new script file and make it executable
+    echo "${timep_runFuncSrc}" >"${timep_TMPDIR}/main.bash"
+    chmod +x "${timep_TMPDIR}/main.bash"
 
-
-        printf '\n
-    ----------------------------------------------------------------------------
-    ----------------------- RUNTIME BREAKDOWN BY COMMAND -----------------------
-    ----------------------------------------------------------------------------
-
-    COMMAND PROFILED:
-    %s
-
-    START TIME:
-    %s (%s)
-
-    FORMAT (TAB-SEPERATED):
-    ---------------------------------------------------------------------------------------------------------------------------
-    NPIPE    STARTTIME    ENDTIME    F:FNEST FUNCNAME_A    S:SNEST BASHPID_A    N:NEXEC_N NEXEC    LINENO    ::    BASH_COMMAND
-    ---------------------------------------------------------------------------------------------------------------------------\\n\\n' "$([[ "${timep_runType}" == 'f' ]] && printf '%s' "${timep_runCmd}" || printf '%s' "${timep_runCmdPath}")" "$(date)" "${EPOCHREALTIME}" >"${timep_TMPDIR}/.log/format"
+    [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
 
     echo "timep_TMPDIR = ${timep_TMPDIR}" >&2
 
@@ -875,7 +866,7 @@ _timep_getFuncSrc() {
     ${timep_DEBUG_FLAG} && {
         mapfile -t timep_LOG_A < <(printf '%s\n' "${timep_TMPDIR}/.log/log"* | sort -V)
         for nn in "${timep_LOG_A[@]}"; do
-            printf '\n\n------------------------------------------------------------------\n%s\n\n' "$nn"; sort -n -k2 <"$nn"; 
+            printf '\n\n------------------------------------------------------------------\n%s\n\n' "$nn"; sort -n -k2 <"$nn";
         done >&2
     }
 
@@ -1167,7 +1158,7 @@ _timep_getFuncSrc() {
                     unset "eA[-1]" "IFS0"
                     ns=0
                     nf=1
-                    for nn in "${eA[@]}"; do 
+                    for nn in "${eA[@]}"; do
                         if [[ "${nn}" == *'{'*'}' ]]; then
                             [[ ${sA[$ns]} ]] && fgA+=("SUBSHELL (${sA[$ns]})_[s]")
                             ((ns++))
@@ -1321,7 +1312,7 @@ _timep_getFuncSrc() {
                 }
             done)"
             mapfile -t lineUA < <(r=''; sed -E 's/^([^\:]+\:[[:space:]]+)[0-9\|\(\)\.s%]+[[:space:]]*'/'\1\t'/ <<<"${logMergeAll}"| while read -r nn; do [[ ${nn##+(\|   |\|-- |\|)} ]] || continue; [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; printf '%s\n' "$nn"; }; done)
-            (( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]}"; do  
+            (( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]}"; do
                 mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" |  sed -E 's/^([^\:]+\:[[:space:]]+)\(([0-9\.s]+)\|([0-9\.%]+)\)[[:space:]]*(.*)$'/'\2 \3'/)
                 count0="${lineU#*$'\t'}"
                 count0="${count0%% *}"
@@ -1348,7 +1339,7 @@ _timep_getFuncSrc() {
     # loop through logs from deepest nested upwards and run each through post processing function
     printf '\n\n' >&2
     kk=0
-    { 
+    {
         for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING[@]}; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
             mapfile -t timep_LOGS_CUR < <(echo "${timep_LOG_NESTING[$timep_LOG_NESTING_CUR]%$'\n'}" | sort -Vr)
 #            declare -F forkrun &>/dev/null && {
@@ -1364,7 +1355,7 @@ _timep_getFuncSrc() {
                 ((kk++))
             done
         done
-    } 
+    }
 
     read -r -u "${fd_sleep}" -t 0.01
 
@@ -1381,12 +1372,12 @@ _timep_getFuncSrc() {
     read -r -u "${fd_sleep}" -t 0.01
 
     # reverse flamegraph input so it starts at the parent and ends at the depest child
-    echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^([0-9]+)\:'/'\1 '/ | sort -nr -k1,1 | sed -E s/'^[0-9]+ '//)" >"${timep_TMPDIR}/.log/out.flamegraph.full" 
+    echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^([0-9]+)\:'/'\1 '/ | sort -nr -k1,1 | sed -E s/'^[0-9]+ '//)" >"${timep_TMPDIR}/.log/out.flamegraph.full"
 
     read -r -u "${fd_sleep}" -t 0.01
 
     # fold flamegrapoh stack traces
-    sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | tr -d '\n') ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
+    sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | sed -E s/'\n'//g) ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
@@ -1405,7 +1396,7 @@ _timep_getFuncSrc() {
 
     # add another percentage showing "percent of total runtime" to final outputs
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
-        
+
         # split lines into start, time, percent, end
         echo "$(sed -E s/'^([^\(]+\()([0-9\.]+)s\|([0-9\.]+)(.+)$'/'\1'$'\034''\2'$'\034''\3'$'\034''\4'/ <"${logPathCur}" | while IFS=$'\034' read -r a0 t p a1; do
             { [[ $t ]] && [[ $p ]] && [[ $a1 ]]; } || {
@@ -1422,7 +1413,7 @@ _timep_getFuncSrc() {
             else
                 p1="${p1:0:2}.${p1:2}"
             fi
-            
+
             # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
             if [[ "$p" == "${p1}" ]] && { [[ "${timep_runType}" == 'f' ]] && [[ "${a0#\|   }" == [0-9]* ]] || [[ "${a0}" == [0-9]* ]]; }; then
                 printf '%s\n' "${a0}${t}s|${p}${a1}"
@@ -1457,7 +1448,7 @@ _timep_getFuncSrc() {
                 s) timep_TITLE="${timep_runCmdPath}" ;;
                 c) timep_TITLE='Various Commands' ;;
             esac
-            
+
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (FULL)" --minwidth 0.01 --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --minwidth 0.01 --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
         }
@@ -1470,32 +1461,32 @@ _timep_getFuncSrc() {
         cat "${timep_TMPDIR}/profiles/out.flamegraph.full"
     }
 
-    [[ "${timep_outType}" == *' f '* ]] && {    
+    [[ "${timep_outType}" == *' f '* ]] && {
         printf '\n\nFLAMEGRAPH FOLDED STACK TRACE\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.flamegraph"
     }
 
-    [[ "${timep_outType}" == *' pf '* ]] && {    
+    [[ "${timep_outType}" == *' pf '* ]] && {
         printf '\n\nOUTPUT LOG (FULL)\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile.full"
     }
 
-    [[ "${timep_outType}" == *' p '* ]] && {    
+    [[ "${timep_outType}" == *' p '* ]] && {
         printf '\n\nOUTPUT LOG (COMBINED)\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile"
     }
-    
+
     read -r -u "${fd_sleep}" -t 0.01
-    
+
     ${timep_deleteFlag} && {
         \rm -rf "${timep_TMPDIR}/.log"
         for nn in "${timep_TMPDIR}"/*; do
             [[ -f "$nn" ]] && \rm -f "$nn"
         done
     }
-   
+
     read -r -u "${fd_sleep}" -t 0.01
-    
+
     [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
     type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles
 

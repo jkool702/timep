@@ -79,3 +79,22 @@ gives
 
 Total CPU time here is user time + sys time = 1006 seconds. runtime is 44.2 seconds. Average CPU utilization (on a 14C/28T cpu) is just under 23 cores.
 
+Running the command with time gives
+
+```
+real    0m44.174s
+user    13m31.967s
+sys     3m12.772s
+```
+
+Compared to the time output timep outputs when you pass the `--time` flag
+
+```
+real    0m47.793s
+user    14m52.670s
+sys     3m7.439s
+```
+
+And we see that the timing instrumentation overhead is ~8% for both wall clock time (44.174 sec vs 47.793 sec) and total CPU time (~1080 sec vs ~1004 sec). Note that the vast majority of that overhead happens between one commands end timestamp and the next commands start timestamp, and as such does not effect the time profile that was generated.
+
+
