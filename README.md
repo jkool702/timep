@@ -6,13 +6,18 @@
 -------------------------------------------------------------------------------------------------------------------------------------------
 # USAGE
 
-USAGE:     `. /path/to/timep.bash; timep [-s|-f|-c] [-d] [-o <type>] [--flame] [--] << SCRIPT/FUNCTION TO PROFILE >>`
+USAGE:     `. /path/to/timep.bash; timep [-s|-f|-c] [-k] [-o <type>] [--flame] [--] << SCRIPT/FUNCTION TO PROFILE >>`
 
 In other words, source `timep.bash` and then simply add `timep` before the function/script/commands you want to profile! anything passed to timep's stdin will automatically be redi\rected to the stdin of whatever is being profiled.
 
 ***
 
-OUTPUTS: `timep` generates 4-6 types of outputs. These will be saved to disk in timep's tmpdir directory (by default: /dev/shm/.timep/timep-XXXXXXXX -- printed to stderr at the end) in the "profiles" sub-directory.
+OUTPUTS: in total, `timep` generates either 4 or 6 outputs:
+* 2 time profiles,
+* 2 stack trace lists for generating flamegraphs, and
+* (if `--flame` is given): 2 flamegraph .svg images)
+  
+These outputs are always saved to disk in the "profiles" directory in the timep tmpdir. Upon finishing, `timep` will create a symlink to this directory in your PWD at `./timep.profiles`4-6 types of outputs. These will be saved to disk in timep's tmpdir directory (by default: /dev/shm/.timep/timep-XXXXXXXX -- printed to stderr at the end) in the "profiles" sub-directory.
 
 NOTE: when finished running, `timep` will create a symbolic link called `./timep.profiles` that links to the "profiles" dir that contains all the `timep` outputs 
 
@@ -45,11 +50,6 @@ FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can
 
  `--`: prevents cmdline args after this from being interpreted as `timep` flags.
 
-NOTE: in total there are either 4 or 6 outputs:
-* 2 time profiles,
-* 2 stack trace lists for generatingflamegraphs, and
-* (if `--flame` is given) 2 flamegraph .svg images)
-These outputs are always saved to disk in the "profiles" directory in the timep tmpdir. Upon finishing, `timep` will create a symlink to this directory in your PWD at `./timep.profiles`
 
 ***
 
