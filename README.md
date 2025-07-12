@@ -4,7 +4,7 @@
 **BUILTIN FLAMEGRAPH GENERATOR**:  One standout feature of `timep` is that, in addition to the time profile, `timep` will generate outputs consisting of call-stack traces that can be directly used with `flamegraph.pl` (from Brendan Gregg's [FlameGraph repo](https://github.com/brendangregg/FlameGraph)).If you pass `timep` the `--flame` flag, timep will automatically download (if needed) a copy of `flamegraph.pl` and use it to generate both "full" and a "folded" flamegraph SVG images. However, unlike typical flamegraphs (which are are built using stack traces), these flamegraphs are built using bash commands and their associated runtimes, and the different levels represent combined function+subshell nesting depth.
 
 -------------------------------------------------------------------------------------------------------------------------------------------
-# USAGE
+# USING TIMEP
 
 USAGE:     `. /path/to/timep.bash; timep [-s|-f|-c] [-k] [-o <type>] [--flame] [--] << SCRIPT/FUNCTION TO PROFILE >>`
 
@@ -17,9 +17,9 @@ OUTPUTS: in total, `timep` generates either 4 or 6 outputs:
 * 2 stack trace lists for generating flamegraphs, and
 * (if `--flame` is given): 2 flamegraph .svg images)
   
-These outputs are always saved to disk in the "profiles" directory in the timep tmpdir. Upon finishing, `timep` will create a symlink to this directory in your PWD at `./timep.profiles`4-6 types of outputs. These will be saved to disk in timep's tmpdir directory (by default: /dev/shm/.timep/timep-XXXXXXXX -- printed to stderr at the end) in the "profiles" sub-directory.
+These outputs are always saved to disk in the "profiles" directory in the timep tmpdir (by default: /dev/shm/.timep/timep-XXXXXXXX). Upon finishing, `timep` will create a symlink in your PWD at `./timep.profiles` that links to the "profiles" dir that contains all the `timep` outputs.
 
-NOTE: when finished running, `timep` will create a symbolic link called `./timep.profiles` that links to the "profiles" dir that contains all the `timep` outputs 
+DETAILS ON OUTPUTS:
 
 2 are time profiles: "out.profile.full" and "out.profile"
 
@@ -31,7 +31,7 @@ NOTE: when finished running, `timep` will create a symbolic link called `./timep
 3. out.flamegraph.full: contains stack traces from all commands
 4. out.flamegraph:      contains "folded" stack traces where the times from otherwise identical stack traces have been summed together in a single stack trace
      
-if `--flame` is passed as a flag there are 2 addition outputs -- the flamegraph .svg files from the above two "out.flamegraph" files: "flamegraph.full.svg" and "flamegraph.svg" 
+if `--flame` is passed as a flag: 2 are the flamegraph .svg files from the above two "out.flamegraph" files: "flamegraph.full.svg" and "flamegraph.svg" 
 
 **NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE**: the total runtimes represent the combined sum of the "wall-clock time" from the main process being profiled + all of its descendents. If it has no descendents (i.e., it never spawn a background fork) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is somewhere between "wall-clock time" and "total CPU time (sys+user)"
 
@@ -44,12 +44,12 @@ FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can
 `-k` or `--keep`: Use this flag to prevent `timep` from "cleaning up" and deleting all the intermediate logs and script files it generated. Without this flag, only the "profiles" directory with the final output will remain in the timep tmpdir.
 
 `-o <type>`: Use this flag to control which outputs are printed to stdout after timep is finished. `<type>` is a comma-seperated list of `p`, `pf`, `f` and `ff`. use `-o ''` to not print any of these to stdout.
-   `<type>`: p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
+
+   `<type>`: p --> out.profile (DEFAULT)........pf --> out.profile.full.......f --> out.flamegraph.......ff -> out.flamegraph.full
 
  `-F` or `--flame`: Use this flag to have `timep` automatically generate flamegraphs (both with and without folding/merging commands)
 
- `--`: prevents cmdline args after this from being interpreted as `timep` flags.
-
+ `--`: Use this flag to prevent cmdline args after this from being interpreted as `timep` flags.
 
 ***
 
