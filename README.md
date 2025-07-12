@@ -26,6 +26,8 @@ NOTE: when finished running, `timep` will create a symbolic link called `./timep
      
 if `--flame` is passed as a flag there are 2 addition outputs -- the flamegraph .svg files from the above two "out.flamegraph" files: "flamegraph.full.svg" and "flamegraph.svg" 
 
+NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE: the total runtimes represent the combined sum of the "wall-clock time" from the main process being profiled + all of its descendents. If it has no descendents (i.e., it never spawn a background fork) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is somewhere between "wall-clock time" and "total CPU time (sys+user)"
+
 ***
 
 FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can be used in any order, but all timep flags must come before listing what to profile.
