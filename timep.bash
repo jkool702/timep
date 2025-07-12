@@ -32,8 +32,7 @@ timep() {
     #        2. if $1 is not a function but exists as a file in the filestystem that ut executable and containsa ascii text, then treat as a script (s)
     #        3. if neither of the above are true, then treat as raw command[s] (c)
     #
-    #   [+d] -d | --delete        : remove all the intermediate logs and scripts in timep's trmpdir (everything except the "profiles" dir) after timep is finished running
-    #                               [ -d | --delete ] enables removal, [ +d ] disables removal. DEFAULT is no NOT remove (+r behavior) 
+    #        -k | --keep          : do not remove all the intermediate logs and scripts in timep's trmpdir (everything except the "profiles" dir) after timep is finished running. (DEFAULT is to delete everything except the final output profiles + flamegraph files)
     #
     # -o <type> | --output=<type> : tell timep which type of profile(s) to print to stdout. 
     #                                   pass a comma-seperated list to output more than one profile type. 
