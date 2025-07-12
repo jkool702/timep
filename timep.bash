@@ -272,6 +272,7 @@ _timep_getFuncSrc() {
             for kk in "${!off_A[@]}"; do
                 (( off_A[$kk] = off - off_A[$kk] ))
             done
+            mapfile -t off_A < <(printf '%s\n' "${off_A[@]}" | sort -nr)
             mapfile -t A < <(history | tail -n "$off" | sed -E s/'^[[:space:]]*[0-9]*[[:space:]]*'//)
 
         elif [[ -f "${p}" ]]; then
@@ -304,7 +305,7 @@ _timep_getFuncSrc() {
         for mm in "${off_A[@]}"; do
 
             # remove any preceeding commands on first history line
-            mapfile -t -d '' cmd_rm < <(. /proc/self/fd/0 <<<"trap 'set +n; printf '\"'\"'%s\0'\"'\"' \"\${BASH_COMMAND}\"; set -n'; ${A[$mm]}" 2>/dev/null)
+            mapfile -t -d '' cmd_rm < <(. /proc/self/fd/0 <<<"trap 'set +n; printf '\"'\"'%s\0'\"'\"' \"\${BASH_COMMAND}\"; set -n' DEBUG; ${A[$mm]}" 2>/dev/null)
             for nn in "${cmd_rm[@]}"; do
                 A[$mm]="${A[$mm]//"$nn"//}"
             done
@@ -316,8 +317,8 @@ _timep_getFuncSrc() {
             m=$(kk=1; IFS=$'\n'; set -n; until . /proc/self/fd/0 <<<"${A[*]:${mm}:${kk}}" &>/dev/null || (( ( mm + kk ) > ${#A[@]} )); do ((kk++)); done; echo "$kk")
 
             # remove any trailing commands on last history line
-            (( mmm = mm + m ))
-            mapfile -t -d '' cmd_rm < <(. /proc/self/fd/0 <<<"IFS=$'\n'; trap 'set +n; printf '\"'\"'%s\0'\"'\"' \"\${BASH_COMMAND}\"; set -n'; ${A[*]:${mm}:${m}}" 2>/dev/null)
+            (( mmm = mm + m - 1 ))
+            mapfile -t -d '' cmd_rm < <(. /proc/self/fd/0 <<<"IFS=$'\n'; trap 'set +n; printf '\"'\"'%s\0'\"'\"' \"\${BASH_COMMAND}\"; set -n' DEBUG; ${A[*]:${mm}:${m}}" 2>/dev/null)
             for nn in "${cmd_rm[@]}"; do
                 A[$mmm]="${A[$mmm]//"$nn"//}"
             done
@@ -557,7 +558,11 @@ _timep_getFuncSrc() {
             timep_NO_PRINT_FLAG=false
             timep_IS_FUNC_FLAG_1=true
         }
-        timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]="${BASH_COMMAND}"
+        if (( timep_LINENO_0 < 0 )) && [[ "${BASH_COMMAND}" == "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]% \(\?\)}" ]]; then
+            timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]="${BASH_COMMAND} "'"'"'(?)'"'"'
+        else
+            timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]="${BASH_COMMAND}"
+        fi
         timep_LINENO[${timep_FNEST_CUR}]="${timep_LINENO_0}"
         timep_BG_PID_PREV="$!"
         timep_BASHPID_PREV="$BASHPID"
@@ -1329,8 +1334,6 @@ _timep_getFuncSrc() {
 
     }
 
-    #sed -E s'/^([^0-9]*)([0-9]+)(\.[0-9]+[^0-9]+)([0-9\.]+)(s[^%]+%..)(.*)$'/'\1\n\2\n\3\n\4\n\5\n\6\n\n\0'/
-
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log*' | grep -vE '\.init_[csr]$' | sort -V)
 
@@ -1365,7 +1368,7 @@ _timep_getFuncSrc() {
 
     read -r -u "${fd_sleep}" -t 0.01
 
-    printf '\n\n' >&2
+    printf '\nFINALIZING TIME PROFILE\n' >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}"
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.combined"
 
@@ -1421,7 +1424,7 @@ _timep_getFuncSrc() {
             fi
             
             # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-            if [[ "$p" == "${p1}" ]]; then
+            if [[ "$p" == "${p1}" ]] && { [[ "${timep_runType}" == 'f' ]] && [[ "${a0#\|   }" == [0-9]* ]] || [[ "${a0}" == [0-9]* ]]; }; then
                 printf '%s\n' "${a0}${t}s|${p}${a1}"
             else
                 printf '%s\n' "${a0}${t}s|${p1}%|${p}${a1}"
@@ -1431,6 +1434,7 @@ _timep_getFuncSrc() {
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
+        printf '\nGENERATING FLAMEGRAPHS\n' >&2
         export PATH="${PATH}${PATH:+:}${timep_TMPDIR%/*}"
         if type -p timep_flamegraph.pl &>/dev/null; then
             timep_flameGraphPath="$(type -p timep_flamegraph.pl)"

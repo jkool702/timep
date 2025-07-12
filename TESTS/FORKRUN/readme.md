@@ -2,7 +2,12 @@ this test computed several checksums on ~620k small files (max size 2 mb, total 
 
 
 ```
+mkdir -p /mnt/ramdisk
+mount | grep -qE '^tmpfs on /mnt/ramdisk ' || sudo mount -t tmpfs tmpfs /mnt/ramdisk 
+mkdir -p /mnt/ram,disk/usr
+rsync -a --max-size=$((1<<22)) /usr/* /mnt/ramdisk/usr
 find /mnt/ramdisk/usr -type f >/mnt/ramdisk/flist
+find /mnt/ramdisk/usr -type f -print0 >/mnt/ramdisk/flist0
 
 ff() {
 sha1sum "${@}"
@@ -21,54 +26,56 @@ xxhsum -H3 "${@}"
 }
 export -f ff
 
-timep --flame forkrun ff </mnt/ramdisk/flist >/dev/null
+cd /mnt/ramdisk
+[[ -d /mnt/ramdisk/forkrun ]] || git clone https://github.com/jkool702/forkrun.git --branch=forkrun_testing_nSpawn_5
+. /mnt/ramdisk/forkrun/forkrun.bash
+export -f forkrun
+export -f _forkrun_getVal
+
+
+[[ -d /mnt/ramdisk/timep ]] || git clone https://github.com/jkool702/timep.git
+. /mnt/ramdisk/timep/timep.bash
+
+
+timep --flame -c 'forkrun ff </mnt/ramdisk/flist >/dev/null' 'forkrun -z ff </mnt/ramdisk/flist0 >/dev/null'
 ```
 
-In total, this is around 33,900 individual bash commands. It is a rather demanding test:
+In total, this is around 67,800 individual bash commands. It is a rather demanding test:
 
 ```
-perf stat -v -d -d  "$BASH" -O extglob  -c 'forkrun ff </mnt/ramdisk/flist >/dev/null'
+perf stat -d -d -d  "$BASH" -O extglob  -c 'forkrun ff </mnt/ramdisk/flist >/dev/null; forkrun -z ff </mnt/ramdisk/flist0 >/dev/null'
 ```
 
 gives
 
 ```
-Performance counter stats for '/usr/bin/bash -O extglob -c forkrun ff </mnt/ramdisk/flist >/dev/null':
 
-        501,649.20 msec task-clock                       #   22.600 CPUs utilized [out of 28 -- CPU is 14c/28t]            
-            37,920      context-switches                 #   75.591 /sec                      
-             5,491      cpu-migrations                   #   10.946 /sec                      
-         6,527,697      page-faults                      #   13.012 K/sec                     
- 2,998,955,972,751      instructions                     #    1.49  insn per cycle              (38.45%)
- 2,010,094,659,664      cycles                           #    4.007 GHz                         (38.47%)
-   141,752,317,177      branches                         #  282.573 M/sec                       (38.47%)
-     1,216,244,735      branch-misses                    #    0.86% of all branches             (38.47%)
-   352,531,428,649      L1-dcache-loads                  #  702.745 M/sec                       (38.47%)
-    14,734,780,607      L1-dcache-load-misses            #    4.18% of all L1-dcache accesses   (30.78%)
-     1,761,547,444      LLC-loads                        #    3.512 M/sec                       (30.77%)
-     1,435,688,135      LLC-load-misses                  #   81.50% of all LL-cache accesses    (30.77%)
-    13,103,605,623      L1-icache-load-misses                                                   (30.76%)
-   352,632,120,969      dTLB-loads                       #  702.946 M/sec                       (30.75%)
-       123,076,159      dTLB-load-misses                 #    0.03% of all dTLB cache accesses  (30.75%)
-       146,278,369      iTLB-loads                       #  291.595 K/sec                       (30.75%)
-       101,197,323      iTLB-load-misses                 #   69.18% of all iTLB cache accesses  (30.76%)
+ Performance counter stats for '/usr/bin/bash -O extglob -c forkrun ff </mnt/ramdisk/flist >/dev/null; forkrun -z ff </mnt/ramdisk/flist0 >/dev/null':
 
-      22.196856216 seconds time elapsed
+      1,006,809.99 msec task-clock                       #   22.765 CPUs utilized             
+            75,085      context-switches                 #   74.577 /sec                      
+            10,528      cpu-migrations                   #   10.457 /sec                      
+        13,072,088      page-faults                      #   12.984 K/sec                     
+ 6,021,119,138,347      instructions                     #    1.49  insn per cycle              (38.46%)
+ 4,030,208,270,125      cycles                           #    4.003 GHz                         (38.47%)
+   283,281,503,152      branches                         #  281.365 M/sec                       (38.47%)
+     2,415,987,569      branch-misses                    #    0.85% of all branches             (38.47%)
+   706,997,289,462      L1-dcache-loads                  #  702.215 M/sec                       (38.47%)
+    29,472,351,677      L1-dcache-load-misses            #    4.17% of all L1-dcache accesses   (30.78%)
+     3,513,778,842      LLC-loads                        #    3.490 M/sec                       (30.78%)
+     2,874,334,001      LLC-load-misses                  #   81.80% of all LL-cache accesses    (30.77%)
+    26,384,005,984      L1-icache-load-misses                                                   (30.77%)
+   706,782,039,909      dTLB-loads                       #  702.001 M/sec                       (30.75%)
+       239,914,225      dTLB-load-misses                 #    0.03% of all dTLB cache accesses  (30.75%)
+       291,435,141      iTLB-loads                       #  289.464 K/sec                       (30.76%)
+       204,748,181      iTLB-load-misses                 #   70.26% of all iTLB cache accesses  (30.77%)
 
-     402.860133000 seconds user
-      94.909168000 seconds sys
-```
+      44.226257320 seconds time elapsed
 
-Total CPU time here is user time + sys time = ~498 seconds. Alternately, on my system, running the command through the `time` builtin gave
+     811.313597000 seconds user
+     187.668289000 seconds sys
 
 ```
-time { forkrun ff </mnt/ramdisk/flist >/dev/null; }
 
-real    0m22.168s
-user    6m43.454s
-sys     1m37.100s
-```
+Total CPU time here is user time + sys time = 1006 seconds. runtime is 44.2 seconds. Average CPU utilization (on a 14C/28T cpu) is just under 23 cores.
 
-This is a total CPU time (usr + sys) of 8 min 20 sec = 500 seconds
-
-`timep` recorded a total combined time of 543 seconds, indicating the total profiling overhead in the timep profile is under 10%. This is in all liklihood due to forkrun achieving near 100% cpu utilization in this test and the debug trap instrumentation causing, for example, increased contexrt switching.
