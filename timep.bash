@@ -1388,14 +1388,48 @@ _timep_getFuncSrc() {
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+)$'/'+\2'/ | tr -d '\n') ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
+    timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
     sed -E s/'\t([0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
     sed -E s/'\t([0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
     sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' <"${timep_LOG_NESTING[0]%$'\n'}" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]%$'\n'}.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
+        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
     else
-        cat "${timep_LOG_NESTING[0]%$'\n'}.combined" >"${timep_TMPDIR}/profiles/out.profile"
+        cat "${timep_LOG_NESTING[0]}.combined" >"${timep_TMPDIR}/profiles/out.profile"
     fi
+
+    # get total runtime
+    read -r timep_runtimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
+    ((timep_runtimeALL = 10#${timep_runtimeALL//./}))
+
+    # add another percentage showing "percent of total runtime" to final outputs
+    for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
+        
+        # split lines into start, time, percent, end
+        echo "$(sed -E s/'^([^\(]+\()([0-9\.]+)s\|([0-9\.]+)(.+)$'/'\1'$'\034''\2'$'\034''\3'$'\034''\4'/ <"${logPathCur}" | while IFS=$'\034' read -r a0 t p a1; do
+            { [[ $t ]] && [[ $p ]] && [[ $a1 ]]; } || {
+                # this is a blank/seperator line. re-print it unmodified
+                printf '%s\n' "${a0}${t}${p}${a1}"
+                continue
+            }
+
+            # get percent of total runtime
+            ((p1 = (10000 * 10#${t//./}) / timep_runtimeALL))
+            printf -v p1 '%0.4d' "${p1//./}"
+            if ((10#${p1} == 10000)); then
+                p1="100.00"
+            else
+                p1="${p1:0:2}.${p1:2}"
+            fi
+            
+            # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
+            if [[ "$p" == "${p1}" ]]; then
+                printf '%s\n' "${a0}${t}s|${p}${a1}"
+            else
+                printf '%s\n' "${a0}${t}s|${p1}%|${p}${a1}"
+            fi
+        done)" >"${logPathCur}"
+    done
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {

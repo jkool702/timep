@@ -1,21 +1,27 @@
-testfunc() { f() { echo "f: $*"; }
+testfunc() { 
+f() { echo "f: $*"; }
 g() ( echo "g: $*"; )
-h() { echo "h: $*"; ff "$@"; gg "$@"; }
+h() { 
+	echo "h: $*"; 
+	f "$@"; 
+	g "$@";
+}
 
 echo 0
 { echo 1; }
 ( echo 2 )
 echo 3 &
 { echo 4; } &
+
 echo 5 | cat | tee
 
 for (( kk=6; kk<10; kk++ )); do
-echo $kk
-h $kk
-for jj in {1..3}; do
-f $kk $jj
-g $kk $jj
-done
+	echo $kk
+	h $kk
+	for jj in {1..3}; do
+		f $kk $jj
+		g $kk $jj
+	done
 done
 }
 
