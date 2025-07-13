@@ -84,7 +84,7 @@ timep() {
 (
     # check that basic requirements to run timep are met
     # to disable this check, call timep via 'timep_DISABLE_CHECKS=1 timep <...>'
-    [[ ${timep_DISABLE_CHECKS} ]] || { [[ -d /proc/${BASHPID}/stat ]] && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
+    [[ ${timep_DISABLE_CHECKS} ]] || { [[ -f /proc/self/stat ]] && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
 
     shopt -s extglob
 
@@ -919,8 +919,17 @@ _timep_getFuncSrc() {
     _timep_EPOCHREALTIME_DIFF_ALT() {
         local tDiff d d6
 
-        { (( ${#} >= 2 )) && [[ $1 ]] && [[ $2 ]]; } || return
-        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} ))
+        { (( ${#} >= 2 )) && [[ $1 ]] && [[ $2 ]]; } || { (( ${#} == 1 )) && [[ "${1}" == *\ * ]]; } || return
+
+        if (( ${#} >= 2 )); then
+            (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} ))
+        else
+            local a1 a2
+            a1="${1% *}"
+            a2="${1#* }"
+            (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} ))
+        fi
+
         printf -v d '%0.7d' "${tDiff#-}"
         (( d6 = ${#d} - 6 ))
         printf '%s.%s' "${d:0:$d6}" "${d:$d6}"
@@ -954,7 +963,7 @@ _timep_getFuncSrc() {
         local tSum tSum0 d d6
 
         (( ${#} == 0 )) && return
-        (( ${#} == 1 )) && {
+        (( ${#} == 1 )) && ! [[ "${1}" == *\ * ]] && {
             # short circuit if only 1 time
             echo "${1}"
             return
@@ -978,7 +987,7 @@ _timep_getFuncSrc() {
         local tSum tSum0 d d2
 
         (( ${#} == 0 )) && return
-        (( ${#} == 1 )) && {
+        (( ${#} == 1 )) && ! [[ "${1}" == *\ * ]] && {
             # short circuit if only 1 time
             echo "${1}"
             return
@@ -1139,7 +1148,6 @@ _timep_getFuncSrc() {
 
             # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
             (( nPipeA[$kk] == 1 )) && [[ -z ${runTimesA[$kk]} ]] && _timep_EPOCHREALTIME_DIFF "$kk"
-
             [[ ${runTimesA[$kk]} ]] || runTimesA[$kk]='0.000001'
             (( 10#${runTimesA[$kk]//./} > 0 )) || {
                 endTimesA[$kk]="$(_timep_EPOCHREALTIME_SUM_ALT "${startTimesA[$kk]}" '0.000001')"
@@ -1180,7 +1188,7 @@ _timep_getFuncSrc() {
         # get total runtime
         case ${#logA[@]} in
             1) runTimeTotal="${runTimesA[*]}" ;;
-            *) _timep_EPOCHREALTIME_SUM ;;
+            *) _timep_EPOCHREALTIME_SUM  ;; 
         esac
 
         [[ ${runTimeTotal} ]] || runTimeTotal='0.000001'
@@ -1316,7 +1324,7 @@ _timep_getFuncSrc() {
                 mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" |  sed -E 's/^([^\:]+\:[[:space:]]+)\(([0-9\.s]+)\|([0-9\.%]+)\)[[:space:]]*(.*)$'/'\2 \3'/)
                 count0="${lineU#*$'\t'}"
                 count0="${count0%% *}"
-                (( count0 = ${count0//[^0-9]/} * ${#timeUA[@]} ))
+                (( count0 = 10#${count0//[^0-9]/} * ${#timeUA[@]} ))
                 printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM_ALT "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG_ALT "${timeUA[@]#* }")" "${count0}" "${lineU#*$'\t'* }"
             done
 
@@ -1336,26 +1344,69 @@ _timep_getFuncSrc() {
         ((kk++));
     done < <(printf '%s\n' "${timep_LOG_NAME[@]}" | sed -E 's/^.*\/log\.([^\/]*)$/\1/; s/[^\.]//g')
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
+
+    # sort logs in nesting order
+    mapfile -t timep_LOG_NAME < <(for kk in "${!timep_LOG_NESTING[@]}"; do sort -V <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; done)
+
+    # get indicies for each nesting lvl
+    mapfile -t timep_LOG_NESTING_IND < <(jj0=0; for kk in "${!timep_LOG_NESTING[@]}"; do mapfile -t A <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; (( jj1 = jj0 + ${#A[@]} - 1 )); printf '%s:' "${#A[@]}"; eval "printf '%X ' {${jj1}..${jj0}..-1}"; (( jj0 = jj1 + 1 )); done)
+
+    timep_nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
+
+    exec {timep_fd_logID}<>(:) {timep_fd_done}<><(:)
+
+    timep_coprocSrc='while true; do
+    read -r -u "${timep_fd_logID}" logID
+    [[ ${logID} ]] || break
+    (( logID = 16#${logID} ))
+    _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
+    printf '"'"'\n'"'"' >&${timep_fd_done}
+done'
+
     # loop through logs from deepest nested upwards and run each through post processing function
     printf '\n\n' >&2
-    kk=0
-    {
-        for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING[@]}; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
-            mapfile -t timep_LOGS_CUR < <(echo "${timep_LOG_NESTING[$timep_LOG_NESTING_CUR]%$'\n'}" | sort -Vr)
-#            declare -F forkrun &>/dev/null && {
-#                timep_LOGS_CUR_last="${timep_LOGS_CUR[-1]}"
-#                unset "timep_LOGS_CUR[-1]"
-#                printf '%s\n' "${timep_LOGS_CUR[@]}" | forkrun -l 1 _timep_PROCESS_LOG
-#                timep_LOGS_CUR=("${timep_LOGS_CUR_last}")
-#            }
-            for nn in "${timep_LOGS_CUR[@]}"; do
-                printf '\rPROCESSING TIMEP LOG #%s of %s' "$kk" "${#timep_LOG_NAME[@]}" >&2
-                [[ ${nn} ]] && _timep_PROCESS_LOG "${nn}"
-                read -r -u "${fd_sleep}" -t 0.01
-                ((kk++))
-            done
+
+    export -f _timep_EPOCHREALTIME_DIFF
+    export -f _timep_EPOCHREALTIME_SUM
+    export -f _timep_EPOCHREALTIME_DIFF_ALT
+    export -f _timep_EPOCHREALTIME_SUM_ALT
+    export -f _timep_PERCENT_AVG_ALT
+    export -f _timep_PROCESS_LOG
+
+    timep_LOG_NUM="${#timep_LOG_NAME[@]}"
+    kk="${timep_LOG_NESTING_IND[-1]%% *}"
+    jj=0
+    nWorker=1
+    eval '{ coproc p0 {
+    '"${timep_coprocSrc}"'
+  }
+} 2>/dev/null'
+    pAll_PID=("${p0_PID}")
+    
+    for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
+        mapfile -t timep_LOG_NESTING_IND_CUR <<<"${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]// /$'\n'}"
+        {
+            printf '%s\n' "${timep_LOG_NESTING_IND_CUR[@]}" >&${timep_fd_logID}
+        } &
+        while (( ${timep_LOG_NESTING_IND_CUR} > nWorker )) && (( nWorker < nCPU )); do
+            eval '{ coproc p'"${nWorker}"' {
+    '"${timep_coprocSrc}"'
+  }
+} 2>/dev/null
+pAll_PID+=("${p'"${nWorker}"'_PID}")'
+            ((nWorker++))
         done
-    }
+
+        (( kkMin = 16#${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]##* } ))
+            while (( kk >= kkMin )); do
+                read -r -u "${timep_fd_done}" _; do 
+                ((kk--))
+                ((jj++))
+                printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "$kk" "${timep_LOG_NUM}" >&2
+            done 
+            read -r -u "${fd_sleep}" -t 0.01
+        done
+    done
 
     read -r -u "${fd_sleep}" -t 0.01
 
@@ -1415,7 +1466,7 @@ _timep_getFuncSrc() {
             fi
 
             # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-            if [[ "$p" == "${p1}" ]] && { [[ "${timep_runType}" == 'f' ]] && [[ "${a0#\|   }" == [0-9]* ]] || [[ "${a0}" == [0-9]* ]]; }; then
+            if [[ "${p}" == "${p1}" ]] && ( a00="${a0%%[0-9]*}"; [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )) || (( "${#a00}" <= 1 )); ); then
                 printf '%s\n' "${a0}${t}s|${p}${a1}"
             else
                 printf '%s\n' "${a0}${t}s|${p1}%|${p}${a1}"
