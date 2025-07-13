@@ -1340,9 +1340,7 @@ _timep_getFuncSrc() {
     timep_LOG_NESTING=()
     kk=0
     while read -r nn; do
-       (( nn1 = 2 * ${#nn} ))
-       [[ "${timep_LOG_NAME[$kk]}" == *'}' ]] && ((nn1++))
-        timep_LOG_NESTING[${nn1}]+="${timep_LOG_NAME[$kk]}"$'\n'
+        timep_LOG_NESTING[${#nn}]+="${timep_LOG_NAME[$kk]}"$'\n'
         ((kk++))
     done < <(printf '%s\n' "${timep_LOG_NAME[@]}" | sed -E 's/^.*\/log\.([^\/]*)$/\1/; s/[^\.]//g')
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
@@ -1387,14 +1385,15 @@ done'
     pAll_PID=("${p0_PID}")
 
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
-        mapfile -t timep_LOG_NESTING_IND_CUR <<<"${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]// /$'\n'}"
+        kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
       
         {
-            while (( kk >= timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}] )); do
+            while (( kk >= kkMin )); do
                 printf '%X\n' "${kk}" >&${timep_fd_logID} && ((kk--)) || read -r -u "${fd_sleep}" -t 0.1
             done
         } &
-        while (( ${#timep_LOG_NESTING_IND_CUR[@]} > nWorker )) && (( nWorker < nCPU )); do
+        
+        while (( kk - kkMin > nWorker )) && (( nWorker < nCPU )); do
             eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
   }
@@ -1402,20 +1401,25 @@ done'
 pAll_PID+=("${p'"${nWorker}"'_PID}")'
             ((nWorker++))
         done
-        while (( ${#timep_LOG_NESTING_IND_CUR[@]} < nWorker )); do 
+        
+        while (( kk - kkMin < nWorker )); do 
             printf '\n' >&${timep_fd_logID}
             ((nWorker--))
         done
 
-        (( kkMin = 16#${timep_LOG_NESTING_IND_CUR[0]} ))
+        read -r -u "${fd_sleep}" -t 0.01
+
         while (( kk >= kkMin )); do
             read -r -u "${timep_fd_done}" _
             ((kk--))
             ((jj++))
-            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "$kk" "${timep_LOG_NUM}" >&2
+            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "$jj" "${timep_LOG_NUM}" >&2
         done 
+        
         read -r -u "${fd_sleep}" -t 0.01
     done
+
+    read -r -u "${fd_sleep}" -t 0.01
 
     while (( nWorker > 0 )); do
         printf '\n' >&${timep_fd_logID}
