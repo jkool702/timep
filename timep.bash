@@ -1353,7 +1353,7 @@ _timep_getFuncSrc() {
 
     timep_nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
 
-    exec {timep_fd_logID}<>(:) {timep_fd_done}<><(:)
+    exec {timep_fd_logID}<><(:) {timep_fd_done}<><(:)
 
     timep_coprocSrc='while true; do
     read -r -u "${timep_fd_logID}" logID
@@ -1382,7 +1382,7 @@ done'
   }
 } 2>/dev/null'
     pAll_PID=("${p0_PID}")
-    
+
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         mapfile -t timep_LOG_NESTING_IND_CUR <<<"${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]// /$'\n'}"
         {
@@ -1398,14 +1398,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         done
 
         (( kkMin = 16#${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]##* } ))
-            while (( kk >= kkMin )); do
-                read -r -u "${timep_fd_done}" _; do 
-                ((kk--))
-                ((jj++))
-                printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "$kk" "${timep_LOG_NUM}" >&2
-            done 
-            read -r -u "${fd_sleep}" -t 0.01
-        done
+        while (( kk >= kkMin )); do
+            read -r -u "${timep_fd_done}" _
+            ((kk--))
+            ((jj++))
+            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "$kk" "${timep_LOG_NUM}" >&2
+        done 
+        read -r -u "${fd_sleep}" -t 0.01
     done
 
     read -r -u "${fd_sleep}" -t 0.01
