@@ -1374,9 +1374,10 @@ done'
     export -f _timep_PROCESS_LOG
 
     timep_LOG_NUM="${#timep_LOG_NAME[@]}"
-    kk="${timep_LOG_NESTING_IND[-1]%% *}"
+    kk="${timep_LOG_NESTING_IND[-1]%%\:*}"
     jj=0
     nWorker=1
+
     eval '{ coproc p0 {
     '"${timep_coprocSrc}"'
   }
@@ -1385,10 +1386,11 @@ done'
 
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         mapfile -t timep_LOG_NESTING_IND_CUR <<<"${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]// /$'\n'}"
+        timep_LOG_NESTING_IND_CUR[0]="${timep_LOG_NESTING_IND_CUR[0]#*\:}"
         {
-            printf '%s\n' "${timep_LOG_NESTING_IND_CUR[@]}" >&${timep_fd_logID}
+            printf '%s\n' "${timep_LOG_NESTING_IND_CUR[@]#*\:}" >&${timep_fd_logID}
         } &
-        while (( ${timep_LOG_NESTING_IND_CUR} > nWorker )) && (( nWorker < nCPU )); do
+        while (( ${#timep_LOG_NESTING_IND_CUR[@]} > nWorker )) && (( nWorker < nCPU )); do
             eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
   }
@@ -1396,8 +1398,12 @@ done'
 pAll_PID+=("${p'"${nWorker}"'_PID}")'
             ((nWorker++))
         done
+        while (( ${#timep_LOG_NESTING_IND_CUR[@]} < nWorker )); do 
+            printf '\n' >&${timep_fd_logID}
+            ((nWorker--))
+        done
 
-        (( kkMin = 16#${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]##* } ))
+        (( kkMin = 16#${timep_LOG_NESTING_IND_CUR[0]} ))
         while (( kk >= kkMin )); do
             read -r -u "${timep_fd_done}" _
             ((kk--))
@@ -1406,6 +1412,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         done 
         read -r -u "${fd_sleep}" -t 0.01
     done
+
+    while (( nWorker > 0 )); do
+        printf '\n' >&${timep_fd_logID}
+        ((nWorker--))
+    done        
 
     read -r -u "${fd_sleep}" -t 0.01
 
