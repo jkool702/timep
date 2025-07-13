@@ -1353,12 +1353,12 @@ _timep_getFuncSrc() {
 
     timep_nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
 
-    exec {timep_fd_logID}<><(:) {timep_fd_done}<><(:)
+    exec {timep_fd_logID}<><(:) 
+    exec {timep_fd_done}<><(:)
 
     timep_coprocSrc='while true; do
     read -r -u "${timep_fd_logID}" logID
     [[ ${logID} ]] || break
-    (( logID = 16#${logID} ))
     _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
     printf '"'"'\n'"'"' >&${timep_fd_done}
 done'
@@ -1386,14 +1386,20 @@ done'
 
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
+
+        (( kkDiff = kk - kkMin + 1 ))
       
         {
             while (( kk >= kkMin )); do
-                printf '%X\n' "${kk}" >&${timep_fd_logID} && ((kk--)) || read -r -u "${fd_sleep}" -t 0.1
+                if printf '%s\n' "${kk}" >&${timep_fd_logID}; then
+                    ((kk--))
+                else
+                    read -r -u "${fd_sleep}" -t 0.1 _ 
+                fi
             done
         } &
         
-        while (( kk - kkMin > nWorker )) && (( nWorker < nCPU )); do
+        while (( kkDiff > nWorker )) && (( nWorker < nCPU )); do
             eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
   }
@@ -1402,7 +1408,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             ((nWorker++))
         done
         
-        while (( kk - kkMin < nWorker )); do 
+        while (( kkDiff < nWorker )); do 
             printf '\n' >&${timep_fd_logID}
             ((nWorker--))
         done
@@ -1424,7 +1430,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     while (( nWorker > 0 )); do
         printf '\n' >&${timep_fd_logID}
         ((nWorker--))
-    done        
+    done    
+
+    exec {timep_fd_logID}>&- 
+    exec {timep_fd_done}>&-    
 
     read -r -u "${fd_sleep}" -t 0.01
 
