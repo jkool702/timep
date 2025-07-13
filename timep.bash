@@ -1340,8 +1340,10 @@ _timep_getFuncSrc() {
     timep_LOG_NESTING=()
     kk=0
     while read -r nn; do
-        timep_LOG_NESTING[${#nn}]+="${timep_LOG_NAME[$kk]}"$'\n';
-        ((kk++));
+       (( nn1 = 2 * ${#nn} ))
+       [[ "${timep_LOG_NAME[$kk]}" == *'}' ]] && ((nn1++))
+        timep_LOG_NESTING[${nn1}]+="${timep_LOG_NAME[$kk]}"$'\n'
+        ((kk++))
     done < <(printf '%s\n' "${timep_LOG_NAME[@]}" | sed -E 's/^.*\/log\.([^\/]*)$/\1/; s/[^\.]//g')
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
 
@@ -1349,7 +1351,7 @@ _timep_getFuncSrc() {
     mapfile -t timep_LOG_NAME < <(for kk in "${!timep_LOG_NESTING[@]}"; do sort -V <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; done)
 
     # get indicies for each nesting lvl
-    mapfile -t timep_LOG_NESTING_IND < <(jj0=0; for kk in "${!timep_LOG_NESTING[@]}"; do mapfile -t A <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; (( jj1 = jj0 + ${#A[@]} - 1 )); printf '%s:' "${#A[@]}"; eval "printf '%X ' {${jj1}..${jj0}..-1}"; (( jj0 = jj1 + 1 )); done)
+    mapfile -t timep_LOG_NESTING_IND < <(jj0=0; for kk in "${!timep_LOG_NESTING[@]}"; do mapfile -t A <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; printf '%s\n' "${jj0}"; (( jj0 += ${#A[@]} )); done)
 
     timep_nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
 
@@ -1374,7 +1376,7 @@ done'
     export -f _timep_PROCESS_LOG
 
     timep_LOG_NUM="${#timep_LOG_NAME[@]}"
-    kk="${timep_LOG_NESTING_IND[-1]%%\:*}"
+    (( kk = timep_LOG_NUM - 1 ))
     jj=0
     nWorker=1
 
@@ -1386,9 +1388,11 @@ done'
 
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         mapfile -t timep_LOG_NESTING_IND_CUR <<<"${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]// /$'\n'}"
-        timep_LOG_NESTING_IND_CUR[0]="${timep_LOG_NESTING_IND_CUR[0]#*\:}"
+      
         {
-            printf '%s\n' "${timep_LOG_NESTING_IND_CUR[@]#*\:}" >&${timep_fd_logID}
+            while (( kk >= timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}] )); do
+                printf '%X\n' "${kk}" >&${timep_fd_logID} && ((kk--)) || read -r -u "${fd_sleep}" -t 0.1
+            done
         } &
         while (( ${#timep_LOG_NESTING_IND_CUR[@]} > nWorker )) && (( nWorker < nCPU )); do
             eval '{ coproc p'"${nWorker}"' {
