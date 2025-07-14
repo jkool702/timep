@@ -1446,10 +1446,8 @@ done'
 
         {
             for kk1 in "${kkNeed[@]:${kkMin}}"; do
-                until printf '%s\n' "${kk1}" >&${timep_fd_logID}; do 
-                    read -r -u "${fd_sleep}" -t 0.1
-                done
-            done  
+                printf '%s\n' "${kk1}" >&${timep_fd_logID}
+            done
         } &
 
         while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
@@ -1484,9 +1482,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 _timep_NUM_RUNNING "${pAll_PID[@]}" || {
                     {
                         for kk1 in "${kkNeed[@]:${kkMin}}"; do
-                            until printf '%s\n' "${kk1}" >&${timep_fd_logID}; do 
-                                read -r -u "${fd_sleep}" -t 0.1
-                            done
+                            [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
+                             printf '%s\n' "${kk1}" >&${timep_fd_logID}
                         done   
                     } &
                     (( nWorker == 0 )) && {
