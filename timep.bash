@@ -1034,9 +1034,21 @@ _timep_FILE_EXISTS() {
     return 1
 }
 
-_timep_IS_RUNNING() {
-    eval "$(printf '[[ -d "/proc/%s" ]] || ' "${@}"; echo 'return 1')"
-    return 0
+_timep_NUM_RUNNING() {
+    local -i n=0
+    local nn
+
+    for nn in "${@}"; do
+        [[ -d "/proc/${nn}" ]] && ((n++))
+    done
+    
+    if (( n < nWorker )); then
+        printf -v nRunning '%s' "${n}"
+        return 1
+    else
+        printf -v nRunning '%s' "${n}"
+        return 0
+    fi
 }
 
 shopt -s extglob
@@ -1413,13 +1425,14 @@ done'
     export -f _timep_EPOCHREALTIME_SUM_ALT
     export -f _timep_PERCENT_AVG_ALT
     export -f _timep_FILE_EXISTS
-    export -f _timep_IS_RUNNING
+    export -f _timep_NUM_RUNNING
     export -f _timep_PROCESS_LOG
 
     timep_LOG_NUM="${#timep_LOG_NAME[@]}"
     (( kk = timep_LOG_NUM - 1 ))
     jj=0
     nWorker=1
+    nRunning=1
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
 
     eval '{ coproc p0 {
@@ -1472,7 +1485,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 unset "kkNeed[$doneInd]"
                 printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
             elif (( nRetry < 3 )); then
-                _timep_IS_RUNNING "${pAll_PID[@]}" || {
+                _timep_NUM_RUNNING "${pAll_PID[@]}" || {
                     {
                         for kk in "${kkNeed[@]:${kkMin}}"; do
                             if printf '%s\n' "${kk}" >&${timep_fd_logID}; then
@@ -1482,7 +1495,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                             fi
                         done   
                     } &
-                    (( nWorker = nWorker + kkMin - ${#kkNeed[@]} ))
                     (( nWorker == 0 )) && {
                         eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
@@ -1512,7 +1524,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         ((nWorker--))
     done
 
-    wait "${pAll_PID[@]}"
+    wait "${pAll_PID[@]}" &>/dev/null
 
     read -r -u "${fd_sleep}" -t 0.01
 
