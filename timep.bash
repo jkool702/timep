@@ -931,10 +931,10 @@ for kk in {0..9999}; do
     :
 done >/dev/null
 
-(( tSum0 = 10#${t1/./} - 10#${t0//./} ))
+(( tSum0 = 10#${t1//./} - 10#${t0//./} ))
 tSum1=0
 for kk in {0..9999}; do
-    (( tSum1 = tSum1 + 10#${t11[$kk]/./} - 10#${t00[$kk]//./} ))
+    (( tSum1 = tSum1 + 10#${t11[$kk]//./} - 10#${t00[$kk]//./} ))
 done
 
 (( time_RUNTIME_CORRECTION = ( 5000 + $tSum1 - $tSum0 ) / 10000 ))
@@ -961,12 +961,12 @@ _timep_EPOCHREALTIME_DIFF_ALT() {
     local tDiff d d6
 
     if (( ${#} >= 2 )) && [[ ${1//[^0-9]/} ]] && [[ ${2//[^0-9]/} ]]; then
-        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} ))
+        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} - time_RUNTIME_CORRECTION ))
     elif (( ${#} == 1 )) && [[ "${1}" == *[0-9]*\ *[0-9]* ]]; then
         local a1 a2
         a1="${1% *}"
         a2="${1#* }"
-        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} ))
+        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - time_RUNTIME_CORRECTION ))
     else
         printf '%s' '0.000001'
         return 1
