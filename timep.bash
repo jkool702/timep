@@ -82,15 +82,16 @@ timep() {
     #
     ################################################################################################################################################################
 (
+
     # check that basic requirements to run timep are met
     # to disable this check, call timep via 'timep_DISABLE_CHECKS=1 timep <...>'
     [[ ${timep_DISABLE_CHECKS} ]] || { [[ -f /proc/self/stat ]] && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
 
     shopt -s extglob
 
-    local timep_runType timep_DEBUG_FLAG timep_flameGraphFlag timep_deleteFlag timep_noOutFlag timep_timeFlag IFS0 kk nn
-    local -a timep_outTypeA
-    local -gx timep_TMPDIR
+    local IFS0 jj kk kk0 kk1 nn logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_runTimeCur timep_runType timep_TIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST u varList0
+    local -a pAll_PID timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND timep_outTypeA
+    local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2
 
     if [[ ${timep_DEBUG} ]] && { [[ "${timep_DEBUG}" == '1' ]] || [[ "${timep_DEBUG}" == 'true' ]]; }; then
         timep_DEBUG_FLAG=true
@@ -620,7 +621,6 @@ _timep_getFuncSrc() {
         timep_STARTTIME[${timep_FNEST_CUR}]="${EPOCHREALTIME}"
     }'
 
-
     # overload the trap builtin to allow the use of custom EXIT/RETURN/DEBUG traps
 
     export -p -f trap &>/dev/null && export -n -f trap
@@ -639,11 +639,11 @@ _timep_getFuncSrc() {
             shift 1
             while (( $# > 1)); do
                 case "$1" in
-                    EXIT|RETURN|SIGHUP|SIGINT|SIGQUIT|SIGILL|SIGTRAP|SIGABRT|SIGBUS|SIGFPE|SIGKILL|SIGUSR1|SIGSEGV|SIGUSR2|SIGPIPE|SIGALRM|SIGTERM|SIGSTKFLT|SIGCHLD|SIGCONT|SIGSTOP|SIGTSTP|SIGTTIN|SIGTTOU|SIGURG|SIGXCPU|SIGXFSZ|SIGVTALRM|SIGPROF|SIGWINCH|SIGIO|SIGPWR|SIGSYS|SIGRTMIN|SIGRTMAX|SIGRTMIN[+-]*|SIGRTMAX[+-]*)
+                    EXIT|RETURN|DEBUG|ERR|SIGHUP|SIGINT|SIGQUIT|SIGILL|SIGTRAP|SIGABRT|SIGBUS|SIGFPE|SIGKILL|SIGUSR1|SIGSEGV|SIGUSR2|SIGPIPE|SIGALRM|SIGTERM|SIGSTKFLT|SIGCHLD|SIGCONT|SIGSTOP|SIGTSTP|SIGTTIN|SIGTTOU|SIGURG|SIGXCPU|SIGXFSZ|SIGVTALRM|SIGPROF|SIGWINCH|SIGIO|SIGPWR|SIGSYS|SIGRTMIN|SIGRTMAX|SIGRTMIN[+-]*|SIGRTMAX[+-]*)
                         break
                     ;;
                     *)
-                        trapStr+="${1:+ }${1}"
+                        trapStr+="${trapStrc:+ }${1}"
                         shift 1
                     ;;
                 esac
@@ -861,7 +861,6 @@ _timep_getFuncSrc() {
     printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s"\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" >&2
     unset IFS
 
-
     # DEBUG OUTPUT - print log contents
     ${timep_DEBUG_FLAG} && {
         mapfile -t timep_LOG_A < <(printf '%s\n' "${timep_TMPDIR}/.log/log"* | sort -V)
@@ -889,9 +888,8 @@ _timep_getFuncSrc() {
         \rm -f "${nn}"
     done
 
-    find  "${timep_TMPDIR}/.log" -maxdepth 1 -name 'log.*' -empty -exec \rm {} +
-
-
+    # shellcheck disable=SC1001
+    find  "${timep_TMPDIR}/.log" -maxdepth 1 -name 'log.*' -empty -exec rm \-f {} +
 
     ##### POST-PROCESSING #####
 
@@ -905,10 +903,16 @@ _timep_getFuncSrc() {
 
     # define helper functions for getting runtime from timestamp differences and for summing runtimes
 
+#    export LOCALE=C
+#    export LC_ALL=C
+
     _timep_EPOCHREALTIME_DIFF() {
         local tDiff d d6
 
-        { [[ ${endTimesA[$1]} ]] && [[ ${startTimesA[$1]} ]]; } || return
+        { [[ ${endTimesA[$1]//[^0-9]/} ]] && [[ ${startTimesA[$1]//[^0-9]/} ]]; } || {
+            runtime='0.000001'
+            return 1
+        }
         (( tDiff = 10#${endTimesA[$1]//[^0-9]/} - 10#${startTimesA[$1]//[^0-9]/} ))
         printf -v d '%0.7d' "${tDiff#-}"
         (( d6 = ${#d} - 6 ))
@@ -919,15 +923,16 @@ _timep_getFuncSrc() {
     _timep_EPOCHREALTIME_DIFF_ALT() {
         local tDiff d d6
 
-        { (( ${#} >= 2 )) && [[ $1 ]] && [[ $2 ]]; } || { (( ${#} == 1 )) && [[ "${1}" == *\ * ]]; } || return
-
-        if (( ${#} >= 2 )); then
+        if (( ${#} >= 2 )) && [[ ${1//[^0-9]/} ]] && [[ ${2//[^0-9]/} ]]; then
             (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} ))
-        else
+        elif (( ${#} == 1 )) && [[ "${1}" == *[0-9]*\ *[0-9]* ]]; then
             local a1 a2
             a1="${1% *}"
             a2="${1#* }"
             (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} ))
+        else
+            printf '%s' '0.000001'
+            return 1
         fi
 
         printf -v d '%0.7d' "${tDiff#-}"
@@ -938,22 +943,24 @@ _timep_getFuncSrc() {
     _timep_EPOCHREALTIME_SUM() {
         local tSum tSum0 d d6
 
-        (( ${#runTimesA[@]} == 0 )) && return
+        (( ${#runTimesA[@]} == 0 )) && return 1
         (( ${#runTimesA[@]} == 1 )) && {
             # short circuit if only 1 time
             runTimeTotal="${runTimesA[*]}"
-            return
+            return 0
         }
 
-        printf -v tSum '+10#%s' ${runTimesA[@]//[^0-9]/}
+        printf -v tSum '+10#%s' "${runTimesA[@]//[^0-9]/}"
+        tSum="${tSum// /+10#}"
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
+        tSum="${tSum%+10#}"
         until [[ "${tSum}" == "${tSum0}" ]]; do
             tSum0="${tSum}"
             tSum="${tSum//+10#+/+}"
+            tSum="${tSum%+10#}"
         done
-        tSum="${tSum%+10#}"
-        (( tSum = 0${tSum} ))
+        (( tSum = 0${tSum//s/} ))
         printf -v d '%0.7d' "${tSum}"
         (( d6 = ${#d} - 6 ))
         printf -v runTimeTotal '%s.%s' "${d:0:$d6}" "${d:$d6}"
@@ -963,21 +970,23 @@ _timep_getFuncSrc() {
         local tSum tSum0 d d6
 
         (( ${#} == 0 )) && return
-        (( ${#} == 1 )) && ! [[ "${1}" == *\ * ]] && {
+        (( ${#} == 1 )) && ! [[ "${1}" == *[0-9]*\ *[0-9]* ]] && {
             # short circuit if only 1 time
             echo "${1}"
             return
         }
 
-        printf -v tSum '+10#%s' ${@//[^0-9]/}
+        printf -v tSum '+10#%s' "${@//[^0-9]/}"
+        tSum="${tSum// /+10#}"
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
+        tSum="${tSum%+10#}"
         until [[ "${tSum}" == "${tSum0}" ]]; do
             tSum0="${tSum}"
             tSum="${tSum//+10#+/+}"
+            tSum="${tSum%+10#}"
         done
-        tSum="${tSum%+10#}"
-        (( tSum = 0${tSum//+10#+/+} ))
+        (( tSum = 0${tSum//s/} ))
         printf -v d '%0.7d' "${tSum}"
         (( d6 = ${#d} - 6 ))
         printf '%s.%s' "${d:0:$d6}" "${d:$d6}"
@@ -986,26 +995,41 @@ _timep_getFuncSrc() {
     _timep_PERCENT_AVG_ALT() {
         local tSum tSum0 d d2
 
-        (( ${#} == 0 )) && return
-        (( ${#} == 1 )) && ! [[ "${1}" == *\ * ]] && {
+        (( ${#} == 0 )) && return 1
+        (( ${#} == 1 )) && ! [[ "${1}" == *[0-9]*\ *[0-9]* ]] && {
             # short circuit if only 1 time
             echo "${1}"
-            return
+            return 0
         }
 
-        printf -v tSum '+10#%s' ${@//[^0-9]/}
+        printf -v tSum '+10#%s' "${@//[^0-9]/}"
+        tSum="${tSum// /+10#}"
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
+        tSum="${tSum%+10#}"
         until [[ "${tSum}" == "${tSum0}" ]]; do
             tSum0="${tSum}"
             tSum="${tSum//+10#+/+}"
+            tSum="${tSum%+10#}"
         done
-        tSum="${tSum%+10#}"
         (( tSum = 0${tSum//\%/} ))
         (( tSum = tSum / ${#} ))
         printf -v d '%0.4d' "${tSum}"
         (( d2 = ${#d} - 2 ))
         printf '%s.%s%%' "${d:0:$d2}" "${d:$d2}"
+    }
+
+    _timep_FILE_EXISTS() {
+        local w
+
+        [[ -s "${1}" ]] && return 0
+
+        for w in {01..09} {10..90..10}; do
+            read -r -u $fd_sleep -t "0.${w}" _
+            [[ -s "${1}" ]] && return 0
+        done
+
+        return 1
     }
 
     local -g timep_LOG_NESTING_MAX timep_LOG_NESTING_CUR
@@ -1051,6 +1075,7 @@ _timep_getFuncSrc() {
             cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
             cmd="$(eval echo "${cmd}")"
             cmd="${cmd//$'\n'/\$"'"\\n"'"}"
+            cmd="${cmd//$'\t'/\$"'"\\t"'"}"
             cmdA[$kk]="${cmd}"
 
             # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
@@ -1061,7 +1086,7 @@ _timep_getFuncSrc() {
             elif (( nPipe > 1 )) && [[ "${cmd}" == '(('*@([<>=])*'))' ]]; then
                 (( kk1 = kk - 1 ))
                 IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
-               (( nPipe0 > 1 )) && [[ "${cmd0}" == @([[:print:]])'(('*=*'))'@([[:print:]])*([[:space:]]) ]] && {
+                (( nPipe0 > 1 )) && [[ "${cmd0}" == @([[:print:]])'(('*=*'))'@([[:print:]])*([[:space:]]) ]] && {
                     nPipe=1
                     nPipeA[$kk]=1
                     nPipeNextIgnoreFlag=true
@@ -1069,21 +1094,21 @@ _timep_getFuncSrc() {
             fi
 
             # check if cmd is a subshell/bg fork/function that needs to be merged up
-            if [[ "${cmdA[$kk]#"'"}" == '<< ('*'): '*' >>'* ]]; then
+            if [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]]; then
                 normalCmdFlag=false
 
                 # record which log to merge up and where
                 mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
 
                 # read in the endtime + runtime from the log
-                [[ "${cmdA[$kk]#"'"}" == '<< (BACKGROUND FORK): '*' >>'* ]] || {
-                    [[ -s "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }" ]] && {
+                [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
+                    _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }" && {
                         read -r runTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
                         [[ ${runTime} ]] && runTimesA[$kk]="${runTime}"
                     }
                 }
                 [[ "${endTimesA[$kk]}" == '-' ]] && {
-                    [[ -s "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }" ]] && {
+                    _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }" && {
                         read -r endTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"
                         [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && endTimesA[$kk]="${endTime}"
                     }
@@ -1091,7 +1116,6 @@ _timep_getFuncSrc() {
             else
                 normalCmdFlag=true
             fi
-
 
             # single-command command/process substitutions dont get a endtime logged (uses endTime='+' as indicator), since they wont trigger a EXIT trap
             # figure out the most reasonable endtimeby looking at starttimes for the parent, then grandparent, etc.
@@ -1105,7 +1129,7 @@ _timep_getFuncSrc() {
                             if (( 10#${endTime//./} > 10#${startTimesA[$kk]//./} )); then
                                 break 2
                             else
-                                endTime=0
+                                endTime="${timep_TIME_DONE}"
                             fi
                         done <"${log_tmp}"
                     }
@@ -1180,7 +1204,7 @@ _timep_getFuncSrc() {
 
                 # print stack trace for flamegraph
                 runTime="${runTimesA[$kk]//./}"
-                printf '%s%s\t%s\n' "${fg0}" "${cmd//\;/\:}" "${runTime##+(0)}"  >>"${1%\/*}/out.flamegraph.full"
+                printf '%s%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\:}" "${runTime##+(0)}"  >>"${1%\/*}/out.flamegraph.full"
             }
 
         done
@@ -1188,7 +1212,8 @@ _timep_getFuncSrc() {
         # get total runtime
         case ${#logA[@]} in
             1) runTimeTotal="${runTimesA[*]}" ;;
-            *) _timep_EPOCHREALTIME_SUM  ;; 
+            *) _timep_EPOCHREALTIME_SUM  ;;
+
         esac
 
         [[ ${runTimeTotal} ]] || runTimeTotal='0.000001'
@@ -1351,13 +1376,23 @@ _timep_getFuncSrc() {
     # get indicies for each nesting lvl
     mapfile -t timep_LOG_NESTING_IND < <(jj0=0; for kk in "${!timep_LOG_NESTING[@]}"; do mapfile -t A <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; printf '%s\n' "${jj0}"; (( jj0 += ${#A[@]} )); done)
 
-    timep_nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
+    nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
+    printf '\nDETECTED %s CPUs\n' "${nCPU}" >&2
+    [[ $nCPU ]] || (( nCPU > 0 )) || nCPU=1
+    (( nWorkerMax = ( 1 + nCPU ) / 2 ))
 
-    exec {timep_fd_logID}<><(:) 
+    exec {timep_fd_logID}<><(:)
+
     exec {timep_fd_done}<><(:)
+    exec {timep_fd_lock}<><(:)
 
-    timep_coprocSrc='while true; do
+    printf '\n' >&${timep_fd_lock}
+
+    timep_coprocSrc='declare logID
+while true; do
+    read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
+    printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
     _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
     printf '"'"'\n'"'"' >&${timep_fd_done}
@@ -1371,6 +1406,7 @@ done'
     export -f _timep_EPOCHREALTIME_DIFF_ALT
     export -f _timep_EPOCHREALTIME_SUM_ALT
     export -f _timep_PERCENT_AVG_ALT
+    export -f _timep_FILE_EXISTS
     export -f _timep_PROCESS_LOG
 
     timep_LOG_NUM="${#timep_LOG_NAME[@]}"
@@ -1388,18 +1424,18 @@ done'
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
 
         (( kkDiff = kk - kkMin + 1 ))
-      
+
         {
             while (( kk >= kkMin )); do
                 if printf '%s\n' "${kk}" >&${timep_fd_logID}; then
                     ((kk--))
                 else
-                    read -r -u "${fd_sleep}" -t 0.1 _ 
+                    read -r -u "${fd_sleep}" -t 0.1
                 fi
             done
         } &
-        
-        while (( kkDiff > nWorker )) && (( nWorker < nCPU )); do
+
+        while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
             eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
   }
@@ -1407,11 +1443,13 @@ done'
 pAll_PID+=("${p'"${nWorker}"'_PID}")'
             ((nWorker++))
         done
-        
-        while (( kkDiff < nWorker )); do 
+
+        while (( nWorker > kkDiff )); do
             printf '\n' >&${timep_fd_logID}
             ((nWorker--))
         done
+
+        printf '\n\nPROCESSING NESTING LVL %s (%s LOGS) -- USING %s WORKERS (MAX: %s)\n' "${timep_LOG_NESTING_CUR}" "${kkDiff}" "${nWorker}" "${nWorkerMax}" >&2
 
         read -r -u "${fd_sleep}" -t 0.01
 
@@ -1420,9 +1458,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             ((kk--))
             ((jj++))
             printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "$jj" "${timep_LOG_NUM}" >&2
-        done 
-        
-        read -r -u "${fd_sleep}" -t 0.01
+        done
+
+        read -r -u "${fd_sleep}" -t 0.1
     done
 
     read -r -u "${fd_sleep}" -t 0.01
@@ -1430,10 +1468,17 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     while (( nWorker > 0 )); do
         printf '\n' >&${timep_fd_logID}
         ((nWorker--))
-    done    
+    done
 
-    exec {timep_fd_logID}>&- 
-    exec {timep_fd_done}>&-    
+    wait "${pAll_PID[${nWorker}]}"
+
+    read -r -u "${fd_sleep}" -t 0.01
+
+    exec {timep_fd_logID}>&-
+
+    exec {timep_fd_done}>&-
+
+    exec {timep_fd_lock}>&-
 
     read -r -u "${fd_sleep}" -t 0.01
 
