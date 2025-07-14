@@ -90,7 +90,7 @@ timep() {
     shopt -s extglob
 
     local IFS0 jj kk kk0 kk1 nn logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_runTimeCur timep_runType timep_TIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST u varList0
-    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX
+    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX time_RUNTIME_CORRECTION
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2
     local -a pAll_PID timep_outTypeA
     local -ag timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
@@ -908,6 +908,41 @@ _timep_getFuncSrc() {
 #    export LOCALE=C
 #    export LC_ALL=C
 
+_timep_GET_RUNTIME_CORRECTION() {
+    
+    local t0 t1 kk tSum0 tSum1 nPipe
+    local -a t00 t11
+
+t0=$EPOCHREALTIME
+for kk in {0..9999}; do
+    echo
+done >/dev/null
+t1=$EPOCHREALTIME
+
+t11=()
+t00=()
+
+for kk in {0..9999}; do
+    t00+=($EPOCHREALTIME)
+    echo
+    nPipe=${#PIPESTATUS[@]}
+    t11+=($EPOCHREALTIME)
+    echo
+    :
+done >/dev/null
+
+(( tSum0 = 10#${t1/./} - 10#${t0//./} ))
+tSum1=0
+for kk in {0..9999}; do
+    (( tSum1 = tSum1 + 10#${t11[$kk]/./} - 10#${t00[$kk]//./} ))
+done
+
+(( time_RUNTIME_CORRECTION = ( 5000 + $tSum1 - $tSum0 ) / 10000 ))
+
+}
+
+_timep_GET_RUNTIME_CORRECTION
+
 _timep_EPOCHREALTIME_DIFF() {
     local tDiff d d6
 
@@ -915,7 +950,7 @@ _timep_EPOCHREALTIME_DIFF() {
         runtime='0.000001'
         return 1
     }
-    (( tDiff = 10#${endTimesA[$1]//[^0-9]/} - 10#${startTimesA[$1]//[^0-9]/} ))
+    (( tDiff = 10#${endTimesA[$1]//[^0-9]/} - 10#${startTimesA[$1]//[^0-9]/} - time_RUNTIME_CORRECTION ))
     printf -v d '%0.7d' "${tDiff#-}"
     (( d6 = ${#d} - 6 ))
     printf -v runTime '%s.%s' "${d:0:$d6}" "${d:$d6}"
