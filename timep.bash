@@ -90,7 +90,7 @@ timep() {
     shopt -s extglob
 
     local IFS0 jj kk kk0 kk1 nn logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_runTimeCur timep_runType timep_TIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST u varList0
-    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX time_RUNTIME_CORRECTION
+    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_RUNTIME_CORRECTION
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2
     local -a pAll_PID timep_outTypeA
     local -ag timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
@@ -909,39 +909,40 @@ _timep_getFuncSrc() {
 #    export LC_ALL=C
 
 _timep_GET_RUNTIME_CORRECTION() {
+## corrects for the overhead of adding nPipe=${#PIPESTATUS[@]} before every command
     
-    local t0 t1 kk tSum0 tSum1 nPipe
-    local -a t00 t11
+    local tSum0 tSum1 N
 
-t0=$EPOCHREALTIME
-for kk in {0..9999}; do
-    echo
-done >/dev/null
-t1=$EPOCHREALTIME
+    if [[ "$1" == *[0-9]* ]]; then
+        N="$1"
+    else
+        N=10000
+    fi
 
-t11=()
-t00=()
+    (( NN = ( N<<1 ) + 1 ))
 
-for kk in {0..9999}; do
-    t00+=($EPOCHREALTIME)
-    echo
-    nPipe=${#PIPESTATUS[@]}
-    t11+=($EPOCHREALTIME)
-    echo
-    :
-done >/dev/null
+    tSum0="$(t0=$EPOCHREALTIME; 
+    for (( kk=0; kk<$NN; kk++)); do
+        :                       
+    done
+    t1=$EPOCHREALTIME;
+    (( tSum = 10#${t1//./} - 10#${t0//./} ))
+    echo "$tSum")"
 
-(( tSum0 = 10#${t1//./} - 10#${t0//./} ))
-tSum1=0
-for kk in {0..9999}; do
-    (( tSum1 = tSum1 + 10#${t11[$kk]//./} - 10#${t00[$kk]//./} ))
-done
+    tSum1="$(tSum=0; kk=0
+    trap 'nPipe=${#PIPESTATUS[@]}; 
+    t1=$EPOCHREALTIME; 
+    (( kk == 0 )) || (( tSum += 10#${t1//./} - 10#${t0//./} )); 
+    t0=$EPOCHREALTIME' DEBUG;
+    for (( kk=0; kk<$N; kk++)); do
+        :                       
+    done
+    echo "$tSum")"
 
-(( time_RUNTIME_CORRECTION = ( 5000 + $tSum1 - $tSum0 ) / 10000 ))
+    echo "$(( ( tSum1 - tSum0 + ( NN  >> 1 ) ) / NN ))"
 
 }
-
-_timep_GET_RUNTIME_CORRECTION
+timep_RUNTIME_CORRECTION="$(_timep_GET_RUNTIME_CORRECTION)"
 
 _timep_EPOCHREALTIME_DIFF() {
     local tDiff d d6
@@ -950,8 +951,9 @@ _timep_EPOCHREALTIME_DIFF() {
         runtime='0.000001'
         return 1
     }
-    (( tDiff = 10#${endTimesA[$1]//[^0-9]/} - 10#${startTimesA[$1]//[^0-9]/} - time_RUNTIME_CORRECTION ))
-    printf -v d '%0.7d' "${tDiff#-}"
+    (( tDiff = 10#${endTimesA[$1]//[^0-9]/} - 10#${startTimesA[$1]//[^0-9]/} - timep_RUNTIME_CORRECTION ))
+    (( tDiff <= 0 )) && tDiff=1
+    printf -v d '%0.7d' "${tDiff}"
     (( d6 = ${#d} - 6 ))
     printf -v runTime '%s.%s' "${d:0:$d6}" "${d:$d6}"
     runTimesA[$1]="${runTime}"
@@ -966,13 +968,14 @@ _timep_EPOCHREALTIME_DIFF_ALT() {
         local a1 a2
         a1="${1% *}"
         a2="${1#* }"
-        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - time_RUNTIME_CORRECTION ))
+        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
+        (( tDiff <= 0 )) && tDiff=1
     else
         printf '%s' '0.000001'
         return 1
     fi
 
-    printf -v d '%0.7d' "${tDiff#-}"
+    printf -v d '%0.7d' "${tDiff}"
     (( d6 = ${#d} - 6 ))
     printf '%s.%s' "${d:0:$d6}" "${d:$d6}"
 }
@@ -1560,7 +1563,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     read -r -u "${fd_sleep}" -t 0.01
 
-    printf '\nFINALIZING TIME PROFILE\n' >&2
+    printf '\n\nFINALIZING TIME PROFILE\n' >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}"
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.combined"
 
