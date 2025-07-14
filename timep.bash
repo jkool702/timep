@@ -1400,7 +1400,6 @@ _timep_PROCESS_LOG() {
     (( nWorkerMax = ( 1 + nCPU ) / 2 ))
 
     exec {timep_fd_logID}<><(:)
-
     exec {timep_fd_done}<><(:)
     exec {timep_fd_lock}<><(:)
 
@@ -1432,7 +1431,6 @@ done'
     (( kk = timep_LOG_NUM - 1 ))
     jj=0
     nWorker=1
-    nRunning=1
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
 
     eval '{ coproc p0 {
@@ -1447,13 +1445,11 @@ done'
         (( kkDiff = kk - kkMin + 1 ))
 
         {
-            while (( kk >= kkMin )); do
-                if printf '%s\n' "${kk}" >&${timep_fd_logID}; then
-                    ((kk--))
-                else
+            for kk1 in "${kkNeed[@]:${kkMin}}"; do
+                until printf '%s\n' "${kk1}" >&${timep_fd_logID}; do 
                     read -r -u "${fd_sleep}" -t 0.1
-                fi
-            done
+                done
+            done  
         } &
 
         while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
@@ -1487,12 +1483,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             elif (( nRetry < 3 )); then
                 _timep_NUM_RUNNING "${pAll_PID[@]}" || {
                     {
-                        for kk in "${kkNeed[@]:${kkMin}}"; do
-                            if printf '%s\n' "${kk}" >&${timep_fd_logID}; then
-                                ((kk--))
-                            else
+                        for kk1 in "${kkNeed[@]:${kkMin}}"; do
+                            until printf '%s\n' "${kk1}" >&${timep_fd_logID}; do 
                                 read -r -u "${fd_sleep}" -t 0.1
-                            fi
+                            done
                         done   
                     } &
                     (( nWorker == 0 )) && {
@@ -1529,9 +1523,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01
 
     exec {timep_fd_logID}>&-
-
     exec {timep_fd_done}>&-
-
     exec {timep_fd_lock}>&-
 
     read -r -u "${fd_sleep}" -t 0.01
