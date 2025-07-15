@@ -469,6 +469,13 @@ _timep_getFuncSrc() {
         else
             (( timep_LINENO_0 = LINENO - timep_LINENO_OFFSET[${timep_FNEST_CUR}] - timep_LINENO_OFFSET_0[${timep_FNEST_CUR}] ))
         fi
+        if [[ -z ${timep_PARENT_PGID0} ]] && [[ -z ${timep_PARENT_TPID0} ]] && (( timep_PARENT_PGID == timep_CHILD_PGID )) && (( timep_PARENT_PGID == timep_PARENT_TPID )) && ! (( timep_PARENT_PGID == timep_CHILD_TPID )); then
+            timep_IS_BG_INDICATOR='"'"'(^)'"'"'
+        elif (( timep_PARENT_PGID0 == timep_PARENT_TPID0 )) && (( timep_PARENT_PGID == timep_CHILD_PGID )) && (( timep_PARENT_PGID0 == timep_PARENT_PGID )) && (( timep_PARENT_TPID == timep_CHILD_TPID )) && ! (( timep_PARENT_PGID == timep_PARENT_TPID )); then
+            timep_IS_BG_INDICATOR='"'"'(^)'"'"'
+        else
+            timep_IS_BG_INDICATOR='"''"'
+        fi
         if ${timep_IS_SUBSHELL_FLAG}; then
             timep_NPIPE[${timep_FNEST_CUR}]=1
             timep_NPIDWRAP_PREV_0="${timep_NPIDWRAP}"
@@ -484,13 +491,6 @@ _timep_getFuncSrc() {
                 timep_BG_PID_PREV_0="-${timep_BG_PID_PREV_0}"
             else
                 timep_BG_PID_PREV_0='"''"'
-            fi
-            if [[ -z ${timep_PARENT_PGID0} ]] && [[ -z ${timep_PARENT_TPID0} ]] && (( timep_PARENT_PGID == timep_CHILD_PGID )) && (( timep_PARENT_PGID == timep_PARENT_TPID )) && ! (( timep_PARENT_PGID == timep_CHILD_TPID )); then
-                timep_IS_BG_INDICATOR='"'"'(^)'"'"'  
-            elif (( timep_PARENT_PGID0 == timep_PARENT_TPID0 )) && (( timep_PARENT_PGID == timep_CHILD_PGID )) && (( timep_PARENT_PGID0 == timep_PARENT_PGID )) && (( timep_PARENT_TPID == timep_CHILD_TPID )) && ! (( timep_PARENT_PGID == timep_PARENT_TPID )); then
-                timep_IS_BG_INDICATOR='"'"'(^)'"'"'
-            else
-                timep_IS_BG_INDICATOR='"''"'
             fi
             printf '"'"'1\t%s\t-\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_FNEST_CUR}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO[${timep_FNEST_CUR:-${#FUNCNAME[@]}}]:-${timep_LINENO_0}}" "${timep_BASH_COMMAND_PREV_0@Q}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_r"
             printf '"'"'1\t%s\t+\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}.0\t%s\t::\t%s\n'"'"' "${EPOCHREALTIME}" "${timep_FNEST_CUR}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}.${BASHPID}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO_0}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${BASH_COMMAND@Q} ${timep_IS_BG_INDICATOR}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_c"
@@ -551,17 +551,7 @@ _timep_getFuncSrc() {
                 timep_IS_BG_FLAG=true
                 timep_CMD_TYPE="SIMPLE FORK *"
             }
-             
-
-            if [[ -z ${timep_PARENT_PGID0} ]] && [[ -z ${timep_PARENT_TPID0} ]] && (( timep_PARENT_PGID == timep_CHILD_PGID )) && (( timep_PARENT_PGID == timep_PARENT_TPID )) && ! (( timep_PARENT_PGID == timep_CHILD_TPID )); then
-                    timep_IS_BG_INDICATOR='"'"'(^)'"'"'  
-            elif (( timep_PARENT_PGID0 == timep_PARENT_TPID0 )) && (( timep_PARENT_PGID == timep_CHILD_PGID )) && (( timep_PARENT_PGID0 == timep_PARENT_PGID )) && (( timep_PARENT_TPID == timep_CHILD_TPID )) && ! (( timep_PARENT_PGID == timep_PARENT_TPID )); then
-                    timep_IS_BG_INDICATOR='"'"'(^)'"'"'  
-            elif ${timep_IS_BG_FLAG}; then
-                timep_IS_BG_INDICATOR='"'"'(&)'"'"'
-            else
-                timep_IS_BG_INDICATOR='"''"'
-            fi
+            ${timep_IS_BG_FLAG} && [[ -z ${timep_IS_BG_INDICATOR} ]] && timep_IS_BG_INDICATOR='"'"'(&)'"'"'
             [[ -s "${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}" ]] && {
                 {
                     while read -r -u ${timep_FD} timep_ENDTIME0; do
@@ -929,7 +919,7 @@ _timep_getFuncSrc() {
 
 _timep_GET_RUNTIME_CORRECTION() {
 ## corrects for the overhead of adding nPipe=${#PIPESTATUS[@]} before every command
-    
+
     local tSum0 tSum1 N
 
     if [[ "$1" == *[0-9]* ]]; then
@@ -940,21 +930,21 @@ _timep_GET_RUNTIME_CORRECTION() {
 
     (( NN = ( N<<1 ) + 1 ))
 
-    tSum0="$(t0=$EPOCHREALTIME; 
+    tSum0="$(t0=$EPOCHREALTIME;
     for (( kk=0; kk<$NN; kk++)); do
-        :                       
+        :
     done
     t1=$EPOCHREALTIME;
     (( tSum = 10#${t1//./} - 10#${t0//./} ))
     echo "$tSum")"
 
     tSum1="$(tSum=0; kk=0
-    trap 'nPipe=${#PIPESTATUS[@]}; 
-    t1=$EPOCHREALTIME; 
-    (( kk == 0 )) || (( tSum += 10#${t1//./} - 10#${t0//./} )); 
+    trap 'nPipe=${#PIPESTATUS[@]};
+    t1=$EPOCHREALTIME;
+    (( kk == 0 )) || (( tSum += 10#${t1//./} - 10#${t0//./} ));
     t0=$EPOCHREALTIME' DEBUG;
     for (( kk=0; kk<$N; kk++)); do
-        :                       
+        :
     done
     echo "$tSum")"
 
@@ -1098,7 +1088,7 @@ _timep_NUM_RUNNING() {
     for nn in "${@}"; do
         [[ -d "/proc/${nn}" ]] && ((n++))
     done
-    
+
     if (( n < nWorker )); then
         printf -v nRunning '%s' "${n}"
         return 1
@@ -1542,7 +1532,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         for kk1 in "${kkNeed[@]:${kkMin}}"; do
                             [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
                              printf '%s\n' "${kk1}" >&${timep_fd_logID}
-                        done   
+                        done
                     } &
                     (( nWorker == 0 )) && {
                         eval '{ coproc p'"${nWorker}"' {
