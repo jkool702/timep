@@ -1227,7 +1227,7 @@ _timep_PROCESS_LOG() {
             (( nPipeA[$kk] = nPipeA[$kk1] - 1 ))
             (( isPipeA[$kk] = isPipeA[$kk1] + 1 ))
             endTimesA[$kk]="${endTimesA[$kk1]}"
-            cmdA[$kk]+=" | ${cmdA[$kk1]}"
+            cmdA[$kk]+=" | ${cmdA[$kk1]% \(\&\)}"
             (( nPipeA[$kk] == 1 )) && inPipeFlag=false
         elif (( nPipeA[$kk] > 1 )); then
             # this is the last element of a pipeline. set flag to indicate this
