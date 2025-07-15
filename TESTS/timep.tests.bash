@@ -75,6 +75,8 @@ trap 'echo got USR1; sleep .01' USR1
 kill -USR1 $BASHPID
 echo after-signal
 
+cat <(echo hi) <(echo bye) <(echo 1; echo 2; echo 3)
+
 for i in {1..3}; do
   while read x; do
     if (( x % 2 == 0 )); then
