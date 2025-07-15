@@ -4,7 +4,7 @@ this test computed several checksums on ~620k small files (max size 2 mb, total 
 ```
 mkdir -p /mnt/ramdisk
 mount | grep -qE '^tmpfs on /mnt/ramdisk ' || sudo mount -t tmpfs tmpfs /mnt/ramdisk 
-mkdir -p /mnt/ram,disk/usr
+mkdir -p /mnt/ramdisk/usr
 rsync -a --max-size=$((1<<22)) /usr/* /mnt/ramdisk/usr
 find /mnt/ramdisk/usr -type f >/mnt/ramdisk/flist
 find /mnt/ramdisk/usr -type f -print0 >/mnt/ramdisk/flist0
