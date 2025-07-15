@@ -100,9 +100,10 @@ timep() {
     else
         timep_DEBUG_FLAG=false
     fi
-    : "${timep_DEBUG_IDS_FLAG:=false}"
-    [[ "${timep_DEBUG_IDS_FLAG}" == '1' ]] && timep_DEBUG_IDS_FLAG=true
-    [[ "${timep_DEBUG_IDS_FLAG}" == 'true' ]] || timep_DEBUG_IDS_FLAG=false
+    case "${timep_DEBUG_IDS_FLAG,,}" in
+        true|1|y|yes|on) timep_DEBUG_IDS_FLAG=true ;;
+        *) timep_DEBUG_IDS_FLAG=false ;;
+    esac
 
     # parse flags
     timep_flameGraphFlag=false
