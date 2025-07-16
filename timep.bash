@@ -89,11 +89,11 @@ timep() {
 
     shopt -s extglob
 
-    local IFS0 jj kk kk0 kk1 nn logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_runTimeCur timep_runType timep_TIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST u varList0
-    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_RUNTIME_CORRECTION
-    local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2
+    local IFS0 jj kk kk0 kk1 nn logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_runTimeCur timep_runType timep_TIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST u varList0 a b
+    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_RUNTIME_CORRECTION 
+    local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 timep_CPU_TIME_MULT
     local -a pAll_PID timep_outTypeA
-    local -ag timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
+    local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
     if [[ ${timep_DEBUG} ]] && { [[ "${timep_DEBUG}" == '1' ]] || [[ "${timep_DEBUG}" == 'true' ]]; }; then
         timep_DEBUG_FLAG=true
@@ -942,13 +942,13 @@ _timep_GET_RUNTIME_CORRECTION() {
         :
     done
     t1=$EPOCHREALTIME;
-    (( tSum = 10#${t1//./} - 10#${t0//./} ))
+    (( tSum = 10#0${t1//./} - 10#0${t0//./} ))
     echo "$tSum")"
 
     tSum1="$(tSum=0; kk=0
     trap 'nPipe=${#PIPESTATUS[@]};
     t1=$EPOCHREALTIME;
-    (( kk == 0 )) || (( tSum += 10#${t1//./} - 10#${t0//./} ));
+    (( kk == 0 )) || (( tSum += 10#0${t1//./} - 10#0${t0//./} ));
     t0=$EPOCHREALTIME' DEBUG;
     for (( kk=0; kk<$N; kk++)); do
         :
@@ -963,12 +963,12 @@ timep_RUNTIME_CORRECTION="$(_timep_GET_RUNTIME_CORRECTION)"
 _timep_EPOCHREALTIME_DIFF() {
     local tDiff d d6
 
-    { [[ ${endTimesA[$1]//[^0-9]/} ]] && [[ ${startTimesA[$1]//[^0-9]/} ]]; } || {
+    { [[ ${end_TimesA[$1]//[^0-9]/} ]] && [[ ${start_TimesA[$1]//[^0-9]/} ]]; } || {
         runTime='0.000001'
         runTimesA[$kk]="${runTime}"
         return 1
     }
-    (( tDiff = 10#${endTimesA[$1]//[^0-9]/} - 10#${startTimesA[$1]//[^0-9]/} - timep_RUNTIME_CORRECTION ))
+    (( tDiff = 10#0${end_TimesA[$1]//[^0-9]/} - 10#0${start_TimesA[$1]//[^0-9]/} - timep_RUNTIME_CORRECTION ))
     (( tDiff <= 0 )) && tDiff=1
     printf -v d '%0.7d' "${tDiff}"
     (( d6 = ${#d} - 6 ))
@@ -980,12 +980,12 @@ _timep_EPOCHREALTIME_DIFF_ALT() {
     local tDiff d d6
 
     if (( ${#} >= 2 )) && [[ ${1//[^0-9]/} ]] && [[ ${2//[^0-9]/} ]]; then
-        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
+        (( tDiff = 10#0${2//[^0-9]/} - 10#0${1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
     elif (( ${#} == 1 )) && [[ "${1}" == *[0-9]*\ *[0-9]* ]]; then
         local a1 a2
         a1="${1% *}"
         a2="${1#* }"
-        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
+        (( tDiff = 10#0${a2//[^0-9]/} - 10#0${a1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
         (( tDiff <= 0 )) && tDiff=1
     else
         printf '%s' '0.000001'
@@ -1105,14 +1105,15 @@ _timep_NUM_RUNNING() {
         return 0
     fi
 }
+        
+local a b
+read -r _ a </proc/uptime
+read -r _ _ _ _ b _ </proc/stat
+(( timep_CPU_TIME_MULT = 10000 * ${a//./} / b ))
 
 _timep_CONVERT_CPU_TIME() {
     local nn a b t t6
-    [[ ${timep_CPU_TIME_MULT} ]] || {
-        read -r _ a </proc/uptime
-        read -r _ _ _ _ b _ </proc/stat
-        (( timep_CPU_TIME_MULT = 10000 * ${a//./} / b ))
-    }
+
     for nn in "$@"; do 
         (( t = ${nn} * timep_CPU_TIME_MULT ))
         (( t6 = ${#t} - 6 ))
@@ -1124,8 +1125,8 @@ _timep_CONVERT_CPU_TIME
  
 shopt -s extglob
 _timep_PROCESS_LOG() {
-    local kk kk1 nn r runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime startUTime endUTime startSTime endSTime runTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf normalCmdFlag nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0
-    local -a logA nPipeA startTimesA endTimesA startUTimesA endUTimesA startSTimesA endSTimesA runTimesA runTimesPA cpuTimesA cpuTimesPA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA utimeUA stimeUA sA fA eA fgA
+    local kk kk1 nn r runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime startUTime endUTime startSTime endSTime runTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf normalCmdFlag nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0 uTimeTotal sTimeTotal cpuTimeTotal uTimeP sTimeP cpuTimeP
+    local -a logA nPipeA start_TimesA end_TimesA start_uTimesA end_uTimesA start_sTimesA end_sTimesA runTimesA runTimesPA cpuTimesA cpuTimesPA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA utimeUA stimeUA sA fA eA fgA uTimesA sTimesA uTimesPA sTimesPA
 
     local -A linenoUniqLineA linenoUniqCountA linenoUniqTimesA linenoUniqTimesPA linenoUniqUTimesA linenoUniqUTimesPA linenoUniqSTimesA linenoUniqSTimesPA linenoUniqCTimesA linenoUniqCTimesPA
 
@@ -1158,12 +1159,12 @@ _timep_PROCESS_LOG() {
         # read log fields into variables
         IFS=$'\t' read -r nPipe startTime endTime startUTime endUTime startSTime endSTime func pid nexec lineno _ cmd <<<"${logA[$kk]}"
         nPipeA[$kk]="${nPipe}"
-        startTimesA[$kk]="${startTime}"
-        endTimesA[$kk]="${endTime}"
-        startUTimesA[$kk]="${startUTime}"
-        endUTimesA[$kk]="${endUTime}"
-        startSTimesA[$kk]="${startSTime}"
-        endSTimesA[$kk]="${endSTime}"
+        start_TimesA[$kk]="${startTime}"
+        end_TimesA[$kk]="${endTime}"
+        start_uTimesA[$kk]="${startUTime}"
+        end_uTimesA[$kk]="${endUTime}"
+        start_sTimesA[$kk]="${startSTime}"
+        end_sTimesA[$kk]="${endSTime}"
         funcA[$kk]="${func}"
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
@@ -1204,26 +1205,27 @@ _timep_PROCESS_LOG() {
                     [[ ${runTime} ]] && runTimesA[$kk]="${runTime}"
                 }
                  _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.run_utimes/log.${nexecA[$kk]#* }" && {
-                    read -r runUTime <"${timep_TMPDIR}/.log/.run_utimes/log.${nexecA[$kk]#* }"
-                    [[ ${runTime} ]] && runUTimesA[$kk]="${runUTime}"
+                    read -r uTime <"${timep_TMPDIR}/.log/.run_utimes/log.${nexecA[$kk]#* }"
+                    [[ ${runTime} ]] && uTimesA[$kk]="${uTime}"
+
                 }
                  _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.run_stimes/log.${nexecA[$kk]#* }" && {
-                    read -r runSTime <"${timep_TMPDIR}/.log/.run_stimes/log.${nexecA[$kk]#* }"
-                    [[ ${runTime} ]] && runSTimesA[$kk]="${runSTime}"
+                    read -r sTime <"${timep_TMPDIR}/.log/.run_stimes/log.${nexecA[$kk]#* }"
+                    [[ ${runTime} ]] && sTimesA[$kk]="${sTime}"
                 }
             }
-            [[ "${endTimesA[$kk]}" == '-' ]] && {
+            [[ "${end_TimesA[$kk]}" == '-' ]] && {
                 _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }" && {
                     read -r endTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"
-                    [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && endTimesA[$kk]="${endTime}"
+                    [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && end_TimesA[$kk]="${endTime}"
                 }
                 _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.end_utimes/log.${nexecA[$kk]#* }" && {
                     read -r endTime <"${timep_TMPDIR}/.log/.end_utimes/log.${nexecA[$kk]#* }"
-                    [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && endTimesA[$kk]="${endTime}"
+                    [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && end_TimesA[$kk]="${endTime}"
                 }
                 _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.end_stimes/log.${nexecA[$kk]#* }" && {
                     read -r endTime <"${timep_TMPDIR}/.log/.end_stimes/log.${nexecA[$kk]#* }"
-                    [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && endTimesA[$kk]="${endTime}"
+                    [[ ${endTime} ]] && ! [[ "${endTime}" == '-' ]] && end_TimesA[$kk]="${endTime}"
                 }
             }
         else
@@ -1241,43 +1243,40 @@ _timep_PROCESS_LOG() {
             until [[ "${log_tmp}" == *'/log' ]]; do
                 [[ -s "${log_tmp}" ]] && {
                     while read -r _ endTime _ endUTime _ endSTime _ ; do
-                        if (( 10#${endTime//./} > 10#${startTimesA[$kk]//./} )); then
-                            break 2
-                        else
-                            endTime="${timep_TIME_DONE}"
-                        fi
+                        (( 10#0${endTime//./} > 10#0${start_TimesA[$kk]//./} )) && break 2
                     done <"${log_tmp}"
                 }
                 log_tmp="${log_tmp%.*}"
             done
 
             # if we still dont have a valid end time, use the global timep endtime
-            (( 10#${endTime//./} > 10#${startTimesA[$kk]//./} )) || endTime="${timep_TIME_DONE}"
+            (( 10#0${endTime//./} > 10#0${start_TimesA[$kk]//./} )) || endTime="${timep_TIME_DONE}"
 
             # if we still dont have a valid end time, figure out how long the parent command/process dsubstitution command ran for and add that to the starttime
-            (( 10#${endTime//./} > 10#${startTimesA[$kk]//./} )) || {
-                read -r _ t0 t1 _ < <(grep -F "${1%\[*}" <"${1%.*}")
-                if [[ $t0 ]] && [[ $t1 ]]; then
-                    endTime="$( _timep_EPOCHREALTIME_SUM_ALT "${startTimesA[$kk]}" "$(_timep_EPOCHREALTIME_DIFF_ALT "$t0" "$t1")" )"
-                else
-                    # if all else fails, set endtime to 1 us after start time so we still get a log entry and valid logs
-                    endTime="$( _timep_EPOCHREALTIME_SUM_ALT "${startTimesA[$kk]}" '0.000001' )"
-                fi
-            }
-            endTimesA[$kk]="${endTime}"
+#            (( 10#0${endTime//./} > 10#0${start_TimesA[$kk]//./} )) || {
+#                read -r _ t0 t1 _ < <(grep -F "${1%\[*}" <"${1%.*}")
+#                if [[ $t0 ]] && [[ $t1 ]]; then
+#                    endTime="$( _timep_EPOCHREALTIME_SUM_ALT "${start_TimesA[$kk]}" "$(_timep_EPOCHREALTIME_DIFF_ALT "$t0" "$t1")" )"
+#                else
+#                    # if all else fails, set endtime to 1 us after start time so we still get a log entry and valid logs
+#                    endTime="$( _timep_EPOCHREALTIME_SUM_ALT "${start_TimesA[$kk]}" '0.000001' )"
+#                fi
+#            }
+            end_TimesA[$kk]="${endTime}"
         }
 
         # merge pipelines
         if ${inPipeFlag}; then
             # we are in a pipeline, but not at the last element
-            # override nPipeA and endTimesA based on the values from the next command and append next command to current cmdA (with `|` in between)
+            # override nPipeA and end_TimesA based on the values from the next command and append next command to current cmdA (with `|` in between)
             # note that this makes the $kk corresponding to the 1st pipeline element the one we will log
             (( kk1 = kk + 1 ))
             (( nPipeA[$kk] = nPipeA[$kk1] - 1 ))
             (( isPipeA[$kk] = isPipeA[$kk1] + 1 ))
-            endTimesA[$kk]="${endTimesA[$kk1]}"
-            runUTimesA[$kk]="${runUTimesA[$kk1]}"
-            runSTimesA[$kk]="${runSTimesA[$kk1]}"
+            end_TimesA[$kk]="${end_TimesA[$kk1]}"
+            uTimesA[$kk]="${uTimesA[$kk1]}"
+            sTimesA[$kk]="${sTimesA[$kk1]}"
+
             cpuTimesA[$kk]="${cpuTimesA[$kk1]}"
             cmdA[$kk]+=" | ${cmdA[$kk1]% \(\&\)}"
             (( nPipeA[$kk] == 1 )) && inPipeFlag=false
@@ -1291,18 +1290,18 @@ _timep_PROCESS_LOG() {
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
         (( nPipeA[$kk] == 1 )) && [[ -z ${runTimesA[$kk]} ]] && _timep_EPOCHREALTIME_DIFF "$kk"
         [[ ${runTimesA[$kk]} ]] || runTimesA[$kk]='0.000001'
-        (( 10#${runTimesA[$kk]//./} > 0 )) || {
-            endTimesA[$kk]="$(_timep_EPOCHREALTIME_SUM_ALT "${startTimesA[$kk]}" '0.000001')"
+        (( 10#0${runTimesA[$kk]//./} > 0 )) || {
+            end_TimesA[$kk]="$(_timep_EPOCHREALTIME_SUM_ALT "${start_TimesA[$kk]}" '0.000001')"
             runTimesA[$kk]='0.000001'
         }
-        [[ ${endUTimesA[$kk]} ]] || {
-
-            (( endUTimesA[$kk] = ${startUTimesA[$kk]:-0} + ( ( timep_CPU_TIME_MULT / 2 ) + 10#${runTimesA[$kk]//./} ) / timep_CPU_TIME_MULT ))
-            (( endSTimesA[$kk] = ${startSTimesA[$kk]:-0} + ( ( timep_CPU_TIME_MULT / 2 ) + 10#${runTimesA[$kk]//./} ) / timep_CPU_TIME_MULT ))
+        [[ ${end_uTimesA[$kk]} ]] || {
+            (( end_uTimesA[$kk] = ${start_uTimesA[$kk]:-0} + ( ( timep_CPU_TIME_MULT / 2 ) + 10#0${runTimesA[$kk]//./} ) / timep_CPU_TIME_MULT ))
+            (( end_sTimesA[$kk] = ${start_sTimesA[$kk]:-0} + ( ( timep_CPU_TIME_MULT / 2 ) + 10#0${runTimesA[$kk]//./} ) / timep_CPU_TIME_MULT ))
         }    
-        (( runUTimesA[$kk] =  ${runUTimesA[$kk]:-0} + timep_CPU_TIME_MULT * ( endUTimesA[$kk] - startUTimesA[$kk] ) ))
-        (( runSTimesA[$kk] =  ${runSTimesA[$kk]:-0} + timep_CPU_TIME_MULT * ( endSTimesA[$kk] - startSTimesA[$kk] ) ))
-        (( cpuTimesA[$kk] =  ${cpuTimesA[$kk]:-0} + runUTimesA[$kk] + runUTimesA[$kk] ))
+        (( uTimesA[$kk] = 10#0${uTimesA[$kk]:-0} + timep_CPU_TIME_MULT * ( end_uTimesA[$kk] - start_uTimesA[$kk] ) ))
+        (( sTimesA[$kk] = 10#0${sTimesA[$kk]:-0} + timep_CPU_TIME_MULT * ( end_sTimesA[$kk] - start_sTimesA[$kk] ) ))
+        (( cpuTimesA[$kk] = 10#0${cpuTimesA[$kk]:-0} + uTimesA[$kk] + sTimesA[$kk] ))
+
         cpuTime="${cpuTimesA[$kk]}"
         
         # generate stack trace for flamegraph generation
@@ -1341,109 +1340,87 @@ _timep_PROCESS_LOG() {
     # get total runtime
     case ${#logA[@]} in
         1) 
-
             runTimeTotal="${runTimesA[*]:-1}"
-            runUTimeTotal="${runUTimesA[*]:-1}"
-            runSTimeTotal="${runSTimesA[*]:-1}"
+            uTimeTotal="${uTimesA[*]:-1}"
+            sTimeTotal="${sTimesA[*]:-1}"
+
             cpuTimeTotal="${cpuTimesA[*]:-1}" 
         ;;
         *) 
             _timep_EPOCHREALTIME_SUM 
 
-            printf -v runUTimeTotal '+%s' "${runUTimesA[@]}"
-            (( runUTimeTotal = 1${runUTimeTotal} ))
-            printf -v runSTimeTotal '+%s' "${runSTimesA[@]}"
-            (( runSTimeTotal = 1${runSTimeTotal} ))
+            printf -v uTimeTotal '+%s' "${uTimesA[@]}"
+            (( uTimeTotal = 10#0${uTimeTotal:-0} ))
+            printf -v sTimeTotal '+%s' "${sTimesA[@]}"
+            (( sTimeTotal = 10#0${sTimeTotal:-0} ))
             printf -v cpuTimeTotal '+%s' "${cpuTimesA[@]}"
-            (( cpuTimeTotal = 1${cpuTimeTotal} ))
+            (( cpuTimeTotal = 10#0${cpuTimeTotal:-0} ))
         ;;
     esac
 
     [[ ${runTimeTotal} ]] || runTimeTotal='0.000001'
 
     # write runtime and final endtime to .{end,run}time file
-    echo "${endTimesA[-1]}" >"${1%\/*}/.endtimes/${1##*\/}"
+    echo "${end_TimesA[-1]}" >"${1%\/*}/.endtimes/${1##*\/}"
     echo "${runTimeTotal}" >"${1%\/*}/.runtimes/${1##*\/}"
-    echo "${endUTimesA[-1]}" >"${1%\/*}/.end_utimes/${1##*\/}"
-    echo "${runUTimeTotal}" >"${1%\/*}/.run_utimes/${1##*\/}"
-    echo "${endSTimesA[-1]}" >"${1%\/*}/.end_stimes/${1##*\/}"
-    echo "${runSTimeTotal}" >"${1%\/*}/.run_stimes/${1##*\/}"
+    echo "${end_uTimesA[-1]}" >"${1%\/*}/.end_utimes/${1##*\/}"
+    echo "${uTimeTotal}" >"${1%\/*}/.run_utimes/${1##*\/}"
+    echo "${end_sTimesA[-1]}" >"${1%\/*}/.end_stimes/${1##*\/}"
+    echo "${sTimeTotal}" >"${1%\/*}/.run_stimes/${1##*\/}"
 
-    (( runTimeTotal0= 10#${runTimeTotal//./} ))
-    ((  ))
+    (( runTimeTotal0= 10#0${runTimeTotal//./} ))
 
     # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
     linenoA[0]="${linenoA[0]}.0"
     lineno1=0
-    (( runTimeP = ( 10000 * 10#${runTimesA[0]//./} ) / 10#${runTimeTotal0:-1} ))
-
-    if (( runUTimeTotal == 0 )); then
-        runUTimeP=0
-    else
-        (( runUTimeP = ( 10000 * 10#${runUTimesA[0]:-0} ) / 10#${runUTimeTotal:-1} ))
-    fi
-
-    if (( runSTimeTotal == 0 )); then
-        runSTimeP=0
-    else
-        (( runSTimeP = ( 10000 * 10#${runUTimesA[0]:-0} ) / 10#${runSTimeTotal:-1} ))
-    fi
-        
-    if (( cpuTimeTotal == 0 )); then
-        cpuTimeP=0
-    else
-       (( cpuTimeP = ( 10000 * 10#${cpuTimesA[0]:-0} ) / 10#${cpuTimeTotal:-1} ))
-    fi
-
+    (( runTimeP = ( 10000 * 10#0${runTimesA[0]//./} ) / 10#0${runTimeTotal0:-1} ))
     printf -v runTimeP '%0.4d' "$runTimeP"
     case "${runTimeP}" in
         10000) runTimesPA[0]=100.00 ;;
         *) runTimesPA[0]="${runTimeP:0:2}.${runTimeP:2}" ;;
     esac
 
-    if (( runUTimeTotal == 0 )); then
-        runUTimeP='0.00'
+    if (( uTimeTotal == 0 )); then
+        uTimeP='0.00'
     else
-        (( runUTimeP = ( 10000 * 10#${runUTimesA[0]:-0} ) / 10#${runUTimeTotal:-1} ))
-        printf -v runUTimeP '%0.4d' "$runUTimeP"
-        case "${runUTimeP}" in
-            10000) runUTimesPA[0]=100.00 ;;
-            *) runUTimesPA[0]="${runUTimeP:0:2}.${runUTimeP:2}" ;;
+        (( uTimeP = ( 10000 * 10#0${uTimesA[0]:-0} ) / 10#0${uTimeTotal:-1} ))
+        printf -v uTimeP '%0.4d' "$uTimeP"
+        case "${uTimeP}" in
+            10000) uTimesPA[0]=100.00 ;;
+            *) uTimesPA[0]="${uTimeP:0:2}.${uTimeP:2}" ;;
         esac
     fi
 
-    if (( runSTimeTotal == 0 )); then
-        runSTimeP='0.00'
+    if (( sTimeTotal == 0 )); then
+        sTimeP='0.00'
     else
-        (( runSTimeP = ( 10000 * 10#${runUTimesA[0]:-0} ) / 10#${runSTimeTotal:-1} ))
-        printf -v runSTimeP '%0.4d' "$runSTimeP"
-        case "${runSTimeP}" in
-            10000) runSTimesPA[0]=100.00 ;;
-            *) runSTimesPA[0]="${runSTimeP:0:2}.${runSTimeP:2}" ;;
+        (( sTimeP = ( 10000 * 10#0${sTimesA[0]:-0} ) / 10#0${sTimeTotal:-1} ))
+        printf -v sTimeP '%0.4d' "$sTimeP"
+        case "${sTimeP}" in
+            10000) sTimesPA[0]=100.00 ;;
+            *) sTimesPA[0]="${sTimeP:0:2}.${sTimeP:2}" ;;
         esac
     fi
         
     if (( cpuTimeTotal == 0 )); then
         cpuTimeP='0.00'
     else
-       (( cpuTimeP = ( 10000 * 10#${cpuTimesA[0]:-0} ) / 10#${cpuTimeTotal:-1} ))
+       (( cpuTimeP = ( 10000 * 10#0${cpuTimesA[0]:-0} ) / 10#0${cpuTimeTotal:-1} ))
         printf -v cpuTimeP '%0.4d' "$cpuTimeP"
         case "${cpuTimeP}" in
             10000) cpuTimesPA[0]=100.00 ;;
             *) cpuTimesPA[0]="${cpuTimeP:0:2}.${cpuTimeP:2}" ;;
         esac
     fi
-        
 
     linenoUniqA[0]="${linenoA[0]}"
     linenoUniq+=" ${linenoA[0]} "
     linenoUniqLineA[${linenoA[0]}]="0"
     linenoUniqCountA[${linenoA[0]}]="1"
     linenoUniqTimesA[${linenoA[0]}]="${runTimesA[0]}"
-    linenoUniqUTimesA[${linenoA[0]}]="${runUTimesA[0]}"
-    linenoUniqSTimesA[${linenoA[0]}]="${runSTimesA[0]}"
+    linenoUniqUTimesA[${linenoA[0]}]="${uTimesA[0]}"
+    linenoUniqSTimesA[${linenoA[0]}]="${sTimesA[0]}"
     linenoUniqCTimesA[${linenoA[0]}]="${cpuTimesA[0]}"
-
 
     for (( kk=1; kk<${#logA[@]}; kk++ )); do
         (( kk1 = kk - 1 ))
@@ -1457,7 +1434,8 @@ _timep_PROCESS_LOG() {
         if (( runTimeTotal0 == 0 )); then
             runTimeP=0
         else
-            (( runTimeP = ( 10000 * 10#${runTimesA[$kk]//./} ) / 10#${runTimeTotal0:-1} ))
+            (( runTimeP = ( 10000 * 10#0${runTimesA[$kk]//./} ) / 10#0${runTimeTotal0:-1} ))
+
         fi
 
         printf -v runTimeP '%0.4d' "$runTimeP"
@@ -1466,32 +1444,34 @@ _timep_PROCESS_LOG() {
             *) runTimesPA[$kk]="${runTimeP:0:2}.${runTimeP:2}" ;;
         esac
 
-        if (( runUTimeTotal == 0 )) || (( runUTimesA[$kk] == 0 )); then
-            runUTimesPA='0.00'
+        if (( uTimeTotal == 0 )) || (( uTimesA[$kk] == 0 )); then
+            uTimesPA='0.00'
         else
-            (( runUTimeP = ( 10000 * 10#${runUTimesA[$kk]:-0} ) / 10#${runUTimeTotal:-1} ))
-            printf -v runUTimeP '%0.4d' "$runUTimeP"
-            case "${runUTimeP}" in
-                10000) runUTimesPA[$kk]=100.00 ;;
-                *) runUTimesPA[$kk]="${runUTimeP:0:2}.${runUTimeP:2}" ;;
+            (( uTimeP = ( 10000 * 10#0${uTimesA[$kk]:-0} ) / 10#0${uTimeTotal:-1} ))
+            printf -v uTimeP '%0.4d' "$uTimeP"
+            case "${uTimeP}" in
+                10000) uTimesPA[$kk]=100.00 ;;
+                *) uTimesPA[$kk]="${uTimeP:0:2}.${uTimeP:2}" ;;
             esac
         fi
 
-        if (( runSTimeTotal == 0 )) || (( runUTimesA[$kk] == 0 )); then
-            runSTimesPA[$kk]='0.00'
+        if (( sTimeTotal == 0 )) || (( sTimesA[$kk] == 0 )); then
+            sTimesPA[$kk]='0.00'
         else
-            (( runSTimeP = ( 10000 * 10#${runUTimesA[$kk]:-0} ) / 10#${runSTimeTotal:-1} ))
-            printf -v runSTimeP '%0.4d' "$runSTimeP"
-            case "${runSTimeP}" in
-                10000) runSTimesPA[$kk]=100.00 ;;
-                *) runSTimesPA[$kk]="${runSTimeP:0:2}.${runSTimeP:2}" ;;
+            (( sTimeP = ( 10000 * 10#0${sTimesA[$kk]:-0} ) / 10#0${sTimeTotal:-1} ))
+            printf -v sTimeP '%0.4d' "$sTimeP"
+            case "${sTimeP}" in
+                10000) sTimesPA[$kk]=100.00 ;;
+                *) sTimesPA[$kk]="${sTimeP:0:2}.${sTimeP:2}" ;;
+
             esac
         fi
             
         if (( cpuTimeTotal == 0 )) || (( cpuTimesA[$kk] == 0 )); then
             cpuTimesPA[$kk]='0.00'
         else
-           (( cpuTimeP = ( 10000 * 10#${cpuTimesA[$kk]:-0} ) / 10#${cpuTimeTotal:-1} ))
+           (( cpuTimeP = ( 10000 * 10#0${cpuTimesA[$kk]:-0} ) / 10#0${cpuTimeTotal:-1} ))
+
             printf -v cpuTimeP '%0.4d' "$cpuTimeP"
             case "${cpuTimeP}" in
                 10000) cpuTimesPA[$kk]=100.00 ;;
@@ -1507,15 +1487,15 @@ _timep_PROCESS_LOG() {
             linenoUniqLineA[${linenoA[$kk]}]+=" $kk"
             (( linenoUniqCountA[${linenoA[$kk]}]++ ))
             linenoUniqTimesA[${linenoA[$kk]}]+=" ${runTimesA[$kk]}"
-            linenoUniqUTimesA[${linenoA[$kk]}]+=" ${runUTimesA[$kk]}"
-            linenoUniqSTimesA[${linenoA[$kk]}]+=" ${runSTimesA[$kk]}"
+            linenoUniqUTimesA[${linenoA[$kk]}]+=" ${uTimesA[$kk]}"
+            linenoUniqSTimesA[${linenoA[$kk]}]+=" ${sTimesA[$kk]}"
             linenoUniqCTimesA[${linenoA[$kk]}]+=" ${cpuTimesA[$kk]}"
         else
             linenoUniqLineA[${linenoA[$kk]}]="$kk"
             linenoUniqCountA[${linenoA[$kk]}]="1"
             linenoUniqTimesA[${linenoA[$kk]}]="${runTimesA[$kk]}"
-            linenoUniqUTimesA[${linenoA[$kk]}]="${runUTimesA[$kk]}"
-            linenoUniqSTimesA[${linenoA[$kk]}]="${runSTimesA[$kk]}"
+            linenoUniqUTimesA[${linenoA[$kk]}]="${uTimesA[$kk]}"
+            linenoUniqSTimesA[${linenoA[$kk]}]="${sTimesA[$kk]}"
             linenoUniqCTimesA[${linenoA[$kk]}]="${cpuTimesA[$kk]}"
         fi
     done
@@ -1531,25 +1511,27 @@ _timep_PROCESS_LOG() {
         if (( runTimeTotal0 == 0 )); then
             runTimeP=0
         else
-            (( runTimeP = ( 10000 * 10#${linenoUniqTimesA[$kk]//./} ) / 10#${runTimeTotal0:-1} ))
+            (( runTimeP = ( 10000 * 10#0${linenoUniqTimesA[$kk]//./} ) / 10#0${runTimeTotal0:-1} ))
         fi
 
-        if (( runUTimeTotal0 == 0 )); then
-            runUTimeP=0
+        if (( uTimeTotal0 == 0 )); then
+            uTimeP=0
         else        
-            (( runUTimeP = ( 10000 * 10#${linenoUniqUTimesA[$kk]//./} ) / 10#${runUTimeTotal:-1} ))
+            (( uTimeP = ( 10000 * 10#0${linenoUniqUTimesA[$kk]//./} ) / 10#0${uTimeTotal:-1} ))
         fi
         
-        if (( runSTimeTotal0 == 0 )); then
-            runSTimeP=0
+        if (( sTimeTotal0 == 0 )); then
+            sTimeP=0
         else
-            (( runSTimeP = ( 10000 * 10#${linenoUniqSTimesA[$kk]//./} ) / 10#${runSTimeTotal:-1} ))
+            (( sTimeP = ( 10000 * 10#0${linenoUniqSTimesA[$kk]//./} ) / 10#0${sTimeTotal:-1} ))
+
         fi
         
         if (( cpuTimeTotal0 == 0 )); then
             cpuTimeP=0
         else
-            (( cpuTimeP = ( 10000 * 10#${linenoUniqCTimesA[$kk]//./} ) / 10#${cpuTimeTotal:-1} ))
+            (( cpuTimeP = ( 10000 * 10#0${linenoUniqCTimesA[$kk]//./} ) / 10#0${cpuTimeTotal:-1} ))
+
         fi
 
         printf -v runTimeP '%0.4d' "${runTimeP}"
@@ -1558,18 +1540,17 @@ _timep_PROCESS_LOG() {
             *) linenoUniqTimesPA[$kk]="${runTimeP:0:2}.${runTimeP:2}" ;;
         esac
         
-        printf -v runUTimeP '%0.4d' "${runUTimeP}"
-        case "${runUTimeP}" in
-
+        printf -v uTimeP '%0.4d' "${uTimeP}"
+        case "${uTimeP}" in
             10000) linenoUniqUTimesPA[$kk]=100.00 ;;
-            *) linenoUniqUTimesPA[$kk]="${runUTimeP:0:2}.${runUTimeP:2}" ;;
+            *) linenoUniqUTimesPA[$kk]="${uTimeP:0:2}.${uTimeP:2}" ;;
         esac
         
-        printf -v runSTimeP '%0.4d' "${runSTimeP}"
-        case "${runSTimeP}" in
-
+        printf -v sTimeP '%0.4d' "${sTimeP}"
+        case "${sTimeP}" in
             10000) linenoUniqSTimesPA[$kk]=100.00 ;;
-            *) linenoUniqSTimesPA[$kk]="${runSTimeP:0:2}.${runSTimeP:2}" ;;
+            *) linenoUniqSTimesPA[$kk]="${sTimeP:0:2}.${sTimeP:2}" ;;
+
         esac
         
         printf -v cpuTimeP '%0.4d' "${cpuTimeP}"
@@ -1592,7 +1573,7 @@ _timep_PROCESS_LOG() {
         else
             # add line to log
             (( kk == 0  )) || printf '\n\n'
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\t(%s->%s)' "${linenoA[$kk]}" '' "${runTimesA[$kk]}" "${runTimesPA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startTimesA[$kk]}" "${endTimesA[$kk]}"
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\t(%s->%s)' "${linenoA[$kk]}" '' "${runTimesA[$kk]}" "${runTimesPA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${start_TimesA[$kk]}" "${end_TimesA[$kk]}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1650,7 +1631,7 @@ _timep_PROCESS_LOG() {
             mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" |  sed -E 's/^([^\:]+\:[[:space:]]+)\(([0-9\.s]+)\|([0-9\.%]+)\)[[:space:]]*(.*)$'/'\2 \3'/)
             count0="${lineU#*$'\t'}"
             count0="${count0%% *}"
-            (( count0 = 10#${count0//[^0-9]/} * ${#timeUA[@]} ))
+            (( count0 = 10#0${count0//[^0-9]/} * ${#timeUA[@]} ))
             printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM_ALT "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG_ALT "${timeUA[@]#* }")" "${count0}" "${lineU#*$'\t'* }"
         done
 
@@ -1847,7 +1828,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # get total runtime
     read -r timep_runtimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
-    ((timep_runtimeALL = 10#${timep_runtimeALL//./}))
+    ((timep_runtimeALL = 10#0${timep_runtimeALL//./}))
 
     # add another percentage showing "percent of total runtime" to final outputs
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
@@ -1861,9 +1842,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             }
 
             # get percent of total runtime
-            ((p1 = (10000 * 10#${t//./}) / timep_runtimeALL))
+            ((p1 = (10000 * 10#0${t//./}) / timep_runtimeALL))
             printf -v p1 '%0.4d' "${p1//./}"
-            if ((10#${p1} == 10000)); then
+            if ((10#0${p1} == 10000)); then
                 p1="100.00"
             else
                 p1="${p1:0:2}.${p1:2}"
