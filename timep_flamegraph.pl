@@ -412,26 +412,25 @@ sub random_namehash {
 }
 
 sub color_timep {
-  my ($name, $count_wall, $max_wall, $count_cpu, $max_cpu) = @_;
-	my ($saturation, $intensity, $type);
+  my ($type, $name, $count_wall, $max_wall, $count_cpu, $max_cpu) = @_;
+	my ($saturation, $intensity);
 	my ($r, $g, $b);
 	
 	$intensity  = $count_wall / $max_wall;
+	$intensity = 2 * $intensity / (1 + $intensity * $intensity);
+  $intensity  = 1 if $intensity > 1;
 
 	if (defined $count_cpu && defined $max_cpu && $max_cpu > 0) {
 	    $saturation = $count_cpu / $max_cpu;
 	} else {
 	    $saturation = 1 - 2 * (1 - $intensity) * (1 - $intensity) / 3;
 	}
-
-  # Clamp [0, 1]
-  $intensity  = 1 if $intensity > 1;
   $saturation = 1 if $saturation > 1;
 
   	if ($name =~ m:_\[f\]$:) {	# function
-			$type = "blue";
+			$type = "function";
 		} elsif ($name =~ m:_\[s\]$:) {	# subshell
-			$type = "aqua";
+			$type = "subshell";
 		} else {			# command
 			$type = "timep";
 		}
@@ -441,16 +440,15 @@ sub color_timep {
     $g = int((32 * (7 - 6 * (1 - 2 * $intensity) * (1 - 2 * $intensity))) * $saturation + 255 * (1 - $saturation));
     $b = int((255 * (1 - $intensity)) * $saturation + 255 * (1 - $saturation));
   } else {
-  	my v1=random_namehash($name);
         $saturation = (1 / 4) + ($saturation / 2);
-  	if ($type eq blue) {
-		  $r = (80 + int(60 * $v1) * $saturation + 255 * (1 - $saturation));
-		  $g = (70 + int(75 * $v1) * $saturation + 255 * (1 - $saturation));
-                  $b = (205 + int(50 * $v1) * $saturation + 255 * (1 - $saturation));
-  	} elsif ($type eq "aqua") {
-		  $r = (50 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
-		  $g = (155 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
-		  $b = (175 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
+  	if ($type eq "function") {
+		  $r = ((185 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+		  $g = ((95 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+      $b = ((205 + int(50 * $intensity)) * $saturation + 255 * (1 - $saturation));
+  	} elsif ($type eq "subshell") {
+		  $r = ((155 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+		  $g = ((55 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+		  $b = ((175 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
   	}
   }
 
@@ -687,7 +685,12 @@ sub flow {
 		my $k = "$this->[$i];$i";
 		$Tmp{$k}->{stime} = $v;
 		if (defined $d) {
+			if ($colors eq "timep") {
+		$Tmp{$k}->{delta} = $d;
+
+			} else {
 			$Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
+		}
 		}
 	}
 
@@ -703,6 +706,8 @@ my $delta = undef;
 my $ignored = 0;
 my $line;
 my $maxdelta = 1;
+my $max1 = 0;
+my $max2 = 0;
 
 # reverse if needed
 foreach (<>) {
@@ -732,12 +737,6 @@ if ($flamechart) {
 	@SortedData = sort @Data;
 }
 
-if ($colors eq "timep") {
-    my max1 = 0;
-	my max2 = 0;
-}
-
-
 # process and merge frames
 foreach (@SortedData) {
 	chomp;
@@ -761,6 +760,7 @@ foreach (@SortedData) {
 		$max1 = $samples if $samples > $max1;
 	    if (defined $samples2) {
 		    $max2 = $samples2 if $samples2 > $max2;
+                    $delta = $samples2;
 		} else {
 		    $max2 = undef;
 		}
@@ -1318,6 +1318,9 @@ while (my ($id, $node) = each %Node) {
 		=~ s/(^[-+]?\d+?(?=(?>(?:\d{3})+)(?!\d))|\G\d{3}(?=\d))/$1,/g;
 
 	my $info;
+        my $samples2;
+        my $d = $negate ? -$delta : $delta;
+
 	if ($func eq "" and $depth == 0) {
 		$info = "all ($samples_txt $countname, 100%)";
 	} else {
@@ -1329,14 +1332,18 @@ while (my ($id, $node) = each %Node) {
 		$escaped_func =~ s/>/&gt;/g;
 		$escaped_func =~ s/"/&quot;/g;
 		$escaped_func =~ s/_\[[kwij]\]$//;	# strip any annotation
-		unless (defined $delta) {
+	            unless (defined $delta) {
 			$info = "$escaped_func ($samples_txt $countname, $pct%)";
-		} else {
+		    } elsif ($colors eq "timep") {
+		    		my $samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
+			$info = "$escaped_func ($samples_txt $countname, $pct%)";
+		    } else {
 			my $d = $negate ? -$delta : $delta;
 			my $deltapct = sprintf "%.2f", ((100 * $d) / ($timemax * $factor));
 			$deltapct = $d > 0 ? "+$deltapct" : $deltapct;
 			$info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";
-		}
+		    }
+                
 	}
 
 	my $nameattr = { %{ $nameattr{$func}||{} } }; # shallow clone
@@ -1345,7 +1352,7 @@ while (my ($id, $node) = each %Node) {
 
 	my $color;
 	if ($colors eq "timep") {
-		$color = color_timep($func, $samples, $max1, $samples2, $max2);
+		$color = color_timep($colors, $func, $samples, $max1, $samples2, $max2);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
