@@ -411,10 +411,12 @@ sub random_namehash {
 }
 
 sub color_timep {
-    my ($count_wall,$max_wall,$count_cpu,$max_cpu) = @_;
-	my $intensity  = $count_wall / $max_wall;
-	my $saturation
-	 
+  my ($name, $count_wall, $max_wall, $count_cpu, $max_cpu) = @_;
+	my ($saturation, $intensity, $type);
+	my ($r, $g, $b);
+	
+	$intensity  = $count_wall / $max_wall;
+
 	if (defined $count_cpu && defined $max_cpu && $max_cpu > 0) {
 	    $saturation = $count_cpu / $max_cpu;
 	} else {
@@ -424,10 +426,31 @@ sub color_timep {
   # Clamp [0, 1]
   $intensity  = 1 if $intensity > 1;
   $saturation = 1 if $saturation > 1;
+
+  	if ($name =~ m:_\[f\]$:) {	# function
+			$type = "blue";
+		} elsif ($name =~ m:_\[s\]$:) {	# subshell
+			$type = "aqua";
+		} else {			# command
+			$type = "timep";
+		}
   
-  my $r = int((255 * $intensity) * $saturation + 255 * (1 - $saturation));
-  my $g = int((64 * (3 - (2 * $intensity))) * $saturation + 255 * (1 - $saturation));
-  my $b = int((255 * (1 - $intensity)) * $saturation + 255 * (1 - $saturation));
+  if ($type eq "timep") {
+    $r = int((255 * $intensity) * $saturation + 255 * (1 - $saturation));
+    $g = int((64 * (3 - (2 * $intensity))) * $saturation + 255 * (1 - $saturation));
+    $b = int((255 * (1 - $intensity)) * $saturation + 255 * (1 - $saturation));
+  } else {
+  	my v1=random_namehash($name);
+  	if ($type eq blue) {
+		  $r = (80 + int(60 * $v1) * $saturation + 255 * (1 - $saturation));
+		  $g = (70 + int(75 * $v1) * $saturation + 255 * (1 - $saturation));
+      $b = (205 + int(50 * $v1) * $saturation + 255 * (1 - $saturation));
+  	} elsif ($type eq "aqua") {
+		  $r = (50 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
+		  $g = (155 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
+		  $b = (175 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
+  	}
+  }
 
   return "rgb($r,$g,$b)";
 }
@@ -502,16 +525,6 @@ sub color {
 		} elsif ($name =~ m:_\[k\]$:) {	# kernel
 			$type = "orange";
 		} else {			# system
-			$type = "red";
-		}
-		# fall-through to color palettes
-	}
-	if (defined $type and $type eq "timep") {
-		if ($name =~ m:_\[f\]$:) {	# function
-			$type = "blue";
-		} elsif ($name =~ m:_\[s\]$:) {	# subshell
-			$type = "aqua";
-		} else {			# command
 			$type = "red";
 		}
 		# fall-through to color palettes
@@ -1330,7 +1343,7 @@ while (my ($id, $node) = each %Node) {
 
 	my $color;
 	if ($colors eq "timep") {
-		$color = color_timep($samples, $max1, $samples2, $max2);
+		$color = color_timep($func, $samples, $max1, $samples2, $max2);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
