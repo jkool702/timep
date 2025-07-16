@@ -410,6 +410,28 @@ sub random_namehash {
 	return rand(1)
 }
 
+sub color_timep {
+    my ($count_wall,$max_wall,$count_cpu,$max_cpu) = @_;
+	my $intensity  = $count_wall / $max_wall;
+	my $saturation
+	 
+	if (defined $count_cpu && defined $max_cpu && $max_cpu > 0) {
+	    $saturation = $count_cpu / $max_cpu;
+	} else {
+	    $saturation = 1;
+	}
+
+  # Clamp [0, 1]
+  $intensity  = 1 if $intensity > 1;
+  $saturation = 1 if $saturation > 1;
+  
+  my $r = int((255 * $intensity) * $saturation + 255 * (1 - $saturation));
+  my $g = int((64 * (3 - (2 * $intensity))) * $saturation + 255 * (1 - $saturation));
+  my $b = int((255 * (1 - $intensity)) * $saturation + 255 * (1 - $saturation));
+
+  return "rgb($r,$g,$b)";
+}
+
 sub color {
 	my ($type, $hash, $name) = @_;
 	my ($v1, $v2, $v3);
@@ -695,6 +717,12 @@ if ($flamechart) {
 	@SortedData = sort @Data;
 }
 
+if ($colors eq "timep") {
+    my max1 = 0;
+	my max2 = 0;
+}
+
+
 # process and merge frames
 foreach (@SortedData) {
 	chomp;
@@ -713,11 +741,20 @@ foreach (@SortedData) {
 		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
 	}
 	$delta = undef;
+	
+	if ($colors eq "timep") {
+		$max1 = $samples if $samples > $max1;
+	    if (defined $samples2) {
+		    $max2 = $samples2 if $samples2 > $max2;
+		} else {
+		    $max2 = undef;
+		}
+	} else {
 	if (defined $samples2) {
 		$delta = $samples2 - $samples;
 		$maxdelta = abs($delta) if abs($delta) > $maxdelta;
+	}	
 	}
-
 	# for chain graphs, annotate waker frames with "_[w]", for later
 	# coloring. This is a hack, but has a precedent ("_[k]" from perf).
 	if ($colors eq "chain") {
@@ -735,6 +772,7 @@ foreach (@SortedData) {
 
 	# merge frames and populate %Node:
 	$last = flow($last, [ '', split ";", $stack ], $time, $delta);
+
 
 	if (defined $samples2) {
 		$time += $samples2;
@@ -1291,7 +1329,9 @@ while (my ($id, $node) = each %Node) {
 	$im->group_start($nameattr);
 
 	my $color;
-	if ($func eq "--") {
+	if ($colors eq "timep") {
+		$color = color_timep($samples, $max1, $samples2, $max2);
+	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
 		$color = $dgrey;
