@@ -1126,6 +1126,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
     local kk kk1 nn r runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime startUTime endUTime startSTime endSTime runTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf normalCmdFlag nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0
     local -a logA nPipeA startTimesA endTimesA startUTimesA endUTimesA startSTimesA endSTimesA runTimesA runTimesPA cpuTimesA cpuTimesPA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA utimeUA stimeUA sA fA eA fgA
+
     local -A linenoUniqLineA linenoUniqCountA linenoUniqTimesA linenoUniqTimesPA linenoUniqUTimesA linenoUniqUTimesPA linenoUniqSTimesA linenoUniqSTimesPA linenoUniqCTimesA linenoUniqCTimesPA
 
     [[ -e "${1}" ]] || return 1
@@ -1295,12 +1296,13 @@ _timep_PROCESS_LOG() {
             runTimesA[$kk]='0.000001'
         }
         [[ ${endUTimesA[$kk]} ]] || {
+
             (( endUTimesA[$kk] = ${startUTimesA[$kk]:-0} + ( ( timep_CPU_TIME_MULT / 2 ) + 10#${runTimesA[$kk]//./} ) / timep_CPU_TIME_MULT ))
             (( endSTimesA[$kk] = ${startSTimesA[$kk]:-0} + ( ( timep_CPU_TIME_MULT / 2 ) + 10#${runTimesA[$kk]//./} ) / timep_CPU_TIME_MULT ))
         }    
-        (( runUTimesA[$kk] =  ${runUTimesA[$kk]} + timep_CPU_TIME_MULT * ( endUTimesA[$kk] - startUTimesA[$kk] ) ))
-        (( runSTimesA[$kk] =  ${runSTimesA[$kk]} + timep_CPU_TIME_MULT * ( endSTimesA[$kk] - startSTimesA[$kk] ) ))
-        (( cpuTimesA[$kk] =  ${cpuTimesA[$kk]} + runUTimesA[$kk] + runUTimesA[$kk] ))
+        (( runUTimesA[$kk] =  ${runUTimesA[$kk]:-0} + timep_CPU_TIME_MULT * ( endUTimesA[$kk] - startUTimesA[$kk] ) ))
+        (( runSTimesA[$kk] =  ${runSTimesA[$kk]:-0} + timep_CPU_TIME_MULT * ( endSTimesA[$kk] - startSTimesA[$kk] ) ))
+        (( cpuTimesA[$kk] =  ${cpuTimesA[$kk]:-0} + runUTimesA[$kk] + runUTimesA[$kk] ))
         cpuTime="${cpuTimesA[$kk]}"
         
         # generate stack trace for flamegraph generation
@@ -1339,6 +1341,7 @@ _timep_PROCESS_LOG() {
     # get total runtime
     case ${#logA[@]} in
         1) 
+
             runTimeTotal="${runTimesA[*]:-1}"
             runUTimeTotal="${runUTimesA[*]:-1}"
             runSTimeTotal="${runSTimesA[*]:-1}"
@@ -1367,11 +1370,31 @@ _timep_PROCESS_LOG() {
     echo "${runSTimeTotal}" >"${1%\/*}/.run_stimes/${1##*\/}"
 
     (( runTimeTotal0= 10#${runTimeTotal//./} ))
+    ((  ))
 
     # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
     linenoA[0]="${linenoA[0]}.0"
     lineno1=0
     (( runTimeP = ( 10000 * 10#${runTimesA[0]//./} ) / 10#${runTimeTotal0:-1} ))
+
+    if (( runUTimeTotal == 0 )); then
+        runUTimeP=0
+    else
+        (( runUTimeP = ( 10000 * 10#${runUTimesA[0]:-0} ) / 10#${runUTimeTotal:-1} ))
+    fi
+
+    if (( runSTimeTotal == 0 )); then
+        runSTimeP=0
+    else
+        (( runSTimeP = ( 10000 * 10#${runUTimesA[0]:-0} ) / 10#${runSTimeTotal:-1} ))
+    fi
+        
+    if (( cpuTimeTotal == 0 )); then
+        cpuTimeP=0
+    else
+       (( cpuTimeP = ( 10000 * 10#${cpuTimesA[0]:-0} ) / 10#${cpuTimeTotal:-1} ))
+    fi
+
     printf -v runTimeP '%0.4d' "$runTimeP"
     case "${runTimeP}" in
         10000) runTimesPA[0]=100.00 ;;
@@ -1420,6 +1443,7 @@ _timep_PROCESS_LOG() {
     linenoUniqUTimesA[${linenoA[0]}]="${runUTimesA[0]}"
     linenoUniqSTimesA[${linenoA[0]}]="${runSTimesA[0]}"
     linenoUniqCTimesA[${linenoA[0]}]="${cpuTimesA[0]}"
+
 
     for (( kk=1; kk<${#logA[@]}; kk++ )); do
         (( kk1 = kk - 1 ))
@@ -1499,6 +1523,7 @@ _timep_PROCESS_LOG() {
     # get runtime sums for the combined uniq lineno's
     for kk in "${!linenoUniqTimesA[@]}"; do
         linenoUniqTimesA[$kk]="$( _timep_EPOCHREALTIME_SUM_ALT ${linenoUniqTimesA[$kk]} )"
+
         linenoUniqUTimesA[$kk]="$( _timep_EPOCHREALTIME_SUM_ALT ${linenoUniqUTimesA[$kk]} )"
         linenoUniqSTimesA[$kk]="$( _timep_EPOCHREALTIME_SUM_ALT ${linenoUniqSTimesA[$kk]} )"
         linenoUniqCTimesA[$kk]="$( _timep_EPOCHREALTIME_SUM_ALT ${linenoUniqCTimesA[$kk]} )"
@@ -1535,18 +1560,21 @@ _timep_PROCESS_LOG() {
         
         printf -v runUTimeP '%0.4d' "${runUTimeP}"
         case "${runUTimeP}" in
+
             10000) linenoUniqUTimesPA[$kk]=100.00 ;;
             *) linenoUniqUTimesPA[$kk]="${runUTimeP:0:2}.${runUTimeP:2}" ;;
         esac
         
         printf -v runSTimeP '%0.4d' "${runSTimeP}"
         case "${runSTimeP}" in
+
             10000) linenoUniqSTimesPA[$kk]=100.00 ;;
             *) linenoUniqSTimesPA[$kk]="${runSTimeP:0:2}.${runSTimeP:2}" ;;
         esac
         
         printf -v cpuTimeP '%0.4d' "${cpuTimeP}"
         case "${cpuTimeP}" in
+
             10000) linenoUniqCTimesPA[$kk]=100.00 ;;
             *) linenoUniqCTimesPA[$kk]="${cpuTimeP:0:2}.${cpuTimeP:2}" ;;
         esac
@@ -1596,6 +1624,7 @@ _timep_PROCESS_LOG() {
         else
             # add line to log
             (( kk == 0  )) || printf '\n\n'
+
             printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%sx) %s' "${linenoUniqA[$kk]}" '' "${linenoUniqTimesA[${linenoUniqA[$kk]}]}" "${linenoUniqTimesPA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}"
 
             # check if this is the start of a pipeline
