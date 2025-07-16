@@ -420,7 +420,7 @@ sub color_timep {
 	if (defined $count_cpu && defined $max_cpu && $max_cpu > 0) {
 	    $saturation = $count_cpu / $max_cpu;
 	} else {
-	    $saturation = 1;
+	    $saturation = 1 - 2 * (1 - $intensity) * (1 - $intensity) / 3;
 	}
 
   # Clamp [0, 1]
