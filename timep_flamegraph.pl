@@ -7,8 +7,9 @@
 # License: CDDL 1.0 (see below).
 #
 # Modifications by Anthony Barone for the "timep" project (c) 2025:
-# - Added support for `(cmd)`, `(fn)`, `(sh)` tags for per-frame coloring.
-# - Added grey_colors() and blue_colors() palettes.
+#   Added timep colormap: color is based on wall time and color saturation
+#      is based on cpu time + has different colors for subshells/functions
+# - Added support for `_[f]` and `_[s]` tags for per-frame coloring.
 #
 # This script remains licensed under CDDL 1.0. You may distribute
 # it alongside the "timep" project (MIT-licensed), provided that this
@@ -441,10 +442,11 @@ sub color_timep {
     $b = int((255 * (1 - $intensity)) * $saturation + 255 * (1 - $saturation));
   } else {
   	my v1=random_namehash($name);
+        $saturation = (1 / 4) + ($saturation / 2);
   	if ($type eq blue) {
 		  $r = (80 + int(60 * $v1) * $saturation + 255 * (1 - $saturation));
 		  $g = (70 + int(75 * $v1) * $saturation + 255 * (1 - $saturation));
-      $b = (205 + int(50 * $v1) * $saturation + 255 * (1 - $saturation));
+                  $b = (205 + int(50 * $v1) * $saturation + 255 * (1 - $saturation));
   	} elsif ($type eq "aqua") {
 		  $r = (50 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
 		  $g = (155 + int(55 * $v1)) * $saturation + 255 * (1 - $saturation));
