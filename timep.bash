@@ -183,7 +183,7 @@ timep() {
          return 1
     }
 
-    mkdir -p "${timep_TMPDIR}"/.log/.{end,run,end_u,run_u,end_s,run_s}times
+    mkdir -p "${timep_TMPDIR}"/.log/.{end,run}times
     mkdir -p "${timep_TMPDIR}/profiles"
 
     # determine if command being profiled is a shell script or not
