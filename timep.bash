@@ -1114,8 +1114,8 @@ _timep_NUM_RUNNING() {
 
 shopt -s extglob
 _timep_PROCESS_LOG() {
-    local kk kk1 nn r runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime startUTime endUTime startSTime endSTime runTime uTime sTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf normalCmdFlag nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0 uTimeSplitN sTimeSplitN uTimeSplitK sTimeSplitK
-    local -a logA nPipeA startTimesA endTimesA runTimesA runTimesPA uTimesA sTimesA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA wallUTimeSplitA
+    local kk kk1 nn r runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime startUTime endUTime startSTime endSTime runTime uTime sTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0 uTimeSplitN sTimeSplitN uTimeSplitK sTimeSplitK
+    local -a logA nPipeA startTimesA endTimesA runTimesA runTimesPA uTimesA sTimesA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA wallUTimeSplitA normalCmdFlagA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA
 
     [[ -e "${1}" ]] || return 1
@@ -1182,7 +1182,7 @@ _timep_PROCESS_LOG() {
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
         if [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]]; then
-            normalCmdFlag=false
+            normalCmdFlagA[$kk]=false
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
@@ -1205,7 +1205,7 @@ _timep_PROCESS_LOG() {
                 }
             }
         else
-            normalCmdFlag=true
+            normalCmdFlagA[$kk]=true
         fi
 
         # single-command command/process substitutions dont get a endtime logged (uses endTime='+' as indicator), since they wont trigger a EXIT trap
@@ -1247,7 +1247,7 @@ _timep_PROCESS_LOG() {
             inPipeFlag=true
             isPipeA[$kk]=1
         fi
-        ${inPipeFlag} && normalCmdFlag=false
+        ${inPipeFlag} && normalCmdFlagA[$kk]=false
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
         (( nPipeA[$kk] == 1 )) && [[ -z ${runTimesA[$kk]} ]] && _timep_EPOCHREALTIME_DIFF "$kk"
@@ -1256,18 +1256,23 @@ _timep_PROCESS_LOG() {
             endTimesA[$kk]="$(_timep_EPOCHREALTIME_SUM_ALT "${startTimesA[$kk]}" '0.000001')"
             runTimesA[$kk]='0.000001'
         }
-
+        
+        # convert time to microseconds
         (( uTime = timep_CPU_TIME_MULT * ( endUTime - startUTime ) ))
         (( sTime = timep_CPU_TIME_MULT * ( endSTime - startSTime ) ))
         uTimesA[$kk]=${uTime}
         sTimesA[$kk]=${sTime}
 
+        # find sections that are listed as having 0 utime/stime (i.e., utime from proc/pis/stat was the same before and after the command)
+        # we are going to steal 1 jiffy from the next command (usually 10 ms = 10000 us) and distribute it between all the commands that ran without increasing utime/stime
+        # each command will get a a set number of us (timep_RUNTIME_MIN --> approximate minimum debug trap overhead). and the rest will be distributed via the following weights:
+        # a = avg runtime for all N commands being distributed to; x_n = runtime for command n; weight = w_n = W / (a^2 + x_n^2); W = 1 / (sum of all W_n)
         if (( uTime == 0 )); then
             if (( uTimeSplitN == 0 )); then
                 (( kk1 = kk + 1 ))
                 uTimeSplitN=2
-                uTimeSplitK=$kk
-                (( wallUTimeSplitA[0] = 10#${runTimesA[$kk1]//./} ))
+                uTimeSplitK=${kk1}
+                (( wallUTimeSplitA[0] = 10#${runTimesA[$kk1]//./} / uTime[$kk1] ))
                 (( wallUTimeSplitA[1] = 10#${runTime//./} ))
                 (( wallUTimeSplitSum = wallUTimeSplitA[0] + wallUTimeSplitA[1] ))
             else
@@ -1276,17 +1281,61 @@ _timep_PROCESS_LOG() {
                 ((uTimeSplitN++))
             fi
         elif (( uTimeSplitN > 0 )); then
+           (( uTimeSplitTimeDistAll = timep_CPU_TIME_MULT - ( timep_RUNTIME_MIN * uTimeSplitN ) ))
             (( wallUTimeSplitAvg2 = ( wallUTimeSplitSum / uTimeSplitN ) ** 2 ))
+            uTimeSplitIWMax=0
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-            (( uTimeSplitWA[$kk1] = ( wallUTimeSplitA[$kk1] ** 2 ) + wallUTimeSplitAvg2 ))
-
-
-
+                (( uTimeSplitIWA[$kk1] = ( wallUTimeSplitA[$kk1] ** 2 ) + wallUTimeSplitAvg2 ))
+                (( uTimeSplitIWA[$kk1] > uTimeSplitIWMax )) && uTimeSplitIWMax="${uTimeSplitIWA[$kk1]}"
+            done
+            uTimeSplitTimeDistSum=0
+            for kk1 in "${!wallUTimeSplitA[@]}"; do
+               (( uTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * uTimeSplitIWMax * uTimeSplitTimeDistAll / uTimeSplitIWA[$kk1] ))
+               (( uTimeSplitTimeDistSum += uTimeSplitTimeDistA[$kk1] ))
+            done
+            for kk1 in "${!wallUTimeSplitA[@]}"; do
+                (( uTime[$uTimeSplitK]= timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
+                (( uTimeSplitK-- ))
+                (( uTimeSplitN-- ))
             done
         fi
 
+        if (( sTime == 0 )); then
+            if (( sTimeSplitN == 0 )); then
+                (( kk1 = kk + 1 ))
+                sTimeSplitN=2
+                sTimeSplitK=${kk1}
+                (( wallSTimeSplitA[0] = 10#${runTimesA[$kk1]//./} / sTime[$kk1] ))
+                (( wallSTimeSplitA[1] = 10#${runTime//./} ))
+                (( wallSTimeSplitSum = wallSTimeSplitA[0] + wallSTimeSplitA[1] ))
+            else
+                (( wallSTimeSplitA[${sTimeSplitN}] = 10#${runTime//./} ))
+                (( wallSTimeSplitSum += wallSTimeSplitA[${sTimeSplitN}] ))
+                ((sTimeSplitN++))
+            fi
+        elif (( sTimeSplitN > 0 )); then
+           (( sTimeSplitTimeDistAll = timep_CPU_TIME_MULT - ( timep_RUNTIME_MIN * sTimeSplitN ) ))
+            (( wallSTimeSplitAvg2 = ( wallSTimeSplitSum / sTimeSplitN ) ** 2 ))
+            sTimeSplitIWMax=0
+            for kk1 in "${!wallSTimeSplitA[@]}"; do
+                (( sTimeSplitIWA[$kk1] = ( wallSTimeSplitA[$kk1] ** 2 ) + wallSTimeSplitAvg2 ))
+                (( sTimeSplitIWA[$kk1] > sTimeSplitIWMax )) && sTimeSplitIWMax="${sTimeSplitIWA[$kk1]}"
+            done
+            sTimeSplitTimeDistSum=0
+            for kk1 in "${!wallSTimeSplitA[@]}"; do
+               (( sTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * sTimeSplitIWMax * sTimeSplitTimeDistAll / sTimeSplitIWA[$kk1] ))
+               (( sTimeSplitTimeDistSum += sTimeSplitTimeDistA[$kk1] ))
+            done
+            for kk1 in "${!wallSTimeSplitA[@]}"; do
+                (( sTime[$sTimeSplitK]= timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
+                (( sTimeSplitK-- ))
+                (( sTimeSplitN-- ))
+            done
+        fi
+    done
 
-        ${normalCmdFlag} && {
+    for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
+        ${normalCmdFlagA[$kk]} && {
             if [[ -z "${fg0}" ]]; then
                 fg0="$(IFS0="${IFS}"
                 IFS='.'
@@ -1311,8 +1360,8 @@ _timep_PROCESS_LOG() {
             fi
 
             # print stack trace for flamegraph
-            runTime="${runTimesA[$kk]//./}"
-            printf '%s%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\:}" "${runTime##+(0)}"  >>"${1%\/*}/out.flamegraph.full"
+            (( runTime = 10#${runTimesA[$kk]//./} ))
+            printf '%s%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${runTime##+(0)}"  >>"${1%\/*}/out.flamegraph.full"
         }
 
     done
