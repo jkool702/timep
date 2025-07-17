@@ -1308,7 +1308,7 @@ _timep_PROCESS_LOG() {
             (( uTimeSplitTimeDistSum <= 0 )) && uTimeSplitTimeDistSum=1
             (( uTime[$uTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-                (( nPipeA[$$uTimeSplitK] == 1 )) && (( uTime[$uTimeSplitK] = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
+                (( nPipeA[$uTimeSplitK] == 1 )) && (( uTime[$uTimeSplitK] = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
                 (( uTimeSplitK-- ))
                 (( uTimeSplitN-- ))
             done
@@ -1355,7 +1355,7 @@ _timep_PROCESS_LOG() {
             (( sTimeSplitTimeDistSum <= 0 )) && sTimeSplitTimeDistSum=1
             (( sTime[$sTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallSTimeSplitA[@]}"; do
-                (( nPipeA[$$sTimeSplitK] == 1 )) && (( sTime[$sTimeSplitK] = timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
+                (( nPipeA[$sTimeSplitK] == 1 )) && (( sTime[$sTimeSplitK] = timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
                 (( sTimeSplitK-- ))
                 (( sTimeSplitN-- ))
             done
