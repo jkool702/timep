@@ -1003,31 +1003,36 @@ _timep_EPOCHREALTIME_DIFF_ALT() {
 }
 
 _timep_EPOCHREALTIME_SUM() {
-    local tSum tSum0 d d6 A T TT
+    local tSum tSum0 d d6 A T
 
     (( ${#runTimesA[@]} == 0 )) && return 1
     (( ${#runTimesA[@]} == 1 )) && runTimeTotal="${runTimesA[*]}"
     (( ${#uTimesA[@]} == 1 )) && uTimeTotal="${uTimesA[*]}"
     (( ${#sTimesA[@]} == 1 )) && sTimeTotal="${sTimesA[*]}"
-    (( ${#runTimesA[@]} == 1 )) && (( ${#uTimesA[@]} == 1 )) && (( ${#sTimesA[@]} == 1 )) && return 0
+    (( ${#cTimesA[@]} == 1 )) && cTimeTotal="${cTimesA[*]}"
+    (( ${#runTimesA[@]} == 1 )) && (( ${#uTimesA[@]} == 1 )) && (( ${#sTimesA[@]} == 1 )) && (( ${#cTimesA[@]} == 1 )) && return 0
 
-    for A in 'run' 'u' 's'; do
-    local -n T="${A}TimesA"
-    printf -v tSum '+10#%s' "${T[@]//[^0-9]/}"
-    local +n T
-    tSum="${tSum// /+10#}"
-    tSum0="${tSum}"
-    tSum="${tSum//+10#+/+}"
-    tSum="${tSum%+10#}"
-    until [[ "${tSum}" == "${tSum0}" ]]; do
+    for A in 'run' 'u' 's' 'c'; do
+        local -n T="${A}TimesA"
+        printf -v tSum '+10#%s' "${T[@]//[^0-9]/}"
+        local +n T
+        tSum="${tSum// /+10#}"
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
         tSum="${tSum%+10#}"
-    done
-    (( tSum = 0${tSum//s/} ))
-    printf -v d '%0.7d' "${tSum}"
-    (( d6 = ${#d} - 6 ))
-    printf -v "${A}TimeTotal" '%s.%s' "${d:0:$d6}" "${d:$d6}"
+        until [[ "${tSum}" == "${tSum0}" ]]; do
+            tSum0="${tSum}"
+            tSum="${tSum//+10#+/+}"
+            tSum="${tSum%+10#}"
+        done
+        (( tSum = 0${tSum//s/} ))
+        if [[ "${A}" == 'run' ]]; then
+            printf -v d '%0.7d' "${tSum}"
+            (( d6 = ${#d} - 6 ))
+            printf -v "${A}TimeTotal" '%s.%s' "${d:0:$d6}" "${d:$d6}"
+        else
+            printf -v "${A}TimeTotal" '%s' "${tSum}"
+        fi
     done
 }
 
@@ -1089,8 +1094,8 @@ _timep_FILE_EXISTS() {
 
     [[ -s "${1}" ]] && return 0
 
-    for w in {01..09} {10..90..10}; do
-        read -r -u $fd_sleep -t "0.${w}" _
+    for w in {01..09}; do
+        read -r -u ${fd_sleep} -t "0.${w}" _
         [[ -s "${1}" ]] && return 0
     done
 
@@ -1133,7 +1138,7 @@ _timep_PROCESS_LOG() {
 
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sort -V -k9,9 <"${1}")
+    mapfile -t logA < <(sort -V -k13,13 <"${1}")
 
     log_dupe_flag=false
     for (( kk=1; kk<${#logA[@]}; kk++ )); do
@@ -1372,7 +1377,7 @@ _timep_PROCESS_LOG() {
 
     # get 1st "normal command"
     kk=0
-    while [[ "${cmdA[$kk]}" == '<< ('*'): '*'>>' ]] || (( nPipeA[$kk] != 1 )); do
+    while [[ "${cmdA[$kk]}" == '<< ('*'): '*'>>' ]]; do
        ((kk++))
        (( kk >= ${#logA[@]} )) && {
             (( kk = ${#logA[@]} - 1 ))
@@ -1382,32 +1387,33 @@ _timep_PROCESS_LOG() {
 
     # get base stack (showing all the parents) for this log
     fg0="$(IFS0="${IFS}"
-                IFS='.'
-                # get base stack for flamegraph
-                read -r -a fA <<<"${funcA[$kk]#* }"
-                read -r -a sA <<<"${pidA[$kk]#* }"
-                read -r -a eA <<<"${nexecA[$kk]#* }"
-                IFS="${IFS0}"
-                unset "eA[-1]" "IFS0"
-                ns=0
-                nf=1
-                for nn in "${eA[@]}"; do
-                    if [[ "${nn}" == *'{'*'}' ]]; then
-                        [[ ${sA[$ns]} ]] && fgA+=("SUBSHELL (${sA[$ns]})_[s]")
-                        ((ns++))
-                    else
-                        [[ ${fA[$nf]} ]] && fgA+=("FUNCTION (${fA[$nf]})_[f]")
-                        ((nf++))
-                    fi
-                done
-                printf '%s;' "${fgA[@]}")"
+IFS='.'
+# get base stack for flamegraph
+read -r -a fA <<<"${funcA[$kk]#* }"
+read -r -a sA <<<"${pidA[$kk]#* }"
+read -r -a eA <<<"${nexecA[$kk]#* }"
+IFS="${IFS0}"
+unset "eA[-1]" "IFS0"
+ns=0
+nf=1
+for nn in "${eA[@]}"; do
+    if [[ "${nn}" == *'{'*'}' ]]; then
+        [[ ${sA[$ns]} ]] && fgA+=("SUBSHELL (${sA[$ns]})_[s]")
+        ((ns++))
+    else
+        [[ ${fA[$nf]} ]] && fgA+=("FUNCTION (${fA[$nf]})_[f]")
+        ((nf++))
+    fi
+done
+printf '%s;' "${fgA[@]}")"
 
     # print stack trace for flamegraph
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
         ${normalCmdFlagA[$kk]} && {
             (( runTime = 10#${runTimesA[$kk]//./} ))
-            (( cpuTime = uTimesA[$kk] + sTimesA[$kk] ))
-            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${runTime##+(0)}" "${cpuTime}" >>"${1%\/*}/out.flamegraph.full"
+            (( cTime = uTimesA[$kk] + sTimesA[$kk] ))
+            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${runTime##+(0)}" "${cTime}" >>"${1%\/*}/out.flamegraph.full"
+            cTimesA[$kk]=${cTime}
         }
     done
 
@@ -1422,36 +1428,46 @@ _timep_PROCESS_LOG() {
     printf '%s %s %s\n' "${endTimesA[-1]}" "${endUTimesA[-1]}" "${endSTimesA[-1]}" >"${1%\/*}/.endtimes/${1##*\/}"
     printf '%s %s %s\n' "${runTimeTotal}" "${uTimeTotal}" "${sTimeTotal}" >"${1%\/*}/.runtimes/${1##*\/}"
 
-    (( runTimeTotal0= 10#${runTimeTotal//./} ))
+    (( runTimeTotal0= 10#0${runTimeTotal//./} ))
+    (( cTimeTotal = uTimeTotal + sTimeTotal ))
 
     # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
-    linenoA[0]="${linenoA[0]}.0"
-    lineno1=0
-    (( runTimeP = ( 10000 * 10#${runTimesA[0]//./} ) / 10#$runTimeTotal0 ))
-    printf -v runTimeP '%0.4d' "$runTimeP"
-    case "${runTimeP}" in
-        10000) runTimesPA[0]=100.00 ;;
-        *) runTimesPA[0]="${runTimeP:0:2}.${runTimeP:2}" ;;
-    esac
-    linenoUniqA[0]="${linenoA[0]}"
-    linenoUniq+=" ${linenoA[0]} "
-    linenoUniqLineA[${linenoA[0]}]="0"
-    linenoUniqCountA[${linenoA[0]}]="1"
-    linenoUniqTimeA[${linenoA[0]}]="${runTimesA[0]}"
-    for (( kk=1; kk<${#logA[@]}; kk++ )); do
+  
+    for (( kk=0; kk<${#logA[@]}; kk++ )); do
         (( kk1 = kk - 1 ))
-        if (( linenoA[$kk] == ${linenoA[$kk1]%.*} )); then
+        if (( kk > 0 )) && (( linenoA[$kk] == ${linenoA[$kk1]%.*} )); then
             (( lineno1++ ))
         else
             lineno1=0
         fi
         linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
-        (( runTimeP = ( 10000 * 10#${runTimesA[$kk]//./} ) / 10#$runTimeTotal0 ))
+        (( runTimeP = ( 10000 * 10#0${runTimesA[$kk]//./} ) / 10#0${runTimeTotal0} ))
+        (( uTimeP = ( 10000 * 10#0${uTimesA[$kk]//./} ) / 10#0${uTimeTotal} ))
+        (( sTimeP = ( 10000 * 10#0${sTimesA[$kk]//./} ) / 10#0${sTimeTotal} ))
+        (( cTimeP = ( 10000 * 10#0${cTimesA[$kk]//./} ) / 10#0${cTimeTotal} ))
+
+        
         printf -v runTimeP '%0.4d' "$runTimeP"
         case "${runTimeP}" in
-            10000) runTimesPA[$kk]=100.00 ;;
-            *) runTimesPA[$kk]="${runTimeP:0:2}.${runTimeP:2}" ;;
+            10000) runTimesPA[0]=100.00 ;;
+            *) runTimesPA[0]="${runTimeP:0:2}.${runTimeP:2}" ;;
         esac
+        printf -v uTimeP '%0.4d' "$uTimeP"
+        case "${uTimeP}" in
+            10000) uTimesPA[0]=100.00 ;;
+            *) uTimesPA[0]="${uTimeP:0:2}.${uTimeP:2}" ;;
+        esac
+        printf -v sTimeP '%0.4d' "$sTimeP"
+        case "${sTimeP}" in
+            10000) sTimesPA[0]=100.00 ;;
+            *) sTimesPA[0]="${sTimeP:0:2}.${sTimeP:2}" ;;
+        esac
+        printf -v cTimeP '%0.4d' "$cTimeP"
+        case "${cTimeP}" in
+            10000) cTimesPA[0]=100.00 ;;
+            *) cTimesPA[0]="${cTimeP:0:2}.${cTimeP:2}" ;;
+        esac        
+
         [[ "${linenoUniq}" == *" ${linenoA[$kk]} "* ]] || {
             linenoUniqA[$kk]="${linenoA[$kk]}"
             linenoUniq+=" ${linenoA[$kk]} "
@@ -1460,22 +1476,53 @@ _timep_PROCESS_LOG() {
             linenoUniqLineA[${linenoA[$kk]}]+=" $kk"
             (( linenoUniqCountA[${linenoA[$kk]}]++ ))
             linenoUniqTimeA[${linenoA[$kk]}]+=" ${runTimesA[$kk]}"
+            linenoUniqUTimeA[${linenoA[$kk]}]+=" ${uTimesA[$kk]}"
+            linenoUniqSTimeA[${linenoA[$kk]}]+=" ${sTimesA[$kk]}"
+            linenoUniqCTimeA[${linenoA[$kk]}]+=" ${cTimesA[$kk]}"
         else
             linenoUniqLineA[${linenoA[$kk]}]="$kk"
             linenoUniqCountA[${linenoA[$kk]}]="1"
             linenoUniqTimeA[${linenoA[$kk]}]="${runTimesA[$kk]}"
+            linenoUniqUTimeA[${linenoA[$kk]}]="${uTimesA[$kk]}"
+            linenoUniqSTimeA[${linenoA[$kk]}]="${sTimesA[$kk]}"
+            linenoUniqTCimeA[${linenoA[$kk]}]="${cTimesA[$kk]}"
         fi
     done
 
     # get runtime sums for the combined uniq lineno's
     for kk in "${!linenoUniqTimeA[@]}"; do
         linenoUniqTimeA[$kk]="$( _timep_EPOCHREALTIME_SUM_ALT ${linenoUniqTimeA[$kk]} )"
-        (( runTimeP = ( 10000 * 10#${linenoUniqTimeA[$kk]//./} ) / 10#$runTimeTotal0 ))
+        (( linenoUniqUTimeA[$kk] = ${linenoUniqUTimeA[$kk]// /\+} ))
+        (( linenoUniqSTimeA[$kk] = ${linenoUniqSTimeA[$kk]// /\+} ))
+        (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} ))
+
+        (( runTimeP = ( 10000 * 10#0${linenoUniqTimeA[$kk]//./} ) / 10#0$runTimeTotal0 ))
         printf -v runTimeP '%0.4d' "$runTimeP"
         case "${runTimeP}" in
             10000) linenoUniqTimePA[$kk]=100.00 ;;
             *) linenoUniqTimePA[$kk]="${runTimeP:0:2}.${runTimeP:2}" ;;
         esac
+
+        (( uTimeP = ( 10000 * 10#0${linenoUniqUTimeA[$kk]//./} ) / 10#0$uTimeTotal ))
+        printf -v uTimeP '%0.4d' "$uTimeP"
+        case "${uTimeP}" in
+            10000) linenoUniqUTimePA[$kk]=100.00 ;;
+            *) linenoUniqUTimePA[$kk]="${uTimeP:0:2}.${uTimeP:2}" ;;
+        esac
+
+        (( sTimeP = ( 10000 * 10#0${linenoUniqSTimeA[$kk]//./} ) / 10#0$sTimeTotal ))
+        printf -v sTimeP '%0.4d' "$sTimeP"
+        case "${sTimeP}" in
+            10000) linenoUniqSTimePA[$kk]=100.00 ;;
+            *) linenoUniqSTimePA[$kk]="${sTimeP:0:2}.${sTimeP:2}" ;;
+        esac
+
+        (( cTimeP = ( 10000 * 10#0${linenoUniqCTimeA[$kk]//./} ) / 10#0$cTimeTotal ))
+        printf -v cTimeP '%0.4d' "$cTimeP"
+        case "${cTimeP}" in
+            10000) linenoUniqCTimePA[$kk]=100.00 ;;
+            *) linenoUniqCTimePA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
+        esac                    
     done
 
     (( spacerN = 4 * ( timep_LOG_NESTING_MAX - timep_LOG_NESTING_CUR ) ))
