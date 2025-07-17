@@ -1005,17 +1005,14 @@ _timep_EPOCHREALTIME_DIFF_ALT() {
 _timep_EPOCHREALTIME_SUM() {
     local tSum tSum0 d d6 A T
 
-    (( ${#runTimesA[@]} == 0 )) && return 1
-    (( ${#runTimesA[@]} == 1 )) && runTimeTotal="${runTimesA[*]}"
-    (( ${#uTimesA[@]} == 1 )) && uTimeTotal="${uTimesA[*]}"
-    (( ${#sTimesA[@]} == 1 )) && sTimeTotal="${sTimesA[*]}"
-    (( ${#cTimesA[@]} == 1 )) && cTimeTotal="${cTimesA[*]}"
+    (( ${#runTimesA[@]} == 1 )) && printf -v "runTimeTotal" '%s' "${runTimesA[@]}"
+    (( ${#uTimesA[@]} == 1 )) && printf -v "uTimeTotal" '%s' "${uTimesA[@]}"
+    (( ${#sTimesA[@]} == 1 )) && printf -v "sTimeTotal" '%s' "${sTimesA[@]}"
+    (( ${#cTimesA[@]} == 1 )) && printf -v "cTimeTotal" '%s' "${cTimesA[@]}"
     (( ${#runTimesA[@]} == 1 )) && (( ${#uTimesA[@]} == 1 )) && (( ${#sTimesA[@]} == 1 )) && (( ${#cTimesA[@]} == 1 )) && return 0
 
-    for A in 'run' 'u' 's' 'c'; do
-        local -n T="${A}TimesA"
-        printf -v tSum '+10#%s' "${T[@]//[^0-9]/}"
-        local +n T
+    (( ${#runTimesA[@]} <= 1 )) || {
+        printf -v tSum '+10#%s' "${runTimesA[@]//[^0-9]/}"
         tSum="${tSum// /+10#}"
         tSum0="${tSum}"
         tSum="${tSum//+10#+/+}"
@@ -1026,14 +1023,25 @@ _timep_EPOCHREALTIME_SUM() {
             tSum="${tSum%+10#}"
         done
         (( tSum = 0${tSum//s/} ))
-        if [[ "${A}" == 'run' ]]; then
-            printf -v d '%0.7d' "${tSum}"
-            (( d6 = ${#d} - 6 ))
-            printf -v "${A}TimeTotal" '%s.%s' "${d:0:$d6}" "${d:$d6}"
-        else
-            printf -v "${A}TimeTotal" '%s' "${tSum}"
-        fi
-    done
+        printf -v d '%0.7d' "${tSum}"
+        (( d6 = 0 - 6 ))
+        printf -v "runTimeTotal" '%s.%s' "${d:0:$d6}" "${d:$d6}"
+    }
+    (( ${#uTimesA[@]} <= 1 )) || {
+        printf -v tSum '+10#%s' "${uTimesA[@]//[^0-9]/}"
+        (( tSum = 0${tSum} ))
+        printf -v "uTimeTotal" '%s' "${tSum}"
+    }
+    (( ${#sTimesA[@]} <= 1 )) || {
+        printf -v tSum '+10#%s' "${sTimesA[@]//[^0-9]/}"
+        (( tSum = 0${tSum} ))
+        printf -v "sTimeTotal" '%s' "${tSum}"
+    }
+     (( ${#cTimesA[@]} <= 1 )) || {
+        printf -v tSum '+10#%s' "${cTimesA[@]//[^0-9]/}"
+        (( tSum = 0${tSum} ))
+        printf -v "cTimeTotal" '%s' "${tSum}"
+    }
 }
 
 _timep_EPOCHREALTIME_SUM_ALT() {
@@ -1121,15 +1129,13 @@ _timep_NUM_RUNNING() {
 
 shopt -s extglob
 _timep_PROCESS_LOG() {
-    local kk kk1 nn r runTimeTotal runTimeTotal0 inPipeFlag lineno1 nPipe startTime endTime startUTime endUTime startSTime endSTime runTime uTime sTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0 uTimeSplitN uTimeSplitK wallUTimeSplitSum wallUTimeSplitAvg2 uTimeSplitTimeDistAll uTimeSplitTimeDistSum uTimeSplitIWMax sTimeSplitN sTimeSplitK wallSTimeSplitSum wallSTimeSplitAvg2 sTimeSplitTimeDistAll sTimeSplitTimeDistSum sTimeSplitIWMax
-    local -a logA nPipeA startTimesA endTimesA runTimesA runTimesPA uTimesA sTimesA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA wallUTimeSplitA normalCmdFlagA wallUTimeSplitA uTimeSplitIWA wallSTimeSplitA sTimeSplitIWA
-i    local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA linenoUniqUTimeA linenoUniqUTimePA linenoUniqSTimeA linenoUniqSTimePA linenoUniqCTimeA linenoUniqCTimePA 
+    local kk kk1 nn r runTimeTotal runTimeTotal0 uTimeTotal sTimeTotal cTimeTotal inPipeFlag lineno1 nPipe startTime endTime startUTime endUTime startSTime endSTime runTime uTime sTime runTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0 uTimeSplitN uTimeSplitK wallUTimeSplitSum wallUTimeSplitAvg2 uTimeSplitTimeDistAll uTimeSplitTimeDistSum uTimeSplitIWMax sTimeSplitN sTimeSplitK wallSTimeSplitSum wallSTimeSplitAvg2 sTimeSplitTimeDistAll sTimeSplitTimeDistSum sTimeSplitIWMax
+    local -a logA nPipeA startTimesA endTimesA runTimesA runTimesPA uTimesA sTimesA cTimesA uTimesPA sTimesPA cTimesPA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA wallUTimeSplitA normalCmdFlagA wallUTimeSplitA uTimeSplitIWA wallSTimeSplitA sTimeSplitIWA
+    local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA linenoUniqUTimeA linenoUniqUTimePA linenoUniqSTimeA linenoUniqSTimePA linenoUniqCTimeA linenoUniqCTimePA 
 
-
+    trap 'echo "ERROR: $BASH_COMMAND"' ERR
 
     [[ -e "${1}" ]] || return 1
-
-    trap 'declare -p | grep -i time >&$timep_FD2' ERR
 
     inPipeFlag=false
     nPipeNextIgnoreFlag=false
@@ -1205,10 +1211,11 @@ i    local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA 
             # read in the endtime + runtime from the log
             [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
                 _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }" && {
-                    IFS=$'\t' read -r runTime uTime sTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
+                    IFS=$'\t' read -r runTime uTime sTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
                     [[ ${runTime} ]] && runTimesA[$kk]="${runTime}"
                     [[ ${uTime} ]] && uTimesA[$kk]="${uTime}"
                     [[ ${sTime} ]] && sTimesA[$kk]="${sTime}"
+                    [[ ${cTime} ]] && cTimesA[$kk]="${cTime}"
                 }
             }
             [[ "${endTimesA[$kk]}" == '-' ]] && {
@@ -1282,6 +1289,7 @@ i    local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA 
         # we are going to steal 1 jiffy from the next command (usually 10 ms = 10000 us) and distribute it between all the commands that ran without increasing utime/stime
         # each command will get a a set number of us (timep_RUNTIME_MIN --> approximate minimum debug trap overhead). and the rest will be distributed via the following weights:
         # a = avg runtime for all N commands being distributed to; x_n = runtime for command n; weight = w_n = W * x_n^2 / (a^2 + x_n^2); W = 1 / (sum of all W_n)
+        #declare -p kk uTime sTime runTime endUTime startUTime endSTime startSTime >&2
           (( kk1 = kk + 1 ))
         if (( kk > 0 )) && (( kk < ${#logA[@]} - 1 )) && { { (( uTime == 0 )) && (( uTimesA[$kk1] + uTimeSplitN > 0 )); } || { (( uTimeSplitN > 0 )) && (( nPipeA[$kk] > 1 )); }; }; then
             if (( uTimeSplitN == 0 )) && (( uTime == 0 )) && (( kk > 0 )); then
@@ -1320,9 +1328,14 @@ i    local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA 
                (( uTimeSplitTimeDistSum += uTimeSplitTimeDistA[$kk1] ))
             done
             (( uTimeSplitTimeDistSum <= 0 )) && uTimeSplitTimeDistSum=1
+            printf '\nstealing 1 jiffy from command #%s\n' "${uTimeSplitK}" >&2
             (( uTimesA[$uTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-                (( nPipeA[$uTimeSplitK] == 1 )) && (( uTimesA[$uTimeSplitK] = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
+                (( nPipeA[$uTimeSplitK] == 1 )) && {
+                    (( uTimeAdd = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
+                    printf '\ngiving %s us to command #%s\n' "${uTimeAdd}" "${uTimeSplitK}" >&2
+                    (( uTimesA[$uTimeSplitK] += uTimeAdd ))
+                }
                 (( uTimeSplitK-- ))
                 (( uTimeSplitN-- ))
             done
@@ -1377,6 +1390,8 @@ i    local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA 
             sTimeSplitK=0
             sTimeSplitN=0
         fi
+        #declare -p kk uTime sTime runTime endUTime startUTime endSTime startSTime  >&2
+
     done
 
     # get 1st "normal command"
@@ -1412,13 +1427,13 @@ done
 printf '%s;' "${fgA[@]}")"
 
     # print stack trace for flamegraph
-    for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
-        ${normalCmdFlagA[$kk]} && {
+    for kk in "${!logA[@]}"; do
+        #{
             (( runTime = 10#${runTimesA[$kk]//./} ))
             (( cTime = uTimesA[$kk] + sTimesA[$kk] ))
-            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${runTime##+(0)}" "${cTime}" >>"${1%\/*}/out.flamegraph.full"
             cTimesA[$kk]=${cTime}
-        }
+            ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${runTime##+(0)}" "${cTime}" >>"${1%\/*}/out.flamegraph.full"
+        #}
     done
 
     # get total runtime
@@ -1446,10 +1461,10 @@ printf '%s;' "${fgA[@]}")"
             lineno1=0
         fi
         linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
-        (( runTimeP = ( 10000 * 10#0${runTimesA[$kk]//./} ) / 10#0${runTimeTotal0} ))
-        (( uTimeP = ( 10000 * 10#0${uTimesA[$kk]//./} ) / 10#0${uTimeTotal} ))
-        (( sTimeP = ( 10000 * 10#0${sTimesA[$kk]//./} ) / 10#0${sTimeTotal} ))
-        (( cTimeP = ( 10000 * 10#0${cTimesA[$kk]//./} ) / 10#0${cTimeTotal} ))
+        (( runTimeP = ( 10000 * 10#0${runTimesA[$kk]//./} ) / ( 1 + 10#0${runTimeTotal0} ) ))
+        (( uTimeP = ( 10000 * 10#0${uTimesA[$kk]//./} ) / ( 1 + 10#0${uTimeTotal} ) ))
+        (( sTimeP = ( 10000 * 10#0${sTimesA[$kk]//./} ) / ( 1 + 10#0${sTimeTotal} ) ))
+        (( cTimeP = ( 10000 * 10#0${cTimesA[$kk]//./} ) /( 1 + 10#0${cTimeTotal} ) ))
 
         
         printf -v runTimeP '%0.4d' "$runTimeP"
@@ -1490,39 +1505,51 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqTimeA[${linenoA[$kk]}]="${runTimesA[$kk]}"
             linenoUniqUTimeA[${linenoA[$kk]}]="${uTimesA[$kk]:-1}"
             linenoUniqSTimeA[${linenoA[$kk]}]="${sTimesA[$kk]:-1}"
-            linenoUniqTCimeA[${linenoA[$kk]}]="${cTimesA[$kk]:-1}"
+            linenoUniqCTimeA[${linenoA[$kk]}]="${cTimesA[$kk]:-1}"
         fi
     done
 
     # get runtime sums for the combined uniq lineno's
     for kk in "${!linenoUniqTimeA[@]}"; do
         linenoUniqTimeA[$kk]="$( _timep_EPOCHREALTIME_SUM_ALT ${linenoUniqTimeA[$kk]} )"
-        (( linenoUniqUTimeA[$kk] = ${linenoUniqUTimeA[$kk]// /\+} ))
-        (( linenoUniqSTimeA[$kk] = ${linenoUniqSTimeA[$kk]// /\+} ))
-        (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} ))
 
-        (( runTimeP = ( 10000 * 10#0${linenoUniqTimeA[$kk]//./} ) / 10#0$runTimeTotal0 ))
+        linenoUniqUTimeA[$kk]="${linenoUniqUTimeA[$kk]//[^0-9 ]/}"
+        linenoUniqSTimeA[$kk]="${linenoUniqSTimeA[$kk]//[^0-9 ]/}"
+        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]//[^0-9 ]/}"
+
+        linenoUniqUTimeA[$kk]="${linenoUniqUTimeA[$kk]# }"
+        linenoUniqSTimeA[$kk]="${linenoUniqSTimeA[$kk]# }"
+        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]# }"
+        linenoUniqUTimeA[$kk]="${linenoUniqUTimeA[$kk]% }"
+        linenoUniqSTimeA[$kk]="${linenoUniqSTimeA[$kk]% }"
+        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]% }"
+
+        [[ ${linenoUniqUTimeA[$kk]} ]] && (( linenoUniqUTimeA[$kk] = ${linenoUniqUTimeA[$kk]// /\+} )) || linenoUniqUTimeA[$kk]=0
+        [[ ${linenoUniqSTimeA[$kk]} ]] && (( linenoUniqSTimeA[$kk] = ${linenoUniqSTimeA[$kk]// /\+} )) || linenoUniqSTimeA[$kk]=0
+        [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) || linenoUniqCTimeA[$kk]=0
+
+        (( runTimeP = ( 10000 * 10#0${linenoUniqTimeA[$kk]//./} ) / ( 1 + runTimeTotal0 ) ))
         printf -v runTimeP '%0.4d' "$runTimeP"
         case "${runTimeP}" in
             10000) linenoUniqTimePA[$kk]=100.00 ;;
             *) linenoUniqTimePA[$kk]="${runTimeP:0:2}.${runTimeP:2}" ;;
         esac
 
-        (( uTimeP = ( 10000 * 10#0${linenoUniqUTimeA[$kk]//./} ) / 10#0$uTimeTotal ))
+        (( uTimeP = ( 10000 * 10#0${linenoUniqUTimeA[$kk]:-0} ) / ( 1 + uTimeTotal ) ))
         printf -v uTimeP '%0.4d' "$uTimeP"
         case "${uTimeP}" in
             10000) linenoUniqUTimePA[$kk]=100.00 ;;
             *) linenoUniqUTimePA[$kk]="${uTimeP:0:2}.${uTimeP:2}" ;;
         esac
 
-        (( sTimeP = ( 10000 * 10#0${linenoUniqSTimeA[$kk]//./} ) / 10#0$sTimeTotal ))
+        (( sTimeP = ( 10000 * 10#0${linenoUniqSTimeA[$kk]:-0} ) / ( 1 + sTimeTotal ) ))
         printf -v sTimeP '%0.4d' "$sTimeP"
         case "${sTimeP}" in
             10000) linenoUniqSTimePA[$kk]=100.00 ;;
             *) linenoUniqSTimePA[$kk]="${sTimeP:0:2}.${sTimeP:2}" ;;
         esac
 
-        (( cTimeP = ( 10000 * 10#0${linenoUniqCTimeA[$kk]//./} ) / 10#0$cTimeTotal ))
+        (( cTimeP = ( 10000 * 10#0${linenoUniqCTimeA[$kk]:-0} ) / ( 1 + cTimeTotal ) ))
         printf -v cTimeP '%0.4d' "$cTimeP"
         case "${cTimeP}" in
             10000) linenoUniqCTimePA[$kk]=100.00 ;;
@@ -1735,8 +1762,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 }
             else
                 printf '\n\nERROR: could not process the following logs:\n' >&2
-                printf '%s\n' "${kkNeed[@]:$kkMin}" >&2
-                printf '\nABORTING!' >&2
+                for kkErr in "${kkNeed[@]:$kkMin}"; do
+                    printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
+                done
+                                printf '\nABORTING!' >&2
                 return 1
             fi
         done
