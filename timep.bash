@@ -1297,6 +1297,7 @@ _timep_PROCESS_LOG() {
                (( uTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( uTimeSplitIWMax + wallUTimeSplitAvg2 ) * uTimeSplitTimeDistAll * uTimeSplitIWA[$kk1] / ( wallUTimeSplitAvg2 + uTimeSplitIWA[$kk1] ) ))
                (( uTimeSplitTimeDistSum += uTimeSplitTimeDistA[$kk1] ))
             done
+            (( uTimeSplitTimeDistSum <= 0 )) && uTimeSplitTimeDistSum=1
             (( uTime[$uTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallUTimeSplitA[@]}"; do
                 (( uTime[$uTimeSplitK] = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
@@ -1335,6 +1336,7 @@ _timep_PROCESS_LOG() {
                (( sTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( sTimeSplitIWMax + wallSTimeSplitAvg2 ) * sTimeSplitTimeDistAll * sTimeSplitIWA[$kk1] / ( wallSTimeSplitAvg2 + sTimeSplitIWA[$kk1] ) ))
                (( sTimeSplitTimeDistSum += sTimeSplitTimeDistA[$kk1] ))
             done
+            (( sTimeSplitTimeDistSum <= 0 )) && sTimeSplitTimeDistSum=1
             (( sTime[$sTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallSTimeSplitA[@]}"; do
                 (( sTime[$sTimeSplitK] = timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
