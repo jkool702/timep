@@ -1267,7 +1267,7 @@ _timep_PROCESS_LOG() {
         # we are going to steal 1 jiffy from the next command (usually 10 ms = 10000 us) and distribute it between all the commands that ran without increasing utime/stime
         # each command will get a a set number of us (timep_RUNTIME_MIN --> approximate minimum debug trap overhead). and the rest will be distributed via the following weights:
         # a = avg runtime for all N commands being distributed to; x_n = runtime for command n; weight = w_n = W * x_n^2 / (a^2 + x_n^2); W = 1 / (sum of all W_n)
-        if (( uTime == 0 )); then
+        if (( uTime == 0 )) || { (( uTimeSplitN > 0 )) && (( nPipeA[$kk] > 1 )); }; then
             if (( uTimeSplitN == 0 )); then
                 (( kk1 = kk + 1 ))
                 uTimeSplitN=2
@@ -1314,7 +1314,7 @@ _timep_PROCESS_LOG() {
             done
         fi
 
-        if (( sTime == 0 )); then
+        if (( sTime == 0 )) || { (( sTimeSplitN > 0 )) && (( nPipeA[$kk] > 1 )); }; then
             if (( sTimeSplitN == 0 )); then
                 (( kk1 = kk + 1 ))
                 sTimeSplitN=2
