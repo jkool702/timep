@@ -1004,16 +1004,18 @@ _timep_EPOCHREALTIME_DIFF_ALT() {
 }
 
 _timep_EPOCHREALTIME_SUM() {
-    local tSum tSum0 d d6
+    local tSum tSum0 d d6 A T TT
 
     (( ${#runTimesA[@]} == 0 )) && return 1
-    (( ${#runTimesA[@]} == 1 )) && {
-        # short circuit if only 1 time
-        runTimeTotal="${runTimesA[*]}"
-        return 0
-    }
+    (( ${#runTimesA[@]} == 1 )) && runTimeTotal="${runTimesA[*]}"
+    (( ${#uTimesA[@]} == 1 )) && uTimeTotal="${uTimesA[*]}"
+    (( ${#sTimesA[@]} == 1 )) && sTimeTotal="${sTimesA[*]}"
+    (( ${#runTimesA[@]} == 1 )) && (( ${#uTimesA[@]} == 1 )) && (( ${#sTimesA[@]} == 1 )) && return 0
 
-    printf -v tSum '+10#%s' "${runTimesA[@]//[^0-9]/}"
+    for A in 'run' 'u' 's'; do
+    local -n T="${A}TimesA"
+    printf -v tSum '+10#%s' "${T[@]//[^0-9]/}"
+    local +n T
     tSum="${tSum// /+10#}"
     tSum0="${tSum}"
     tSum="${tSum//+10#+/+}"
@@ -1026,7 +1028,8 @@ _timep_EPOCHREALTIME_SUM() {
     (( tSum = 0${tSum//s/} ))
     printf -v d '%0.7d' "${tSum}"
     (( d6 = ${#d} - 6 ))
-    printf -v runTimeTotal '%s.%s' "${d:0:$d6}" "${d:$d6}"
+    printf -v "${A}TimeTotal" '%s.%s' "${d:0:$d6}" "${d:$d6}"
+    done
 }
 
 _timep_EPOCHREALTIME_SUM_ALT() {
@@ -1362,15 +1365,18 @@ _timep_PROCESS_LOG() {
         fi
     done
 
-    for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
-        ${normalCmdFlagA[$kk]} && {
-            if [[ -z "${fg0}" ]]; then
-                fg0="$(IFS0="${IFS}"
+    # get 1st "normal comand"
+    while [[ "${cmdA[$kk]}" == '<< ('*'): '*'>>' ]] || (( nPipeA[$kk] != 1 )); do
+       ((kk++))
+    done
+
+    # get base stack (showing all the parents) for this log
+    fg0="$(IFS0="${IFS}"
                 IFS='.'
                 # get base stack for flamegraph
-                read -r -a fA <<<"${func#* }"
-                read -r -a sA <<<"${pid#* }"
-                read -r -a eA <<<"${nexec#* }"
+                read -r -a fA <<<"${funcA[$kk]#* }"
+                read -r -a sA <<<"${pidA[$kk]#* }"
+                read -r -a eA <<<"${nexecA[$kk]#* }"
                 IFS="${IFS0}"
                 unset "eA[-1]" "IFS0"
                 ns=0
@@ -1385,23 +1391,22 @@ _timep_PROCESS_LOG() {
                     fi
                 done
                 printf '%s;' "${fgA[@]}")"
-            fi
 
-            # print stack trace for flamegraph
+    # print stack trace for flamegraph
+    for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
+        ${normalCmdFlagA[$kk]} && {
             (( runTime = 10#${runTimesA[$kk]//./} ))
-            printf '%s%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${runTime##+(0)}"  >>"${1%\/*}/out.flamegraph.full"
+            (( cpuTime = uTime[$kk] + sTime[$kk] ))
+            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${runTime##+(0)}" "${cpuTime}" >>"${1%\/*}/out.flamegraph.full"
         }
-
     done
 
     # get total runtime
-    case ${#logA[@]} in
-        1) runTimeTotal="${runTimesA[*]}" uTimeTotal="${uTimesA[*]}"; sTimeTotal="${sTimesA[*]}" ;;
-        *) _timep_EPOCHREALTIME_SUM  ;;
-
-    esac
-
+    _timep_EPOCHREALTIME_SUM
+    
     [[ ${runTimeTotal} ]] || runTimeTotal='0.000001'
+    [[ ${uTimeTotal} ]] || uTimeTotal='1'
+    [[ ${sTimeTotal} ]] || sTimeTotal='1'
 
     # write runtime and final endtime to .{end,run}time file
     printf '%s %s %s\n' "${endTimesA[-1]}" "${endUTimesA[-1]}" "${endSTimesA[-1]}" >"${1%\/*}/.endtimes/${1##*\/}"
