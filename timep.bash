@@ -1274,18 +1274,26 @@ _timep_PROCESS_LOG() {
                 uTimeSplitK=${kk1}
                 (( wallUTimeSplitA[0] = 10#${runTimesA[$kk1]//./} / uTime[$kk1] ))
                 (( wallUTimeSplitA[1] = 10#${runTime//./} ))
-                (( wallUTimeSplitSum = wallUTimeSplitA[0] + wallUTimeSplitA[1] ))
+                if (( nPipeA[$kk] == 1 )); then
+                    (( wallUTimeSplitSum = wallUTimeSplitA[0] + wallUTimeSplitA[1] ))
+                    uTimeSplitN=2
+                else
+                    wallUTimeSplitSum=${wallUTimeSplitA[0]}
+                    uTimeSplitN=1
+                fi
             else
-                (( wallUTimeSplitA[${uTimeSplitN}] = 10#${runTime//./} ))
-                (( wallUTimeSplitSum += wallUTimeSplitA[${uTimeSplitN}] ))
-                ((uTimeSplitN++))
+                (( wallUTimeSplitA[${#wallUTimeSplitA[@]}] = 10#${runTime//./} ))
+                (( nPipeA[$kk] == 1 )) && {
+                    (( wallUTimeSplitSum += wallUTimeSplitA[-1] ))
+                    ((uTimeSplitN++))
+                }
             fi
         elif (( uTimeSplitN > 0 )); then
            (( uTimeSplitTimeDistAll = timep_CPU_TIME_MULT - ( timep_RUNTIME_MIN * uTimeSplitN ) ))
             (( wallUTimeSplitAvg2 = ( wallUTimeSplitSum / uTimeSplitN ) ** 2 ))
             uTimeSplitIWMax=0
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-                if [[ "${cmdA[$kk1]}" == 'wait '* ]]; then
+                if [[ "${cmdA[$kk1]}" == 'wait '* ]] || (( nPipeA[$kk] != 1 )); then
                     uTimeSplitIWA[$kk1]=0
                 else
                     (( uTimeSplitIWA[$kk1] = ( wallUTimeSplitA[$kk1] ** 2 ) ))
@@ -1300,7 +1308,7 @@ _timep_PROCESS_LOG() {
             (( uTimeSplitTimeDistSum <= 0 )) && uTimeSplitTimeDistSum=1
             (( uTime[$uTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-                (( uTime[$uTimeSplitK] = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
+                (( nPipeA[$$uTimeSplitK] == 1 )) && (( uTime[$uTimeSplitK] = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
                 (( uTimeSplitK-- ))
                 (( uTimeSplitN-- ))
             done
@@ -1313,18 +1321,26 @@ _timep_PROCESS_LOG() {
                 sTimeSplitK=${kk1}
                 (( wallSTimeSplitA[0] = 10#${runTimesA[$kk1]//./} / sTime[$kk1] ))
                 (( wallSTimeSplitA[1] = 10#${runTime//./} ))
-                (( wallSTimeSplitSum = wallSTimeSplitA[0] + wallSTimeSplitA[1] ))
+                if (( nPipeA[$kk] == 1 )); then
+                    (( wallSTimeSplitSum = wallSTimeSplitA[0] + wallSTimeSplitA[1] ))
+                    sTimeSplitN=2
+                else
+                    wallSTimeSplitSum=${wallSTimeSplitA[0]}
+                    sTimeSplitN=1
+                fi
             else
-                (( wallSTimeSplitA[${sTimeSplitN}] = 10#${runTime//./} ))
-                (( wallSTimeSplitSum += wallSTimeSplitA[${sTimeSplitN}] ))
-                ((sTimeSplitN++))
+                (( wallSTimeSplitA[${#wallSTimeSplitA[@]}] = 10#${runTime//./} ))
+                (( nPipeA[$kk] == 1 )) && {
+                    (( wallSTimeSplitSum += wallSTimeSplitA[-1] ))
+                    ((sTimeSplitN++))
+                }
             fi
         elif (( sTimeSplitN > 0 )); then
            (( sTimeSplitTimeDistAll = timep_CPU_TIME_MULT - ( timep_RUNTIME_MIN * sTimeSplitN ) ))
             (( wallSTimeSplitAvg2 = ( wallSTimeSplitSum / sTimeSplitN ) ** 2 ))
             sTimeSplitIWMax=0
             for kk1 in "${!wallSTimeSplitA[@]}"; do
-                if [[ "${cmdA[$kk1]}" == 'wait '* ]]; then
+                if [[ "${cmdA[$kk1]}" == 'wait '* ]] || (( nPipeA[$kk] != 1 )); then
                     sTimeSplitIWA[$kk1]=0
                 else
                     (( sTimeSplitIWA[$kk1] = ( wallSTimeSplitA[$kk1] ** 2 ) ))
@@ -1339,7 +1355,7 @@ _timep_PROCESS_LOG() {
             (( sTimeSplitTimeDistSum <= 0 )) && sTimeSplitTimeDistSum=1
             (( sTime[$sTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallSTimeSplitA[@]}"; do
-                (( sTime[$sTimeSplitK] = timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
+                (( nPipeA[$$sTimeSplitK] == 1 )) && (( sTime[$sTimeSplitK] = timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
                 (( sTimeSplitK-- ))
                 (( sTimeSplitN-- ))
             done
