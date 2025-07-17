@@ -494,7 +494,7 @@ _timep_getFuncSrc() {
                 timep_BG_PID_PREV_0='"''"'
             fi
             printf '"'"'1\t%s\t-\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_FNEST_CUR:-${#FUNCNAME[@]}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO[${timep_FNEST_CUR:-${#FUNCNAME[@]}}]:-${timep_LINENO_0}}" "${timep_BASH_COMMAND_PREV_0@Q}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_r"
-            printf '"'"'1\t%s\t+\t+\t+\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}.0\t%s\t::\t%s\n'"'"' "${EPOCHREALTIME}"$'"'"'\t'"'"'"${timep_ENDTIME#*$'"'"'\t'"'"'}" "${timep_FNEST_CUR:-${#FUNCNAME[@]}}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}.${BASHPID}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO_0}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${BASH_COMMAND@Q} ${timep_IS_BG_INDICATOR}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_c"
+            printf '"'"'1\t%s\t+\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}.0\t%s\t::\t%s\n'"'"' "${EPOCHREALTIME}"$'"'"'\t'"'"'"${timep_ENDTIME#*$'"'"'\t'"'"'}" "${timep_ENDTIME#*$'"'"'\t'"'"'}" "${timep_FNEST_CUR:-${#FUNCNAME[@]}}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}.${BASHPID}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO_0}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${BASH_COMMAND@Q} ${timep_IS_BG_INDICATOR}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_c"
             timep_SUBSHELL_INIT_FLAG=true
             timep_CMD_TYPE_PREV_0="${timep_CMD_TYPE}"
             timep_BASHPID_PREV_0="${timep_BASHPID_PREV}"
@@ -1278,12 +1278,13 @@ _timep_PROCESS_LOG() {
             endTimesA[$kk]="$(_timep_EPOCHREALTIME_SUM_ALT "${startTimesA[$kk]}" '0.000001')"
             runTimesA[$kk]='0.000001'
         }
-        
+
         # convert time to microseconds
-        (( uTime = timep_CPU_TIME_MULT * ( endUTime - startUTime ) ))
-        (( sTime = timep_CPU_TIME_MULT * ( endSTime - startSTime ) ))
+        [[ ${endUTime} ]] && [[ ${startUTime} ]] && (( uTime = timep_CPU_TIME_MULT * ( endUTime - startUTime ) )) || uTime=0
+        [[ ${endSTime} ]] && [[ ${startSTime} ]] && (( sTime = timep_CPU_TIME_MULT * ( endSTime - startSTime ) )) || sTime=0
         uTimesA[$kk]=${uTime}
         sTimesA[$kk]=${sTime}
+
 
         # find sections that are listed as having 0 utime/stime (i.e., utime from proc/pis/stat was the same before and after the command)
         # we are going to steal 1 jiffy from the next command (usually 10 ms = 10000 us) and distribute it between all the commands that ran without increasing utime/stime
@@ -1324,8 +1325,12 @@ _timep_PROCESS_LOG() {
             done
             uTimeSplitTimeDistSum=0
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-               (( uTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( uTimeSplitIWMax + wallUTimeSplitAvg2 ) * uTimeSplitTimeDistAll * uTimeSplitIWA[$kk1] / ( wallUTimeSplitAvg2 + uTimeSplitIWA[$kk1] ) ))
-               (( uTimeSplitTimeDistSum += uTimeSplitTimeDistA[$kk1] ))
+                if (( uTimeSplitIWA[$kk1] == 0 )); then
+                    (( uTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( uTimeSplitIWMax + wallUTimeSplitAvg2 ) * uTimeSplitTimeDistAll * uTimeSplitIWA[$kk1] / ( wallUTimeSplitAvg2 + uTimeSplitIWA[$kk1] ) ))
+                    (( uTimeSplitTimeDistSum += uTimeSplitTimeDistA[$kk1] ))
+                else
+                    uTimeSplitTimeDistA[$kk1]=0
+                fi
             done
             (( uTimeSplitTimeDistSum <= 0 )) && uTimeSplitTimeDistSum=1
             printf '\nstealing 1 jiffy from command #%s\n' "${uTimeSplitK}" >&2
@@ -1341,6 +1346,11 @@ _timep_PROCESS_LOG() {
             done
             uTimeSplitK=0
             uTimeSplitN=0
+            uTimeSplitTimeDistSum=0 
+            uTimeSplitTimeDistAll=0
+            wallUTimeSplitAvg2=0
+            wallUTimeSplitA=()
+            uTimeSplitTimeDistA=()
         fi
 
         (( kk1 = kk + 1 ))
@@ -1377,8 +1387,13 @@ _timep_PROCESS_LOG() {
             done
             sTimeSplitTimeDistSum=0
             for kk1 in "${!wallSTimeSplitA[@]}"; do
-               (( sTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( sTimeSplitIWMax + wallSTimeSplitAvg2 ) * sTimeSplitTimeDistAll * sTimeSplitIWA[$kk1] / ( wallSTimeSplitAvg2 + sTimeSplitIWA[$kk1] ) ))
-               (( sTimeSplitTimeDistSum += sTimeSplitTimeDistA[$kk1] ))
+               
+                if (( sTimeSplitIWA[$kk1] == 0 )); then
+                    (( sTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( sTimeSplitIWMax + wallSTimeSplitAvg2 ) * sTimeSplitTimeDistAll * sTimeSplitIWA[$kk1] / ( wallSTimeSplitAvg2 + sTimeSplitIWA[$kk1] ) ))
+                    (( sTimeSplitTimeDistSum += sTimeSplitTimeDistA[$kk1] ))
+                else
+                    sTimeSplitTimeDistA[$kk1]=0
+                fi
             done
             (( sTimeSplitTimeDistSum <= 0 )) && sTimeSplitTimeDistSum=1
             (( sTimesA[$sTimeSplitK] -= timep_CPU_TIME_MULT ))
@@ -1389,9 +1404,13 @@ _timep_PROCESS_LOG() {
             done
             sTimeSplitK=0
             sTimeSplitN=0
+            sTimeSplitTimeDistSum=0 
+            sTimeSplitTimeDistAll=0
+            wallSTimeSplitAvg2=0
+            wallSTimeSplitA=()
+            sTimeSplitTimeDistA=()
         fi
         #declare -p kk uTime sTime runTime endUTime startUTime endSTime startSTime  >&2
-
     done
 
     # get 1st "normal command"
@@ -1528,28 +1547,28 @@ printf '%s;' "${fgA[@]}")"
         [[ ${linenoUniqSTimeA[$kk]} ]] && (( linenoUniqSTimeA[$kk] = ${linenoUniqSTimeA[$kk]// /\+} )) || linenoUniqSTimeA[$kk]=0
         [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) || linenoUniqCTimeA[$kk]=0
 
-        (( runTimeP = ( 10000 * 10#0${linenoUniqTimeA[$kk]//./} ) / ( 1 + runTimeTotal0 ) ))
+        (( runTimeP = ( 10000 * 10#0${linenoUniqTimeA[$kk]//./} ) / ( 1 + ${runTimeTotal0:-0} ) ))
         printf -v runTimeP '%0.4d' "$runTimeP"
         case "${runTimeP}" in
             10000) linenoUniqTimePA[$kk]=100.00 ;;
             *) linenoUniqTimePA[$kk]="${runTimeP:0:2}.${runTimeP:2}" ;;
         esac
 
-        (( uTimeP = ( 10000 * 10#0${linenoUniqUTimeA[$kk]:-0} ) / ( 1 + uTimeTotal ) ))
+        (( uTimeP = ( 10000 * 10#0${linenoUniqUTimeA[$kk]:-0} ) / ( 1 + ${uTimeTotal:-0} ) ))
         printf -v uTimeP '%0.4d' "$uTimeP"
         case "${uTimeP}" in
             10000) linenoUniqUTimePA[$kk]=100.00 ;;
             *) linenoUniqUTimePA[$kk]="${uTimeP:0:2}.${uTimeP:2}" ;;
         esac
 
-        (( sTimeP = ( 10000 * 10#0${linenoUniqSTimeA[$kk]:-0} ) / ( 1 + sTimeTotal ) ))
+        (( sTimeP = ( 10000 * 10#0${linenoUniqSTimeA[$kk]:-0} ) / ( 1 + ${sTimeTotal:-0} ) ))
         printf -v sTimeP '%0.4d' "$sTimeP"
         case "${sTimeP}" in
             10000) linenoUniqSTimePA[$kk]=100.00 ;;
             *) linenoUniqSTimePA[$kk]="${sTimeP:0:2}.${sTimeP:2}" ;;
         esac
 
-        (( cTimeP = ( 10000 * 10#0${linenoUniqCTimeA[$kk]:-0} ) / ( 1 + cTimeTotal ) ))
+        (( cTimeP = ( 10000 * 10#0${linenoUniqCTimeA[$kk]:-0} ) / ( 1 + ${cTimeTotal:-0} ) ))
         printf -v cTimeP '%0.4d' "$cTimeP"
         case "${cTimeP}" in
             10000) linenoUniqCTimePA[$kk]=100.00 ;;
@@ -1628,7 +1647,7 @@ printf '%s;' "${fgA[@]}")"
             mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" |  sed -E 's/^([^\:]+\:[[:space:]]+)\(([0-9\.s]+)\|([0-9\.%]+)\)[[:space:]]*(.*)$'/'\2 \3'/)
             count0="${lineU#*$'\t'}"
             count0="${count0%% *}"
-            (( count0 = 10#${count0//[^0-9]/} * ${#timeUA[@]} ))
+            (( count0 = 10#0${count0//[^0-9]/} * ${#timeUA[@]} ))
             printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM_ALT "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG_ALT "${timeUA[@]#* }")" "${count0}" "${lineU#*$'\t'* }"
         done
 
@@ -1828,7 +1847,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # get total runtime
     read -r timep_runtimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
-    ((timep_runtimeALL = 10#${timep_runtimeALL//./}))
+    ((timep_runtimeALL = 10#0${timep_runtimeALL//[^0-9]/}))
 
     # add another percentage showing "percent of total runtime" to final outputs
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
