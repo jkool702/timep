@@ -1266,7 +1266,7 @@ _timep_PROCESS_LOG() {
         # find sections that are listed as having 0 utime/stime (i.e., utime from proc/pis/stat was the same before and after the command)
         # we are going to steal 1 jiffy from the next command (usually 10 ms = 10000 us) and distribute it between all the commands that ran without increasing utime/stime
         # each command will get a a set number of us (timep_RUNTIME_MIN --> approximate minimum debug trap overhead). and the rest will be distributed via the following weights:
-        # a = avg runtime for all N commands being distributed to; x_n = runtime for command n; weight = w_n = W / (a^2 + x_n^2); W = 1 / (sum of all W_n)
+        # a = avg runtime for all N commands being distributed to; x_n = runtime for command n; weight = w_n = W * x_n^2 / (a^2 + x_n^2); W = 1 / (sum of all W_n)
         if (( uTime == 0 )); then
             if (( uTimeSplitN == 0 )); then
                 (( kk1 = kk + 1 ))
@@ -1285,16 +1285,21 @@ _timep_PROCESS_LOG() {
             (( wallUTimeSplitAvg2 = ( wallUTimeSplitSum / uTimeSplitN ) ** 2 ))
             uTimeSplitIWMax=0
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-                (( uTimeSplitIWA[$kk1] = ( wallUTimeSplitA[$kk1] ** 2 ) + wallUTimeSplitAvg2 ))
-                (( uTimeSplitIWA[$kk1] > uTimeSplitIWMax )) && uTimeSplitIWMax="${uTimeSplitIWA[$kk1]}"
+                if [[ "${cmdA[$kk1]}" == 'wait '* ]]; then
+                    uTimeSplitIWA[$kk1]=0
+                else
+                    (( uTimeSplitIWA[$kk1] = ( wallUTimeSplitA[$kk1] ** 2 ) ))
+                    (( uTimeSplitIWA[$kk1] > uTimeSplitIWMax )) && uTimeSplitIWMax="${uTimeSplitIWA[$kk1]}"
+                fi
             done
             uTimeSplitTimeDistSum=0
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-               (( uTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * uTimeSplitIWMax * uTimeSplitTimeDistAll / uTimeSplitIWA[$kk1] ))
+               (( uTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( uTimeSplitIWMax + wallUTimeSplitAvg2 ) * uTimeSplitTimeDistAll * uTimeSplitIWA[$kk1] / ( wallUTimeSplitAvg2 + uTimeSplitIWA[$kk1] ) ))
                (( uTimeSplitTimeDistSum += uTimeSplitTimeDistA[$kk1] ))
             done
+            (( uTime[$uTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallUTimeSplitA[@]}"; do
-                (( uTime[$uTimeSplitK]= timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
+                (( uTime[$uTimeSplitK] = timep_RUNTIME_MIN + ( uTimeSplitTimeDistA[$kk1] * uTimeSplitTimeDistAll / uTimeSplitTimeDistSum ) ))
                 (( uTimeSplitK-- ))
                 (( uTimeSplitN-- ))
             done
@@ -1318,16 +1323,21 @@ _timep_PROCESS_LOG() {
             (( wallSTimeSplitAvg2 = ( wallSTimeSplitSum / sTimeSplitN ) ** 2 ))
             sTimeSplitIWMax=0
             for kk1 in "${!wallSTimeSplitA[@]}"; do
-                (( sTimeSplitIWA[$kk1] = ( wallSTimeSplitA[$kk1] ** 2 ) + wallSTimeSplitAvg2 ))
-                (( sTimeSplitIWA[$kk1] > sTimeSplitIWMax )) && sTimeSplitIWMax="${sTimeSplitIWA[$kk1]}"
+                if [[ "${cmdA[$kk1]}" == 'wait '* ]]; then
+                    sTimeSplitIWA[$kk1]=0
+                else
+                    (( sTimeSplitIWA[$kk1] = ( wallSTimeSplitA[$kk1] ** 2 ) ))
+                    (( sTimeSplitIWA[$kk1] > sTimeSplitIWMax )) && sTimeSplitIWMax="${sTimeSplitIWA[$kk1]}"
+                fi
             done
             sTimeSplitTimeDistSum=0
             for kk1 in "${!wallSTimeSplitA[@]}"; do
-               (( sTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * sTimeSplitIWMax * sTimeSplitTimeDistAll / sTimeSplitIWA[$kk1] ))
+               (( sTimeSplitTimeDistA[$kk1] = ( 1 << 10 ) * ( sTimeSplitIWMax + wallSTimeSplitAvg2 ) * sTimeSplitTimeDistAll * sTimeSplitIWA[$kk1] / ( wallSTimeSplitAvg2 + sTimeSplitIWA[$kk1] ) ))
                (( sTimeSplitTimeDistSum += sTimeSplitTimeDistA[$kk1] ))
             done
+            (( sTime[$sTimeSplitK] -= timep_CPU_TIME_MULT ))
             for kk1 in "${!wallSTimeSplitA[@]}"; do
-                (( sTime[$sTimeSplitK]= timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
+                (( sTime[$sTimeSplitK] = timep_RUNTIME_MIN + ( sTimeSplitTimeDistA[$kk1] * sTimeSplitTimeDistAll / sTimeSplitTimeDistSum ) ))
                 (( sTimeSplitK-- ))
                 (( sTimeSplitN-- ))
             done
