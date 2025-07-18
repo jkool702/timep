@@ -1,0 +1,120 @@
+# timep_builtin_cross.mk
+# Cross-compile clock_gettime builtin for multiple targets using musl-cross-make toolchains
+
+# Modify this if your musl-cross-make is in a different directory
+MUSL_CROSS_ROOT ?= /opt/musl-cross
+BUILTIN_SRC     ?= clock_gettime.c
+BUILTIN_NAME    ?= clock_gettime.so
+OUTPUT_DIR      ?= build
+
+# List of target architectures to build for
+TARGETS = \
+    x86_64-linux-musl \
+    aarch64-linux-musl \
+    arm-linux-musleabihf \
+    riscv64-linux-musl \
+    mipsel-linux-musl
+
+# Rules to invoke musl-cross-gcc
+all: $(addprefix $(OUTPUT_DIR)/, $(addsuffix /$(BUILTIN_NAME), $(TARGETS)))
+
+$(OUTPUT_DIR)/%/$(BUILTIN_NAME): $(BUILTIN_SRC)
+	@mkdir -p $(dir $@)
+	$(MUSL_CROSS_ROOT)/bin/$*-gcc -fPIC -shared -O3 -flto -Wall -Wextra -DSHELL -DLOADABLE_BUILTIN -I/usr/include/bash -I/usr/include/bash/include -I/usr/include/bash/builtins -o  $@ $<
+
+clean:
+	rm -rf $(OUTPUT_DIR)
+
+.PHONY: all clean
+
+
+
+
+
+
+git clone https://github.com/richfelker/musl-cross-make
+cd musl-cross-make
+
+# Set target in config.mak
+cat > config.mak <<EOF
+TARGET = aarch64-linux-musl
+OUTPUT = /opt/musl-cross
+EOF
+
+make -j$(nproc)
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <errno.h>
+#include <string.h>
+#include <stdint.h>
+
+#include "builtins.h"
+#include "shell.h"
+#include "common.h"
+#include "command.h"
+
+extern char **make_builtin_argv(WORD_LIST *list, int *argc);
+
+// Docstring for `help clock_gettime`
+static char *clock_gettime_doc[] = {
+    "Return high-resolution CPU time used by the current process.",
+    "If an argument is passed, use it as the name of a Bash variable to assign the result.",
+    "Otherwise, prints the result to stdout.",
+    "Usage: clock_gettime [VARNAME]",
+    NULL
+};
+
+// Builtin function
+static int clock_gettime_builtin(WORD_LIST *list) {
+    int argc;
+    char **argv = make_builtin_argv(list, &argc);
+
+#if defined(CLOCK_PROCESS_CPUTIME_ID)
+    struct timespec ts;
+    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) != 0) {
+        builtin_error("clock_gettime failed: %s", strerror(errno));
+        xfree(argv);
+        return EXECUTION_FAILURE;
+    }
+
+    // Calculate microseconds
+    uint64_t micros = ts.tv_sec * 1000000ULL + ts.tv_nsec / 1000;
+
+    if (argc > 1 && argv[1] && argv[1][0] != '\0') {
+        // Store in Bash variable
+        char buffer[32];
+        snprintf(buffer, sizeof(buffer), "%llu", (unsigned long long)micros);
+        setvar(argv[1], buffer, 0);
+        xfree(argv);
+        return EXECUTION_SUCCESS;
+    }
+
+    // Otherwise, print to stdout
+    printf("%llu\n", (unsigned long long)micros);
+    xfree(argv);
+    return EXECUTION_SUCCESS;
+
+#else
+    builtin_error("clock_gettime is not supported on this system.");
+    xfree(argv);
+    return EXECUTION_FAILURE;
+#endif
+}
+
+// Declare the builtin
+struct builtin clock_gettime_struct = {
+    "clock_gettime",
+    clock_gettime_builtin,
+    BUILTIN_ENABLED,
+    clock_gettime_doc,
+    "clock_gettime [VARNAME]",
+    0
+};
