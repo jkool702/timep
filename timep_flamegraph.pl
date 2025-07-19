@@ -420,12 +420,17 @@ sub color_timep {
 	$intensity = 2 * $intensity / (1 + $intensity * $intensity);
   $intensity  = 1 if $intensity > 1;
 
-	if (defined $count_cpu && defined $max_cpu && $max_cpu > 0) {
-	    $saturation = $count_cpu / $max_cpu;
-	} else {
-	    $saturation = 1 - 2 * (1 - $intensity) * (1 - $intensity) / 3;
-	}
-  $saturation = 1 if $saturation > 1;
+    if (defined $count_wall && $count_wall > 0 && defined $count_cpu) {
+      $saturation = sqrt($count_cpu / $count_wall);
+      if ($saturation > 1;) {
+	$saturation = 0.9 + (0.1 * ($saturation - 1));
+      } else {
+	$saturation = 0.1 + (0.8 * $saturation);
+      }
+    } else {
+      $saturation = 1;  # or fall back to heuristic like before
+    }
+    $saturation = 1 if $saturation > 1;
 
   	if ($name =~ m:_\[f\]$:) {	# function
 			$type = "function";
