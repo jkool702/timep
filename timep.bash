@@ -1448,6 +1448,7 @@ printf '%s;' "${fgA[@]}")"
 
         (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
     done >"${logCur}.combined"
+    return 0
 }
 
     # get log names
@@ -1561,7 +1562,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
             elif (( nRetry < 3 )) && (( nWorkerKilled > 0 )); then
                 kkNeed0=("${kkNeed[@]:${kkMin}}")
-                (( nWorkerKilled < ${#kkNeed0[@]} )) || _timep_NUM_RUNNING "${pAll_PID[@]}" || {
+                 _timep_NUM_RUNNING "${pAll_PID[@]}" || {
                     {
                         for kk1 in "${kkNeed[@]:${kkMin}}"; do
                             [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
