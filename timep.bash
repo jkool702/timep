@@ -1098,9 +1098,9 @@ _timep_NUM_RUNNING() {
 
 shopt -s extglob
 _timep_PROCESS_LOG() {
-    local logCur log_tmp kk kk1 nn r wTimeTotal wTimeTotal0 uTimeTotal sTimeTotal cTimeTotal inPipeFlag lineno1 nPipe startWTime endWTime startCTime endCTime wTime cTime wTimeP cTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0
+    local logCur log_tmp kk kk1 nn r wTimeTotal wTimeTotal0 uTimeTotal sTimeTotal cTimeTotal inPipeFlag lineno1 nPipe startWTime endWTime startCTime endCTime wTime cTime wTimeP wTime0 cTime0 cTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0 d6 
     local -a logA nPipeA startWTimesA endWTimesA wTimesA wTimesPA startCTimesA endCTimesA cTimesA cTimesPA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA
-    local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimesA linenoUniqWTimePA linenoUniqCTimesA linenoUniqCTimePA
+    local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimesA linenoUniqWTimesPA linenoUniqCTimesA linenoUniqCTimesPA
 
     trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND"' ERR
 
@@ -1278,7 +1278,7 @@ for nn in "${eA[@]}"; do
 done
 printf '%s;' "${fgA[@]}")"
             }
-            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTime}" "${cTime}" >>"${logCur%\/*}/out.flamegraph.full"
+            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimesA[$kk]}" "${cTimesA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
         }
     done
 
@@ -1303,17 +1303,17 @@ printf '%s;' "${fgA[@]}")"
         (( wTimeP = ( 10000 * wTimesA[$kk] ) / wTimeTotal ))
         (( cTimeP = ( 10000 * cTimesA[$kk] ) / cTimeTotal ))
 
-        printf -v wTimeP '%0.4d' "$wTimeP"
+        printf -v wTimeP '%0.4d' "${wTimeP}"
         case "${wTimeP}" in
-            10000) wTimesPA[0]=100.00 ;;
-            0|'') wTimesPA[0]=00.00 ;;
-            *) wTimesPA[0]="${wTimeP:0:2}.${wTimeP:2}" ;;
+            10000) wTimesPA[$kk]=100.00 ;;
+            0|'') wTimesPA[$kk]=00.00 ;;
+            *) wTimesPA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
-        printf -v cTimeP '%0.4d' "$cTimeP"
+        printf -v cTimeP '%0.4d' "${cTimeP}"
         case "${cTimeP}" in
-            10000) cTimesPA[0]=100.00 ;;
-            0|'') cTimesPA[0]=00.00 ;;
-            *) cTimesPA[0]="${cTimeP:0:2}.${cTimeP:2}" ;;
+            10000) cTimesPA[$kk]=100.00 ;;
+            0|'') cTimesPA[$kk]=00.00 ;;
+            *) cTimesPA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
         esac        
 
         [[ "${linenoUniq}" == *" ${linenoA[$kk]} "* ]] || {
@@ -1350,17 +1350,17 @@ printf '%s;' "${fgA[@]}")"
         (( wTimeP = ( 10000 * linenoUniqWTimesA[$kk] ) / wTimeTotal ))
         printf -v wTimeP '%0.4d' "$wTimeP"
         case "${wTimeP}" in
-            10000) linenoUniqTimePA[$kk]=100.00 ;;
-            0|'') linenoUniqTimePA[$kk]=00.00 ;;
-            *) linenoUniqTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
+            10000) linenoUniqWTimesPA[$kk]=100.00 ;;
+            0|'') linenoUniqWTimesPA[$kk]=00.00 ;;
+            *) linenoUniqWTimesPA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
 
         (( cTimeP = ( 10000 * linenoUniqCTimesA[$kk] ) / cTimeTotal ))
         printf -v cTimeP '%0.4d' "$cTimeP"
         case "${cTimeP}" in
-            10000) linenoUniqCTimePA[$kk]=100.00 ;;
-            0|'') linenoUniqCTimePA[$kk]=00.00 ;;
-            *) linenoUniqCTimePA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
+            10000) linenoUniqCTimesPA[$kk]=100.00 ;;
+            0|'') linenoUniqCTimesPA[$kk]=00.00 ;;
+            *) linenoUniqCTimesPA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
         esac                    
     done
 
@@ -1376,7 +1376,11 @@ printf '%s;' "${fgA[@]}")"
         else
             # add line to log
             (( kk == 0  )) || printf '\n\n'
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\t(%s->%s)' "${linenoA[$kk]}" '' "${wTimesA[$kk]}" "${wTimesPA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimesA[$kk]}" "${endWTimesA[$kk]}"
+            printf -v wTime0 '%0.7d' "${wTimesA[$kk]}"
+            (( d6 = ${#wTime0} - 6 ))
+            printf -v wTime '%s.%ss' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\t(%s->%s)' "${linenoA[$kk]}" '' "${wTime}" "${wTimesPA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimesA[$kk]}" "${endWTimesA[$kk]}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1408,7 +1412,12 @@ printf '%s;' "${fgA[@]}")"
         else
             # add line to log
             (( kk == 0  )) || printf '\n\n'
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%sx) %s' "${linenoUniqA[$kk]}" '' "${linenoUniqWTimesA[${linenoUniqA[$kk]}]}" "${linenoUniqTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}"
+
+            printf -v wTime0 '%0.7d' "${linenoUniqWTimesA[${linenoUniqA[$kk]}]}"
+            (( d6 = ${#wTime0} - 6 ))
+            printf -v wTime '%s.%ss' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%sx) %s' "${linenoUniqA[$kk]}" '' "${wTime}" "${linenoUniqWTimesPA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1472,14 +1481,16 @@ printf '%s;' "${fgA[@]}")"
 
     timep_coprocSrc='declare logID
 shopt -s extglob
+trap '"'"'printf '"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"'"'"' >&${timep_fd_done}'"'"'  EXIT
 while true; do
     read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
-    _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
+    _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || exit 1
     printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
-done'
+done
+trap - EXIT'
 
     # loop through logs from deepest nested upwards and run each through post processing function
     printf '\n\n' >&2
@@ -1501,7 +1512,7 @@ done'
 
     eval '{ coproc p0 {
     '"${timep_coprocSrc}"'
-  }
+  } 2>&${timep_FD2}
 } 2>/dev/null'
     pAll_PID=("${p0_PID}")
 
@@ -1519,7 +1530,7 @@ done'
         while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
             eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
-  }
+  } 2>&${timep_FD2}
 } 2>/dev/null
 pAll_PID+=("${p'"${nWorker}"'_PID}")'
             ((nWorker++))
@@ -1539,13 +1550,18 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         while (( kk >= kkMin )); do
             if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
-                ((kk--))
-                ((kkDiff--))
-                ((jj++))
-                unset "kkNeed[$doneInd]"
-                printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
-            elif (( nRetry < 3 )); then
-                _timep_NUM_RUNNING "${pAll_PID[@]}" || {
+                if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
+                    ((nWorkerKilled++))
+                else
+                    ((kk--))
+                    ((kkDiff--))
+                    ((jj++))
+                    unset "kkNeed[$doneInd]"
+                    printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
+                fi
+            elif (( nRetry < 3 )) && (( nWorkerKilled > 0 )); then
+                kkNeed0=("${kkNeed[@]:${kkMin}}")
+                (( nWorkerKilled < ${#kkNeed0[@]} )) || _timep_NUM_RUNNING "${pAll_PID[@]}" || {
                     {
                         for kk1 in "${kkNeed[@]:${kkMin}}"; do
                             [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
@@ -1553,14 +1569,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         done
                     } &
                     (( nWorker == 0 )) && {
-                        eval '{ coproc p'"${nWorker}"' {
+                        eval '{ coproc p0 {
     '"${timep_coprocSrc}"'
-  }
-} 2>/dev/null
-pAll_PID+=("${p'"${nWorker}"'_PID}")'
-            ((nWorker++))
+  } 2>&${timep_FD2}
+} 2>/dev/null'
+                        pAll_PID+=("${p0_PID}")
+                        ((nWorker++))
                     }
-                    NWorkerMax="${nWorker}"
+                    nWorkerMax="${nWorker}"
                     ((nRetry++))
                 }
             else
@@ -1568,7 +1584,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 for kkErr in "${kkNeed[@]:$kkMin}"; do
                     printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
                 done
-                                printf '\nABORTING!' >&2
+                    printf '\nABORTING!' >&2
                 return 1
             fi
         done
