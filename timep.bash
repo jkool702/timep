@@ -995,21 +995,6 @@ _timep_GET_RUNTIME_CORRECTION
 _timep_EPOCHREALTIME_DIFF() {
     local tDiff d d6
 
-    { [[ ${endWTimesA[$1]//[^0-9]/} ]] && [[ ${startWTimesA[$1]//[^0-9]/} ]]; } || {
-        wTime='0.000001'
-        return 1
-    }
-    (( tDiff = 10#${endWTimesA[$1]//[^0-9]/} - 10#${startWTimesA[$1]//[^0-9]/} - timep_RUNTIME_CORRECTION ))
-    (( tDiff <= 0 )) && tDiff=1
-    printf -v d '%0.7d' "${tDiff}"
-    (( d6 = ${#d} - 6 ))
-    printf -v wTime '%s.%s' "${d:0:$d6}" "${d:$d6}"
-    wTimesA[$1]="${wTime}"
-}
-
-_timep_EPOCHREALTIME_DIFF_ALT() {
-    local tDiff d d6
-
     if (( ${#} >= 2 )) && [[ ${1//[^0-9]/} ]] && [[ ${2//[^0-9]/} ]]; then
         (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
     elif (( ${#} == 1 )) && [[ "${1}" == *[0-9]*\ *[0-9]* ]]; then
@@ -1029,48 +1014,6 @@ _timep_EPOCHREALTIME_DIFF_ALT() {
 }
 
 _timep_EPOCHREALTIME_SUM() {
-    local tSum tSum0 d d6 A T
-
-    (( ${#wTimesA[@]} == 1 )) && printf -v "wTimeTotal" '%s' "${wTimesA[@]}"
-    (( ${#uTimesA[@]} == 1 )) && printf -v "uTimeTotal" '%s' "${uTimesA[@]}"
-    (( ${#sTimesA[@]} == 1 )) && printf -v "sTimeTotal" '%s' "${sTimesA[@]}"
-    (( ${#cTimesA[@]} == 1 )) && printf -v "cTimeTotal" '%s' "${cTimesA[@]}"
-    (( ${#wTimesA[@]} == 1 )) && (( ${#uTimesA[@]} == 1 )) && (( ${#sTimesA[@]} == 1 )) && (( ${#cTimesA[@]} == 1 )) && return 0
-
-    (( ${#wTimesA[@]} <= 1 )) || {
-        printf -v tSum '+10#%s' "${wTimesA[@]//[^0-9]/}"
-        tSum="${tSum// /+10#}"
-        tSum0="${tSum}"
-        tSum="${tSum//+10#+/+}"
-        tSum="${tSum%+10#}"
-        until [[ "${tSum}" == "${tSum0}" ]]; do
-            tSum0="${tSum}"
-            tSum="${tSum//+10#+/+}"
-            tSum="${tSum%+10#}"
-        done
-        (( tSum = 0${tSum//s/} ))
-        printf -v d '%0.7d' "${tSum}"
-        (( d6 = 0 - 6 ))
-        printf -v "wTimeTotal" '%s.%s' "${d:0:$d6}" "${d:$d6}"
-    }
-    (( ${#uTimesA[@]} <= 1 )) || {
-        printf -v tSum '+10#%s' "${uTimesA[@]//[^0-9]/}"
-        (( tSum = 0${tSum} ))
-        printf -v "uTimeTotal" '%s' "${tSum}"
-    }
-    (( ${#sTimesA[@]} <= 1 )) || {
-        printf -v tSum '+10#%s' "${sTimesA[@]//[^0-9]/}"
-        (( tSum = 0${tSum} ))
-        printf -v "sTimeTotal" '%s' "${tSum}"
-    }
-     (( ${#cTimesA[@]} <= 1 )) || {
-        printf -v tSum '+10#%s' "${cTimesA[@]//[^0-9]/}"
-        (( tSum = 0${tSum} ))
-        printf -v "cTimeTotal" '%s' "${tSum}"
-    }
-}
-
-_timep_EPOCHREALTIME_SUM_ALT() {
     local tSum tSum0 d d6
 
     (( ${#} == 0 )) && return
@@ -1096,7 +1039,7 @@ _timep_EPOCHREALTIME_SUM_ALT() {
     printf '%s.%s' "${d:0:$d6}" "${d:$d6}"
 }
 
-_timep_PERCENT_AVG_ALT() {
+_timep_PERCENT_AVG() {
     local tSum tSum0 d d2
 
     (( ${#} == 0 )) && return 1
@@ -1159,7 +1102,7 @@ _timep_PROCESS_LOG() {
     local -a logA nPipeA startWTimesA endWTimesA wTimesA wTimesPA uTimesA sTimesA cTimesA uTimesPA sTimesPA cTimesPA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA wallUTimeSplitA normalCmdFlagA wallUTimeSplitA uTimeSplitIWA wallSTimeSplitA sTimeSplitIWA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqTimeA linenoUniqTimePA linenoUniqWTimeA linenoUniqUTimePA linenoUniqSTimeA linenoUniqSTimePA linenoUniqCTimeA linenoUniqCTimePA 
 
-    trap 'echo "ERROR: $BASH_COMMAND"' ERR
+    trap 'echo "ERROR: $BASH_COMMAND" >&2' ERR
 
     [[ -e "${1}" ]] || return 1
 
@@ -1459,8 +1402,7 @@ printf '%s;' "${fgA[@]}")"
         # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
-        logMergeAll="$(
-        for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
+        logMergeAll="$(for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
             [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.combined" ]] && {
                 mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk1]}.combined")
                 printf '\n|-- %s' "${logMergeA[0]}"
@@ -1478,7 +1420,7 @@ printf '%s;' "${fgA[@]}")"
             count0="${lineU#*$'\t'}"
             count0="${count0%% *}"
             (( count0 = 10#0${count0//[^0-9]/} * ${#timeUA[@]} ))
-            printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM_ALT "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG_ALT "${timeUA[@]#* }")" "${count0}" "${lineU#*$'\t'* }"
+            printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG "${timeUA[@]#* }")" "${count0}" "${lineU#*$'\t'* }"
         done
 
         (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
@@ -1528,9 +1470,7 @@ done'
 
     export -f _timep_EPOCHREALTIME_DIFF
     export -f _timep_EPOCHREALTIME_SUM
-    export -f _timep_EPOCHREALTIME_DIFF_ALT
-    export -f _timep_EPOCHREALTIME_SUM_ALT
-    export -f _timep_PERCENT_AVG_ALT
+    export -f _timep_PERCENT_AVG
     export -f _timep_FILE_EXISTS
     export -f _timep_NUM_RUNNING
     export -f _timep_PROCESS_LOG
