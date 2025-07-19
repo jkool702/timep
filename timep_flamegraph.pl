@@ -441,9 +441,11 @@ sub color_timep {
 		}
   
   if ($type eq "timep") {
-    $r = int((255 * $intensity) * $saturation + 255 * (1 - $saturation));
-    $g = int((255 * (1 - (1 - 2 * $intensity) * (1 - 2 * sqrt($intensity))) * (1 - $intensity * $intensity)) * $saturation + 255 * (1 - $saturation));
+    $r = int((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
+    $g = ((255 * (1 - (1 - 2 * $intensity) * (1 - 2 * ($intensity))) * (1 - $intensity * $intensity)) * $saturation + 255 * (1 - $saturation))
     $b = int((255 * (1 - $intensity) * (1 - ($intensity * $intensity)) * (1 - ($intensity * $intensity * $intensity))) * $saturation + 255 * (1 - $saturation));
+    my $s = $saturation * (1 + 255 / (r$ + $g1 +$b1)) / 2
+    $g = int($g * $s + 255 * (1 - $s))
   } else {
         $saturation = (1 / 4) + ($saturation / 2);
   	if ($type eq "function") {
