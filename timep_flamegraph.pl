@@ -419,6 +419,8 @@ sub color_timep {
   $intensity  = $count_wall / $max_wall;
   #$intensity = 2 * $intensity / (1 + $intensity * $intensity);
   $intensity  = 1 if $intensity > 1;
+  $intensity  = 0 if $intensity < 0;
+
 
     if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
       $saturation = sqrt($count_cpu / $count_wall);
@@ -443,11 +445,12 @@ sub color_timep {
   }
   
   if ($type eq "time") {
+    my i2 = $intensity ** 2;
     $r = int((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
-    $g = ((255 * (1 - (1 - 2 * $intensity) * (1 - 2 * ($intensity))) * (1 - $intensity * $intensity)) * $saturation + 255 * (1 - $saturation))
-    $b = int((255 * (1 - $intensity) * (1 - ($intensity * $intensity)) * (1 - ($intensity * $intensity * $intensity))) * $saturation + 255 * (1 - $saturation));
-    my $s = $saturation * (1 + 255 / (r$ + $g1 +$b1)) / 2
-    $g = int($g * $s + 255 * (1 - $s))
+    $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 255 * (1 - $saturation))
+    $b = int((255 * (1 - $intensity) * (1 - ($i2)) * (1 - ($intensity * $i2))) * $saturation + 255 * (1 - $saturation));
+    my $s = $saturation * (1 + 255 / (r$ + $g1 +$b1)) / 2;
+    $g = int($g * $s + 255 * (1 - $s));
   } else {
         $saturation = (1 / 4) + ($saturation / 2);
   	if ($type eq "function") {
