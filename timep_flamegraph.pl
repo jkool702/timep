@@ -422,7 +422,7 @@ sub color_timep {
 
     if (defined $count_wall && $count_wall > 0 && defined $count_cpu) {
       $saturation = sqrt($count_cpu / $count_wall);
-      if ($saturation > 1;) {
+      if ($saturation > 1) {
 	$saturation = 0.9 + (0.1 * ($saturation - 1));
       } else {
 	$saturation = 0.1 + (0.8 * $saturation);
@@ -442,7 +442,7 @@ sub color_timep {
   
   if ($type eq "timep") {
     $r = int((255 * $intensity) * $saturation + 255 * (1 - $saturation));
-    $g = int((255 * (1 - (1 - 2 * $intensity) * (1 - 2 * sqrt($intensity))) * (1 - $intensity * intensity)) * $saturation + 255 * (1 - $saturation));
+    $g = int((255 * (1 - (1 - 2 * $intensity) * (1 - 2 * sqrt($intensity))) * (1 - $intensity * $intensity)) * $saturation + 255 * (1 - $saturation));
     $b = int((255 * (1 - $intensity) * (1 - ($intensity * $intensity)) * (1 - ($intensity * $intensity * $intensity))) * $saturation + 255 * (1 - $saturation));
   } else {
         $saturation = (1 / 4) + ($saturation / 2);
