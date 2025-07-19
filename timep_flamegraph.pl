@@ -412,15 +412,15 @@ sub random_namehash {
 }
 
 sub color_timep {
-  my ($type, $name, $count_wall, $max_wall, $count_cpu, $max_cpu) = @_;
-	my ($saturation, $intensity);
-	my ($r, $g, $b);
+  my ($type, $name, $count_wall, $max_wall, $count_cpu) = @_;
+  my ($saturation, $intensity);
+  my ($r, $g, $b);
 	
-	$intensity  = $count_wall / $max_wall;
-	$intensity = 2 * $intensity / (1 + $intensity * $intensity);
+  $intensity  = $count_wall / $max_wall;
+  #$intensity = 2 * $intensity / (1 + $intensity * $intensity);
   $intensity  = 1 if $intensity > 1;
 
-    if (defined $count_wall && $count_wall > 0 && defined $count_cpu) {
+    if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
       $saturation = sqrt($count_cpu / $count_wall);
       if ($saturation > 1) {
 	$saturation = 0.9 + (0.1 * ($saturation - 1));
@@ -428,19 +428,21 @@ sub color_timep {
 	$saturation = 0.1 + (0.8 * $saturation);
       }
     } else {
-      $saturation = 1;  # or fall back to heuristic like before
+      $saturation = 1;  # or fall back to full saturation
     }
     $saturation = 1 if $saturation > 1;
 
-  	if ($name =~ m:_\[f\]$:) {	# function
-			$type = "function";
-		} elsif ($name =~ m:_\[s\]$:) {	# subshell
-			$type = "subshell";
-		} else {			# command
-			$type = "timep";
-		}
-  
   if ($type eq "timep") {
+    if ($name =~ m:_\[f\]$:) {	# function
+      $type = "function";
+    } elsif ($name =~ m:_\[s\]$:) {	# subshell
+      $type = "subshell";
+    } else {			# command
+      type = "time";
+    }
+  }
+  
+  if ($type eq "time") {
     $r = int((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
     $g = ((255 * (1 - (1 - 2 * $intensity) * (1 - 2 * ($intensity))) * (1 - $intensity * $intensity)) * $saturation + 255 * (1 - $saturation))
     $b = int((255 * (1 - $intensity) * (1 - ($intensity * $intensity)) * (1 - ($intensity * $intensity * $intensity))) * $saturation + 255 * (1 - $saturation));
@@ -713,8 +715,7 @@ my $delta = undef;
 my $ignored = 0;
 my $line;
 my $maxdelta = 1;
-my $max1 = 0;
-my $max2 = 0;
+my $maxcount = 0;
 
 # reverse if needed
 foreach (<>) {
@@ -764,12 +765,9 @@ foreach (@SortedData) {
 	$delta = undef;
 	
 	if ($colors eq "timep") {
-		$max1 = $samples if $samples > $max1;
+		$maxcount = $samples if $samples > $maxcount;
 	    if (defined $samples2) {
-		    $max2 = $samples2 if $samples2 > $max2;
                     $delta = $samples2;
-		} else {
-		    $max2 = undef;
 		}
 	} else {
 	if (defined $samples2) {
@@ -1342,7 +1340,7 @@ while (my ($id, $node) = each %Node) {
 	            unless (defined $delta) {
 			$info = "$escaped_func ($samples_txt $countname, $pct%)";
 		    } elsif ($colors eq "timep") {
-		    		my $samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
+		    	$samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
 			$info = "$escaped_func ($samples_txt $countname, $pct%)";
 		    } else {
 			my $d = $negate ? -$delta : $delta;
@@ -1358,8 +1356,8 @@ while (my ($id, $node) = each %Node) {
 	$im->group_start($nameattr);
 
 	my $color;
-	if ($colors eq "timep") {
-		$color = color_timep($colors, $func, $samples, $max1, $samples2, $max2);
+	if ($colors eq "time" || $colors eq "timep") {
+		$color = color_timep($colors, $func, $samples, $maxcount, $samples2);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
