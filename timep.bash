@@ -89,10 +89,10 @@ timep() {
 
     shopt -s extglob
 
-    local IFS0 jj kk kk0 kk1 nn logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_wTimeCur timep_runType timep_TIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST u varList0 a a0 b timep_CLOCK_GETTIME_FLAG
-    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_RUNTIME_CORRECTION 
+    local IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_wTimeCur timep_runType timep_TIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST varList0 timep_CLOCK_GETTIME_FLAG
+    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION 
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 timep_CPU_TIME_MULT
-    local -a pAll_PID timep_outTypeA
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
     
@@ -970,39 +970,75 @@ _timep_GET_RUNTIME_CORRECTION() {
 
     (( NN = ( N<<1 ) + 1 ))
 
-    tSum0="$(t0=$EPOCHREALTIME;
-    for (( kk=0; kk<$NN; kk++)); do
-        :
-    done
-    t1=$EPOCHREALTIME;
-    (( tSum = 10#${t1//./} - 10#${t0//./} ))
-    echo "$tSum")"
+    if ${timep_CLOCK_GETTIME_FLAG}; then
 
-    tSum1="$(tSum=0; kk=0
-    trap 'nPipe=${#PIPESTATUS[@]};
-    t1=$EPOCHREALTIME;
-    (( kk == 0 )) || (( tSum += 10#${t1//./} - 10#${t0//./} ));
-    t0=$EPOCHREALTIME' DEBUG;
-    for (( kk=0; kk<$N; kk++)); do
-        :
-    done
-    echo "$tSum")"
 
-    (( timep_RUNTIME_CORRECTION = ( tSum1 - tSum0 + N ) / NN ))
-    #(( timep_RUNTIME_MIN = ( tSum1 + ( N  >> 1 ) ) / N ))
+        mapfile -t tSum0 < <(tw0=$EPOCHREALTIME;
+        clock_gettime tc0
+        for (( kk=0; kk<$NN; kk++)); do
+            :
+        done
+        tw1=$EPOCHREALTIME;
+        clock_gettime tc1
+        (( twSum = 10#${tw1//./} - 10#${tw0//./} ))
+        (( tcSum = 10#${tc1//./} - 10#${tc0//./} ))
+        printf '%s\n' "${twSum}" "${tcSum}")
+
+        mapfile -t tSum1 < <(tSum=0; kk=0
+        trap 'nPipe=${#PIPESTATUS[@]};
+        tw1=$EPOCHREALTIME;
+        clock_gettime tc1
+        (( kk == 0 )) || {
+            (( twSum += 10#${tw1//./} - 10#${tw0//./} ));
+            (( tcSum += 10#${tc1//./} - 10#${tc0//./} ));
+        }
+        tw0=$EPOCHREALTIME
+        clock_gettime tc0' DEBUG;
+        for (( kk=0; kk<$N; kk++)); do
+            :
+        done
+        printf '%s\n' "${twSum}" "${tcSum}")
+
+        (( timep_WTIME_CORRECTION = ( ${tSum1[0]} - ${tSum0[0]} + N ) / NN ))
+        (( timep_CTIME_CORRECTION = ( ${tSum1[1]} - ${tSum0[1]} + N ) / NN ))
+
+    else
+
+        tSum0="$(t0=$EPOCHREALTIME;
+        for (( kk=0; kk<$NN; kk++)); do
+            :
+        done
+        t1=$EPOCHREALTIME;
+        (( tSum = 10#${t1//./} - 10#${t0//./} ))
+        echo "$tSum")"
+
+        tSum1="$(tSum=0; kk=0
+        trap 'nPipe=${#PIPESTATUS[@]};
+        t1=$EPOCHREALTIME;
+        (( kk == 0 )) || (( tSum += 10#${t1//./} - 10#${t0//./} ));
+        t0=$EPOCHREALTIME' DEBUG;
+        for (( kk=0; kk<$N; kk++)); do
+            :
+        done
+        echo "$tSum")"
+
+        (( timep_WTIME_CORRECTION = ( tSum1 - tSum0 + N ) / NN ))
+        timep_CTIME_CORRECTION=0
+
+    fi
+
 }
 _timep_GET_RUNTIME_CORRECTION
 
 _timep_EPOCHREALTIME_DIFF() {
-    local tDiff d d6
+    local tDiff d d6 a1 a2
 
     if (( ${#} >= 2 )) && [[ ${1//[^0-9]/} ]] && [[ ${2//[^0-9]/} ]]; then
-        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
+        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} - timep_WTIME_CORRECTION ))
     elif (( ${#} == 1 )) && [[ "${1}" == *[0-9]*\ *[0-9]* ]]; then
-        local a1 a2
         a1="${1% *}"
         a2="${1#* }"
-        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - timep_RUNTIME_CORRECTION ))
+        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - timep_WTIME_CORRECTION ))
         (( tDiff <= 0 )) && tDiff=1
     else
         printf '%s' '0.000001'
@@ -1103,7 +1139,7 @@ _timep_PROCESS_LOG() {
     local -a logA nPipeA startWTimeA endWTimeA wTimeA wTimePA startCTimeA endCTimeA cTimeA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
-    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND"' ERR
+    #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND"' ERR
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
 
@@ -1236,12 +1272,13 @@ _timep_PROCESS_LOG() {
         ${inPipeFlag} && normalCmdFlagA[$kk]=false
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
-        [[ -z ${wTimeA[$kk]} ]] && [[ ${endWTimeA[$kk]} ]] && [[ ${startWTimeA[$kk]} ]] && (( wTimeA[$kk] = ( endWTimeA[$kk] - startWTimeA[$kk] ) ))
+        [[ -z ${wTimeA[$kk]} ]] && [[ ${endWTimeA[$kk]} ]] && [[ ${startWTimeA[$kk]} ]] && (( wTimeA[$kk] = ( endWTimeA[$kk] - startWTimeA[$kk] - timep_WTIME_CORRECTION ) ))
+
         [[ -z ${cTimeA[$kk]} ]] && [[ ${endCTimeA[$kk]} ]] && [[ ${startCTimeA[$kk]} ]] && {
             if (( endCTimeA[$kk] < startCTimeA[$kk] )); then
-                cTimeA[$kk]="${endCTimeA[$kk]}"
+                (( cTimeA[$kk] = endCTimeA[$kk] - timep_CTIME_CORRECTION ))
             else
-                (( cTimeA[$kk] = ( endCTimeA[$kk] - startCTimeA[$kk] ) ))
+                (( cTimeA[$kk] = ( endCTimeA[$kk] - startCTimeA[$kk] - timep_CTIME_CORRECTION ) ))
             fi
         }
 
@@ -1564,9 +1601,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
                     ((nWorkerKilled++))
                     ((nWorker--))
+                    printf '\nWARNING: a log has failed to post-process!\n' >&2
                 else
                     ((kk--))
-                    ((kkDiff--))
                     ((jj++))
                     unset "kkNeed[$doneInd]"
                     printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
@@ -1591,6 +1628,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         ((nWorker++))
                         nWorkerMax="${nWorker}"
                     done
+                    printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
                 }
             else
                 printf '\n\nERROR: could not process the following logs:\n' >&2
