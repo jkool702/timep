@@ -417,7 +417,8 @@ _timep_getFuncSrc() {
 
     read -r _ a </proc/uptime
     read -r _ _ _ _ b _ </proc/stat
-    (( timep_CPU_TIME_MULT = 10000 * ${a//./} / b ))
+    a0="${a##*.}"
+    (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//./} / b ))
 
     if ${timep_CLOCK_GETTIME_FLAG}; then
         timep_END_CTIME_STR='clock_gettime timep_END_CTIME'$'\n'
@@ -1631,7 +1632,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # fold flamegrapoh stack traces
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+\t[0-9]+)$'/'+\2'/ | sed -E s/'\n'//g) ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
-sa
+
     # copy final outputs to profiles dir
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
     sed -E s/'\t([0-9]+\t[0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
