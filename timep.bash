@@ -425,10 +425,10 @@ _timep_getFuncSrc() {
     else
         timep_END_CTIME_STR+='read -r _ _ _ _ _ _ _ _ _ _ _ _ _ timep_END_UTIME timep_END_STIME _ </proc/${timep_BASHPID_PREV:-$BASHPID}/stat
         (( timep_END_CTIME = '"${timep_CPU_TIME_MULT}"' * ( timep_END_UTIME + timep_END_STIME ) ))
-        (( timep_END_CTIME <= ${timep_STARTTIME[${timep_FNEST_CUR}]#* } )) && timep_END_CTIME=${timep_STARTTIME[${timep_FNEST_CUR}]#* }'$'\n'
+        (( timep_END_CTIME <= ${timep_STARTTIME[${timep_FNEST_CUR}]#*$'"'"'\t'"'"'} )) && timep_END_CTIME=${timep_STARTTIME[${timep_FNEST_CUR}]#*$'"'"'\t'"'"'}'$'\n'
         timep_START_CTIME_STR+='read -r _ _ _ _ _ _ _ _ _ _ _ _ _ timep_START_UTIME timep_START_STIME _ </proc/${timep_BASHPID_PREV:-$BASHPID}/stat
         (( timep_START_CTIME = '"${timep_CPU_TIME_MULT}"' * ( timep_START_UTIME + timep_START_STIME ) ))
-        (( timep_START_CTIME <=  ${timep_ENDTIME#* } )) && timep_START_CTIME=${timep_ENDTIME}'$'\n'
+        (( timep_START_CTIME <=  ${timep_ENDTIME#*$'"'"'\t'"'"'} )) && timep_START_CTIME=${timep_ENDTIME#*$'"'"'\t'"'"'}'$'\n'
     fi
 
     export -p timep_DEBUG_TRAP_STR_0 &>/dev/null && export -n timep_DEBUG_TRAP_STR_0
