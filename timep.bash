@@ -1514,6 +1514,7 @@ trap - EXIT'
     jj=0
     nWorker=1
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
+    nRetryMax=20
 
     trap 'kill -TERM "${pAll_PID[@]}"' EXIT
 
@@ -1522,8 +1523,11 @@ trap - EXIT'
   } 2>&${timep_FD2}
 } 2>/dev/null'
     pAll_PID=("${p0_PID}")
+    export timep_LOG_NESTING_MAX="${timep_LOG_NESTING_MAX}"
 
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
+        export timep_LOG_NESTING_CUR="${timep_LOG_NESTING_CUR}"
+        
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
 
         (( kkDiff = kk - kkMin + 1 ))
@@ -1559,6 +1563,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
                 if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
                     ((nWorkerKilled++))
+                    ((nWorker--))
                 else
                     ((kk--))
                     ((kkDiff--))
@@ -1566,33 +1571,33 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     unset "kkNeed[$doneInd]"
                     printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
                 fi
-            elif (( nRetry < 3 )) && (( nWorkerKilled > 0 )); then
+            elif (( nRetry <= nRetryMax )) && (( nWorkerKilled > 0 )); then
                 kkNeed0=("${kkNeed[@]:${kkMin}}")
+                (( nRetry = nRetry + ${#kkNeed0[@]} ))
                  _timep_NUM_RUNNING "${pAll_PID[@]}" || {
                     {
                         for kk1 in "${kkNeed[@]:${kkMin}}"; do
                             [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
-			    (( nRetry == 2 )) && kkd=':' || kkd=''
-                             printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
+			                (( nRetry >= nRetryMax )) && kkd=':' || kkd=''
+                            printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
                         done
                     } &
-                    (( nWorker == 0 )) && {
+                    until (( nWorker > 0 )); do
                         eval '{ coproc p0 {
     '"${timep_coprocSrc}"'
   } 2>&${timep_FD2}
 } 2>/dev/null'
                         pAll_PID+=("${p0_PID}")
                         ((nWorker++))
-                    }
-                    nWorkerMax="${nWorker}"
-                    ((nRetry++))
+                        nWorkerMax="${nWorker}"
+                    done
                 }
             else
                 printf '\n\nERROR: could not process the following logs:\n' >&2
                 for kkErr in "${kkNeed[@]:$kkMin}"; do
                     printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
                 done
-                    printf '\nABORTING!' >&2
+                printf '\nABORTING!' >&2
                 return 1
             fi
         done
