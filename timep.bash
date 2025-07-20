@@ -1205,7 +1205,7 @@ _timep_PROCESS_LOG() {
         fi
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
-        if [[ "${cmdA[$kk]}" == '<< ('*'): '*' >>' ]] || ; then
+        if [[ "${cmdA[$kk]}" == '<< ('*'): '*' >>' ]]; then
             normalCmdFlagA[$kk]=false
 
             # record which log to merge up and where
@@ -1213,18 +1213,27 @@ _timep_PROCESS_LOG() {
 
             # read in the endtime + runtime from the log
             [[ "${cmdA[$kk]}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
-                _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.runtimes\/log}" && {
+                if _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.runtimes\/log}"; then                
                     IFS=$'\t' read -r wTime cTime <"${logCur//\/.log\/log/\/.log\/.runtimes\/log}"
                     [[ ${wTime} ]] && wTimeA[$kk]="${wTime}"
                     [[ ${cTime} ]] && cTimeA[$kk]="${cTime}"
-                }
+                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"; then
+                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
+                    [[ ${wTime} ]] && wTimeA[$kk]="${wTime}"
+                    [[ ${cTime} ]] && cTimeA[$kk]="${cTime}"
+                 fi                
             }
+            
             [[ "${endWTimeA[$kk]}" == '-' ]] && {
-                _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.endtimes\/log}" && {
+                if _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.endtimes\/log}"; then
                     IFS=$'\t' read -r endWTime endCTime <"${logCur//\/.log\/log/\/.log\/.endtimes\/log}"
                     [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
                     [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && endCTimeA[$kk]="${endCTime}"
-                }
+                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"; then
+                    IFS=$'\t' read -r endWTime endCTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"
+                    [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
+                    [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && endCTimeA[$kk]="${endCTime}"
+                 fi
             }
         else
             normalCmdFlagA[$kk]=true
