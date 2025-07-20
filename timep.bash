@@ -1105,6 +1105,8 @@ _timep_PROCESS_LOG() {
 
     trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND"' ERR
 
+    [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
+
     logCur="${1}"
 
     [[ -e "${logCur}" ]] || return 1
@@ -1130,8 +1132,6 @@ _timep_PROCESS_LOG() {
 
     # rename log to ___.orig
     \mv -f "${logCur}" "${logCur}.orig"
-
-    declare -p
 
     # loop through lines in reverse order
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
@@ -1449,6 +1449,7 @@ printf '%s;' "${fgA[@]}")"
 
         (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
     done >"${logCur}.combined"
+    [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && declare -p >&${timep_FD2}
     return 0
 }
 
@@ -1489,7 +1490,11 @@ while true; do
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
-    _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || exit 1
+    if [[ "${logID}" == '"'"':'"'"'* ]]; then
+         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[${logID#\:}]}" 2>&${timep_FD2} || exit 1
+    else
+        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || exit 1
+    fi
     printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
 done
 trap - EXIT'
@@ -1567,7 +1572,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     {
                         for kk1 in "${kkNeed[@]:${kkMin}}"; do
                             [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
-                             printf '%s\n' "${kk1}" >&${timep_fd_logID}
+			    (( nRetry == 2 )) && kkd=':' || kkd=''
+                             printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
                         done
                     } &
                     (( nWorker == 0 )) && {
