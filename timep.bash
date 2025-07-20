@@ -972,7 +972,6 @@ _timep_GET_RUNTIME_CORRECTION() {
 
     if ${timep_CLOCK_GETTIME_FLAG}; then
 
-
         mapfile -t tSum0 < <(tw0=$EPOCHREALTIME;
         clock_gettime tc0
         for (( kk=0; kk<$NN; kk++)); do
@@ -1154,7 +1153,7 @@ _timep_PROCESS_LOG() {
     cTimeTotal=0
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sort -V -k13,13 <"${logCur}")
+    mapfile -t logA < <(sort -V -k11,11 <"${logCur}")
 
     log_dupe_flag=false
     for (( kk=1; kk<${#logA[@]}; kk++ )); do
@@ -1206,23 +1205,23 @@ _timep_PROCESS_LOG() {
         fi
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
-        if [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]]; then
+        if [[ "${cmdA[$kk]}" == '<< ('*'): '*' >>' ]] || ; then
             normalCmdFlagA[$kk]=false
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
 
             # read in the endtime + runtime from the log
-            [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
-                _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }" && {
-                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
+            [[ "${cmdA[$kk]}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
+                _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.runtimes\/log}" && {
+                    IFS=$'\t' read -r wTime cTime <"${logCur//\/.log\/log/\/.log\/.runtimes\/log}"
                     [[ ${wTime} ]] && wTimeA[$kk]="${wTime}"
                     [[ ${cTime} ]] && cTimeA[$kk]="${cTime}"
                 }
             }
             [[ "${endWTimeA[$kk]}" == '-' ]] && {
-                _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }" && {
-                    IFS=$'\t' read -r endWTime endCTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"
+                _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.endtimes\/log}" && {
+                    IFS=$'\t' read -r endWTime endCTime <"${logCur//\/.log\/log/\/.log\/.endtimes\/log}"
                     [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
                     [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && endCTimeA[$kk]="${endCTime}"
                 }
@@ -1276,17 +1275,17 @@ _timep_PROCESS_LOG() {
 
         [[ -z ${cTimeA[$kk]} ]] && [[ ${endCTimeA[$kk]} ]] && [[ ${startCTimeA[$kk]} ]] && {
             if (( endCTimeA[$kk] < startCTimeA[$kk] )); then
-                (( cTimeA[$kk] = endCTimeA[$kk] - timep_CTIME_CORRECTION ))
+                ${timep_CLOCK_GETTIME_FLAG} && (( cTimeA[$kk] = endCTimeA[$kk] - timep_CTIME_CORRECTION ))
             else
                 (( cTimeA[$kk] = ( endCTimeA[$kk] - startCTimeA[$kk] - timep_CTIME_CORRECTION ) ))
             fi
         }
 
         [[ ${wTimeA[$kk]} ]] || (( wTimeA[$kk] >= 1 )) || { 
-            wTimeA[$kk]=${endWTimeA[$kk]}
+            wTimeA[$kk]=1
         }
         [[ ${cTimeA[$kk]} ]] || (( cTimeA[$kk] >= 1 )) || { 
-            cTimeA[$kk]=${endCTimeA[$kk]}
+            cTimeA[$kk]=1
         }
 
         (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
