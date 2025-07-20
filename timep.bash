@@ -89,11 +89,10 @@ timep() {
 
     shopt -s extglob
 
-    local IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_wTimeCur timep_runType timep_WTIME_DONE timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST varList0 timep_CLOCK_GETTIME_FLAG
-    local -g LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION 
-    local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 timep_CPU_TIME_MULT
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG
+    local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0
-    local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
+    local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND  
 
     
     clock_gettime &>/dev/null || _timep_SETUP
@@ -1123,13 +1122,17 @@ _timep_NUM_RUNNING() {
         [[ -d "/proc/${nn}" ]] && ((n++))
     done
 
-    if (( n < nWorker )); then
-        printf -v nWorker '%s' "${n}"
-        return 1
-    else
-        printf -v nWorker '%s' "${n}"
-        return 0
-    fi
+    nWorker0="${nWorker}"
+    nWorker="$n"
+    (( nWorkerDiff = nWorker - nWorker0 ))
+
+    (( nWorker == nWorker0 ))
+}
+
+_timep_DEBUG_PRINTVARS() {
+
+declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(wTimeTotal0)|(uTimeTotal)|(sTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimePA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimePA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimePA)|(linenoUniqCTimeA)|(linenoUniqCTimePA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_runtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_))=' | sed -E s/'^declare \-. '//
+
 }
 
 shopt -s extglob
@@ -1138,7 +1141,7 @@ _timep_PROCESS_LOG() {
     local -a logA nPipeA startWTimeA endWTimeA wTimeA wTimePA startCTimeA endCTimeA cTimeA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
-    #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND"' ERR
+    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
 
@@ -1184,7 +1187,7 @@ _timep_PROCESS_LOG() {
         linenoA[$kk]="${lineno}"
         cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
-        cmd="$(eval echo "${cmd}")"
+        read -r -d '' cmd < <(echo "${cmd}")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         cmdA[$kk]="${cmd}"
@@ -1280,13 +1283,13 @@ _timep_PROCESS_LOG() {
         ${inPipeFlag} && normalCmdFlagA[$kk]=false
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
-        [[ -z ${wTimeA[$kk]} ]] && [[ ${endWTimeA[$kk]} ]] && [[ ${startWTimeA[$kk]} ]] && (( wTimeA[$kk] = ( endWTimeA[$kk] - startWTimeA[$kk] - timep_WTIME_CORRECTION ) ))
+        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = ${endWTimeA[$kk]//[^0-9]/} >= ${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
 
-        [[ -z ${cTimeA[$kk]} ]] && [[ ${endCTimeA[$kk]} ]] && [[ ${startCTimeA[$kk]} ]] && {
-            if (( endCTimeA[$kk] < startCTimeA[$kk] )); then
-                ${timep_CLOCK_GETTIME_FLAG} && (( cTimeA[$kk] = endCTimeA[$kk] - timep_CTIME_CORRECTION ))
+        [[ -z ${cTimeA[$kk]//[^0-9]/} ]] && [[ ${endCTimeA[$kk]//[^0-9]/} ]] && {
+            if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( ${endCTimeA[$kk]//[^0-9]/} >= ${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION )); then
+                (( cTimeA[$kk] = ${endCTimeA[$kk]//[^0-9]/} - ${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             else
-                (( cTimeA[$kk] = ( endCTimeA[$kk] - startCTimeA[$kk] - timep_CTIME_CORRECTION ) ))
+                (( cTimeA[$kk] = ${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             fi
         }
 
@@ -1497,6 +1500,7 @@ printf '%s;' "${fgA[@]}")"
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && declare -p >&${timep_FD2}
     return 0
 }
+    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log*' | grep -vE '\.init_[csr]$' | sort -V)
@@ -1528,17 +1532,18 @@ printf '%s;' "${fgA[@]}")"
     printf '\n' >&${timep_fd_lock}
 
     timep_coprocSrc='declare logID
+    failFlag=false
 shopt -s extglob
-trap '"'"'printf '"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"'"'"' >&${timep_fd_done}'"'"'  EXIT
+trap '"'"'${failFlag} && printf '"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"'"'"' >&${timep_fd_done}'"'"'  EXIT
 while true; do
     read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
     if [[ "${logID}" == '"'"':'"'"'* ]]; then
-         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[${logID#\:}]}" 2>&${timep_FD2} || exit 1
+         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[${logID#\:}]}" 2>&${timep_FD2} || { failFlag=true; exit 1; }
     else
-        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || exit 1
+        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || { failFlag=true; exit 1; }
     fi
     printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
 done
@@ -1553,6 +1558,7 @@ trap - EXIT'
     export -f _timep_FILE_EXISTS
     export -f _timep_NUM_RUNNING
     export -f _timep_PROCESS_LOG
+    export -f _timep_DEBUG_PRINTVARS
 
     timep_LOG_NUM="${#timep_LOG_NAME[@]}"
     (( kk = timep_LOG_NUM - 1 ))
@@ -1608,8 +1614,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
                 if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
                     ((nWorkerKilled++))
-                    ((nWorker--))
-                    printf '\nWARNING: a log has failed to post-process!\n' >&2
                 else
                     ((kk--))
                     ((jj++))
@@ -1618,25 +1622,28 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
             elif (( nRetry <= nRetryMax )) && (( nWorkerKilled > 0 )); then
                 kkNeed0=("${kkNeed[@]:${kkMin}}")
-                (( nRetry = nRetry + ${#kkNeed0[@]} ))
-                 _timep_NUM_RUNNING "${pAll_PID[@]}" || {
-                    {
-                        for kk1 in "${kkNeed[@]:${kkMin}}"; do
-                            [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
-			                (( nRetry >= nRetryMax )) && kkd=':' || kkd=''
-                            printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
+                _timep_NUM_RUNNING "${pAll_PID[@]}" || {
+                    (( ${#kkNeed0[@]} > ( nWorker0 - nWorker ) )) || {
+                        (( nRetry = nRetry + ${#kkNeed0[@]} ))
+                        {
+                            for kk1 in "${kkNeed[@]:${kkMin}}"; do
+                                [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
+    			                (( nRetry >= nRetryMax )) && kkd=':' || kkd=''
+                                printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
+                            done
+                        } &
+                        (( nWorkerMax = 1 + ( ( 3 * nWorkerMax ) >> 2 ) ))
+                        until (( nWorker >= nWorkerMax)); do
+                            eval '{ coproc p0 {
+        '"${timep_coprocSrc}"'
+      } 2>&${timep_FD2}
+    } 2>/dev/null'
+                            pAll_PID=("${p0_PID}")
+                            nWorker=1
+                            
                         done
-                    } &
-                    until (( nWorker > 0 )); do
-                        eval '{ coproc p0 {
-    '"${timep_coprocSrc}"'
-  } 2>&${timep_FD2}
-} 2>/dev/null'
-                        pAll_PID+=("${p0_PID}")
-                        ((nWorker++))
-                        nWorkerMax="${nWorker}"
-                    done
-                    printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
+                        printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
+                    }
                 }
             else
                 printf '\n\nERROR: could not process the following logs:\n' >&2
@@ -1644,6 +1651,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
                 done
                 printf '\nABORTING!' >&2
+                _timep_DEBUG_PRINTVARS
                 return 1
             fi
         done
