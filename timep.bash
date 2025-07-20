@@ -1122,11 +1122,8 @@ _timep_NUM_RUNNING() {
         [[ -d "/proc/${nn}" ]] && ((n++))
     done
 
-    nWorker0="${nWorker}"
+    (( nWorkerDiff = nWorker - n ))
     nWorker="$n"
-    (( nWorkerDiff = nWorker - nWorker0 ))
-
-    (( nWorker == nWorker0 ))
 }
 
 _timep_DEBUG_PRINTVARS() {
@@ -1534,20 +1531,18 @@ printf '%s;' "${fgA[@]}")"
     timep_coprocSrc='declare logID
     failFlag=false
 shopt -s extglob
-trap '"'"'${failFlag} && printf '"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"'"'"' >&${timep_fd_done}'"'"'  EXIT
 while true; do
     read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
     if [[ "${logID}" == '"'"':'"'"'* ]]; then
-         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[${logID#\:}]}" 2>&${timep_FD2} || { failFlag=true; exit 1; }
+         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[${logID#\:}]}" 2>&${timep_FD2} ||  printf '"'"'\n'"'"' >&${timep_fd_done}
     else
-        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || { failFlag=true; exit 1; }
+        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || printf '"'"'\n'"'"' >&${timep_fd_done}
     fi
     printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
-done
-trap - EXIT'
+done'
 
     # loop through logs from deepest nested upwards and run each through post processing function
     printf '\n\n' >&2
@@ -1607,23 +1602,24 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         read -r -u "${fd_sleep}" -t 0.01 _
 
-        nWorkerKilled=0
+        nFailed=0
         nRetry=0
 
         while (( kk >= kkMin )); do
             if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
                 if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
-                    ((nWorkerKilled++))
+                    ((nFailed++))
                 else
                     ((kk--))
                     ((jj++))
                     unset "kkNeed[$doneInd]"
                     printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
                 fi
-            elif (( nRetry <= nRetryMax )) && (( nWorkerKilled > 0 )); then
+            elif (( nRetry <= nRetryMax )); then
                 kkNeed0=("${kkNeed[@]:${kkMin}}")
-                _timep_NUM_RUNNING "${pAll_PID[@]}" || {
-                    (( ${#kkNeed0[@]} > ( nWorker0 - nWorker ) )) || {
+                _timep_NUM_RUNNING "${pAll_PID[@]}" 
+                (( nFailed = nFailed + nWorkerDiff ))
+                    (( ${#kkNeed0[@]} > nFailed )) ||  (( ${#kkNeed0} == 0 )) || {
                         (( nRetry = nRetry + ${#kkNeed0[@]} ))
                         {
                             for kk1 in "${kkNeed[@]:${kkMin}}"; do
@@ -1633,26 +1629,32 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                             done
                         } &
                         (( nWorkerMax = 1 + ( ( 3 * nWorkerMax ) >> 2 ) ))
-                        until (( nWorker >= nWorkerMax)); do
-                            eval '{ coproc p0 {
+                        nFailed=0
+                        printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
+                    }
+                    until (( nWorker >= nWorkerMax)); do
+                        eval '{ coproc p0 {
         '"${timep_coprocSrc}"'
       } 2>&${timep_FD2}
     } 2>/dev/null'
-                            pAll_PID=("${p0_PID}")
-                            nWorker=1
+                         pAll_PID=("${p0_PID}")
+                         nWorker=1
                             
-                        done
-                        printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
-                    }
-                }
+                    done
+
             else
-                printf '\n\nERROR: could not process the following logs:\n' >&2
-                for kkErr in "${kkNeed[@]:$kkMin}"; do
-                    printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
-                done
-                printf '\nABORTING!' >&2
-                _timep_DEBUG_PRINTVARS
-                return 1
+                kkNeed0=("${kkNeed[@]:${kkMin}}")
+                _timep_NUM_RUNNING "${pAll_PID[@]}" 
+                (( nFailed = nFailed + nWorkerDiff ))
+                (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
+                    printf '\n\nERROR: could not process the following logs:\n' >&2
+                    for kkErr in "${kkNeed[@]:$kkMin}"; do
+                        printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
+                    done
+                    printf '\nABORTING!' >&2
+                    _timep_DEBUG_PRINTVARS
+                    return 1
+                }
             fi
         done
 
