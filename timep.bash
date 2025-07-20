@@ -1138,7 +1138,7 @@ _timep_PROCESS_LOG() {
     local -a logA nPipeA startWTimeA endWTimeA wTimeA wTimePA startCTimeA endCTimeA cTimeA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
-    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
+    #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
 
@@ -1497,7 +1497,7 @@ printf '%s;' "${fgA[@]}")"
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && declare -p >&${timep_FD2}
     return 0
 }
-    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
+    #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log*' | grep -vE '\.init_[csr]$' | sort -V)
