@@ -1437,7 +1437,7 @@ printf '%s;' "${fgA[@]}")"
             printf -v wTime0 '%0.7d' "${wTimeA[$kk]}"
             (( d6 = ${#wTime0} - 6 ))
             printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
-            printf -v cTime0 '%0.7d' "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
+            printf -v cTime0 '%0.7d'  "${cTimeA[$kk]}"
             (( d6 = ${#cTime0} - 6 ))
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
