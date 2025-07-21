@@ -89,7 +89,7 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND  
@@ -1143,7 +1143,7 @@ _timep_NUM_RUNNING() {
 
 _timep_DEBUG_PRINTVARS() {
 
-declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(wTimeTotal0)|(uTimeTotal)|(sTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimePA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimePA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimePA)|(linenoUniqCTimeA)|(linenoUniqCTimePA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_runtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_))=' | sed -E s/'^declare \-. '//
+declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(wTimeTotal0)|(uTimeTotal)|(sTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimePA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimePA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimePA)|(linenoUniqCTimeA)|(linenoUniqCTimePA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_wtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_))=' | sed -E s/'^declare \-. '//
 
 }
 
@@ -1353,8 +1353,9 @@ printf '%s;' "${fgA[@]}")"
 
 
     # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
+    kk1=0
     for (( kk=0; kk<${#logA[@]}; kk++ )); do
-        (( kk1 = kk - 1 ))
+        (( npipeA[$kk] == 1 )) || continue
         if (( kk > 0 )) && (( linenoA[$kk] == ${linenoA[$kk1]%.*} )); then
             (( lineno1++ ))
         else
@@ -1392,6 +1393,7 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqWTimeA[${linenoA[$kk]}]="${wTimeA[$kk]}"
             linenoUniqCTimeA[${linenoA[$kk]}]="${cTimeA[$kk]:-1}"
         fi
+	kk1=${kk}
     done
 
     # get runtime sums for the combined uniq lineno's
@@ -1519,7 +1521,7 @@ printf '%s;' "${fgA[@]}")"
         # for the logs we will be merging up, find uniq nesting/lineno/cmd combinations by removing the timing data (time+percent) from the center of each line and running it through `sort -u`
         mapfile -t lineUA < <(r=''; sed -E 's/^([^\:]+\:[[:space:]]+)([0-9\|\(\)\.s%]+[[:space:]]*)+'/'\1\t'/ <<<"${logMergeAll}" | while read -r nn; do [[ ${nn##+(\|   |\|-- |\|)} ]] || continue; [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; printf '%s\n' "$nn"; }; done)
 
-	# for each nesting/lineno/cmd combination, gather all the matching lines from the logs thst will be merged up, then combine times, average percents, and aggregate counts
+	# for each nesting/lineno/cmd combination, gather all the matching lines from the logs thst will be merged up, then combine times, average percents, and aggregate counts. then write combined line.
 	(( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]}"; do
             mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" |  sed -E 's/^([^\:]+\:[[:space:]]+)(([0-9\|\(\)\.s%]+[[:space:]]*)+)(.*)$/\2 \4/)
 	    wTimeCurA=()
@@ -1815,9 +1817,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.combined"
 
     for nn in "${timep_TMPDIR}"/.log/.runtimes/log.*; do
-        read -r timep_wTimeCur <"${nn}"
-        printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_wTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}"
-        printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_wTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.combined"
+        read -r timep_wTimeCur timep_cTimeCur <"${nn}"
+        printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}"
+        printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.combined"
     done
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
@@ -1832,8 +1834,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # copy final outputs to profiles dir
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
-    sed -E s/'\t([0-9]+\t[0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
-    sed -E s/'\t([0-9]+\t[0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
+    sed -E s/'\t([0-9]+)\t([0-9]+)$'/'\t \1\t \2'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
+    sed -E s/'\t([0-9]+)\t([0-9]+)$'/'\t \1\t \2'/ <"${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
     sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' <"${timep_LOG_NESTING[0]%$'\n'}" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
         sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
@@ -1842,37 +1844,56 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     fi
 
     # remove (some) of the spurious '(&)' marks caused by process substitutions
-    grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | { A="$(<"${timep_TMPDIR}/profiles/out.profile")"; B="$(<"${timep_TMPDIR}/profiles/out.profile.full")"; while read -r nn; do A="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$A")"; B="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$B")"; done; sed -E s/' \(\^\)$'//  <<<"$A" >"${timep_TMPDIR}/profiles/out.profile"; sed -E s/' \(\^\)\t'/'\t'/  <<<"$B" >"${timep_TMPDIR}/profiles/out.profile.full"; }
+    grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | { 
+        A="$(<"${timep_TMPDIR}/profiles/out.profile")"; 
+	B="$(<"${timep_TMPDIR}/profiles/out.profile.full")"; 
+        while read -r nn; do 
+	    A="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$A")"; 
+            B="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$B")"; 
+	done; 
+        sed -E s/' \(\^\)$'//  <<<"$A" >"${timep_TMPDIR}/profiles/out.profile"; 
+        sed -E s/' \(\^\)\t'/'\t'/  <<<"$B" >"${timep_TMPDIR}/profiles/out.profile.full"; 
+    }
 
     # get total runtime
-    read -r timep_runtimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
-    ((timep_runtimeALL = 10#0${timep_runtimeALL//[^0-9]/}))
+    read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
+    ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
+    ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
     # add another percentage showing "percent of total runtime" to final outputs
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
         # split lines into start, time, percent, end
-        echo "$(sed -E s/'^([^\(]+\()([0-9\.]+)s\|([0-9\.]+)(.+)$'/'\1'$'\034''\2'$'\034''\3'$'\034''\4'/ <"${logPathCur}" | while IFS=$'\034' read -r a0 t p a1; do
-            { [[ $t ]] && [[ $p ]] && [[ $a1 ]]; } || {
+        echo "$(sed -E s/'^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)\t\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$'/'\1'$'\034''\2'$'\034''\3'$'\034''\4'/ <"${logPathCur}" | while IFS=$'\034' read -r a0 tw pw tc pc a1; do
+            { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $a1 ]]; } || {
                 # this is a blank/seperator line. re-print it unmodified
-                printf '%s\n' "${a0}${t}${p}${a1}"
+                printf '%s(%ss|%s%%)\t(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${tc}" "${pc}" "${a1}"
                 continue
             }
 
             # get percent of total runtime
-            ((p1 = (10000 * 10#${t//[^0-9]/}) / timep_runtimeALL))
-            printf -v p1 '%0.4d' "${p1//[^0-9]/}"
-            if ((10#${p1} == 10000)); then
-                p1="100.00"
+            ((p1w = (10000 * 10#${tw//[^0-9]/}) / timep_wtimeALL))
+            printf -v p1w '%0.4d' "${p1w//[^0-9]/}"
+            if ((10#${p1w} == 10000)); then
+                p1w="100.00"
             else
-                p1="${p1:0:2}.${p1:2}"
+                p1w="${p1w:0:2}.${p1w:2}"
+            fi
+
+            # get percent of total cpu time
+            ((p1c = (10000 * 10#${tc//[^0-9]/}) / timep_ctimeALL))
+            printf -v p1c '%0.4d' "${p1c//[^0-9]/}"
+            if ((10#${p1c} == 10000)); then
+                p1c="100.00"
+            else
+                p1c="${p1c:0:2}.${p1c:2}"
             fi
 
             # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-            if [[ "${p}" == "${p1}" ]] && ( a00="${a0%%[0-9]*}"; [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )) || (( "${#a00}" <= 1 )); ); then
-                printf '%s\n' "${a0}${t}s|${p}${a1}"
+            if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && ( a00="${a0%%[0-9]*}"; [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )) || (( "${#a00}" <= 1 )); ); then
+                printf '%s(%ss|%s%%)\t(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${tc}" "${pc}" "${a1}"
             else
-                printf '%s\n' "${a0}${t}s|${p1}%|${p}${a1}"
+                printf '%s(%ss|%s%%|%s%%)\t(%ss|%s%%|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${a1}"
             fi
         done)" >"${logPathCur}"
     done
