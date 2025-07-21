@@ -1143,7 +1143,7 @@ _timep_PROCESS_LOG() {
     local -a logA nPipeA startWTimeA endWTimeA wTimeA wTimePA startCTimeA endCTimeA cTimeA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
-    #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
+    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
 
@@ -1578,54 +1578,55 @@ done'
 
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         export timep_LOG_NESTING_CUR="${timep_LOG_NESTING_CUR}"
-        (( timep_LOG_NESTING_CUR == 0 )) && set -xv
         
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
 
         (( kkDiff = kk - kkMin + 1 ))
 
-        {
-            for kk1 in "${kkNeed[@]:${kkMin}}"; do
-                printf '%s\n' "${kk1}" >&${timep_fd_logID}
-            done
-        } &
+        if (( kkDiff > 1 )); then
 
-        while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
-            eval '{ coproc p'"${nWorker}"' {
+            {
+                for kk1 in "${kkNeed[@]:${kkMin}}"; do
+                    printf '%s\n' "${kk1}" >&${timep_fd_logID}
+                done
+            } &
+
+            while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
+                eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
   } 2>&${timep_FD2}
 } 2>/dev/null
 pAll_PID+=("${p'"${nWorker}"'_PID}")'
-            ((nWorker++))
-        done
+                ((nWorker++))
+            done
 
-        while (( nWorker > kkDiff )); do
-            printf '\n' >&${timep_fd_logID}
-            ((nWorker--))
-        done
+            while (( nWorker > kkDiff )); do
+                printf '\n' >&${timep_fd_logID}
+                ((nWorker--))
+            done
 
-        printf '\n\nPROCESSING NESTING LVL %s (%s LOGS) -- USING %s WORKERS (MAX: %s)\n' "${timep_LOG_NESTING_CUR}" "${kkDiff}" "${nWorker}" "${nWorkerMax}" >&2
+            printf '\n\nPROCESSING NESTING LVL %s (%s LOGS) -- USING %s WORKERS (MAX: %s)\n' "${timep_LOG_NESTING_CUR}" "${kkDiff}" "${nWorker}" "${nWorkerMax}" >&2
 
-        read -r -u "${fd_sleep}" -t 0.01 _
+            read -r -u "${fd_sleep}" -t 0.01 _ || :
 
-        nFailed=0
-        nRetry=0
+            nFailed=0
+            nRetry=0
 
-        while (( kk >= kkMin )); do
-            if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
-                if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
-                    ((nFailed++))
-                else
-                    ((kk--))
-                    ((jj++))
-                    unset "kkNeed[$doneInd]"
-                    printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
-                fi
-            elif (( nRetry <= nRetryMax )); then
-                kkNeed0=("${kkNeed[@]:${kkMin}}")
-                _timep_NUM_RUNNING "${pAll_PID[@]}" 
-                (( nFailed = nFailed + nWorkerDiff ))
-                    (( ${#kkNeed0[@]} > nFailed )) ||  (( ${#kkNeed0} == 0 )) || {
+            while (( kk >= kkMin )); do
+                if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
+                    if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
+                        ((nFailed++))
+                    else
+                        ((kk--))
+                        ((jj++))
+                        unset "kkNeed[$doneInd]"
+                        printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
+                    fi
+                elif (( nRetry <= nRetryMax )); then
+                    kkNeed0=("${kkNeed[@]:${kkMin}}")
+                    _timep_NUM_RUNNING "${pAll_PID[@]}" 
+                    (( nFailed = nFailed + nWorkerDiff ))
+                    (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
                         (( nRetry = nRetry + ${#kkNeed0[@]} ))
                         {
                             for kk1 in "${kkNeed[@]:${kkMin}}"; do
@@ -1639,35 +1640,49 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
                     }
                     until (( nWorker >= nWorkerMax)); do
-                        eval '{ coproc p0 {
-        '"${timep_coprocSrc}"'
-      } 2>&${timep_FD2}
-    } 2>/dev/null'
-                         pAll_PID=("${p0_PID}")
-                         nWorker=1
+                        eval '{ coproc p'"${nWorker}"' {
+    '"${timep_coprocSrc}"'
+  } 2>&${timep_FD2}
+} 2>/dev/null
+pAll_PID+=("${p'"${nWorker}"'_PID}")'
+                        ((nWorker++))
                             
                     done
 
-            else
-                kkNeed0=("${kkNeed[@]:${kkMin}}")
-                _timep_NUM_RUNNING "${pAll_PID[@]}" 
-                (( nFailed = nFailed + nWorkerDiff ))
-                (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
-                    printf '\n\nERROR: could not process the following logs:\n' >&2
-                    for kkErr in "${kkNeed[@]:$kkMin}"; do
-                        printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
-                    done
-                    printf '\nABORTING!' >&2
-                    _timep_DEBUG_PRINTVARS
-                    return 1
-                }
-            fi
-        done
+                else
+                    kkNeed0=("${kkNeed[@]:${kkMin}}")
+                    _timep_NUM_RUNNING "${pAll_PID[@]}" 
+                    (( nFailed = nFailed + nWorkerDiff ))
+                    (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
+                        printf '\n\nERROR: could not process the following logs:\n' >&2
+                        for kkErr in "${kkNeed[@]:$kkMin}"; do
+                            printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
+                        done
+                        printf '\nABORTING!' >&2
+                        _timep_DEBUG_PRINTVARS
+                        return 1
+                    }
+                fi
+            done
 
-        read -r -u "${fd_sleep}" -t 0.1 _
+        else
+            # only 1 log at this level - dont use workers
+            printf '\n\nPROCESSING NESTING LVL %s (1 LOG)\n' "${timep_LOG_NESTING_CUR}" >&2
+            (
+                while true; do
+                    _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}" && break
+                done
+                ((kk--))
+                ((jj++))
+                unset "kkNeed[$kk]"
+                printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
+            )
+        fi
+
+        read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     while (( nWorker > 0 )); do
         printf '\n' >&${timep_fd_logID}
@@ -1678,13 +1693,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     trap - EXIT INT
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     exec {timep_fd_logID}>&-
     exec {timep_fd_done}>&-
     exec {timep_fd_lock}>&-
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     printf '\n\nFINALIZING TIME PROFILE\n' >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}"
@@ -1696,12 +1711,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_wTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.combined"
     done
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # reverse flamegraph input so it starts at the parent and ends at the depest child
     echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^([0-9]+)\:'/'\1 '/ | sort -nr -k1,1 | sed -E s/'^[0-9]+ '//)" >"${timep_TMPDIR}/.log/out.flamegraph.full"
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # fold flamegrapoh stack traces
     sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+\t[0-9]+)$'/'+\2'/ | sed -E s/'\n'//g) ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
@@ -1784,7 +1799,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         }
     }
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     [[ "${timep_outType}" == *' ff '* ]] && {
         printf '\n\nFLAMEGRAPH FULL STACK TRACE\n\n' >&2
@@ -1806,7 +1821,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         cat "${timep_TMPDIR}/profiles/out.profile"
     }
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     ${timep_deleteFlag} && {
         \rm -rf "${timep_TMPDIR}/.log"
@@ -1815,7 +1830,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         done
     }
 
-    read -r -u "${fd_sleep}" -t 0.01 _
+    read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
     type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles
