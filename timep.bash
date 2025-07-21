@@ -1606,8 +1606,7 @@ while true; do
     if (( $? == 0 )); then
         printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
     else
-        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_logID}
-        printf '"'"'\n'"'"' >&${timep_fd_done}
+        printf '"'"'-%s\n'"'"' "${logID}" >&${timep_fd_done}
     fi
     : >"${timep_TMPDIR}/.worker/${BASHPID}"
 done
@@ -1687,17 +1686,19 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
-                    if [[ -z ${doneInd} ]]; then
-                        # we read a blank index --> a log failed but didnt kill the coproc and the coproc already re-submitted the job to the workqueue
+                    if [[ "${doneInd}" == \-* ]]; then
+                        # we read a negative index --> a log failed but didnt kill the coproc and the coproc already re-submitted the job to the workqueue
                         # perhaps in the future there will be a "nFailedMax" to break out of failing to process some log in an infinite loop.
                         ((nFailed++))
+                        doneInd="${doneInd#\-}"
                         if (( nFailed > nFailedMax )); then
                             printf '\nERROR: post-processing failed too many times on logs from current nesting lvl.\nABORTING TO PREVENT GETTING STUCK IN AN INFINITE RETRY LOOP.\n' >&2
                             _timep_DEBUG_PRINTVARS
                             return 2
                         else
-                            printf '\nWARNING: a log failed to process correctly. timep will attempt to process this log again. (used %s / %s respawn retries)\n' "${nFailed}" "${nFailedMax}" >&2
+                            printf '\nWARNING: log # %s (%s) failed to process correctly. timep will attempt to process this log again. (used %s / %s retries)\n' "${doneInd}" "${timep_LOG_NAME[$doneInd]}" "${nFailed}" "${nFailedMax}" >&2
                             (( nFailed == nFailedMax )) && kkd=':'
+                            printf '%s%s\n' "${kkd}" "${doneInd}" >&${timep_fd_logID}
                         fi
                     elif  [[ ${kkNeed[$doneInd]} ]]; then
                         # we read an index --> that log has finished processing
