@@ -690,7 +690,7 @@ _timep_getFuncSrc() {
                         break
                     ;;
                     *)
-                        trapStr+="${trapStrc:+ }${1}"
+                        trapStr+="${trapStr:+ }${1}"
                         shift 1
                     ;;
                 esac
@@ -987,8 +987,8 @@ _timep_GET_RUNTIME_CORRECTION() {
         tw1=$EPOCHREALTIME;
         clock_gettime tc1
         (( kk == 0 )) || {
-            (( twSum += 10#${tw1//./} - 10#${tw0//./} ));
-            (( tcSum += 10#${tc1//./} - 10#${tc0//./} ));
+            (( twSum = ${twSum:-0} + 10#${tw1//./} - 10#${tw0//./} ));
+            (( tcSum = ${tcSum:-0} + 10#${tc1//./} - 10#${tc0//./} ));
         }
         tw0=$EPOCHREALTIME
         clock_gettime tc0' DEBUG;
@@ -1013,7 +1013,7 @@ _timep_GET_RUNTIME_CORRECTION() {
         tSum1="$(tSum=0; kk=0
         trap 'nPipe=${#PIPESTATUS[@]};
         t1=$EPOCHREALTIME;
-        (( kk == 0 )) || (( tSum += 10#${t1//./} - 10#${t0//./} ));
+        (( kk == 0 )) || (( tSum = ${tSum:-0} + 10#${t1//./} - 10#${t0//./} ));
         t0=$EPOCHREALTIME' DEBUG;
         for (( kk=0; kk<$N; kk++)); do
             :
@@ -1122,7 +1122,7 @@ _timep_NUM_RUNNING() {
     for nn in "${@}"; do
         [[ -d "/proc/${nn}" ]] && { 
             ((n++))
-            pAll_PID0+=("$n")
+            pAll_PID0+=("$nn")
         }
     done
 
