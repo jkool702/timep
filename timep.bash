@@ -1134,7 +1134,7 @@ _timep_NUM_RUNNING() {
         fi
     done
 
-    (( nWorkerDiff = nWorker - n ))
+    (( nWorkerDiff = nWorker - nWorker0 ))
     nWorker="${nWorker0}"
     nActive="${nActive0}"
     pAll_PID=("${pAll_PID0[@]}")
