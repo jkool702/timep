@@ -1535,7 +1535,8 @@ printf '%s;' "${fgA[@]}")"
     nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
     printf '\nDETECTED %s CPUs\n' "${nCPU}" >&2
     [[ $nCPU ]] || (( nCPU > 0 )) || nCPU=1
-    (( nWorkerMax = ( 1 + nCPU ) / 2 ))
+    (( nWorkerMax = ( 1 + nCPU ) >> 1 ))
+    nWorkerMax0=${nWorkerMax}
 
     exec {timep_fd_logID}<><(:)
     exec {timep_fd_done}<><(:)
@@ -1585,6 +1586,7 @@ done
     nWorker=1
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
     nRetryMax0=20
+    nFailedMax0=30
     nActive=0
 
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"' EXIT
@@ -1635,6 +1637,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             nFailed=0
             nRetry=0
             nRetryMax=${nRetryMax0}
+            nFailedMax=${nFailedMax0}
+            nWorkerMax=${nWorkerMax0}
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
@@ -1642,12 +1646,19 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         # we read a blank index --> a log failed but didnt kill the coproc and the coproc already re-submitted the job to the workqueue
                         # perhaps in the future there will be a "nFailedMax" to break out of failing to process some log in an infinite loop.
                         ((nFailed++))
+                        if (( nFailed > nFailedMax )); then
+                            printf '\nERROR: post-processing failed too many times on logs from current nesting lvl.\nABORTING TO PREVENT GETTING STUCK IN AN INFINITE RETRY LOOP.\n' >&2
+                            return 2
+                        else
+                            printf '\nWARNING: a log failed to process correctly. timep will attempt to process this log again. (used %s / %s respawn retries)\n' "${nFailed}" "${nFailedMax}" >&2
+                        fi
                     elif  [[ ${kkNeed[$doneInd]} ]]; then
                         # we read an index --> that log has finished processing
                         ((kk--))
                         ((jj++))
                         unset "kkNeed[$doneInd]"
                         printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
+                        (( nWorkerMax < nWorkerMax0 )) && ((nWorkerMax++))
                     fi
                 elif (( nRetry <= nRetryMax )); then
                     # get not-yet-completed log indicies from current nesting lvl
@@ -1673,8 +1684,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         # if a worker died midway through processing then it may have been killed by the OOM killer --> we may have too many worker coprocs --> lets lower the max limit a bit.
                         (( nWorkerMax = 1 + ( ( 3 * nWorkerMax ) >> 2 ) ))
 
-                        printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
-                    }
+                        printf '\nWARNING: %s log(s) failed to process correctly and killed the worker that was running them. timep will attempt to process these logs again. (used %s / %s respawn retries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
+                    
                     # re-spawn dead workers, upo to the max number orf the number of remaining logs at current nesting lvl
                     until (( nWorker >= nWorkerMax)) || (( nWorker >= ${#kkNeed0[@]} )); do
                         eval '{ coproc p'"${nWorker}"' {
@@ -1697,7 +1708,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         done
                         printf '\nABORTING!' >&2
                         _timep_DEBUG_PRINTVARS
-                        return 1
+                        return 3
                     }
                 fi
             done
@@ -1705,9 +1716,20 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         else
             # only 1 log at this level - dont use workers
             printf '\n\nPROCESSING NESTING LVL %s (1 LOG)\n' "${timep_LOG_NESTING_CUR}" >&2
+            nFailed=0
             (
                 while true; do
-                    _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}" && break
+                    if _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}"; then
+                        break
+                    else
+                        ((nFailed++))
+                        if (( nFailed > nFailedMax )); then
+                            printf '\nERROR: post-processing failed too many times on logs from current nesting lvl.\nABORTING TO PREVENT GETTING STUCK IN AN INFINITE RETRY LOOP.\n' >&2
+                            return 2
+                        else
+                            printf '\nWARNING: a log failed to process correctly. timep will attempt to process this log again. (used %s / %s respawn retries)\n' "${nFailed}" "${nFailedMax}" >&2
+                        fi
+                    fi
                 done
             )
             ((kk--))
