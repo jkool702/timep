@@ -1117,13 +1117,18 @@ _timep_FILE_EXISTS() {
 _timep_NUM_RUNNING() {
     local -i n=0
     local nn
+    local -a pAll_PID0
 
     for nn in "${@}"; do
-        [[ -d "/proc/${nn}" ]] && ((n++))
+        [[ -d "/proc/${nn}" ]] && { 
+            ((n++))
+            pAll_PID0+=("$n")
+        }
     done
 
     (( nWorkerDiff = nWorker - n ))
     nWorker="$n"
+    pAll_PID=("${pAll_PID0[@]}")
 }
 
 _timep_DEBUG_PRINTVARS() {
@@ -1562,8 +1567,8 @@ done'
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
     nRetryMax=20
 
-    trap 'kill -TERM "${pAll_PID[@]}"' EXIT
-
+    trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"' EXIT
+    trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"; trap - SIGINT; kill -INT ${BASHPID}' INT
     eval '{ coproc p0 {
     '"${timep_coprocSrc}"'
   } 2>&${timep_FD2}
@@ -1573,6 +1578,7 @@ done'
 
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         export timep_LOG_NESTING_CUR="${timep_LOG_NESTING_CUR}"
+        (( timep_LOG_NESTING_CUR == 0 )) && set -xv
         
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
 
@@ -1670,7 +1676,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     wait "${pAll_PID[@]}" &>/dev/null
 
-    trap - EXIT
+    trap - EXIT INT
 
     read -r -u "${fd_sleep}" -t 0.01 _
 
