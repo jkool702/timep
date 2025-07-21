@@ -417,7 +417,7 @@ _timep_getFuncSrc() {
     read -r _ a </proc/uptime
     read -r _ _ _ _ b _ </proc/stat
     a0="${a##*.}"
-    (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//./} / b ))
+    (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//[^0-9]/} / b ))
 
     if ${timep_CLOCK_GETTIME_FLAG}; then
         timep_END_CTIME_STR='clock_gettime timep_END_CTIME'$'\n'
@@ -434,7 +434,7 @@ _timep_getFuncSrc() {
     export -p timep_DEBUG_TRAP_STR_0 &>/dev/null && export -n timep_DEBUG_TRAP_STR_0
     export -p timep_DEBUG_TRAP_STR_1 &>/dev/null && export -n timep_DEBUG_TRAP_STR_1
     timep_DEBUG_TRAP_STR_0='timep_NPIPE0="${#PIPESTATUS[@]}"
-    (( timep_END_TIME = 10#${EPOCHREALTIME//./} ))
+    (( timep_END_TIME = 10#${EPOCHREALTIME//[^0-9]/} ))
     '"${timep_END_CTIME_STR}"
     
     timep_DEBUG_TRAP_STR_1='[[ "$-" == *m* ]] || {
@@ -583,7 +583,7 @@ _timep_getFuncSrc() {
             [[ -s "${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}" ]] && {
                 {
                     while read -r -u ${timep_FD_ENDTIME} timep_END_TIME0 timep_END_CTIME0; do
-                        ((${timep_END_TIME0//./} < ${timep_END_TIME//./})) && {
+                        ((${timep_END_TIME0//[^0-9]/} < ${timep_END_TIME//[^0-9]/})) && {
                             timep_END_TIME="${timep_END_TIME0}"
                             timep_END_CTIME="${timep_END_CTIME0}"
                         }
@@ -663,7 +663,7 @@ _timep_getFuncSrc() {
         fi
        '"${timep_START_CTIME_STR}"'
         
-        (( timep_START_TIME = 10#${EPOCHREALTIME//./} ))
+        (( timep_START_TIME = 10#${EPOCHREALTIME//[^0-9]/} ))
 
         timep_STARTTIME[${timep_FNEST_CUR}]="${timep_START_TIME}"$'"'"'\t'"'"'"${timep_START_CTIME}"
     }'
@@ -905,7 +905,7 @@ _timep_getFuncSrc() {
            "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
-    (( timep_WTIME_DONE = 10#${EPOCHREALTIME//./} ))
+    (( timep_WTIME_DONE = 10#${EPOCHREALTIME//[^0-9]/} ))
 
     printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s"\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" >&2
     unset IFS
@@ -978,8 +978,8 @@ _timep_GET_RUNTIME_CORRECTION() {
         done
         tw1=$EPOCHREALTIME;
         clock_gettime tc1
-        (( twSum = 10#${tw1//./} - 10#${tw0//./} ))
-        (( tcSum = 10#${tc1//./} - 10#${tc0//./} ))
+        (( twSum = 10#${tw1//[^0-9]/} - 10#${tw0//[^0-9]/} ))
+        (( tcSum = 10#${tc1//[^0-9]/} - 10#${tc0//[^0-9]/} ))
         printf '%s\n' "${twSum}" "${tcSum}")
 
         mapfile -t tSum1 < <(tSum=0; kk=0
@@ -987,8 +987,8 @@ _timep_GET_RUNTIME_CORRECTION() {
         tw1=$EPOCHREALTIME;
         clock_gettime tc1
         (( kk == 0 )) || {
-            (( twSum = ${twSum:-0} + 10#${tw1//./} - 10#${tw0//./} ));
-            (( tcSum = ${tcSum:-0} + 10#${tc1//./} - 10#${tc0//./} ));
+            (( twSum = ${twSum:-0} + 10#${tw1//[^0-9]/} - 10#${tw0//[^0-9]/} ));
+            (( tcSum = ${tcSum:-0} + 10#${tc1//[^0-9]/} - 10#${tc0//[^0-9]/} ));
         }
         tw0=$EPOCHREALTIME
         clock_gettime tc0' DEBUG;
@@ -1007,13 +1007,13 @@ _timep_GET_RUNTIME_CORRECTION() {
             :
         done
         t1=$EPOCHREALTIME;
-        (( tSum = 10#${t1//./} - 10#${t0//./} ))
+        (( tSum = 10#${t1//[^0-9]/} - 10#${t0//[^0-9]/} ))
         echo "$tSum")"
 
         tSum1="$(tSum=0; kk=0
         trap 'nPipe=${#PIPESTATUS[@]};
         t1=$EPOCHREALTIME;
-        (( kk == 0 )) || (( tSum = ${tSum:-0} + 10#${t1//./} - 10#${t0//./} ));
+        (( kk == 0 )) || (( tSum = ${tSum:-0} + 10#${t1//[^0-9]/} - 10#${t0//[^0-9]/} ));
         t0=$EPOCHREALTIME' DEBUG;
         for (( kk=0; kk<$N; kk++)); do
             :
@@ -1024,6 +1024,9 @@ _timep_GET_RUNTIME_CORRECTION() {
         timep_CTIME_CORRECTION=0
 
     fi
+
+    (( timep_WTIME_CORRECTION = 10#${timep_WTIME_CORRECTION} ))
+    (( timep_CTIME_CORRECTION = 10#${timep_CTIME_CORRECTION} ))
 
 }
 _timep_GET_RUNTIME_CORRECTION
@@ -1115,19 +1118,26 @@ _timep_FILE_EXISTS() {
 }
 
 _timep_NUM_RUNNING() {
-    local -i n=0
+    local -i nWorker0 nActive0
     local nn
-    local -a pAll_PID0
+    local -a pAll_PID0 
+
+    nWorker0=0
+    nActive0=0
 
     for nn in "${@}"; do
-        [[ -d "/proc/${nn}" ]] && { 
-            ((n++))
+        if [[ -d "/proc/${nn}" ]]; then
+            ((nWorker0++))
             pAll_PID0+=("$nn")
-        }
+            [[ -s "${timep_TMPDIR}/.worker/${nn}" ]] && ((nActive0++))
+        elif [[ -f "${timep_TMPDIR}/.worker/${nn}" ]]; then
+            \rm -f "${timep_TMPDIR}/.worker/${nn}"
+        fi
     done
 
     (( nWorkerDiff = nWorker - n ))
     nWorker="$n"
+    nActive="${nActive0}"
     pAll_PID=("${pAll_PID0[@]}")
 }
 
@@ -1143,7 +1153,7 @@ _timep_PROCESS_LOG() {
     local -a logA nPipeA startWTimeA endWTimeA wTimeA wTimePA startCTimeA endCTimeA cTimeA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
-    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
+#    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
 
@@ -1285,13 +1295,13 @@ _timep_PROCESS_LOG() {
         ${inPipeFlag} && normalCmdFlagA[$kk]=false
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
-        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = ${endWTimeA[$kk]//[^0-9]/} >= ${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
+        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = 10#${endWTimeA[$kk]//[^0-9]/} - 10#${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
 
         [[ -z ${cTimeA[$kk]//[^0-9]/} ]] && [[ ${endCTimeA[$kk]//[^0-9]/} ]] && {
-            if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( ${endCTimeA[$kk]//[^0-9]/} >= ${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION )); then
-                (( cTimeA[$kk] = ${endCTimeA[$kk]//[^0-9]/} - ${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+            if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#${endCTimeA[$kk]//[^0-9]/} >= 10#${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION )); then
+                (( cTimeA[$kk] = 10#${endCTimeA[$kk]//[^0-9]/} - 10#${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             else
-                (( cTimeA[$kk] = ${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+                (( cTimeA[$kk] = 10#${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             fi
         }
 
@@ -1533,21 +1543,30 @@ printf '%s;' "${fgA[@]}")"
 
     printf '\n' >&${timep_fd_lock}
 
-    timep_coprocSrc='declare logID
-    failFlag=false
+    mkdir -p "${timep_TMPDIR}/.worker"
+
+    # NOTE: $timep_TMPDIR/.worker/<workerPID> contasins info on current workers state
+    # if the file exists and is empty --> worker is running but not post-processing a log
+    # if the file exists and is non empty then it contains the logID that the worker is currently post-processing
+    # running `_timep_NUM_RUNNING` will clean up this dir and remove stale entries (e.g., from workers who were killed midway through post-processing a log)
+    timep_coprocSrc='declare logID 
 shopt -s extglob
+: >"${timep_TMPDIR}/.worker/${BASHPID}"
 while true; do
     read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
-    if [[ "${logID}" == '"'"':'"'"'* ]]; then
-         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[${logID#\:}]}" 2>&${timep_FD2} ||  printf '"'"'\n'"'"' >&${timep_fd_done}
+    printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
+    if _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}; then
+        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_logID}
+        printf '"'"'\n'"'"' "${logID}" >&${timep_fd_done}
     else
-        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || printf '"'"'\n'"'"' >&${timep_fd_done}
+        printf '"'"'%s\n'"'"' >&${timep_fd_done}
     fi
-    printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
-done'
+    : >"${timep_TMPDIR}/.worker/${BASHPID}"
+done
+\rm -f "${timep_TMPDIR}/.worker/${BASHPID}"'
 
     # loop through logs from deepest nested upwards and run each through post processing function
     printf '\n\n' >&2
@@ -1565,7 +1584,8 @@ done'
     jj=0
     nWorker=1
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
-    nRetryMax=20
+    nRetryMax0=20
+    nActive=0
 
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"' EXIT
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"; trap - SIGINT; kill -INT ${BASHPID}' INT
@@ -1584,13 +1604,15 @@ done'
         (( kkDiff = kk - kkMin + 1 ))
 
         if (( kkDiff > 1 )); then
-
+            # write ID's of logs to process (for current nesting lvl) to work queue pipe 
+            # writer is a background process to prevent deadlock
             {
                 for kk1 in "${kkNeed[@]:${kkMin}}"; do
                     printf '%s\n' "${kk1}" >&${timep_fd_logID}
                 done
             } &
 
+            # spawn workers until we hit either the max worker count or the number of logs to process at current nesting lvl
             while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
                 eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
@@ -1600,6 +1622,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 ((nWorker++))
             done
 
+            # shut down workers if we have more than we need for current nesting lvl
             while (( nWorker > kkDiff )); do
                 printf '\n' >&${timep_fd_logID}
                 ((nWorker--))
@@ -1611,35 +1634,49 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             nFailed=0
             nRetry=0
+            nRetryMax=${nRetryMax0}
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
-                    if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
+                    if [[ -z ${doneInd} ]]; then
+                        # we read a blank index --> a log failed but didnt kill the coproc and the coproc already re-submitted the job to the workqueue
+                        # perhaps in the future there will be a "nFailedMax" to break out of failing to process some log in an infinite loop.
                         ((nFailed++))
-                    else
+                    elif  [[ ${kkNeed[$doneInd]} ]]; then
+                        # we read an index --> that log has finished processing
                         ((kk--))
                         ((jj++))
                         unset "kkNeed[$doneInd]"
                         printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
                     fi
                 elif (( nRetry <= nRetryMax )); then
+                    # get not-yet-completed log indicies from current nesting lvl
                     kkNeed0=("${kkNeed[@]:${kkMin}}")
+
+                    # update info on how many workers are still running and how many log files are actively being processed by those workers
                     _timep_NUM_RUNNING "${pAll_PID[@]}" 
-                    (( nFailed = nFailed + nWorkerDiff ))
-                    (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
+
+                    # to re-send log indicies that have not yet finbished processing, 2 conditions must be met:
+                    #    1. there are 0 logs actively being processed, and
+                    #    2. there is at least 1 worker coproc that is still running 
+                    # combined, this means there is a worker that is being blocked trying to read from the logID pipe --> there are currently no logID's in the logID pipe 
+                    (( nWorker > 0 )) && (( nActive == 0 )) && {
                         (( nRetry = nRetry + ${#kkNeed0[@]} ))
+                        (( nRetry >= nRetryMax )) && kkd=':' || kkd=''
+                        # re-send unfinished indicies
                         {
-                            for kk1 in "${kkNeed[@]:${kkMin}}"; do
+                            for kk1 in "${kkNeed0[@]}"; do
                                 [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
-    			                (( nRetry >= nRetryMax )) && kkd=':' || kkd=''
                                 printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
                             done
                         } &
+                        # if a worker died midway through processing then it may have been killed by the OOM killer --> we may have too many worker coprocs --> lets lower the max limit a bit.
                         (( nWorkerMax = 1 + ( ( 3 * nWorkerMax ) >> 2 ) ))
-                        nFailed=0
+
                         printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
                     }
-                    until (( nWorker >= nWorkerMax)); do
+                    # re-spawn dead workers, upo to the max number orf the number of remaining logs at current nesting lvl
+                    until (( nWorker >= nWorkerMax)) || (( nWorker >= ${#kkNeed0[@]} )); do
                         eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
   } 2>&${timep_FD2}
@@ -1751,8 +1788,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             }
 
             # get percent of total runtime
-            ((p1 = (10000 * 10#${t//./}) / timep_runtimeALL))
-            printf -v p1 '%0.4d' "${p1//./}"
+            ((p1 = (10000 * 10#${t//[^0-9]/}) / timep_runtimeALL))
+            printf -v p1 '%0.4d' "${p1//[^0-9]/}"
             if ((10#${p1} == 10000)); then
                 p1="100.00"
             else
