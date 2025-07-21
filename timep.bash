@@ -1649,7 +1649,6 @@ done
 
         (( kkDiff = kk - kkMin + 1 ))
 
-#        if (( kkDiff > 1 )); then
             # write ID's of logs to process (for current nesting lvl) to work queue pipe
 
             # writer is a background process to prevent deadlock
@@ -1684,6 +1683,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             nRetryMax=${nRetryMax0}
             nFailedMax=${nFailedMax0}
             nWorkerMax=${nWorkerMax0}
+            kkd=''
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
@@ -1697,6 +1697,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                             return 2
                         else
                             printf '\nWARNING: a log failed to process correctly. timep will attempt to process this log again. (used %s / %s respawn retries)\n' "${nFailed}" "${nFailedMax}" >&2
+                            (( nFailed == nFailedMax )) && kkd=':'
                         fi
                     elif  [[ ${kkNeed[$doneInd]} ]]; then
                         # we read an index --> that log has finished processing
@@ -1721,7 +1722,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                     (( nWorker > 0 )) && (( nActive == 0 )) && {
                         (( nRetry = nRetry + ${#kkNeed0[@]} ))
-                        (( nRetry >= nRetryMax )) && kkd=':' || kkd=''
+                        (( nRetry >= nRetryMax )) && kkd=':'
                         # re-send unfinished indicies
                         {
                             for kk1 in "${kkNeed0[@]}"; do
@@ -1762,31 +1763,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     }
                 fi
             done
-
-#        else
-#            # only 1 log at this level - dont use workers
-#            printf '\n\nPROCESSING NESTING LVL %s (1 LOG)\n' "${timep_LOG_NESTING_CUR}" >&2
-#            nFailed=0
-#            (
-#                while true; do
-#                    if _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}"; then
-#                        break
-#                    else
-#                        ((nFailed++))
-#                        if (( nFailed > nFailedMax )); then
-#                            printf '\nERROR: post-processing failed too many times on logs from current nesting lvl.\nABORTING TO PREVENT GETTING STUCK IN AN INFINITE RETRY LOOP.\n' >&2
-#                            return 2
-#                        else
-#                            printf '\nWARNING: a log failed to process correctly. timep will attempt to process this log again. (used %s / %s respawn retries)\n' "${nFailed}" "${nFailedMax}" >&2
-#                        fi
-#                    fi
-#                done
-#            )
-#            ((kk--))
-#            ((jj++))
-#            unset "kkNeed[$kk]"
-#            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
-#        fi
 
         read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
