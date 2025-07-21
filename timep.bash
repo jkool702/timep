@@ -1558,8 +1558,14 @@ while true; do
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
+    if [[ "${logID}" == \:* ]]; then
+        logID="${logID#\:}"
+        debugStr='"'"'timep_POSTPROC_DEBUG_FLAG=true'"'"'
+    else
+        debugStr='"''"'
+    fi
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
-    if _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}; then
+    if "${debugStr}" _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}; then
         printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_logID}
         printf '"'"'\n'"'"' "${logID}" >&${timep_fd_done}
     else
