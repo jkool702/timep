@@ -1447,7 +1447,7 @@ printf '%s;' "${fgA[@]}")"
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
             # write line
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\t(%s->%s)' "${linenoA[$kk]}" '' "${wTime}" "${wTimePA[$kk]}" "${cTime}" "${cTimePA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}"
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\t(%s->%s)' "${linenoA[$kk]}" '' "${wTime}" "${wTimePA[$kk]}" "${cTime}" "${cTimePA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1538,7 +1538,7 @@ printf '%s;' "${fgA[@]}")"
 	        (kk1++))
             done < <(printf '%s\n' "${timeUA[@]}" | sed -E 's/[sx%\|\(\)[:space]]/ /g; s/ +/ /g')
             
-            printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM "${wTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${wTimeCurPA[@]}")" "$(_timep_EPOCHREALTIME_SUM "${cTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${wTimeCurPA[@]}")" "${count0}" "${lineU#*$'\t'* }"
+            printf '\n%s\t(%ss|%s)\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM "${wTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${wTimeCurPA[@]}")" "$(_timep_EPOCHREALTIME_SUM "${cTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${wTimeCurPA[@]}")" "${count0}" "${lineU#*$'\t'* }"
         done
 
         (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
