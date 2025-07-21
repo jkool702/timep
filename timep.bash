@@ -1816,6 +1816,15 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     for nn in "${timep_TMPDIR}"/.log/.runtimes/log.*; do
         read -r timep_wTimeCur timep_cTimeCur <"${nn}"
+
+        printf -v timep_wTimeCur '%0.7d' "${timep_wTimeCur}"
+        (( d6 = ${#timep_wTimeCur} - 6 ))
+        printf -v timep_wTimeCur '%s.%s' "${timep_wTimeCur:0:${d6}}" "${timep_wTimeCur:${d6}}"
+        
+        printf -v timep_cTimeCur '%0.7d' "${timep_cTimeCur}"
+        (( d6 = ${#timep_cTimeCur} - 6 ))
+        printf -v timep_cTimeCur '%s.%s' "${timep_cTimeCur:0:${d6}}" "${timep_cTimeCur:${d6}}"
+
         printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out"
         printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out.combined"
     done
