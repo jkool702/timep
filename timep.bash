@@ -1560,16 +1560,25 @@ while true; do
     [[ ${logID} ]] || break
     if [[ "${logID}" == \:* ]]; then
         logID="${logID#\:}"
-        debugStr='"'"'timep_POSTPROC_DEBUG_FLAG=true'"'"'
+        debugFlag=true
     else
-        debugStr='"''"'
+        debugFlag=false
     fi
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
-    if "${debugStr}" _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}; then
-        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_logID}
-        printf '"'"'\n'"'"' "${logID}" >&${timep_fd_done}
+    if "${debugFlag}"; then
+	   if timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}; then
+	        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_logID}
+        	printf '"'"'\n'"'"' "${logID}" >&${timep_fd_done}
+	    else
+        	printf '"'"'%s\n'"'"' >&${timep_fd_done}
+	    fi
     else
-        printf '"'"'%s\n'"'"' >&${timep_fd_done}
+	   if _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}; then
+	        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_logID}
+        	printf '"'"'\n'"'"' "${logID}" >&${timep_fd_done}
+	    else
+        	printf '"'"'%s\n'"'"' >&${timep_fd_done}
+	    fi
     fi
     : >"${timep_TMPDIR}/.worker/${BASHPID}"
 done
@@ -1611,7 +1620,7 @@ done
 
         (( kkDiff = kk - kkMin + 1 ))
 
-        if (( kkDiff > 1 )); then
+#        if (( kkDiff > 1 )); then
             # write ID's of logs to process (for current nesting lvl) to work queue pipe 
             # writer is a background process to prevent deadlock
             {
@@ -1691,6 +1700,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         (( nWorkerMax = 1 + ( ( 3 * nWorkerMax ) >> 2 ) ))
 
                         printf '\nWARNING: %s log(s) failed to process correctly and killed the worker that was running them. timep will attempt to process these logs again. (used %s / %s respawn retries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
+			}
                     
                     # re-spawn dead workers, upo to the max number orf the number of remaining logs at current nesting lvl
                     until (( nWorker >= nWorkerMax)) || (( nWorker >= ${#kkNeed0[@]} )); do
@@ -1719,30 +1729,30 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
             done
 
-        else
-            # only 1 log at this level - dont use workers
-            printf '\n\nPROCESSING NESTING LVL %s (1 LOG)\n' "${timep_LOG_NESTING_CUR}" >&2
-            nFailed=0
-            (
-                while true; do
-                    if _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}"; then
-                        break
-                    else
-                        ((nFailed++))
-                        if (( nFailed > nFailedMax )); then
-                            printf '\nERROR: post-processing failed too many times on logs from current nesting lvl.\nABORTING TO PREVENT GETTING STUCK IN AN INFINITE RETRY LOOP.\n' >&2
-                            return 2
-                        else
-                            printf '\nWARNING: a log failed to process correctly. timep will attempt to process this log again. (used %s / %s respawn retries)\n' "${nFailed}" "${nFailedMax}" >&2
-                        fi
-                    fi
-                done
-            )
-            ((kk--))
-            ((jj++))
-            unset "kkNeed[$kk]"
-            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
-        fi
+#        else
+#            # only 1 log at this level - dont use workers
+#            printf '\n\nPROCESSING NESTING LVL %s (1 LOG)\n' "${timep_LOG_NESTING_CUR}" >&2
+#            nFailed=0
+#            (
+#                while true; do
+#                    if _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}"; then
+#                        break
+#                    else
+#                        ((nFailed++))
+#                        if (( nFailed > nFailedMax )); then
+#                            printf '\nERROR: post-processing failed too many times on logs from current nesting lvl.\nABORTING TO PREVENT GETTING STUCK IN AN INFINITE RETRY LOOP.\n' >&2
+#                            return 2
+#                        else
+#                            printf '\nWARNING: a log failed to process correctly. timep will attempt to process this log again. (used %s / %s respawn retries)\n' "${nFailed}" "${nFailedMax}" >&2
+#                        fi
+#                    fi
+#                done
+#            )
+#            ((kk--))
+#            ((jj++))
+#            unset "kkNeed[$kk]"
+#            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
+#        fi
 
         read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
@@ -1909,7 +1919,7 @@ _timep_file_to_base64() {
     charmap=($(printf '%s ' {0..9} {a..z} {A..Z} '@' '_'))
 
     [[ -f "${1}" ]] || { 
-        printf '\nERROR: "%s" not found. ABORTING.\n' "${1}"; >&2
+        printf '\nERROR: "%s" not found. ABORTING.\n' "${1}" >&2
         return 1                                              
     }
     
