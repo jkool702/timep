@@ -1672,11 +1672,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 while true; do
                     _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}" && break
                 done
-                ((kk--))
-                ((jj++))
-                unset "kkNeed[$kk]"
-                printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
             )
+            ((kk--))
+            ((jj++))
+            unset "kkNeed[$kk]"
+            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
         fi
 
         read -r -u "${fd_sleep}" -t 0.1 _ || :
