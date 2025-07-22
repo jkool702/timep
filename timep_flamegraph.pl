@@ -415,7 +415,7 @@ sub random_namehash {
 }
 
 sub color_timep {
-  my ($type, $name, $count_wall, $max_wall, $count_cpu, $max_cpu) = @_;
+  my ($type, $name, $count_wall, $max_wall, $avg_wall $count_cpu, $max_cpu, $avg_cpu) = @_;
   my ($saturation, $intensity, $i2, $s);
   my ($r, $g, $b);
 	
@@ -423,11 +423,11 @@ sub color_timep {
   #$intensity = 2 * $intensity / (1 + $intensity * $intensity);
 
   if ($type eq "time") {
-    $intensity  = $count_wall / $max_wall;
+    $intensity  = 1 - (1 / (1 + (2 * $count_wall / $avg_wall)) ** 2);
     $saturation = 1; 
   } else {
     if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
-      $intensity  = $count_wall / $max_wall;
+      $intensity  = 1 - (1 / (1 + (2 * $count_wall / $avg_wall)) ** 2);
       $saturation = 1 - (1 / (1 + (2 * $count_cpu / $count_wall)) ** 2);
       #$saturation = sqrt($count_cpu / $count_wall);
       if ($saturation > 1) {
@@ -436,7 +436,7 @@ sub color_timep {
 	$saturation = 0.1 + (0.8 * $saturation);
       }
     } elsif (defined $count_cpu && $count_cpu > 0 && defined $max_cpu && $max_cpu > 0 && defined $count_wall && $type eq "timepr") {
-      $intensity  = $count_cpu / $max_cpu;
+      $intensity  = 1 - (1 / (1 + (2 * $count_cpu / $avg_cpu)) ** 2);
       $saturation = 1 - (1 / (1 + (2 * $count_wall / $count_cpu)) ** 2);
       #$saturation = sqrt($count_wall / $count_cpu);
       if ($saturation > 1) {
@@ -739,8 +739,14 @@ my $time = 0;
 my $delta = undef;
 my $ignored = 0;
 my $line;
-my $maxdelta = 1;
 my $maxwall = 0;
+my $avgwall = 0;
+my $sumwall = 0;
+my $nwall = 0;
+my $maxdelta = 1;
+my $avgdelta = 0;
+my $sumdelta = 0;
+my $ndelta = 0;
 
 if ($colors =~ /^timep/) {
     $maxdelta = 0;
@@ -786,6 +792,9 @@ foreach (@SortedData) {
 	}
 
 	$maxwall = $samples if $samples > $maxwall;
+        $sumwall = $sumwall + $samples;
+	$nwall = $nwall + 1;
+ 	$avgwall = $sumwall / nwall;
 
         # there may be an extra samples column for differentials:
 	my $samples2 = undef;
@@ -800,6 +809,9 @@ foreach (@SortedData) {
 	            # we are hijacking the "delta" and "maxdelta" variables. 
 	            # samples is really "wall-clock time". samples2 is really "cpu time".
                     $delta = $samples2;
+	            $sumdelta = $sumdelta + $samples;
+	            $ndelta  = $ndelta + 1;
+ 	            $avgdelta = $sumdelta / ndelta;
 		} else {
 		    $delta = $samples2 - $samples;
                 }
@@ -1388,7 +1400,7 @@ while (my ($id, $node) = each %Node) {
 
 	my $color;
 	if ($colors =~ /^time/) {
-		$color = color_timep($colors, $func, $samples, $maxwall, $samples2, $maxdelta);
+		$color = color_timep($colors, $func, $samples, $maxwall, $avgwall, $samples2, $maxdelta, $avgdelta);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
