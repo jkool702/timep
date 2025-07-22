@@ -416,7 +416,7 @@ sub random_namehash {
 
 sub color_timep {
   my ($type, $name, $count_wall, $max_wall, $count_cpu, $max_cpu) = @_;
-  my ($saturation, $intensity);
+  my ($saturation, $intensity, $i2, $s);
   my ($r, $g, $b);
 	
   $intensity  = $count_wall / $max_wall;
@@ -454,22 +454,24 @@ sub color_timep {
   $saturation = 0 if $saturation < 0;
 
   if ($colors =~ /^timep/) {
-    if ($name =~ m:_\[f\]$:) {	# function
+    if ($name =~ m:_\[f\]$:) { 
       $type = "function";
-    } elsif ($name =~ m:_\[s\]$:) {	# subshell
+    } elsif ($name =~ m:_\[s\]$:) {
       $type = "subshell";
-    } else {			# command
-      type = "time";
+    } else {			
+      $type = "time";
     }
   }
   
   if ($type eq "time") {
-    my i2 = $intensity ** 2;
-    $r = int((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
+    $i2 = $intensity ** 2;
+    $r = ((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
     $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 255 * (1 - $saturation))
-    $b = int((255 * (1 - $intensity) * (1 - ($i2)) * (1 - ($intensity * $i2))) * $saturation + 255 * (1 - $saturation));
-    my $s = $saturation * (1 + 255 / (r$ + $g1 +$b1)) / 2;
+    $b = ((255 * (1 - $intensity) * (1 - $i2) * (1 - ($intensity * $i2))) * $saturation + 255 * (1 - $saturation));
+    $s = $saturation * (1 + 255 / ($r + $g + $b)) / 2;
+    $r = int($r);
     $g = int($g * $s + 255 * (1 - $s));
+    $b = int($b);
   } else {
         $saturation = (1 / 4) + ($saturation / 2);
   	if ($type eq "function") {
