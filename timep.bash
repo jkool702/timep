@@ -1862,10 +1862,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
         # split lines into start, time, percent, end
-        echo "$(sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4/'$'\034''\5/'$'\034''\6/' <"${logPathCur}" | while IFS=$'\034' read -r a0 tw pw s tc pc a1; do
+        echo "$(sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
+        IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
+
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $a1 ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
-                    printf '%s(%ss|%s%%)%s(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1}"
+                    printf '%s\n' "${lineOrig}"
                     continue
                 }
 
@@ -1887,8 +1889,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     p1c="${p1c:0:2}.${p1c:2}"
                 fi
 
+                a00="${a0%%[0-9\.]*}"; 
+
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-                if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && ( a00="${a0%%[0-9]*}"; [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )) || (( "${#a00}" <= 1 )); ); then
+                if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
                     printf '%s(%ss|%s%%)%s(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1}"
                 else
                     printf '%s(%ss|%s%%|%s%%)%s(%ss|%s%%|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1}"
