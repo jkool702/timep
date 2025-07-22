@@ -466,7 +466,7 @@ sub color_timep {
   if ($type eq "time") {
     $i2 = $intensity ** 2;
     $r = ((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
-    $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 255 * (1 - $saturation))
+    $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 255 * (1 - $saturation));
     $b = ((255 * (1 - $intensity) * (1 - $i2) * (1 - ($intensity * $i2))) * $saturation + 255 * (1 - $saturation));
     $s = $saturation * (1 + 255 / ($r + $g + $b)) / 2;
     $r = int($r);
