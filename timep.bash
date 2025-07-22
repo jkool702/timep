@@ -1100,7 +1100,7 @@ _timep_PERCENT_AVG() {
     (( tSum = tSum / ${#} ))
     printf -v d '%0.4d' "${tSum}"
     (( d2 = ${#d} - 2 ))
-    printf '%s.%s%%' "${d:0:$d2}" "${d:$d2}"
+    printf '%s.%s' "${d:0:$d2}" "${d:$d2}"
 }
 
 _timep_FILE_EXISTS() {
@@ -1148,13 +1148,13 @@ declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTime
 
 shopt -s extglob
 _timep_PROCESS_LOG() {
-    local logCur log_tmp kk kk1 nn r wTimeTotal cTimeTotal inPipeFlag lineno1 nPipe startWTime endWTime startCTime endCTime wTime cTime wTimeP wTime0 cTime0 cTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6
+    local logCur log_tmp kk kk1 lineno1 nn r wTimeTotal cTimeTotal inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTimeP wTime0 cTime0 cTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6
 
     local -a logA nPipeA startWTimeA endWTimeA wTimeA wTimePA startCTimeA endCTimeA cTimeA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA
 
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
-#    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
+    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2' ERR #; _timep_DEBUG_PRINTVARS >&2' ERR
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
 
     logCur="${1}"
@@ -1171,12 +1171,13 @@ _timep_PROCESS_LOG() {
     mapfile -t logA < <(sort -V -k11,11 <"${logCur}")
 
     log_dupe_flag=false
-    for (( kk=1; kk<${#logA[@]}; kk++ )); do
-        (( kk1 = kk - 1 ))
+    kk1=0
+    (( ${#logA[@]} > 0 )) && for (( kk=1; kk<${#logA[@]}; kk++ )); do
         [[ "${logA[$kk1]}" == "${logA[$kk]}" ]] && {
             unset "logA[$kk1]"
             log_dupe_flag=true
         }
+        kk1=${kk}
     done
     ${log_dupe_flag} && mapfile -t -d '' logA < <(printf '%s\0' "${logA[@]}" | sed -E s/'\0+'/'\0'/g)
 
@@ -1199,7 +1200,7 @@ _timep_PROCESS_LOG() {
         linenoA[$kk]="${lineno}"
         cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
-        read -r -d '' cmd < <(echo ${cmd})
+        read -r -d '' cmd < <(echo "${cmd}"; printf '\0')
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         cmdA[$kk]="${cmd}"
@@ -1289,13 +1290,15 @@ _timep_PROCESS_LOG() {
         ${inPipeFlag} && normalCmdFlagA[$kk]=false
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
-        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = 10#${endWTimeA[$kk]//[^0-9]/} - 10#${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
+        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
 
         [[ -z ${cTimeA[$kk]//[^0-9]/} ]] && [[ ${endCTimeA[$kk]//[^0-9]/} ]] && {
-            if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#${endCTimeA[$kk]//[^0-9]/} >= 10#${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION )); then
-                (( cTimeA[$kk] = 10#${endCTimeA[$kk]//[^0-9]/} - 10#${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
-            else
-                (( cTimeA[$kk] = 10#${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+            if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} + ( timep_CTIME_CORRECTION << 1 ) )); then
+                (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+            elif [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} >= 10#0${startCTimeA[$kk]//[^0-9]/} )); then 
+                 (( cTimeA[$kk] = 1 + ( 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ) >> 1 ))
+           elif ${timep_CLOCK_GETTIME_FLAG}; then
+                (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             fi
         }
 
@@ -1348,10 +1351,11 @@ printf '%s;' "${fgA[@]}")"
 
     # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
     kk1=0
+    lineno1=0
     for (( kk=0; kk<${#logA[@]}; kk++ )); do
         (( nPipeA[$kk] == 1 )) || continue
         if (( kk > 0 )) && (( linenoA[$kk] == ${linenoA[$kk1]%.*} )); then
-            (( lineno1++ ))
+            ((lineno1 = lineno1 + 1))
         else
             lineno1=0
         fi
@@ -1378,31 +1382,31 @@ printf '%s;' "${fgA[@]}")"
         }
         if [[ ${linenoUniqLineA[${linenoA[$kk]}]} ]]; then
             linenoUniqLineA[${linenoA[$kk]}]+=" $kk"
-            (( linenoUniqCountA[${linenoA[$kk]}]++ ))
+            (( linenoUniqCountA[${linenoA[$kk]}] = linenoUniqCountA[${linenoA[$kk]}] + 1 ))
             linenoUniqWTimeA[${linenoA[$kk]}]+=" ${wTimeA[$kk]}"
             linenoUniqCTimeA[${linenoA[$kk]}]+=" ${cTimeA[$kk]:-1}"
         else
             linenoUniqLineA[${linenoA[$kk]}]="$kk"
-            linenoUniqCountA[${linenoA[$kk]}]="1"
+            linenoUniqCountA[${linenoA[$kk]}]=1
             linenoUniqWTimeA[${linenoA[$kk]}]="${wTimeA[$kk]}"
             linenoUniqCTimeA[${linenoA[$kk]}]="${cTimeA[$kk]:-1}"
         fi
     kk1=${kk}
     done
-
+#declare -p cTimeA wTimeA cTimePA wTimePA linenoUniqWTimeA linenoUniqCTimeA >&2
     # get runtime sums for the combined uniq lineno's
     for kk in "${!linenoUniqWTimeA[@]}"; do
 
         linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]//[^0-9 ]/}"
         linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]//[^0-9 ]/}"
 
-        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]# }"
-        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]# }"
-        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]% }"
-        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]% }"
+        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]##*( )}"
+        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]##*( )}"
+        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]%%*( )}"
+        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]%%*( )}"
 
-        [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) || linenoUniqWTimeA[$kk]=0
-        [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) || linenoUniqCTimeA[$kk]=0
+        [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) #|| linenoUniqWTimeA[$kk]=0
+        [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) #|| linenoUniqCTimeA[$kk]=0
 
         (( wTimeP = ( 10000 * linenoUniqWTimeA[$kk] ) / wTimeTotal ))
         printf -v wTimeP '%0.4d' "$wTimeP"
@@ -1421,13 +1425,13 @@ printf '%s;' "${fgA[@]}")"
         esac
 
     done
+#declare -p linenoUniqWTimeA linenoUniqCTimeA  linenoUniqWTimePA linenoUniqCTimePA >&2
 
     (( spacerN = 4 * ( timep_LOG_NESTING_MAX - timep_LOG_NESTING_CUR ) ))
 
     # write out new merged-upward log
-    kk=0
     inPipeFlag=false
-    while (( kk < ${#logA[@]} )); do
+    for kk in "${!logA[@]}"; do
         if ${inPipeFlag}; then
             # we are in a pipeline but not in the 1st element. dont add line to log
             (( isPipeA[$kk] == 1 )) && inPipeFlag=false
@@ -1466,7 +1470,6 @@ printf '%s;' "${fgA[@]}")"
         }
         (( timep_LOG_NESTING_CUR == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
 
-        (( kk++ ))
     done >"${logCur}.out"
 
     # write out new combined (uniq lineno) merged-upward log
@@ -1496,9 +1499,9 @@ printf '%s;' "${fgA[@]}")"
         # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
-         logMergeAll="$(for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
-            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && {
-                mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk1]}.out.combined")
+        logMergeAll=()
+        for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
+            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk1]}.out.combined")
                 if (( ${#logMergeA[@]} == 0 )); then
                     continue
                 elif (( ${#logMergeA[@]} <= 2 )); then
@@ -1507,36 +1510,40 @@ printf '%s;' "${fgA[@]}")"
                     printf '\n|-- %s' "${logMergeA[0]}"
                     printf '\n|   %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
                     printf '\n|-- %s' "${logMergeA[-1]}"
-                fi
-        #printf $'\034'
-        }
-        done)"
+                fi)")
+        done
 
         # for the logs we will be merging up, find uniq nesting/lineno/cmd combinations by removing the timing data (time+percent) from the center of each line and running it through `sort -u`
-        mapfile -t lineUA < <(r=''; sed -E 's/^([^\:]+\:[[:space:]]+)([0-9\|\(\)\.s%]+[[:space:]]*)+/\1\t/' <<<"${logMergeAll}" | while read -r nn; do [[ ${nn##+(\|   |\|-- |\|)} ]] || continue; [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; printf '%s\n' "$nn"; }; done)
+        (( ${#logMergeAll[@]} > 0 )) && {
+            mapfile -t lineUA < <(r=''; printf '\n%s\n' "${logMergeAll[@]}" | grep -F ':' | sed -E 's/^([^\:]+\:[[:space:]]+)([0-9\|\(\)\.s%]+\t*){2}/\1\t/' | while read -r nn; do [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; printf '%s\n' "${nn}"; }; done)
+            #declare -p lineUA logMergeAll >&2
 
-        # for each nesting/lineno/cmd combination, gather all the matching lines from the logs thst will be merged up, then combine times, average percents, and aggregate counts. then write combined line.
-        (( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]}"; do
-            mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" | sed -E 's/^[^\:]+\:\t\(/\(/; s/%\)\t(\([0-9]+x\)) .*$/%) \1/; s/[sx\%\t\|\(\)]/ /g; s/ +/ /g')
+            # for each nesting/lineno/cmd combination, gather all the matching lines from the logs thst will be merged up, then combine times, average percents, and aggregate counts. then write combined line.
+            (( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]/:+([[:space:]])\(/:$'\t'(}"; do
+                mapfile -t timeUA < <(printf '%s\n' "${logMergeAll[@]}" | grep -F "${lineU%%$'\t'*}" | grep -F "${lineU#*$'\t'}" | sed -E 's/^[^\:]+\:[[:space:]]*//; s/((\([0-9\.\|s%]+\)[[:space:]]+){2}\([0-9]+x\)).*$/\1/; s/[\(\)\|s%x]/ /g; s/[[:space:]]+/ /g')
 
-            wTimeCurA=()
-            wTimeCurPA=()
-            cTimeCurA=()
-            cTimeCurPA=()
-            count0=0
-            kk1=0
+                #declare -p lineU  timeUA  >&2
 
-            while read -r wTimeCur wTimeCurP cTimeCur cTimeCurP count1 _ ; do
-                wTimeCurA[$kk1]="${wTimeCur}"
-                wTimeCurPA[$kk1]="${wTimeCurP}"
-                cTimeCurA[$kk1]="${cTimeCur}"
-                cTimeCurPA[$kk1]="${cTimeCurP}"
-                (( count0 = count0 + ( ${count1:-1} * ${#timeUA[@]} ) ))
-                ((kk1++))
-            done < <(printf '%s\n' "${timeUA[@]}" | sed -E 's/[sx%\|\(\)[:space]]/ /g; s/ +/ /g')
+                wTimeCurA=()
+                wTimeCurPA=()
+                cTimeCurA=()
+                cTimeCurPA=()
+                count0=0
+                kk1=0
 
-            printf '\n%s\t(%ss|%s)\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM "${wTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${wTimeCurPA[@]}")" "$(_timep_EPOCHREALTIME_SUM "${cTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${cTimeCurPA[@]}")" "${count0}" "${lineU#*$'\t'* }"
-        done
+                while read -r wTimeCur wTimeCurP cTimeCur cTimeCurP count1 _ ; do
+                    wTimeCurA[$kk1]="${wTimeCur}"
+                    wTimeCurPA[$kk1]="${wTimeCurP}"
+                    cTimeCurA[$kk1]="${cTimeCur}"
+                    cTimeCurPA[$kk1]="${cTimeCurP}"
+                    (( count0 = count0 + ( ${count1:-1} * ${#timeUA[@]} ) ))
+                    ((kk1=k1+1))
+                done < <(printf '%s\n' "${timeUA[@]}" | sed -E 's/[sx\%\|\(\) \t]+/ /g')
+                #declare -p wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA count0 >&2
+
+                printf '\n%s\t(%ss|%s)\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM "${wTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${wTimeCurPA[@]}")" "$(_timep_EPOCHREALTIME_SUM "${cTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${cTimeCurPA[@]}")" "${count0}" "${lineU#*$'\t'* }"
+            done
+        }
 
         (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
     done >"${logCur}.out.combined"
@@ -1820,32 +1827,25 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
     sed -E 's/\t([0-9]+)\t([0-9]+)$/\t \1\t \2/' <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
     sed -E 's/\t([0-9]+)\t([0-9]+)$/\t \1\t \2/' <"${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
-    sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
+    sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
+        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
     else
         cat "${timep_LOG_NESTING[0]}.out.combined" >"${timep_TMPDIR}/profiles/out.profile"
     fi
 
     # remove some (all?) of the spurious '(&)' marks caused by process substitutions
     grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | {
-
         A="$(<"${timep_TMPDIR}/profiles/out.profile")";
-
-    B="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
+        B="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
 
         while read -r nn; do
-
-        A="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$A")";
-
+            A="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$A")";
             B="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$B")";
-
-    done;
+        done;
 
         sed -E 's/ \(\^\)$//'  <<<"$A" >"${timep_TMPDIR}/profiles/out.profile";
-
         sed -E 's/ \(\^\)\t/\t/'  <<<"$B" >"${timep_TMPDIR}/profiles/out.profile.full";
-
     }
 
     # get total runtime
