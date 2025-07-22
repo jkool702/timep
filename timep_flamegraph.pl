@@ -1,15 +1,18 @@
 #!/usr/bin/perl -w
 #
 # ------------------------------------------------------------
-# timep_flamegraph.pl — modified to support tag-based coloring
+# timep_flamegraph.pl — modified to support time-based and tag-based coloring
 # Based on flamegraph.pl by Brendan Gregg — modified for use with "timep"
 # Original flamegraph.pl © 2011–2025 Brendan Gregg.
 # License: CDDL 1.0 (see below).
 #
 # Modifications by Anthony Barone for the "timep" project (c) 2025:
-#   Added timep colormap: color is based on wall time and color saturation
-#      is based on cpu time + has different colors for subshells/functions
-# - Added support for `_[f]` and `_[s]` tags for per-frame coloring.
+# Added 3 new color options: time, timep and timepr.
+#   time:   wall-clock time --> color. optional 2nd input is end value for deltas.
+#   timep:  wall-clock time --> color and cpu/wall time ratio--> color saturation.
+#   timepr: cpu time --> color and wall/cpu time ratio --> color saturation.
+#   timep[r]: supports _[s]/_[f] tags for per-frame coloring of subshells/functions.
+#   timep[r]: 2nd input is cpu time (no deltas). If missing reverts to "time" behavior.
 #
 # This script remains licensed under CDDL 1.0. You may distribute
 # it alongside the "timep" project (MIT-licensed), provided that this
@@ -159,7 +162,7 @@ USAGE: $0 [options] infile > outfile.svg\n
 	--nametype TEXT  # name type label (default "Function:")
 	--colors PALETTE # set color palette. choices are: hot (default), mem,
 	                 # io, wakeup, chain, java, js, perl, red, green, blue,
-	                 # aqua, yellow, purple, orange
+	                 # aqua, yellow, purple, orange, time, timep, timepr
 	--bgcolors COLOR # set background colors. gradient choices are yellow
 	                 # (default), blue, green, grey; flat colors use "#rrggbb"
 	--hash           # colors are keyed by function name hash
