@@ -428,7 +428,8 @@ sub color_timep {
   } else {
     if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
       $intensity  = $count_wall / $max_wall;
-      $saturation = sqrt($count_cpu / $count_wall);
+      $saturation = 1 - (1 / (1 + (2 * $count_cpu / $count_wall)) ** 2);
+      #$saturation = sqrt($count_cpu / $count_wall);
       if ($saturation > 1) {
 	$saturation = 0.9 + (0.1 * ($saturation - 1));
       } else {
@@ -436,7 +437,8 @@ sub color_timep {
       }
     } elsif (defined $count_cpu && $count_cpu > 0 && defined $max_cpu && $max_cpu > 0 && defined $count_wall && $type eq "timepr") {
       $intensity  = $count_cpu / $max_cpu;
-      $saturation = sqrt($count_wall / $count_cpu);
+      $saturation = 1 - (1 / (1 + (2 * $count_wall / $count_cpu)) ** 2);
+      #$saturation = sqrt($count_wall / $count_cpu);
       if ($saturation > 1) {
 	$saturation = 0.9 + (0.1 * ($saturation - 1));
       } else {
