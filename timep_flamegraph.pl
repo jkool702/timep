@@ -7,8 +7,9 @@
 # License: CDDL 1.0 (see below).
 #
 # Modifications by Anthony Barone for the "timep" project (c) 2025:
-# - Added support for `(cmd)`, `(fn)`, `(sh)` tags for per-frame coloring.
-# - Added grey_colors() and blue_colors() palettes.
+#   Added timep colormap: color is based on wall time and color saturation
+#      is based on cpu time + has different colors for subshells/functions
+# - Added support for `_[f]` and `_[s]` tags for per-frame coloring.
 #
 # This script remains licensed under CDDL 1.0. You may distribute
 # it alongside the "timep" project (MIT-licensed), provided that this
@@ -410,6 +411,78 @@ sub random_namehash {
 	return rand(1)
 }
 
+sub color_timep {
+  my ($type, $name, $count_wall, $max_wall, $count_cpu, $max_cpu) = @_;
+  my ($saturation, $intensity);
+  my ($r, $g, $b);
+	
+  $intensity  = $count_wall / $max_wall;
+  #$intensity = 2 * $intensity / (1 + $intensity * $intensity);
+
+  if ($type eq "time") {
+    $intensity  = $count_wall / $max_wall;
+    $saturation = 1; 
+  } else {
+    if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
+      $intensity  = $count_wall / $max_wall;
+      $saturation = sqrt($count_cpu / $count_wall);
+      if ($saturation > 1) {
+	$saturation = 0.9 + (0.1 * ($saturation - 1));
+      } else {
+	$saturation = 0.1 + (0.8 * $saturation);
+      }
+    } elsif (defined $count_cpu && $count_cpu > 0 && defined $max_cpu && $max_cpu > 0 && defined $count_wall && $type eq "timepr") {
+      $intensity  = $count_cpu / $max_cpu;
+      $saturation = sqrt($count_wall / $count_cpu);
+      if ($saturation > 1) {
+	$saturation = 0.9 + (0.1 * ($saturation - 1));
+      } else {
+	$saturation = 0.1 + (0.8 * $saturation);
+      }
+    } else {
+      $intensity  = $count_wall / $max_wall;
+      $saturation = 1;  
+    }
+  }
+
+  $intensity  = 1 if $intensity > 1;
+  $intensity  = 0 if $intensity < 0;
+  $saturation = 1 if $saturation > 1;
+  $saturation = 0 if $saturation < 0;
+
+  if ($colors =~ /^timep/) {
+    if ($name =~ m:_\[f\]$:) {	# function
+      $type = "function";
+    } elsif ($name =~ m:_\[s\]$:) {	# subshell
+      $type = "subshell";
+    } else {			# command
+      type = "time";
+    }
+  }
+  
+  if ($type eq "time") {
+    my i2 = $intensity ** 2;
+    $r = int((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
+    $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 255 * (1 - $saturation))
+    $b = int((255 * (1 - $intensity) * (1 - ($i2)) * (1 - ($intensity * $i2))) * $saturation + 255 * (1 - $saturation));
+    my $s = $saturation * (1 + 255 / (r$ + $g1 +$b1)) / 2;
+    $g = int($g * $s + 255 * (1 - $s));
+  } else {
+        $saturation = (1 / 4) + ($saturation / 2);
+  	if ($type eq "function") {
+		  $r = ((185 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+		  $g = ((95 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+      $b = ((205 + int(50 * $intensity)) * $saturation + 255 * (1 - $saturation));
+  	} elsif ($type eq "subshell") {
+		  $r = ((155 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+		  $g = ((55 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+		  $b = ((175 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+  	}
+  }
+
+  return "rgb($r,$g,$b)";
+}
+
 sub color {
 	my ($type, $hash, $name) = @_;
 	my ($v1, $v2, $v3);
@@ -484,16 +557,6 @@ sub color {
 		}
 		# fall-through to color palettes
 	}
-	if (defined $type and $type eq "timep") {
-		if ($name =~ m:_\[f\]$:) {	# function
-			$type = "blue";
-		} elsif ($name =~ m:_\[s\]$:) {	# subshell
-			$type = "aqua";
-		} else {			# command
-			$type = "red";
-		}
-		# fall-through to color palettes
-	}
 	if (defined $type and $type eq "js") {
 		# Handle both annotations (_[j], _[i], ...; which are
 		# accurate), as well as input that lacks any annotations, as
@@ -535,10 +598,9 @@ sub color {
 
 	# color palettes
 	if (defined $type and $type eq "red") {
-		my $r = 205 + int(50 * $v3);
-		my $g = 0 + int(230 * $v1);
-		my $b = 0 + int(55 * $v2);
-		return "rgb($r,$g,$b)";
+		my $r = 200 + int(55 * $v1);
+		my $x = 50 + int(80 * $v1);
+		return "rgb($r,$x,$x)";
 	}
 	if (defined $type and $type eq "green") {
 		my $g = 200 + int(55 * $v1);
@@ -650,7 +712,12 @@ sub flow {
 		my $k = "$this->[$i];$i";
 		$Tmp{$k}->{stime} = $v;
 		if (defined $d) {
+			if ($colors eq "timep") {
+		$Tmp{$k}->{delta} = $d;
+
+			} else {
 			$Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
+		}
 		}
 	}
 
@@ -666,6 +733,11 @@ my $delta = undef;
 my $ignored = 0;
 my $line;
 my $maxdelta = 1;
+my $maxwall = 0;
+
+if ($colors =~ /^timep/) {
+    $maxdelta = 0;
+}
 
 # reverse if needed
 foreach (<>) {
@@ -706,18 +778,27 @@ foreach (@SortedData) {
 		next;
 	}
 
-	# there may be an extra samples column for differentials:
+	$maxwall = $samples if $samples > $maxwallcount;
+
+        # there may be an extra samples column for differentials:
 	my $samples2 = undef;
 	if ($stack =~ /^(.*)\s+?(\d+(?:\.\d*)?)$/) {
 		$samples2 = $samples;
 		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
 	}
-	$delta = undef;
+	
+        $delta = undef;
 	if (defined $samples2) {
-		$delta = $samples2 - $samples;
+	        if ($colors =~ /^timep/)) {
+	            # we are hijacking the "delta" and "maxdelta" variables. 
+	            # samples is really "wall-clock time". samples2 is really "cpu time".
+                    $delta = $samples2;
+		} else {
+		    $delta = $samples2 - $samples;
+                }
 		$maxdelta = abs($delta) if abs($delta) > $maxdelta;
+            }
 	}
-
 	# for chain graphs, annotate waker frames with "_[w]", for later
 	# coloring. This is a hack, but has a precedent ("_[k]" from perf).
 	if ($colors eq "chain") {
@@ -736,7 +817,9 @@ foreach (@SortedData) {
 	# merge frames and populate %Node:
 	$last = flow($last, [ '', split ";", $stack ], $time, $delta);
 
-	if (defined $samples2) {
+	if ($colors eq "timep") {
+ 		$time += $samples;
+        } elsif (defined $samples2) {
 		$time += $samples2;
 	} else {
 		$time += $samples;
@@ -1265,6 +1348,9 @@ while (my ($id, $node) = each %Node) {
 		=~ s/(^[-+]?\d+?(?=(?>(?:\d{3})+)(?!\d))|\G\d{3}(?=\d))/$1,/g;
 
 	my $info;
+        my $samples2;
+        my $d = $negate ? -$delta : $delta;
+
 	if ($func eq "" and $depth == 0) {
 		$info = "all ($samples_txt $countname, 100%)";
 	} else {
@@ -1276,14 +1362,18 @@ while (my ($id, $node) = each %Node) {
 		$escaped_func =~ s/>/&gt;/g;
 		$escaped_func =~ s/"/&quot;/g;
 		$escaped_func =~ s/_\[[kwij]\]$//;	# strip any annotation
-		unless (defined $delta) {
+	            unless (defined $delta) {
 			$info = "$escaped_func ($samples_txt $countname, $pct%)";
-		} else {
+		    } elsif ($colors eq "timep") {
+		    	$samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
+			$info = "$escaped_func ($samples_txt $countname, $pct%)";
+		    } else {
 			my $d = $negate ? -$delta : $delta;
 			my $deltapct = sprintf "%.2f", ((100 * $d) / ($timemax * $factor));
 			$deltapct = $d > 0 ? "+$deltapct" : $deltapct;
 			$info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";
-		}
+		    }
+                
 	}
 
 	my $nameattr = { %{ $nameattr{$func}||{} } }; # shallow clone
@@ -1291,7 +1381,9 @@ while (my ($id, $node) = each %Node) {
 	$im->group_start($nameattr);
 
 	my $color;
-	if ($func eq "--") {
+	if ($colors =~ /^time/) {
+		$color = color_timep($colors, $func, $samples, $maxwall, $samples2, $maxdelta);
+	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
 		$color = $dgrey;
