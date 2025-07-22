@@ -1821,7 +1821,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # fold flamegrapoh stack traces
-    sed -E 's/^(.+)\t([0-9]+)$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)\t([0-9]+)\t([0-9]+)$/+\2/' | sed -E 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)\t([0-9]+)\t([0-9]+)$/+\3/' | sed -E 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "$tw" "$tc"; done >"${timep_TMPDIR}/.log/out.flamegraph"
+    sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\2/' | sed -zE 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\3/' | sed -zE 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "${tw}" "${tc}"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
@@ -1857,10 +1857,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
         # split lines into start, time, percent, end
-        echo "$(sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)\t\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4/' <"${logPathCur}" | while IFS=$'\034' read -r a0 tw pw tc pc a1; do
+        echo "$(sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4/'$'\034''\5/'$'\034''\6/' <"${logPathCur}" | while IFS=$'\034' read -r a0 tw pw s tc pc a1; do
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $a1 ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
-                    printf '%s(%ss|%s%%)\t(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${tc}" "${pc}" "${a1}"
+                    printf '%s(%ss|%s%%)%s(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1}"
                     continue
                 }
 
@@ -1884,12 +1884,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
                 if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && ( a00="${a0%%[0-9]*}"; [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )) || (( "${#a00}" <= 1 )); ); then
-                    printf '%s(%ss|%s%%)\t(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${tc}" "${pc}" "${a1}"
+                    printf '%s(%ss|%s%%)%s(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1}"
                 else
-                    printf '%s(%ss|%s%%|%s%%)\t(%ss|%s%%|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${a1}"
+                    printf '%s(%ss|%s%%|%s%%)%s(%ss|%s%%|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1}"
                 fi
-            done
-        )" >"${logPathCur}"
+            done)" >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
