@@ -783,7 +783,7 @@ foreach (@SortedData) {
 		next;
 	}
 
-	$maxwall = $samples if $samples > $maxwallcount;
+	$maxwall = $samples if $samples > $maxwall;
 
         # there may be an extra samples column for differentials:
 	my $samples2 = undef;
@@ -794,7 +794,7 @@ foreach (@SortedData) {
 	
         $delta = undef;
 	if (defined $samples2) {
-	        if ($colors =~ /^timep/)) {
+	        if ($colors =~ /^timep/) {
 	            # we are hijacking the "delta" and "maxdelta" variables. 
 	            # samples is really "wall-clock time". samples2 is really "cpu time".
                     $delta = $samples2;
@@ -802,7 +802,6 @@ foreach (@SortedData) {
 		    $delta = $samples2 - $samples;
                 }
 		$maxdelta = abs($delta) if abs($delta) > $maxdelta;
-            }
 	}
 	# for chain graphs, annotate waker frames with "_[w]", for later
 	# coloring. This is a hack, but has a precedent ("_[k]" from perf).
