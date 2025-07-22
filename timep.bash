@@ -1759,8 +1759,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     kkNeed0=("${kkNeed[@]:${kkMin}}")
                     _timep_NUM_RUNNING "${pAll_PID[@]}"
 
-                    (( nFailed = nFailed + nWorkerDiff ))
-                    (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
+                    { { (( nWorker == 0 ) || { (( nWorker > 0 )) && (( nActive == 0 )); }; } && {
                         printf '\n\nERROR: could not process the following logs:\n' >&2
                         for kkErr in "${kkNeed[@]:$kkMin}"; do
                             printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
