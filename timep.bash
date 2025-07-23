@@ -745,7 +745,7 @@ _timep_getFuncSrc() {
             ;;
         esac
 
-    ${timep_CLOCK_GETTIME_FLAG} && export -f _timep_SETUP
+    ${timep_CLOCK_GETTIME_FLAG} && { export -f _timep_SETUP; export -f _timep_file_to_base64; }
     chmod +x "${timep_TMPDIR}/functions.bash"
     timep_runFuncSrc+='(
 
@@ -1843,7 +1843,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
 
-    printf '\n\nFINALIZING TIME PROFILE\n' >&2
+    printf '\n\nFINALIZING OUTPUTS\n' >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out"
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out.combined"
 
