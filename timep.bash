@@ -1556,6 +1556,12 @@ printf '%s;' "${fgA[@]}")"
     return 0
 }
 
+# # # # # # # # # # # # # # # # POST PROCESSING BEGINS HERE # # # # # # # # # # # # # # # # 
+
+# # # # STEP 1: PROCESS LOGS, STARTING AT THE DEEPEST NESTING LVL AND MOVING UPWARDS
+#       Logs for each nesting level are processed in parallel, but all logs from
+#       a given nesting lvl must finish before moving on to the next nesting lvl
+
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log.*' | grep -vE '\.init_[csr]$' | sort -V)
 
@@ -1574,24 +1580,38 @@ printf '%s;' "${fgA[@]}")"
     # get indicies for each nesting lvl
     mapfile -t timep_LOG_NESTING_IND < <(jj0=0; for kk in "${!timep_LOG_NESTING[@]}"; do mapfile -t A <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; printf '%s\n' "${jj0}"; (( jj0 += ${#A[@]} )); done)
 
+    # use up to num_cpu / 2 + 1 workers
     nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
     printf '\nDETECTED %s CPUs\n' "${nCPU}" >&2
     [[ $nCPU ]] || (( nCPU > 0 )) || nCPU=1
     (( nWorkerMax = ( 1 + nCPU ) >> 1 ))
     nWorkerMax0=${nWorkerMax}
 
+    # open anonymous pipes for IPC
     exec {timep_fd_logID}<><(:)
     exec {timep_fd_done}<><(:)
     exec {timep_fd_lock}<><(:)
 
+    # initialize read lock
     printf '\n' >&${timep_fd_lock}
 
+    # create dir for worker status/state info 
     mkdir -p "${timep_TMPDIR}/.worker"
 
     # NOTE: $timep_TMPDIR/.worker/<workerPID> contasins info on current workers state
     # if the file exists and is empty --> worker is running but not post-processing a log
     # if the file exists and is non empty then it contains the logID that the worker is currently post-processing
     # running `_timep_NUM_RUNNING` will clean up this dir and remove stale entries (e.g., from workers who were killed midway through post-processing a log)
+    
+    # define the code that the worker coprocs will run. basically, each worker will:
+    #      reads log indicies from the timep_fd_logID pipe in an infinite loop, 
+    #      process the log corresponding to that ID using _timep_PROCESS_LOG
+    #      writes the log ID on success (-logID on failure) to timep_fd_done when finished
+    #      break out of loop and exit is logID is empty
+    #      create "${timep_TMPDIR}/.worker/${BASHPID}" when spawned
+    #      write the logID to "${timep_TMPDIR}/.worker/${BASHPID}" when processing a log starts, and clear it when done
+    #      if logID begins with a : strip off the : and enable debug output
+    
     timep_coprocSrc='declare logID
 
 shopt -s extglob
@@ -1605,7 +1625,7 @@ while true; do
         logID="${logID#\:}"
         debugFlag=true
     else
-        debugFlag=false
+        debugFlag=falseworker state dir
     fi
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
     if "${debugFlag}"; then
@@ -1625,6 +1645,7 @@ done
     # loop through logs from deepest nested upwards and run each through post processing function
     printf '\n\n' >&2
 
+    # export helper functions
     export -f _timep_EPOCHREALTIME_DIFF
     export -f _timep_EPOCHREALTIME_SUM
     export -f _timep_PERCENT_AVG
@@ -1633,6 +1654,7 @@ done
     export -f _timep_PROCESS_LOG
     export -f _timep_DEBUG_PRINTVARS
 
+    # initialize variables
     timep_LOG_NUM="${#timep_LOG_NAME[@]}"
     (( kk = timep_LOG_NUM - 1 ))
     jj=0
@@ -1642,8 +1664,11 @@ done
     nFailedMax0=30
     nActive=0
 
+    # set traps to kill workers on SIGINT / EXIT
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"' EXIT
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"; trap - SIGINT; kill -INT ${BASHPID}' INT
+
+    # spawn coproc worker p0
     eval '{ coproc p0 {
     '"${timep_coprocSrc}"'
   } 2>&${timep_FD2}
@@ -1651,16 +1676,18 @@ done
     pAll_PID=("${p0_PID}")
     export timep_LOG_NESTING_MAX="${timep_LOG_NESTING_MAX}"
 
+    # BEGIN LOOP OVER NESTING LVL (DEEPEST TO SHALLOWEST)
+    
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         export timep_LOG_NESTING_CUR="${timep_LOG_NESTING_CUR}"
 
+        # get lowest log index for this nesting lvl
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
         printf '%s %s\n' "${timep_LOG_NESTING_CUR}" "${timep_LOG_NESTING_MAX}" >"${timep_TMPDIR}/.log/.log_nesting_cur_max"
 
         (( kkDiff = kk - kkMin + 1 ))
 
             # write ID's of logs to process (for current nesting lvl) to work queue pipe
-
             # writer is a background process to prevent deadlock
             {
                 for kk1 in "${kkNeed[@]:${kkMin}}"; do
@@ -1688,6 +1715,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             read -r -u "${fd_sleep}" -t 0.01 _ || :
 
+            # re-initialize variables that keep track of failures
             nFailed=0
             nRetry=0
             nRetryMax=${nRetryMax0}
@@ -1697,6 +1725,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
+                # we read something!
                     if [[ "${doneInd}" == \-* ]]; then
                         # we read a negative index --> a log failed but didnt kill the coproc and the coproc already re-submitted the job to the workqueue
                         # perhaps in the future there will be a "nFailedMax" to break out of failing to process some log in an infinite loop.
@@ -1712,7 +1741,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                             printf '%s%s\n' "${kkd}" "${doneInd}" >&${timep_fd_logID}
                         fi
                     elif  [[ ${kkNeed[$doneInd]} ]]; then
-                        # we read an index --> that log has finished processing
+                        # we read an index --> that log has finished processing. increment counters and status
                         ((kk--))
                         ((jj++))
                         unset "kkNeed[$doneInd]"
@@ -1720,6 +1749,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         (( nWorkerMax < nWorkerMax0 )) && ((nWorkerMax++))
                     fi
                 elif (( nRetry <= nRetryMax )); then
+                    # we didnt read anything from the doneInd pipe, but we arent at the retry limit yet
+                    # figure out if we had a worker die and we need to re-send some log indicies
+                    
                     # get not-yet-completed log indicies from current nesting lvl
                     kkNeed0=("${kkNeed[@]:${kkMin}}")
 
@@ -1729,7 +1761,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     # to re-send log indicies that have not yet finbished processing, 2 conditions must be met:
                     #    1. there are 0 logs actively being processed, and
                     #    2. there is at least 1 worker coproc that is still running
-
                     # combined, this means there is a worker that is being blocked trying to read from the logID pipe --> there are currently no logID's in the logID pipe
 
                     (( nWorker > 0 )) && (( nActive == 0 )) && {
@@ -1742,13 +1773,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                                 printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
                             done
                         } &
-                        # if a worker died midway through processing then it may have been killed by the OOM killer --> we may have too many worker coprocs --> lets lower the max limit a bit.
+                        # if we hit this code branch it means a worker died midway through processing --> it may have been killed by the OOM killer --> we may have too many worker coprocs --> lets lower the max limit a bit.
                         (( nWorkerMax = 1 + ( ( 3 * nWorkerMax ) >> 2 ) ))
 
                         printf '\nWARNING: %s log(s) failed to process correctly and killed the worker that was running them. timep will attempt to process these logs again. (used %s / %s respawn retries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
             }
 
-                    # re-spawn dead workers, upo to the max number orf the number of remaining logs at current nesting lvl
+                    # if needed, re-spawn dead workers, upo to the max number of the number of remaining logs at current nesting lvl
                     until (( nWorker >= nWorkerMax)) || (( nWorker >= ${#kkNeed0[@]} )); do
                         eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
@@ -1760,10 +1791,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     done
 
                 else
+                    # limit if number of failed log processings hit. if this round fails abort.
+                    # re-send indicies with : to enable debug output
                     kkNeed0=("${kkNeed[@]:${kkMin}}")
                     _timep_NUM_RUNNING "${pAll_PID[@]}"
 
                     { (( nWorker == 0 )) || { (( nWorker > 0 )) && (( nActive == 0 )); }; } && {
+                        # abort to avoid deadlock. print list of which logs are currently failing to process
                         printf '\n\nERROR: could not process the following logs:\n' >&2
                         for kkErr in "${kkNeed[@]:$kkMin}"; do
                             printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
@@ -1780,6 +1814,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
+    # kill remaining workers
     while (( nWorker > 0 )); do
         printf '\n' >&${timep_fd_logID}
         ((nWorker--))
@@ -1787,10 +1822,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     wait "${pAll_PID[@]}" &>/dev/null
 
+    # unset traps
     trap - EXIT INT
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
+    # close anonymous IPC pipes
     exec {timep_fd_logID}>&-
     exec {timep_fd_done}>&-
     exec {timep_fd_lock}>&-
