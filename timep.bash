@@ -1368,8 +1368,8 @@ printf '%s;' "${fgA[@]}")"
             lineno1=0
         fi
         linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
-        (( wTimeP = ( 10000 * wTimeA[$kk] ) / wTimeTotal ))
-        (( cTimeP = ( 10000 * cTimeA[$kk] ) / cTimeTotal ))
+        (( wTimeP =  wTimeA[$kk] > 0 ? ( 10000 * wTimeA[$kk] ) / wTimeTotal : 0 ))
+        (( cTimeP =  cTimeA[$kk] > 0 ? ( 10000 * cTimeA[$kk] ) / cTimeTotal : 0))
 
         printf -v wTimeP '%0.4d' "${wTimeP}"
         case "${wTimeP}" in
@@ -1416,7 +1416,7 @@ printf '%s;' "${fgA[@]}")"
         [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) #|| linenoUniqWTimeA[$kk]=0
         [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) #|| linenoUniqCTimeA[$kk]=0
 
-        (( wTimeP = ( 10000 * linenoUniqWTimeA[$kk] ) / wTimeTotal ))
+        (( wTimeP = linenoUniqWTimeA[$kk] > 0 ? ( 10000 * linenoUniqWTimeA[$kk] ) / wTimeTotal : 0 ))
         printf -v wTimeP '%0.4d' "$wTimeP"
         case "${wTimeP}" in
             10000) linenoUniqWTimePA[$kk]=100.00 ;;
@@ -1424,7 +1424,7 @@ printf '%s;' "${fgA[@]}")"
             *) linenoUniqWTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
 
-        (( cTimeP = ( 10000 * linenoUniqCTimeA[$kk] ) / cTimeTotal ))
+        (( cTimeP = linenoUniqCTimeA[$kk] > 0 ? ( 10000 * linenoUniqCTimeA[$kk] ) / cTimeTotal : 0 ))
         printf -v cTimeP '%0.4d' "$cTimeP"
         case "${cTimeP}" in
             10000) linenoUniqCTimePA[$kk]=100.00 ;;
