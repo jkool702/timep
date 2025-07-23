@@ -418,7 +418,7 @@ sub random_namehash {
 
 sub color_timep {
   my ($type, $name, $count_wall, $ind_wall, $n_wall, $max_wall, $avg_wall, $count_cpu, $ind_cpu, $n_cpu, $max_cpu, $avg_cpu) = @_;
-  my ($saturation, $intensity, $i2, $s);
+  my ($saturation, $intensity, $i2, $s, $type0);
   my ($r, $g, $b);
 	
   $intensity  = $count_wall / $max_wall;
@@ -431,6 +431,7 @@ sub color_timep {
        $intensity = 1 - (1 / (1 + (2 * $count_wall / $avg_wall)) ** 2);
     }
     $saturation = 1; 
+    $type0 = "time";
   } else {
     if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
       if (defined $ind_wall && $ind_wall > 0 && defined $n_wall && $n_wall > 0 ) {
@@ -445,7 +446,8 @@ sub color_timep {
       } else {
 	$saturation = 0.1 + (0.8 * $saturation);
       }
-    } elsif (defined $count_cpu && $count_cpu > 0 && defined $max_cpu && $max_cpu > 0 && defined $count_wall && $type eq "timepr") {
+       $type0 = "time";
+   } elsif (defined $count_cpu && $count_cpu > 0 && defined $max_cpu && $max_cpu > 0 && defined $count_wall && $type eq "timepr") {
       if (defined $ind_cpu && $ind_cpu > 0 && defined $n_cpu && $n_cpu > 0 ) {
         $intensity = $ind_cpu / (2 * $n_cpu);       
       } else {
@@ -458,6 +460,7 @@ sub color_timep {
       } else {
 	$saturation = 0.1 + (0.8 * $saturation);
       }
+      $type0 = "time";
     } else {
       $intensity  = $count_wall / $max_wall;
       $saturation = 1;  
@@ -471,15 +474,15 @@ sub color_timep {
 
   if ($colors =~ /^timep/) {
     if ($name =~ m:_\[f\]$:) { 
-      $type = "function";
+      $type0 = "function";
     } elsif ($name =~ m:_\[s\]$:) {
-      $type = "subshell";
+      $type0 = "subshell";
     } else {			
-      $type = "time";
+      $type0 = "time";
     }
   }
   
-  if ($type eq "time") {
+  if ($type0 eq "time") {
     $i2 = $intensity ** 2;
     $r = ((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
     $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 255 * (1 - $saturation));
@@ -490,11 +493,11 @@ sub color_timep {
     $b = int($b);
   } else {
         $saturation = (1 / 4) + ($saturation / 2);
-  	if ($type eq "function") {
+  	if ($type0 eq "function") {
 		  $r = ((185 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
 		  $g = ((95 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
       $b = ((205 + int(50 * $intensity)) * $saturation + 255 * (1 - $saturation));
-  	} elsif ($type eq "subshell") {
+  	} elsif ($type0 eq "subshell") {
 		  $r = ((155 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
 		  $g = ((55 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
 		  $b = ((175 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
@@ -819,7 +822,7 @@ foreach (@SortedData) {
 	chomp;
 	# process: folded_stack count
 	# eg: func_a;func_b;func_c 31
-	my ($stack, $samples) 
+	my ($stack, $samples);
         my $samples2 = undef;
         if ($colors =~ /^time/) {
               ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
@@ -831,14 +834,14 @@ foreach (@SortedData) {
 		$samples2 = $samples;
 		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
 	}
-         if ($samples =~ (/^(\d+):(\d+)$/) {
-                ($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/);
-        }
-        if ($samples2 =~ (/^(\d+):(\d+)$/) {
-                ($samples2, $inddelta) = $samples2 =~ (/^(\d+):(\d+)$/);
-        }
+         if (index($samples, ":") >= 0) {
+             ($samples, $indwall) = split /:/, $samples, 2;
+         }
+          if (index($samples2, ":") >= 0) {
+             ($samples2, $indcpu) = split /:/, $samples, 2;
+         }
 
-	  } else {
+       } else {
               ($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
 	      	unless (defined $samples and defined $stack) {
 		++$ignored;
