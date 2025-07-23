@@ -11,8 +11,10 @@
 #   time:   wall-clock time --> color. optional 2nd input is end value for deltas.
 #   timep:  wall-clock time --> color and cpu/wall time ratio--> color saturation.
 #   timepr: cpu time --> color and wall/cpu time ratio --> color saturation.
-#   timep[r]: supports _[s]/_[f] tags for per-frame coloring of subshells/functions.
-#   timep[r]: 2nd input is cpu time (no deltas). If missing reverts to "time" behavior.
+#   timep[r][0]: supports _[s]/_[f] tags for per-frame coloring of subshells/functions.
+#   timep[r][0]: 2nd input is cpu time (no deltas). If missing reverts to "time" behavior.
+#  (optional): pass eiter wall time and/or cpu time as "time:CDF_ind" and that time will be 
+#         assigned color based on where CDF_ind/2N linearly falls in the color scale.
 #
 # This script remains licensed under CDDL 1.0. You may distribute
 # it alongside the "timep" project (MIT-licensed), provided that this
@@ -415,7 +417,7 @@ sub random_namehash {
 }
 
 sub color_timep {
-  my ($type, $name, $count_wall, $max_wall, $avg_wall $count_cpu, $max_cpu, $avg_cpu) = @_;
+  my ($type, $name, $count_wall, $ind_wall, $n_wall, $max_wall, $avg_wall, $count_cpu, $ind_cpu, $n_cpu, $max_cpu, $avg_cpu) = @_;
   my ($saturation, $intensity, $i2, $s);
   my ($r, $g, $b);
 	
@@ -423,11 +425,19 @@ sub color_timep {
   #$intensity = 2 * $intensity / (1 + $intensity * $intensity);
 
   if ($type eq "time") {
-    $intensity  = 1 - (1 / (1 + (2 * $count_wall / $avg_wall)) ** 2);
+    if (defined $ind_wall && $ind_wall > 0 && defined $n_wall && $n_wall > 0 ) {
+       $intensity = $ind_wall / (2 * $n_wall);
+    } else {
+       $intensity = 1 - (1 / (1 + (2 * $count_wall / $avg_wall)) ** 2);
+    }
     $saturation = 1; 
   } else {
     if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
-      $intensity  = 1 - (1 / (1 + $count_wall / $avg_wall) ** 2);
+      if (defined $ind_wall && $ind_wall > 0 && defined $n_wall && $n_wall > 0 ) {
+        $intensity = $ind_wall / (2 * $n_wall);       
+      } else {
+        $intensity  = 1 - (1 / (1 + $count_wall / $avg_wall) ** 2);
+      }
       $saturation = 1 - (1 / (1 + $count_cpu / $count_wall) ** 2);
       #$saturation = sqrt($count_cpu / $count_wall);
       if ($saturation > 1) {
@@ -436,7 +446,11 @@ sub color_timep {
 	$saturation = 0.1 + (0.8 * $saturation);
       }
     } elsif (defined $count_cpu && $count_cpu > 0 && defined $max_cpu && $max_cpu > 0 && defined $count_wall && $type eq "timepr") {
-      $intensity  = 1 - (1 / (1 + $count_cpu / $avg_cpu) ** 2);
+      if (defined $ind_cpu && $ind_cpu > 0 && defined $n_cpu && $n_cpu > 0 ) {
+        $intensity = $ind_cpu / (2 * $n_cpu);       
+      } else {
+        $intensity  = 1 - (1 / (1 + $count_cpu / $avg_cpu) ** 2);
+      }
       $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
       #$saturation = sqrt($count_wall / $count_cpu);
       if ($saturation > 1) {
@@ -743,10 +757,12 @@ my $maxwall = 0;
 my $avgwall = 0;
 my $sumwall = 0;
 my $nwall = 0;
+my $indwall = undef;
 my $maxdelta = 1;
 my $avgdelta = 0;
 my $sumdelta = 0;
 my $ndelta = 0;
+my $inddelta = undef;
 
 if ($colors =~ /^timep/) {
     $maxdelta = 0;
@@ -756,7 +772,24 @@ if ($colors =~ /^timep/) {
 foreach (<>) {
 	chomp;
 	$line = $_;
-	if ($stackreverse) {
+        if ($colors =~ /^time/) {
+            if ($stackreverse) {
+		# there may be an extra samples column for differentials
+		# XXX todo: redo these REs as one. It's repeated below.
+		my($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+		my $samples2 = undef;
+		if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d+)?)?)$/) {
+			$samples2 = $samples;
+			($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+			unshift @Data, join(";", reverse split(";", $stack)) . " $samples $samples2";
+		} else {
+			unshift @Data, join(";", reverse split(";", $stack)) . " $samples";
+		}
+	    } else {
+		unshift @Data, $line;
+	    }
+        } else {
+	    if ($stackreverse) {
 		# there may be an extra samples column for differentials
 		# XXX todo: redo these REs as one. It's repeated below.
 		my($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
@@ -768,9 +801,10 @@ foreach (<>) {
 		} else {
 			unshift @Data, join(";", reverse split(";", $stack)) . " $samples";
 		}
-	} else {
+	    } else {
 		unshift @Data, $line;
-	}
+	    }
+         }
 }
 
 if ($flamechart) {
@@ -785,11 +819,37 @@ foreach (@SortedData) {
 	chomp;
 	# process: folded_stack count
 	# eg: func_a;func_b;func_c 31
-	my ($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-	unless (defined $samples and defined $stack) {
+	my ($stack, $samples) 
+        my $samples2 = undef;
+        if ($colors =~ /^time/) {
+              ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+	      	unless (defined $samples and defined $stack) {
 		++$ignored;
 		next;
 	}
+	if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/) {
+		$samples2 = $samples;
+		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+	}
+         if ($samples =~ (/^(\d+):(\d+)$/) {
+                ($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/);
+        }
+        if ($samples2 =~ (/^(\d+):(\d+)$/) {
+                ($samples2, $inddelta) = $samples2 =~ (/^(\d+):(\d+)$/);
+        }
+
+	  } else {
+              ($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
+	      	unless (defined $samples and defined $stack) {
+		++$ignored;
+		next;
+	}
+	if ($stack =~ /^(.*)\s+?(\d+(?:\.\d*)?)$/) {
+		$samples2 = $samples;
+		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
+	}
+          }               
+
 
 	$maxwall = $samples if $samples > $maxwall;
         $sumwall = $sumwall + $samples;
@@ -797,11 +857,6 @@ foreach (@SortedData) {
  	$avgwall = $sumwall / nwall;
 
         # there may be an extra samples column for differentials:
-	my $samples2 = undef;
-	if ($stack =~ /^(.*)\s+?(\d+(?:\.\d*)?)$/) {
-		$samples2 = $samples;
-		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-	}
 	
         $delta = undef;
 	if (defined $samples2) {
@@ -1400,7 +1455,7 @@ while (my ($id, $node) = each %Node) {
 
 	my $color;
 	if ($colors =~ /^time/) {
-		$color = color_timep($colors, $func, $samples, $maxwall, $avgwall, $samples2, $maxdelta, $avgdelta);
+		$color = color_timep($colors, $func, $samples, $indwall, $nwall, $maxwall, $avgwall, $samples2, $inddelta, $ndelta, $maxdelta, $avgdelta);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
