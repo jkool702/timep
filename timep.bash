@@ -977,8 +977,8 @@ _timep_GET_RUNTIME_CORRECTION() {
         done
         tw1=$EPOCHREALTIME;
         clock_gettime tc1
-        (( twSum = 10#${tw1//[^0-9]/} - 10#${tw0//[^0-9]/} ))
-        (( tcSum = 10#${tc1//[^0-9]/} - 10#${tc0//[^0-9]/} ))
+        (( twSum = 10#0${tw1//[^0-9]/} - 10#0${tw0//[^0-9]/} ))
+        (( tcSum = 10#0${tc1//[^0-9]/} - 10#0${tc0//[^0-9]/} ))
         printf '%s\n' "${twSum}" "${tcSum}")
 
         mapfile -t tSum1 < <(twSum=0; tcSum=0; kk=0
@@ -986,8 +986,8 @@ _timep_GET_RUNTIME_CORRECTION() {
         tw1=$EPOCHREALTIME;
         clock_gettime tc1
         (( kk == 0 )) || {
-            (( twSum = ${twSum:-0} + 10#${tw1//[^0-9]/} - 10#${tw0//[^0-9]/} ));
-            (( tcSum = ${tcSum:-0} + 10#${tc1//[^0-9]/} - 10#${tc0//[^0-9]/} ));
+            (( twSum = ${twSum:-0} + 10#0${tw1//[^0-9]/} - 10#0${tw0//[^0-9]/} ));
+            (( tcSum = ${tcSum:-0} + 10#0${tc1//[^0-9]/} - 10#0${tc0//[^0-9]/} ));
         }
         tw0=$EPOCHREALTIME
         clock_gettime tc0' DEBUG;
@@ -1006,13 +1006,13 @@ _timep_GET_RUNTIME_CORRECTION() {
             :
         done
         t1=$EPOCHREALTIME;
-        (( tSum = 10#${t1//[^0-9]/} - 10#${t0//[^0-9]/} ))
+        (( tSum = 10#0${t1//[^0-9]/} - 10#0${t0//[^0-9]/} ))
         echo "$tSum")"
 
         tSum1="$(tSum=0; kk=0
         trap 'nPipe=${#PIPESTATUS[@]};
         t1=$EPOCHREALTIME;
-        (( kk == 0 )) || (( tSum = ${tSum:-0} + 10#${t1//[^0-9]/} - 10#${t0//[^0-9]/} ));
+        (( kk == 0 )) || (( tSum = ${tSum:-0} + 10#0${t1//[^0-9]/} - 10#0${t0//[^0-9]/} ));
         t0=$EPOCHREALTIME' DEBUG;
         for (( kk=0; kk<$N; kk++)); do
             :
@@ -1024,8 +1024,8 @@ _timep_GET_RUNTIME_CORRECTION() {
 
     fi
 
-    (( timep_WTIME_CORRECTION = 10#${timep_WTIME_CORRECTION} ))
-    (( timep_CTIME_CORRECTION = 10#${timep_CTIME_CORRECTION} ))
+    (( timep_WTIME_CORRECTION = 10#0${timep_WTIME_CORRECTION} ))
+    (( timep_CTIME_CORRECTION = 10#0${timep_CTIME_CORRECTION} ))
 
 }
 _timep_GET_RUNTIME_CORRECTION
@@ -1034,11 +1034,11 @@ _timep_EPOCHREALTIME_DIFF() {
     local tDiff d d6 a1 a2
 
     if (( ${#} >= 2 )) && [[ ${1//[^0-9]/} ]] && [[ ${2//[^0-9]/} ]]; then
-        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} - timep_WTIME_CORRECTION ))
+        (( tDiff = 10#0${2//[^0-9]/} - 10#0${1//[^0-9]/} - timep_WTIME_CORRECTION ))
     elif (( ${#} == 1 )) && [[ "${1}" == *[0-9]*\ *[0-9]* ]]; then
         a1="${1% *}"
         a2="${1#* }"
-        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - timep_WTIME_CORRECTION ))
+        (( tDiff = 10#0${a2//[^0-9]/} - 10#0${a1//[^0-9]/} - timep_WTIME_CORRECTION ))
         (( tDiff <= 0 )) && tDiff=1
     else
         printf '%s' '0.000001'
@@ -1343,16 +1343,10 @@ printf '%s;' "${fgA[@]}")"
         }
     done
 
-    if [[ ${wTimeTotal//[^0-9]/} ]] && (( 10#${wTimeTotal//[^0-9]/} >= 1 )); then
-        (( wTimeTotal = 10#${wTimeTotal//[^0-9]/} ))
-    else
-        wTimeTotal=1
-    fi
-    if [[ ${cTimeTotal//[^0-9]/} ]] && (( 10#${cTimeTotal//[^0-9]/} >= 1 )); then
-        (( cTimeTotal = 10#${cTimeTotal//[^0-9]/} ))
-    else
-        cTimeTotal=1
-    fi
+
+    (( wTimeTotal = 10#0${wTimeTotal//[^0-9]/} >= 1 ? 10#0${wTimeTotal//[^0-9]/} : 1 ))
+    (( cTimeTotal = 10#0${cTimeTotal//[^0-9]/} >= 1 ? 10#0${cTimeTotal//[^0-9]/} : 1 ))
+
     # write runtime and final endtime to .{end,run}time file
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
@@ -1368,8 +1362,8 @@ printf '%s;' "${fgA[@]}")"
             lineno1=0
         fi
         linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
-        (( wTimeP =  wTimeA[$kk] > 0 ? ( 10000 * wTimeA[$kk] ) / wTimeTotal : 0 ))
-        (( cTimeP =  cTimeA[$kk] > 0 ? ( 10000 * cTimeA[$kk] ) / cTimeTotal : 0))
+        (( wTimeP =  10#0${wTimeA[$kk]//[^0-9]/} > 0 ? ( 10000 * 10#0${wTimeA[$kk]//[^0-9]/} ) / wTimeTotal : 0 ))
+        (( cTimeP =  10#0${cTimeA[$kk]//[^0-9]/} > 0 ? ( 10000 * 10#0${cTimeA[$kk]//[^0-9]/} ) / cTimeTotal : 0 ))
 
         printf -v wTimeP '%0.4d' "${wTimeP}"
         case "${wTimeP}" in
@@ -1416,7 +1410,7 @@ printf '%s;' "${fgA[@]}")"
         [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) #|| linenoUniqWTimeA[$kk]=0
         [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) #|| linenoUniqCTimeA[$kk]=0
 
-        (( wTimeP = linenoUniqWTimeA[$kk] > 0 ? ( 10000 * linenoUniqWTimeA[$kk] ) / wTimeTotal : 0 ))
+        (( wTimeP = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? ( 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} ) / wTimeTotal : 0 ))
         printf -v wTimeP '%0.4d' "$wTimeP"
         case "${wTimeP}" in
             10000) linenoUniqWTimePA[$kk]=100.00 ;;
@@ -1424,7 +1418,7 @@ printf '%s;' "${fgA[@]}")"
             *) linenoUniqWTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
 
-        (( cTimeP = linenoUniqCTimeA[$kk] > 0 ? ( 10000 * linenoUniqCTimeA[$kk] ) / cTimeTotal : 0 ))
+        (( cTimeP = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? ( 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} ) / cTimeTotal : 0 ))
         printf -v cTimeP '%0.4d' "$cTimeP"
         case "${cTimeP}" in
             10000) linenoUniqCTimePA[$kk]=100.00 ;;
@@ -1956,18 +1950,18 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 }
 
                 # get percent of total runtime
-                ((p1w = (10000 * 10#${tw//[^0-9]/}) / timep_wtimeALL))
+                ((p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL))
                 printf -v p1w '%0.4d' "${p1w//[^0-9]/}"
-                if ((10#${p1w} == 10000)); then
+                if ((10#0${p1w} == 10000)); then
                     p1w="100.00"
                 else
                     p1w="${p1w:0:2}.${p1w:2}"
                 fi
 
                 # get percent of total cpu time
-                ((p1c = (10000 * 10#${tc//[^0-9]/}) / timep_ctimeALL))
+                ((p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL))
                 printf -v p1c '%0.4d' "${p1c//[^0-9]/}"
-                if ((10#${p1c} == 10000)); then
+                if ((10#0${p1c} == 10000)); then
                     p1c="100.00"
                 else
                     p1c="${p1c:0:2}.${p1c:2}"
