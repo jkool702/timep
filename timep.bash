@@ -1625,7 +1625,7 @@ while true; do
         logID="${logID#\:}"
         debugFlag=true
     else
-        debugFlag=falseworker state dir
+        debugFlag=false
     fi
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
     if "${debugFlag}"; then
@@ -1869,44 +1869,44 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
 
-# for flamegraph.pl inputs - convert times to CDF index (to maximize colorspace usage)
-for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
+    # for flamegraph.pl inputs - convert times to CDF index (to maximize colorspace usage)
+    for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
 
-# seperate logs into stack / wall time / cpu time
-mapfile -t stackA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\1/' <"$fgCur}") 
-mapfile -t wallTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\2/' <"$fgCur}") 
-mapfile -t cpuTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\3/' <"$fgCur}") 
+        # seperate logs into stack / wall time / cpu time
+        mapfile -t stackA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\1/' <"${fgCur}") 
+        mapfile -t wallTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\2/' <"${fgCur}") 
+        mapfile -t cpuTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\3/' <"${fgCur}") 
 
-# sort times then prepend line numbers to start
-mapfile -t wallTimeSortA < <( printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
-mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}"  | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+        # sort times then prepend line numbers to start
+        mapfile -t wallTimeSortA < <( printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+        mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}"  | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
 
-# get 2x total count
-(( wallTimeN = ${#wallTimeSortA[@]} << 1 ))
-(( cpuTimeN = ${#cpuTimeSortA[@]} << 1 ))
+        # get 2x total count
+        (( wallTimeN = ${#wallTimeSortA[@]} << 1 ))
+        (( cpuTimeN = ${#cpuTimeSortA[@]} << 1 ))
 
-# get unique times and counts and populate inverse mapping arrays
-wallTimesCDF_map=()
-cpuTimesCDF_map=()
+        # get unique times and counts and populate inverse mapping arrays
+        wallTimesCDF_map=()
+        cpuTimesCDF_map=()
 
-while read -r a b c; do
-{ [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
-    (( n = ( ( b - 1 ) << 1 ) + a ))
-    wallTimeCDF_map[$c]="$n"
-done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
+        while read -r a b c; do
+        { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+            (( n = ( ( b - 1 ) << 1 ) + a ))
+            wallTimeCDF_map[$c]="$n"
+        done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
 
-while read -r a b c; do
-{ [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
-    (( n = ( ( b - 1 ) << 1 ) + a ))
-    cpuTimeCDF_map[$c]="$n"
-done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
+        while read -r a b c; do
+        { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+            (( n = ( ( b - 1 ) << 1 ) + a ))
+            cpuTimeCDF_map[$c]="$n"
+        done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
 
-# re-write log with time mapped to CDF index
-for kk in "${!stackA[@]}"; do
-    printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeA[$kk]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeA[$kk]}]}" 
-done >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
+        # re-write log with time mapped to CDF index
+        for kk in "${!stackA[@]}"; do
+            printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeA[$kk]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeA[$kk]}]}" 
+        done >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
 
-done
+    done
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
     sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
@@ -1980,12 +1980,21 @@ done
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
         printf '\nGENERATING FLAMEGRAPHS\n' >&2
-        export PATH="${PATH}${PATH:+:}${timep_TMPDIR%/*}"
-        if type -p timep_flamegraph.pl &>/dev/null; then
-            timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
-        elif [[ -f "${PWD}/timep_flamegraph.pl" ]]; then
-            cat "${PWD}/timep_flamegraph.pl" >"${timep_TMPDIR%/*}/timep_flamegraph.pl"
-            timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
+        export PATH="${PATH}${PATH:+:}${timep_TMPDIR%\/*}"
+        if PATH="${PATH}${PATH:+:}${PWD}" type -p -a timep_flamegraph.pl &>/dev/null; then
+            mapfile -t timep_flameGraphPathA < <(PATH="${PATH}${PATH:+:}${PWD}" type -p -a timep_flamegraph.pl)
+            if (( ${#timep_flameGraphPathA[@]} == 1 )) || ! type -p date &>/dev/null; then
+                timep_flameGraphPath="${timep_flameGraphPathA[0]}"
+            else
+                t=$(date -r "${timep_flameGraphPathA[0]}" '+%s')
+                k=0
+                for (( kk=1; kk<${#timep_flameGraphPathA[@]}; kk++ )); do
+                    tt=$(date -r "${timep_flameGraphPathA[$kk]}" '+%s')
+                    (( tt > t )) && k=$kk
+                done
+                timep_flameGraphPath="${timep_flameGraphPathA[$k]}"
+            fi
+            [[ "${timep_flameGraphPath}" == "${timep_TMPDIR%/*}/timep_flamegraph.pl" ]] || \cp -f "${timep_flameGraphPath}" "${timep_TMPDIR%\/*}/timep_flamegraph.pl"
         else
             type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl -O "${timep_TMPDIR%/*}/timep_flamegraph.pl" 2>/dev/null
             type -p timep_flamegraph.pl &>/dev/null || {

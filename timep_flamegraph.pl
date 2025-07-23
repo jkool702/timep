@@ -823,41 +823,42 @@ foreach (@SortedData) {
 	# process: folded_stack count
 	# eg: func_a;func_b;func_c 31
 	my ($stack, $samples);
-        my $samples2 = undef;
-        if ($colors =~ /^time/) {
-              ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
-	      	unless (defined $samples and defined $stack) {
-		++$ignored;
-		next;
-	}
-	if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/) {
-		$samples2 = $samples;
-		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
-	}
-         if (index($samples, ":") >= 0) {
-             ($samples, $indwall) = split /:/, $samples, 2;
-         }
-          if (index($samples2, ":") >= 0) {
-             ($samples2, $indcpu) = split /:/, $samples, 2;
-         }
+  my $samples2 = undef;
+  if ($colors =~ /^time/) {
+    ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+	  unless (defined $samples and defined $stack) {
+		  ++$ignored;
+		  next;
+	  }
+	  if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/) {
+		  $samples2 = $samples;
+		  ($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+      if ($samples2 =~ /^(.*):(.*)$/) {
+        ($samples2, $inddelta) = $samples2 =~ (/^(\d+):(\d+)$/); 
+      }
+ 	  }
+      if ($samples =~ /^(.*):(.*)$/) {
+        ($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/); 
+      }
 
-       } else {
-              ($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-	      	unless (defined $samples and defined $stack) {
-		++$ignored;
-		next;
-	}
-	if ($stack =~ /^(.*)\s+?(\d+(?:\.\d*)?)$/) {
-		$samples2 = $samples;
-		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-	}
-          }               
+
+  } else {
+    ($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
+	  unless (defined $samples and defined $stack) {
+		  ++$ignored;
+		    next;
+	  }
+	  if ($stack =~ /^(.*)\s+?(\d+(?:\.\d*)?)$/) {
+		  $samples2 = $samples;
+		  ($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
+	  }
+  }               
 
 
 	$maxwall = $samples if $samples > $maxwall;
         $sumwall = $sumwall + $samples;
 	$nwall = $nwall + 1;
- 	$avgwall = $sumwall / nwall;
+ 	$avgwall = $sumwall / $nwall;
 
         # there may be an extra samples column for differentials:
 	
@@ -869,7 +870,7 @@ foreach (@SortedData) {
                     $delta = $samples2;
 	            $sumdelta = $sumdelta + $samples;
 	            $ndelta  = $ndelta + 1;
- 	            $avgdelta = $sumdelta / ndelta;
+ 	            $avgdelta = $sumdelta / $ndelta;
 		} else {
 		    $delta = $samples2 - $samples;
                 }
