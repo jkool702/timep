@@ -1148,8 +1148,8 @@ declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTime
 
 shopt -s extglob
 _timep_PROCESS_LOG() {
-    local logCur log_tmp kk kk1 lineno1 nn r wTimeTotal cTimeTotal inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTimeP wTime0 cTime0 cTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6
-
+    local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTimeP wTime0 cTime0 cTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6
+    local -i wTimeTotal cTimeTotal 
     local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA  startCTimeA endCTimeA
     local -ai wTimeA cTimeA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
@@ -1343,9 +1343,16 @@ printf '%s;' "${fgA[@]}")"
         }
     done
 
-    (( wTimeTotal >= 1 )) || wTimeTotal=1
-    (( cTimeTotal >= 1 )) || cTimeTotal=1
-
+    if [[ ${wTimeTotal//[^0-9]/} ]] && (( 10#${wTimeTotal//[^0-9]/} >= 1 )); then
+        (( wTimeTotal = 10#${wTimeTotal//[^0-9]/} ))
+    else
+        wTimeTotal=1
+    fi
+    if [[ ${cTimeTotal//[^0-9]/} ]] && (( 10#${cTimeTotal//[^0-9]/} >= 1 )); then
+        (( cTimeTotal = 10#${cTimeTotal//[^0-9]/} ))
+    else
+        cTimeTotal=1
+    fi
     # write runtime and final endtime to .{end,run}time file
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"

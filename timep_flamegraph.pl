@@ -708,7 +708,7 @@ my %Tmp;
 
 # flow() merges two stacks, storing the merged frames and value data in %Node.
 sub flow {
-	my ($last, $this, $v, $d) = @_;
+	my ($last, $this, $v, $d, $iw, $id) = @_;
 
 	my $len_a = @$last - 1;
 	my $len_b = @$this - 1;
@@ -735,17 +735,25 @@ sub flow {
 	for ($i = $len_same; $i <= $len_b; $i++) {
 		my $k = "$this->[$i];$i";
 		$Tmp{$k}->{stime} = $v;
-		if (defined $d) {
-			if ($colors eq "timep") {
-		$Tmp{$k}->{delta} = $d;
 
-			} else {
-			$Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
-		}
+		if ($colors =~ /^time/) {
+		  if (defined $d) {
+				$Tmp{$k}->{delta} = $d;
+			}
+		  if (defined $iw) {
+			  $Tmp{$k}->{indwall} = $iw;		
+	  	}
+		  if (defined $id) {
+			  $Tmp{$k}->{inddelta} = $id;		
+		  }
+		} else {
+			if (defined $d) {
+			  $Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
+		  }
 		}
 	}
-
-        return $this;
+        
+  return $this;
 }
 
 # parse input
@@ -856,24 +864,24 @@ foreach (@SortedData) {
 
 
 	$maxwall = $samples if $samples > $maxwall;
-        $sumwall = $sumwall + $samples;
+  $sumwall = $sumwall + $samples;
 	$nwall = $nwall + 1;
  	$avgwall = $sumwall / $nwall;
 
-        # there may be an extra samples column for differentials:
+  # there may be an extra samples column for differentials:
 	
-        $delta = undef;
+  $delta = undef;
 	if (defined $samples2) {
 	        if ($colors =~ /^timep/) {
 	            # we are hijacking the "delta" and "maxdelta" variables. 
 	            # samples is really "wall-clock time". samples2 is really "cpu time".
-                    $delta = $samples2;
+              $delta = $samples2;
 	            $sumdelta = $sumdelta + $samples;
 	            $ndelta  = $ndelta + 1;
  	            $avgdelta = $sumdelta / $ndelta;
 		} else {
 		    $delta = $samples2 - $samples;
-                }
+    }
 		$maxdelta = abs($delta) if abs($delta) > $maxdelta;
 	}
 	# for chain graphs, annotate waker frames with "_[w]", for later
@@ -892,7 +900,7 @@ foreach (@SortedData) {
 	}
 
 	# merge frames and populate %Node:
-	$last = flow($last, [ '', split ";", $stack ], $time, $delta);
+	$last = flow($last, [ '', split ";", $stack ], $time, $delta, $indwall, $inddelta);
 
 	if ($colors eq "timep") {
  		$time += $samples;
@@ -902,7 +910,7 @@ foreach (@SortedData) {
 		$time += $samples;
 	}
 }
-flow($last, [], $time, $delta);
+flow($last, [], $time, $delta, $indwall, $inddelta);
 
 if ($countname eq "samples") {
 	# If $countname is used, it's likely that we're not measuring in stack samples
@@ -1404,6 +1412,14 @@ while (my ($id, $node) = each %Node) {
 	my ($func, $depth, $etime) = split ";", $id;
 	my $stime = $node->{stime};
 	my $delta = $node->{delta};
+	my $indw;
+	my $indc;
+	my $iwall;
+	my $icpu;
+	if ($colors =~ /^time/) {
+	  $indw = $node->{indwall};
+	  $indc = $node->{inddelta};
+	}
 
 	$etime = $timemax if $func eq "" and $depth == 0;
 
@@ -1425,8 +1441,8 @@ while (my ($id, $node) = each %Node) {
 		=~ s/(^[-+]?\d+?(?=(?>(?:\d{3})+)(?!\d))|\G\d{3}(?=\d))/$1,/g;
 
 	my $info;
-        my $samples2;
-        my $d = $negate ? -$delta : $delta;
+  my $samples2;
+  my $d = $negate ? -$delta : $delta;
 
 	if ($func eq "" and $depth == 0) {
 		$info = "all ($samples_txt $countname, 100%)";
@@ -1453,13 +1469,16 @@ while (my ($id, $node) = each %Node) {
                 
 	}
 
+
 	my $nameattr = { %{ $nameattr{$func}||{} } }; # shallow clone
 	$nameattr->{title}       ||= $info;
 	$im->group_start($nameattr);
 
 	my $color;
 	if ($colors =~ /^time/) {
-		$color = color_timep($colors, $func, $samples, $indwall, $nwall, $maxwall, $avgwall, $samples2, $inddelta, $ndelta, $maxdelta, $avgdelta);
+	  $iwall = sprintf "%.0f", ($etime - $indw) * $factor;
+	  $icpu = sprintf "%.0f", ($etime - $indc) * $factor;
+		$color = color_timep($colors, $func, $samples, $iwall, $nwall, $maxwall, $avgwall, $samples2, $icpu, $ndelta, $maxdelta, $avgdelta);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
