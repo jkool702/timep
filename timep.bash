@@ -1866,9 +1866,49 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\2/' | sed -zE 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\3/' | sed -zE 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "${tw}" "${tc}"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
+    
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
-    sed -E 's/\t([0-9]+)\t([0-9]+)$/\t \1\t \2/' <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
-    sed -E 's/\t([0-9]+)\t([0-9]+)$/\t \1\t \2/' <"${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
+
+# for flamegraph.pl inputs - convert times to CDF index (to maximize colorspace usage)
+for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
+
+# seperate logs into stack / wall time / cpu time
+mapfile -t stackA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\1/' <"$fgCur}") 
+mapfile -t wallTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\2/' <"$fgCur}") 
+mapfile -t cpuTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\3/' <"$fgCur}") 
+
+# sort times then prepend line numbers to start
+mapfile -t wallTimeSortA < <( printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}"  | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+
+# get 2x total count
+(( wallTimeN = ${#wallTimeSortA[@]} << 1 ))
+(( cpuTimeN = ${#cpuTimeSortA[@]} << 1 ))
+
+# get unique times and counts and populate inverse mapping arrays
+wallTimesCDF_map=()
+cpuTimesCDF_map=()
+
+while read -r a b c; do
+{ [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+    (( n = ( ( b - 1 ) << 1 ) + a ))
+    wallTimeCDF_map[$c]="$n"
+done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
+
+while read -r a b c; do
+{ [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+    (( n = ( ( b - 1 ) << 1 ) + a ))
+    cpuTimeCDF_map[$c]="$n"
+done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
+
+# re-write log with time mapped to CDF index
+for kk in "${!stackA[@]}"; do
+    printf '%s\t %s\t %s\n' "${stackA[$kk]}" "${wallTimeCDF_map[${wallTimeA[$kk]}]}"  "${cpuTimeCDF_map[${cpuTimeA[$kk]}]}" 
+done >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
+
+done
+
+    # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
     sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
         sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
