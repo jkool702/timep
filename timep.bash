@@ -1903,7 +1903,7 @@ done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
 
 # re-write log with time mapped to CDF index
 for kk in "${!stackA[@]}"; do
-    printf '%s\t %s\t %s\n' "${stackA[$kk]}" "${wallTimeCDF_map[${wallTimeA[$kk]}]}"  "${cpuTimeCDF_map[${cpuTimeA[$kk]}]}" 
+    printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeA[$kk]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeA[$kk]}]}" 
 done >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
 
 done
