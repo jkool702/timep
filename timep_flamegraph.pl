@@ -416,56 +416,51 @@ sub random_namehash {
 	return rand(1)
 }
 
+my $max_wall;
+my $sum_wall;
+my $max_cpu;
+my $sum_cpu;
+my $n_samples;
+
 sub color_timep {
-  my ($type, $name, $count_wall, $ind_wall, $n_wall, $max_wall, $sum_wall, $count_cpu, $ind_cpu, $n_cpu, $max_cpu, $sum_cpu) = @_;
+  my ($type, $name, $count_wall, $ind_wall, $count_cpu, $ind_cpu) = @_;
   my ($saturation, $intensity, $i2, $s, $type0);
   my ($r, $g, $b);
-	
-  $intensity  = $count_wall / $max_wall;
-  #$intensity = 2 * $intensity / (1 + $intensity * $intensity);
 
-  if ($type eq "time") {
-    if (defined $ind_wall && $ind_wall > 0 && defined $n_wall && $n_wall > 0 ) {
-       $intensity = $ind_wall / (2 * $n_wall);
-    } else {
-       $intensity = 1 - (1 / (1 + ($n_wall * $count_wall / $sum_wall)) ** 2);
-    }
-    $saturation = 1; 
-    $type0 = "time";
-  } else {
-    if (defined $count_wall && $count_wall > 0 && defined $count_cpu && $type eq "timep") {
-      if (defined $ind_wall && $ind_wall > 0 && defined $n_wall && $n_wall > 0 ) {
-        $intensity = $ind_wall / (2 * $n_wall);       
+    if ($type eq "timep") {
+      if (defined $ind_wall && $ind_wall > 0 && defined $n_samples && $n_samples > 0 ) {
+        $intensity = $ind_wall / (2 * $n_samples);       
       } else {
-        $intensity  = 1 - (1 / (1 + ($n_wall * $count_wall / $sum_wall)) ** 2);
+        $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
       }
-      $saturation = 1 - (1 / (1 + $count_cpu / $count_wall) ** 2);
-      #$saturation = sqrt($count_cpu / $count_wall);
-      if ($saturation > 1) {
-	$saturation = 0.9 + (0.1 * ($saturation - 1));
+      if (defined $count_cpu && $count_cpu > 0) {
+	      $saturation = 1 - (1 / (1 + $count_cpu / $count_wall) ** 2);
       } else {
-	$saturation = 0.1 + (0.8 * $saturation);
+	      $saturation = 1
       }
        $type0 = "time";
-   } elsif (defined $count_cpu && $count_cpu > 0 && defined $max_cpu && $max_cpu > 0 && defined $count_wall && $type eq "timepr") {
-      if (defined $ind_cpu && $ind_cpu > 0 && defined $n_cpu && $n_cpu > 0 ) {
-        $intensity = $ind_cpu / (2 * $n_cpu);       
+   } elsif (defined $count_cpu && $count_cpu > 0 && $type eq "timepr") {
+      if (defined $ind_cpu && $ind_cpu > 0 && defined $n_samples && $n_samples > 0 ) {
+        $intensity = $ind_cpu / (2 * $n_samples);       
       } else {
-        $intensity  = 1 - (1 / (1 + ($n_cpu * $count_cpu / $sum_cpu) ** 2);
+        $intensity  = 1 - (1 / (1 + ($count_cpu / $max_cpu) ** 2) ** 2);
       }
-      $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
-      #$saturation = sqrt($count_wall / $count_cpu);
-      if ($saturation > 1) {
-	$saturation = 0.9 + (0.1 * ($saturation - 1));
+      if (defined $count_wall && $count_wall > 0) {
+	      $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
       } else {
-	$saturation = 0.1 + (0.8 * $saturation);
+	      $saturation = 1
       }
       $type0 = "time";
     } else {
-      $intensity  = $count_wall / $max_wall;
+      if (defined $ind_wall && $ind_wall > 0 && defined $n_samples && $n_samples > 0 ) {
+        $intensity = $ind_wall / (2 * $n_samples);       
+      } else {
+        $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
+      }
       $saturation = 1;  
+      $type0 = "time";
     }
-  }
+ 
 
   $intensity  = 1 if $intensity > 1;
   $intensity  = 0 if $intensity < 0;
@@ -481,7 +476,7 @@ sub color_timep {
       $type0 = "time";
     }
   }
-  
+
   if ($type0 eq "time") {
     $i2 = $intensity ** 2;
     $r = ((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
@@ -767,16 +762,15 @@ my @SortedData;
 my $last = [];
 my $time = 0;
 my $delta = undef;
+my $indwall = undef;
+my $inddelta = undef;
 my $ignored = 0;
 my $line;
 my $maxwall = 0;
 my $sumwall = 0;
-my $nwall = 0;
-my $indwall = undef;
 my $maxdelta = 1;
 my $sumdelta = 0;
-my $ndelta = 0;
-my $inddelta = undef;
+my $nsamples = 0;
 
 if ($colors =~ /^timep/) {
     $maxdelta = 0;
@@ -835,6 +829,7 @@ foreach (@SortedData) {
 	# eg: func_a;func_b;func_c 31
 	my ($stack, $samples);
   my $samples2 = undef;
+
   if ($colors =~ /^time/) {
     ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
 	  unless (defined $samples and defined $stack) {
@@ -873,8 +868,7 @@ foreach (@SortedData) {
 	            # we are hijacking the "delta" and "maxdelta" variables. 
 	            # samples is really "wall-clock time". samples2 is really "cpu time".
               $delta = $samples2;
-	            $sumdelta = $sumdelta + $delta;
-	            $ndelta  = $ndelta + 1;
+	            $sumdelta += $delta;
 		} else {
 		    $delta = $samples2 - $samples;
     }
@@ -882,8 +876,7 @@ foreach (@SortedData) {
 	}
    
 	$maxwall = $samples if $samples > $maxwall;
-	sumwall = $sumwall + $samples;
-	$nwall = $nwall + 1;
+	$nsamples += 1;
 
 	# for chain graphs, annotate waker frames with "_[w]", for later
 	# coloring. This is a hack, but has a precedent ("_[k]" from perf).
@@ -905,7 +898,7 @@ foreach (@SortedData) {
 
 	if ($colors eq "timep") {
  		$time += $samples;
-        } elsif (defined $samples2) {
+ 	} elsif (defined $samples2) {
 		$time += $samples2;
 	} else {
 		$time += $samples;
@@ -937,6 +930,11 @@ if ($timemax and $timemax < $time) {
 	undef $timemax;
 }
 $timemax ||= $time;
+$max_wall ||= $maxwall;
+$sum_wall ||= $time;
+$max_cpu ||= $maxdelta;
+$sum_cpu ||= $sumdelta;
+$n_samples ||= $nsamples;
 
 my $widthpertime = ($imagewidth - 2 * $xpad) / $timemax;
 
@@ -1413,7 +1411,6 @@ while (my ($id, $node) = each %Node) {
 	my ($func, $depth, $etime) = split ";", $id;
 	my $stime = $node->{stime};
 	my $delta = $node->{delta};
-
   my $indwall = $node->{indwall};
   my $inddelta = $node->{inddelta};
 
@@ -1437,9 +1434,9 @@ while (my ($id, $node) = each %Node) {
 		=~ s/(^[-+]?\d+?(?=(?>(?:\d{3})+)(?!\d))|\G\d{3}(?=\d))/$1,/g;
 
 	my $info;
-	my $samples2;
-	my $iwall;
-	my $icpu;
+	my $samples2 = undef;
+	my $iwall = undef;
+	my $icpu = undef;
 	my $d = $negate ? -$delta : $delta;
 
 	if ($func eq "" and $depth == 0) {
@@ -1453,24 +1450,25 @@ while (my ($id, $node) = each %Node) {
 		$escaped_func =~ s/>/&gt;/g;
 		$escaped_func =~ s/"/&quot;/g;
 		$escaped_func =~ s/_\[[kwij]\]$//;	# strip any annotation
-	            unless (defined $delta) {
+
+		if (defined $indwall) {
+			$iwall = sprintf "%.0f", $indwall;
+		}
+		if (defined $inddelta) {
+			$icpu = sprintf "%.0f", $inddelta;
+		}		
+		unless (defined $delta) {
 			$info = "$escaped_func ($samples_txt $countname, $pct%)";
-		    } elsif ($colors =~ /^timep/) {
-		    		$samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
-		    		$icpu = sprintf "%.0f", $inddelta;
-			      $info = "$escaped_func ($samples_txt $countname, $pct%)";
-		    } else {
-		    	if ($colors eq "time") {
-		    	  $iwall = sprintf "%.0f", $indwall;
-		      }
+		} elsif ($colors =~ /^timepr?/) {
+			$samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
+			$info = "$escaped_func ($samples_txt $countname, $pct%)";
+		} else {
 			my $d = $negate ? -$delta : $delta;
 			my $deltapct = sprintf "%.2f", ((100 * $d) / ($timemax * $factor));
 			$deltapct = $d > 0 ? "+$deltapct" : $deltapct;
-			$info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";
-		    }
-                
+			$info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";		      	
+		}
 	}
-
 
 	my $nameattr = { %{ $nameattr{$func}||{} } }; # shallow clone
 	$nameattr->{title}       ||= $info;
@@ -1478,8 +1476,7 @@ while (my ($id, $node) = each %Node) {
 
 	my $color;
 	if ($colors =~ /^time/) {
-
-		$color = color_timep($colors, $func, $samples, $iwall, $nwall, $maxwall, $sumwall, $samples2, $icpu, $ndelta, $maxdelta, $sumdelta);
+		$color = color_timep($colors, $func, $samples, $iwall, $samples2, $icpu);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
