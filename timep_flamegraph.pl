@@ -729,6 +729,12 @@ sub flow {
 		if (defined $Tmp{$k}->{delta}) {
 			$Node{"$k;$v"}->{delta} = delete $Tmp{$k}->{delta};
 		}
+		if (defined $Tmp{$k}->{indwall}) {
+			$Node{"$k;$v"}->{indwall} = delete $Tmp{$k}->{indwall};
+		}
+		if (defined $Tmp{$k}->{inddelta}) {
+			$Node{"$k;$v"}->{inddelta} = delete $Tmp{$k}->{inddelta};
+		}
 		delete $Tmp{$k};
 	}
 
@@ -761,7 +767,6 @@ my @Data;
 my @SortedData;
 my $last = [];
 my $time = 0;
-my $delta = undef;
 my $ignored = 0;
 my $line;
 my $maxwall = 0;
@@ -774,6 +779,7 @@ my $avgdelta = 0;
 my $sumdelta = 0;
 my $ndelta = 0;
 my $inddelta = undef;
+my $delta = undef;
 
 if ($colors =~ /^timep/) {
     $maxdelta = 0;
@@ -1412,13 +1418,12 @@ while (my ($id, $node) = each %Node) {
 	my ($func, $depth, $etime) = split ";", $id;
 	my $stime = $node->{stime};
 	my $delta = $node->{delta};
-	my $indw;
-	my $indc;
-	my $iwall;
-	my $icpu;
-	if ($colors =~ /^time/) {
-	  $indw = $node->{indwall};
-	  $indc = $node->{inddelta};
+
+  my $indwall;
+  my $inddelta;
+  if ($colors =~ /^timep/) {
+	  $indwall = $node->{indwall};
+	  $inddelta = $node->{inddelta}; 
 	}
 
 	$etime = $timemax if $func eq "" and $depth == 0;
@@ -1442,6 +1447,8 @@ while (my ($id, $node) = each %Node) {
 
 	my $info;
   my $samples2;
+  my $iwall;
+  my $icpu;
   my $d = $negate ? -$delta : $delta;
 
 	if ($func eq "" and $depth == 0) {
@@ -1457,8 +1464,10 @@ while (my ($id, $node) = each %Node) {
 		$escaped_func =~ s/_\[[kwij]\]$//;	# strip any annotation
 	            unless (defined $delta) {
 			$info = "$escaped_func ($samples_txt $countname, $pct%)";
-		    } elsif ($colors eq "timep") {
+		    } elsif ($colors =~ /^timep/) {
 		    	$samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
+		    	$iwall = sprintf "%.0f", ($etime - $indwall) * $factor;
+		    	$icpu = sprintf "%.0f", ($etime - $inddelta) * $factor;
 			$info = "$escaped_func ($samples_txt $countname, $pct%)";
 		    } else {
 			my $d = $negate ? -$delta : $delta;
@@ -1476,8 +1485,9 @@ while (my ($id, $node) = each %Node) {
 
 	my $color;
 	if ($colors =~ /^time/) {
-	  $iwall = sprintf "%.0f", ($etime - $indw) * $factor;
-	  $icpu = sprintf "%.0f", ($etime - $indc) * $factor;
+	  my $iwall = sprintf "%.0f", $indwall;
+	  my $icpu = sprintf "%.0f", $inddelta;
+
 		$color = color_timep($colors, $func, $samples, $iwall, $nwall, $maxwall, $avgwall, $samples2, $icpu, $ndelta, $maxdelta, $avgdelta);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
