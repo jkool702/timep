@@ -1553,6 +1553,80 @@ printf '%s;' "${fgA[@]}")"
     return 0
 }
 
+_timep_PROCESS_FLAMEGRAPH() {
+
+    [[ -f "$1" ]] || {
+        printf '\nERROR: no file found at "%s"...ABORTING\n\n' "${1}"
+        return 1
+    }
+
+    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk a b c n
+    local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
+
+     # seperate logs into stack / wall time / cpu time
+    mapfile -t stackA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\1/' <"${1}") 
+    mapfile -t wallTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\2/' <"${1}") 
+    mapfile -t cpuTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\3/' <"${1}") 
+
+    # sort times then prepend line numbers to start
+    mapfile -t wallTimeSortA < <( printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+    mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+
+    # get 2x total count
+    (( wallTimeN = ${#wallTimeSortA[@]} ))
+    (( cpuTimeN = ${#cpuTimeSortA[@]} ))
+
+    # get unique times and counts and populate inverse mapping arrays
+    wallTimeCDF_map0=()
+    cpuTimeCDF_map0=()
+    wallTimeCDF_mapC=()
+    cpuTimeCDF_mapC=()
+
+    while read -r a b c; do
+        { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+        (( n = ( ( b - 1 ) << 1 ) + a ))
+        (( wallTimeCDF_mapC[$n] = ${wallTimeCDF_mapC[$n]:-0} + c ))
+        wallTimeCDF_map0[$c]="$n"
+    done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
+
+    kk0=-1
+    for n in "${!wallTimeCDF_mapC[@]}"; do
+        (( kk0 >= 0 )) && (( wallTimeCDF_mapC[$n] = wallTimeCDF_mapC[$n] + wallTimeCDF_mapC[$kk0] ))
+        kk0=${n}
+    done
+
+    for n in "${!wallTimeCDF_map[@]}"; do
+        (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_csum ))
+    done
+
+     while read -r a b c; do
+        { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+        (( n = ( ( b - 1 ) << 1 ) + a ))
+        (( cpuTimeCDF_mapC[$n] = ${cpuTimeCDF_mapC[$n]:-0} + c ))
+        cpuTimeCDF_map0[$c]="$n"
+    done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
+
+    kk0=-1
+    for n in "${!cpuTimeCDF_mapC[@]}"; do
+        (( kk0 >= 0 )) && (( cpuTimeCDF_mapC[$n] = cpuTimeCDF_mapC[$n] + cpuTimeCDF_mapC[$kk0] ))
+        kk0=${n}
+    done
+
+    for n in "${!cpuTimeCDF_map[@]}"; do
+        (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
+    done
+    for n in "${!cpuTimeCDF_map[@]}"; do
+        (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
+    done
+
+
+    # re-write log with time mapped to CDF index
+    for kk in "${!stackA[@]}"; do
+        printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_mapC[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_mapC[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
+    done 
+
+}
+
 # # # # # # # # # # # # # # # # POST PROCESSING BEGINS HERE # # # # # # # # # # # # # # # # 
 
 # # # # STEP 1: PROCESS LOGS, STARTING AT THE DEEPEST NESTING LVL AND MOVING UPWARDS
@@ -1866,65 +1940,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
 
-    # for flamegraph.pl inputs - convert times to CDF index (to maximize colorspace usage)
+    # for flamegraph.pl inputs - convert times to screen-size-normalized CDF index (to maximize colorspace usage)
     for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
-
-        # seperate logs into stack / wall time / cpu time
-        mapfile -t stackA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\1/' <"${fgCur}") 
-        mapfile -t wallTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\2/' <"${fgCur}") 
-        mapfile -t cpuTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\3/' <"${fgCur}") 
-
-        # sort times then prepend line numbers to start
-        mapfile -t wallTimeSortA < <( printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
-        mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}"  | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
-
-        # get 2x total count
-        (( wallTimeN = ${#wallTimeSortA[@]} << 1 ))
-        (( cpuTimeN = ${#cpuTimeSortA[@]} << 1 ))
-
-        # get unique times and counts and populate inverse mapping arrays
-        wallTimesCDF_map0=()
-        cpuTimesCDF_map0=()
-        wallTimesCDF_map=()
-        cpuTimesCDF_map=()
-
-        while read -r a b c; do
-        { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
-            (( n = ( ( b - 1 ) << 1 ) + a ))
-            (( wallTimeCDF_map0[$n] = ${wallTimeCDF_map0[$n]:-0} + c ))
-        done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
-
-        wallTimeCDF_csum=0
-        for n in "${!wallTimeCDF_map0[@]}"; do
-            (( wallTimeCDF_csum = wallTimeCDF_csum + wallTimeCDF_map0[$n] ))
-            wallTimeCDF_map[$n]=${wallTimeCDF_csum}
-        done
-
-        for n in "${!wallTimeCDF_map[@]}"; do
-            (( wallTimeCDF_map[$n] = ( ( ${#wallTimeCDF_map[@]} * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_csum ))
-        done
-
-        while read -r a b c; do
-        { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
-            (( n = ( ( b - 1 ) << 1 ) + a ))
-            (( cpuTimeCDF_map0[$n] = ${cpuTimeCDF_map0[$n]:-0} + c ))
-        done < <(printf '%s\n' "${cpuTimeSortA[@]}" | sort -n)
-
-        cpuTimeCDF_csum=0
-        for n in "${!cpuTimeCDF_map0[@]}"; do
-            (( cpuTimeCDF_csum = cpuTimeCDF_csum + cpuTimeCDF_map0[$n] ))
-            cpuTimeCDF_map[$n]=${cpuTimeCDF_csum}
-        done
-
-        for n in "${!cpuTimeCDF_map[@]}"; do
-            (( cpuTimeCDF_map[$n] = ( ( ${#cpuTimeCDF_map[@]} * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
-        done
-
-        # re-write log with time mapped to CDF index
-        for kk in "${!stackA[@]}"; do
-            printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeA[$kk]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeA[$kk]}]}" 
-        done >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
-
+        _timep_PROCESS_FLAMEGRAPH "${fgCur}" >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
     done
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
