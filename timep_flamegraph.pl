@@ -417,7 +417,7 @@ sub random_namehash {
 }
 
 sub color_timep {
-  my ($type, $name, $count_wall, $ind_wall, $n_wall, $max_wall, $avg_wall, $count_cpu, $ind_cpu, $n_cpu, $max_cpu, $avg_cpu) = @_;
+  my ($type, $name, $count_wall, $ind_wall, $n_wall, $max_wall, $sum_wall, $count_cpu, $ind_cpu, $n_cpu, $max_cpu, $sum_cpu) = @_;
   my ($saturation, $intensity, $i2, $s, $type0);
   my ($r, $g, $b);
 	
@@ -428,7 +428,7 @@ sub color_timep {
     if (defined $ind_wall && $ind_wall > 0 && defined $n_wall && $n_wall > 0 ) {
        $intensity = $ind_wall / (2 * $n_wall);
     } else {
-       $intensity = 1 - (1 / (1 + (2 * $count_wall / $avg_wall)) ** 2);
+       $intensity = 1 - (1 / (1 + ($n_wall * $count_wall / $sum_wall)) ** 2);
     }
     $saturation = 1; 
     $type0 = "time";
@@ -437,7 +437,7 @@ sub color_timep {
       if (defined $ind_wall && $ind_wall > 0 && defined $n_wall && $n_wall > 0 ) {
         $intensity = $ind_wall / (2 * $n_wall);       
       } else {
-        $intensity  = 1 - (1 / (1 + $count_wall / $avg_wall) ** 2);
+        $intensity  = 1 - (1 / (1 + ($n_wall * $count_wall / $sum_wall)) ** 2);
       }
       $saturation = 1 - (1 / (1 + $count_cpu / $count_wall) ** 2);
       #$saturation = sqrt($count_cpu / $count_wall);
@@ -451,7 +451,7 @@ sub color_timep {
       if (defined $ind_cpu && $ind_cpu > 0 && defined $n_cpu && $n_cpu > 0 ) {
         $intensity = $ind_cpu / (2 * $n_cpu);       
       } else {
-        $intensity  = 1 - (1 / (1 + $count_cpu / $avg_cpu) ** 2);
+        $intensity  = 1 - (1 / (1 + ($n_cpu * $count_cpu / $sum_cpu) ** 2);
       }
       $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
       #$saturation = sqrt($count_wall / $count_cpu);
@@ -770,12 +770,10 @@ my $delta = undef;
 my $ignored = 0;
 my $line;
 my $maxwall = 0;
-my $avgwall = 0;
 my $sumwall = 0;
 my $nwall = 0;
 my $indwall = undef;
 my $maxdelta = 1;
-my $avgdelta = 0;
 my $sumdelta = 0;
 my $ndelta = 0;
 my $inddelta = undef;
@@ -875,9 +873,8 @@ foreach (@SortedData) {
 	            # we are hijacking the "delta" and "maxdelta" variables. 
 	            # samples is really "wall-clock time". samples2 is really "cpu time".
               $delta = $samples2;
-	            $sumdelta = $sumdelta + $samples;
+	            $sumdelta = $sumdelta + $delta;
 	            $ndelta  = $ndelta + 1;
- 	            $avgdelta = $sumdelta / $ndelta;
 		} else {
 		    $delta = $samples2 - $samples;
     }
@@ -885,9 +882,8 @@ foreach (@SortedData) {
 	}
    
 	$maxwall = $samples if $samples > $maxwall;
-  $sumwall = $sumwall + $samples;
+	sumwall = $sumwall + $samples;
 	$nwall = $nwall + 1;
- 	$avgwall = $sumwall / $nwall;
 
 	# for chain graphs, annotate waker frames with "_[w]", for later
 	# coloring. This is a hack, but has a precedent ("_[k]" from perf).
@@ -1483,7 +1479,7 @@ while (my ($id, $node) = each %Node) {
 	my $color;
 	if ($colors =~ /^time/) {
 
-		$color = color_timep($colors, $func, $samples, $iwall, $nwall, $maxwall, $avgwall, $samples2, $icpu, $ndelta, $maxdelta, $avgdelta);
+		$color = color_timep($colors, $func, $samples, $iwall, $nwall, $maxwall, $sumwall, $samples2, $icpu, $ndelta, $maxdelta, $sumdelta);
 	} elsif ($func eq "--") {
 		$color = $vdgrey;
 	} elsif ($func eq "-") {
