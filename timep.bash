@@ -1149,9 +1149,10 @@ declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTime
 shopt -s extglob
 _timep_PROCESS_LOG() {
     local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6
-    local -i wTimeTotal cTimeTotal wTimeP cTimeP
+    local -i wTimeTotal cTimeTotal wTimeP0 cTimeP0
+    local +i wTimeP cTimeP
     local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA  startCTimeA endCTimeA
-    local -ai wTimeA cTimeA
+    local -ia wTimeA cTimeA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
     trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2' ERR #; _timep_DEBUG_PRINTVARS >&2' ERR
@@ -1231,8 +1232,8 @@ _timep_PROCESS_LOG() {
             #[[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
                 if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"; then
                     IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
-                    [[ ${wTime} ]] && wTimeA[$kk]="${wTime}"
-                    [[ ${cTime} ]] && cTimeA[$kk]="${cTime}"
+                    [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
+                    [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
                 fi
             #}
 
@@ -1303,14 +1304,8 @@ _timep_PROCESS_LOG() {
             fi
         }
 
-        [[ ${wTimeA[$kk]} ]] || (( wTimeA[$kk] >= 1 )) || {
-
-            wTimeA[$kk]=1
-        }
-        [[ ${cTimeA[$kk]} ]] || (( cTimeA[$kk] >= 1 )) || {
-
-            cTimeA[$kk]=1
-        }
+        (( wTimeA[$kk] >= 1 )) || wTimeA[$kk]=1
+        (( cTimeA[$kk] >= 1 )) || cTimeA[$kk]=1
 
         (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
         (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
@@ -1344,8 +1339,8 @@ printf '%s;' "${fgA[@]}")"
     done
 
 
-    (( wTimeTotal = 10#0${wTimeTotal//[^0-9]/} >= 1 ? 10#0${wTimeTotal//[^0-9]/} : 1 ))
-    (( cTimeTotal = 10#0${cTimeTotal//[^0-9]/} >= 1 ? 10#0${cTimeTotal//[^0-9]/} : 1 ))
+    (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
+    (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
 
     # write runtime and final endtime to .{end,run}time file
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
@@ -1362,16 +1357,17 @@ printf '%s;' "${fgA[@]}")"
             lineno1=0
         fi
         linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
-        (( wTimeP =  10#0${wTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${wTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
-        (( cTimeP =  10#0${cTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${cTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
 
-        printf -v wTimeP '%0.4d' "${wTimeP}"
+        (( wTimeP0 =  wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
+        printf -v wTimeP '%0.4d' "${wTimeP0}"
         case "${wTimeP}" in
             10000) wTimePA[$kk]=100.00 ;;
             0|'') wTimePA[$kk]=00.00 ;;
             *) wTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
-        printf -v cTimeP '%0.4d' "${cTimeP}"
+
+        (( cTimeP0 =  cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
+        printf -v cTimeP '%0.4d' "${cTimeP0}"
         case "${cTimeP}" in
             10000) cTimePA[$kk]=100.00 ;;
             0|'') cTimePA[$kk]=00.00 ;;
@@ -1410,16 +1406,16 @@ printf '%s;' "${fgA[@]}")"
         [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) #|| linenoUniqWTimeA[$kk]=0
         [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) #|| linenoUniqCTimeA[$kk]=0
 
-        (( wTimeP = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
-        printf -v wTimeP '%0.4d' "$wTimeP"
+        (( wTimeP0 = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
+        printf -v wTimeP '%0.4d' "${wTimeP0}"
         case "${wTimeP}" in
             10000) linenoUniqWTimePA[$kk]=100.00 ;;
             0|'') linenoUniqWTimePA[$kk]=00.00 ;;
             *) linenoUniqWTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
 
-        (( cTimeP = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
-        printf -v cTimeP '%0.4d' "$cTimeP"
+        (( cTimeP0 = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
+        printf -v cTimeP '%0.4d' "${cTimeP0}"
         case "${cTimeP}" in
             10000) linenoUniqCTimePA[$kk]=100.00 ;;
             0|'') linenoUniqCTimePA[$kk]=00.00 ;;
