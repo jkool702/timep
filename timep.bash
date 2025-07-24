@@ -1883,20 +1883,42 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         (( cpuTimeN = ${#cpuTimeSortA[@]} << 1 ))
 
         # get unique times and counts and populate inverse mapping arrays
+        wallTimesCDF_map0=()
+        cpuTimesCDF_map0=()
         wallTimesCDF_map=()
         cpuTimesCDF_map=()
 
         while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
             (( n = ( ( b - 1 ) << 1 ) + a ))
-            wallTimeCDF_map[$c]="$n"
+            (( wallTimeCDF_map0[$n] = ${wallTimeCDF_map0[$n]:-0} + c ))
         done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
+
+        wallTimeCDF_csum=0
+        for n in "${!wallTimeCDF_map0[@]}"; do
+            (( wallTimeCDF_csum = wallTimeCDF_csum + wallTimeCDF_map0[$n] ))
+            wallTimeCDF_map[$n]=${wallTimeCDF_csum}
+        done
+
+        for n in "${!wallTimeCDF_map[@]}"; do
+            (( wallTimeCDF_map[$n] = ( ( ${#wallTimeCDF_map[@]} * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_csum ))
+        done
 
         while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
             (( n = ( ( b - 1 ) << 1 ) + a ))
-            cpuTimeCDF_map[$c]="$n"
-        done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
+            (( cpuTimeCDF_map0[$n] = ${cpuTimeCDF_map0[$n]:-0} + c ))
+        done < <(printf '%s\n' "${cpuTimeSortA[@]}" | sort -n)
+
+        cpuTimeCDF_csum=0
+        for n in "${!cpuTimeCDF_map0[@]}"; do
+            (( cpuTimeCDF_csum = cpuTimeCDF_csum + cpuTimeCDF_map0[$n] ))
+            cpuTimeCDF_map[$n]=${cpuTimeCDF_csum}
+        done
+
+        for n in "${!cpuTimeCDF_map[@]}"; do
+            (( cpuTimeCDF_map[$n] = ( ( ${#cpuTimeCDF_map[@]} * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
+        done
 
         # re-write log with time mapped to CDF index
         for kk in "${!stackA[@]}"; do
