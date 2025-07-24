@@ -428,44 +428,52 @@ sub color_timep {
   my ($r, $g, $b);
 
     if ($type eq "timep") {
-      if (defined $ind_wall && $ind_wall > 0 && defined $n_samples && $n_samples > 0 ) {
-        $intensity = $ind_wall / (2 * $n_samples);       
-      } else {
-        $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
-      }
-      if (defined $count_cpu && $count_cpu > 0) {
-	      $saturation = 1 - (1 / (1 + $count_cpu / $count_wall) ** 2);
-      } else {
-	      $saturation = 1
-      }
-       $type0 = "time";
-   } elsif (defined $count_cpu && $count_cpu > 0 && $type eq "timepr") {
-      if (defined $ind_cpu && $ind_cpu > 0 && defined $n_samples && $n_samples > 0 ) {
-        $intensity = $ind_cpu / (2 * $n_samples);       
-      } else {
-        $intensity  = 1 - (1 / (1 + ($count_cpu / $max_cpu) ** 2) ** 2);
-      }
-      if (defined $count_wall && $count_wall > 0) {
-	      $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
-      } else {
-	      $saturation = 1
-      }
-      $type0 = "time";
-    } else {
-      if (defined $ind_wall && $ind_wall > 0 && defined $n_samples && $n_samples > 0 ) {
-        $intensity = $ind_wall / (2 * $n_samples);       
-      } else {
-        $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
-      }
-      $saturation = 1;  
-      $type0 = "time";
-    }
- 
-
+      	    if (defined $ind_wall && $ind_wall >= 0 && defined $n_samples && $n_samples > 0 ) {
+	    	    $intensity = $ind_wall / (2 * $n_samples);       
+      	    } else {
+	    	    $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
+      	    }
+      	    if (defined $count_cpu && $count_cpu > 0) {
+      		    if (defined $ind_cpu && $ind_cpu >= 0 && defined $n_samples && $n_samples > 0 ) {
+      			    $saturation = $ind_cpu / (2 * $n_samples);       
+      		    } else {
+      			    $saturation  = 1 - (1 / (1 + ($count_cpu / $count_wall) ** 2) ** 2);      		    }
+      	    } else {
+      		    $saturation = 1
+      	    }
+      	    $type0 = "time";
+    } elsif (defined $count_cpu && $count_cpu > 0 && $type eq "timepr") {
+     	   if (defined $ind_cpu && $ind_cpu >= 0 && defined $n_samples && $n_samples > 0 ) {
+	   	   $intensity = $ind_cpu / (2 * $n_samples);       
+     	   } else {
+	   	   $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_cpu / $max_cpu) ** 2) ** 2));
+     	   }
+     	   if (defined $count_wall && $count_wall > 0) {
+     		   if (defined $ind_wall && $ind_wall >= 0 && defined $n_samples && $n_samples > 0 ) {
+     			   $saturation = $ind_wall / (2 * $n_samples);       
+     		   } else {
+			   $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
+     		   }
+     	   } else {
+     		   $saturation = 1
+     	   }
+     	   $type0 = "time";
+   } else {
+     	   if (defined $ind_wall && $ind_wall >= 0 && defined $n_samples && $n_samples > 0 ) {
+	   	   $intensity = $ind_wall / (2 * $n_samples);       
+     	   } else {
+	   	   $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
+     	   }
+     	   $saturation = 1;  
+     	   $type0 = "time";
+   }
+  
   $intensity  = 1 if $intensity > 1;
   $intensity  = 0 if $intensity < 0;
   $saturation = 1 if $saturation > 1;
   $saturation = 0 if $saturation < 0;
+
+  $saturation  = (4 / 3) * (1 - (1 / (1 + ($saturation) ** 2) ** 2));
 
   if ($colors =~ /^timep/) {
     if ($name =~ m:_\[f\]$:) { 
