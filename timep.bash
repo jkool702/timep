@@ -1981,27 +1981,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
         printf '\nGENERATING FLAMEGRAPHS\n' >&2
-        export PATH="${PATH}${PATH:+:}${timep_TMPDIR%\/*}"
-        if PATH="${PATH}${PATH:+:}${PWD}" type -p -a timep_flamegraph.pl &>/dev/null; then
-            mapfile -t timep_flameGraphPathA < <(PATH="${PATH}${PATH:+:}${PWD}" type -p -a timep_flamegraph.pl)
-            if (( ${#timep_flameGraphPathA[@]} == 1 )) || ! type -p date &>/dev/null; then
-                timep_flameGraphPath="${timep_flameGraphPathA[0]}"
-            else
-                t=$(date -r "${timep_flameGraphPathA[0]}" '+%s')
-                k=0
-                for (( kk=1; kk<${#timep_flameGraphPathA[@]}; kk++ )); do
-                    tt=$(date -r "${timep_flameGraphPathA[$kk]}" '+%s')
-                    (( tt > t )) && k=$kk
-                done
-                timep_flameGraphPath="${timep_flameGraphPathA[$k]}"
-            fi
-            [[ "${timep_flameGraphPath}" == "${timep_TMPDIR%/*}/timep_flamegraph.pl" ]] || \cp -f "${timep_flameGraphPath}" "${timep_TMPDIR%\/*}/timep_flamegraph.pl"
+       
+        if type -p "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null; then
+            timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
         else
-            type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl -O "${timep_TMPDIR%/*}/timep_flamegraph.pl" 2>/dev/null
-            type -p timep_flamegraph.pl &>/dev/null || {
-                type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl >"${timep_TMPDIR%/*}/timep_flamegraph.pl" 2>/dev/null
-            }
-            type -p timep_flamegraph.pl &>/dev/null && timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
+            _timep_SETUP
         fi
 
         [[ ${timep_flameGraphPath} ]] && {
@@ -2057,6 +2041,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ) {timep_FD0}<&0 {timep_FD1}>&1 {timep_FD2}>&2 {fd_sleep}<><(:)
 }
 
+
+_timep_SETUP() {
+    local -A b64 
+    local -a timep_flameGraphPathA
+    local ARCH t tt k kk
+
+    [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
+
 _timep_file_to_base64() {
 
     local nn k1 k2;
@@ -2109,18 +2101,55 @@ _timep_base64_to_file() {
     (( $# > 0 )) && chmod +x "${1}"
 }
 
-_timep_SETUP() {
-    local -A b64
+    mkdir --mode=777 -p "/dev/shm/.timep"
+    mkdir --mode=777 -p "/dev/shm/.timep/lib"
+    mkdir --mode 755 -p "/dev/shm/.timep/lib/${USER}-${EUID}"
 
-    local ARCH
-
-    mkdir --mode=777 -p "/dev/shm/.timep/.so"
-    mkdir --mode 755 -p "/dev/shm/.timep/.so/${USER}-${EUID}"
-
-    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH#/dev\/shm\/.timep/?(\/)?(\:)}"
-    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH%?(\:)/dev\/shm\/.timep?(\/)}"
-    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH//\:\/dev\/shm\/.timep?(\/)\:/\:}${BASH_LOADABLES_PATH:+\:}/dev/shm/.timep/.so/${USER}-${EUID}"
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH//\:\/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)\:/\:}"
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH#/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)?(\:)}"
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH%?(\:)/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)}"
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH}${BASH_LOADABLES_PATH:+\:}/dev/shm/.timep/lib/${USER}-${EUID}"
     export BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH}"
+
+    PATH="${PATH//\:\/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)\:/\:}"
+    PATH="${PATH#/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)?(\:)}"
+    PATH="${PATH%?(\:)/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)}"
+    PATH="${PATH}${PATH:+\:}/dev/shm/.timep/lib/${USER}-${EUID}"
+    export PATH="${PATH}"
+
+    if PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl &>/dev/null; then
+        mapfile -t timep_flameGraphPathA < <(PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl)
+        mapfile -t timep_flameGraphPathA < <(printf '%s\n' "${timep_flameGraphPathA}" | grep -F '/dev/shm/.timep/lib/'"${USER}-${EUID}"; printf '%s\n' "${timep_flameGraphPathA}" | grep -vF '/dev/shm/.timep/lib/'"${USER}-${EUID}")
+        if (( ${#timep_flameGraphPathA[@]} > 1 )) && type -p date &>/dev/null; then
+            t=$(date -r "${timep_flameGraphPathA[0]}" '+%s')
+            k=0
+            for (( kk=1; kk<${#timep_flameGraphPathA[@]}; kk++ )); do
+                tt=$(date -r "${timep_flameGraphPathA[$kk]}" '+%s')
+                (( tt > t )) && k=$kk
+            done
+            timep_flameGraphPath="${timep_flameGraphPathA[$k]}"
+        elif (( ${#timep_flameGraphPathA[@]} > 0 )); then
+            timep_flameGraphPath="${timep_flameGraphPathA[0]}"
+        fi
+        [[ "${timep_flameGraphPath}" ]] && chmod +x "${timep_flameGraphPath}"
+        [[ "${timep_flameGraphPath}" == "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" ]] || {
+            \cp -f "${timep_flameGraphPath}" "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+            chmod +x "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+        }
+    else
+        type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl -O "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null
+        type -p timep_flamegraph.pl &>/dev/null || {
+            type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl >"/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" 2>/dev/null
+        }
+        timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+        chmod +x "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+    fi
+
+    if type -p "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null; then
+        timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+    elif type -p timep_flamegraph.pl &>/dev/null; then
+        timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
+    fi
 
     # note: this base64 binary blob is generatred by using _timep_base64_to_file  on the arch-specific coimpiled shared .so file for the builtin. 
     # passing this blob to the stdin of _timep_base64_to_file <path> will restore the original .so file (needed for the loadable builtin to get cpu time with clock_gettime) at <path>.
@@ -2129,7 +2158,8 @@ _timep_SETUP() {
 
     ARCH="$(uname -m)"
 
-    printf '%s\n' "${!b64[@]}" | grep -qF "${ARCH}" && _timep_base64_to_file /dev/shm/.timep/.so/${USER}-${EUID}/timep.so <<<"${b64[${ARCH}]}"
+    printf '%s\n' "${!b64[@]}" | grep -qF "${ARCH}" && _timep_base64_to_file /dev/shm/.timep/lib/${USER}-${EUID}/timep.so <<<"${b64[${ARCH}]}"
     enable -f timep clock_gettime
 }
-enable | grep -qF 'enable clock_gettime' || _timep_SETUP
+
+_timep_SETUP
