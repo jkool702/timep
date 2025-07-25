@@ -1554,13 +1554,25 @@ printf '%s;' "${fgA[@]}")"
 }
 
 _timep_PROCESS_FLAMEGRAPH() {
+## Emperically creates a non-linear colorspace mapping (using a screen-space-weighted  CDF) that 
+#      ensure that the colorspace is perceptually uniform and has equal spatial distribution.
+#
+# USAGE:   _timep_PROCESS_FLAMEGRAPH out.folded >out.folded.mod
+#
+# OUTPUT:  for each line in out.folded:
+#    a;b;c;d; time [time2] --> a;b;c;d; time:ind [time2:ind2]
+#  
+#    both "ind" and (if time2 is present) "ind2" are linear maps to the colorspce
+#    that range between 0 and 2 * N (N = total number of samples / lines in out.folded)
+#
+#    this output style is designed to work with `flamegraph.pl --color=time[p[r]]`
 
     [[ -f "$1" ]] || {
         printf '\nERROR: no file found at "%s"...ABORTING\n\n' "${1}"
         return 1
     }
 
-    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk a b c n cpuTimeFlag
+    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag
     local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
 
      # seperate logs into stack / wall time / cpu time
@@ -1592,16 +1604,17 @@ _timep_PROCESS_FLAMEGRAPH() {
         wallTimeCDF_map0[$c]="$n"
     done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
 
-    # cummulative sum weighted CDF to get final mapping
+    # cummulative sum weighted CDF to get final "equal screen space" mapping
     kk0=-1
     for n in "${!wallTimeCDF_map[@]}"; do
         (( kk0 >= 0 )) && (( wallTimeCDF_map[$n] = wallTimeCDF_map[$n] + wallTimeCDF_map[$kk0] ))
         kk0=${n}
     done
+    wallTimeCDF_csum="${wallTimeCDF_map[$n]}"
 
     # renormalize final mapping to range between 0 and (2 * numSamples)
     for n in "${!wallTimeCDF_map[@]}"; do
-        (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_map[-1] ))
+        (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_csum ))
     done
 
     # if we alsio have cpu times, repeat the above steps to get a weighted CDF mapping for those too
@@ -1625,14 +1638,14 @@ _timep_PROCESS_FLAMEGRAPH() {
             (( kk0 >= 0 )) && (( cpuTimeCDF_map[$n] = cpuTimeCDF_map[$n] + cpuTimeCDF_map[$kk0] ))
             kk0=${n}
         done
+        cpuTimeCDF_csum="${cpuTimeCDF_map[$n]}"
 
         for n in "${!cpuTimeCDF_map[@]}"; do
-            (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_map[-1] ))
+            (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
         done
     }
 
-
-    # re-write log with time(s) mapped to weighted CDF index
+    # re-create log with time(s) mapped to weighted CDF index
     if ${cpuTimeFlag}; then
         for kk in "${!stackA[@]}"; do
             printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
