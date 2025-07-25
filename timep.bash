@@ -1585,7 +1585,7 @@ _timep_PROCESS_FLAMEGRAPH() {
     while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
         (( n = ( ( b - 1 ) << 1 ) + a ))
-        (( wallTimeCDF_map[$n] = ${wallTimeCDF_map[$n]:-0} + c ))
+        (( wallTimeCDF_map[$n] = ${wallTimeCDF_map[$n]:-0} + a * c ))
         wallTimeCDF_map0[$c]="$n"
     done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
 
@@ -1602,7 +1602,7 @@ _timep_PROCESS_FLAMEGRAPH() {
      while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
         (( n = ( ( b - 1 ) << 1 ) + a ))
-        (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + c ))
+        (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + a * c ))
         cpuTimeCDF_map0[$c]="$n"
     done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
 
