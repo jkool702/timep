@@ -1579,50 +1579,47 @@ _timep_PROCESS_FLAMEGRAPH() {
     # get unique times and counts and populate inverse mapping arrays
     wallTimeCDF_map0=()
     cpuTimeCDF_map0=()
-    wallTimeCDF_mapC=()
-    cpuTimeCDF_mapC=()
+    wallTimeCDF_map=()
+    cpuTimeCDF_map=()
 
     while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
         (( n = ( ( b - 1 ) << 1 ) + a ))
-        (( wallTimeCDF_mapC[$n] = ${wallTimeCDF_mapC[$n]:-0} + c ))
+        (( wallTimeCDF_map[$n] = ${wallTimeCDF_map[$n]:-0} + c ))
         wallTimeCDF_map0[$c]="$n"
     done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
 
     kk0=-1
-    for n in "${!wallTimeCDF_mapC[@]}"; do
-        (( kk0 >= 0 )) && (( wallTimeCDF_mapC[$n] = wallTimeCDF_mapC[$n] + wallTimeCDF_mapC[$kk0] ))
+    for n in "${!wallTimeCDF_map[@]}"; do
+        (( kk0 >= 0 )) && (( wallTimeCDF_map[$n] = wallTimeCDF_map[$n] + wallTimeCDF_map[$kk0] ))
         kk0=${n}
     done
 
     for n in "${!wallTimeCDF_map[@]}"; do
-        (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_csum ))
+        (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_map[-1] ))
     done
 
      while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
         (( n = ( ( b - 1 ) << 1 ) + a ))
-        (( cpuTimeCDF_mapC[$n] = ${cpuTimeCDF_mapC[$n]:-0} + c ))
+        (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + c ))
         cpuTimeCDF_map0[$c]="$n"
     done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
 
     kk0=-1
-    for n in "${!cpuTimeCDF_mapC[@]}"; do
-        (( kk0 >= 0 )) && (( cpuTimeCDF_mapC[$n] = cpuTimeCDF_mapC[$n] + cpuTimeCDF_mapC[$kk0] ))
+    for n in "${!cpuTimeCDF_map[@]}"; do
+        (( kk0 >= 0 )) && (( cpuTimeCDF_map[$n] = cpuTimeCDF_map[$n] + cpuTimeCDF_map[$kk0] ))
         kk0=${n}
     done
 
     for n in "${!cpuTimeCDF_map[@]}"; do
-        (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
-    done
-    for n in "${!cpuTimeCDF_map[@]}"; do
-        (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
+        (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_map[-1] ))
     done
 
 
     # re-write log with time mapped to CDF index
     for kk in "${!stackA[@]}"; do
-        printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_mapC[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_mapC[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
+        printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
     done 
 
 }
