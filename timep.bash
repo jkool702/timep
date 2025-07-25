@@ -1584,6 +1584,7 @@ _timep_PROCESS_FLAMEGRAPH() {
     wallTimeCDF_map0=()
     wallTimeCDF_map=()
 
+    # get map from time -> CDF index and then weight each CDF index by the total time shown at that index
     while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
         (( n = ( ( b - 1 ) << 1 ) + a ))
@@ -1591,16 +1592,19 @@ _timep_PROCESS_FLAMEGRAPH() {
         wallTimeCDF_map0[$c]="$n"
     done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
 
+    # cummulative sum weighted CDF to get final mapping
     kk0=-1
     for n in "${!wallTimeCDF_map[@]}"; do
         (( kk0 >= 0 )) && (( wallTimeCDF_map[$n] = wallTimeCDF_map[$n] + wallTimeCDF_map[$kk0] ))
         kk0=${n}
     done
 
+    # renormalize final mapping to range between 0 and (2 * numSamples)
     for n in "${!wallTimeCDF_map[@]}"; do
         (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_map[-1] ))
     done
 
+    # if we alsio have cpu times, repeat the above steps to get a weighted CDF mapping for those too
     ${cpuTimeFlag} && {
         mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
 
@@ -1628,7 +1632,7 @@ _timep_PROCESS_FLAMEGRAPH() {
     }
 
 
-    # re-write log with time mapped to CDF index
+    # re-write log with time(s) mapped to weighted CDF index
     if ${cpuTimeFlag}; then
         for kk in "${!stackA[@]}"; do
             printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
