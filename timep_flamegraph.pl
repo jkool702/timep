@@ -105,8 +105,9 @@
 #
 # CDDL HEADER END
 #
+# ??-Jul-2025   Anthony Barone  Added support for time-based coloring.
 # 11-Oct-2014	Adrien Mahieux	Added zoom.
-# 21-Nov-2013   Shawn Sterling  Added consistent palette file option
+# 21-Nov-2013   Shawn Sterling  Added consistent palette file option.
 # 17-Mar-2013   Tim Bunce       Added options and more tunables.
 # 15-Dec-2011	Dave Pacheco	Support for frames with whitespace.
 # 10-Sep-2011	Brendan Gregg	Created this.
@@ -141,6 +142,7 @@ my $stackreverse = 0;           # reverse stack order, switching merge end
 my $inverted = 0;               # icicle graph
 my $flamechart = 0;             # produce a flame chart (sort by time, do not merge stacks)
 my $negate = 0;                 # switch differential hues
+my $colortime;			# maps primary (v1) color channel to index defined in the stack traces
 my $titletext = "";             # centered heading
 my $titledefault = "Flame Graph";	# overwritten by --title
 my $titleinverted = "Icicle Graph";	#   "    "
@@ -169,6 +171,7 @@ USAGE: $0 [options] infile > outfile.svg\n
 	                 # (default), blue, green, grey; flat colors use "#rrggbb"
 	--hash           # colors are keyed by function name hash
 	--random         # colors are randomly generated
+	--time           # colors are determined from sample counts (time spent per-function)
 	--cp             # use consistent palette (palette.map)
 	--reverse        # generate stack-reversed flame graph
 	--inverted       # icicle graph
@@ -206,6 +209,7 @@ GetOptions(
 	'inverted'    => \$inverted,
 	'flamechart'  => \$flamechart,
 	'negate'      => \$negate,
+	'time'	      => \$colortime,
 	'notes=s'     => \$notestext,
 	'help'        => \$help,
 ) or usage();
@@ -417,9 +421,7 @@ sub random_namehash {
 }
 
 my $max_wall;
-my $sum_wall;
 my $max_cpu;
-my $sum_cpu;
 my $n_samples;
 
 sub color_timep {
@@ -511,7 +513,7 @@ sub color_timep {
 }
 
 sub color {
-	my ($type, $hash, $name) = @_;
+	my ($type, $hash, $name, $ind) = @_;
 	my ($v1, $v2, $v3);
 
 	if ($hash) {
@@ -526,6 +528,10 @@ sub color {
 		$v2 = random_namehash($name);
 		$v3 = random_namehash($name);
 	}
+
+        if ($colortime && defined $ind && $ind >= 0 && $n_samples >= 0) {
+	    $v1 = 2 * $ind / $n_samples;
+        } 
 
 	# theme palettes
 	if (defined $type and $type eq "hot") {
@@ -745,9 +751,12 @@ sub flow {
 		my $k = "$this->[$i];$i";
 		$Tmp{$k}->{stime} = $v;
 
-    if ($colors eq "timep") {
       if (defined $d) {
-        $Tmp{$k}->{delta} = $d;
+        if ($colors =~ /^timep/) {
+          $Tmp{$k}->{delta} = $d;
+	} else {
+           $Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
+	}
       }
       if (defined $iw) {
         $Tmp{$k}->{indwall} = $iw;
@@ -755,11 +764,7 @@ sub flow {
       if (defined $id) {
         $Tmp{$k}->{inddelta} = $id;
       }
-    } else {
-      if (defined $d) {
-        $Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
-      }
-    }
+  
   }
   return $this;
 }
@@ -788,8 +793,7 @@ if ($colors =~ /^timep/) {
 foreach (<>) {
 	chomp;
 	$line = $_;
-        if ($colors =~ /^time/) {
-            if ($stackreverse) {
+    if ($stackreverse) {
 		# there may be an extra samples column for differentials
 		# XXX todo: redo these REs as one. It's repeated below.
 		my($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
@@ -801,26 +805,9 @@ foreach (<>) {
 		} else {
 			unshift @Data, join(";", reverse split(";", $stack)) . " $samples";
 		}
-	    } else {
+	} else {
 		unshift @Data, $line;
-	    }
-        } else {
-	    if ($stackreverse) {
-		# there may be an extra samples column for differentials
-		# XXX todo: redo these REs as one. It's repeated below.
-		my($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-		my $samples2 = undef;
-		if ($stack =~ /^(.*)\s+?(\d+(?:\.\d*)?)$/) {
-			$samples2 = $samples;
-			($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-			unshift @Data, join(";", reverse split(";", $stack)) . " $samples $samples2";
-		} else {
-			unshift @Data, join(";", reverse split(";", $stack)) . " $samples";
-		}
-	    } else {
-		unshift @Data, $line;
-	    }
-         }
+	}       
 }
 
 if ($flamechart) {
@@ -838,13 +825,12 @@ foreach (@SortedData) {
 	my ($stack, $samples);
   my $samples2 = undef;
 
-  if ($colors =~ /^time/) {
-    ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+  ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
 	  unless (defined $samples and defined $stack) {
 		  ++$ignored;
 		  next;
 	  }
-	  if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/) {
+	if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/) {
 		  $samples2 = $samples;
 		  ($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
       if ($samples2 =~ /^(.*):(.*)$/) {
@@ -853,20 +839,7 @@ foreach (@SortedData) {
  	  }
       if ($samples =~ /^(.*):(.*)$/) {
         ($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/); 
-      }
-
-
-  } else {
-    ($stack, $samples) = (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-	  unless (defined $samples and defined $stack) {
-		  ++$ignored;
-		    next;
-	  }
-	  if ($stack =~ /^(.*)\s+?(\d+(?:\.\d*)?)$/) {
-		  $samples2 = $samples;
-		  ($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?:\.\d*)?)$/);
-	  }
-  }               
+      }          
 
   # there may be an extra samples column for differentials / cpu time:
 	
@@ -876,7 +849,6 @@ foreach (@SortedData) {
 	            # we are hijacking the "delta" and "maxdelta" variables. 
 	            # samples is really "wall-clock time". samples2 is really "cpu time".
               $delta = $samples2;
-	            $sumdelta += $delta;
 		} else {
 		    $delta = $samples2 - $samples;
     }
@@ -914,6 +886,11 @@ foreach (@SortedData) {
 }
 flow($last, [], $time, $delta, $indwall, $inddelta);
 
+if ($colortime) {
+    (defined $indwall) or warn "Coloring by sample count / time requires running the input stack traces through 'stackcollapse-time.bash'. Standard function-name-based coloring ill be used.\n";
+    ($colors !~ /^time/) and (defined $indwall and defined $delta) and warn "Coloring by sample count / time is not supported when using the delta between two input sample counts / times.\nIf the 2nd input is an intependent sample count / time measurement, use '--color=timep' instead.\n"
+}
+
 if ($countname eq "samples") {
 	# If $countname is used, it's likely that we're not measuring in stack samples
 	# (e.g. time could be the unit), so don't warn.
@@ -939,9 +916,7 @@ if ($timemax and $timemax < $time) {
 }
 $timemax ||= $time;
 $max_wall ||= $maxwall;
-$sum_wall ||= $time;
 $max_cpu ||= $maxdelta;
-$sum_cpu ||= $sumdelta;
 $n_samples ||= $nsamples;
 
 my $widthpertime = ($imagewidth - 2 * $xpad) / $timemax;
@@ -1419,8 +1394,8 @@ while (my ($id, $node) = each %Node) {
 	my ($func, $depth, $etime) = split ";", $id;
 	my $stime = $node->{stime};
 	my $delta = $node->{delta};
-  my $indwall = $node->{indwall};
-  my $inddelta = $node->{inddelta};
+        my $indwall = $node->{indwall};
+        my $inddelta = $node->{inddelta};
 
 	$etime = $timemax if $func eq "" and $depth == 0;
 
@@ -1445,7 +1420,6 @@ while (my ($id, $node) = each %Node) {
 	my $samples2 = undef;
 	my $iwall = undef;
 	my $icpu = undef;
-	my $d = $negate ? -$delta : $delta;
 
 	if ($func eq "" and $depth == 0) {
 		$info = "all ($samples_txt $countname, 100%)";
@@ -1474,7 +1448,7 @@ while (my ($id, $node) = each %Node) {
 			my $d = $negate ? -$delta : $delta;
 			my $deltapct = sprintf "%.2f", ((100 * $d) / ($timemax * $factor));
 			$deltapct = $d > 0 ? "+$deltapct" : $deltapct;
-			$info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";		      	
+			$info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";
 		}
 	}
 
@@ -1494,7 +1468,7 @@ while (my ($id, $node) = each %Node) {
 	} elsif ($palette) {
 		$color = color_map($colors, $func);
 	} else {
-		$color = color($colors, $hash, $func);
+		$color = color($colors, $hash, $func, $iwall);
 	}
 	$im->filledRectangle($x1, $y1, $x2, $y2, $color, 'rx="2" ry="2"');
 
