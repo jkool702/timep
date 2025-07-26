@@ -142,7 +142,7 @@ my $stackreverse = 0;           # reverse stack order, switching merge end
 my $inverted = 0;               # icicle graph
 my $flamechart = 0;             # produce a flame chart (sort by time, do not merge stacks)
 my $negate = 0;                 # switch differential hues
-my $colortime;			# maps primary (v1) color channel to index defined in the stack traces
+my $colortime;					# maps primary (v1) color channel to index defined in the stack traces
 my $titletext = "";             # centered heading
 my $titledefault = "Flame Graph";	# overwritten by --title
 my $titleinverted = "Icicle Graph";	#   "    "
@@ -220,7 +220,7 @@ my $ypad1 = $fontsize * 3;      # pad top, include title
 my $ypad2 = $fontsize * 2 + 10; # pad bottom, include labels
 my $ypad3 = $fontsize * 2;      # pad top, include subtitle (optional)
 my $xpad = 10;                  # pad lefm and right
-my $framepad = 1;		# vertical padding for frames
+my $framepad = 1;				# vertical padding for frames
 my $depthmax = 0;
 my %Events;
 my %nameattr;
@@ -529,7 +529,7 @@ sub color {
 		$v3 = random_namehash($name);
 	}
 
-        if ($colortime && defined $ind && $ind >= 0 && $n_samples >= 0) {
+        if ($colortime && defined $ind && $ind >= 0 && $n_samples > 0) {
 	    $v1 = 2 * $ind / $n_samples;
         } 
 
@@ -753,10 +753,11 @@ sub flow {
 
       if (defined $d) {
         if ($colors =~ /^timep/) {
+			# --color=timep[r] will hijack delta and use it as a 2nd independent time / sample count
           $Tmp{$k}->{delta} = $d;
-	} else {
+		} else {
            $Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
-	}
+		}
       }
       if (defined $iw) {
         $Tmp{$k}->{indwall} = $iw;
@@ -829,29 +830,29 @@ foreach (@SortedData) {
 	  unless (defined $samples and defined $stack) {
 		  ++$ignored;
 		  next;
-	  }
+	}
 	if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/) {
-		  $samples2 = $samples;
-		  ($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
-      if ($samples2 =~ /^(.*):(.*)$/) {
-        ($samples2, $inddelta) = $samples2 =~ (/^(\d+):(\d+)$/); 
-      }
- 	  }
-      if ($samples =~ /^(.*):(.*)$/) {
-        ($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/); 
-      }          
+		$samples2 = $samples;
+		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+  	  	if ($samples2 =~ /^(.*):(.*)$/) {
+   	  		($samples2, $inddelta) = $samples2 =~ (/^(\d+):(\d+)$/); 
+		}
+  	}
+   	if ($samples =~ /^(.*):(.*)$/) {
+       	($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/); 
+  	}          
 
-  # there may be an extra samples column for differentials / cpu time:
+  	# there may be an extra samples column for differentials / cpu time:
 	
-  $delta = undef;
+  	$delta = undef;
 	if (defined $samples2) {
-	        if ($colors =~ /^timep/) {
+	    if ($colors =~ /^timep/) {
 	            # we are hijacking the "delta" and "maxdelta" variables. 
 	            # samples is really "wall-clock time". samples2 is really "cpu time".
               $delta = $samples2;
 		} else {
 		    $delta = $samples2 - $samples;
-    }
+    	}
 		$maxdelta = abs($delta) if abs($delta) > $maxdelta;
 	}
    
@@ -1494,4 +1495,5 @@ if ($palette) {
 	write_palette();
 }
 
+# vim: ts=8 sts=8 sw=8 noexpandtab
 # vim: ts=8 sts=8 sw=8 noexpandtab
