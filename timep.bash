@@ -1562,6 +1562,7 @@ _timep_PROCESS_FLAMEGRAPH() {
 #      ensure that the colorspace is perceptually uniform and has equal spatial distribution.
 #
 # USAGE:   _timep_PROCESS_FLAMEGRAPH out.folded >out.folded.mod
+#          _timep_PROCESS_FLAMEGRAPH <out.folded | timep_flamegraph.pl ( --time | --color=time[p[r]] )
 #
 # OUTPUT:  for each line in out.folded:
 #    a;b;c;d; time [time2] --> a;b;c;d; time:ind [time2:ind2]
@@ -1571,18 +1572,24 @@ _timep_PROCESS_FLAMEGRAPH() {
 #
 #    this output style is designed to work with `flamegraph.pl --color=time[p[r]]`
 
-    [[ -f "$1" ]] || {
+    shopt -s extglob
+
+    [[ -e "$1" ]] || {
         printf '\nERROR: no file found at "%s"...ABORTING\n\n' "${1}"
         return 1
     }
 
-    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag
+    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag stackOrig
     local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
 
+    stackOrig="$(cat "${1}")"
+
      # seperate logs into stack / wall time / cpu time
-    mapfile -t stackA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\1/' <"${1}") 
-    mapfile -t wallTimeA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\2 /; s/^[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\1/' <"${1}") 
-    mapfile -t cpuTimeA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\2 /; s/^[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\2/' <"${1}" | grep -E '.+') 
+    mapfile -t stackA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\1/' <<<"${stackOrig}") 
+    mapfile -t wallTimeA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\2 /; s/^[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\1/' <<<"${stackOrig}") 
+    mapfile -t cpuTimeA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\2 /; s/^[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\2/' <<<"${stackOrig}" | grep -E '.+') 
+
+    unset "stackOrig"
 
     if (( ${#cpuTimeA[@]} == 0 )); then
         cpuTimeFlag=false
@@ -1652,11 +1659,11 @@ _timep_PROCESS_FLAMEGRAPH() {
     # re-create log with time(s) mapped to weighted CDF index
     if ${cpuTimeFlag}; then
         for kk in "${!stackA[@]}"; do
-            printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"  "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
+            printf '%s\t%s:%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}" "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
         done 
     else
         for kk in "${!stackA[@]}"; do
-            printf '%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"
+            printf '%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"
         done 
     fi
 }
