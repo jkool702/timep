@@ -1592,9 +1592,13 @@ _timep_PROCESS_FLAMEGRAPH() {
     fi
 
      # seperate logs into stack / wall time / cpu time
-    mapfile -t stackA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\1/' <<<"${stackOrig}") 
-    mapfile -t wallTimeA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\2 /; s/^[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\1/' <<<"${stackOrig}") 
-    mapfile -t cpuTimeA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\2 /; s/^[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\2/' <<<"${stackOrig}" | grep -E '.+') 
+    #mapfile -t stackA < <(sed -E 's/^(.*)((\t[[:space:]]+[0-9]+)+)$/\1/' <<<"${stackOrig}") 
+    #mapfile -t wallTimeA < <(sed -E 's/^(.*)((\t[[:space:]]+[0-9]+)+)$/\2 /; s/^\t[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\1/' <<<"${stackOrig}") 
+    #mapfile -t cpuTimeA < <(sed -E 's/^(.*)((\t[[:space:]]+[0-9]+)+)$/\2 /; s/^\t[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\2/' <<<"${stackOrig}" | grep -E '.+') 
+
+    mapfile -t stackA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\1/' <<<"${stackOrig}") 
+    mapfile -t wallTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\2/' <<<"${stackOrig}") 
+    mapfile -t cpuTimeA < <(sed -E s/'^(.*)\t[[:space:]]*([0-9]+)\t[[:space:]]*([0-9]+)[[:space:]]*$'/'\3/' <<<"${stackOrig}") 
 
     unset "stackOrig"
 
