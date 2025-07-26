@@ -1670,11 +1670,11 @@ _timep_PROCESS_FLAMEGRAPH() {
     # re-create log with time(s) mapped to weighted CDF index
     if ${cpuTimeFlag}; then
         for kk in "${!stackA[@]}"; do
-            printf '%s\t%s:%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}" "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
+            printf '%s\t %s:%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}" "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
         done 
     else
         for kk in "${!stackA[@]}"; do
-            printf '%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"
+            printf '%s\t %s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"
         done 
     fi
 }
