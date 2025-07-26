@@ -797,11 +797,11 @@ foreach (<>) {
     if ($stackreverse) {
 		# there may be an extra samples column for differentials
 		# XXX todo: redo these REs as one. It's repeated below.
-		my($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+		my($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d*)?)?)$/);
 		my $samples2 = undef;
-		if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d+)?)?)$/) {
+		if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d+)?)?)$/) {
 			$samples2 = $samples;
-			($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+			($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d*)?)?)$/);
 			unshift @Data, join(";", reverse split(";", $stack)) . " $samples $samples2";
 		} else {
 			unshift @Data, join(";", reverse split(";", $stack)) . " $samples";
@@ -826,14 +826,14 @@ foreach (@SortedData) {
 	my ($stack, $samples);
   my $samples2 = undef;
 
-  ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+  ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d*)?)?)$/);
 	  unless (defined $samples and defined $stack) {
 		  ++$ignored;
 		  next;
 	}
 	if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/) {
 		$samples2 = $samples;
-		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\.\d*(?::?\d*)?)?)$/);
+		($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d*)?)?)$/);
   	  	if ($samples2 =~ /^(.*):(.*)$/) {
    	  		($samples2, $inddelta) = $samples2 =~ (/^(\d+):(\d+)$/); 
 		}
