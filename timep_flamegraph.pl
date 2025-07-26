@@ -795,9 +795,10 @@ foreach (<>) {
 	chomp;
 	$line = $_;
     if ($stackreverse) {
+    
 		# there may be an extra samples column for differentials
 		# XXX todo: redo these REs as one. It's repeated below.
-		my($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d*)?)?)$/);
+		my ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d*)?)?)$/);
 		my $samples2 = undef;
 		if ($stack =~ /^(.*)\s+?(\d+(?::?\d+)?(?:\s+?\d*(?::?\d+)?)?)$/) {
 			$samples2 = $samples;
