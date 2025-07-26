@@ -1269,7 +1269,7 @@ _timep_PROCESS_LOG() {
             (( endWTime > startWTimeA[$kk] )) || endWTime="${timep_WTIME_DONE}"
 
             endWTimeA[$kk]="${endWTime}"
-            (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+            (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
         }
 
         # merge pipelines
@@ -1296,10 +1296,10 @@ _timep_PROCESS_LOG() {
 
         [[ -z ${cTimeA[$kk]//[^0-9]/} ]] && [[ ${endCTimeA[$kk]//[^0-9]/} ]] && {
             if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} + ( timep_CTIME_CORRECTION << 1 ) )); then
-                # normal case -0 use end - start - correction
+                # normal case - use end - start - correction
                 (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             elif [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} >= 10#0${startCTimeA[$kk]//[^0-9]/} )); then 
-                # case where end - start is less than the correction. Compromise and use (end - start)/2
+                # case where end - start is less than double the correction. Compromise and use (end - start)/2
                  (( cTimeA[$kk] = 1 + ( 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ) >> 1 ))
            elif ${timep_CLOCK_GETTIME_FLAG}; then
                # if we are using clock_gettime and our end time is before the start time, then chances are clock_gettime is reading from a new clock even though there isnt a full subshell. This happens on things like arithmitic evaluations  `(( ... ))` 
@@ -1308,13 +1308,18 @@ _timep_PROCESS_LOG() {
             fi
         }
 
-        (( wTimeA[$kk] >= 1 )) || wTimeA[$kk]=1
-        (( cTimeA[$kk] >= 1 )) || cTimeA[$kk]=1
+        if (( 10#0${wTimeA[$kk]//[^0-9]/} >= 1 )); then
+            (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
+        else
+             wTimeA[$kk]=1
+        fi
+        if (( 10#0${cTimeA[$kk]//[^0-9]/} >= 1 )); then
+             (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
+        else
+            cTimeA[$kk]=1
+        fi
 
-        (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
-        (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
-
-       ${normalCmdFlagA[$kk]} && {
+        ${normalCmdFlagA[$kk]} && {
             [[ -z ${fg0} ]] && {
                 # get base stack (showing all the parents) for this log
                 fg0="$(IFS0="${IFS}"
@@ -1574,15 +1579,17 @@ _timep_PROCESS_FLAMEGRAPH() {
 
     shopt -s extglob
 
-    [[ -e "$1" ]] || {
-        printf '\nERROR: no file found at "%s"...ABORTING\n\n' "${1}"
-        return 1
-    }
-
     local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag stackOrig
     local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
 
-    stackOrig="$(cat "${1}")"
+    if [[ -e "$1" ]]; then
+        stackOrig="$(cat "${1}")"
+    elif ! [[ -t 0 ]]; then
+        stackOrig="$(cat <&0)"
+    else
+        printf '\nERROR: nothing was passed on stdin and no file found at "%s"...ABORTING\n\n' "${1:-\<no input\>}"
+        return 1
+    fi
 
      # seperate logs into stack / wall time / cpu time
     mapfile -t stackA < <(sed -E 's/^(.*)(([[:space:]]+[0-9]+)+)$/\1/' <<<"${stackOrig}") 
