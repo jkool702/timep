@@ -436,10 +436,11 @@ sub color_timep {
                     $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
             }
             if (defined $count_cpu && $count_cpu > 0) {
-                    if (defined $ind_cpu && $ind_cpu >= 0 && defined $n_samples && $n_samples > 0 ) {
-                            $saturation = $ind_cpu / (2 * $n_samples);       
-                    } else {
-                            $saturation  = 1 - (1 / (1 + ($count_cpu / $count_wall) ** 2) ** 2);                    }
+		    #    if (defined $ind_cpu && $ind_cpu >= 0 && defined $n_samples && $n_samples > 0 ) {
+		    # $saturation = $ind_cpu / (2 * $n_samples);       
+		    # } else {
+                            $saturation  = 1 - (1 / (1 + ($count_cpu / $count_wall) ** 2) ** 2);
+	 	    #}
             } else {
                     $saturation = 1
             }
@@ -451,11 +452,11 @@ sub color_timep {
                    $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_cpu / $max_cpu) ** 2) ** 2));
            }
            if (defined $count_wall && $count_wall > 0) {
-                   if (defined $ind_wall && $ind_wall >= 0 && defined $n_samples && $n_samples > 0 ) {
-                           $saturation = $ind_wall / (2 * $n_samples);       
-                   } else {
+		   #if (defined $ind_wall && $ind_wall >= 0 && defined $n_samples && $n_samples > 0 ) {
+		   #        $saturation = $ind_wall / (2 * $n_samples);       
+		   #} else {
                            $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
-                   }
+			   #}
            } else {
                    $saturation = 1
            }
@@ -738,11 +739,14 @@ sub flow {
                 if (defined $Tmp{$k}->{delta}) {
                         $Node{"$k;$v"}->{delta} = delete $Tmp{$k}->{delta};
                 }
+                if (defined $Tmp{$k}->{ctime}) {
+                        $Node{"$k;$v"}->{ctime} = delete $Tmp{$k}->{ctime};
+                }
                 if (defined $Tmp{$k}->{indwall}) {
                         $Node{"$k;$v"}->{indwall} = delete $Tmp{$k}->{indwall};
                 }
-                if (defined $Tmp{$k}->{inddelta}) {
-                        $Node{"$k;$v"}->{inddelta} = delete $Tmp{$k}->{inddelta};
+                if (defined $Tmp{$k}->{indcpu}) {
+                        $Node{"$k;$v"}->{indcpu} = delete $Tmp{$k}->{indcpu};
                 }
                 delete $Tmp{$k};
         }
@@ -752,18 +756,18 @@ sub flow {
                 $Tmp{$k}->{stime} = $v;
 
       if (defined $d) {
-        if ($colors =~ /^timep/) {
-                        # --color=timep[r] will hijack delta and use it as a 2nd independent time / sample count
-          $Tmp{$k}->{delta} = $d;
-                } else {
-           $Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
-                }
+      	      if ($colors =~ /^timep/) {
+      		      # --color=timep[r] will hijack delta and use it as a 2nd independent time / sample count
+		      $Tmp{$k}->{ctime} = $d;
+      	      } else {
+      		      $Tmp{$k}->{delta} += $i == $len_b ? $d : 0;
+      	      }
       }
       if (defined $iw) {
-        $Tmp{$k}->{indwall} = $iw;
+      	      $Tmp{$k}->{indwall} = $iw;
       }
       if (defined $id) {
-        $Tmp{$k}->{inddelta} = $id;
+        $Tmp{$k}->{indcpu} = $id;
       }
   
   }
@@ -777,13 +781,11 @@ my $last = [];
 my $time = 0;
 my $delta = undef;
 my $indwall = undef;
-my $inddelta = undef;
+my $indcpu = undef;
 my $ignored = 0;
 my $line;
 my $maxwall = 0;
-my $sumwall = 0;
 my $maxdelta = 1;
-my $sumdelta = 0;
 my $nsamples = 0;
 
 if ($colors =~ /^timep/) {
@@ -794,11 +796,12 @@ if ($colors =~ /^timep/) {
 foreach (<>) {
         chomp;
         $line = $_;
-    if ($stackreverse) {
-    
+    	if ($stackreverse) {
                 # there may be an extra samples column for differentials
                 # XXX todo: redo these REs as one. It's repeated below.
-                my ($stack, $samples1, $samples2) = /^(.*)\s+(\d+(?::\d+)?)(?:\s+(\d+(?::\d+)?))?\s*$/;
+		my ($stack, $samples);
+		my $samples2 = undef;
+                ($stack, $samples, $samples2) = /^(.*)\s+(\d+(?::\d+)?)(?:\s+(\d+(?::\d+)?))?\s*$/;
                 if (defined $samples2) {
                         unshift @Data, join(";", reverse split(";", $stack)) . " $samples $samples2";
                 } else {
@@ -821,7 +824,11 @@ foreach (@SortedData) {
         chomp;
         # process: folded_stack count
         # eg: func_a;func_b;func_c 31
-        my ($stack, $samples, $indwall, $samples2, $inddelta) = /^(.*)\s+(\d+)(?::(\d+))?(?:\s+(\d+)(?::(\d+))?)?\s*$/;
+	my ($stack, $samples);
+	my $indwall = undef;
+	my $samples2 = undef;
+	my $indcpu = undef;
+        ($stack, $samples, $indwall, $samples2, $indcpu) = /^(.*)\s+(\d+)(?::(\d+))?(?:\s+(\d+)(?::(\d+))?)?\s*$/;
           unless (defined $samples and defined $stack) {
                   ++$ignored;
                   next;
@@ -833,16 +840,17 @@ foreach (@SortedData) {
             if ($colors =~ /^timep/) {
                     # we are hijacking the "delta" and "maxdelta" variables. 
                     # samples is really "wall-clock time". samples2 is really "cpu time".
-              $delta = $samples2;
-                } else {
-                    $delta = $samples2 - $samples;
-        }
-                $maxdelta = abs($delta) if abs($delta) > $maxdelta;
-        }
-   
-        $maxwall = $samples if $samples > $maxwall;
-        $nsamples += 1;
-
+		    $delta = $samples2;
+	    } else {
+		    
+		    $delta = $samples2 - $samples;
+    	    }
+	    $maxdelta = abs($delta) if abs($delta) > $maxdelta;
+    }
+    
+    $maxwall = $samples if $samples > $maxwall;
+    $nsamples += 1;
+    
         # for chain graphs, annotate waker frames with "_[w]", for later
         # coloring. This is a hack, but has a precedent ("_[k]" from perf).
         if ($colors eq "chain") {
@@ -859,7 +867,7 @@ foreach (@SortedData) {
         }
 
         # merge frames and populate %Node:
-        $last = flow($last, [ '', split ";", $stack ], $time, $delta, $indwall, $inddelta);
+        $last = flow($last, [ '', split ";", $stack ], $time, $delta, $indwall, $indcpu);
 
         if ($colors eq "timep") {
                 $time += $samples;
@@ -869,7 +877,7 @@ foreach (@SortedData) {
                 $time += $samples;
         }
 }
-flow($last, [], $time, $delta, $indwall, $inddelta);
+flow($last, [], $time, $delta, $indwall, $indcpu);
 
 if ($colortime) {
     (defined $indwall) or warn "Coloring by sample count / time requires running the input stack traces through 'stackcollapse-time.bash'. Standard function-name-based coloring ill be used.\n";
@@ -1378,9 +1386,12 @@ $im->group_start({id => "frames"});
 while (my ($id, $node) = each %Node) {
         my ($func, $depth, $etime) = split ";", $id;
         my $stime = $node->{stime};
+	my $ctime = $node->{ctime};
         my $delta = $node->{delta};
         my $indwall = $node->{indwall};
-        my $inddelta = $node->{inddelta};
+        my $indcpu = $node->{indcpu};
+	my $ind;
+	($etime, $ind) = split ":", $etime;
 
         $etime = $timemax if $func eq "" and $depth == 0;
 
@@ -1421,13 +1432,13 @@ while (my ($id, $node) = each %Node) {
                 if (defined $indwall) {
                         $iwall = sprintf "%.0f", $indwall;
                 }
-                if (defined $inddelta) {
-                        $icpu = sprintf "%.0f", $inddelta;
+                if (defined $indcpu) {
+                        $icpu = sprintf "%.0f", $indcpu;
                 }
                 unless (defined $delta) {
                         $info = "$escaped_func ($samples_txt $countname, $pct%)";
                 } elsif ($colors =~ /^timepr?/) {
-                        $samples2 = sprintf "%.0f", ($etime - $delta) * $factor;
+                        $samples2 = sprintf "%.0f", $ctime * $factor;
                         $info = "$escaped_func ($samples_txt $countname, $pct%)";
                 } else {
                         my $d = $negate ? -$delta : $delta;
