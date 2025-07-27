@@ -127,8 +127,8 @@ timep() {
             -k|--keep)  timep_deleteFlag=false ;;
             -t|--time)  timep_timeFlag=true ;;
             -F|-[Ff]lame|--[Ff]lame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
-            -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true ;;
-            -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true  ;;
+            -o|--output) shift 1; IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true ;;
+            -o=*|--output=*) IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true  ;;
             --)  shift 1 && break  ;;
              *)  break  ;;
         esac
@@ -1322,13 +1322,15 @@ _timep_PROCESS_LOG() {
         ${normalCmdFlagA[$kk]} && {
             [[ -z ${fg0} ]] && {
                 # get base stack (showing all the parents) for this log
-                fg0="$(IFS0="${IFS}"
+                fg0="$(IFS0="${IFS@Q}"
+IFS0="${IFS0/["'"\$]/IFS\=&}"
 IFS='.'
 # get base stack for flamegraph
 read -r -a fA <<<"${funcA[$kk]#* }"
 read -r -a sA <<<"${pidA[$kk]#* }"
 read -r -a eA <<<"${nexecA[$kk]#* }"
-IFS="${IFS0}"
+eval "${IFS0:-unset IFS}"
+unset IFS0
 unset "eA[-1]" "IFS0"
 ns=0
 nf=1
@@ -1600,15 +1602,14 @@ _timep_PROCESS_FLAMEGRAPH() {
     stackA=("${stackA[@]%$'\034'*}")
     cpuTimeA=("${wallTimeA[@]##*$'\035'}")
     wallTimeA=("${wallTimeA[@]%$'\035'*}")
-    cpuTimeA0=(${cpuTimeA[@]}
 
-    if (( ${#cpuTimeA0[@]} == 0 )); then
-        cpuTimeFlag=false
-    else
-        cpuTimeFlag=true
-    fi
-
-    unset "cpuTimeA0"
+    # check if we have cpu times too
+    IFS0="${IFS@Q}"
+    IFS0="${IFS0/["'"\$]/IFS\=&}"
+    IFS=
+    [[ "${cpuTimeA[*]}" ]] && cpuTimeFlag=true || cpuTimeFlag=false
+    eval "${IFS0:-unset IFS}"
+    unset IFS0
 
     # sort times then prepend line numbers to start
     mapfile -t wallTimeSortA < <(printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
