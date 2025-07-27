@@ -1579,37 +1579,39 @@ _timep_PROCESS_FLAMEGRAPH() {
 
     shopt -s extglob
 
-    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag stackOrig
+    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag fdRead
     local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
 
     if [[ -e "$1" ]]; then
-        stackOrig="$(cat "${1}")"
+        exec {fdRead}<"${1}"
     elif ! [[ -t 0 ]]; then
-        stackOrig="$(cat <&0)"
+        exec {fdRead}<&0
     else
         printf '\nERROR: nothing was passed on stdin and no file found at "%s"...ABORTING\n\n' "${1:-\<no input\>}"
         return 1
     fi
 
-     # seperate logs into stack / wall time / cpu time
-    #mapfile -t stackA < <(sed -E 's/^(.*)((\t[[:space:]]+[0-9]+)+)$/\1/' <<<"${stackOrig}") 
-    #mapfile -t wallTimeA < <(sed -E 's/^(.*)((\t[[:space:]]+[0-9]+)+)$/\2 /; s/^\t[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\1/' <<<"${stackOrig}") 
-    #mapfile -t cpuTimeA < <(sed -E 's/^(.*)((\t[[:space:]]+[0-9]+)+)$/\2 /; s/^\t[[:space:]]+([0-9]+)[[:space:]]+([0-9]*)[[:space:]]*$/\2/' <<<"${stackOrig}" | grep -E '.+') 
+    # load stack traces into array with field seperators added
+    mapfile -t -u ${fdRead} stackA < <(sed -E 's/(.*)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)$/\1'$'\034''\2'$'\035''\3/; s/(.*)['$'\034''[:space:]]+([0-9]+)'$'\035''?$/\1'$'\034''\2'$'\035''/' <<<'a; b && c; d  55 99'$'\n''e; f || g; '$'\t''44')
+    exec {fdRead}>&-
 
-    mapfile -t stackA < <(sed -E 's/^([^\t]+)\t([^\t]+)\t?([^\t]*)'/'\1'/ <<<"${stackOrig}")
-    mapfile -t wallTimeA < <(sed -E 's/^([^\t]+)\t([^\t]+)\t?([^\t]*)'/'\2'/ <<<"${stackOrig}")
-    mapfile -t cpuTimeA < <(sed -E 's/^([^\t]+)\t([^\t]+)\t?([^\t]*)'/'\3'/ <<<"${stackOrig}")
+    # seperate logs into stack / wall time / cpu time
+    wallTimeA=("${stackA[@]##*$'\034'}")
+    stackA=("${stackA[@]%$'\034'*}")
+    cpuTimeA=("${wallTimeA[@]##*$'\035'}")
+    wallTimeA=("${n1[@]%$'\035'*}")
+    cpuTimeA0=(${cpuTimeA[@]}
 
-    unset "stackOrig"
-
-    if (( ${#cpuTimeA[@]} == 0 )); then
+    if (( ${#cpuTimeA0[@]} == 0 )); then
         cpuTimeFlag=false
     else
         cpuTimeFlag=true
     fi
 
+    unset "cpuTimeA0"
+
     # sort times then prepend line numbers to start
-    mapfile -t wallTimeSortA < <( printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+    mapfile -t wallTimeSortA < <(printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
     
     # get total count
     (( wallTimeN = ${#wallTimeSortA[@]} ))
