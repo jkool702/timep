@@ -798,11 +798,8 @@ foreach (<>) {
     
                 # there may be an extra samples column for differentials
                 # XXX todo: redo these REs as one. It's repeated below.
-                my($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d*)?(?:\.?\d*(?::?\d*)?)?)$/);
-                my $samples2 = undef;
-                if ($stack =~ /^(.*)\s+?(\d+(?::?\d*)?(?:\.\d+(?::?\d*)?)?)$/) {
-                        $samples2 = $samples;
-                        ($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d*)?(?:\.\d+(?::?\d*)?)?)$/);
+                my ($stack, $samples1, $samples2) = /^(.*)\s+(\d+(?::\d+)?)(?:\s+(\d+(?::\d+)?))?\s*$/;
+                if (defined $samples2) {
                         unshift @Data, join(";", reverse split(";", $stack)) . " $samples $samples2";
                 } else {
                         unshift @Data, join(";", reverse split(";", $stack)) . " $samples";
@@ -824,27 +821,13 @@ foreach (@SortedData) {
         chomp;
         # process: folded_stack count
         # eg: func_a;func_b;func_c 31
-        my ($stack, $samples);
-  my $samples2 = undef;
-
-     ($stack, $samples) = (/^(.*)\s+?(\d+(?::?\d*)?(?:\.?\d*(?::?\d*)?)?)$/);
+        my ($stack, $samples, $indwall, $samples2, $inddelta) = /^(.*)\s+(\d+)(?::(\d+))?(?:\s+(\d+)(?::(\d+))?)?\s*$/;
           unless (defined $samples and defined $stack) {
                   ++$ignored;
                   next;
           }
-          if ($stack =~ /^(.*)\s+?(\d+(?::?\d*)?(?:\.\d+(?::?\d*)?)?)$/) {
-                  $samples2 = $samples;
-                  ($stack, $samples) = $stack =~ (/^(.*)\s+?(\d+(?::?\d*)?(?:\.\d+(?::?\d*)?)?)$/);
-      if ($samples2 =~ /^(.*):(.*)$/) {
-        ($samples2, $inddelta) = $samples2 =~ (/^(\d+):(\d+)$/);
-      }
-          }
-      if ($samples =~ /^(.*):(.*)$/) {
-        ($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/);
-      }          
 
         # there may be an extra samples column for differentials / cpu time:
-
         $delta = undef;
         if (defined $samples2) {
             if ($colors =~ /^timep/) {
