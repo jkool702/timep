@@ -1592,14 +1592,14 @@ _timep_PROCESS_FLAMEGRAPH() {
     fi
 
     # load stack traces into array with field seperators added
-    mapfile -t -u ${fdRead} stackA < <(sed -E 's/(.*)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)$/\1'$'\034''\2'$'\035''\3/; s/(.*)['$'\034''[:space:]]+([0-9]+)'$'\035''?$/\1'$'\034''\2'$'\035''/' <<<'a; b && c; d  55 99'$'\n''e; f || g; '$'\t''44')
+    mapfile -t stackA < <(sed -E 's/(.*)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)$/\1'$'\034''\2'$'\035''\3/; s/(.*)['$'\034''[:space:]]+([0-9]+)'$'\035''?$/\1'$'\034''\2'$'\035''/' <&${fdRead})
     exec {fdRead}>&-
 
     # seperate logs into stack / wall time / cpu time
     wallTimeA=("${stackA[@]##*$'\034'}")
     stackA=("${stackA[@]%$'\034'*}")
     cpuTimeA=("${wallTimeA[@]##*$'\035'}")
-    wallTimeA=("${n1[@]%$'\035'*}")
+    wallTimeA=("${wallTimeA[@]%$'\035'*}")
     cpuTimeA0=(${cpuTimeA[@]}
 
     if (( ${#cpuTimeA0[@]} == 0 )); then
