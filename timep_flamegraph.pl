@@ -496,23 +496,24 @@ sub color_timep {
 
   if ($type0 eq "time") {
     $i2 = $intensity ** 2;
-    $r = ((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 255 * (1 - $saturation));
-    $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 255 * (1 - $saturation));
-    $b = ((255 * (1 - $intensity) * (1 - $i2) * (1 - ($intensity * $i2))) * $saturation + 255 * (1 - $saturation));
+    $r = ((255 * ($intensity + sqrt($intensity)) / 2) * $saturation + 212 * (1 - $saturation));
+    $g = ((255 * (1 - ((1 - 2 * $intensity) ** 2)) * (1 - $i2)) * $saturation + 212 * (1 - $saturation));
+    $b = ((255 * (1 - $intensity) * (1 - $i2) * (1 - ($intensity * $i2))) * $saturation + 212 * (1 - $saturation));
     $s = $saturation * (1 + 255 / ($r + $g + $b)) / 2;
+    $s = 1 if $s > 1;
     $r = int($r);
-    $g = int($g * $s + 255 * (1 - $s));
+    $g = int($g * $s + 212 * (1 - $s));
     $b = int($b);
   } else {
-        $saturation = (1 / 4) + ($saturation / 2);
+        $saturation = (1 / 3) + ($saturation / 4);
         if ($type0 eq "function") {
-                  $r = ((185 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
-                  $g = ((95 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
-      $b = ((205 + int(50 * $intensity)) * $saturation + 255 * (1 - $saturation));
-        } elsif ($type0 eq "subshell") {
                   $r = ((155 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
-                  $g = ((55 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
-                  $b = ((175 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+                  $g = ((55 + int(25 * $intensity)) * $saturation + 255 * (1 - $saturation));
+	    	  $b = ((200 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+        } elsif ($type0 eq "subshell") {
+                  $r = ((200 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
+                  $g = ((55 + int(25 * $intensity)) * $saturation + 255 * (1 - $saturation));
+                  $b = ((155 + int(55 * $intensity)) * $saturation + 255 * (1 - $saturation));
         }
   }
 
@@ -1461,7 +1462,7 @@ while (my ($id, $node) = each %Node) {
                 }
 	        if ($colors =~ /^timep/) {
                         $samples2 = sprintf "%.0f", $ctime * $factor;
-                        $info = "$escaped_func ($samples_txt $countname $samples $iwall $samples2 $icpu, $pct%)";
+                        $info = "$escaped_func ($samples_txt $countname, $pct%)";
 		} else {
 			unless (defined $delta) {
 				$info = "$escaped_func ($samples_txt $countname, $pct%)";
