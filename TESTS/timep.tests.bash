@@ -87,6 +87,9 @@ for i in {1..3}; do
   done < <(seq 1 4; :)
 done
 
+sleep 1 &
+wait -n $!
+
 (
     trap 'echo bye' EXIT
     exit
