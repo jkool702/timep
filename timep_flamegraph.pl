@@ -420,6 +420,8 @@ sub random_namehash {
         return rand(1)
 }
 
+my $sum_wall;
+my $sum_cpu;
 my $max_wall;
 my $max_cpu;
 my $n_samples;
@@ -429,17 +431,21 @@ sub color_timep {
   my ($saturation, $intensity, $i2, $s, $type0);
   my ($r, $g, $b);
 
+  if (defined $count_cpu && defined $max_cpu && $max_cpu > 0) {
+	  $count_cpu = $count_cpu * $max_wall / $max_cpu;
+  }
+
     if ($type eq "timep") {
             if (defined $ind_wall && $ind_wall >= 0 && defined $n_samples && $n_samples > 0 ) {
                     $intensity = $ind_wall / (2 * $n_samples);       
             } else {
-                    $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
+                   $intensity  = (4 / 3) * (1 - (1 / (1 + ($count_wall / $max_wall) ** 2) ** 2));
             }
             if (defined $count_cpu && $count_cpu > 0) {
 		    #    if (defined $ind_cpu && $ind_cpu >= 0 && defined $n_samples && $n_samples > 0 ) {
 		    # $saturation = $ind_cpu / (2 * $n_samples);       
 		    # } else {
-                            $saturation  = 1 - (1 / (1 + ($count_cpu / $count_wall) ** 2) ** 2);
+                            $saturation  = 1 - (1 / (1 + ($count_cpu / $count_wall)) ** 2);
 	 	    #}
             } else {
                     $saturation = 1
@@ -455,7 +461,7 @@ sub color_timep {
 		   #if (defined $ind_wall && $ind_wall >= 0 && defined $n_samples && $n_samples > 0 ) {
 		   #        $saturation = $ind_wall / (2 * $n_samples);       
 		   #} else {
-                           $saturation = 1 - (1 / (1 + $count_wall / $count_cpu) ** 2);
+                           $saturation = 1 - (1 / (1 + ($count_wall / $count_cpu)) ** 2);
 			   #}
            } else {
                    $saturation = 1
@@ -476,7 +482,7 @@ sub color_timep {
   $saturation = 1 if $saturation > 1;
   $saturation = 0 if $saturation < 0;
 
-  $saturation  = (4 / 3) * (1 - (1 / (1 + ($saturation) ** 2) ** 2));
+  $saturation  = (4 / 3) * (1 - (1 / (1 + ($sum_wall * $saturation / $sum_cpu) ** 2) ** 2));
 
   if ($colors =~ /^timep/) {
     if ($name =~ m:_\[f\]$:) { 
@@ -786,6 +792,8 @@ my $ignored = 0;
 my $line;
 my $maxwall = 0;
 my $maxdelta = 1;
+my $sumwall = 0;
+my $sumcpu = 0;
 my $nsamples = 0;
 
 if ($colors =~ /^timep/) {
@@ -801,7 +809,11 @@ foreach (<>) {
                 # XXX todo: redo these REs as one. It's repeated below.
 		my ($stack, $samples);
 		my $samples2 = undef;
-                ($stack, $samples, $samples2) = /^(.*)\s+(\d+(?::\d+)?)(?:\s+(\d+(?::\d+)?))?\s*$/;
+                ($stack, $samples) = (/^(.*)\s+(\d+(?::?\d*?)?)\s*?$/);
+		if ($stack =~ /^(.*)\s+(\d+(?::?\d*?)?)\s*?$/) {
+			$samples2 = $samples;
+                	($stack, $samples) = $stack =~ (/^(.*)\s+(\d+(?::?\d*?)?)\s*?$/);
+		}
                 if (defined $samples2) {
                         unshift @Data, join(";", reverse split(";", $stack)) . " $samples $samples2";
                 } else {
@@ -827,12 +839,22 @@ foreach (@SortedData) {
 	my ($stack, $samples);
 	my $indwall = undef;
 	my $samples2 = undef;
-	my $indcpu = undef;
-        ($stack, $samples, $indwall, $samples2, $indcpu) = /^(.*)\s+(\d+)(?::(\d+))?(?:\s+(\d+)(?::(\d+))?)?\s*$/;
-          unless (defined $samples and defined $stack) {
-                  ++$ignored;
+	my $indcupu = undef;
+	($stack, $samples) = (/^(.*)\s+(\d+(?::?\d*?)?)\s*?$/);
+	if ($stack =~ /^(.*)\s+(\d+(?::?\d*?)?)\s*?$/) {
+		$samples2 = $samples;
+		($stack, $samples) = $stack =~ (/^(.*)\s+(\d+(?::?\d*?)?)\s*?$/);		
+		if ($samples2 =~ /^(\d+):(\d+)$/) {
+			($samples2, $indcpu) = $samples2 =~ (/^(\d+):(\d+)$/)
+		}
+	}
+	if ($samples =~ /^(\d+):(\d+)$/) {
+		($samples, $indwall) = $samples =~ (/^(\d+):(\d+)$/)
+	}
+	unless (defined $samples and defined $stack) {
+		++$ignored;
                   next;
-          }
+        }
 
         # there may be an extra samples column for differentials / cpu time:
         $delta = undef;
@@ -846,9 +868,11 @@ foreach (@SortedData) {
 		    $delta = $samples2 - $samples;
     	    }
 	    $maxdelta = abs($delta) if abs($delta) > $maxdelta;
+	    $sumcpu += $samples2;
     }
     
     $maxwall = $samples if $samples > $maxwall;
+    $sumwall += $samples;
     $nsamples += 1;
     
         # for chain graphs, annotate waker frames with "_[w]", for later
@@ -910,6 +934,8 @@ if ($timemax and $timemax < $time) {
 $timemax ||= $time;
 $max_wall ||= $maxwall;
 $max_cpu ||= $maxdelta;
+$sum_wall ||= $sumwall;
+$sum_cpu ||= $sumcpu;
 $n_samples ||= $nsamples;
 
 my $widthpertime = ($imagewidth - 2 * $xpad) / $timemax;
@@ -1390,8 +1416,6 @@ while (my ($id, $node) = each %Node) {
         my $delta = $node->{delta};
         my $indwall = $node->{indwall};
         my $indcpu = $node->{indcpu};
-	my $ind;
-	($etime, $ind) = split ":", $etime;
 
         $etime = $timemax if $func eq "" and $depth == 0;
 
@@ -1435,18 +1459,20 @@ while (my ($id, $node) = each %Node) {
                 if (defined $indcpu) {
                         $icpu = sprintf "%.0f", $indcpu;
                 }
-                unless (defined $delta) {
-                        $info = "$escaped_func ($samples_txt $countname, $pct%)";
-                } elsif ($colors =~ /^timepr?/) {
+	        if ($colors =~ /^timep/) {
                         $samples2 = sprintf "%.0f", $ctime * $factor;
-                        $info = "$escaped_func ($samples_txt $countname, $pct%)";
-                } else {
-                        my $d = $negate ? -$delta : $delta;
-                        my $deltapct = sprintf "%.2f", ((100 * $d) / ($timemax * $factor));
-                        $deltapct = $d > 0 ? "+$deltapct" : $deltapct;
-                        $info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";
-                }
-        }
+                        $info = "$escaped_func ($samples_txt $countname $samples $iwall $samples2 $icpu, $pct%)";
+		} else {
+			unless (defined $delta) {
+				$info = "$escaped_func ($samples_txt $countname, $pct%)";
+			} else {
+				my $d = $negate ? -$delta : $delta;
+				my $deltapct = sprintf "%.2f", ((100 * $d) / ($timemax * $factor));
+				$deltapct = $d > 0 ? "+$deltapct" : $deltapct;
+				$info = "$escaped_func ($samples_txt $countname, $pct%; $deltapct%)";
+			}
+		}
+	}
 
         my $nameattr = { %{ $nameattr{$func}||{} } }; # shallow clone
         $nameattr->{title}       ||= $info;
