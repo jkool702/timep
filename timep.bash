@@ -2228,7 +2228,7 @@ _timep_base64_to_file() {
             chmod +x "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
         }
     else
-        timep_git_branch='timep_testing2'
+        timep_git_branch='timep_testing4'
         type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl -O "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null
         type -p timep_flamegraph.pl &>/dev/null || {
             type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl >"/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" 2>/dev/null
