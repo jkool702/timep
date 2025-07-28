@@ -1,0 +1,13 @@
+timing this command without timep gives
+
+time { forkrun ff </mnt/ramdisk/flist >/dev/null; forkrun -z ff </mnt/ramdisk/flist0 >/dev/null; }
+
+real    0m44.644s
+user    13m31.940s
+sys     3m14.576s
+
+Which is a total cpu (sys+usr) time of 1006.516. 
+timep computed a total CPU time (by summing the run time of each of the ~65,000 individual commands, computed via start+stop cpu timestamps) of 999.913 seconds. 
+
+Error in total CPU time measurement is around 0.6%
+

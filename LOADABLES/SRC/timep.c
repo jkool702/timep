@@ -1,7 +1,6 @@
 // timep.c
-// timep.so
-// gcc -Wall -fPIC -flto -O3 -v -DSHELL -DLOADABLE_BUILTIN -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -I. -shared  -c timep.c -o timep.so
-
+// to compile loadable shared librrary file (timep.so): clone bash git tree, cd to bash/examples/loadables, copy "timep.c" to that dir, and run 
+// gcc -Wall -fPIC -flto -O3 -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -I. -shared  -o timep.so timep.c
 // Enable GNU extensions 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
@@ -9,25 +8,14 @@
 
 // System headers
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+#include <errno.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <errno.h>
-#include <sys/eventfd.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <dirent.h>
-#include <ctype.h>
-#include <sys/sendfile.h>
-#include <poll.h>
-#include <limits.h>
-#include <sys/mman.h>
-#include <inttypes.h>
-#include <time.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -42,86 +30,137 @@
 #include "variables.h"
 
 // Helpers for builtins
-extern int add_builtin(struct builtin * bp, int keep);
-extern char ** make_builtin_argv();
+extern int add_builtin(struct builtin *bp, int keep);
+extern char **make_builtin_argv();
 
 // define function prototypes
 static int timep_builtin(WORD_LIST * list);
-static int clock_gettime_main(int argc, char ** argv);
+static int getCPUtime_main(int argc, char **argv);
 
-/* -------------------------------------------------- */
-/* clock_gettime builtin                              */
-/* -------------------------------------------------- */
+/* ----------------------------- */
+/* --------  getCPUtime -------- */
+/* ----------------------------- */
 
-static char * clock_gettime_doc[] = {
+static char *getCPUtime_doc[] = {
     "",
-    "USAGE: clock_gettime [<VAR>]",
+    "USAGE: getCPUtime [<VAR> [<VAR_SELF>]]",
     "",
-    "Return high-resolution CPU time used by the current process.",
-    "If an argument is passed, use it as the name of a Bash variable to assign the result.",
-    "Otherwise, prints the result to stdout.",
+    "Return high-resolution CPU time (microseconds) used by this process and",
+    "all finished child processes and all their finished descendents.",
+    "",
+    "If <VAR> is given, assigns the value to that variable; otherwise prints it.",
+    "If <VAR_SELF> is also given, assigns self CPU time (no children) to that variable.",
+    "",
     NULL
 };
 
-static int clock_gettime_main(int argc, char ** argv) {
-    if (argc > 2) {
-        builtin_error("clock_gettime: too many arguments");
-        return EXECUTION_FAILURE;
-    }
-    char * varname = NULL;
-    if (argc == 2 && argv[1][0] != '\0') {
-        varname = argv[1];
-    }
-	
-#if defined(CLOCK_PROCESS_CPUTIME_ID)
-    struct timespec ts;
-    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) != 0) {
-        builtin_error("clock_gettime failed: %s", strerror(errno));
-        xfree(argv);
+static int getCPUtime_main(int argc, char **argv) {
+    if (argc > 3) {
+        builtin_error("getCPUtime: too many arguments");
         return EXECUTION_FAILURE;
     }
 
-    // Calculate microseconds
-    int64_t micros = ts.tv_sec * 1000000LL + ts.tv_nsec / 1000;
-	
-    if (varname) {
-        char buf_micros[32];
-        snprintf(buf_micros, sizeof(buf_micros), "%lld", (long long) micros);
-        bind_variable(varname, buf_micros, 0);
-    } else {
-        printf("%lld\n", (long long) micros);
+    char *var_combined = NULL;
+    char *var_self     = NULL;
+
+    if (argc >= 2 && argv[1][0] != '\0')
+        var_combined = argv[1];
+    if (argc == 3 && argv[2][0] != '\0')
+        var_self = argv[2];
+
+    int64_t micros_self = 0;     // Self-only CPU time
+    int64_t micros_combined = 0; // Self + finished children
+
+    // ---- Collect self time ----
+#if defined(CLOCK_PROCESS_CPUTIME_ID)
+    {
+        struct timespec ts;
+        if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == 0) {
+            micros_self = (int64_t)ts.tv_sec * 1000000LL + ts.tv_nsec / 1000;
+        } else {
+            // Fallback to getrusage(RUSAGE_SELF)
+            struct rusage ru_self;
+            if (getrusage(RUSAGE_SELF, &ru_self) == 0) {
+                micros_self = (int64_t)ru_self.ru_utime.tv_sec * 1000000LL +
+                              ru_self.ru_utime.tv_usec +
+                              (int64_t)ru_self.ru_stime.tv_sec * 1000000LL +
+                              ru_self.ru_stime.tv_usec;
+            } else {
+                builtin_error("getrusage (SELF) failed: %s", strerror(errno));
+                return EXECUTION_FAILURE;
+            }
+        }
     }
-    return EXECUTION_SUCCESS;
-	
 #else
-    builtin_error("clock_gettime is not supported on this system.");
-    xfree(argv);
-    return EXECUTION_FAILURE;
+    {
+        struct rusage ru_self;
+        if (getrusage(RUSAGE_SELF, &ru_self) == 0) {
+            micros_self = (int64_t)ru_self.ru_utime.tv_sec * 1000000LL +
+                          ru_self.ru_utime.tv_usec +
+                          (int64_t)ru_self.ru_stime.tv_sec * 1000000LL +
+                          ru_self.ru_stime.tv_usec;
+        } else {
+            builtin_error("getrusage (SELF) failed: %s", strerror(errno));
+            return EXECUTION_FAILURE;
+        }
+    }
 #endif
+
+    // ---- Add finished children for combined time ----
+    micros_combined = micros_self; // Start with self
+    struct rusage ru_child;
+    if (getrusage(RUSAGE_CHILDREN, &ru_child) == 0) {
+        micros_combined += (int64_t)ru_child.ru_utime.tv_sec * 1000000LL +
+                           ru_child.ru_utime.tv_usec +
+                           (int64_t)ru_child.ru_stime.tv_sec * 1000000LL +
+                           ru_child.ru_stime.tv_usec;
+    } else {
+        builtin_error("getrusage (CHILDREN) failed: %s", strerror(errno));
+        return EXECUTION_FAILURE;
+    }
+
+    // ---- Output results ----
+    if (var_combined) {
+        char buf_combined[64];
+        snprintf(buf_combined, sizeof(buf_combined), "%lld", (long long)micros_combined);
+        bind_variable(var_combined, buf_combined, 0);
+
+        if (var_self) {
+            char buf_self[64];
+            snprintf(buf_self, sizeof(buf_self), "%lld", (long long)micros_self);
+            bind_variable(var_self, buf_self, 0);
+        }
+    } else {
+        // No variables provided: print combined time to stdout
+        printf("%lld\n", (long long)micros_combined);
+    }
+
+    return EXECUTION_SUCCESS;
 }
 
-struct builtin clock_gettime_struct = {
-    "clock_gettime",
+struct builtin getCPUtime_struct = {
+    "getCPUtime",
     timep_builtin,
     BUILTIN_ENABLED,
-    clock_gettime_doc,
-    "clock_gettime [<VAR>]",
+    getCPUtime_doc,
+    "getCPUtime [<VAR> [<VAR_SELF>]]",
     0
 };
 
-/* -------------------------------------------------- */
-/* Register all builtins  (under timep)                  */
-/* -------------------------------------------------- */
+/* --------------------------------------------*/
+/* Register all builtins (under timep_builtin) */
+/* --------------------------------------------*/
 
 static int timep_builtin(WORD_LIST * list) {
+    // convert input WORD_LISTR to argc + argv
     int argc;
     char ** argv = make_builtin_argv(list, & argc);
 
     char * sub = argv[0];
 
     int ret;
-    if (strcmp(sub, "clock_gettime") == 0) {
-        ret = clock_gettime_main(argc, argv);
+    if (strcmp(sub, "getCPUtime") == 0) {
+        ret = getCPUtime_main(argc, argv);
     } else {
         builtin_error("timep: unknown command '%s'", sub);
         ret = EXECUTION_FAILURE;
@@ -132,6 +171,7 @@ static int timep_builtin(WORD_LIST * list) {
 }
 
 int setup_builtin_timep(void) {
-    add_builtin(&clock_gettime_struct, 1);
+    add_builtin(&getCPUtime_struct, 1);
     return 0;
 }
+

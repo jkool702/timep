@@ -7,7 +7,7 @@ timep() {
     # timep logs command times+metadata hierarchically based on both function and subshell nesting depth, recreating the complete call-stack tree in its logs.
     #
     # USAGE:            timep [-s|-f|-c] [-k] [--flame] [-o <type>] [--] _______            --OR--
-    #           [...] | timep [-s|-f|-c] [-k] [--flame] [-o <type>] [--] _______ | [...]
+    #           [...] | timep [-s|-f|-c] [-k] [--flame] [-o <type>] [--] _______ | [...]https://raw.githubusercontent.com/jkool702/timep/timep_testing5/TESTS/FORKRUN/flamegraph.svg
     #
     # OUTPUT: timep generates 4-6 types of outputs that will be saved to disk in the "profiles" dir in timep's tmpdir directory (by default: /dev/shm/.timep/timep-XXXXXXXX -- printed to stderr at the end):
     #        2 are time profiles: "out.profile.full" and "out.profile"
@@ -89,16 +89,15 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_runtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0
-    local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND  
+    local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
-    
-    clock_gettime &>/dev/null || _timep_SETUP
+    getCPUtime &>/dev/null || _timep_SETUP
 
     unset a
-    clock_gettime a &>/dev/null || timep_CLOCK_GETTIME_FLAG=false
+    getCPUtime a &>/dev/null || timep_CLOCK_GETTIME_FLAG=false
     if [[ "${a}" = *[0-9]* ]] && (( a > 0 )); then
         timep_CLOCK_GETTIME_FLAG=true
     else
@@ -128,8 +127,8 @@ timep() {
             -k|--keep)  timep_deleteFlag=false ;;
             -t|--time)  timep_timeFlag=true ;;
             -F|-[Ff]lame|--[Ff]lame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
-            -o|--output) shift 1; IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; IFS="$IFS0"; [[ -z ${timep_outTypeA} ]] && timep_noOutFlag=true ;;
-            -o=*|--output=*) IFS0="${IFS}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; IFS="$IFS0"  ;;
+            -o|--output) shift 1; IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true ;;
+            -o=*|--output=*) IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true  ;;
             --)  shift 1 && break  ;;
              *)  break  ;;
         esac
@@ -417,26 +416,28 @@ _timep_getFuncSrc() {
     read -r _ a </proc/uptime
     read -r _ _ _ _ b _ </proc/stat
     a0="${a##*.}"
-    (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//./} / b ))
+    (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//[^0-9]/} / b ))
 
     if ${timep_CLOCK_GETTIME_FLAG}; then
-        timep_END_CTIME_STR='clock_gettime timep_END_CTIME'$'\n'
-        timep_START_CTIME_STR='clock_gettime timep_START_CTIME'$'\n'
+        timep_END_CTIME_STR='getCPUtime timep_END_CTIME timep_END_CTIME_SELF'$'\n'
+        timep_START_CTIME_STR='getCPUtime timep_START_CTIME timep_START_CTIME_SELF'$'\n'
     else
-        timep_END_CTIME_STR+='read -r _ _ _ _ _ _ _ _ _ _ _ _ _ timep_END_UTIME timep_END_STIME _ </proc/${timep_BASHPID_PREV:-$BASHPID}/stat
-        (( timep_END_CTIME = '"${timep_CPU_TIME_MULT}"' * ( timep_END_UTIME + timep_END_STIME ) ))
+        timep_END_CTIME_STR+='read -r _ _ _ _ _ _ _ _ _ _ _ _ _ timep_END_UTIME timep_END_STIME timep_END_CUTIME timep_END_CSTIME _ </proc/${timep_BASHPID_PREV:-$BASHPID}/stat
+        (( timep_END_CTIME = '"${timep_CPU_TIME_MULT}"' * ( timep_END_UTIME + timep_END_STIME + timep_END_CUTIME + timep_END_CSTIME ) ))
+        (( timep_END_CTIME_SELF = '"${timep_CPU_TIME_MULT}"' * ( timep_END_UTIME + timep_END_STIME ) ))
         (( timep_END_CTIME <= ${timep_STARTTIME[${timep_FNEST_CUR}]#*$'"'"'\t'"'"'} )) && timep_END_CTIME=${timep_STARTTIME[${timep_FNEST_CUR}]#*$'"'"'\t'"'"'}'$'\n'
-        timep_START_CTIME_STR+='read -r _ _ _ _ _ _ _ _ _ _ _ _ _ timep_START_UTIME timep_START_STIME _ </proc/${timep_BASHPID_PREV:-$BASHPID}/stat
-        (( timep_START_CTIME = '"${timep_CPU_TIME_MULT}"' * ( timep_START_UTIME + timep_START_STIME ) ))
-        (( timep_START_CTIME <=  ${timep_ENDTIME#*$'"'"'\t'"'"'} )) && timep_START_CTIME=${timep_ENDTIME#*$'"'"'\t'"'"'}'$'\n'
+        timep_START_CTIME_STR+='read -r _ _ _ _ _ _ _ _ _ _ _ _ _ timep_START_UTIME timep_START_STIME timep_START_CUTIME timep_START_CSTIME _ </proc/${timep_BASHPID_PREV:-$BASHPID}/stat
+        (( timep_START_CTIME = '"${timep_CPU_TIME_MULT}"' * ( timep_START_UTIME + timep_START_STIME + timep_START_CUTIME + timep_START_CSTIME ) ))
+        (( timep_START_CTIME_SELF = '"${timep_CPU_TIME_MULT}"' * ( timep_START_UTIME + timep_START_STIME ) ))
+        (( timep_START_CTIME <= ${timep_ENDTIME#*$'"'"'\t'"'"'} )) && timep_START_CTIME=${timep_ENDTIME#*$'"'"'\t'"'"'}'$'\n'
     fi
 
     export -p timep_DEBUG_TRAP_STR_0 &>/dev/null && export -n timep_DEBUG_TRAP_STR_0
     export -p timep_DEBUG_TRAP_STR_1 &>/dev/null && export -n timep_DEBUG_TRAP_STR_1
     timep_DEBUG_TRAP_STR_0='timep_NPIPE0="${#PIPESTATUS[@]}"
-    (( timep_END_TIME = 10#${EPOCHREALTIME//./} ))
+    (( timep_END_TIME = 10#${EPOCHREALTIME//[^0-9]/} ))
     '"${timep_END_CTIME_STR}"
-    
+
     timep_DEBUG_TRAP_STR_1='[[ "$-" == *m* ]] || {
         printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\n\n'"'"' >&2
         set -m
@@ -446,6 +447,12 @@ _timep_getFuncSrc() {
     }
     ${timep_SKIP_DEBUG_FLAG} || {
         timep_NPIPE[${timep_FNEST_CUR}]=${timep_NPIPE0}
+        if (( timep_START_CTIME_SELF_A[${timep_FNEST_CUR}] > timep_END_CTIME_SELF )); then
+            timep_STARTTIME[${timep_FNEST_CUR}]="${timep_STARTTIME[${timep_FNEST_CUR}]%$'"'"'\t'"'"'*}$'"'"'\t'"'"'0"
+        fi
+        if [[ "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]}" == '"'"'wait'"'"' ]] || [[ "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]}" == '"'"'wait '"'"'* ]]; then
+            (( timep_END_CTIME = ${timep_STARTTIME[${timep_FNEST_CUR}]#*$'"'"'\t'"'"'} + timep_END_CTIME_SELF - timep_START_CTIME_SELF_A[${timep_FNEST_CUR}] ))
+        fi
         timep_ENDTIME="${timep_END_TIME}"$'"'"'\t'"'"'"${timep_END_CTIME}"
         timep_IS_BG_FLAG=false
         timep_IS_SUBSHELL_FLAG=false
@@ -583,12 +590,13 @@ _timep_getFuncSrc() {
             [[ -s "${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}" ]] && {
                 {
                     while read -r -u ${timep_FD_ENDTIME} timep_END_TIME0 timep_END_CTIME0; do
-                        ((${timep_END_TIME0//./} < ${timep_END_TIME//./})) && {
+                        ((${timep_END_TIME0//[^0-9]/} < ${timep_END_TIME//[^0-9]/})) && {
                             timep_END_TIME="${timep_END_TIME0}"
                             timep_END_CTIME="${timep_END_CTIME0}"
                         }
                     done
-                    timep_ENDTIME="${timep_END_TIME}"$'"'"'\t'"'"'"${timep_END_CTIME}"                
+                    timep_ENDTIME="${timep_END_TIME}"$'"'"'\t'"'"'"${timep_END_CTIME}"
+
                 } {timep_FD_ENDTIME}<"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}"
                 exec {timep_FD_ENDTIME}>&-
             }
@@ -662,10 +670,12 @@ _timep_getFuncSrc() {
             fi
         fi
        '"${timep_START_CTIME_STR}"'
-        
-        (( timep_START_TIME = 10#${EPOCHREALTIME//./} ))
+
+        (( timep_START_TIME = 10#${EPOCHREALTIME//[^0-9]/} ))
 
         timep_STARTTIME[${timep_FNEST_CUR}]="${timep_START_TIME}"$'"'"'\t'"'"'"${timep_START_CTIME}"
+        timep_START_CTIME_SELF_A[${timep_FNEST_CUR}]="${timep_START_CTIME_SELF}"
+
     }'
 
     # overload the trap builtin to allow the use of custom EXIT/RETURN/DEBUG traps
@@ -745,14 +755,14 @@ _timep_getFuncSrc() {
             ;;
         esac
 
-    ${timep_CLOCK_GETTIME_FLAG} && export -f _timep_SETUP
+    ${timep_CLOCK_GETTIME_FLAG} && { export -f _timep_SETUP; export -f _timep_file_to_base64; }
     chmod +x "${timep_TMPDIR}/functions.bash"
     timep_runFuncSrc+='(
 
         builtin trap - DEBUG EXIT RETURN
 
-        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_BASH_PATH timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0
-        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_0 timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME
+        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_BASH_PATH timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0
+        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_0 timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A
 
         set -mT
 
@@ -905,7 +915,7 @@ _timep_getFuncSrc() {
            "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
-    (( timep_WTIME_DONE = 10#${EPOCHREALTIME//./} ))
+    (( timep_WTIME_DONE = 10#${EPOCHREALTIME//[^0-9]/} ))
 
     printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s"\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" >&2
     unset IFS
@@ -955,7 +965,6 @@ _timep_getFuncSrc() {
 #    export LOCALE=C
 #    export LC_ALL=C
 
-
 _timep_GET_RUNTIME_CORRECTION() {
 ## corrects for the overhead of adding nPipe=${#PIPESTATUS[@]} before every command
 
@@ -972,26 +981,26 @@ _timep_GET_RUNTIME_CORRECTION() {
     if ${timep_CLOCK_GETTIME_FLAG}; then
 
         mapfile -t tSum0 < <(tw0=$EPOCHREALTIME;
-        clock_gettime tc0
+        getCPUtime tc0
         for (( kk=0; kk<$NN; kk++)); do
             :
         done
         tw1=$EPOCHREALTIME;
-        clock_gettime tc1
-        (( twSum = 10#${tw1//./} - 10#${tw0//./} ))
-        (( tcSum = 10#${tc1//./} - 10#${tc0//./} ))
+        getCPUtime tc1
+        (( twSum = 10#0${tw1//[^0-9]/} - 10#0${tw0//[^0-9]/} ))
+        (( tcSum = 10#0${tc1//[^0-9]/} - 10#0${tc0//[^0-9]/} ))
         printf '%s\n' "${twSum}" "${tcSum}")
 
-        mapfile -t tSum1 < <(tSum=0; kk=0
+        mapfile -t tSum1 < <(twSum=0; tcSum=0; kk=0
         trap 'nPipe=${#PIPESTATUS[@]};
         tw1=$EPOCHREALTIME;
-        clock_gettime tc1
+        getCPUtime tc1
         (( kk == 0 )) || {
-            (( twSum = ${twSum:-0} + 10#${tw1//./} - 10#${tw0//./} ));
-            (( tcSum = ${tcSum:-0} + 10#${tc1//./} - 10#${tc0//./} ));
+            (( twSum = ${twSum:-0} + 10#0${tw1//[^0-9]/} - 10#0${tw0//[^0-9]/} ));
+            (( tcSum = ${tcSum:-0} + 10#0${tc1//[^0-9]/} - 10#0${tc0//[^0-9]/} ));
         }
         tw0=$EPOCHREALTIME
-        clock_gettime tc0' DEBUG;
+        getCPUtime tc0' DEBUG;
         for (( kk=0; kk<$N; kk++)); do
             :
         done
@@ -1007,13 +1016,13 @@ _timep_GET_RUNTIME_CORRECTION() {
             :
         done
         t1=$EPOCHREALTIME;
-        (( tSum = 10#${t1//./} - 10#${t0//./} ))
+        (( tSum = 10#0${t1//[^0-9]/} - 10#0${t0//[^0-9]/} ))
         echo "$tSum")"
 
         tSum1="$(tSum=0; kk=0
         trap 'nPipe=${#PIPESTATUS[@]};
         t1=$EPOCHREALTIME;
-        (( kk == 0 )) || (( tSum = ${tSum:-0} + 10#${t1//./} - 10#${t0//./} ));
+        (( kk == 0 )) || (( tSum = ${tSum:-0} + 10#0${t1//[^0-9]/} - 10#0${t0//[^0-9]/} ));
         t0=$EPOCHREALTIME' DEBUG;
         for (( kk=0; kk<$N; kk++)); do
             :
@@ -1025,6 +1034,9 @@ _timep_GET_RUNTIME_CORRECTION() {
 
     fi
 
+    (( timep_WTIME_CORRECTION = 10#0${timep_WTIME_CORRECTION} ))
+    (( timep_CTIME_CORRECTION = 10#0${timep_CTIME_CORRECTION} ))
+
 }
 _timep_GET_RUNTIME_CORRECTION
 
@@ -1032,11 +1044,11 @@ _timep_EPOCHREALTIME_DIFF() {
     local tDiff d d6 a1 a2
 
     if (( ${#} >= 2 )) && [[ ${1//[^0-9]/} ]] && [[ ${2//[^0-9]/} ]]; then
-        (( tDiff = 10#${2//[^0-9]/} - 10#${1//[^0-9]/} - timep_WTIME_CORRECTION ))
+        (( tDiff = 10#0${2//[^0-9]/} - 10#0${1//[^0-9]/} - timep_WTIME_CORRECTION ))
     elif (( ${#} == 1 )) && [[ "${1}" == *[0-9]*\ *[0-9]* ]]; then
         a1="${1% *}"
         a2="${1#* }"
-        (( tDiff = 10#${a2//[^0-9]/} - 10#${a1//[^0-9]/} - timep_WTIME_CORRECTION ))
+        (( tDiff = 10#0${a2//[^0-9]/} - 10#0${a1//[^0-9]/} - timep_WTIME_CORRECTION ))
         (( tDiff <= 0 )) && tDiff=1
     else
         printf '%s' '0.000001'
@@ -1098,7 +1110,7 @@ _timep_PERCENT_AVG() {
     (( tSum = tSum / ${#} ))
     printf -v d '%0.4d' "${tSum}"
     (( d2 = ${#d} - 2 ))
-    printf '%s.%s%%' "${d:0:$d2}" "${d:$d2}"
+    printf '%s.%s' "${d:0:$d2}" "${d:$d2}"
 }
 
 _timep_FILE_EXISTS() {
@@ -1115,37 +1127,47 @@ _timep_FILE_EXISTS() {
 }
 
 _timep_NUM_RUNNING() {
-    local -i n=0
+    local -i nWorker0 nActive0
     local nn
     local -a pAll_PID0
 
+    nWorker0=0
+    nActive0=0
+
     for nn in "${@}"; do
-        [[ -d "/proc/${nn}" ]] && { 
-            ((n++))
+        if [[ -d "/proc/${nn}" ]]; then
+            ((nWorker0++))
             pAll_PID0+=("$nn")
-        }
+            [[ -s "${timep_TMPDIR}/.worker/${nn}" ]] && ((nActive0++))
+        elif [[ -f "${timep_TMPDIR}/.worker/${nn}" ]]; then
+            \rm -f "${timep_TMPDIR}/.worker/${nn}"
+        fi
     done
 
-    (( nWorkerDiff = nWorker - n ))
-    nWorker="$n"
+    (( nWorkerDiff = nWorker - nWorker0 ))
+    nWorker="${nWorker0}"
+    nActive="${nActive0}"
     pAll_PID=("${pAll_PID0[@]}")
 }
 
 _timep_DEBUG_PRINTVARS() {
 
-declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(wTimeTotal0)|(uTimeTotal)|(sTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimePA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimePA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimePA)|(linenoUniqCTimeA)|(linenoUniqCTimePA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_runtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_))=' | sed -E s/'^declare \-. '//
+declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimePA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimePA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimePA)|(linenoUniqCTimeA)|(linenoUniqCTimePA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_wtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_)|(Time)|(.+A))=' | sed -E s/'^declare \-. '//
 
 }
 
 shopt -s extglob
+
 _timep_PROCESS_LOG() {
-    local logCur log_tmp kk kk1 nn r wTimeTotal wTimeTotal0 uTimeTotal sTimeTotal cTimeTotal inPipeFlag lineno1 nPipe startWTime endWTime startCTime endCTime wTime cTime wTimeP wTime0 cTime0 cTimeP func pid nexec lineno cmd t0 t1 log_tmp linenoUniq merge_init_flag log_dupe_flag spacerN lineU logMergeAll fg0 ns nf  nPipeNextIgnoreFlag IFS0 count0 nPipe0 cmd0 d6 
-    local -a logA nPipeA startWTimeA endWTimeA wTimeA wTimePA startCTimeA endCTimeA cTimeA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA
+
+    local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP
+    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
 
-    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
-
-    [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && set -xv
+    [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
+        trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2' ERR #; _timep_DEBUG_PRINTVARS >&2' ERR
+        set -xv
+    }
 
     logCur="${1}"
 
@@ -1161,19 +1183,20 @@ _timep_PROCESS_LOG() {
     mapfile -t logA < <(sort -V -k11,11 <"${logCur}")
 
     log_dupe_flag=false
-    for (( kk=1; kk<${#logA[@]}; kk++ )); do
-        (( kk1 = kk - 1 ))
+    kk1=0
+    (( ${#logA[@]} > 0 )) && for (( kk=1; kk<${#logA[@]}; kk++ )); do
         [[ "${logA[$kk1]}" == "${logA[$kk]}" ]] && {
             unset "logA[$kk1]"
             log_dupe_flag=true
         }
+        kk1=${kk}
     done
     ${log_dupe_flag} && mapfile -t -d '' logA < <(printf '%s\0' "${logA[@]}" | sed -E s/'\0+'/'\0'/g)
 
-    # rename log to ___.orig
-    \mv -f "${logCur}" "${logCur}.orig"
+    [[ -f "${logCur}.out" ]] && \rm -f "${logCur}.out"
+    [[ -f "${logCur}.out.combined" ]] && \rm -f "${logCur}.out.combined"
 
-    # loop through lines in reverse order
+   # loop through lines in reverse order
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
 
         # read log fields into variables
@@ -1189,7 +1212,7 @@ _timep_PROCESS_LOG() {
         linenoA[$kk]="${lineno}"
         cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
-        read -r -d '' cmd < <(echo "${cmd}")
+        read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         cmdA[$kk]="${cmd}"
@@ -1210,42 +1233,35 @@ _timep_PROCESS_LOG() {
         fi
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
-        if [[ "${cmdA[$kk]}" == '<< ('*'): '*' >>' ]]; then
+        if [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]]; then
             normalCmdFlagA[$kk]=false
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
 
             # read in the endtime + runtime from the log
-            [[ "${cmdA[$kk]}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
-                if _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.runtimes\/log}"; then                
-                    IFS=$'\t' read -r wTime cTime <"${logCur//\/.log\/log/\/.log\/.runtimes\/log}"
-                    [[ ${wTime} ]] && wTimeA[$kk]="${wTime}"
-                    [[ ${cTime} ]] && cTimeA[$kk]="${cTime}"
-                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"; then
+            #[[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
+                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"; then
                     IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
-                    [[ ${wTime} ]] && wTimeA[$kk]="${wTime}"
-                    [[ ${cTime} ]] && cTimeA[$kk]="${cTime}"
-                 fi                
-            }
-            
-            [[ "${endWTimeA[$kk]}" == '-' ]] && {
-                if _timep_FILE_EXISTS "${logCur//\/.log\/log/\/.log\/.endtimes\/log}"; then
-                    IFS=$'\t' read -r endWTime endCTime <"${logCur//\/.log\/log/\/.log\/.endtimes\/log}"
-                    [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
-                    [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && endCTimeA[$kk]="${endCTime}"
-                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"; then
-                    IFS=$'\t' read -r endWTime endCTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"
-                    [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
-                    [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && endCTimeA[$kk]="${endCTime}"
-                 fi
-            }
+                    [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
+                    [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
+                fi
+            #}
         else
             normalCmdFlagA[$kk]=true
         fi
 
+        # see if we need to merge up the endtime/runtime from the child log
+        [[ "${endWTimeA[$kk]}" == '-' ]] && {
+            if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"; then
+                IFS=$'\t' read -r endWTime endCTime <"${timep_TMPDIR}/.log/.endtimes/log.${nexecA[$kk]#* }"
+                [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
+            fi
+            (( startCTimeA[$kk] > 0 )) && [[ ${cTimeA[$kk]} ]] && (( cTimeA[$kk] > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
+        }
+
         # single-command command/process substitutions dont get a endtime logged (uses endWTime='+' as indicator), since they wont trigger a EXIT trap
-        # figure out the most reasonable endtimeby looking at starttimes for the parent, then grandparent, etc.
+        # figure out the most reasonable endtime for these lines by looking at starttimes for the parent, then grandparent, etc.
         # to get the closest timestamp that is greater than the starttime for this command and use that as the endtime
         [[ "${endWTimeA[$kk]}" == '+' ]] && {
             endWTime=0
@@ -1263,6 +1279,7 @@ _timep_PROCESS_LOG() {
             (( endWTime > startWTimeA[$kk] )) || endWTime="${timep_WTIME_DONE}"
 
             endWTimeA[$kk]="${endWTime}"
+            (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
         }
 
         # merge pipelines
@@ -1285,36 +1302,45 @@ _timep_PROCESS_LOG() {
         ${inPipeFlag} && normalCmdFlagA[$kk]=false
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
-        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = ${endWTimeA[$kk]//[^0-9]/} >= ${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
+        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
 
         [[ -z ${cTimeA[$kk]//[^0-9]/} ]] && [[ ${endCTimeA[$kk]//[^0-9]/} ]] && {
-            if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( ${endCTimeA[$kk]//[^0-9]/} >= ${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION )); then
-                (( cTimeA[$kk] = ${endCTimeA[$kk]//[^0-9]/} - ${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
-            else
-                (( cTimeA[$kk] = ${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+            if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} + ( timep_CTIME_CORRECTION << 1 ) )); then
+                # normal case - use end - start - correction
+                (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+            elif [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} >= 10#0${startCTimeA[$kk]//[^0-9]/} )); then 
+                # case where end - start is less than double the correction. Compromise and use (end - start)/2
+                 (( cTimeA[$kk] = 1 + ( 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ) >> 1 ))
+           elif ${timep_CLOCK_GETTIME_FLAG}; then
+               # if we are using getCPUtime and our end time is before the start time, then chances are getCPUtime is reading from a new clock even though there isnt a full subshell. This happens on things like arithmitic evaluations  `(( ... ))` 
+               # assume the start clock is 0 here, which makes the time equal to end - 0 - correction --> end - correction
+                (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             fi
         }
 
-        [[ ${wTimeA[$kk]} ]] || (( wTimeA[$kk] >= 1 )) || { 
-            wTimeA[$kk]=1
-        }
-        [[ ${cTimeA[$kk]} ]] || (( cTimeA[$kk] >= 1 )) || { 
+        if (( 10#0${wTimeA[$kk]//[^0-9]/} >= 1 )); then
+            (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
+        else
+             wTimeA[$kk]=1
+        fi
+        if (( 10#0${cTimeA[$kk]//[^0-9]/} >= 1 )); then
+             (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
+        else
             cTimeA[$kk]=1
-        }
+        fi
 
-        (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
-        (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
-
-       ${normalCmdFlagA[$kk]} && {
+        ${normalCmdFlagA[$kk]} && {
             [[ -z ${fg0} ]] && {
                 # get base stack (showing all the parents) for this log
-                fg0="$(IFS0="${IFS}"
+                fg0="$(IFS0="${IFS@Q}"
+IFS0="${IFS0/["'"\$]/IFS\=&}"
 IFS='.'
 # get base stack for flamegraph
 read -r -a fA <<<"${funcA[$kk]#* }"
 read -r -a sA <<<"${pidA[$kk]#* }"
 read -r -a eA <<<"${nexecA[$kk]#* }"
-IFS="${IFS0}"
+eval "${IFS0:-unset IFS}"
+unset IFS0
 unset "eA[-1]" "IFS0"
 ns=0
 nf=1
@@ -1333,39 +1359,41 @@ printf '%s;' "${fgA[@]}")"
         }
     done
 
-    (( wTimeTotal >= 1 )) || wTimeTotal=1
-    (( cTimeTotal >= 1 )) || cTimeTotal=1
+
+    (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
+    (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
 
     # write runtime and final endtime to .{end,run}time file
-    printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/*}/.endtimes/${logCur##*\/}"
-    printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/*}/.runtimes/${logCur##*\/}"
-
-
+    printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
+    printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
     # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
+    kk1=0
+    lineno1=0
     for (( kk=0; kk<${#logA[@]}; kk++ )); do
-        (( kk1 = kk - 1 ))
+        (( nPipeA[$kk] == 1 )) || continue
         if (( kk > 0 )) && (( linenoA[$kk] == ${linenoA[$kk1]%.*} )); then
-            (( lineno1++ ))
+            ((lineno1 = lineno1 + 1))
         else
             lineno1=0
         fi
         linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
-        (( wTimeP = ( 10000 * wTimeA[$kk] ) / wTimeTotal ))
-        (( cTimeP = ( 10000 * cTimeA[$kk] ) / cTimeTotal ))
 
-        printf -v wTimeP '%0.4d' "${wTimeP}"
+        (( wTimeP0 =  wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
+        printf -v wTimeP '%0.4d' "${wTimeP0}"
         case "${wTimeP}" in
             10000) wTimePA[$kk]=100.00 ;;
             0|'') wTimePA[$kk]=00.00 ;;
             *) wTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
-        printf -v cTimeP '%0.4d' "${cTimeP}"
+
+        (( cTimeP0 =  cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
+        printf -v cTimeP '%0.4d' "${cTimeP0}"
         case "${cTimeP}" in
             10000) cTimePA[$kk]=100.00 ;;
             0|'') cTimePA[$kk]=00.00 ;;
             *) cTimePA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
-        esac        
+        esac
 
         [[ "${linenoUniq}" == *" ${linenoA[$kk]} "* ]] || {
             linenoUniqA[$kk]="${linenoA[$kk]}"
@@ -1373,65 +1401,74 @@ printf '%s;' "${fgA[@]}")"
         }
         if [[ ${linenoUniqLineA[${linenoA[$kk]}]} ]]; then
             linenoUniqLineA[${linenoA[$kk]}]+=" $kk"
-            (( linenoUniqCountA[${linenoA[$kk]}]++ ))
+            (( linenoUniqCountA[${linenoA[$kk]}] = linenoUniqCountA[${linenoA[$kk]}] + 1 ))
             linenoUniqWTimeA[${linenoA[$kk]}]+=" ${wTimeA[$kk]}"
             linenoUniqCTimeA[${linenoA[$kk]}]+=" ${cTimeA[$kk]:-1}"
         else
             linenoUniqLineA[${linenoA[$kk]}]="$kk"
-            linenoUniqCountA[${linenoA[$kk]}]="1"
+            linenoUniqCountA[${linenoA[$kk]}]=1
             linenoUniqWTimeA[${linenoA[$kk]}]="${wTimeA[$kk]}"
             linenoUniqCTimeA[${linenoA[$kk]}]="${cTimeA[$kk]:-1}"
         fi
+    kk1=${kk}
     done
-
+#declare -p cTimeA wTimeA cTimePA wTimePA linenoUniqWTimeA linenoUniqCTimeA >&2
     # get runtime sums for the combined uniq lineno's
     for kk in "${!linenoUniqWTimeA[@]}"; do
-     
+
         linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]//[^0-9 ]/}"
         linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]//[^0-9 ]/}"
 
-        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]# }"
-        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]# }"
-        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]% }"
-        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]% }"
+        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]##*( )}"
+        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]##*( )}"
+        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]%%*( )}"
+        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]%%*( )}"
 
-        [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) || linenoUniqWTimeA[$kk]=0
-        [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) || linenoUniqCTimeA[$kk]=0
+        [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) #|| linenoUniqWTimeA[$kk]=0
+        [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) #|| linenoUniqCTimeA[$kk]=0
 
-        (( wTimeP = ( 10000 * linenoUniqWTimeA[$kk] ) / wTimeTotal ))
-        printf -v wTimeP '%0.4d' "$wTimeP"
+        (( wTimeP0 = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
+        printf -v wTimeP '%0.4d' "${wTimeP0}"
         case "${wTimeP}" in
             10000) linenoUniqWTimePA[$kk]=100.00 ;;
             0|'') linenoUniqWTimePA[$kk]=00.00 ;;
             *) linenoUniqWTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
         esac
 
-        (( cTimeP = ( 10000 * linenoUniqCTimeA[$kk] ) / cTimeTotal ))
-        printf -v cTimeP '%0.4d' "$cTimeP"
+        (( cTimeP0 = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
+        printf -v cTimeP '%0.4d' "${cTimeP0}"
         case "${cTimeP}" in
             10000) linenoUniqCTimePA[$kk]=100.00 ;;
             0|'') linenoUniqCTimePA[$kk]=00.00 ;;
             *) linenoUniqCTimePA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
-        esac                    
-    done
+        esac
 
-    (( spacerN = 4 * ( timep_LOG_NESTING_MAX - timep_LOG_NESTING_CUR ) ))
+    done
+#declare -p linenoUniqWTimeA linenoUniqCTimeA  linenoUniqWTimePA linenoUniqCTimePA >&2
+
+    read -r timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX <"${timep_TMPDIR}/.log/.log_nesting_cur_max"
+    (( spacerN = 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${timep_LOG_NESTING_CUR:-0} ) )) || spacerN=0
 
     # write out new merged-upward log
-    kk=0
     inPipeFlag=false
-    while (( kk < ${#logA[@]} )); do
+    for kk in "${!logA[@]}"; do
         if ${inPipeFlag}; then
             # we are in a pipeline but not in the 1st element. dont add line to log
             (( isPipeA[$kk] == 1 )) && inPipeFlag=false
         else
             # add line to log
             (( kk == 0  )) || printf '\n\n'
+
+            # convert microseconds to seconds
             printf -v wTime0 '%0.7d' "${wTimeA[$kk]}"
             (( d6 = ${#wTime0} - 6 ))
-            printf -v wTime '%s.%ss' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+            printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+            printf -v cTime0 '%0.7d'  "${cTimeA[$kk]}"
+            (( d6 = ${#cTime0} - 6 ))
+            printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\t(%s->%s)' "${linenoA[$kk]}" '' "${wTime}" "${wTimePA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}"
+            # write line
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]}" '' "${wTime}" "${wTimePA[$kk]}" "${cTime}" "${cTimePA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}" 
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1439,20 +1476,21 @@ printf '%s;' "${fgA[@]}")"
         (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
-        [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}" ]] && {
-            mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk]}")
-            printf '\n|-- %s' "${logMergeA[0]}"
-            if (( ${#logMergeA[@]} == 2 )); then
-                printf '\n|-- %s' "${logMergeA[1]}"
+        [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}.out" ]] && {
+            mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk]}.out")
+            if (( ${#logMergeA[@]} == 0 )); then
+                continue
+            elif (( ${#logMergeA[@]} <= 2 )); then
+                printf '\n|-- %s' "${logMergeA[@]}"
             elif (( ${#logMergeA[@]} > 2 )); then
+                printf '\n|-- %s' "${logMergeA[0]}"
                 printf '\n|   %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
                 printf '\n|-- %s' "${logMergeA[-1]}"
             fi
         }
         (( timep_LOG_NESTING_CUR == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
 
-        (( kk++ ))
-    done >"${logCur}"
+    done >"${logCur}.out"
 
     # write out new combined (uniq lineno) merged-upward log
     inPipeFlag=false
@@ -1464,11 +1502,16 @@ printf '%s;' "${fgA[@]}")"
             # add line to log
             (( kk == 0  )) || printf '\n\n'
 
+            # convert microseconds to seconds
             printf -v wTime0 '%0.7d' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}"
             (( d6 = ${#wTime0} - 6 ))
-            printf -v wTime '%s.%ss' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+            printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+            printf -v cTime0 '%0.7d' "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
+            (( d6 = ${#cTime0} - 6 ))
+            printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%sx) %s' "${linenoUniqA[$kk]}" '' "${wTime}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}"
+            # write line
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx) %s' "${linenoUniqA[$kk]}" '' "${wTime}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${cTime}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1476,36 +1519,187 @@ printf '%s;' "${fgA[@]}")"
         # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
-         logMergeAll="$(for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
-            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.combined" ]] && {
-                mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk1]}.combined")
-                printf '\n|-- %s' "${logMergeA[0]}"
-                if (( ${#logMergeA[@]} == 2 )); then
-                    printf '\n|-- %s' "${logMergeA[1]}"
+        logMergeAll=()
+        for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
+            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk1]}.out.combined")
+                if (( ${#logMergeA[@]} == 0 )); then
+                    continue
+                elif (( ${#logMergeA[@]} <= 2 )); then
+                    printf '\n|-- %s' "${logMergeA[@]}"
                 elif (( ${#logMergeA[@]} > 2 )); then
+                    printf '\n|-- %s' "${logMergeA[0]}"
                     printf '\n|   %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
                     printf '\n|-- %s' "${logMergeA[-1]}"
-                fi
-            }
-        done)"
-        mapfile -t lineUA < <(r=''; sed -E 's/^([^\:]+\:[[:space:]]+)[0-9\|\(\)\.s%]+[[:space:]]*'/'\1\t'/ <<<"${logMergeAll}"| while read -r nn; do [[ ${nn##+(\|   |\|-- |\|)} ]] || continue; [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; printf '%s\n' "$nn"; }; done)
-        (( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]}"; do
-            mapfile -t timeUA < <(grep -F "${lineU%%$'\t'*}" <<<"${logMergeAll}" | grep -F "${lineU#*$'\t'}" |  sed -E 's/^([^\:]+\:[[:space:]]+)\(([0-9\.s]+)\|([0-9\.%]+)\)[[:space:]]*(.*)$'/'\2 \3'/)
-            count0="${lineU#*$'\t'}"
-            count0="${count0%% *}"
-            (( count0 = 10#0${count0//[^0-9]/} * ${#timeUA[@]} ))
-            printf '\n%s\t(%ss|%s)\t(%sx) %s' "${lineU%%$'\t'*}" "$(_timep_EPOCHREALTIME_SUM "${timeUA[@]%s *}")" "$(_timep_PERCENT_AVG "${timeUA[@]#* }")" "${count0}" "${lineU#*$'\t'* }"
+                fi)")
         done
 
+        # for the logs we will be merging up, find uniq nesting/lineno/cmd combinations by removing the timing data (time+percent) from the center of each line and running it through `sort -u`
+        (( ${#logMergeAll[@]} > 0 )) && {
+            mapfile -t lineUA < <(r=''; printf '%s\n' "${logMergeAll[@]}" | sed -E 's/^([^\:]+\:[[:space:]]+)([0-9\|\(\)\.s%]+[[:space:]]*)+'/'\1\t'/ | while read -r nn; do [[ ${nn##+('|   '|'|-- 
+            '|'|')} ]] || continue; [[ "$r" == *$'\n'"$nn"$'\n'* ]] || { r+=$'\n'"$nn"$'\n'; printf '%s\n' "$nn"; }; done)
+
+            # for each nesting/lineno/cmd combination, gather all the matching lines from the logs thst will be merged up, then combine times, average percents, and aggregate counts. then write combined line.
+            #(( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]//*([[:space:]])$'\t'*([[:space:]])/$'\t'}"; do
+            (( ${#lineUA[@]} > 0 )) && for lineU in "${lineUA[@]//*([[:space:]])$'\t'*([[:space:]])/$'\034'&$'\035'}"; do
+
+
+                mapfile -t timeUA < <(printf '%s\n' "${logMergeAll[@]}" | grep -F "${lineU%%$'\034'*}" | grep -F "${lineU#*$'\035'}" |  sed -E 's/^[^\:]+\:[[:space:]]*//; s/((\([0-9\.\|s%]+\)[[:space:]]+){2}\([0-9]+x\)).*$/\1/; s/[\(\)\|s%x]/ /g; s/[[:space:]]+/ /g')               
+               
+                wTimeCurA=()
+                wTimeCurPA=()
+                cTimeCurA=()
+                cTimeCurPA=()
+
+                while read -r wTimeCur wTimeCurP cTimeCur cTimeCurP count0 _; do
+                    wTimeCurA+=("${wTimeCur}")
+                    wTimeCurPA+=("${wTimeCurP}")
+                    cTimeCurA+=("${cTimeCur}")
+                    cTimeCurPA+=("${cTimeCurP}")
+                done < <(printf '%s\n' "${timeUA[@]}")
+
+                { [[ ${count0//[^0-9]/} ]] && (( count0 > 0 )); } || count0=1
+                (( count0 = 10#0${count0//[^0-9]/} * ${#timeUA[@]} ))
+                { [[ ${count0//[^0-9]/} ]] && (( count0 > 0 )); } || count0=1               #declare -p wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA count0 >&2
+
+                lineU="${lineU//$'\034'/}"
+
+                printf '\n%s\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx) %s' "${lineU%%*($'\t')$'\035'*}" "$(_timep_EPOCHREALTIME_SUM "${wTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${wTimeCurPA[@]}")" "$(_timep_EPOCHREALTIME_SUM "${cTimeCurA[@]}")" "$(_timep_PERCENT_AVG "${cTimeCurPA[@]}")" "${count0}" "${lineU#*$'\035'* }"
+            done
+        }
+
         (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
-    done >"${logCur}.combined"
-    [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && declare -p >&${timep_FD2}
+    done >"${logCur}.out.combined"
+
+    [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
 }
-    #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
+
+_timep_PROCESS_FLAMEGRAPH() {
+## Emperically creates a non-linear colorspace mapping (using a screen-space-weighted  CDF) that 
+#      ensure that the colorspace is perceptually uniform and has equal spatial distribution.
+#
+# USAGE:   _timep_PROCESS_FLAMEGRAPH out.folded >out.folded.mod
+#          _timep_PROCESS_FLAMEGRAPH <out.folded | timep_flamegraph.pl ( --time | --color=time[p[r]] )
+#
+# OUTPUT:  for each line in out.folded:
+#    a;b;c;d; time [time2] --> a;b;c;d; time:ind [time2:ind2]
+#  
+#    both "ind" and (if time2 is present) "ind2" are linear maps to the colorspce
+#    that range between 0 and 2 * N (N = total number of samples / lines in out.folded)
+#
+#    this output style is designed to work with `flamegraph.pl --color=time[p[r]]`
+
+    shopt -s extglob
+
+    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag fdRead
+    local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
+
+    if [[ -e "$1" ]]; then
+        exec {fdRead}<"${1}"
+    elif ! [[ -t 0 ]]; then
+        exec {fdRead}<&0
+    else
+        printf '\nERROR: nothing was passed on stdin and no file found at "%s"...ABORTING\n\n' "${1:-\<no input\>}"
+        return 1
+    fi
+
+    # load stack traces into array with field seperators added
+    mapfile -t stackA < <(sed -E 's/(.*)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)$/\1'$'\034''\2'$'\035''\3/; s/(.*)['$'\034''[:space:]]+([0-9]+)'$'\035''?$/\1'$'\034''\2'$'\035''/' <&${fdRead})
+    exec {fdRead}>&-
+
+    # seperate logs into stack / wall time / cpu time
+    wallTimeA=("${stackA[@]##*$'\034'}")
+    stackA=("${stackA[@]%$'\034'*}")
+    cpuTimeA=("${wallTimeA[@]##*$'\035'}")
+    wallTimeA=("${wallTimeA[@]%$'\035'*}")
+
+    # check if we have cpu times too
+    IFS0="${IFS@Q}"
+    IFS0="${IFS0/["'"\$]/IFS\=&}"
+    IFS=
+    [[ "${cpuTimeA[*]}" ]] && cpuTimeFlag=true || cpuTimeFlag=false
+    eval "${IFS0:-unset IFS}"
+    unset IFS0
+
+    # sort times then prepend line numbers to start
+    mapfile -t wallTimeSortA < <(printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+    
+    # get total count
+    (( wallTimeN = ${#wallTimeSortA[@]} ))
+  
+    # get unique times and counts and populate inverse mapping arrays
+    wallTimeCDF_map0=()
+    wallTimeCDF_map=()
+
+    # get map from time -> CDF index and then weight each CDF index by the total time shown at that index
+    while read -r a b c; do
+        { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+        (( n = ( ( b - 1 ) << 1 ) + a ))
+        (( wallTimeCDF_map[$n] = ${wallTimeCDF_map[$n]:-0} + a * c ))
+        wallTimeCDF_map0[$c]="$n"
+    done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
+
+    # cummulative sum weighted CDF to get final "equal screen space" mapping
+    kk0=-1
+    for n in "${!wallTimeCDF_map[@]}"; do
+        (( kk0 >= 0 )) && (( wallTimeCDF_map[$n] = wallTimeCDF_map[$n] + wallTimeCDF_map[$kk0] ))
+        kk0=${n}
+    done
+    wallTimeCDF_csum="${wallTimeCDF_map[$n]}"
+
+    # renormalize final mapping to range between 0 and (2 * numSamples)
+    for n in "${!wallTimeCDF_map[@]}"; do
+        (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_csum ))
+    done
+
+    # if we alsio have cpu times, repeat the above steps to get a weighted CDF mapping for those too
+    ${cpuTimeFlag} && {
+        mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
+
+        (( cpuTimeN = ${#cpuTimeSortA[@]} ))
+
+        cpuTimeCDF_map0=()
+        cpuTimeCDF_map=()
+
+         while read -r a b c; do
+            { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
+            (( n = ( ( b - 1 ) << 1 ) + a ))
+            (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + a * c ))
+            cpuTimeCDF_map0[$c]="$n"
+        done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
+
+        kk0=-1
+        for n in "${!cpuTimeCDF_map[@]}"; do
+            (( kk0 >= 0 )) && (( cpuTimeCDF_map[$n] = cpuTimeCDF_map[$n] + cpuTimeCDF_map[$kk0] ))
+            kk0=${n}
+        done
+        cpuTimeCDF_csum="${cpuTimeCDF_map[$n]}"
+
+        for n in "${!cpuTimeCDF_map[@]}"; do
+            (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
+        done
+    }
+
+    # re-create log with time(s) mapped to weighted CDF index
+    if ${cpuTimeFlag}; then
+        for kk in "${!stackA[@]}"; do
+            printf '%s\t%s:%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}" "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}" 
+        done 
+    else
+        for kk in "${!stackA[@]}"; do
+            printf '%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"
+        done 
+    fi
+}
+
+# # # # # # # # # # # # # # # # POST PROCESSING BEGINS HERE # # # # # # # # # # # # # # # # 
+
+# # # # STEP 1: PROCESS LOGS, STARTING AT THE DEEPEST NESTING LVL AND MOVING UPWARDS
+#       Logs for each nesting level are processed in parallel, but all logs from
+#       a given nesting lvl must finish before moving on to the next nesting lvl
 
     # get log names
-    mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log*' | grep -vE '\.init_[csr]$' | sort -V)
+    mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log.*' | grep -vE '\.init_[csr]$' | sort -V)
 
     # get nesting lvl for each log
     timep_LOG_NESTING=()
@@ -1522,36 +1716,72 @@ printf '%s;' "${fgA[@]}")"
     # get indicies for each nesting lvl
     mapfile -t timep_LOG_NESTING_IND < <(jj0=0; for kk in "${!timep_LOG_NESTING[@]}"; do mapfile -t A <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; printf '%s\n' "${jj0}"; (( jj0 += ${#A[@]} )); done)
 
+    # use up to num_cpu / 2 + 1 workers
     nCPU="$( { type -p nproc &>/dev/null && nproc; } || grep -cE '^processor.*: ' /proc/cpuinfo; )"
     printf '\nDETECTED %s CPUs\n' "${nCPU}" >&2
     [[ $nCPU ]] || (( nCPU > 0 )) || nCPU=1
-    (( nWorkerMax = ( 1 + nCPU ) / 2 ))
+    (( nWorkerMax = ( 1 + nCPU ) >> 1 ))
+    nWorkerMax0=${nWorkerMax}
 
+    # open anonymous pipes for IPC
     exec {timep_fd_logID}<><(:)
     exec {timep_fd_done}<><(:)
     exec {timep_fd_lock}<><(:)
 
+    # initialize read lock
     printf '\n' >&${timep_fd_lock}
 
+    # create dir for worker status/state info 
+    mkdir -p "${timep_TMPDIR}/.worker"
+
+    # NOTE: $timep_TMPDIR/.worker/<workerPID> contasins info on current workers state
+    # if the file exists and is empty --> worker is running but not post-processing a log
+    # if the file exists and is non empty then it contains the logID that the worker is currently post-processing
+    # running `_timep_NUM_RUNNING` will clean up this dir and remove stale entries (e.g., from workers who were killed midway through post-processing a log)
+    
+    # define the code that the worker coprocs will run. basically, each worker will:
+    #      reads log indicies from the timep_fd_logID pipe in an infinite loop, 
+    #      process the log corresponding to that ID using _timep_PROCESS_LOG
+    #      writes the log ID on success (-logID on failure) to timep_fd_done when finished
+    #      break out of loop and exit is logID is empty
+    #      create "${timep_TMPDIR}/.worker/${BASHPID}" when spawned
+    #      write the logID to "${timep_TMPDIR}/.worker/${BASHPID}" when processing a log starts, and clear it when done
+    #      if logID begins with a : strip off the : and enable debug output
+    
     timep_coprocSrc='declare logID
-    failFlag=false
+
 shopt -s extglob
+: >"${timep_TMPDIR}/.worker/${BASHPID}"
 while true; do
     read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
-    if [[ "${logID}" == '"'"':'"'"'* ]]; then
-         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[${logID#\:}]}" 2>&${timep_FD2} ||  printf '"'"'\n'"'"' >&${timep_fd_done}
+    if [[ "${logID}" == \:* ]]; then
+        logID="${logID#\:}"
+        debugFlag=true
     else
-        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2} || printf '"'"'\n'"'"' >&${timep_fd_done}
+        debugFlag=false
     fi
-    printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
-done'
+    printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
+    if "${debugFlag}"; then
+        timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
+    else
+        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
+    fi 
+    if (( $? == 0 )); then
+        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
+    else
+        printf '"'"'-%s\n'"'"' "${logID}" >&${timep_fd_done}
+    fi
+    : >"${timep_TMPDIR}/.worker/${BASHPID}"
+done
+\rm -f "${timep_TMPDIR}/.worker/${BASHPID}"'
 
     # loop through logs from deepest nested upwards and run each through post processing function
     printf '\n\n' >&2
 
+    # export helper functions
     export -f _timep_EPOCHREALTIME_DIFF
     export -f _timep_EPOCHREALTIME_SUM
     export -f _timep_PERCENT_AVG
@@ -1560,15 +1790,21 @@ done'
     export -f _timep_PROCESS_LOG
     export -f _timep_DEBUG_PRINTVARS
 
+    # initialize variables
     timep_LOG_NUM="${#timep_LOG_NAME[@]}"
     (( kk = timep_LOG_NUM - 1 ))
     jj=0
     nWorker=1
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
-    nRetryMax=20
+    nRetryMax0=20
+    nFailedMax0=30
+    nActive=0
 
+    # set traps to kill workers on SIGINT / EXIT
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"' EXIT
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"; trap - SIGINT; kill -INT ${BASHPID}' INT
+
+    # spawn coproc worker p0
     eval '{ coproc p0 {
     '"${timep_coprocSrc}"'
   } 2>&${timep_FD2}
@@ -1576,21 +1812,26 @@ done'
     pAll_PID=("${p0_PID}")
     export timep_LOG_NESTING_MAX="${timep_LOG_NESTING_MAX}"
 
+    # BEGIN LOOP OVER NESTING LVL (DEEPEST TO SHALLOWEST)
+    
     for (( timep_LOG_NESTING_CUR=${#timep_LOG_NESTING_IND[@]}-1; timep_LOG_NESTING_CUR>=0; timep_LOG_NESTING_CUR-- )); do
         export timep_LOG_NESTING_CUR="${timep_LOG_NESTING_CUR}"
-        
+
+        # get lowest log index for this nesting lvl
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
+        printf '%s %s\n' "${timep_LOG_NESTING_CUR}" "${timep_LOG_NESTING_MAX}" >"${timep_TMPDIR}/.log/.log_nesting_cur_max"
 
         (( kkDiff = kk - kkMin + 1 ))
 
-        if (( kkDiff > 1 )); then
-
+            # write ID's of logs to process (for current nesting lvl) to work queue pipe
+            # writer is a background process to prevent deadlock
             {
                 for kk1 in "${kkNeed[@]:${kkMin}}"; do
                     printf '%s\n' "${kk1}" >&${timep_fd_logID}
                 done
             } &
 
+            # spawn workers until we hit either the max worker count or the number of logs to process at current nesting lvl
             while (( kkDiff > nWorker )) && (( nWorker < nWorkerMax )); do
                 eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
@@ -1600,6 +1841,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 ((nWorker++))
             done
 
+            # shut down workers if we have more than we need for current nesting lvl
             while (( nWorker > kkDiff )); do
                 printf '\n' >&${timep_fd_logID}
                 ((nWorker--))
@@ -1609,81 +1851,106 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             read -r -u "${fd_sleep}" -t 0.01 _ || :
 
+            # re-initialize variables that keep track of failures
             nFailed=0
             nRetry=0
+            nRetryMax=${nRetryMax0}
+            nFailedMax=${nFailedMax0}
+            nWorkerMax=${nWorkerMax0}
+            kkd=''
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
-                    if [[ -z ${doneInd} ]] || [[ -z ${kkNeed[$doneInd]} ]]; then
+                # we read something!
+                    if [[ "${doneInd}" == \-* ]]; then
+                        # we read a negative index --> a log failed but didnt kill the coproc and the coproc already re-submitted the job to the workqueue
+                        # perhaps in the future there will be a "nFailedMax" to break out of failing to process some log in an infinite loop.
                         ((nFailed++))
-                    else
+                        doneInd="${doneInd#\-}"
+                        if (( nFailed > nFailedMax )); then
+                            printf '\nERROR: post-processing failed too many times on logs from current nesting lvl.\nABORTING TO PREVENT GETTING STUCK IN AN INFINITE RETRY LOOP.\n' >&2
+                            _timep_DEBUG_PRINTVARS
+                            return 2
+                        else
+                            printf '\nWARNING: log # %s (%s) failed to process correctly. timep will attempt to process this log again. (used %s / %s retries)\n' "${doneInd}" "${timep_LOG_NAME[$doneInd]}" "${nFailed}" "${nFailedMax}" >&2
+                            (( nFailed == nFailedMax )) && kkd=':'
+                            printf '%s%s\n' "${kkd}" "${doneInd}" >&${timep_fd_logID}
+                        fi
+                    elif  [[ ${kkNeed[$doneInd]} ]]; then
+                        # we read an index --> that log has finished processing. increment counters and status
                         ((kk--))
                         ((jj++))
                         unset "kkNeed[$doneInd]"
                         printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
+                        (( nWorkerMax < nWorkerMax0 )) && ((nWorkerMax++))
                     fi
                 elif (( nRetry <= nRetryMax )); then
+                    # we didnt read anything from the doneInd pipe, but we arent at the retry limit yet
+                    # figure out if we had a worker die and we need to re-send some log indicies
+                    
+                    # get not-yet-completed log indicies from current nesting lvl
                     kkNeed0=("${kkNeed[@]:${kkMin}}")
-                    _timep_NUM_RUNNING "${pAll_PID[@]}" 
-                    (( nFailed = nFailed + nWorkerDiff ))
-                    (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
+
+                    # update info on how many workers are still running and how many log files are actively being processed by those workers
+                    _timep_NUM_RUNNING "${pAll_PID[@]}"
+
+                    # to re-send log indicies that have not yet finbished processing, 2 conditions must be met:
+                    #    1. there are 0 logs actively being processed, and
+                    #    2. there is at least 1 worker coproc that is still running
+                    # combined, this means there is a worker that is being blocked trying to read from the logID pipe --> there are currently no logID's in the logID pipe
+
+                    (( nWorker > 0 )) && (( nActive == 0 )) && {
                         (( nRetry = nRetry + ${#kkNeed0[@]} ))
+                        (( nRetry >= nRetryMax )) && kkd=':'
+                        # re-send unfinished indicies
                         {
-                            for kk1 in "${kkNeed[@]:${kkMin}}"; do
-                                [[ -f "${timep_LOG_NAME[$kk1]}.orig" ]] && \mv -f "${timep_LOG_NAME[$kk1]}.orig" "${timep_LOG_NAME[$kk1]}"
-    			                (( nRetry >= nRetryMax )) && kkd=':' || kkd=''
+                            for kk1 in "${kkNeed0[@]}"; do
+                                [[ -f "${timep_LOG_NAME[$kk1]}.out" ]] || [[ -f "${timep_LOG_NAME[$kk1]}.out.combined" ]] && \rm -f "${timep_LOG_NAME[$kk1]}.out"*
                                 printf '%s%s\n' "${kkd}" "${kk1}" >&${timep_fd_logID}
                             done
                         } &
+                        # if we hit this code branch it means a worker died midway through processing --> it may have been killed by the OOM killer --> we may have too many worker coprocs --> lets lower the max limit a bit.
                         (( nWorkerMax = 1 + ( ( 3 * nWorkerMax ) >> 2 ) ))
-                        nFailed=0
-                        printf '\nWARNING: %s log(s) failed to process correctly. timep will attempt to process these logs again. (used %s / %s re-tries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
-                    }
-                    until (( nWorker >= nWorkerMax)); do
+
+                        printf '\nWARNING: %s log(s) failed to process correctly and killed the worker that was running them. timep will attempt to process these logs again. (used %s / %s respawn retries)\n' "${#kkNeed0}" "${nRetry}" "${nRetryMax}" >&2
+            }
+
+                    # if needed, re-spawn dead workers, upo to the max number of the number of remaining logs at current nesting lvl
+                    until (( nWorker >= nWorkerMax)) || (( nWorker >= ${#kkNeed0[@]} )); do
                         eval '{ coproc p'"${nWorker}"' {
     '"${timep_coprocSrc}"'
   } 2>&${timep_FD2}
 } 2>/dev/null
 pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         ((nWorker++))
-                            
+
                     done
 
                 else
+                    # limit if number of failed log processings hit. if this round fails abort.
+                    # re-send indicies with : to enable debug output
                     kkNeed0=("${kkNeed[@]:${kkMin}}")
-                    _timep_NUM_RUNNING "${pAll_PID[@]}" 
-                    (( nFailed = nFailed + nWorkerDiff ))
-                    (( ${#kkNeed0[@]} > nFailed )) || (( ${#kkNeed0} == 0 )) || {
+                    _timep_NUM_RUNNING "${pAll_PID[@]}"
+
+                    { (( nWorker == 0 )) || { (( nWorker > 0 )) && (( nActive == 0 )); }; } && {
+                        # abort to avoid deadlock. print list of which logs are currently failing to process
                         printf '\n\nERROR: could not process the following logs:\n' >&2
                         for kkErr in "${kkNeed[@]:$kkMin}"; do
                             printf '%s: %s\n' "$kkErr" "${timep_LOG_NAME[$kkErr]}" >&2
                         done
                         printf '\nABORTING!' >&2
                         _timep_DEBUG_PRINTVARS
-                        return 1
+                        return 3
                     }
                 fi
             done
-
-        else
-            # only 1 log at this level - dont use workers
-            printf '\n\nPROCESSING NESTING LVL %s (1 LOG)\n' "${timep_LOG_NESTING_CUR}" >&2
-            (
-                while true; do
-                    _timep_PROCESS_LOG "${timep_LOG_NAME[$kk]}" && break
-                done
-            )
-            ((kk--))
-            ((jj++))
-            unset "kkNeed[$kk]"
-            printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
-        fi
 
         read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
+    # kill remaining workers
     while (( nWorker > 0 )); do
         printf '\n' >&${timep_fd_logID}
         ((nWorker--))
@@ -1691,98 +1958,135 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     wait "${pAll_PID[@]}" &>/dev/null
 
+    # unset traps
     trap - EXIT INT
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
+    # close anonymous IPC pipes
     exec {timep_fd_logID}>&-
     exec {timep_fd_done}>&-
     exec {timep_fd_lock}>&-
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
+    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
-    printf '\n\nFINALIZING TIME PROFILE\n' >&2
-    printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}"
-    printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.combined"
+
+    printf '\n\nFINALIZING OUTPUTS\n' >&2
+    printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out"
+    printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out.combined"
 
     for nn in "${timep_TMPDIR}"/.log/.runtimes/log.*; do
-        read -r timep_wTimeCur <"${nn}"
-        printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_wTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}"
-        printf '\n\nTOTAL RUN TIME: %ss\n' "${timep_wTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.combined"
+        read -r timep_wTimeCur timep_cTimeCur <"${nn}"
+
+        printf -v timep_wTimeCur '%0.7d' "${timep_wTimeCur}"
+        (( d6 = ${#timep_wTimeCur} - 6 ))
+        printf -v timep_wTimeCur '%s.%s' "${timep_wTimeCur:0:${d6}}" "${timep_wTimeCur:${d6}}"
+        
+        printf -v timep_cTimeCur '%0.7d' "${timep_cTimeCur}"
+        (( d6 = ${#timep_cTimeCur} - 6 ))
+        printf -v timep_cTimeCur '%s.%s' "${timep_cTimeCur:0:${d6}}" "${timep_cTimeCur:${d6}}"
+
+        printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out"
+        printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out.combined"
     done
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # reverse flamegraph input so it starts at the parent and ends at the depest child
-    echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^([0-9]+)\:'/'\1 '/ | sort -nr -k1,1 | sed -E s/'^[0-9]+ '//)" >"${timep_TMPDIR}/.log/out.flamegraph.full"
+    echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^([0-9]+)\:/\1 /' | sort -nr -k1,1 | sed -E 's/^[0-9]+ //')" >"${timep_TMPDIR}/.log/out.flamegraph.full"
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # fold flamegrapoh stack traces
-    sed -E s/'^(.+)\t([0-9]+)$'/'\1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do printf '%s\t%s\n' "${u#*$'\t'}" "$((0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E s/'^(.+)\t([0-9]+\t[0-9]+)$'/'+\2'/ | sed -E s/'\n'//g) ))"; done >"${timep_TMPDIR}/.log/out.flamegraph"
+    sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\2/' | sed -zE 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\3/' | sed -zE 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "${tw}" "${tc}"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
+    
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
-    sed -E s/'\t([0-9]+\t[0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph.full" >"${timep_TMPDIR}/profiles/out.flamegraph.full"
-    sed -E s/'\t([0-9]+\t[0-9]+)$'/'\t \1'/ <"${timep_TMPDIR}/.log/out.flamegraph" >"${timep_TMPDIR}/profiles/out.flamegraph"
-    sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' <"${timep_LOG_NESTING[0]%$'\n'}" >"${timep_TMPDIR}/profiles/out.profile.full"
+
+    # for flamegraph.pl inputs - convert times to screen-size-normalized CDF index (to maximize colorspace usage)
+    for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
+        _timep_PROCESS_FLAMEGRAPH "${fgCur}" >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
+    done
+
+    # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
+    sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
+        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
     else
-        cat "${timep_LOG_NESTING[0]}.combined" >"${timep_TMPDIR}/profiles/out.profile"
+        cat "${timep_LOG_NESTING[0]}.out.combined" >"${timep_TMPDIR}/profiles/out.profile"
     fi
 
-    # remove (some) of the spurious '(&)' marks caused by process substitutions
-    grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | { A="$(<"${timep_TMPDIR}/profiles/out.profile")"; B="$(<"${timep_TMPDIR}/profiles/out.profile.full")"; while read -r nn; do A="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$A")"; B="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$B")"; done; sed -E s/' \(\^\)$'//  <<<"$A" >"${timep_TMPDIR}/profiles/out.profile"; sed -E s/' \(\^\)\t'/'\t'/  <<<"$B" >"${timep_TMPDIR}/profiles/out.profile.full"; }
+    # remove some (all?) of the spurious '(&)' marks caused by process substitutions
+    grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | {
+        A="$(<"${timep_TMPDIR}/profiles/out.profile")";
+        B="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
+
+        while read -r nn; do
+            A="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$A")";
+            B="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$B")";
+        done;
+
+        sed -E 's/ \(\^\)$//'  <<<"$A" >"${timep_TMPDIR}/profiles/out.profile";
+        sed -E 's/ \(\^\)\t/\t/'  <<<"$B" >"${timep_TMPDIR}/profiles/out.profile.full";
+    }
 
     # get total runtime
-    read -r timep_runtimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
-    ((timep_runtimeALL = 10#0${timep_runtimeALL//[^0-9]/}))
+    read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
+    ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
+    ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
     # add another percentage showing "percent of total runtime" to final outputs
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
         # split lines into start, time, percent, end
-        echo "$(sed -E s/'^([^\(]+\()([0-9\.]+)s\|([0-9\.]+)(.+)$'/'\1'$'\034''\2'$'\034''\3'$'\034''\4'/ <"${logPathCur}" | while IFS=$'\034' read -r a0 t p a1; do
-            { [[ $t ]] && [[ $p ]] && [[ $a1 ]]; } || {
-                # this is a blank/seperator line. re-print it unmodified
-                printf '%s\n' "${a0}${t}${p}${a1}"
-                continue
-            }
+        echo "$(sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
+        IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
 
-            # get percent of total runtime
-            ((p1 = (10000 * 10#${t//./}) / timep_runtimeALL))
-            printf -v p1 '%0.4d' "${p1//./}"
-            if ((10#${p1} == 10000)); then
-                p1="100.00"
-            else
-                p1="${p1:0:2}.${p1:2}"
-            fi
+                { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $a1 ]]; } || {
+                    # this is a blank/seperator line. re-print it unmodified
+                    printf '%s\n' "${lineOrig}"
+                    continue
+                }
 
-            # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-            if [[ "${p}" == "${p1}" ]] && ( a00="${a0%%[0-9]*}"; [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )) || (( "${#a00}" <= 1 )); ); then
-                printf '%s\n' "${a0}${t}s|${p}${a1}"
-            else
-                printf '%s\n' "${a0}${t}s|${p1}%|${p}${a1}"
-            fi
-        done)" >"${logPathCur}"
+                # get percent of total runtime
+                ((p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL))
+                printf -v p1w '%0.4d' "${p1w//[^0-9]/}"
+                if ((10#0${p1w} == 10000)); then
+                    p1w="100.00"
+                else
+                    p1w="${p1w:0:2}.${p1w:2}"
+                fi
+
+                # get percent of total cpu time
+                ((p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL))
+                printf -v p1c '%0.4d' "${p1c//[^0-9]/}"
+                if ((10#0${p1c} == 10000)); then
+                    p1c="100.00"
+                else
+                    p1c="${p1c:0:2}.${p1c:2}"
+                fi
+
+                a00="${a0%%[0-9\.]*}"; 
+
+                # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
+                if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
+                    printf '%s(%ss|%s%%)%s(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1}"
+                else
+                    printf '%s(%ss|%s%%|%s%%)%s(%ss|%s%%|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1}"
+                fi
+            done)" >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
         printf '\nGENERATING FLAMEGRAPHS\n' >&2
-        export PATH="${PATH}${PATH:+:}${timep_TMPDIR%/*}"
-        if type -p timep_flamegraph.pl &>/dev/null; then
-            timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
-        elif [[ -f "${PWD}/timep_flamegraph.pl" ]]; then
-            cat "${PWD}/timep_flamegraph.pl" >"${timep_TMPDIR%/*}/timep_flamegraph.pl"
-            timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
+       
+        if type -p "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null; then
+            timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
         else
-            type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl -O "${timep_TMPDIR%/*}/timep_flamegraph.pl" 2>/dev/null
-            type -p timep_flamegraph.pl &>/dev/null || {
-                type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/main/timep_flamegraph.pl >"${timep_TMPDIR%/*}/timep_flamegraph.pl" 2>/dev/null
-            }
-            type -p timep_flamegraph.pl &>/dev/null && timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
+            _timep_SETUP
         fi
 
         [[ ${timep_flameGraphPath} ]] && {
@@ -1794,8 +2098,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 c) timep_TITLE='Various Commands' ;;
             esac
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (FULL)" --minwidth 0.01 --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --minwidth 0.01 --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
+	    "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
         }
     }
 
@@ -1839,23 +2143,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 }
 
 
-_timep_file_to_base64() { 
-    local ff nn k1 k2;
-    charmap=($(printf '%s ' {0..9} {a..z} {A..Z} '@' '_'))
+_timep_SETUP() {
+    local -A b64 
+    local -a timep_flameGraphPathA
+    local ARCH t tt k kk
 
-    [[ -f "${1}" ]] || { 
-        printf '\nERROR: "%s" not found. ABORTING.\n' "${1}"; >&2
-        return 1                                              
-    }
-    
-    charmap=($(printf '%s ' {0..9} {a..z} {A..Z} '@' '_'))
-    
-    while read -r -N 3 nn; do
-        (( k1 = ( 16#${nn} >> 6 ) ));
-        (( k2 = ( 16#${nn} % 64 ) ));
-        printf '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
-    done < <(hexdump -v -x < "${1}" | sed -E 's/^[^ ]*//; s/ //g' | sed -zE s/'\n'//g);                                                                           
-} 
+    [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
 
 _timep_base64_to_file() {
     local b fd0 fd1
@@ -1872,35 +2165,110 @@ _timep_base64_to_file() {
     else
         exec {fd1}>&1
     fi
-    
+
     {
-        printf "$(while read -r -u "${fd0}" -N 4 b; do 
+        printf "$(while read -r -u "${fd0}" -N 4 b; do
+
         printf -v b '%0.6X' "$(( 64#${b} ))"
         printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
         done)" >&"${fd1}"
-    } 
-    
+    }
+
     exec {fd0}>&-
     exec {fd1}>&-
 
     (( $# > 0 )) && chmod +x "${1}"
 }
 
-_timep_SETUP() {
-    local -A b64 
-    local ARCH
-    
-    mkdir -p /dev/shm/.timep
-    
-    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH#/dev\/shm\/.timep/?(\/)?(\:)}"
-    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH%?(\:)/dev\/shm\/.timep?(\/)}"
-    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH//\:\/dev\/shm\/.timep?(\/)\:/\:}${BASH_LOADABLES_PATH:+\:}/dev/shm/.timep"
+    mkdir --mode=777 -p "/dev/shm/.timep"
+    mkdir --mode=777 -p "/dev/shm/.timep/lib"
+    mkdir --mode 755 -p "/dev/shm/.timep/lib/${USER}-${EUID}"
+
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH//\:\/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/):/:}"
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH#/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)?(:)}"
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH%?(\:)/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)}"
+    BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH}${BASH_LOADABLES_PATH:+:}/dev/shm/.timep/lib/${USER}-${EUID}"
     export BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH}"
-    
-    b64[x86_64]="hnZ6j042004000000000000303U00g00000000000000g000000002fM000000000000001003w02M1002807M0600001000040000000000g00000000010000000000Cw000000002q000000000080000000000g000040002G000000000aE000000000Gw000000000h000000000140000000000w0000000000g0000g00000000000000000000000000000000000I0000000002M000000000g00000000000100001g002M000000000r0000000001I0000000000SM000000003r000000001000000000000400006000es000000002VM00000000bD000000000260000000016g000000004000000000000g0000o0012w00000000ga0000000010E0000000003w000000000e400000000g00000000000200001w003Dw00000000Ku000000002VU000000000t0000000001Q0000000000800000000Vl1At0040009r000000000BI000000002mM00000000070000000000s0000000000g00000003BkShQ00g000aE000000000Gw000000002G0000000000w00000000020000000000200000000elhp7g01w000000000000000000000000000000000000000000000000000000000100000000Vl9At004000es000000002VM00000000bD000000000260000000016g00000000004000000000100001000005001ehM1l00700g0400000g00000000040000500000c004V705l@pwbdoBzKiwDJRP1l0qmv47U@xM0000000g000100000100006w00000000g840w04000Kibd9oeHYoM00000000000000000000000000000000000000140000w0000000000000000000000000200000w00000000000000000000000003M0000w00000000000000000000000005o0000g00000000000000000000000006w0000g00000000000000000000000007o0000g00000000000000000000000007M0000g00000000000000000000000008E0000g00000000000000000000000009o0000i00000000000000000000000009Y0000i0000000000000000000000000aQ0000y0000000000000000000000000bM0000i0000000000000000000000000ck0000i0000000000000000000000000cM0000i0000000000000000000000000dc0000i0000000000000000000000000eg0000h01B0U0000000000M000000000fA0000i018uk0000000000s00000000r01yqiVzrTcSbDg0rmBMplY0pRZLrlZKt7dOolZQ05Z9nQRkp5ZOpmtBsSBBt5hOgQRLr6lKolhIow1BilZdl79vpSlPqmlQl793jmZIpmVxl6Ny06lxrmlHoBZFtnhIrCBxnStO07pRoCNFqnhvrD9BrT80sCpUpn80pmByp6VSnT9xomBIow1Bp65vp7lyr6BFt01KrDdOs6VFpDhz06ZIqSdDnThBqnhBrlY0oRZxu6pvrCBIonFF06lQsSlOsD9OrT00qn9Qrw1Ct7dzsD1JnM1BnT9OrSVInSdLt65Lqg1Kr6dzrRZHpmtQt6RFnSlQsTlOt6dP07hBs7lynSBRt6NKqnhvrmBMpks0ikN3gz9vcyURbAs0ikN3gz9vciU0dM0000400g0100400g0100400g0200c00w0200800w0200400g0100800g0001000000000qtgBF00000w4d00004000Aps6Bw0000c16g00000002VM0000000000w00000000Ks000000003180000000000w00000000sw0000000031g0000000000w00000000sM0000000042w0000000000w000000009Vg000000042E0000000000w000000009O0000000042M0000000000w000000009Vg000000042U0000000000w00000000a4000000004300000000000w00000000ak000000004380000000000w00000000aG0000000043w0000000000w000000009Kw000000043E0000000000w00000000sQ0000000043U0000000000w000000010E000000004400000000000w000000009F0000000031w0000000000o00001000000000000031E0000000000o00002000000000000031M0000000000o0000300000000000003200000000000o0000b000000000000031U0000000000o0000g000000000000044E0000000000s00004000000000000044M0000000000s00005000000000000044U0000000000s0000600000000000004500000000000s0000700000000000004580000000000s00008000000000000045g0000000000s00009000000000000045o0000000000s0000a000000000000045w0000000000s0000c000000000000045E0000000000s0000d000000000000045M0000000000s0000e000000000000045U0000000000s0000f000000000000000k00000000uw40kDw10h0c6Mw70p00000U000070004Xw0005Y0012010e0EQegEMoggcw3wi63A63a4g5s0Wo0wUagOww3wV1gxwg3wV2hww02M0o0000m0005fM0000s0014010e3Bs02000000000006M4X0_@8__Y00w004Sg00f@A__YkV000_@3__SBQpmQWs7kwqSVLrCVToO1JrS5Jp6UD87cB02tIoSdLnSJBpThQrmAwpjNrglo@kw1tr6dzrRZHpmtQt6RF06ljlkt1eAlz86ZIqSdDnThBqnhBrlIwlzNiglQ@001IoSdLnSJBpThQrmAwpm5Cr6BApi0WsOkB06NI2CgB06NI06g00000001BkDlQrD9E86tFbmxBsCZPtmNFt6VLgO1lk7gwrmAwpndRp6ly821Vq7gwpnlzsD9Kpi1QsD1zrTdBbDc00000pABx821KsC5RpSlJt6VF821Pon1PsShB82NPti1Bt6Bx821Pq7gwpm5KpmRL821C865xgCxPty1Oom5Fr68wpmZQoi1PsStF86VEt21Bpn9RsThI02U007hfpmxTsDdFb6lM86BOt6UwsSxQ86lBsDlPt6NQ821Lt7dLp7hR02U00000000006NzoSZvqSlDt7hJqjFBt21LrSQwrC4wun9xtmtBrnhK07c00000000fY_EuwQw8X8d82cg0MM003_fW7Ed82eObi44501l80c250Djg_Ud82cg0MM00000fY_EukQ4R_Ons000B_Onu003cPcPcPcPcPcPcPcPcPbJ1000002n_9sM00cPcPcOXgg01000B_On4003cPcPcKQ400w009vYBL000PcPcPbJ100c002n_9rg00cPcPcOXgg04000B_OmI003cPcPcKQ401g009vYBF000PcPcPbJ100o002n_9pM00cPcPcOXgg07000B_Omk003cPcPcKQ4020009vYBz000PcPcPbJ100A002n_9og00cPcPcOXgg0a000B_OlY003cPcPc9vYkuw00PcM00000000008R8qjQ09kw01oQBow00ekxQ@4wl1oIkfw00xkxQMfY93@207M00000fMU0v000008R8ejQ09kw0doQBcw00akx8_L29Mkw_XI580_w1i4z6_J4kt8J81gk054w0M8k8te3_3Sp47M003Ye07M00000fY_Eufo0AZg00tg1laUd8WzQ04M00ykxQVkwcfoQhPw00muz__@z__Sj__Mn69cQ005Q13Yc07M_3w1Y000003_fW7DvF___c_YPcPcPcP5l1l45jlod8ieOdi2hQW0P@rf__zkzfdv_IifYEyUB9icjLyuvE__W5_Tn0wRcAv08cv7_3yogf08g008R897i_4002002lWf_@xvYfMeS4003E0fX8__YUyV7E__V8_PSdXb3__UB8csrEMfUw__@9jezD_yz__NvH3Sp47M00ykx8XzSdX2X__Y0N_@z__rL_004008BcWev@0L__wQx8Ndy9nlJsglR13Yd47M00zkxhfv_Jcv_EMfTi___hWUJ996O0201Z3M1Jxf__ifZQzh0A0HY00ew0_wb__Y25xg__rv__yQwAt4Mor8Qw9bx8ZY_zkVKB8chFi2hcg10fgAM0XUDTi4zK_I4NfQz0@I581_8F8bU004w0Qg6di10l_@PE__SC___icoBcieXLynDE__TF__Zq__Yv3M10yQwAj4wofoTHU___K4zTP@djCWkwN6B897h040Z2i03FZY58f_D0cs581_EFi4zaRw69Wf_ZWv__6L__7MY0g8d82eObi1QZ01a@0001000HWf_ZcvZ8Mci3MMw00000bD00000000000g00000000010000000000U0000000002M0000000007000000001A000000000020000000006M0000000000A00000000060000000000n000000001_00000000000w00000000480000000001g0000000001M000000000300000000gh00000000001w00000000co0000000000I000000000600000000005000000001cw0000000002w000000004A0000000001A00000000Mk0000000000r0000000000w0000000006w00000003180000000001M000000000200000000f_Mr_Y000001uM00000003__C__000000og00000000__ZL_M0000000g000000000c000000006N00000000003g00000001I000000000_LlL_M000002Y00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001O0000000007c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009Vg00000000D8000000002uk00000000a4000000000Fg000000002Gw000000000000000000000000000002rE00000000sQ0000000000100000000ga0000000009F0000000000000000000bDw000000000000000000000000000006P000000000rc000000001IM000000006P000000000rc000000001IM000000006P000000000rc000000001IM000000006P000000000rc00000000008000040000g0004570ihxcM0N71000000000s400000000008000040000g0004570ihxcM0N6N000000000r9w0000000008000040000g0004570ihxcM0N6M000000000r200000000008000040000g0004570ihxcM0N71000000000sOg0000000008000040000g0004570ihxcM0N7cA00000000sOg0000000008000040000g0004570ihxcM0N7cA00000000sOg0000000008000040000g0004570ihxcM0N6Oo00000000raM0000000008000040000g0004570ihxcM0N6Mw00000000r3g00000006ZJp6MO83gKbz0wcmcErmZxs6BQr68wpmBTq7h785ler20Fp000gQsWgOwwjAsFlj4wbzgKcO0Nc38RczkMcP8E86li86hxi21Qd34Pbz4KciQ0aiU0rSVBt6sKtmVMbCZOpn1Qsw1VryVQrOVBrCsKtnlyr6AJp6hFbw1KpOVRomxEsOU0umhPrCRVbw1Vp7dKsDgK06VDbDlBtDdOrSA0rCsKtmVSbD9BqndKrT9vbw1BsC5Ip2VKuiU0pn9xr70Kt6MK06xBpBZxsClJbw1Epmpvon9BrmxvsCgK06ZOomhxt7cKsDgKcg0NsyVArThxbC5QsP5Oe2UK06BCqmUK06VFt6AK06NM07hMbDhIpOVQrOU0pnhQu2U0omhxt78Kr6lObw1Lp2VKumRxoSAK06BCqmVxnT9Oum4K06VFt6BxnT9Oum4K06ZD07hObCNBrT9MnShxqmhDryU0omhxt2U0rSsKt6NM07hQbBZJr6dKrRZBonhIow1BoyVPsOU0rCsKtnlyr6AKp7hxsDhyqnhRsSkK06ZzrmRKpg1QsOVPq79Qong0oDcKsDhxt01ysOVJum5Q069J06JxnSlRoCNFqnhvrD9xtCtM97hIow1FtnhIrCBBnT9OsCZM97hIu01OpClBs2hQr680rCBvp65Sqn9yomlIs2hQr640p6hynSBRt6NKqn0At6NP071Kqn9QryhCr700t6NzoSZvqSlDt7hJqihBr700t7hPpn9OsD9Ls2hQr700qn9QryhCr700t7hPoT9Mrn0At6Nv06lvsD9LrCNvoSZQomZF96VIs01QnRZUoRZxqmpxrCBIpnFM97hIrSs0t5ZvrmtKrTdvonhQsBZvpOhQrRY0l4BvjmlApn9FpThPsCldl6N3rCZkpm9xpmND97hLnM1kilZdpn9FpThPsCldl6N3rCZkpm9xpmND97hLoM1Lr6JzpRZQpmBQpmRPnT9QoTkAt6ZD07hvnTxznS5FpC5KqmNBuCsAt6Zv06tvrSRvrDhPsC5vt01vqlZFrw1QpBZKqg1FnRZdl5Z3ikNkkRZvp01OpmtBsSBBt5ZOrnhznSZIpmU0sSlOqmtQsT9Bt5ZvrmNzrCZPplY0p5ZvrSNDoCZIomhvrThPsC5vu7lz06RLr71QpmhBc2Vv06hvnSZIpS9Lr65AnSZQsT9xnTxRpBZKqlZFsC5xsBZVrClOt01VsCpJolZBtmhJrg1VnRZOpCRxnSlRp6RJnTBKqnhFolZOsDBxplZQrDBOnM1kilZdpmhBsCBDt7dOpkRkr4dKrRhBoC5Br5Y0l4BvjmlOqmtQsT9BjlhIgSVLl6lyomlInM1AnSZPq5ZKomNA06lvnQRknQdehlZ405ZvnSxBsChPnS5Qt79v06BvqmVvt79xon9vunhPsC40t5ZvrCBQqm5vsD9Vomlvp6Vv06pvrCBvqn9xon9vunhPsC40t5ZvqmpFrC5vsD9Vomlvp6Vv071vpn9KqnhFolZOsDBxsRZxt7hOnM1MnSlOrCBQqm5vsD9Vomlvp6Vv05B4gkV9jg13hRZfj452nQN6jRd6l4lknQ91hkM0nR1vjR95gRl4hl9cnQV9gkJ5hRhvgA55j01vnRZPoBZPt7dOog1QplZArBY0t6lUpg1QplZxp65QnM1BnSlUtmdxt6NynSlQsT9x07hvnSlOomNFnSNMnThQsT9x07hvnSlOomNFnSNMnThKpg1AnRZehRZli4l6nQ5ihkR8nR94pg1ArCk0pnhQu6k0omhxt5Y0j5hvkQZdlkh5j49vkQ5vhlY0sRZxt7hOhlZ4i01inRZQsT1LhlZ4i01inRZQsT9xnTh8k594nM1PnSZQnT18k594f01OomBQqmpFoSNx03VFt6lJnT1RoCNFqng0rCNzoSZvqSlDt7hJqlZBrSg0oQMKc4cK04dc039cbzd3bw13j00Nj2UQgOU0gQM0dm5JpmJynSBRt6NKqm5vpT80tDlyr6BFt5ZKsClLsw1OpDxBsw1Bqm9ArDpvsC5xqmNy06lBsTlQnT1RoCNFqnhvrCBQpmQ0s6NzoSZvqSlDt7hJqlZBt7dRsDhzog1Ap69vqnlQr6VFsM1MrCBOt6U0pCNzoSZvqSlDt7hJqg1BnRZUoRZxqmpxrCBIpnFP079QsClLsw1OsD1KqmpQsM1Ot6Rz071vnT9BrD9vrSZIomdFt6VL00000000000000000000000000000000000000000000000000c00gaE00000000000000000000000000c00wb800000000000000000000000000c00MbM00000000000000000000000000c010co00000000000000000000000000c01gj800000000000000000000000000c01wnI00000000000000000000000000c01Mog00000000000000000000000000c020p000000000000000000000000000c02gvM00000000000000000000000000c02wzU00000000000000000000000000c02MBI00000000000000000000000000c030C800000000000000000000000000c03gEg00000000000000000000000000c03xI000000000000000000000000000c03NIg00000000000000000000000000c041IM00000000000000000000000000c04hM000000000000000000000000000c04xMg00000000000000000000000000c04OVM00000000000000000000000000c052VU00000000000000000000000000c05j1800000000000000000000000000c05z1g00000000000000000000000000c05P1o00000000000000000000000000c0632800000000000000000000000000c06k2w00000000000000000000000000c06A4g00000000000000000000000000c06Q6000000000000000000000000000c0746000000000000000000000000000c07g0000000000000000000000000000c07w0000000000000000000000000000c07M0000000000000000000000000000c0800000000000000000000000000000c08g00000000000000000000000g00008041Jg000000000000000000005M00008041Jw00000000000000000000ag00008041JM00000000000000000000cM00008041K000000000000000000000hg00008041Kg00000000000000000000lg00008041Kw00000000000000000000ow00008041KM00000000000000000000t000008041L000000000000000000000wg00008041Lg00000000000000000000z000008041Lw00000000000000000000BM00008041LM00000000000000000000H00000804hM000000000000000000000Mw0000405P1w00000000000000000000Rg0000405P1E00000000000000000000Zg0000405P1M000000000000000000014M0000405P1U00000000000000000001b00000405P2000000000000000000001jw000w803NIg00000000000000000001l0000w803xI000000000000000000001mw0000406Q6000000000000000000001pM0000804xMg00000000000000000001v00000804xN000000000000000000001zM0000804xO000000000000000000001Fg000040746000000000004000000001Ig0000405j1800000000000000000001S00000804xP000000000000000000001V00000405z1g00000000000000000002eg000w404OVM00000000000000000002hw000w406Q6000000000000000000002kw0000000g0000000000000000000002nM0000005z1g00000000000000000002sw0000005z1o00000000000000000002wM0000005j1800000000000000000002Bw0000005j1g00000000000000000002FM0000008g0000000000000000000002Lg0000008g0000000000000000000002Qg00000052VU00000000000000000002Sw0000006A4g00000000000000000002Y000000041IM000000000000000000032w0000007460000000000000000000035w0000007461000000000000000000036M0000004xVI000000000000000000038w0000006Q6000000000000000000003ag0000000g0000000000000000000003f000003_Yg0000000000000000000003jw00003_Yg0000000000000000000003nw0000002MBI00000000000000000003sg000000746100000000000000000003tg0000004xVI00000000000000000003uM0000006Q6000000000000000000003wg0000o00g0000000000000000000003AM0000008g0000000000000000000003E00000008g0000000000000000000003H00000008g0000000000000000000003Kg0000008g0000000000000000000003Ng0000j_Yg0000000000000000000003Qw0000804xPg000000000nM000000003U00000406k2w0000000003w000000003Yw00000030CW00000000000000000003ZM00000030DC00000000000000000003_000000030C8000000000000000000040g0000003gHo000000000000000000041w00000030E5000000000000000000042M00000030D_00000000000000000001fM0002000000000000000000000000020M0002000000000000000000000000027M000200000000000000000000000004400001000000000000000000000000048w000100000000000000000000000004c0000100000000000000000000000004dw000100000000000000000000000004h00001804xVg0000000001M000000004m00001406k3w00000000030000000004rg000100000000000000000000000004ug000180000000000000000000000004ww000180000000000000000000000004A0000280000000000000000000000004DM000180000000000000000000000004G0000180000000000000000000000004HM000180000000000000000000000004Jw0001800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000700000w00000000aE000000000Gw0000000008000000000000000000000w00000000000000000000k00001M00008000000002O000000000b80000000002g000000000000000000004000000000000000000009M00__pL_M02000000000L0000000002Y0000000000A0000000000g000000000200000000000000000000340000b00000w00000000co000000000Nw000000001I0000000000500000g0000w00000000060000000000V00000M00008000000004O000000000j8000000000ig00000000000000000000100000000000000000000gg00__ZL_M02000000001uM000000005X0000000000A0000000000g0000000000w00000000020000000004U00f_@r_Y00w00000000og000000001x0000000000c0000000000500000g0000g00000000000000000001t00001000008000000006g000000000p0000000000r00000000001000000000080000000001w000000000pM0000g00002000000001_0000000007Y000000000480000000000g0000q000020000000000o000000000740000100000w00000000zU000000002fw000000000t000000000000000000000w00000000000000000001X00000g00008000000009r000000000BI0000000001M00000000000000000000400000000000000000000yg000040000O000000002ow000000009y00000000022000000000000000000000g00000000010000000009w000010000cw00000000Eg000000002x0000000000Y000000000000000000000w0000000000g000000002D00000g0000o00000000r0000000000I00000000000Q00000000000000000000400000000000000000000Hg0000400006000000006N000000000b40000000000r00000000000000000000100000000000000000000bc0000100001w00000001IM000000002P0000000000Q000000000000000000001000000000000000000002U00000g0000o00000000s0000000000M00000000000w00000000000000000000g00000000000000000000Mg00004000060000000071000000000c40000000009s00000000000000000000400000000000000000000cs0000100000M00000002VM000000003D00000000002000000000000000000000w00000000000000000003k00001w0000c00000000Ku000000000VU000000000t00000000001g000000000800000000010000000000Tg0000Y0000300000000c4w00000000gi0000000000800000000000000000000200000000000000000000eA0000e00000M000000031g000000004500000000002000000000000000000000w00000000000000000003R00000g0000c00000000Mm0000000011o0000000003000000000000000000000800000000000000000000@w0000w0000300000000c8w00000000gy000000000ZU000000000000000000000g0000000000000000000gA0000100000M000000042w000000004a0000000000s000000000000000000002000000000000000000004f00000g0000c00000001140000000014g000000000700000000000000000000080000000000000000000160000040000300000000go000000000hw0000000000000000000000000000000200000000000000000000iw0000800000M0000000460000000004o00000000000g00000000000000000000400000000000000000004J00001M00000000000000000000000160000000000i000000000000000000000400000000000000000001gM000040000M0000000000000000000iE0000000001k000000000000000000000g0000000001000000000kM000030000000000000000000000004Lg000000001pw00000000000000000000400000000000000000005m00000M000000000000000000000001hq000000001cs00000000000000000000100000000000000000001nw00008000000000000000000000000pa000000000H8000000000200001y000020000000000o00000000"
+
+    PATH="${PATH//\:\/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/):/:}"
+    PATH="${PATH#/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)?(:)}"
+    PATH="${PATH%?(\:)/dev\/shm\/.timep\/lib\/${USER}-${EUID}?(\/)}"
+    PATH="${PATH}${PATH:+:}/dev/shm/.timep/lib/${USER}-${EUID}"
+    export PATH="${PATH}"
+
+    if PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl &>/dev/null; then
+        mapfile -t timep_flameGraphPathA < <(PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl)
+        mapfile -t timep_flameGraphPathA < <(printf '%s\n' "${timep_flameGraphPathA}" | grep -F '/dev/shm/.timep/lib/'"${USER}-${EUID}"; printf '%s\n' "${timep_flameGraphPathA}" | grep -vF '/dev/shm/.timep/lib/'"${USER}-${EUID}")
+        if (( ${#timep_flameGraphPathA[@]} > 1 )) && type -p date &>/dev/null; then
+            t=$(date -r "${timep_flameGraphPathA[0]}" '+%s')
+            k=0
+            for (( kk=1; kk<${#timep_flameGraphPathA[@]}; kk++ )); do
+                tt=$(date -r "${timep_flameGraphPathA[$kk]}" '+%s')
+                (( tt > t )) && k=$kk
+            done
+            timep_flameGraphPath="${timep_flameGraphPathA[$k]}"
+        elif (( ${#timep_flameGraphPathA[@]} > 0 )); then
+            timep_flameGraphPath="${timep_flameGraphPathA[0]}"
+        fi
+        [[ "${timep_flameGraphPath}" ]] && chmod +x "${timep_flameGraphPath}"
+        [[ "${timep_flameGraphPath}" == "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" ]] || {
+            \cp -f "${timep_flameGraphPath}" "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+            chmod +x "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+        }
+    else
+        timep_git_branch='timep_testing'
+        type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl -O "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null
+        type -p timep_flamegraph.pl &>/dev/null || {
+            type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl >"/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" 2>/dev/null
+        }
+        timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+        chmod +x "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+    fi
+
+    if type -p "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null; then
+        timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
+    elif type -p timep_flamegraph.pl &>/dev/null; then
+        timep_flameGraphPath="$(type -p timep_flamegraph.pl)"
+    fi
+
+    # note: this base64 binary blob is generatred by using _timep_base64_to_file  on the arch-specific coimpiled shared .so file for the builtin. 
+    # passing this blob to the stdin of _timep_base64_to_file <path> will restore the original .so file (needed for the loadable builtin to get cpu time with getCPUtime) at <path>.
+    # the .so file, source code and compile instructions are all available in the "timep" repo on github (https://github.com/jkool702/timep) at LOADABLES/SRC/timep.c. 
+    # The compiled .so file that this binary blob re-creates is avaiilable in the repo at LOADABLES/BIN/$ARCH/timep.so
+
+    b64[x86_64]="vQlchw810g000000000000c0fw0100000000000000100000000001wD0000000000000400e00b04008w0v00o000040000g0000000001000000000040000000000q0800000001E0w00000000w000000000100000g0002E0w0000000aw200000000G0800000001k0000000005g000000000200000000001000010000000000000000000000000000000000007wc00000000u0M00000000040000000004000050000u0M00000001U7000000007ws00000000B0g00000002k10000000000g000000000g0000o0000g4g000000010N000000004340000000080w0000000f0e0000000001000000000100001w00020j0000000084c00000000wgM00000000w1000000002g40000000004000000000800006000061400000000ocg00000001wN00000000M040000000300g00000000w000000000kelQp0g0000Y2w00000003Ma00000000f0E00000000A0000000002g00000000010000000001jVnhA10000aw200000000G0800000002E0w000000030000000000c0000000000800000000057Bt6g600000000000000000000000000000000000000000000000000000000004000000000kKlQp0g0000g4g000000010N000000004340000000080w0000000f0e000000000g00000000040000800000k00017jBk00g01M0g000010000000000800s0400000g00000000040000500000c00017jBk0BKei85SUoe3VR5JynbhbvX0oYHs000000g000140000100006w0000000201100g4g000a0QqnmHwUPN00000000000000000000000000000000000000I0000w00000000000000000000000001E0000w00000000000000000000000003o0000w0000000000000000000000000500000g00000000000000000000000005U0000g00000000000000000000000006M0000g00000000000000000000000007U0000g00000000000000000000000008g0000g0000000000000000000000000900000i00000000000000000000000009A0000i0000000000000000000000000as0000i0000000000000000000000000b40000y0000000000000000000000000c00000i0000000000000000000000000cA0000i0000000000000000000000000d00000i0000000000000000000000000ds0000i0000000000000000000000000ew0000h01A0w4c00000000M000000000fE0000i0180Y2000000000s00000000001Iqm9zbDdLbzo0nRZDrmZKnTdQon9QnRY0nQBkjlZApn9BpSBPt6lOl4R3r6ZKplhxoCNB05Z9l4RvsClDqndQpn9kjkdIrSVBl65yr6k0oCBKp5ZSon9Fom9Ipg1ytmBIt6BKnSlOsCZO06RxqSlvoDlFr7hFrBZxsCtS07xCsClB065Ap5ZytmBIt6BK07dKs79FrDhC06dIrSdHnStBt7hFrmk0pSlQsDlPomtB05ZvoTxxnSpFrC5IqnFB07dQsClOsCZO071OqmVQpw1Pt79zrn00nRZBsD9KrRZIrSdxt6BLrw1Dpnh3k5lQqmRBnTdQsDlzt01PpnhRs5ZytmBIt6BKnThFrmlM04tcik93nP8KcyUR04tcik93nP8Kcjs000000g0100400g0100400g0100800M0200800w0200800w0100400g020040000g0000000007kqqgA000803w400100002nApo6000301E1000000000000010N0000000020000000000gcg0000000dwO0000000020000000000g7w0000000e0O0000000020000000001g7w0000000213000000002000000000272w00000002x30000000020000000001g300000000313000000002000000000272w00000003x30000000020000000001M2M00000004130000000020000000003g2w00000004x3000000002000000000272w00000005130000000020000000003o2M00000005x30000000020000000000o2M0000000613000000002000000000272w00000008130000000020000000001Y2w00000008x3000000002000000000208000000009x30000000020000000000wgM0000000a130000000020000000002U2M0000000f0O000000001w0000400000000000000fwO000000001w000080000000000000000P000000001w0000c0000000000000010P000000001w0000M000000000000000wP000000001w0001400000000000000cx3000000001M0000g00000000000000d13000000001M0000k00000000000000dx3000000001M0000o00000000000000e13000000001M0000s00000000000000ex3000000001M0000w00000000000000f13000000001M0000A00000000000000fx3000000001M0000E00000000000000014000000001M0000I000000000000000x4000000001M0000Q00000000000000114000000001M0000U000000000000001x4000000001M0000Y00000000000000214000000001M00010000000000000001g0000000000nFi005U404r30s8A04004M0000s0000K1g001Y20000gwUgzM923xye0Q8e88Q4gwUEz0l13z261A4ee8c7hMXg0wcN0gEee4gec44ea48e848e648e448e244b0000a00006M000285w00q00000113x260A4e68c3h0UMvgEe64ce444e24Ab000o0000C0000cMm000s000004ge45se200000000000004r0PJ8____0M0002gk001A____h1o00bj___@Q5w00Uf___ThFrmlMey1RrCJKrTtK86dLrmRxrCgw9OlP9M1Dpnh3k5lQqmRB001DpnhOtndxpSkwa5d5j4oF86pxqmNBp3Ew9nc09mNIp0E09mNIp000pSlQgR1lt6BJpjEwt6ZL86RxrDAwon9DtmRBrDhP001xr6MwpCBKqndEpmgwoSxFr6gws79LoSlPsSlP865Kp21xr6Mwt6xBqn8wpCBKqndEpmgwp6lPoSlKp6lKt7cK000000000019py0YlA5inRd5j4o@86BP865IsSYwpSBSpmUI865PsSBDrDcwsSlIpy13k5kwt6BJpi0ErCYwoSxFr6hOpmUF87hL87hEongwtC5Oqm5yr6kK00000000kClQtn9K86xFpSwJsClPrSNRt6BLry13k5kwt6BJpi0ErmBzsCZPpmdLrChPai1RsSlA869V87hEqncws79LoSlPsO1xrCg0pSlQgR1lt6BJpi1rf5p1kzUwmPNmgl9vkQlchzVtng19py0YlA5ify1FsO1DqnpBryMwondPqmtKsO1Qq6kwtC5Itmkwt6Ywt6xxt21Son9Fom9IpjIwrThEpn9TqndB871OqmVQsO1Ft2U0000006tBt79RsS5Dpi0EgQx9j4hihkUF86pxqmNBp3Ew9nc000000000001lkQ57hjEwpSlQgR1lt6BJpi1rf5p1kzUwmPNmgl9vkQlchzVtng00YMYu@Ay3X0x8wYg8MM000fcf7LF8w@M8i8I5mho004y5M7g2_Z18wYg8MM00000000000000003P3NXWglf_dvMC003_9vUC003cPcPcPcPcPcPcPcPcP46X00000fYBX2o00cPcPcN1KM40003_9ugC003cPcPcgrI20000_Ons9w00PcPcP46X0M000fYBR2o00cPcPcN1KMg0003_9sMC003cPcPcgrI50000_On49w00PcPcP46X1w000fYBL2o00cPcPcN1KMs0003_9rgC003cPcPcgrI80000_OmI9w00PcPcP46X2g000fYBF2o00cPcPcN1KME0003_9pMC003cPcPcgrIb0000_Omk9w00PcPcPfYBuxk00cPc000000000018zjS19w00i8Q5uyo004wV@7gli8I5fxk004y5M7g9_@0f7U000000MMYvw0000018zjRh9w00i8QRiyo004wF_Ay9Y4z1XzZ8Mvw3i076id7@t1h8yMk55g00i8n0t0z_U6of7Qg00ccf7U000000YMYu@E0Z3io0001RaRl8wPTG500004y9Vngci8QZTx800exp____W6j____61ukB0001nscf7M333N@000000fcf7LHFt____YPcPcPcPcN1lQ5mgll1l5lji87I604008f_0M@fxw4008f_0nUFi8JK2370w7Q004wfhex5cui3_MdR64Obpx11w3MA04Mfhe3H2gYvg00NXkkNV4Odr2h0LM80001cyuXEsvX__Un03UnF0000i8Jc94xczrgAw00004yUP_tjUWmrN218qlMAg4123M18Z@B8MvA_ic7W1QwFOAw1QQO9ZH______W3L@__Z1ysq5M0@5c04004xFx2ig0000g48f04xFz2i00000g48f04w3z2i80000i071i0ec99w000180tB8xuQfxdA0001czglsW___LA000018yusNM4O9MKz0_v__ct98yup8yu_Eo_T__QS5V7gFj8Q5cuL__QO9XQy9Sj70j8D2LA00003EALT__P7ij8DKj8DDW3nZ__Z8wsgo0g00h8DMmRR1n45tglV1nYdczrgAw000037_j8DSW7XZ__@5M0@5Bw0004xFx2ig0000g48f04xFD2i00000g48f04w3D2i80000i073i0es99w0003F_LX__Sof7Qg004ydfqDG__YNMezi_f__grU10000WUlCbwYvx0000000i8Dei8QZuKH__P70W2_Z___Fpv___SoK3N@40000003Ee_T__UIUW0jZ__Z8zjTlW___i8D6cs3Ew_P__@KLAewr_v__yPzEVfP__QydfhnG__Z8ysoNMexz_f__WU@glld8w@Moi8RQ90PEofP__QyddunF__Z8yOx8ysd8yu_EO_P__Un0tiubv2gci8DuWaLZ__@9Nky9T@x1_f__i8f468DEmRT33N@400000018yuV8zjS6Wv__cs2Z0g000ezW@___WYYf7Ug0000004y3X0x8yPQd4w00Lw40003E2_P__P70i8f42cc00000434000000001000000000040000000001M000000001M1w00000000w000000000@040000000090000000001w0000000005M000000001E2000000000800000000080400000000k0000000000s0000000000M000000002MgM00000000o000000000a0c00000000b0000000001w0000000001g000000003M1000000000E0000000009g400000000p000000000e0O000000006M00000000080000000001E000000000S3800000000s0000000000w000000000Yf__rM00000m1w0000000fX__SY00000f0o00000003___ZL00000040000000003000000000287000000000Q000000000u1M00000003R_LZL00000003000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041U00000001g7w0000000000000000000000000000000000000000000000000000000000000000000000000000000000xME00000001g3000000008sa00000000s0I00000003g2w00000008sa00000000S0I00000000o2M00000008sa0000000000000000000000000000000000000000v0E0000000208000000000400000000084c00000002U2M00000000000000000063400000000000000000000000000000I1M00000002M700000000b0s00000000I1M00000002M700000000b0s00000000I1M00000002M700000000b0s00000000I1M00000002M700000000b0s000000002000010000000g00hQ4A0jdxcg2w7g0000000a0t000000002000010000000g00hQ4A0jdxcg287000000009Us000000002000010000000g00hQ4A0jdxcg1U70000000080s000000002000010000000g00hQ4A0jdxcg2w7g00000005Au000000002000010000000g00hQ4A0jdxcg1p7w00000005Au000000002000010000000g00hQ4A0jdxcg1p7w00000005Au000000002000010000000g00hQ4A0jdxcg2u700000000acs000000002000010000000g00hQ4A0jdxcg207000000008ks00000000rmZIp20ObzgMbz4wa6dLrn1xt6Byr6kwtSBQq217jBkwr6gF0017gQcW82x7jBkF834QbzcKci0Oc38Rc3kOcO0EkClA84xxt20Nd2UPbz4JciA002VKrThBbCtKtiVMsCZMpn9Qug0KrCZQpiVDrDkKoDlFr6gJqmg0bCtKtiVEondE02VAumVPumQ0bChVrDdQsw0KpSVRbDpBsDdFrSU0bCtKtiVSpn9PqmZKnT80bD9Br64Kp7BK02VOpmNxbD1It00KpmxvpD9xrmk0bClEnSpOomRBnSxAsw0KsCZAonhxbDdQsz4Kcg0KsCZAonhxbDdQsz4Ke00KpCBKqg0KqmVFt00Ks6NQ02VMr7gKpSZQ02VQpnxQ02VAonhxbD9Br2VOrM0Kp7BKomRFoM0KpCBKqlZxsD9xug0KqmVFt5ZxsD9xug0KpSZQ02VOpmNOrRZMomhAqmVD02VAonhx02VDrTgKs6NQ02VQrlZzr6ZKplZQom9Ipg0KoDdP02VDrDkKoDlFr6gKonhQsCBytnhBsM0KoSZJrmlKt00KsSxPt79Qom80bDdQsDhxow0KsTBJt65y001yqmVAnTpxsCBxoCNB971It01ytmBIt6BKnSlOsCZO971It01JomJBnS9RqmNQqmVvon9DtyhMr7g0u6pOpmkAs6NQ065Ap5ZytmBIt6BK971It01PrD1OqmVQpyhMr7g0oSNLoSJvpSlQt6BJpihMr7g0pSlQsDlPomtB971It01Pt79BsD9LsyhMr7g0s79FrDhC971It01Pt79zrn0As6NQ05Zvpn9OrCZvr6ZzonhFrSUAs6NQ05ZvoTxxnSpFrC5IqnFB971It6tLt01vnStJrSVvsThxsDhvnOhDrTg0nQBkjlZApn9BpSBPt6lOl4R3r6ZKplhxoCNB96tLt01vilhdnT9BpSBPt6lOl4R3r6ZKplhxoCNB96tLt01Dpnh3k5lQqmRBnTdQsDlzt2hDrTg0nRZzu65vpCBKomNFuCkApSZQ05ZvpSRLrBZPt65Ot5Zv05ZFrCBQ05ZCqmVF05Zvl4R3nQN9kRhvnM1Apn9BpSBPt6lOnThJnSdIrSVBsM1OpmtFsThBsBZQrlZzr6ZKpnc0nRZArRZDr6ZyomNvp7hLsDdvonlU06dLrn1IpnhBp2UM05Zvp6ZvpSNLoC5InShQrT9PnS5Ru5ZCqmVFnS5OsC5VnSlKt79V06pOomRBnShRrmRV05ZvpD9xrmlvp7lJrnBvqmVFt5ZxsD9xulZBrDhOug1vilhdnShBsClDqndQpn9kjkdIrSVBl65yr6k0nQBkjlZOpmtFsThBsBhdgSNLrClkom9Ipg1vnShPrRZEomVAr6k0nRZkjkdvhkV4nRY0nRZBq6hOnTdQon9Q05ZvqmVFt5ZxsD9xulZPt65Ot01vnSBKqnhvon9OonBvpmVA05ZvpCBKqlZxsD9xulZPt65Ot01vnSpFrCBvon9OonBvpmVA05Zvs79BqmVFt5ZxsD9xulZPt65Ot01vnT1OpmBKqnhvon9OonBvpmVA05Z4mkV1jkB305Z7j4Z2gkNvjQp6kQlknRh1gAN5nM1vk59fgQl4ll95nQN9jAJ1hQlvl452j4lv05ZvoDdPnTdQon9Q05ZBrCg0nSlQpnxQ05ZBp65Qog1vnSlUpmdRt65yr6lvsThxsDg0nRZOpmNxnSBMr7hvsThxsDg0nRZOpmNxnSBMr7hvpmVA05ZvhQVlnQl8nQpigkR5nQx4kw1BrCg0pnhBu7g0pmhxt640nRhckRZdjQhlj4lvgA5jhlY0nRZPt65Ot5Z5i4hi05ZvsThLs5Z5i4hi05ZvsThxsDhvk4x4kw1vnTdQrT1vk4x4kw0Yon9QqmpFoSBxr3U0pSlQgR1lt6BJplZJomBK07hFrmlMnS9RqmNQqmU0pSlQgR1lt6BJplZArSc0bAN3cM0Kj4cM02VcgPg0bAN3cw0Kj4cN02VcgPk0bAN3dw1yqmVAnTpxsCBxoCNB069RqmNQqmVvpn9OrT80rm5HplZytmBIt6BKnS5OpTo0u6pOpmk0sSlQtn1voDlFr7hFrBZQqmRBs01Dpnh3k5lQqmRBnTdQsDlzt01xp6hvoDlFr7hFrw1PrD1OqmVQpw1zr6ZzqRZDpnhQqmRB06tBt79RsS5Dpg1vnSdUolZCqmVxr6BWpg1Pt79BsD9Lsw1MsCBKt6o0sThOoSRM05Zvpn9OrCZvr6ZzonhFrSU0000000000000000000000000000000000000000000c00g2E0w000000000000000000000000c00w3o0w000000000000000000000000c00M000M000000000000000000000000c0100E0M000000000000000000000000c01g3M10000000000000000000000000c01w0m1w000000000000000000000000c01M0Y1w000000000000000000000000c0201M1w000000000000000000000000c02g1E20000000000000000000000000c02w282g000000000000000000000000c02M0Y2w000000000000000000000000c0301w2w000000000000000000000000c03g2M2w000000000000000000000000c03w1U70000000000000000000000000c03M2870000000000000000000000000c0402M70000000000000000000000000c04g2g7g000000000000000000000000c04w2w7g000000000000000000000000c04M0gcg000000000000000000000000c0500ocg000000000000000000000000c05g3ocw000000000000000000000000c05w3wcw000000000000000000000000c05M3Ecw000000000000000000000000c0600ocM000000000000000000000000c06g0wgM000000000000000000000000c06w2MgM000000000000000000000000c06M0Eh0000000000000000000000000c0700Eh0000000000000000000000000c07g0000000000000000000000000000c07w0000000000000000000000000000c07M0000000000000000000000000000c0800000000000000000000000000000c08g00000000000000000000000g000080403g700000000000000000004M000080403w700000000000000000009g000080403M70000000000000000000eM00008040007g000000000000000000hg000080400g7g000000000000000000lg000080400w7g000000000000000000ow000080400M7g000000000000000000t000008040107g000000000000000000ww000080401g7g000000000000000000zM000080401w7g000000000000000000Cw000080401M7g000000000000000000Fg00008040207g000000000000000000Kw0000804g2g7g000000000000000000Q00000405M3Mcw000000000000000000UM0000405M3Ucw0000000000000000000M4000405M00cM0000000000000000008g4000405M08cM000000000000000000dM4000405M0gcM000000000000000000mg4000823M2870000000000000000000nM4000823w1U70000000000000000000pg4000406M0Eh0000000000000000000sw4000804w2w7g000000000000000000xM4000804w3g7g000000000000000000Cw4000804w0g7w000000000000000000I0400040700Eh0000000004000000000L04000405g3ocw000000000000000000UM4000804w1g7w000000000000000000XM4000405w3wcw000000000000000000h08000424M0gcg000000000000000000kg8000426M0Eh0000000000000000000ng8000000g0000000000000000000000qw8000005w3wcw000000000000000000vg8000005w3Ecw000000000000000000zw8000005g3ocw000000000000000000Eg8000005g3wcw000000000000000000Iw8000008g0000000000000000000000O08000008g0000000000000000000000T0800000500ocg000000000000000000Vg8000006w2MgM000000000000000000@M800000402M700000000000000000005gc00000700Eh00000000000000000008gc00000700Fh00000000000000000009wc000004w0c8g000000000000000000bgc000006M0Eh0000000000000000000d0c000000g0000000000000000000000hMc00000YvY000000000000000000000mgc00000YvY000000000000000000000qgc000002M0Y2w000000000000000000v0c00000700Fh0000000000000000000w0c000004w0c8g000000000000000000xwc000006M0Eh0000000000000000000z0c000o00g0000000000000000000000Dwc000008g0000000000000000000000GMc000008g0000000000000000000000JMc000008g0000000000000000000000N0c000008g0000000000000000000000Q0c000g0YvY000000000000000000000Tgc000804w1w7w00000001Y200000000Xgc000804w208000000006w000000000@Mc000406g0wgM0000000500000000002wg00000302G2w0000000000000000003Mg000003g2M2w00000000000000000050g00000302A2w0000000000000000006gg000003g0E300000000000000000007wg0000030282w0000000000000000008Mg00000301Y2w000000000000000000a0g00000301w2w000000000000000000iw4002000000000000000000000000003w800200000000000000000000000000aw800200000000000000000000000000bgg00100000000000000000000000000eMg00100000000000000000000000000igg00100000000000000000000000000mMg00100000000000000000000000000ogg001804w3M8000000001M000000000tgg001406g20gM000000030000000000xMg00100000000000000000000000000AMg00180000000000000000000000000D0g00180000000000000000000000000Gwg00180000000000000000000000000J0g00280000000000000000000000000MMg00180000000000000000000000000P0g00180000000000000000000000000QMg00180000000000000000000000000Swg001800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000700000w000000002E0w0000000aw200000000c000000000000000000000w00000000000000000000k00001M00008000000000S0800000003o0w00000002g000000000000000000004000000000000000000009M000fr__SY20000000000030000000000c00000000A0000000000g000000000200000000000000000000340000b00000w000000000E0M00000002w300000000O0400000000500000g0000w00000000060000000000V00000M00008000000000Y0g00000003M1000000002k10000000000000000000100000000000000000000gg000f___SY20000000001o6000000005wo00000000C0000000000g0000000000w00000000020000000004U0003@__ZL0w000000000Y1w00000003M600000000c0000000000500000g0000g00000000000000000001t00001000008000000000s0o00000001M1w0000000fw1000000001000000000080000000001w000000000pM0000g000020000000006w800000000q0w00000000w0g00000000g0000q000020000000000o000000000740000100000w00000000282g00000008w900000000J000000000000000000000w00000000000000000001X00000g00008000000000f0E00000000Y2w00000002g00000000000000000000400000000000000000000yg000040000O00000000060a00000000o0E00000001f000000000000000000000g00000000010000000009w000010000cw000000002M2w0000000b0a00000000O040000000000000000000w0000000000g000000002D00000g0000o000000000u1M00000001U3000000000Q00000000000000000000400000000000000000000Hg00004000060000000008ws00000000y0M00000000r00000000000000000000100000000000000000000bc0000100001w000000002M700000000b0c00000000U000000000000000000001000000000000000000002U00000g0000o000000000A1Q00000002g3g00000000w00000000000000000000g00000000000000000000Mg0000400006000000000a0t00000000E0Q00000001I0M000000000000000000400000000000000000000cs0000100000M000000000gcg000000010h000000002000000000000000000000w00000000000000000003k00001w0000c00000000063400000000o4g0000000c01000000001g000000000800000000010000000000Tg0000Y00003000000000dwO00000000S1800000000800000000000000000000200000000000000000000eA0000e00000M000000003wcw0000000e0i000000002000000000000000000000w00000000000000000003R00000g0000c000000000W3800000003E4w00000003000000000000000000000800000000000000000000@w0000w000030000000001wP0000000061c00000003E300000000000000000000g00000000000000000000A1000100000M000000000wgM000000020j00000000A000000000000000000002000000000000000000000f0g000g0000c000000000I4c00000002M4M00000007w000000000000000000008000000000000000000006040004000030000000002x400000000a1g000000000000000000000000000002000000000000000000002w1000800000M000000000Eh000000002wk000000000g00000000000000000000400000000000000000000J0g001M0000000000000000000000000E5000000002010000000000000000000400000000000000000000gM400040000M00000000000000000000i1k00000001k000000000000000000000g00000000010000000004M1000300000000000000000000000009Ml00000000pw40000000000000000000400000000000000000001m0g000M000000000000000000000000025M0000000eI40000000000000000000100000000000000000000nw400080000000000000000000000000Y1I00000000E2M0000000200001B000020000000000o000000000080@o"
+
     ARCH="$(uname -m)"
-    
-    printf '%s\n' "${!b64[@]}" | grep -qF "${ARCH}" && _timep_base64_to_file /dev/shm/.timep/timep.so <<<"${b64[${ARCH}]}"
-    enable -f timep clock_gettime
+
+    printf '%s\n' "${!b64[@]}" | grep -qF "${ARCH}" && _timep_base64_to_file /dev/shm/.timep/lib/${USER}-${EUID}/timep.so <<<"${b64[${ARCH}]}"
+
+
+    enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime
 }
-enable | grep -qF 'enable clock_gettime' || _timep_SETUP
+
+_timep_SETUP
+
+
+_timep_file_to_base64() {
+
+    local nn k1 k2;
+    charmap=($(printf '%s ' {0..9} {a..z} {A..Z} '@' '_'))
+
+    [[ -f "${1}" ]] || {
+
+        printf '\nERROR: "%s" not found. ABORTING.\n' "${1}" >&2
+        return 1
+
+    }
+
+    charmap=($(printf '%s ' {0..9} {a..z} {A..Z} '@' '_'))
+
+    while read -r -N 3 nn; do
+        (( k1 = ( 16#${nn} >> 6 ) ));
+        (( k2 = ( 16#${nn} % 64 ) ));
+        printf '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
+    done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g');
+
+}
+
+
