@@ -1511,7 +1511,7 @@ printf '%s;' "${fgA[@]}")"
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
             # write line
-            logMergeAll=("$(printf '\n%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${wTime}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${cTime}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoUniqA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
+            logMergeAll=("$(printf '%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${wTime}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${cTime}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoUniqA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
