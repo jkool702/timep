@@ -1210,9 +1210,9 @@ _timep_PROCESS_LOG() {
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
-        cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
-        cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
-        read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
+        #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
+        #cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
+        read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'"/}'")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         cmdA[$kk]="${cmd}"
@@ -1499,9 +1499,7 @@ printf '%s;' "${fgA[@]}")"
         # add merged up log to log, including for "in the middle of a pipeline" commands
         for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
             [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined")
-                if (( ${#logMergeA[@]} == 0 )); then
-                    continue
-                else
+                if (( ${#logMergeA[@]} > 0 )); then
                     printf '\n%s\t|-- %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
                     for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
                         printf '\n%s\t|   %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
@@ -1536,8 +1534,8 @@ _timep_PROCESS_FLAMEGRAPH() {
 #    this output style is designed to work with `flamegraph.pl --color=time[p[r]]`
 
     shopt -s extglob
-
-    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag fdRead ratioFactor ratioFactorR
+  
+    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag fdRead ratioFactor wallTimeSum cpuTimeSum
     local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
 
     if [[ -e "$1" ]]; then
@@ -1565,10 +1563,11 @@ _timep_PROCESS_FLAMEGRAPH() {
     IFS=
     if [[ "${cpuTimeA[*]}" ]]; then
         cpuTimeFlag=true
-        (( ${#wallTimeaA[@]} == ${#cpuTimeA[@]} )) && {
+        (( ${#wallTimeA[@]} == ${#cpuTimeA[@]} )) && {
             IFS='+'
-            (( ratioFactor = ( 20 * ( ${wallTimeA[*]} ) ) / ( ${cpuTimeA[*]} ) ))
-            (( ratioFactorR = ( 20 * ( ${cpuTimeA[*]} ) ) / ( ${wallTimeA[*]} ) ))
+           (( wallTimeSum =  ${wallTimeA[*]} ))
+           (( cpuTimeSum = ${cpuTimeA[*]} ))
+           ratioFactor=20
         }
     else
         cpuTimeFlag=false
@@ -1578,9 +1577,11 @@ _timep_PROCESS_FLAMEGRAPH() {
 
     # dont have commands where cpuTimeis <5% of wall time contribute to the CDF
     ${cpuTimeFlag} && [[ ${ratioFactor} ]] && {
-        for kk in "${!wallTimeA[@]}; do
-            (( ( ( ratioFactor * cpuTimeA[$kk] ) / wallTimeA[$kk] ) == 0 )) && wallTimeA[$kk]="${wallTimeA[$kk]}.1"
-            (( ( ( ratioFactorR * wallTimeA[$kk] ) / cpuTimeA[$kk] ) == 0 )) && cpuTimeA[$kk]="${cpuTimeA[$kk]}.1"
+        for kk in "${!wallTimeA[@]}"; do
+            (( ratioFactor * wallTimeSum * cpuTimeA[$kk] < cpuTimeSum * wallTimeA[$kk] )) && {
+                wallTimeA[$kk]="${wallTimeA[$kk]}.1"
+                cpuTimeA[$kk]="${cpuTimeA[$kk]}.1"
+            }
         done
     }
 
@@ -1598,12 +1599,14 @@ _timep_PROCESS_FLAMEGRAPH() {
     while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
         (( n = ( ( b - 1 ) << 1 ) + a ))
-        [[ "${c}" == *'.1' ]] && {
+        if [[ "${c}" == *'.1' ]]; then
             c="${c%.*}"
-            a=0
-        }
-        (( wallTimeCDF_map[$n] = ${wallTimeCDF_map[$n]:-0} + a * c ))
-        wallTimeCDF_map0[$c]="$n"
+            (( wallTimeN = wallTimeN - a ))
+            (( wallTimeCDF_map[$n] = wallTimeCDF_map[$n] ))
+        else
+            (( wallTimeCDF_map[$n] = ${wallTimeCDF_map[$n]:-0} + a * c ))
+        fi
+        wallTimeCDF_map0[${c%.*}]="$n"
     done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
 
     # cummulative sum weighted CDF to get final "equal screen space" mapping
@@ -1619,7 +1622,7 @@ _timep_PROCESS_FLAMEGRAPH() {
         (( wallTimeCDF_map[$n] = ( ( wallTimeN * wallTimeCDF_map[$n] ) << 1 ) / wallTimeCDF_csum ))
     done
 
-    # if we alsio have cpu times, repeat the above steps to get a weighted CDF mapping for those too
+    # if we also have cpu times, repeat the above steps to get a weighted CDF mapping for those too
     ${cpuTimeFlag} && {
         mapfile -t cpuTimeSortA < <( printf '%s\n' "${cpuTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
 
@@ -1631,14 +1634,17 @@ _timep_PROCESS_FLAMEGRAPH() {
          while read -r a b c; do
             { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
             (( n = ( ( b - 1 ) << 1 ) + a ))
-            [[ "${c}" == *'.1' ]] && {
+            if [[ "${c}" == *'.1' ]]; then
                 c="${c%.*}"
-                a=0
-            }
-            (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + a * c ))
-            cpuTimeCDF_map0[$c]="$n"
+                (( cpuTimeN = cpuTimeN - a ))
+                (( cpuTimeCDF_map[$n] = cpuTimeCDF_map[$n] ))
+            else
+                (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + a * c ))
+            fi
+            cpuTimeCDF_map0[${c%.*}]="$n"
         done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
 
+        # cummulative sum weighted CDF to get final "equal screen space" mapping
         kk0=-1
         for n in "${!cpuTimeCDF_map[@]}"; do
             (( kk0 >= 0 )) && (( cpuTimeCDF_map[$n] = cpuTimeCDF_map[$n] + cpuTimeCDF_map[$kk0] ))
@@ -1646,6 +1652,7 @@ _timep_PROCESS_FLAMEGRAPH() {
         done
         cpuTimeCDF_csum="${cpuTimeCDF_map[$n]}"
 
+        # renormalize final mapping to range between 0 and (2 * numSamples)
         for n in "${!cpuTimeCDF_map[@]}"; do
             (( cpuTimeCDF_map[$n] = ( ( cpuTimeN * cpuTimeCDF_map[$n] ) << 1 ) / cpuTimeCDF_csum ))
         done
@@ -1654,11 +1661,11 @@ _timep_PROCESS_FLAMEGRAPH() {
     # re-create log with time(s) mapped to weighted CDF index
     if ${cpuTimeFlag}; then
         for kk in "${!stackA[@]}"; do
-            printf '%s\t%s:%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}" "${cpuTimeA[$kk]}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]}]}]}"
+            printf '%s\t%s:%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]%.*}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]%.*}]}]}" "${cpuTimeA[$kk]%.*}" "${cpuTimeCDF_map[${cpuTimeCDF_map0[${cpuTimeA[$kk]%.*}]}]}"
         done
     else
         for kk in "${!stackA[@]}"; do
-            printf '%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]}]}]}"
+            printf '%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]%.*}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]%.*}]}]}"
         done
     fi
 }
@@ -1944,6 +1951,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
 
     printf '\n\nFINALIZING OUTPUTS\n' >&2
+    printf '\nGETTING TOTAL TIMES\n' >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out"
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out.combined"
 
@@ -1965,11 +1973,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # reverse flamegraph input so it starts at the parent and ends at the depest child
+    printf '\nREORDERING FLAMEGRAPH INPUTS\n' >&2
     echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^([0-9]+)\:/\1 /' | sort -nr -k1,1 | sed -E 's/^[0-9]+ //')" >"${timep_TMPDIR}/.log/out.flamegraph.full"
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # fold flamegrapoh stack traces
+    printf '\nFOLDING FLAMEGRAPH INPUTS\n' >&2
     sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\2/' | sed -zE 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\3/' | sed -zE 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "${tw}" "${tc}"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
@@ -1977,6 +1987,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
 
     # for flamegraph.pl inputs - convert times to screen-size-normalized CDF index (to maximize colorspace usage)
+    printf '\nGENERATING COLOR MAPPING FOR FLAMEGRAPH INPUTS\n' >&2
     for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
         _timep_PROCESS_FLAMEGRAPH "${fgCur}" >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
     done
@@ -1993,6 +2004,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
     # combine lines/times/percentages for main (combined) profile
+    printf '\nMERGING LINES IN COMBINED PROFILE\n' >&2
     mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n\|\n?$/\n/; s/\n\|?\n/\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
     A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
@@ -2016,7 +2028,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             # AA is an associative array that determines/maps the unique lines to the index $jj
             T=();
             L=();
-            I=();
             declare -A AA;
             mapfile -t A0 <<<"${A[$kk]}"
             for jj in "${!A0[@]}"; do
@@ -2046,8 +2057,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     done;
                     ((jj0++));
                 done  <<<"${T[$jj]}"
-                (( tA[1] = tA[1] / jj0 ));
-                (( tA[3] = tA[3] / jj0 ));
+                (( tA[1] = tA[1] / ( jj0 - 1 ) ));
+                (( tA[3] = tA[3] / ( jj0 - 1 ) ));
 
                 # convert integer times (microseconds) and percents (# per 10000) into decimal values (seconds, %)
                 printf -v wTime0 '%0.7d' "${tA[0]}"
@@ -2093,6 +2104,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     } >"${timep_TMPDIR}/profiles/out.profile"
 
     # remove some (all?) of the spurious '(&)' marks caused by process substitutions
+    printf '\nREMOVING SPURIOUS MARKS FROM PROFILES\n' >&2
     grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | {
         P="$(<"${timep_TMPDIR}/profiles/out.profile")";
         PF="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
@@ -2106,7 +2118,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         sed -E 's/ \(\^\)\t/\t/'  <<<"$PF" >"${timep_TMPDIR}/profiles/out.profile.full";
     }
 
+
     # add another percentage showing "percent of total runtime" to final outputs
+    printf '\nADDING PERCENT OF TOTAL TIME TO PROFILES\n' >&2
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
         # split lines into start, time, percent, end
@@ -2139,11 +2153,17 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 a00="${a0%%[0-9\.]*}";
 
+                if [[ "${timep_runType}" == 'f' ]]; then
+                    a000="${a00#\|[ \-][ \-] }"
+                else
+                    a000="${a00}"
+                fi
+
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
                 if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
-                    printf '%s(%ss|%s%%)%s(%ss|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1}"
+                    printf '%s(%ss|%s%%)       %s(%ss|%s%%)       %s%s%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 else
-                    printf '%s(%ss|%s%%|%s%%)%s(%ss|%s%%|%s%%)%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1}"
+                    printf '%s(%ss|%s%%|%s%%)%s(%ss|%s%%|%s%%)%s%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 fi
             done)" >"${logPathCur}"
     done
@@ -2185,12 +2205,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     }
 
     [[ "${timep_outType}" == *' pf '* ]] && {
-        printf '\n\nOUTPUT LOG (FULL)\n\n' >&2
+        printf '\n\nOUTPUT PROFILE (FULL)\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile.full"
     }
 
     [[ "${timep_outType}" == *' p '* ]] && {
-        printf '\n\nOUTPUT LOG (COMBINED)\n\n' >&2
+        printf '\n\nOUTPUT PROFILE (COMBINED)\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile"
     }
 
@@ -2267,7 +2287,7 @@ _timep_base64_to_file() {
 
     if PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl &>/dev/null; then
         mapfile -t timep_flameGraphPathA < <(PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl)
-        mapfile -t timep_flameGraphPathA < <(printf '%s\n' "${timep_flameGraphPathA}" | grep -F '/dev/shm/.timep/lib/'"${USER}-${EUID}"; printf '%s\n' "${timep_flameGraphPathA}" | grep -vF '/dev/shm/.timep/lib/'"${USER}-${EUID}")
+        mapfile -t timep_flameGraphPathA < <(printf '%s\n' "${timep_flameGraphPathA[@]}" | grep -F '/dev/shm/.timep/lib/'"${USER}-${EUID}"; printf '%s\n' "${timep_flameGraphPathA[@]}" | grep -vF '/dev/shm/.timep/lib/'"${USER}-${EUID}")
         if (( ${#timep_flameGraphPathA[@]} > 1 )) && type -p date &>/dev/null; then
             t=$(date -r "${timep_flameGraphPathA[0]}" '+%s')
             k=0
