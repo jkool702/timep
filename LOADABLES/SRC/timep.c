@@ -1,6 +1,13 @@
 // timep.c
 // to compile loadable shared librrary file (timep.so): clone bash git tree, cd to bash/examples/loadables, copy "timep.c" to that dir, and run 
 // gcc -Wall -fPIC -flto -O3 -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -I. -shared  -o timep.so timep.c
+//
+// for cross compile:
+// aarch64-linux-gnu-gcc --sysroot=/usr/aarch64-redhat-linux/sys-root/fc41/ -v -fPIC -flto -static -DHAVE_CONFIG_H -DSHELL -DLOADABLE_BUILTIN -DSELECT_COMMAND -O3 -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -I/usr/lib/gcc/aarch64-linux-gnu/14/include-fixed -I/usr/lib/gcc/aarch64-linux-gnu/14/include -I/mnt/ramdisk/bash/examples/loadables -c timep.c -o timep.o
+// aarch64-linux-gnu-gcc --sysroot=/usr/aarch64-redhat-linux/sys-root/fc41/  -shared -o timep.so timep.o
+
+
+
 // Enable GNU extensions 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
