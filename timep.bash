@@ -1971,6 +1971,18 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n\|\n?$/\n/; s/\n\|?\n/\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
     A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
+
+    spacerN=0
+    while read -r nn; do 
+        if [[ "${nn}" == *\|*\:* ]]; then
+            nnn="\|${nn#*\|}"
+            nnn="${nnn%%\:*}"
+        else
+            nnn=''
+        fi
+        (( spacerN = ${#nnn} > spacerN ? ${#nnn} : spacerN ))
+    done <"${timep_LOG_NESTING[0]}.out.combined"
+
     {
         for kk in "${!A[@]}"; do
             # each element of A is one top-level sub-tree
@@ -2037,13 +2049,17 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 count="${tA[4]}"
                 Lstart="${L[$jj]%%\:*}"
+                Lstart0="${Lstart%%[0-9]*}"
+                (( spacerCur = spacerN - ${#Lstart} ))
+                [[ ${timep_runType} == 'f' ]] && [[ ${Lstart0} ]] && (( ${#Lstart0} < 5  )) && printf '|\n'
+
+                Lend="${L[$jj]#*\:}"
+                Lend="${Lend##*([[:space:]])}"
                 
                 # write out final profile line
-                [[ ${Lstart} ]] && printf '%s:\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx)\t%s\n' "${Lstart}" "${wTime}" "${wTimeP}" "${cTime}" "${cTimeP}" "${count}" "${L[$jj]#*\:}";
+                [[ ${Lstart} ]] && printf '%s:%'"${spacerCur}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx)\t%s\n' "${Lstart}" '' "${wTime}" "${wTimeP}" "${cTime}" "${cTimeP}" "${count}" "${Lend}"
                 
-                Lstart0="${Lstart%%[0-9]*}"
-                [[ ${timep_runType} == 'f' ]] && [[ ${Lstart} ]] && (( ${#Lstart0} < 5  )) && printf '|\n'
-
+       
             done
             printf '\n'
         done
