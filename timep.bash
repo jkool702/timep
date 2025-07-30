@@ -1537,7 +1537,7 @@ _timep_PROCESS_FLAMEGRAPH() {
 
     shopt -s extglob
 
-    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag fdRead
+    local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag fdRead ratioFactor ratioFactorR
     local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
 
     if [[ -e "$1" ]]; then
@@ -1563,9 +1563,26 @@ _timep_PROCESS_FLAMEGRAPH() {
     IFS0="${IFS@Q}"
     IFS0="${IFS0/["'"\$]/IFS\=&}"
     IFS=
-    [[ "${cpuTimeA[*]}" ]] && cpuTimeFlag=true || cpuTimeFlag=false
+    if [[ "${cpuTimeA[*]}" ]]; then
+        cpuTimeFlag=true
+        (( ${#wallTimeaA[@]} == ${#cpuTimeA[@]} )) && {
+            IFS='+'
+            (( ratioFactor = ( 20 * ( ${wallTimeA[*]} ) ) / ( ${cpuTimeA[*]} ) ))
+            (( ratioFactorR = ( 20 * ( ${cpuTimeA[*]} ) ) / ( ${wallTimeA[*]} ) ))
+        }
+    else
+        cpuTimeFlag=false
+    fi
     eval "${IFS0:-unset IFS}"
     unset IFS0
+
+    # dont have commands where cpuTimeis <5% of wall time contribute to the CDF
+    ${cpuTimeFlag} && [[ ${ratioFactor} ]] && {
+        for kk in "${!wallTimeA[@]}; do
+            (( ( ( ratioFactor * cpuTimeA[$kk] ) / wallTimeA[$kk] ) == 0 )) && wallTimeA[$kk]="${wallTimeA[$kk]}.1"
+            (( ( ( ratioFactorR * wallTimeA[$kk] ) / cpuTimeA[$kk] ) == 0 )) && cpuTimeA[$kk]="${cpuTimeA[$kk]}.1"
+        done
+    }
 
     # sort times then prepend line numbers to start
     mapfile -t wallTimeSortA < <(printf '%s\n' "${wallTimeA[@]}" | sort -n | grep -nE '' | sed -E s/'\:'/' '/)
@@ -1581,6 +1598,10 @@ _timep_PROCESS_FLAMEGRAPH() {
     while read -r a b c; do
         { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
         (( n = ( ( b - 1 ) << 1 ) + a ))
+        [[ "${c}" == *'.1' ]] && {
+            c="${c%.*}"
+            a=0
+        }
         (( wallTimeCDF_map[$n] = ${wallTimeCDF_map[$n]:-0} + a * c ))
         wallTimeCDF_map0[$c]="$n"
     done < <(printf '%s\n' "${wallTimeSortA[@]}" | uniq -c -f1)
@@ -1610,6 +1631,10 @@ _timep_PROCESS_FLAMEGRAPH() {
          while read -r a b c; do
             { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
             (( n = ( ( b - 1 ) << 1 ) + a ))
+            [[ "${c}" == *'.1' ]] && {
+                c="${c%.*}"
+                a=0
+            }
             (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + a * c ))
             cpuTimeCDF_map0[$c]="$n"
         done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
