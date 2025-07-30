@@ -1427,21 +1427,23 @@ printf '%s;' "${fgA[@]}")"
         [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) #|| linenoUniqWTimeA[$kk]=0
         [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) #|| linenoUniqCTimeA[$kk]=0
 
-        (( wTimeP0 = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
-        printf -v wTimeP '%0.4d' "${wTimeP0}"
-        case "${wTimeP}" in
-            10000) linenoUniqWTimePA[$kk]=100.00 ;;
-            0|'') linenoUniqWTimePA[$kk]=00.00 ;;
-            *) linenoUniqWTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
-        esac
+        (( linenoUniqWTimePA[$kk] = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
+        #(( wTimeP0 = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
+        #printf -v wTimeP '%0.4d' "${wTimeP0}"
+        #case "${wTimeP}" in
+        #    10000) linenoUniqWTimePA[$kk]=100.00 ;;
+        #    0|'') linenoUniqWTimePA[$kk]=00.00 ;;
+        #    *) linenoUniqWTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
+        #esac
 
-        (( cTimeP0 = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
-        printf -v cTimeP '%0.4d' "${cTimeP0}"
-        case "${cTimeP}" in
-            10000) linenoUniqCTimePA[$kk]=100.00 ;;
-            0|'') linenoUniqCTimePA[$kk]=00.00 ;;
-            *) linenoUniqCTimePA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
-        esac
+        (( linenoUniqCTimePA[$kk] = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
+        #(( cTimeP0 = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
+        #printf -v cTimeP '%0.4d' "${cTimeP0}"
+        #case "${cTimeP}" in
+        #    10000) linenoUniqCTimePA[$kk]=100.00 ;;
+        #    0|'') linenoUniqCTimePA[$kk]=00.00 ;;
+        #    *) linenoUniqCTimePA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
+        #esac
 
     done
 #declare -p linenoUniqWTimeA linenoUniqCTimeA  linenoUniqWTimePA linenoUniqCTimePA >&2
@@ -1503,15 +1505,15 @@ printf '%s;' "${fgA[@]}")"
             (( kk == 0  )) || printf '\n\n'
 
             # convert microseconds to seconds
-            printf -v wTime0 '%0.7d' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}"
-            (( d6 = ${#wTime0} - 6 ))
-            printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
-            printf -v cTime0 '%0.7d' "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
-            (( d6 = ${#cTime0} - 6 ))
-            printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
+            #printf -v wTime0 '%0.7d' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}"
+            #(( d6 = ${#wTime0} - 6 ))
+            #printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+            #printf -v cTime0 '%0.7d' "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
+            #(( d6 = ${#cTime0} - 6 ))
+            #printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
             # write line
-            logMergeAll=("$(printf '%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${wTime}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${cTime}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoUniqA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
+            logMergeAll=("$(printf '%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoUniqA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1523,16 +1525,16 @@ printf '%s;' "${fgA[@]}")"
             [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk1]}.out.combined")
                 if (( ${#logMergeA[@]} == 0 )); then
                     continue
-                elif (( ${#logMergeA[@]} <= 2 )); then
-                    printf '\n|-- %s' "${logMergeA[@]}"
-                elif (( ${#logMergeA[@]} > 2 )); then
-                    printf '\n|-- %s' "${logMergeA[0]}"
-                    printf '\n|   %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
-                    printf '\n|-- %s' "${logMergeA[-1]}"
+                else
+                    printf '\n%s\t|-- %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
+                    for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
+                        printf '\n%s\t|   %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
+                    done
+                    (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t|-- %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
                 fi)")
         done
 
-        printf '%s' "${logMergeAll[@]@Q}"
+        printf '%s' "${logMergeAll[@]}"
 
         :<<'EOF'
 
@@ -1973,10 +1975,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     exec {timep_fd_done}>&-
     exec {timep_fd_lock}>&-
 
-    return 0
-
     read -r -u "${fd_sleep}" -t 0.01 _ || :
-    trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
+    #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
 
     printf '\n\nFINALIZING OUTPUTS\n' >&2
@@ -2020,29 +2020,124 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
     sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' >"${timep_TMPDIR}/profiles/out.profile"
-    else
-        cat "${timep_LOG_NESTING[0]}.out.combined" >"${timep_TMPDIR}/profiles/out.profile"
+        echo "$(sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/')" >"${timep_LOG_NESTING[0]}.out.combined"
     fi
-
-    # remove some (all?) of the spurious '(&)' marks caused by process substitutions
-    grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | {
-        A="$(<"${timep_TMPDIR}/profiles/out.profile")";
-        B="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
-
-        while read -r nn; do
-            A="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$A")";
-            B="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$B")";
-        done;
-
-        sed -E 's/ \(\^\)$//'  <<<"$A" >"${timep_TMPDIR}/profiles/out.profile";
-        sed -E 's/ \(\^\)\t/\t/'  <<<"$B" >"${timep_TMPDIR}/profiles/out.profile.full";
-    }
 
     # get total runtime
     read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
+
+    # combine lines/times/percentages for main (combined) profile
+    mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n\n/\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
+    A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
+    unset "AA"
+    {
+        for kk in "${!A[@]}"; do 
+            # each element of A is one top-level sub-tree
+            # L will contain unique lines (minus times) from ${A[$kk]}
+            # each T[$jj] will contain all times/percentages/counts from all the different lines represented by the unique line in L[$jj] iun a newline-seperated list
+            # AA is an associative array that determines/maps the unique lines to the index $jj
+            T=(); 
+            L=(); 
+            I=(); 
+            declare -A AA; 
+            mapfile -t A0 <<<"${A[$kk]}"
+            for jj in "${!A0[@]}"; do
+                t="${A0[$jj]%%$'\t'*}"
+                l="${A0[$jj]#*$'\t'}"
+                if [[ -z ${AA[${l@Q}]} ]]; then 
+                    AA[${l@Q}]=$jj;
+                    L[$jj]="${l}"; 
+                fi
+                T[${AA[${l@Q}]}]+="${t}"$'\n'; 
+            done 
+            unset "AA"
+
+            # loop over each T and sum times/counts and average percentages
+            for jj in "${!T[@]}"; do 
+                jj0=0; 
+                tA=(0 0 0 0 0); 
+                while read -r -a tA0; do 
+                    for jj1 in {0..4}; do 
+                        (( tA[$jj1] = tA[$jj1] + tA0[$jj1] )); 
+                    done; 
+                    ((jj0++)); 
+                done  <<<"${T[$jj]}"
+                (( tA[1] = tA[1] / jj0 )); 
+                (( tA[3] = tA[3] / jj0 )); 
+
+                # convert integer times (microseconds) and percents (# per 10000) into decimal values (seconds, %)
+                printf -v wTime0 '%0.7d' "${tA[0]}"
+                (( d6 = ${#wTime0} - 6 ))
+                printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+
+                printf -v cTime0 '%0.7d' "${tA[2]}"
+                (( d6 = ${#cTime0} - 6 ))
+                printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
+
+                printf -v wTimeP '%0.4d' "${tA[1]}"
+                case "${wTimeP}" in
+                    10000) wTimeP=100.00 ;;
+                    0|'') wTimeP=00.00 ;;
+                    *) wTimeP="${wTimeP:0:2}.${wTimeP:2}" ;;
+                esac
+
+                printf -v cTimeP '%0.4d' "${tA[3]}"
+                case "${cTimeP}" in
+                    10000) cTimeP=100.00 ;;
+                    0|'') cTimeP=00.00 ;;
+                    *) cTimeP="${cTimeP:0:2}.${cTimeP:2}" ;;
+                esac
+
+                count="${tA[4]}"
+
+                # write out final profile line
+              #  a00="${L[$jj]%%[0-9]*}"
+                #if { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
+                    printf '%s:\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx)\t%s\n' "${L[$jj]%%\:*}" "${wTime}" "${wTimeP}" "${cTime}" "${cTimeP}" "${count}" "${L[$jj]#*\:}";
+
+                #else
+                 #   # get percent of total wall clock time
+                  #  ((p1w = 10000 * tA[0] / timep_wtimeALL))
+                  #  printf -v p1w '%0.4d' "${p1w//[^0-9]/}"
+                   # if ((10#0${p1w} == 10000)); then
+                    #    p1w="100.00"
+                    #else
+                    #    p1w="${p1w:0:2}.${p1w:2}"
+                    #fi
+
+                    # get percent of total cpu time
+     #               ((p1c = 10000 * tA[2] / timep_ctimeALL))
+      #              printf -v p1c '%0.4d' "${p1c//[^0-9]/}"
+       #             if ((10#0${p1c} == 10000)); then
+        #                p1c="100.00"
+         #           else
+          #              p1c="${p1c:0:2}.${p1c:2}"
+           #         fi
+
+            #        printf '%s:\t(%ss|%s%|%s%%)\t(%ss|%s%%|%s%%)\t(%sx)\t%s\n' "${L[$jj]%%\:*}" "${wTime}" "${wTimeP}" "${p1w}" "${cTime}" "${cTimeP}" "${p1c}" "${count}" "${L[$jj]#*\:}";
+             #   fi
+            done
+            printf '\n'
+        done
+
+        echo "${A_end}" 
+    } >"${timep_TMPDIR}/profiles/out.profile"
+
+    # remove some (all?) of the spurious '(&)' marks caused by process substitutions
+    grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | {
+        P="$(<"${timep_TMPDIR}/profiles/out.profile")";
+        PF="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
+
+        while read -r nn; do
+            P="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$P")";
+            PF="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$PF")";
+        done;
+
+        sed -E 's/ \(\^\)$//'  <<<"$P" >"${timep_TMPDIR}/profiles/out.profile";
+        sed -E 's/ \(\^\)\t/\t/'  <<<"$PF" >"${timep_TMPDIR}/profiles/out.profile.full";
+    }
 
     # add another percentage showing "percent of total runtime" to final outputs
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
