@@ -2075,19 +2075,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 (( d6 = ${#cTime0} - 6 ))
                 printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
-                printf -v wTimeP '%0.4d' "${tA[1]}"
-                case "${wTimeP}" in
-                    10000) wTimeP=100.00 ;;
-                    0|'') wTimeP=00.00 ;;
-                    *) wTimeP="${wTimeP:0:2}.${wTimeP:2}" ;;
-                esac
+                printf -v wTimeP '%5.3d' "${tA[1]}"
+                wTimeP="${wTimeP:0:3}.${wTimeP:3}"
 
-                printf -v cTimeP '%0.4d' "${tA[3]}"
-                case "${cTimeP}" in
-                    10000) cTimeP=100.00 ;;
-                    0|'') cTimeP=00.00 ;;
-                    *) cTimeP="${cTimeP:0:2}.${cTimeP:2}" ;;
-                esac
+                printf -v cTimeP '%5.3d' "${tA[3]}"
+                cTimeP="${cTimeP:0:2}.${cTimeP:2}" 
 
                 count="${tA[4]}"
                 Lstart="${L[$jj]%%\:*}"
@@ -2144,21 +2136,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 # get percent of total runtime
                 (( p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL ))
-                printf -v p1w '%0.4d' "${p1w//[^0-9]/}"
-                if [[ "${p1w}" == '10000' ]]; then
-                    p1w="100.00"
-                else
-                    printf -v p1w '%3.1d.%s' "${p1w:0:2}" "${p1w:2}"
-                fi
+                printf -v p1w '%5.3d' "${p1w//[^0-9]/}"
+                p1w="${p1w:0:3}.${p1w:3}"
 
                 # get percent of total cpu time
                 (( p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL ))
-                printf -v p1c '%0.4d' "${p1c//[^0-9]/}"
-                if [[ "${p1c}" == '10000' ]]; then
-                    p1c="100.00"
-                else
-                    printf -v p1c '%3.1d.%s' "${p1c:0:2}" "${p1c:2}"
-                fi
+                printf -v p1c '%5.3d' "${p1c//[^0-9]/}"
+                p1c="${p1c:0:3}.${p1c:3}"
 
                 a00="${a0%%[0-9\.]*}";
 
