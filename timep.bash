@@ -623,6 +623,7 @@ _timep_getFuncSrc() {
         timep_LINENO[${timep_FNEST_CUR}]="${timep_LINENO_0}"
         timep_BG_PID_PREV="$!"
         timep_BASHPID_PREV="$BASHPID"
+        timep_NEXEC_0_TRAP="${timep_NEXEC_0}"
         ${timep_SKIP_DEBUG_NEXT_FLAG} && {
             timep_SKIP_DEBUG_NEXT_FLAG=false
             timep_SKIP_DEBUG_FLAG=true
@@ -683,7 +684,7 @@ _timep_getFuncSrc() {
     export -p -f trap &>/dev/null && export -n -f trap
 
         { printf 'declare -gx timep_EXIT_TRAP_STR='"'"'%s'"'"'\n\ndeclare -gx timep_RETURN_TRAP_STR='"'"'%s'"'"'\n\ndeclare -gx timep_DEBUG_TRAP_STR_0='"'"'%s'"'"'\n\ndeclare -gx timep_DEBUG_TRAP_STR_1='"'"'%s'"'"'\n\n%s\n\n' "${timep_EXIT_TRAP_STR//"'"/"'"'"'"'"'"'"'"}"  "${timep_RETURN_TRAP_STR//"'"/"'"'"'"'"'"'"'"}" "${timep_DEBUG_TRAP_STR_0//"'"/"'"'"'"'"'"'"'"}" "${timep_DEBUG_TRAP_STR_1//"'"/"'"'"'"'"'"'"'"}" 'trap() {
-        local trapStr trapStr0 trapType
+        local trapStr trapStr0 trapStrCur trapType
 
         (( $# == 0 )) && return 1
 
@@ -710,10 +711,18 @@ _timep_getFuncSrc() {
 
         for trapType in "${@}"; do
             case "${trapType}" in
-                EXIT)    builtin trap "${trapStr0}${timep_EXIT_TRAP_STR}" EXIT ;;
-                RETURN)  builtin trap "${trapStr0}${timep_RETURN_TRAP_STR}" RETURN ;;
-                DEBUG)   builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG ;;
-                *)       eval "builtin trap ${trapStr@Q} ${trapType}" ;;
+                EXIT)    
+                   builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (EXIT): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0_TRAP}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_EXIT_TRAP_STR}" EXIT
+                ;;
+                RETURN)  
+                   builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (RETURN): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0_TRAP}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
+                ;;
+                DEBUG) 
+                   builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG
+                ;;
+                *)     
+                    builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0_TRAP}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr}" "${trapType}"
+                ;;
             esac
         done
     }'; } >"${timep_TMPDIR}/functions.bash"
@@ -761,7 +770,7 @@ _timep_getFuncSrc() {
 
         builtin trap - DEBUG EXIT RETURN
 
-        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_BASH_PATH timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0
+        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_BASH_PATH timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_LOGPATH_TRAP timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0
         declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_0 timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A
 
         set -mT
@@ -1160,7 +1169,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP
-    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA
+    local -a A logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqCountRA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1178,8 +1187,25 @@ _timep_PROCESS_LOG() {
     wTimeTotal=0
     cTimeTotal=0
 
+    # deal with commands run by traps / signal handlers
+    mapfile -t A <"${logCur}"
+    for kk in "${!A[@]}"; do
+        if [[ "${A[$kk]}" == 'TRAP ('*'):'* ]]; then 
+            trapCmd="${A[$kk]}"
+            unset "A[$kk]"
+            trapCmd="${trapCmd/TRAP/\[TRAP\]}"
+        elif [[ ${trapCmd} ]]; then
+            if [[ "${A[$kk]}" == *'-'+([0-9])+([[:space:]])'::'+([[:space:]])* ]] ; then  
+                A[$kk]="${A[$kk]%\:\:*}::"$'\t'"${trapCmd}"; 
+            else 
+                trapCmd=''; 
+            fi;
+        fi
+    done
+
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sort -V -k11,11 <"${logCur}")
+    mapfile -t logA < <(printf '%s\n' "${A[@]}" | sort -V -k11,11)
+    unset A
 
     log_dupe_flag=false
     kk1=0
