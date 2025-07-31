@@ -2019,6 +2019,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         fi
         (( spacerN = ${#nnn} > spacerN ? ${#nnn} : spacerN ))
     done <"${timep_LOG_NESTING[0]}.out.combined"
+    (( spacerN < 16 )) && spacerN=16
 
     {
         for kk in "${!A[@]}"; do
@@ -2124,7 +2125,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
         # split lines into start, time, percent, end
-        echo "$(sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
+        (( spacerN0 = spacerN > 16 ? spacerN - 16 : 0 ))
+        echo "$(printf -v headerTXT 'LINE_NUMBER____%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND_________________' ''
+            printf '%s\n|-- lvl <line>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
+            sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
         IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
 
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $a1 ]]; } || {
@@ -2161,9 +2165,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
                 if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
-                    printf '%s(%ss|%s%%)       %s(%ss|%s%%)       %s%s%s\n' "${a0}" "${tw}" "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
+                    printf '%s( %ss |%3.1d.%s%% )          %s( %ss |%3.1d.%s%% )            %s%s%s\n' "${a0}" "${tw}"  "${pw%.*}" "${pw#*.}" "${s}" "${tc}" "${pc%.*}" "${pc#*.}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 else
-                    printf '%s(%ss|%s%%|%s%%)%s(%ss|%s%%|%s%%)%s%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
+                    printf '%s( %ss |%3.1d.%s%% |%3.1d.%s%% )   %s( %ss |%3.1d.%s%% |%3.1d.%s%% )   %s%s%s\n' "${a0}" "${tw}" "${pw%.*}" "${pw#*.}" "${p1w%.*}" "${p1w#*.}" "${s}" "${tc}" "${pc%.*}" "${pc#*.}" "${p1c%.*}" "${p1c#*.}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 fi
             done)" >"${logPathCur}"
     done
@@ -2195,22 +2199,22 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     [[ "${timep_outType}" == *' ff '* ]] && {
-        printf '\n\nFLAMEGRAPH FULL STACK TRACE\n\n' >&2
+        printf '\n\nFLAMEGRAPH FULL STACK TRACE:\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.flamegraph.full"
     }
 
     [[ "${timep_outType}" == *' f '* ]] && {
-        printf '\n\nFLAMEGRAPH FOLDED STACK TRACE\n\n' >&2
+        printf '\n\nFLAMEGRAPH FOLDED STACK TRACE:\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.flamegraph"
     }
 
     [[ "${timep_outType}" == *' pf '* ]] && {
-        printf '\n\nOUTPUT PROFILE (FULL)\n\n' >&2
+        printf '\n\nOUTPUT PROFILE (FULL):\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile.full"
     }
 
     [[ "${timep_outType}" == *' p '* ]] && {
-        printf '\n\nOUTPUT PROFILE (COMBINED)\n\n' >&2
+        printf '\n\nOUTPUT PROFILE (COMBINED):\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile"
     }
 
