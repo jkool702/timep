@@ -1862,7 +1862,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         ((kk--))
                         ((jj++))
                         unset "kkNeed[$doneInd]"
-                        printf '\rFINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
+                        printf '\rPROGRESS: FINISHED PROCESSING TIMEP LOG #%s of %s' "${jj}" "${timep_LOG_NUM}" >&2
                         (( nWorkerMax < nWorkerMax0 )) && ((nWorkerMax++))
                     fi
                 elif (( nRetry <= nRetryMax )); then
@@ -2007,7 +2007,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
     # combine lines/times/percentages for main (combined) profile
-    printf '\nMERGING LINES IN COMBINED PROFILE\n' >&2
+    printf '\nMERGING REPEATED COMMANDS IN COMBINED PROFILE\n' >&2
     mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n\|\n?$/\n/; s/\n\|?\n/\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
     A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
@@ -2024,7 +2024,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     done <"${timep_LOG_NESTING[0]}.out.combined"
     (( spacerN < 16 )) && spacerN=16
 
-    {
+   printf '\rPROGRESS: FINISHED MERGEING 0 OF %s TOP-LEVEL COMMAND TREES' "${#A[@]}" >&2
+   {
         for kk in "${!A[@]}"; do
             # each element of A is one top-level sub-tree
             # L will contain unique lines (minus times) from ${A[$kk]}
@@ -2096,6 +2097,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
        
             done
             printf '\n'
+            printf '\rPROGRESS: FINISHED MERGEING %s OF %s TOP-LEVEL COMMAND TREES' "$kk" "${#A[@]}" >&2
         done
 
         echo "${A_end}"
