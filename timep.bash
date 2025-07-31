@@ -1162,7 +1162,7 @@ _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP
     local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA
-    local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA
+    local -A linenoUniqLineA linenoUniqCountA linenoUniqCountRA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
         trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2' ERR #; _timep_DEBUG_PRINTVARS >&2' ERR
@@ -1319,12 +1319,12 @@ _timep_PROCESS_LOG() {
         }
 
         if (( 10#0${wTimeA[$kk]//[^0-9]/} >= 1 )); then
-            (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
+            ${inPipeFlag} || (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
         else
              wTimeA[$kk]=1
         fi
         if (( 10#0${cTimeA[$kk]//[^0-9]/} >= 1 )); then
-             (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
+            ${inPipeFlag} || (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
         else
             cTimeA[$kk]=1
         fi
@@ -1371,7 +1371,7 @@ printf '%s;' "${fgA[@]}")"
     kk1=0
     lineno1=0
     for (( kk=0; kk<${#logA[@]}; kk++ )); do
-        (( nPipeA[$kk] == 1 )) || continue
+        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
         if (( kk > 0 )) && (( linenoA[$kk] == ${linenoA[$kk1]%.*} )); then
             ((lineno1 = lineno1 + 1))
         else
@@ -1401,12 +1401,15 @@ printf '%s;' "${fgA[@]}")"
         }
         if [[ ${linenoUniqLineA[${linenoA[$kk]}]} ]]; then
             linenoUniqLineA[${linenoA[$kk]}]+=" $kk"
+            [[ "${cmdA[$kk]}" == "${linenoUniqCmdA[${linenoA[$kk]}]}" ]] || (( linenoUniqCountRA[${linenoA[$kk]}] = linenoUniqCountRA[${linenoA[$kk]}] + 1 ))
             (( linenoUniqCountA[${linenoA[$kk]}] = linenoUniqCountA[${linenoA[$kk]}] + 1 ))
             linenoUniqWTimeA[${linenoA[$kk]}]+=" ${wTimeA[$kk]}"
             linenoUniqCTimeA[${linenoA[$kk]}]+=" ${cTimeA[$kk]:-1}"
         else
             linenoUniqLineA[${linenoA[$kk]}]="$kk"
+            linenoUniqCmdA[${linenoA[$kk]}]="${cmdA[$kk]}"
             linenoUniqCountA[${linenoA[$kk]}]=1
+            linenoUniqCountRA[${linenoA[$kk]}]=0
             linenoUniqWTimeA[${linenoA[$kk]}]="${wTimeA[$kk]}"
             linenoUniqCTimeA[${linenoA[$kk]}]="${cTimeA[$kk]:-1}"
         fi
@@ -1440,7 +1443,7 @@ printf '%s;' "${fgA[@]}")"
     for kk in "${!logA[@]}"; do
         if ${inPipeFlag}; then
             # we are in a pipeline but not in the 1st element. dont add line to log
-            (( isPipeA[$kk] == 1 )) && inPipeFlag=false
+            { [[ -z ${isPipeA[$kk]} ]] || (( isPipeA[$kk] == 1 )); } && inPipeFlag=false
         else
             # add line to log
             (( kk == 0  )) || printf '\n\n'
@@ -1481,23 +1484,23 @@ printf '%s;' "${fgA[@]}")"
     # write out new combined (uniq lineno) merged-upward log
     inPipeFlag=false
     for kk in "${!linenoUniqA[@]}"; do
-        if ${inPipeFlag}; then
-            # we are in a pipeline but not in the 1st element. dont add line to log
-            { [[ -z ${isPipeA[$kk]} ]] || (( isPipeA[$kk] == 1 )); } && inPipeFlag=false
-        else
-            # add line to log
-            (( kk == 0  )) || printf '\n\n'
+        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
 
-            # write line
-            logMergeAll=("$(printf '\n%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoUniqA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
+        # add line to log
+        (( kk == 0  )) || printf '\n\n'
 
-            # check if this is the start of a pipeline
-            [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
-        fi
+        (( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] - linenoUniqCountRA[${linenoUniqA[$kk]}] ))
+
+        # write line
+        logMergeAll=("$(printf '\n%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoUniqA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
+
+        # check if this is the start of a pipeline
+        [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
+
         # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
-        for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
+        [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
             [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined")
                 if (( ${#logMergeA[@]} > 0 )); then
                     printf '\n%s\t|-- %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
@@ -2054,12 +2057,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 tA=(0 0 0 0 0);
                 while read -r -a tA0; do
                     for jj1 in {0..4}; do
-                        (( tA[$jj1] = tA[$jj1] + tA0[$jj1] ));
+                        (( tA[$jj1] = 10#0${tA[$jj1]} + 10#0${tA0[$jj1]} ));
                     done;
                     ((jj0++));
                 done  <<<"${T[$jj]}"
-                (( tA[1] = tA[1] / ( jj0 - 1 ) ));
-                (( tA[3] = tA[3] / ( jj0 - 1 ) ));
+                (( jj0 > 0 )) && {
+                    (( tA[1] = 10#0${tA[1]} / ( jj0 - 1 ) ));
+                    (( tA[3] = 10#0${tA[3]} / ( jj0 - 1 ) ));
+                }
 
                 # convert integer times (microseconds) and percents (# per 10000) into decimal values (seconds, %)
                 printf -v wTime0 '%0.7d' "${tA[0]}"
@@ -2124,7 +2129,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     printf '\nADDING PERCENT OF TOTAL TIME TO PROFILES\n' >&2
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
-        # split lines into start, time, percent, end
+        # split lines into start, time, percent, endr
         (( spacerN0 = spacerN > 16 ? spacerN - 16 : 0 ))
         echo "$(printf -v headerTXT 'LINE_NUMBER____%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND_________________' ''
             printf '%s\n|-- lvl <line>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
@@ -2138,21 +2143,21 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 }
 
                 # get percent of total runtime
-                ((p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL))
+                (( p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL ))
                 printf -v p1w '%0.4d' "${p1w//[^0-9]/}"
-                if ((10#0${p1w} == 10000)); then
+                if [[ "${p1w}" == '10000' ]]; then
                     p1w="100.00"
                 else
-                    p1w="${p1w:0:2}.${p1w:2}"
+                    printf -v p1w '%3.1d.%s' "${p1w:0:2}" "${p1w:2}"
                 fi
 
                 # get percent of total cpu time
-                ((p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL))
+                (( p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL ))
                 printf -v p1c '%0.4d' "${p1c//[^0-9]/}"
-                if ((10#0${p1c} == 10000)); then
+                if [[ "${p1c}" == '10000' ]]; then
                     p1c="100.00"
                 else
-                    p1c="${p1c:0:2}.${p1c:2}"
+                    printf -v p1c '%3.1d.%s' "${p1c:0:2}" "${p1c:2}"
                 fi
 
                 a00="${a0%%[0-9\.]*}";
@@ -2165,9 +2170,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
                 if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
-                    printf '%s( %ss |%3.1d.%s%% )          %s( %ss |%3.1d.%s%% )            %s%s%s\n' "${a0}" "${tw}"  "${pw%.*}" "${pw#*.}" "${s}" "${tc}" "${pc%.*}" "${pc#*.}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
+                    printf '%s( %ss |%s%% )          %s( %ss |%s%% )            %s%s%s\n' "${a0}" "${tw}"  "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 else
-                    printf '%s( %ss |%3.1d.%s%% |%3.1d.%s%% )   %s( %ss |%3.1d.%s%% |%3.1d.%s%% )   %s%s%s\n' "${a0}" "${tw}" "${pw%.*}" "${pw#*.}" "${p1w%.*}" "${p1w#*.}" "${s}" "${tc}" "${pc%.*}" "${pc#*.}" "${p1c%.*}" "${p1c#*.}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
+                    printf '%s( %ss |%s%% |%s%% )   %s( %ss |%s%% |%s%% )   %s%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 fi
             done)" >"${logPathCur}"
     done
@@ -2364,5 +2369,4 @@ _timep_file_to_base64() {
     done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g');
 
 }
-
 
