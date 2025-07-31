@@ -1108,9 +1108,8 @@ _timep_PERCENT_AVG() {
     done
     (( tSum = 0${tSum//\%/} ))
     (( tSum = tSum / ${#} ))
-    printf -v d '%0.4d' "${tSum}"
-    (( d2 = ${#d} - 2 ))
-    printf '%s.%s' "${d:0:$d2}" "${d:$d2}"
+    printf -v d '%5.3d' "${tSum}"
+    printf '%s' "${d:0:3}.${d:3}"
 }
 
 _timep_FILE_EXISTS() {
@@ -1380,20 +1379,12 @@ printf '%s;' "${fgA[@]}")"
         linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
 
         (( wTimeP0 =  wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
-        printf -v wTimeP '%0.4d' "${wTimeP0}"
-        case "${wTimeP}" in
-            10000) wTimePA[$kk]=100.00 ;;
-            0|'') wTimePA[$kk]=00.00 ;;
-            *) wTimePA[$kk]="${wTimeP:0:2}.${wTimeP:2}" ;;
-        esac
+        printf -v wTimeP '%5.3d' "${wTimeP0}"
+        wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}" 
 
         (( cTimeP0 =  cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
-        printf -v cTimeP '%0.4d' "${cTimeP0}"
-        case "${cTimeP}" in
-            10000) cTimePA[$kk]=100.00 ;;
-            0|'') cTimePA[$kk]=00.00 ;;
-            *) cTimePA[$kk]="${cTimeP:0:2}.${cTimeP:2}" ;;
-        esac
+        printf -v cTimeP '%5.3d' "${cTimeP0}"
+        cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}" 
 
         [[ "${linenoUniq}" == *" ${linenoA[$kk]} "* ]] || {
             linenoUniqA[$kk]="${linenoA[$kk]}"
@@ -2080,7 +2071,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 wTimeP="${wTimeP:0:3}.${wTimeP:3}"
 
                 printf -v cTimeP '%5.3d' "${tA[3]}"
-                cTimeP="${cTimeP:0:2}.${cTimeP:2}" 
+                cTimeP="${cTimeP:0:3}.${cTimeP:3}" 
 
                 count="${tA[4]}"
                 Lstart="${L[$jj]%%\:*}"
@@ -2104,7 +2095,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     } >"${timep_TMPDIR}/profiles/out.profile"
 
     # remove some (all?) of the spurious '(&)' marks caused by process substitutions
-    printf '\nREMOVING SPURIOUS MARKS FROM PROFILES\n' >&2
+    printf '...DONE\n\nREMOVING SPURIOUS MARKS FROM PROFILES\n' >&2
     grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | {
         P="$(<"${timep_TMPDIR}/profiles/out.profile")";
         PF="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
@@ -2127,7 +2118,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         (( spacerN0 = spacerN > 16 ? spacerN - 16 : 0 ))
         echo "$(printf -v headerTXT 'LINE_NUMBER____%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND_________________' ''
             printf '%s\n|-- lvl <line>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
-            sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\.]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
+            sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
         IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
 
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $a1 ]]; } || {
