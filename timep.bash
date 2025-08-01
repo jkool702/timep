@@ -1177,9 +1177,9 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA 
-    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA
-    local -A linenoUniqLineA linenoUniqCountA linenoUniqCountRA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA
+    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN  logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA logDepth
+    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA linenoUniqMapA
+    local -A linenoUniqLineA linenoUniqCountA linenoUniqCountRA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
         trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2' ERR #; _timep_DEBUG_PRINTVARS >&2' ERR
@@ -1196,24 +1196,10 @@ _timep_PROCESS_LOG() {
     wTimeTotal=0
     cTimeTotal=0
 
-    # deal with commands run by traps / signal handlers
-:<<'EOF'
-    mapfile -t A <
-    trapCmd=''
-    for kk in "${!A[@]}"; do
-        if [[ "${A[$kk]}" == 'TRAP ('*'):'* ]]; then 
-            trapCmd="${A[$kk]}"
-            unset "A[$kk]"
-            trapCmd="${trapCmd/TRAP/\[TRAP\]}"
-        elif [[ ${trapCmd} ]]; then
-            if [[ "${A[$kk]}" == *'-'+([0-9])+([[:space:]])'::'+([[:space:]])* ]] ; then  
-                A[$kk]="${A[$kk]%\:\:*}::"$'\t'"${trapCmd}"; 
-            else 
-                trapCmd=''; 
-            fi;
-        fi
-    done
-EOF
+    # get current log nesting depth
+    logDepth="${1##*\/.log\/log.}"
+    logDepth="${logDepth//[^.]/}"
+    logDepth="${#logDepth}"
 
     # load current log (sorted by NEXEC) into array
     mapfile -t logA < <(sed -zE 's/\n(TRAP [^\n]+)\n/'$'\034\035''\1\n/g' <"${logCur}" | sort -V -k11,11 | sed -E 's/'$'\034\035''(TRAP .*)$/\n\1/')
@@ -1238,6 +1224,7 @@ EOF
    # loop through lines in reverse order
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
 
+        # deal with commands run by traps / signal handlers
         if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
             (( kk1 = kk + 1 ))
             while (( linenoA[$kk1] < 0 )) && (( kk1 < ${nlogA} )); do
@@ -1333,7 +1320,7 @@ EOF
             (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
         }
 
-        # merge pipelines
+        # merge pipelines commands upward into previous line cmdA
         if ${inPipeFlag}; then
             # we are in a pipeline, but not at the last element
             # override nPipeA and endWTimeA based on the values from the next command and append next command to current cmdA (with `|` in between)
@@ -1417,19 +1404,23 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
-    # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
+    # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=0
-    lineno1=0
     for kk in "${!logA[@]}"; do
         [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
+        
+        # write out flamegraph stack trace line for standard commands
         ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
-        if (( kk > 0 )) && (( 10#0${linenoA[$kk]:-0} == 10#0${linenoA[$kk1]%.*} )); then
+
+        # add nesting depth to lineno
+        if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
             ((lineno1 = lineno1 + 1))
         else
             lineno1=0
         fi
-        linenoA[$kk]="${linenoA[$kk]}.${lineno1}"
+        linenoA[$kk]="${linenoA[$kk]}.${logDepth}.${lineno1}"
 
+        # figure out "percent for current nesting depth" for wall/cpu times
         (( wTimeP0 =  wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
         printf -v wTimeP '%5.3d' "${wTimeP0}"
         wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}" 
@@ -1438,24 +1429,34 @@ printf '%s;' "${fgA[@]}")"
         printf -v cTimeP '%5.3d' "${cTimeP0}"
         cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}" 
 
-        [[ "${linenoUniq}" == *" ${linenoA[$kk]} "* ]] || {
-            linenoUniqA[$kk]="${linenoA[$kk]}"
-            linenoUniq+=" ${linenoA[$kk]} "
-        }
-        if [[ ${linenoUniqLineA[${linenoA[$kk]}]} ]]; then
-            linenoUniqLineA[${linenoA[$kk]}]+=" $kk"
-            [[ "${cmdA[$kk]}" == "${linenoUniqCmdA[${linenoA[$kk]}]}" ]] || (( linenoUniqCountRA[${linenoA[$kk]}] = linenoUniqCountRA[${linenoA[$kk]}] + 1 ))
-            (( linenoUniqCountA[${linenoA[$kk]}] = linenoUniqCountA[${linenoA[$kk]}] + 1 ))
-            linenoUniqWTimeA[${linenoA[$kk]}]+=" ${wTimeA[$kk]}"
-            linenoUniqCTimeA[${linenoA[$kk]}]+=" ${cTimeA[$kk]:-1}"
+        # combine times for lines with same lineno + same command
+
+        # generate mapping for all unique "lineno.depth + command" groups into the lineno.depth.cmd from the first instanced in that group
+        if [[ "${linenoUniq}" == *$'\034'"${linenoA[$kk]%.*}${cmdA[$kk]@Q}"$'\035'* ]] && [[ ${linenoUniqMapAA["${linenoA[$kk]%.*}${cmdA[$kk]@Q}"]} ]]; then
+            linenoUniqMapA[$kk]="${linenoUniqMapAA["${linenoA[$kk]%.*}${cmdA[$kk]@Q}"]}"
         else
-            linenoUniqLineA[${linenoA[$kk]}]="$kk"
-            linenoUniqCmdA[${linenoA[$kk]}]="${cmdA[$kk]}"
-            linenoUniqCountA[${linenoA[$kk]}]=1
-            linenoUniqCountRA[${linenoA[$kk]}]=0
-            linenoUniqWTimeA[${linenoA[$kk]}]="${wTimeA[$kk]}"
-            linenoUniqCTimeA[${linenoA[$kk]}]="${cTimeA[$kk]:-1}"
+            linenoUniqA[$kk]="${linenoA[$kk]}"
+            linenoUniqMapA[$kk]="${linenoA[$kk]}"
+            linenoUniqMapAA["${linenoA[$kk]%.*}${cmdA[$kk]@Q}"]="${linenoA[$kk]}"
+            linenoUniq+=$'\034'"${linenoA[$kk]%.*}${cmdA[$kk]@Q}"$'\035'
         fi
+
+        # aggregate the various profile times/metadata from each command in the group at the index(kk) of 1st line in the group
+        if [[ ${linenoUniqLineA[${linenoUniqMapA[$kk]}]} ]]; then
+            linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
+            #[[ "${cmdA[$kk]}" == "${linenoUniqCmdA[${linenoUniqMapA[$kk]}]}" ]] || (( linenoUniqCountRA[${linenoUniqMapA[$kk]}] = linenoUniqCountRA[${linenoUniqMapA[$kk]}] + 1 ))
+            (( linenoUniqCountA[${linenoUniqMapA[$kk]}] = linenoUniqCountA[${linenoUniqMapA[$kk]}] + 1 ))
+            linenoUniqWTimeA[${linenoUniqMapA[$kk]}]+=" ${wTimeA[$kk]:-1}"
+            linenoUniqCTimeA[${linenoUniqMapA[$kk]}]+=" ${cTimeA[$kk]:-1}"
+        else
+            linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
+            linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]}"
+            linenoUniqCountA[${linenoUniqMapA[$kk]}]=1
+            #linenoUniqCountRA[${linenoUniqMapA[$kk]}]=0
+            linenoUniqWTimeA[${linenoUniqMapA[$kk]}]="${wTimeA[$kk]:-1}"
+            linenoUniqCTimeA[${linenoUniqMapA[$kk]}]="${cTimeA[$kk]:-1}"
+        fi
+
         kk1=${kk}
     done
 
@@ -1509,7 +1510,7 @@ printf '%s;' "${fgA[@]}")"
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
         [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}.out" ]] && {
-            mapfile -t logMergeA < <(grep -E '.+' <"${mergeA[$kk]}.out")
+            mapfile -t logMergeA < <(grep -vE '^[[:space:]]*$' <"${mergeA[$kk]}.out")
             if (( ${#logMergeA[@]} == 0 )); then
                 continue
             elif (( ${#logMergeA[@]} <= 2 )); then
@@ -1532,10 +1533,11 @@ printf '%s;' "${fgA[@]}")"
         # add line to log
         (( kk == 0  )) || printf '\n\n'
 
-        (( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] - linenoUniqCountRA[${linenoUniqA[$kk]}] ))
+        #(( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] - linenoUniqCountRA[${linenoUniqA[$kk]}] ))
+        (( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] ))
 
         # write line
-        logMergeAll=("$(printf '\n%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoUniqA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
+        logMergeAll=("$(printf '\n%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoA[$kk]}" '' "${cmdA[$kk]/%: *([0-9\-]) >>/ >>}")")
 
         # check if this is the start of a pipeline
         [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1544,7 +1546,7 @@ printf '%s;' "${fgA[@]}")"
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
         [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
-            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined")
+            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}((\|-- )|(\|   ))*\.')
                 if (( ${#logMergeA[@]} > 0 )); then
                     printf '\n%s\t|-- %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
                     for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
@@ -2065,7 +2067,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         fi
         (( spacerN = ${#nnn} > spacerN ? ${#nnn} : spacerN ))
     done <"${timep_LOG_NESTING[0]}.out.combined"
-    (( spacerN < 18 )) && spacerN=18
+    (( spacerN < 20 )) && spacerN=20
 
    {
         for kk in "${!A[@]}"; do
@@ -2169,11 +2171,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
-                # split lines into start, time, percent, endr
-                (( spacerN0 = spacerN > 18 ? spacerN - 18 : 0 ))
-                echo "$(printf -v headerTXT 'LINE.CMD_NUMBER__%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND___________________________' ''
-                printf '%s\n|-- <line>.<cmd>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
-                sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
+        # split lines into start, time, percent, endr
+        (( spacerN0 = spacerN > 20 ? spacerN - 20 : 0 ))
+        logCurTmp="$( {
+            printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME__________   \tCOMBINED_CPU_TIME_________________   \tCOMMAND_____________________________' ''
+            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
+            sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
 
                 IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
 
@@ -2202,14 +2205,16 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-		if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${a1}" == $'\t(1x)' ]] || [[ "${a1}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
-                    continue
+        		if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${a1}" == $'\t(1x)' ]] || [[ "${a1}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
+                            continue
                 elif [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
                     printf '%s( %ss |%s%% )          %s( %ss |%s%% )            %s%s%s\n' "${a0}" "${tw}"  "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 else
                     printf '%s( %ss |%s%% |%s%% )   %s( %ss |%s%% |%s%% )   %s%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 fi
-	done)" >"${logPathCur}"
+        	done
+        } | grep -n '' | sed -E s/':'/' '/ | sort -k2)"
+        { grep -vE '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(\|?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g' >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
