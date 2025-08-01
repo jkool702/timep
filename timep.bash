@@ -89,7 +89,7 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
@@ -1248,11 +1248,11 @@ _timep_PROCESS_LOG() {
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
-        #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
-        #cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
         read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'"/}'")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
+        #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
+        cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
         cmdA[$kk]="${cmd}"
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
@@ -2150,24 +2150,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         echo "${A_end}"
     } >"${timep_TMPDIR}/profiles/out.profile"
 
-    # remove some (all?) of the spurious '(&)' marks caused by process substitutions
-    printf '...DONE\n\nREMOVING SPURIOUS MARKS FROM PROFILES\n' >&2
-    grep -E '\(\^\)$' "${timep_TMPDIR}/profiles/out.profile" | sed -E 's/\:.*$//;s/^.* //' | {
-        P="$(<"${timep_TMPDIR}/profiles/out.profile")";
-        PF="$(<"${timep_TMPDIR}/profiles/out.profile.full")";
-
-        while read -r nn; do
-            P="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)$/\1/' <<<"$P")";
-            PF="$(sed -E 's/^('"${nn//./\\.}"'.*) \(\&\)\t/\1\t/' <<<"$PF")";
-        done;
-
-        sed -E 's/ \(\^\)$//'  <<<"$P" >"${timep_TMPDIR}/profiles/out.profile";
-        sed -E 's/ \(\^\)\t/\t/'  <<<"$PF" >"${timep_TMPDIR}/profiles/out.profile.full";
-    }
-
-
     # add another percentage showing "percent of total runtime" to final outputs
-    printf '\nADDING PERCENT OF TOTAL TIME TO PROFILES\n' >&2
+    printf '...DONE\n\nADDING PERCENT OF TOTAL TIME TO PROFILES\n' >&2
 
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
@@ -2214,7 +2198,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
         	done
         } | grep -n '' | sed -E s/':'/' '/ | sort -k2)"
-        { grep -vE '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(\|?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g' >"${logPathCur}"
+        logCurTmp="$({ grep -vE '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(\|?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g')"
+
+        # remove some (all?) of the spurious '(&)' marks caused by process substitutions
+        while read -r nn; do
+            logCurTmp="$(sed -E 's/^('"${nn}"'.*) \(\&\)$/\1/' <<<"${logCurTmp}")"
+        done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//;s/^.* //;s/\..*$//' | sort -u)
+
+        sed -E 's/ \\\(\\\^\\\)$//' <<<"${logCurTmp}" >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
