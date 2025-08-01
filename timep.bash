@@ -2067,13 +2067,15 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     done <"${timep_LOG_NESTING[0]}.out.combined"
     (( spacerN < 16 )) && spacerN=16
 
-   printf '\rPROGRESS: FINISHED MERGEING 0 OF %s TOP-LEVEL COMMAND TREES' "${#A[@]}" >&2
    {
         for kk in "${!A[@]}"; do
             # each element of A is one top-level sub-tree
             # L will contain unique lines (minus times) from ${A[$kk]}
             # each T[$jj] will contain all times/percentages/counts from all the different lines represented by the unique line in L[$jj] iun a newline-seperated list
             # AA is an associative array that determines/maps the unique lines to the index $jj
+	    
+            printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES' "$kk" "${#A[@]}" >&2
+
             T=();
             L=();
             local -A AA;
@@ -2140,9 +2142,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
        
             done
             printf '\n'
-            printf '\rPROGRESS: FINISHED MERGEING %s OF %s TOP-LEVEL COMMAND TREES' "$kk" "${#A[@]}" >&2
         done
 
+        printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES' "${#A[@]}" "${#A[@]}" >&2
         echo "${A_end}"
     } >"${timep_TMPDIR}/profiles/out.profile"
 
@@ -2164,14 +2166,16 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # add another percentage showing "percent of total runtime" to final outputs
     printf '\nADDING PERCENT OF TOTAL TIME TO PROFILES\n' >&2
+
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
-        # split lines into start, time, percent, endr
-        (( spacerN0 = spacerN > 16 ? spacerN - 16 : 0 ))
-        echo "$(printf -v headerTXT 'LINE_NUMBER____%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND_________________' ''
-            printf '%s\n|-- lvl <line>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
-            sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
-        IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
+                # split lines into start, time, percent, endr
+                (( spacerN0 = spacerN > 16 ? spacerN - 16 : 0 ))
+                echo "$(printf -v headerTXT 'LINE_NUMBER____%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND_________________' ''
+                printf '%s\n|-- lvl <line>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
+                sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
+
+                IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
 
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $a1 ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
@@ -2198,12 +2202,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-                if [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
+		if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${a1}" == $'\t(1x)' ]] || [[ "${a1}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
+                    continue
+                elif [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
                     printf '%s( %ss |%s%% )          %s( %ss |%s%% )            %s%s%s\n' "${a0}" "${tw}"  "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 else
                     printf '%s( %ss |%s%% |%s%% )   %s( %ss |%s%% |%s%% )   %s%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
                 fi
-            done)" >"${logPathCur}"
+	done)" >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
