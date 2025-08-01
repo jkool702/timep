@@ -1229,7 +1229,6 @@ EOF
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
 
         if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
-            break
             (( kk1 = kk + 1 ))
             while (( linenoA[$kk1] < 0 )) && (( kk1 < ${nlogA} )); do
                 cmdA[$kk1]="${logA[$kk]}"
