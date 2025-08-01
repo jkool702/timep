@@ -711,16 +711,28 @@ _timep_getFuncSrc() {
         for trapType in "${@}"; do
             case "${trapType}" in
                 EXIT)    
-                   builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (EXIT): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_EXIT_TRAP_STR}" EXIT
+                    if [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]]; then
+                        builtin trap "${timep_EXIT_TRAP_STR}" EXIT
+                    else
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (EXIT): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_EXIT_TRAP_STR}" EXIT
+                    fi
                 ;;
                 RETURN)  
-                   builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (RETURN): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
+                    if [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]]; then
+                        builtin trap "${timep_RETURN_TRAP_STR}" RETURN
+                    else
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (RETURN): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
+                    fi
                 ;;
                 DEBUG) 
                    builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG
                 ;;
                 *)     
-                    builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr}" "${trapType}"
+                    if [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]]; then
+                        builtin trap - "${trapType}"
+                    else
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr}" "${trapType}"
+                    fi
                 ;;
             esac
         done
