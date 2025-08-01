@@ -89,7 +89,7 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
@@ -1479,7 +1479,7 @@ printf '%s;' "${fgA[@]}")"
     done
 
     read -r timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX <"${timep_TMPDIR}/.log/.log_nesting_cur_max"
-    (( spacerN = 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${timep_LOG_NESTING_CUR:-0} ) )) || spacerN=0
+    (( spacerN = 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${timep_LOG_NESTING_CUR:-0} ) )) || spacerN=1
 
     # write out new merged-upward log
     inPipeFlag=false
@@ -2065,7 +2065,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         fi
         (( spacerN = ${#nnn} > spacerN ? ${#nnn} : spacerN ))
     done <"${timep_LOG_NESTING[0]}.out.combined"
-    (( spacerN < 16 )) && spacerN=16
+    (( spacerN < 18 )) && spacerN=18
 
    {
         for kk in "${!A[@]}"; do
@@ -2170,9 +2170,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
 
                 # split lines into start, time, percent, endr
-                (( spacerN0 = spacerN > 16 ? spacerN - 16 : 0 ))
-                echo "$(printf -v headerTXT 'LINE_NUMBER____%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND_________________' ''
-                printf '%s\n|-- lvl <line>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
+                (( spacerN0 = spacerN > 18 ? spacerN - 18 : 0 ))
+                echo "$(printf -v headerTXT 'LINE.CMD_NUMBER__%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME________   \tCOMBINED_CPU_TIME_______________   \tCOMMAND___________________________' ''
+                printf '%s\n|-- <line>.<cmd>:%'"${spacerN0}"'.s\t( time | cur lvl %% | total %% )   \t( time | cur lvl %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
                 sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
 
                 IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
