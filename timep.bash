@@ -1167,8 +1167,8 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP trapCmd
-    local -a A logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA
+    local logCur log_tmp kk kk1 lineno1 nn r inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN lineU logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 count0 count1 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP 
+    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA lineUA timeUA sA fA eA fgA normalCmdFlagA wTimeCurA wTimeCurPA cTimeCurA cTimeCurPA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqCountRA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1187,7 +1187,8 @@ _timep_PROCESS_LOG() {
     cTimeTotal=0
 
     # deal with commands run by traps / signal handlers
-    mapfile -t A <"${logCur}"
+:<<'EOF'
+    mapfile -t A <
     trapCmd=''
     for kk in "${!A[@]}"; do
         if [[ "${A[$kk]}" == 'TRAP ('*'):'* ]]; then 
@@ -1202,10 +1203,11 @@ _timep_PROCESS_LOG() {
             fi;
         fi
     done
+EOF
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(printf '%s\n' "${A[@]}" | sort -V -k11,11)
-    unset A
+    mapfile -t logA < <(sed -zE 's/\n(TRAP [^\n]+)\n/'$'\034\035''\1\n/g' <"${logCur}" | sort -V -k11,11 | sed -E 's/'$'\034\035''(TRAP .*)$/\n\1/')
+    #unset A
 
     log_dupe_flag=false
     kk1=0
@@ -1221,8 +1223,23 @@ _timep_PROCESS_LOG() {
     [[ -f "${logCur}.out" ]] && \rm -f "${logCur}.out"
     [[ -f "${logCur}.out.combined" ]] && \rm -f "${logCur}.out.combined"
 
+    nlogA="${#logA[@]}"
+
    # loop through lines in reverse order
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
+
+        if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
+            break
+            (( kk1 = kk + 1 ))
+            while (( linenoA[$kk1] < 0 )) && (( kk1 < ${nlogA} )); do
+                cmdA[$kk1]="${logA[$kk]}"
+                ((kk1++))
+            done
+            nPipeA[$kk]=2
+            isPipe[$kk]=2
+            unset "logA[$kk]"
+            continue
+        fi
 
         # read log fields into variables
         IFS=$'\t' read -r nPipe startWTime startCTime endWTime endCTime func pid nexec lineno _ cmd <<<"${logA[$kk]}"
@@ -1380,7 +1397,6 @@ for nn in "${eA[@]}"; do
 done
 printf '%s;' "${fgA[@]}")"
             }
-            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
         }
     done
 
@@ -1395,9 +1411,10 @@ printf '%s;' "${fgA[@]}")"
     # make LINENO's unique and compute runtime as % of total at this depth and get list of unique lineno's
     kk1=0
     lineno1=0
-    for (( kk=0; kk<${#logA[@]}; kk++ )); do
+    for kk in "${!logA[@]}"; do
         [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
-        if (( kk > 0 )) && (( linenoA[$kk] == ${linenoA[$kk1]%.*} )); then
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
+        if (( kk > 0 )) && (( 10#0${linenoA[$kk]:-0} == 10#0${linenoA[$kk1]%.*} )); then
             ((lineno1 = lineno1 + 1))
         else
             lineno1=0
