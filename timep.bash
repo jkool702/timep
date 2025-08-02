@@ -734,7 +734,7 @@ _timep_getFuncSrc() {
                    builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG
                 ;;
                 *)     
-                    if [[ -z "${trapStr}" ]] 
+                    if [[ -z "${trapStr}" ]]; then
                         builtin trap '"''"' "${trapType}"
 		    elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
