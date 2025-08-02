@@ -1284,15 +1284,13 @@ _timep_PROCESS_LOG() {
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
-        cmd="${cmd%"'"*}${cmd##*"'"}'"  
+        cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"  
         cmd="${cmd//"'\\''"/"'"'"'"'"'"'"'"}"
-        eval "cmd=\"\$(echo ${cmd})\""      
-       #read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'\\''"/"'"'"'"'"'"'"'"}'")
+        eval "cmd=${cmd}" || read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'"/}'")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
-        cmd="${cmd%%+([[:space:]])}"
         cmdA[$kk]="${cmd}"
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
