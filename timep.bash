@@ -734,7 +734,9 @@ _timep_getFuncSrc() {
                    builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG
                 ;;
                 *)     
-                    if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
+                    if [[ -z "${trapStr}" ]] 
+                        builtin trap '"''"' "${trapType}"
+		    elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStr@Q}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'$'"'"'\n'"'"'"${trapStr}" "${trapType}"
