@@ -35,7 +35,7 @@ if `--flame` is passed as a flag: 2 are the flamegraph .svg files from the above
 
 **NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE**: 
 * the "TOTAL RUN TIME"  represents the combined sum of the "wall-clock time" from the main process being profiled + all of its descendents. If it has no descendents (i.e., it never spawn a background process thaty runs asyncronously) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is somewhere between "wall-clock time" and "total CPU time (sys+user)". 
-* The "TOTAL CPU TIME" is equivilent to the combined sys+user time from other timing tools.
+* The "TOTAL CPU TIME" is equivalent to the combined sys+user time from other timing tools.
 
 **EXAMPLE**
 
