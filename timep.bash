@@ -695,7 +695,7 @@ _timep_getFuncSrc() {
     export -p -f trap &>/dev/null && export -n -f trap
 
         { printf 'declare -gx timep_EXIT_TRAP_STR='"'"'%s'"'"'\n\ndeclare -gx timep_RETURN_TRAP_STR='"'"'%s'"'"'\n\ndeclare -gx timep_DEBUG_TRAP_STR_0='"'"'%s'"'"'\n\ndeclare -gx timep_DEBUG_TRAP_STR_1='"'"'%s'"'"'\n\n%s\n\n' "${timep_EXIT_TRAP_STR//"'"/"'"'"'"'"'"'"'"}"  "${timep_RETURN_TRAP_STR//"'"/"'"'"'"'"'"'"'"}" "${timep_DEBUG_TRAP_STR_0//"'"/"'"'"'"'"'"'"'"}" "${timep_DEBUG_TRAP_STR_1//"'"/"'"'"'"'"'"'"'"}" 'trap() {
-        local trapStr trapStr0 trapStrCur trapType
+        local trapStr trapStr0 trapStrQ trapType
 
         (( $# == 0 )) && return 1
 
@@ -727,11 +727,25 @@ _timep_getFuncSrc() {
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
-                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (EXIT): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'$'"'"'\n'"'"'"${trapStr0}${timep_EXIT_TRAP_STR}" EXIT
+                        trapStrQ="${trapStr//"'"'"'"/"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"}"
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
+echo '"'"'"'"'"'"'"'"'TRAP (EXIT): '"'"'"${trapStrQ}"'"'"''"'"'"'"'"'"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
+'"'"'"${trapStr0}"'"'"'
+timep_SKIP_DEBUG_FLAG=false
+'"'"'"${timep_EXIT_TRAP_STR}" EXIT
                     fi
                 ;;
                 RETURN)  
-                    builtin trap "${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
+                    if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
+                        builtin trap "${timep_RETURN_TRAP_STR}" RETURN
+                    else
+                        trapStrQ="${trapStr//"'"'"'"/"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"}"
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
+echo '"'"'"'"'"'"'"'"'TRAP (RETURN): '"'"'"${trapStrQ}"'"'"''"'"'"'"'"'"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
+'"'"'"${trapStr0}"'"'"'
+timep_SKIP_DEBUG_FLAG=false
+'"'"'"${timep_RETURN_TRAP_STR}" RETURN
+                    fi
                 ;;
                 DEBUG) 
                    builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG
@@ -742,7 +756,12 @@ _timep_getFuncSrc() {
             elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
-                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStr@Q}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'$'"'"'\n'"'"'"${trapStr}" "${trapType}"
+                        trapStrQ="${trapStr//"'"'"'"/"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"}"
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
+echo '"'"'"'"'"'"'"'"'TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStrQ}"'"'"''"'"'"'"'"'"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
+'"'"'"${trapStr0}"'"'"'
+timep_SKIP_DEBUG_FLAG=false
+:'"'"' "${trapType}"
                     fi
                 ;;
             esac
@@ -1246,11 +1265,10 @@ _timep_PROCESS_LOG() {
         if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
             (( kk1 = kk + 1 ))
             while (( linenoA[$kk1] < 0 )) && (( kk1 < ${nlogA} )); do
-                cmdA[$kk1]="${logA[$kk]}"
+                cmdA[$kk1]="${logA[$kk]@Q}"
                 ((kk1++))
             done
-            nPipeA[$kk]=2
-            isPipe[$kk]=2
+            nPipeA[$kk]=-1
             unset "logA[$kk]"
             continue
         fi
@@ -1266,11 +1284,15 @@ _timep_PROCESS_LOG() {
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
-        read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'"/}'")
+        cmd="${cmd%"'"*}${cmd##*"'"}'"  
+        cmd="${cmd//"'\\''"/"'"'"'"'"'"'"'"}"
+        eval "cmd=\"\$(echo ${cmd})\""      
+       #read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'\\''"/"'"'"'"'"'"'"'"}'")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
+        cmd="${cmd%%+([[:space:]])}"
         cmdA[$kk]="${cmd}"
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
@@ -1278,13 +1300,17 @@ _timep_PROCESS_LOG() {
             nPipe=1
             nPipeA[$kk]=1
             nPipeNextIgnoreFlag=false
-        elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "${cmd}" == '(('*@([<>=])*'))' ]]; then
+        elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "'"${cmdA[$kk]//"'"/"'"'"'"'"'"'"'"}"'" == '(('*[\<\>\=]*'))' ]]; then
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
-            (( nPipe0 > 1 )) && [[ "${cmd0}" == @([[:print:]])'(('*=*'))'@([[:print:]])*([[:space:]]) ]] && {
-                nPipe=1
-                nPipeA[$kk]=1
-                nPipeNextIgnoreFlag=true
+            (( nPipe0 > 1 )) && {
+                cmd0="${cmd0#@([[:print:]])}"
+                cmd0="${cmd0%@([[:print:]])*([[:space:]])}"
+                [[ "${cmd0}" == '(('*\=*'))' ]] && {
+                    nPipe=1
+                    nPipeA[$kk]=1
+                    nPipeNextIgnoreFlag=true
+                }
             }
         fi
 
@@ -1429,10 +1455,9 @@ printf '%s;' "${fgA[@]}")"
             (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[-1]}]+=" $kk "
             continue
         }
-        
-        # write out flamegraph stack trace line for standard commands
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
-
+        #   # write out flamegraph stack trace line for standard commands
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"        
+     
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
             ((lineno1 = lineno1 + 1))
@@ -1531,7 +1556,7 @@ printf '%s;' "${fgA[@]}")"
 
         # add merged up log to current << ... >> log line, including for "in the middle of a pipeline" commands
         [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}.out" ]] && {
-            mapfile -t logMergeA < <(grep -vE '^\|?[[:space:]]*$' <"${mergeA[$kk]}.out")
+            mapfile -t logMergeA < <(grep -vE '^[[:space:]]*$' <"${mergeA[$kk]}.out")
             if (( ${#logMergeA[@]} == 0 )); then
                 continue
             elif (( ${#logMergeA[@]} <= 2 )); then
@@ -2179,7 +2204,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         # split lines into start, time, percent, endr
         (( spacerN0 = spacerN > 20 ? spacerN - 20 : 0 ))
         logCurTmp="$( {
-            printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME__________   \tCOMBINED_CPU_TIME_________________   \tCOMMAND_____________________________' ''
+            printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
             printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
             sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
 
@@ -2208,14 +2233,16 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 else
                     a000="${a00}"
                 fi
+                
+                a1="${a1#*\(}"
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
                 if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${a1}" == $'\t(1x)' ]] || [[ "${a1}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
                             continue
                 elif [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
-                    printf '%s( %ss |%s%% )          %s( %ss |%s%% )            %s%s%s\n' "${a0}" "${tw}"  "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
+                    printf '%s( %ss |%s%% )          %s( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}" "${a000}" "${a1#*x\)$'\t'}"
                 else
-                    printf '%s( %ss |%s%% |%s%% )   %s( %ss |%s%% |%s%% )   %s%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}x) " "${a000}" "${a1#*x\)$'\t'}"
+                    printf '%s( %ss |%s%% |%s%% )   %s( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}" "${a000}" "${a1#*x\)$'\t'}"
                 fi
             done
         } | grep -n '' | sed -E s/':'/' '/ | sort -k2)"
@@ -2240,7 +2267,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             printf '\n%s\n' "${logCurTmpA[1]}")"
         fi
 
-        sed -E 's/ \\\(\\\^\\\)$//' <<<"${logCurTmp}" | sed -zE 's/\n{3,}/\n\n\n/' >"${logPathCur}"
+        sed -E 's/ \\\(\\\^\\\)$//' <<<"${logCurTmp}" | sed -zE 's/\n\n\n+/\n\n\n/' >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
