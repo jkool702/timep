@@ -89,9 +89,9 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp clktck
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
-    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
     getCPUtime &>/dev/null || _timep_SETUP
@@ -413,10 +413,18 @@ _timep_getFuncSrc() {
     timep_NEXEC_0="${timep_NEXEC_0%.*}"
     timep_SKIP_DEBUG_FLAG=false'
 
-    read -r _ a </proc/uptime
-    read -r _ _ _ _ b _ </proc/stat
-    a0="${a##*.}"
-    (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//[^0-9]/} / b ))
+    type -p getconf &>/dev/null && clktck=$(getconf CLK_TCK)
+    if (( clktck > 0 )); then 
+        (( timep_CPU_TIME_MULT = 1000000 / clktck ))
+    else
+        read -r _ a </proc/uptime
+        read -r _ _ _ _ b _ </proc/stat
+        a0="${a##*.}"
+        (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//[^0-9]/} / b ))
+        until (( timep_CPU_TIME_MULT % 10 == 0 )); do 
+            ((timep_CPU_TIME_MULT++))
+        done
+    fi
 
     if ${timep_CLOCK_GETTIME_FLAG}; then
         timep_END_CTIME_STR='getCPUtime timep_END_CTIME timep_END_CTIME_SELF'$'\n'
@@ -706,38 +714,41 @@ _timep_getFuncSrc() {
                     ;;
                 esac
             done
-            [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]] || trapStr0="${trapStr}"$'"'"'\n'"'"'
+            trapStr0="${trapStr}"$'"'"'\n'"'"'
+            { [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]]; } && trapStr0='"''"'
         fi
 
         for trapType in "${@}"; do
             case "${trapType}" in
                 EXIT)    
-                    if [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]]; then
+                    if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
-                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (EXIT): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_EXIT_TRAP_STR}" EXIT
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (EXIT): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'$'"'"'\n'"'"'"${trapStr0}${timep_EXIT_TRAP_STR}" EXIT
                     fi
                 ;;
                 RETURN)  
-                    if [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]]; then
-                        builtin trap "${timep_RETURN_TRAP_STR}" RETURN
-                    else
-                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (RETURN): '"'"'"${trapStr0}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
-                    fi
+                    builtin trap "${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
                 ;;
                 DEBUG) 
                    builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG
                 ;;
                 *)     
-                    if [[ "${trapStr}" == '"'"'-'"'"' ]] || [[ -z "${trapStr}" ]]; then
+                    if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
-                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'"${trapStr}" "${trapType}"
+                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStr@Q}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'$'"'"'\n'"'"'"${trapStr}" "${trapType}"
                     fi
                 ;;
             esac
         done
     }'; } >"${timep_TMPDIR}/functions.bash"
+
+#                    if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
+#                        builtin trap "${timep_RETURN_TRAP_STR}" RETURN
+#                    else
+#                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (RETURN): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'$'"'"'\n'"'"'"${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
+#                    fi
 
         # setup a string with the command to run
         case "${timep_runType}" in
@@ -2201,12 +2212,26 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         } | grep -n '' | sed -E s/':'/' '/ | sort -k2)"
         logCurTmp="$({ grep -vE '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(\|?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g')"
 
-        # remove some (all?) of the spurious '(&)' marks caused by process substitutions
-        [[ "${logPathCur}" == *'.combined' ]] && while read -r nn; do
-            logCurTmp="$(sed -E 's/^('"${nn}"'.*) \(\&\)$/\1/' <<<"${logCurTmp}")"
-        done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//;s/^.* //;s/\..*$//' | sort -u)
+        # remove some (all?) of the spurious '(&)' marks caused by process substitutions and remove double logged command in full profiles
+        if [[ "${logPathCur}" == "${timep_TMPDIR}/profiles/out.profile.full" ]]; then
+            logCurTmp="$(sed -E 's/( cpu\:\([0-9]*\-\>[0-9]*\)).*$/\1/' <<<"${logCurTmp}")"
+        else
+            while read -r nn; do
+                logCurTmp="$(sed -E 's/^('"${nn}"'.*) \(\&\)$/\1/' <<<"${logCurTmp}")"
+            done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//;s/^.* //;s/\..*$//' | sort -u)
+            # primary sort by lineno remove spaces between top-level commands of thge same line
+            mapfile -t -d '' logCurTmpA < <(sed -zE 's/\n\n([0-9])/\x00\1/g;s/\n\nTOTAL/\x00TOTAL/' <<<"${logCurTmp}" | sort -z -n)
+            logCurTmp="$(printf '%s\n' "${logCurTmpA[0]}" "${logCurTmpA[2]}"
+                kk0=2
+                for (( kk=3; kk<${#A[@]}; kk++)); do
+                    { [[ ${logCurTmpA[$kk]%%.*} ]] && [[ ${logCurTmpA[$kk0]%%.*} ]] && [[ "${logCurTmpA[$kk]%%.*}" == "${logCurTmpA[$kk0]%%.*}" ]]; } || printf '\n'
+                    printf '%s\n' "${logCurTmpA[$kk]}"
+                    kk0="$kk"
+                done
+            printf '\n%s\n' "${logCurTmpA[1]}")"
+        fi
 
-        sed -E 's/ \\\(\\\^\\\)$//' <<<"${logCurTmp}" >"${logPathCur}"
+        sed -E 's/ \\\(\\\^\\\)$//' <<<"${logCurTmp}" | sed -zE 's/\n{3,}/\n\n\n/' >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
