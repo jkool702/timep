@@ -414,13 +414,16 @@ _timep_getFuncSrc() {
     timep_SKIP_DEBUG_FLAG=false'
 
     type -p getconf &>/dev/null && clktck=$(getconf CLK_TCK)
-    if (( clktck > 0 )); then 
+    if (( clktck >= 10 )) && ((clktck <= 10000 )); then 
         (( timep_CPU_TIME_MULT = 1000000 / clktck ))
     else
         read -r _ a </proc/uptime
         read -r _ _ _ _ b _ </proc/stat
         a0="${a##*.}"
         (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//[^0-9]/} / b ))
+	# clamp to CLK_TCK between 10-10000
+	(( timep_CPU_TIME_MULT < 100 )) && timep_CPU_TIME_MULT=100
+	(( timep_CPU_TIME_MULT > 100000 )) && timep_CPU_TIME_MULT=100000
         until (( timep_CPU_TIME_MULT % 10 == 0 )); do 
             ((timep_CPU_TIME_MULT++))
         done
