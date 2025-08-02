@@ -1421,7 +1421,10 @@ printf '%s;' "${fgA[@]}")"
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=0
     for kk in "${!logA[@]}"; do
-        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
+        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || {
+	                linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk1"
+            continue
+	}
         
         # write out flamegraph stack trace line for standard commands
         ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
@@ -1522,9 +1525,9 @@ printf '%s;' "${fgA[@]}")"
         fi
         (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
-        # add merged up log to log, including for "in the middle of a pipeline" commands
+        # add merged up log to current << ... >> log line, including for "in the middle of a pipeline" commands
         [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}.out" ]] && {
-            mapfile -t logMergeA < <(grep -vE '^[[:space:]]*$' <"${mergeA[$kk]}.out")
+            mapfile -t logMergeA < <(grep -vE '^\|?[[:space:]]*$' <"${mergeA[$kk]}.out")
             if (( ${#logMergeA[@]} == 0 )); then
                 continue
             elif (( ${#logMergeA[@]} <= 2 )); then
