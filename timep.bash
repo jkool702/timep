@@ -2201,7 +2201,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         logCurTmp="$({ grep -vE '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(\|?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g')"
 
         # remove some (all?) of the spurious '(&)' marks caused by process substitutions
-        while read -r nn; do
+        [[ "${logPathCur}" == *'.combined' ]] && while read -r nn; do
             logCurTmp="$(sed -E 's/^('"${nn}"'.*) \(\&\)$/\1/' <<<"${logCurTmp}")"
         done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//;s/^.* //;s/\..*$//' | sort -u)
 
