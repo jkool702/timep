@@ -875,6 +875,7 @@ _timep_getFuncSrc() {
 
     export -p -f timep &>/dev/null && export -n -f timep
     export -f timep
+    [[ $BASH ]] || export BASH="$(type -p bash)"
 
     # attempt to figure out the controling terminal from this shell or one of its parents/grandparents/...
     timep_PTY_FLAG=false
