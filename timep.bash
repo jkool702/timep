@@ -450,7 +450,7 @@ _timep_getFuncSrc() {
         if (( timep_START_CTIME_SELF_A[${timep_FNEST_CUR}] > timep_END_CTIME_SELF )); then
             timep_STARTTIME[${timep_FNEST_CUR}]="${timep_STARTTIME[${timep_FNEST_CUR}]%$'"'"'\t'"'"'*}"$'"'"'\t'"'"'"0"
         fi
-        if [[ "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]}" == '"'"'wait'"'"' ]] || [[ "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]}" == '"'"'wait '"'"'* ]]; then
+        if [[ "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]%% *}" == '"'"'wait'"'"' ]]; then
             (( timep_END_CTIME = ${timep_STARTTIME[${timep_FNEST_CUR}]#*$'"'"'\t'"'"'} + timep_END_CTIME_SELF - timep_START_CTIME_SELF_A[${timep_FNEST_CUR}] ))
         fi
         timep_ENDTIME="${timep_END_TIME}"$'"'"'\t'"'"'"${timep_END_CTIME}"
