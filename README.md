@@ -35,7 +35,7 @@ if `--flame` is passed as a flag: 2 are the flamegraph .svg files from the above
 
 **NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE**: 
 * the "TOTAL RUN TIME"  represents the combined sum of the "wall-clock time" from the main process being profiled + all of its descendents. If it has no descendents (i.e., it never spawn a background process thaty runs asyncronously) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is somewhere between "wall-clock time" and "total CPU time (sys+user)". 
-* The "TOTAL CPU TIME" is equivilant to the combined sys+user time from other timing tools.
+* The "TOTAL CPU TIME" is equivilent to the combined sys+user time from other timing tools.
 
 **EXAMPLE**
 
@@ -151,7 +151,7 @@ FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can
 
 # HOW IT WORKS
 
-`timep` leverages the bash DEBUG trap (a well as EXIT and RETURN traps, to a lesser extent) to log start/stop timestamps + nesting metadata to logs (under `timep`'s tmpdir in the /log/ sub-directory). After the code being profiled finishes running, `timep` goes through these logs in a "post-processing" run to generate the final output logs and stack traces that end up in the profiles dir. the debug trap more-or-less does the following:
+`timep` leverages the bash DEBUG trap (as well as EXIT and RETURN traps, to a lesser extent) to log start/stop timestamps + nesting metadata to logs (under `timep`'s tmpdir in the /log/ sub-directory). After the code being profiled finishes running, `timep` goes through these logs in a "post-processing" run to generate the final output logs and stack traces that end up in the profiles dir. the debug trap more-or-less does the following:
 
 1. record previous command endtime
 2. figure out if nesting lvl has changed (e.g., due to entering/exiting a subshell/function) so we can write the log in the correct place
