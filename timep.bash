@@ -727,9 +727,10 @@ _timep_getFuncSrc() {
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
-                        trapStrQ="${trapStr//"'"'"'"/"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"}"
+                        trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
+			trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
-echo '"'"'"'"'"'"'"'"'TRAP (EXIT): '"'"'"${trapStrQ}"'"'"''"'"'"'"'"'"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
+echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
 '"'"'"${trapStr0}"'"'"'
 timep_SKIP_DEBUG_FLAG=false
 '"'"'"${timep_EXIT_TRAP_STR}" EXIT
@@ -739,9 +740,10 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
                     else
-                        trapStrQ="${trapStr//"'"'"'"/"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"}"
+                        trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
+			trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
-echo '"'"'"'"'"'"'"'"'TRAP (RETURN): '"'"'"${trapStrQ}"'"'"''"'"'"'"'"'"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
+echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
 '"'"'"${trapStr0}"'"'"'
 timep_SKIP_DEBUG_FLAG=false
 '"'"'"${timep_RETURN_TRAP_STR}" RETURN
@@ -753,12 +755,13 @@ timep_SKIP_DEBUG_FLAG=false
                 *)     
                     if [[ -z "${trapStr}" ]]; then
                         builtin trap '"''"' "${trapType}"
-            elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
+                    elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
-                        trapStrQ="${trapStr//"'"'"'"/"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"'"}"
+                        trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
+			trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
-echo '"'"'"'"'"'"'"'"'TRAP ('"'"'"${trapType}"'"'"'): '"'"'"${trapStrQ}"'"'"''"'"'"'"'"'"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
+echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
 '"'"'"${trapStr0}"'"'"'
 timep_SKIP_DEBUG_FLAG=false
 :'"'"' "${trapType}"
@@ -1285,12 +1288,17 @@ _timep_PROCESS_LOG() {
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
         cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"  
+        #cmd="${cmd//\;/\\\;}"
         cmd="${cmd//"'\\''"/"'"'"'"'"'"'"'"}"
-        eval "cmd=${cmd}" || read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'"/}'")
+        #cmd="${cmd//"'"'"'"'"'"'"'"/$'\034'}"
+        #eval "cmd=${cmd}" || read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'"/}'")
+        read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
+        #eval "cmd=${cmd}"
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
+        #cmd="${cmd//$'\034'/"'"}"
         cmdA[$kk]="${cmd}"
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
