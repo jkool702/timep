@@ -1457,8 +1457,8 @@ printf '%s;' "${fgA[@]}")"
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
-        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || {
-            (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[-1]}]+=" $kk "
+        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
+            (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk "
             continue
         }
         #   # write out flamegraph stack trace line for standard commands
