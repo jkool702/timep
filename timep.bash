@@ -1495,13 +1495,13 @@ printf '%s;' "${fgA[@]}")"
 
         # aggregate the various profile times/metadata from each command in the group at the index(kk) of 1st line in the group
         if [[ ${linenoUniqLineA[${linenoUniqMapA[$kk]}]} ]]; then
-            linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk "
+            linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
             #[[ "${cmdA[$kk]}" == "${linenoUniqCmdA[${linenoUniqMapA[$kk]}]}" ]] || (( linenoUniqCountRA[${linenoUniqMapA[$kk]}] = linenoUniqCountRA[${linenoUniqMapA[$kk]}] + 1 ))
             (( linenoUniqCountA[${linenoUniqMapA[$kk]}] = linenoUniqCountA[${linenoUniqMapA[$kk]}] + 1 ))
             linenoUniqWTimeA[${linenoUniqMapA[$kk]}]+=" ${wTimeA[$kk]:-1}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]+=" ${cTimeA[$kk]:-1}"
         else
-            linenoUniqLineA[${linenoUniqMapA[$kk]}]=" $kk "
+            linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
             linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]}"
             linenoUniqCountA[${linenoUniqMapA[$kk]}]=1
             #linenoUniqCountRA[${linenoUniqMapA[$kk]}]=0
