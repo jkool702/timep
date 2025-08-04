@@ -414,8 +414,7 @@ _timep_getFuncSrc() {
     timep_SKIP_DEBUG_FLAG=false'
 
     type -p getconf &>/dev/null && clktck=$(getconf CLK_TCK)
-    if (( clktck >= 10 )) && ((clktck <= 10000 )); then
-
+    if (( clktck >= 10 )) && ((clktck <= 10000 )); then 
         (( timep_CPU_TIME_MULT = 1000000 / clktck ))
     else
         read -r _ a </proc/uptime
@@ -425,8 +424,7 @@ _timep_getFuncSrc() {
     # clamp to CLK_TCK between 10-10000
     (( timep_CPU_TIME_MULT < 100 )) && timep_CPU_TIME_MULT=100
     (( timep_CPU_TIME_MULT > 100000 )) && timep_CPU_TIME_MULT=100000
-        until (( timep_CPU_TIME_MULT % 10 == 0 )); do
-
+        until (( timep_CPU_TIME_MULT % 10 == 0 )); do 
             ((timep_CPU_TIME_MULT++))
         done
     fi
@@ -725,13 +723,12 @@ _timep_getFuncSrc() {
 
         for trapType in "${@}"; do
             case "${trapType}" in
-                EXIT)
-
+                EXIT)    
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
                         trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
-            trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
+			trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
 '"'"'"${trapStr0}"'"'"'
@@ -739,13 +736,12 @@ timep_SKIP_DEBUG_FLAG=false
 '"'"'"${timep_EXIT_TRAP_STR}" EXIT
                     fi
                 ;;
-                RETURN)
-
+                RETURN)  
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
                     else
                         trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
-            trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
+			trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
 '"'"'"${trapStr0}"'"'"'
@@ -753,19 +749,17 @@ timep_SKIP_DEBUG_FLAG=false
 '"'"'"${timep_RETURN_TRAP_STR}" RETURN
                     fi
                 ;;
-                DEBUG)
-
+                DEBUG) 
                    builtin trap "${timep_DEBUG_TRAP_STR_0}${trapStr0}${timep_DEBUG_TRAP_STR_1}" DEBUG
                 ;;
-                *)
-
+                *)     
                     if [[ -z "${trapStr}" ]]; then
                         builtin trap '"''"' "${trapType}"
                     elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
                         trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
-            trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
+			trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"
 '"'"'"${trapStr0}"'"'"'
@@ -776,6 +770,12 @@ timep_SKIP_DEBUG_FLAG=false
             esac
         done
     }'; } >"${timep_TMPDIR}/functions.bash"
+
+#                    if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
+#                        builtin trap "${timep_RETURN_TRAP_STR}" RETURN
+#                    else
+#                        builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true; echo "TRAP (RETURN): '"'"'"${trapStr}"'"'"'" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}"; timep_SKIP_DEBUG_FLAG=false; '"'"'$'"'"'\n'"'"'"${trapStr0}${timep_RETURN_TRAP_STR}" RETURN
+#                    fi
 
         # setup a string with the command to run
         case "${timep_runType}" in
@@ -1287,16 +1287,18 @@ _timep_PROCESS_LOG() {
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
-
-        # unquote the cmd string
-        cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
-
+        cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"  
+        #cmd="${cmd//\;/\\\;}"
         cmd="${cmd//"'\\''"/"'"'"'"'"'"'"'"}"
+        #cmd="${cmd//"'"'"'"'"'"'"'"/$'\034'}"
+        #eval "cmd=${cmd}" || read -r -d '' cmd < <(eval "printf '%s\0' '${cmd//"'"/}'")
         read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
+        #eval "cmd=${cmd}"
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
+        #cmd="${cmd//$'\034'/"'"}"
         cmdA[$kk]="${cmd}"
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
@@ -1333,8 +1335,16 @@ _timep_PROCESS_LOG() {
                     [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
                 fi
             }
+
+            # mark if it is a function
+            #if [[ "${cmdA[$kk]//"'"/}" == '<< (FUNCTION): '*' >>' ]]; then
+            #    isFuncA[$kk]=true
+            #else
+            #    isFuncA[$kk]=false
+            #fi 
         else
             normalCmdFlagA[$kk]=true
+            #isFuncA[$kk]=false
         fi
 
         # see if we need to merge up the endtime/runtime from the child log
@@ -1398,8 +1408,8 @@ _timep_PROCESS_LOG() {
                 # case where end - start is less than double the correction. Compromise and use (end - start)/2
                  (( cTimeA[$kk] = 1 + ( 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ) >> 1 ))
            elif ${timep_CLOCK_GETTIME_FLAG}; then
-                # if we are using getCPUtime and our end time is before the start time, then chances are getCPUtime is reading from a new clock even though there isnt a full subshell. This happens on things like arithmitic evaluations  `(( ... ))`
-                # assume the start clock is 0 here, which makes the time equal to end - 0 - correction --> end - correction
+               # if we are using getCPUtime and our end time is before the start time, then chances are getCPUtime is reading from a new clock even though there isnt a full subshell. This happens on things like arithmitic evaluations  `(( ... ))`
+               # assume the start clock is 0 here, which makes the time equal to end - 0 - correction --> end - correction
                 (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
             fi
         }
@@ -1444,6 +1454,7 @@ printf '%s;' "${fgA[@]}")"
         }
     done
 
+
     (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
     (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
 
@@ -1454,13 +1465,15 @@ printf '%s;' "${fgA[@]}")"
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
+        [[ ${mergeA[$kk]} ]]  && echo "index kk=$kk has a log to merge up"
         [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
             (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
+            # echo "kk=$kk -> linenoUniqLineA[${linenoUniqMapA[$kk1]}]" >&2
             continue
         }
-        #  write out flamegraph stack trace line for standard commands
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
-
+        #   # write out flamegraph stack trace line for standard commands
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"        
+     
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
             ((lineno1 = lineno1 + 1))
@@ -1472,35 +1485,44 @@ printf '%s;' "${fgA[@]}")"
         # figure out "percent for current nesting depth" for wall/cpu times
         (( wTimeP0 =  wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
         printf -v wTimeP '%5.3d' "${wTimeP0}"
-        wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}"
+        wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}" 
 
         (( cTimeP0 =  cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
         printf -v cTimeP '%5.3d' "${cTimeP0}"
-        cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}"
+        cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}" 
 
         # combine times for lines with same lineno + same command
 
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
-        keyCur="${linenoA[$kk]%.*}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}.${pidA[$kk]@Q}"
+        if ${normalCmdFlagA[$kk]}; then
+            keyCur="${linenoA[$kk]%.*}.${cmdA[$kk]@Q}"
+        else
+            keyCur="${linenoA[$kk]}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}.${pidA[$kk]@Q}"
+        fi
 
-        if [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
+        if [[ "${linenoUniq}" == *$'\034'"${keyCur}"$'\035'* ]] && [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
             linenoUniqMapA[$kk]="${linenoUniqMapAA["${keyCur}"]}"
         else
-            linenoUniqA[$kk]="${keyCur}"
-            linenoUniqMapA[$kk]="${keyCur}"
-            linenoUniqMapAA["${keyCur}"]="${keyCur}"
+            linenoUniqA[$kk]="${linenoA[$kk]}"
+            linenoUniqMapA[$kk]="${linenoA[$kk]}"
+            linenoUniqMapAA["${keyCur}"]="${linenoA[$kk]}"
+            linenoUniq+=$'\034'"${keyCur}"$'\035'
         fi
 
         # aggregate the various profile times/metadata from each command in the group at the index(kk) of 1st line in the group
         if [[ ${linenoUniqLineA[${linenoUniqMapA[$kk]}]} ]]; then
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
+            #echo "kk=$kk -> linenoUniqLineA[${linenoUniqMapA[$kk]}]" >&2
+            #[[ "${cmdA[$kk]}" == "${linenoUniqCmdA[${linenoUniqMapA[$kk]}]}" ]] || (( linenoUniqCountRA[${linenoUniqMapA[$kk]}] = linenoUniqCountRA[${linenoUniqMapA[$kk]}] + 1 ))
             (( linenoUniqCountA[${linenoUniqMapA[$kk]}] = linenoUniqCountA[${linenoUniqMapA[$kk]}] + 1 ))
             linenoUniqWTimeA[${linenoUniqMapA[$kk]}]+=" ${wTimeA[$kk]:-1}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]+=" ${cTimeA[$kk]:-1}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
+            #echo "kk=$kk -> linenoUniqLineA[${linenoUniqMapA[$kk]}]" >&2
             linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]}"
             linenoUniqCountA[${linenoUniqMapA[$kk]}]=1
+            #linenoUniqCountRA[${linenoUniqMapA[$kk]}]=0
             linenoUniqWTimeA[${linenoUniqMapA[$kk]}]="${wTimeA[$kk]:-1}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]="${cTimeA[$kk]:-1}"
         fi
@@ -1581,11 +1603,12 @@ printf '%s;' "${fgA[@]}")"
         # add line to log
         (( kk == 0  )) || printf '\n\n'
 
+        #(( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] - linenoUniqCountRA[${linenoUniqA[$kk]}] ))
         (( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] ))
 
         cmd="${cmdA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
-        cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
+        cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }". }"
 
         # write line
         logMergeAll=("$(printf '\n%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoA[$kk]}" '' "${cmd}")")
@@ -1596,16 +1619,51 @@ printf '%s;' "${fgA[@]}")"
         # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
-        [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
-            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}((\|-- )|(\|   ))*\.')
-                if (( ${#logMergeA[@]} > 0 )); then
-                    printf '\n%s\t|-- %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
-                    for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
-                        printf '\n%s\t|   %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
+        [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && {
+            mergeCurA=() 
+            for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
+                [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && mergeCurA+=("${mergeA[kk1]}")
+            done
+            if [[ "${#mergeCurA[@]}" == 1 ]] || [[ "${timep_LOG_NESTING_CUR}" == 0 ]] || { [[ {"${timep_runType}" == 'f' ]] && [[ "${timep_LOG_NESTING_CUR}" == 1 ]]; }; then
+                logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeCurA[0]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}((\|-- )|(\|   ))*\.')
+                    if (( ${#logMergeA[@]} > 0 )); then
+                        printf '\n%s\t|-- %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
+                        for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
+                            printf '\n%s\t|   %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
+                        done
+                        (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t|-- %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
+                    fi
+                )")
+            elif (( ${#mergeCurA[@]} > 1 )); then
+                logMergeAll+=("$(T=(); K=0; declare -A C
+                    for kk1 in "${!mergeCurA[@]}"; do
+                        while IFS=' '$'\t' read -r tw pw tc pc c cm <"${mergeCurA[$kk1]}.out.combined"; do
+                            { [[ "${tw}" ]] && [[ "${pw}" ]] && [[ "${tc}" ]] && [[ "${pc}" ]] && [[ "${c}" ]]; } || break
+                            if [[ "$kk1" == 0 ]] || ! [[ ${C["${cm@Q}"]} ]]; then
+                                T+=("${tw}" "${pw}" "${tc}" "${pc}" "${c}" "${cm}" 1)
+                                C["${cm@Q}"]="${K}"
+                                (( K = K + 7 ))
+                            else
+                                KK0="${C["${cm@Q}"]}"
+                                for tAdd in "${tw}" "${pw}" "${tc}" "${pc}" "${c}"; do
+                                    (( T[$KK0] = T[$KK0] + tAdd ))
+                                    ((KK0++))
+                                done
+                                ((KK0++))
+                                (( T[$KK0] = T[$KK0] + 1 ))
+                            fi
+                        done
                     done
-                    (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t|-- %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
-                fi)")
-        done
+                    for (( KK0=6 ; KK0<${#T[@]} ; KK0+=7 )); do
+                        (( kk1 = KK0 - 5 ))
+                        (( T[$kk1] = T[$kk1] / T[$KK0] ))
+                        (( kk1 = kk1 + 2 ))
+                        (( T[$kk1] = T[$kk1] / T[$KK0] ))
+                    done
+                    printf '\n%s %s %s %s %s\t%s%.0s' "${T[@]}"
+                )")
+            fi
+        }
 
         printf '%s' "${logMergeAll[@]}"
 
@@ -1633,7 +1691,7 @@ _timep_PROCESS_FLAMEGRAPH() {
 #    this output style is designed to work with `flamegraph.pl --color=time[p[r]]`
 
     shopt -s extglob
-
+  
     local wallTimeN cpuTimeN wallTimeCDF_csum cpuTimeCDF_csum kk kk0 a b c n cpuTimeFlag fdRead ratioFactor wallTimeSum cpuTimeSum
     local -a stackA wallTimeA cpuTimeA wallTimeSortA cpuTimeSortA wallTimeCDF_map0 cpuTimeCDF_map0 wallTimeCDF_map cpuTimeCDF_map
 
@@ -2048,6 +2106,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
     #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
+
     printf '\n\nFINALIZING OUTPUTS\n' >&2
     printf '\nGETTING TOTAL TIMES\n' >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out"
@@ -2108,8 +2167,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     unset "AA"
 
     spacerN=0
-    while read -r nn; do
-
+    while read -r nn; do 
         if [[ "${nn}" == *\|*\:* ]]; then
             nnn="\|${nn#*\|}"
             nnn="${nnn%%\:*}"
@@ -2126,7 +2184,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             # L will contain unique lines (minus times) from ${A[$kk]}
             # each T[$jj] will contain all times/percentages/counts from all the different lines represented by the unique line in L[$jj] iun a newline-seperated list
             # AA is an associative array that determines/maps the unique lines to the index $jj
-
+        
             printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES' "$kk" "${#A[@]}" >&2
 
             T=();
@@ -2178,7 +2236,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 wTimeP="${wTimeP:0:3}.${wTimeP:3}"
 
                 printf -v cTimeP '%5.3d' "${tA[3]}"
-                cTimeP="${cTimeP:0:3}.${cTimeP:3}"
+                cTimeP="${cTimeP:0:3}.${cTimeP:3}" 
 
                 count="${tA[4]}"
                 Lstart="${L[$jj]%%\:*}"
@@ -2188,10 +2246,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 Lend="${L[$jj]#*\:}"
                 Lend="${Lend##*([[:space:]])}"
-
+                
                 # write out final profile line
                 [[ ${Lstart} ]] && printf '%s:%'"${spacerCur}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx)\t%s\n' "${Lstart}" '' "${wTime}" "${wTimeP}" "${cTime}" "${cTimeP}" "${count}" "${Lend}"
-
+                
+       
             done
             printf '\n'
         done
@@ -2237,7 +2296,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 else
                     a000="${a00}"
                 fi
-
+                
                 a1="${a1#*\(}"
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
@@ -2336,6 +2395,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     ) {timep_FD0}<&0 {timep_FD1}>&1 {timep_FD2}>&2 {fd_sleep}<><(:)
 }
+
 
 _timep_SETUP() {
     local -A b64
@@ -2437,10 +2497,12 @@ _timep_base64_to_file() {
 
     printf '%s\n' "${!b64[@]}" | grep -qF "${ARCH}" && _timep_base64_to_file /dev/shm/.timep/lib/${USER}-${EUID}/timep.so <<<"${b64[${ARCH}]}"
 
+
     enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime
 }
 
 _timep_SETUP
+
 
 _timep_file_to_base64() {
 
@@ -2463,3 +2525,4 @@ _timep_file_to_base64() {
     done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g');
 
 }
+
