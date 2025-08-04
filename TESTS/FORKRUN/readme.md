@@ -95,6 +95,6 @@ user    14m52.670s
 sys     3m7.439s
 ```
 
-And we see that the timing instrumentation overhead is ~8% for both wall clock time (44.174 sec vs 47.793 sec) and total CPU time (~1080 sec vs ~1004 sec). Note that the vast majority of that overhead happens between one commands end timestamp and the next commands start timestamp, and as such does not effect the time profile that was generated.
+And we see that the timing instrumentation overhead is ~8% for both wall clock time (44.174 sec vs 47.793 sec) and total CPU time (~1080 sec vs ~1004 sec). Note that the vast majority of that overhead happens between one commands end timestamp and the next commands start timestamp, and as such does not effect the time profile that was generated. In fact, for this test case the overall total CPU time that timep computed (by summinbg together the CPU times of all ~65000 individual bash commands run in this test) was 999.913 seconds - an error of only ~0.5% compared to running the same code without any timep triming instrumentation!
 
 

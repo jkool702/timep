@@ -3,6 +3,8 @@ gg() { echo "$*"; ff "$@"; }
 
 : | cat <&0 | cat | tee
 
+printf '%s\n' {1..10} | { mapfile -t A <&0; printf '%s%s\n' "${A[@]}"; } | tee | cat 
+
 { echo ; } &
 { ( echo A & ); echo B; } &
 
@@ -86,6 +88,9 @@ for i in {1..3}; do
     fi
   done < <(seq 1 4; :)
 done
+
+sleep 1 &
+wait -n $!
 
 (
     trap 'echo bye' EXIT
