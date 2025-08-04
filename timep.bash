@@ -1217,7 +1217,7 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN  logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA logDepth
+    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN  logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA logDepth keyCur
     local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA linenoUniqMapA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA linenoUniqMapAA
 
@@ -1328,15 +1328,23 @@ _timep_PROCESS_LOG() {
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
 
             # read in the endtime + runtime from the log
-            #[[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
+            [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
                 if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"; then
                     IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
                     [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
                     [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
                 fi
-            #}
+            }
+
+            # mark if it is a function
+            #if [[ "${cmdA[$kk]//"'"/}" == '<< (FUNCTION): '*' >>' ]]; then
+            #    isFuncA[$kk]=true
+            #else
+            #    isFuncA[$kk]=false
+            #fi 
         else
             normalCmdFlagA[$kk]=true
+            #isFuncA[$kk]=false
         fi
 
         # see if we need to merge up the endtime/runtime from the child log
@@ -1457,8 +1465,10 @@ printf '%s;' "${fgA[@]}")"
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
+        [[ ${mergeA[$kk]} ]]  && echo "index kk=$kk has a log to merge up"
         [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
-            (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk "
+            (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
+            # echo "kk=$kk -> linenoUniqLineA[${linenoUniqMapA[$kk1]}]" >&2
             continue
         }
         #   # write out flamegraph stack trace line for standard commands
@@ -1483,25 +1493,33 @@ printf '%s;' "${fgA[@]}")"
 
         # combine times for lines with same lineno + same command
 
-        # generate mapping for all unique "lineno.depth + command" groups into the lineno.depth.cmd from the first instanced in that group
-        if [[ "${linenoUniq}" == *$'\034'"${linenoA[$kk]%.*}${cmdA[$kk]@Q}"$'\035'* ]] && [[ ${linenoUniqMapAA["${linenoA[$kk]%.*}${cmdA[$kk]@Q}"]} ]]; then
-            linenoUniqMapA[$kk]="${linenoUniqMapAA["${linenoA[$kk]%.*}${cmdA[$kk]@Q}"]}"
+        # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
+        if ${normalCmdFlagA[$kk]}; then
+            keyCur="${linenoA[$kk]%.*}.${cmdA[$kk]@Q}"
+        else
+            keyCur="${linenoA[$kk]%.*}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}.${pidA[$kk]@Q}"
+        fi
+
+        if [[ "${linenoUniq}" == *$'\034'"${keyCur}"$'\035'* ]] && [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
+            linenoUniqMapA[$kk]="${linenoUniqMapAA["${keyCur}"]}"
         else
             linenoUniqA[$kk]="${linenoA[$kk]}"
             linenoUniqMapA[$kk]="${linenoA[$kk]}"
-            linenoUniqMapAA["${linenoA[$kk]%.*}${cmdA[$kk]@Q}"]="${linenoA[$kk]}"
-            linenoUniq+=$'\034'"${linenoA[$kk]%.*}${cmdA[$kk]@Q}"$'\035'
+            linenoUniqMapAA["${keyCur}"]="${linenoA[$kk]}"
+            linenoUniq+=$'\034'"${keyCur}"$'\035'
         fi
 
         # aggregate the various profile times/metadata from each command in the group at the index(kk) of 1st line in the group
         if [[ ${linenoUniqLineA[${linenoUniqMapA[$kk]}]} ]]; then
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
+            #echo "kk=$kk -> linenoUniqLineA[${linenoUniqMapA[$kk]}]" >&2
             #[[ "${cmdA[$kk]}" == "${linenoUniqCmdA[${linenoUniqMapA[$kk]}]}" ]] || (( linenoUniqCountRA[${linenoUniqMapA[$kk]}] = linenoUniqCountRA[${linenoUniqMapA[$kk]}] + 1 ))
             (( linenoUniqCountA[${linenoUniqMapA[$kk]}] = linenoUniqCountA[${linenoUniqMapA[$kk]}] + 1 ))
             linenoUniqWTimeA[${linenoUniqMapA[$kk]}]+=" ${wTimeA[$kk]:-1}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]+=" ${cTimeA[$kk]:-1}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
+            #echo "kk=$kk -> linenoUniqLineA[${linenoUniqMapA[$kk]}]" >&2
             linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]}"
             linenoUniqCountA[${linenoUniqMapA[$kk]}]=1
             #linenoUniqCountRA[${linenoUniqMapA[$kk]}]=0
