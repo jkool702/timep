@@ -1,0 +1,2758 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="276" onload="init(evt)" viewBox="0 0 4096 276" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#eeeeee" offset="5%" />
+                <stop stop-color="#eeeeb0" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        #search, #ignorecase { opacity:0.1; cursor:pointer; }
+        #search:hover, #search.show, #ignorecase:hover, #ignorecase.show { opacity:1; }
+        #subtitle { text-anchor:middle; font-color:rgb(160,160,160); }
+        #title { text-anchor:middle; font-size:15px}
+        #unzoom { cursor:pointer; }
+        #frames > *:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+
+                unzoombtn.classList.remove("hide");
+
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="276.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: Various Commands (WALL-CLOCK TIMES)</text>
+<text id="details" x="10.00" y="261" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="261" > </text>
+<g id="frames">
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (37,381 us, 0.01%)</title><rect x="3290.2" y="55" width="0.3" height="23.0" fill="rgb(55,102,243)" rx="2" ry="2" />
+<text  x="3293.21" y="69.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,182,082 us, 0.58%)</title><rect x="1758.2" y="31" width="23.6" height="23.0" fill="rgb(227,103,42)" rx="2" ry="2" />
+<text  x="1761.22" y="45.5" >c..</text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (575,200 us, 0.10%)</title><rect x="544.8" y="31" width="4.3" height="23.0" fill="rgb(81,143,227)" rx="2" ry="2" />
+<text  x="547.84" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (507,213 us, 0.09%)</title><rect x="1074.2" y="31" width="3.8" height="23.0" fill="rgb(70,125,236)" rx="2" ry="2" />
+<text  x="1077.21" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p22 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p22, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (23,904 us, 0.00%)</title><rect x="3161.0" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3163.99" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (113,804 us, 0.02%)</title><rect x="1612.1" y="55" width="0.8" height="23.0" fill="rgb(208,211,212)" rx="2" ry="2" />
+<text  x="1615.10" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p18 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p18, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (23,834 us, 0.00%)</title><rect x="2560.5" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2563.49" y="69.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,164,732 us, 0.21%)</title><rect x="1938.0" y="31" width="8.6" height="23.0" fill="rgb(114,191,190)" rx="2" ry="2" />
+<text  x="1940.98" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,115,789 us, 0.20%)</title><rect x="790.9" y="31" width="8.3" height="23.0" fill="rgb(104,180,202)" rx="2" ry="2" />
+<text  x="793.92" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (21,577 us, 0.00%)</title><rect x="1892.1" y="55" width="0.2" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1895.09" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (24,536 us, 0.00%)</title><rect x="3867.0" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3870.00" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p27 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p27, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (25,217 us, 0.00%)</title><rect x="3866.3" y="55" width="0.1" height="23.0" fill="rgb(50,96,245)" rx="2" ry="2" />
+<text  x="3869.26" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (635,527 us, 0.12%)</title><rect x="2169.6" y="31" width="4.7" height="23.0" fill="rgb(89,156,221)" rx="2" ry="2" />
+<text  x="2172.61" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,493,296 us, 0.27%)</title><rect x="3430.8" y="31" width="11.0" height="23.0" fill="rgb(139,208,149)" rx="2" ry="2" />
+<text  x="3433.79" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (682,527 us, 0.12%)</title><rect x="3854.6" y="31" width="5.1" height="23.0" fill="rgb(92,161,217)" rx="2" ry="2" />
+<text  x="3857.62" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,349,977 us, 0.25%)</title><rect x="3137.8" y="31" width="10.0" height="23.0" fill="rgb(125,201,173)" rx="2" ry="2" />
+<text  x="3140.77" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (413,637 us, 0.08%)</title><rect x="139.9" y="31" width="3.1" height="23.0" fill="rgb(59,107,241)" rx="2" ry="2" />
+<text  x="142.91" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,515,860 us, 3.18%)</title><rect x="551.2" y="55" width="129.7" height="23.0" fill="rgb(227.078509319814,188.337441001056,242.784347827419)" rx="2" ry="2" />
+<text  x="554.24" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p25 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p25, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (24,106 us, 0.00%)</title><rect x="3585.8" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3588.80" y="69.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,127,387 us, 0.20%)</title><rect x="467.9" y="31" width="8.3" height="23.0" fill="rgb(105,181,200)" rx="2" ry="2" />
+<text  x="470.88" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,498,108 us, 0.27%)</title><rect x="551.2" y="31" width="11.1" height="23.0" fill="rgb(141,208,149)" rx="2" ry="2" />
+<text  x="554.24" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,396,142 us, 0.62%)</title><rect x="963.8" y="31" width="25.1" height="23.0" fill="rgb(232,97,41)" rx="2" ry="2" />
+<text  x="966.78" y="45.5" >ck..</text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (534,061 us, 0.10%)</title><rect x="799.2" y="31" width="3.9" height="23.0" fill="rgb(72,129,233)" rx="2" ry="2" />
+<text  x="802.18" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,632,525 us, 0.30%)</title><rect x="3257.1" y="31" width="12.1" height="23.0" fill="rgb(155,207,124)" rx="2" ry="2" />
+<text  x="3260.12" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,473,728 us, 0.27%)</title><rect x="813.7" y="31" width="10.9" height="23.0" fill="rgb(136,207,155)" rx="2" ry="2" />
+<text  x="816.66" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61550)_[s] (550,801,479 us, 100.00%)</title><rect x="10.0" y="199" width="4076.0" height="23.0" fill="rgb(236.666666665954,188.333333330741,221.666666665371)" rx="2" ry="2" />
+<text  x="13.00" y="213.5" >SUBSHELL (61550)_[s]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (23,740 us, 0.00%)</title><rect x="3291.9" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3294.90" y="69.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,188,402 us, 0.58%)</title><rect x="1628.8" y="31" width="23.6" height="23.0" fill="rgb(228,104,43)" rx="2" ry="2" />
+<text  x="1631.84" y="45.5" >c..</text>
+</g>
+<g >
+<title>SUBSHELL (61700)_[s] (18,055,556 us, 3.28%)</title><rect x="2561.4" y="79" width="133.6" height="23.0" fill="rgb(236.666660537139,188.333311044141,221.66665552207)" rx="2" ry="2" />
+<text  x="2564.43" y="93.5" >SUBSHELL (61700)_[s]</text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (422,712 us, 0.08%)</title><rect x="938.1" y="31" width="3.1" height="23.0" fill="rgb(59,107,241)" rx="2" ry="2" />
+<text  x="941.09" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (485,990 us, 0.09%)</title><rect x="2682.0" y="31" width="3.6" height="23.0" fill="rgb(66,118,238)" rx="2" ry="2" />
+<text  x="2685.03" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,846,063 us, 0.34%)</title><rect x="1418.4" y="31" width="13.6" height="23.0" fill="rgb(173,194,95)" rx="2" ry="2" />
+<text  x="1421.36" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,567,881 us, 0.28%)</title><rect x="2075.7" y="31" width="11.6" height="23.0" fill="rgb(149,208,136)" rx="2" ry="2" />
+<text  x="2078.67" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,137,685 us, 0.21%)</title><rect x="124.8" y="31" width="8.5" height="23.0" fill="rgb(108,184,197)" rx="2" ry="2" />
+<text  x="127.84" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p11 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p11, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (19,399 us, 0.00%)</title><rect x="1612.9" y="55" width="0.2" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1615.94" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (32,057 us, 0.01%)</title><rect x="3292.3" y="55" width="0.2" height="23.0" fill="rgb(56,104,243)" rx="2" ry="2" />
+<text  x="3295.28" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (102,340 us, 0.02%)</title><rect x="2174.7" y="55" width="0.7" height="23.0" fill="rgb(206,211,213)" rx="2" ry="2" />
+<text  x="2177.66" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (35,045 us, 0.01%)</title><rect x="549.1" y="55" width="0.3" height="23.0" fill="rgb(55,102,243)" rx="2" ry="2" />
+<text  x="552.10" y="69.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,059,117 us, 0.19%)</title><rect x="2536.9" y="31" width="7.8" height="23.0" fill="rgb(98,170,210)" rx="2" ry="2" />
+<text  x="2539.91" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,691,150 us, 0.31%)</title><rect x="1049.1" y="31" width="12.5" height="23.0" fill="rgb(163,202,111)" rx="2" ry="2" />
+<text  x="1052.12" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,502,242 us, 0.27%)</title><rect x="1350.8" y="31" width="11.1" height="23.0" fill="rgb(143,208,147)" rx="2" ry="2" />
+<text  x="1353.77" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (465,027 us, 0.08%)</title><rect x="1608.4" y="31" width="3.4" height="23.0" fill="rgb(63,113,239)" rx="2" ry="2" />
+<text  x="1611.39" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (562,303 us, 0.10%)</title><rect x="2010.4" y="31" width="4.1" height="23.0" fill="rgb(78,138,229)" rx="2" ry="2" />
+<text  x="2013.36" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,137,975 us, 0.21%)</title><rect x="1527.7" y="31" width="8.4" height="23.0" fill="rgb(108,185,196)" rx="2" ry="2" />
+<text  x="1530.69" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (4,016,766 us, 0.73%)</title><rect x="3310.2" y="31" width="29.8" height="23.0" fill="rgb(243,89,40)" rx="2" ry="2" />
+<text  x="3313.23" y="45.5" >cks..</text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,072,577 us, 0.19%)</title><rect x="326.8" y="31" width="8.0" height="23.0" fill="rgb(99,172,208)" rx="2" ry="2" />
+<text  x="329.84" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (19,738 us, 0.00%)</title><rect x="143.0" y="55" width="0.1" height="23.0" fill="rgb(47,91,245)" rx="2" ry="2" />
+<text  x="145.97" y="69.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,133,028 us, 3.11%)</title><rect x="1350.8" y="55" width="126.8" height="23.0" fill="rgb(227.084780451473,188.352413327892,242.787091447519)" rx="2" ry="2" />
+<text  x="1353.77" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,488,494 us, 0.27%)</title><rect x="287.1" y="31" width="11.0" height="23.0" fill="rgb(140,208,151)" rx="2" ry="2" />
+<text  x="290.08" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,488,447 us, 0.27%)</title><rect x="1083.7" y="31" width="11.0" height="23.0" fill="rgb(139,208,152)" rx="2" ry="2" />
+<text  x="1086.65" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,211,421 us, 0.58%)</title><rect x="697.7" y="31" width="23.7" height="23.0" fill="rgb(230,101,42)" rx="2" ry="2" />
+<text  x="700.68" y="45.5" >ck..</text>
+</g>
+<g >
+<title>SUBSHELL (61593)_[s] (18,106,902 us, 3.29%)</title><rect x="10.4" y="79" width="134.0" height="23.0" fill="rgb(236.666662444263,188.333317979137,221.666658989568)" rx="2" ry="2" />
+<text  x="13.41" y="93.5" >SUBSHELL (61593)_[s]</text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (652,996 us, 0.12%)</title><rect x="3859.7" y="31" width="4.8" height="23.0" fill="rgb(90,158,219)" rx="2" ry="2" />
+<text  x="3862.67" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (588,107 us, 0.11%)</title><rect x="3151.8" y="31" width="4.4" height="23.0" fill="rgb(84,148,225)" rx="2" ry="2" />
+<text  x="3154.80" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,912,415 us, 0.35%)</title><rect x="1404.2" y="31" width="14.2" height="23.0" fill="rgb(180,187,87)" rx="2" ry="2" />
+<text  x="1407.21" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (631,673 us, 0.11%)</title><rect x="1335.5" y="31" width="4.7" height="23.0" fill="rgb(90,156,221)" rx="2" ry="2" />
+<text  x="1338.50" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,954,117 us, 0.35%)</title><rect x="476.2" y="31" width="14.5" height="23.0" fill="rgb(185,180,80)" rx="2" ry="2" />
+<text  x="479.22" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (502,551 us, 0.09%)</title><rect x="1625.1" y="31" width="3.7" height="23.0" fill="rgb(71,125,236)" rx="2" ry="2" />
+<text  x="1628.12" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,187,099 us, 0.22%)</title><rect x="659.6" y="31" width="8.8" height="23.0" fill="rgb(118,195,186)" rx="2" ry="2" />
+<text  x="662.58" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,012,203 us, 0.37%)</title><rect x="343.6" y="31" width="14.9" height="23.0" fill="rgb(192,168,69)" rx="2" ry="2" />
+<text  x="346.56" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (660,951 us, 0.12%)</title><rect x="3446.7" y="31" width="4.8" height="23.0" fill="rgb(92,160,218)" rx="2" ry="2" />
+<text  x="3449.65" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,896,256 us, 0.34%)</title><rect x="3803.4" y="31" width="14.0" height="23.0" fill="rgb(177,189,89)" rx="2" ry="2" />
+<text  x="3806.37" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (500,519 us, 0.09%)</title><rect x="2834.4" y="31" width="3.7" height="23.0" fill="rgb(67,121,237)" rx="2" ry="2" />
+<text  x="2837.40" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (27,596 us, 0.01%)</title><rect x="3733.6" y="55" width="0.2" height="23.0" fill="rgb(55,104,243)" rx="2" ry="2" />
+<text  x="3736.55" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (480,810 us, 0.09%)</title><rect x="3730.0" y="31" width="3.6" height="23.0" fill="rgb(65,117,238)" rx="2" ry="2" />
+<text  x="3733.00" y="45.5" ></text>
+</g>
+<g >
+<title>evfd_copy ${fd_write} ${fd_stdin} (17,254 us, 0.00%)</title><rect x="3867.4" y="79" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="3870.41" y="93.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (572,420 us, 0.10%)</title><rect x="807.2" y="31" width="4.2" height="23.0" fill="rgb(83,146,227)" rx="2" ry="2" />
+<text  x="810.19" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (112,109 us, 0.02%)</title><rect x="2693.3" y="55" width="0.8" height="23.0" fill="rgb(208,211,212)" rx="2" ry="2" />
+<text  x="2696.26" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (23,034 us, 0.00%)</title><rect x="2560.9" y="55" width="0.1" height="23.0" fill="rgb(49,93,245)" rx="2" ry="2" />
+<text  x="2563.86" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (535,528 us, 0.10%)</title><rect x="411.2" y="31" width="3.9" height="23.0" fill="rgb(74,132,232)" rx="2" ry="2" />
+<text  x="414.16" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,114,253 us, 0.38%)</title><rect x="1551.9" y="31" width="15.6" height="23.0" fill="rgb(197,159,63)" rx="2" ry="2" />
+<text  x="1554.87" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,145,247 us, 0.21%)</title><rect x="459.4" y="31" width="8.5" height="23.0" fill="rgb(113,189,195)" rx="2" ry="2" />
+<text  x="462.40" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (650,440 us, 0.12%)</title><rect x="3568.9" y="31" width="4.8" height="23.0" fill="rgb(91,159,219)" rx="2" ry="2" />
+<text  x="3571.91" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,433,733 us, 0.26%)</title><rect x="3340.0" y="31" width="10.6" height="23.0" fill="rgb(130,204,165)" rx="2" ry="2" />
+<text  x="3342.98" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,618,027 us, 0.29%)</title><rect x="1986.1" y="31" width="12.0" height="23.0" fill="rgb(153,207,129)" rx="2" ry="2" />
+<text  x="1989.11" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (372,535 us, 0.07%)</title><rect x="824.6" y="31" width="2.7" height="23.0" fill="rgb(56,103,242)" rx="2" ry="2" />
+<text  x="827.57" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,103,043 us, 0.20%)</title><rect x="1121.6" y="31" width="8.1" height="23.0" fill="rgb(101,176,204)" rx="2" ry="2" />
+<text  x="1124.58" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,462,021 us, 0.27%)</title><rect x="2561.7" y="31" width="10.8" height="23.0" fill="rgb(136,207,157)" rx="2" ry="2" />
+<text  x="2564.72" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,385,908 us, 0.25%)</title><rect x="3587.0" y="31" width="10.3" height="23.0" fill="rgb(127,202,169)" rx="2" ry="2" />
+<text  x="3590.03" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61610)_[s] (17,631,742 us, 3.20%)</title><rect x="1613.7" y="79" width="130.4" height="23.0" fill="rgb(236.666658511386,188.333303677766,221.666651838883)" rx="2" ry="2" />
+<text  x="1616.66" y="93.5" >SUBSHELL (61610)_[s]</text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,601,544 us, 0.29%)</title><rect x="516.4" y="31" width="11.8" height="23.0" fill="rgb(149,208,135)" rx="2" ry="2" />
+<text  x="519.37" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (515,340 us, 0.09%)</title><rect x="3722.5" y="31" width="3.8" height="23.0" fill="rgb(69,124,235)" rx="2" ry="2" />
+<text  x="3725.51" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,100,239 us, 0.56%)</title><rect x="1907.7" y="31" width="22.9" height="23.0" fill="rgb(222,112,45)" rx="2" ry="2" />
+<text  x="1910.65" y="45.5" >c..</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (2,969,361 us, 0.54%)</title><rect x="1235.3" y="31" width="21.9" height="23.0" fill="rgb(221,114,44)" rx="2" ry="2" />
+<text  x="1238.26" y="45.5" >c..</text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,034,759 us, 0.19%)</title><rect x="988.9" y="31" width="7.7" height="23.0" fill="rgb(93,164,214)" rx="2" ry="2" />
+<text  x="991.93" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (507,510 us, 0.09%)</title><rect x="2315.6" y="31" width="3.8" height="23.0" fill="rgb(72,127,235)" rx="2" ry="2" />
+<text  x="2318.64" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,081,962 us, 0.38%)</title><rect x="2633.7" y="31" width="15.4" height="23.0" fill="rgb(194,164,66)" rx="2" ry="2" />
+<text  x="2636.74" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,345,166 us, 0.43%)</title><rect x="2104.5" y="31" width="17.4" height="23.0" fill="rgb(206,142,54)" rx="2" ry="2" />
+<text  x="2107.51" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (2,116,970 us, 0.38%)</title><rect x="3697.6" y="31" width="15.6" height="23.0" fill="rgb(199,158,63)" rx="2" ry="2" />
+<text  x="3700.58" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (26,078 us, 0.00%)</title><rect x="2560.7" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2563.67" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (408,860 us, 0.07%)</title><rect x="3001.4" y="31" width="3.0" height="23.0" fill="rgb(59,107,241)" rx="2" ry="2" />
+<text  x="3004.42" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (3,034,751 us, 0.55%)</title><rect x="2933.4" y="31" width="22.4" height="23.0" fill="rgb(222,113,44)" rx="2" ry="2" />
+<text  x="2936.39" y="45.5" >s..</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (25,101 us, 0.00%)</title><rect x="3008.1" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3011.10" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (24,248 us, 0.00%)</title><rect x="1743.8" y="55" width="0.1" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="1746.75" y="69.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (19,796,562 us, 3.59%)</title><rect x="1744.4" y="55" width="146.5" height="23.0" fill="rgb(226.028634280077,188.434838286368,241.549008772893)" rx="2" ry="2" />
+<text  x="1747.41" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (478,146 us, 0.09%)</title><rect x="298.1" y="31" width="3.5" height="23.0" fill="rgb(66,117,238)" rx="2" ry="2" />
+<text  x="301.09" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,398,197 us, 0.44%)</title><rect x="2761.0" y="31" width="17.7" height="23.0" fill="rgb(208,140,53)" rx="2" ry="2" />
+<text  x="2763.98" y="45.5" >s..</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,155,868 us, 0.57%)</title><rect x="2319.4" y="31" width="23.4" height="23.0" fill="rgb(226,105,42)" rx="2" ry="2" />
+<text  x="2322.40" y="45.5" >c..</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,430,933 us, 0.26%)</title><rect x="2176.5" y="31" width="10.6" height="23.0" fill="rgb(130,204,166)" rx="2" ry="2" />
+<text  x="2179.47" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,456,329 us, 0.26%)</title><rect x="2304.9" y="31" width="10.7" height="23.0" fill="rgb(134,206,159)" rx="2" ry="2" />
+<text  x="2307.86" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,164,433 us, 0.21%)</title><rect x="862.5" y="31" width="8.6" height="23.0" fill="rgb(112,190,190)" rx="2" ry="2" />
+<text  x="865.47" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (631,286 us, 0.11%)</title><rect x="2160.3" y="31" width="4.6" height="23.0" fill="rgb(85,152,222)" rx="2" ry="2" />
+<text  x="2163.27" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (81,100 us, 0.01%)</title><rect x="1349.3" y="55" width="0.6" height="23.0" fill="rgb(203,211,213)" rx="2" ry="2" />
+<text  x="1352.26" y="69.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,228,792 us, 0.22%)</title><rect x="269.1" y="31" width="9.1" height="23.0" fill="rgb(119,197,181)" rx="2" ry="2" />
+<text  x="272.09" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,057,563 us, 0.19%)</title><rect x="3561.1" y="31" width="7.8" height="23.0" fill="rgb(96,168,211)" rx="2" ry="2" />
+<text  x="3564.09" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,946,840 us, 0.35%)</title><rect x="1274.1" y="31" width="14.4" height="23.0" fill="rgb(183,182,81)" rx="2" ry="2" />
+<text  x="1277.08" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (source)_[f] (521,207,403 us, 94.63%)</title><rect x="10.2" y="103" width="3857.0" height="23.0" fill="rgb(221.666666666281,188.333333332562,236.666666666454)" rx="2" ry="2" />
+<text  x="13.22" y="117.5" >FUNCTION (source)_[f]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (24,713 us, 0.00%)</title><rect x="2694.8" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2697.83" y="69.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (2,099,020 us, 0.38%)</title><rect x="3415.3" y="31" width="15.5" height="23.0" fill="rgb(196,162,65)" rx="2" ry="2" />
+<text  x="3418.26" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (23,144 us, 0.00%)</title><rect x="1890.9" y="55" width="0.2" height="23.0" fill="rgb(48,92,245)" rx="2" ry="2" />
+<text  x="1893.91" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (511,618 us, 0.09%)</title><rect x="1078.0" y="31" width="3.7" height="23.0" fill="rgb(73,129,235)" rx="2" ry="2" />
+<text  x="1080.96" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,177,041 us, 0.21%)</title><rect x="1592.4" y="31" width="8.7" height="23.0" fill="rgb(115,192,188)" rx="2" ry="2" />
+<text  x="1595.38" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (24,221 us, 0.00%)</title><rect x="1743.9" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="1746.93" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61599)_[s] (18,347,521 us, 3.33%)</title><rect x="813.4" y="79" width="135.8" height="23.0" fill="rgb(236.666663010083,188.333320036664,221.666660018332)" rx="2" ry="2" />
+<text  x="816.40" y="93.5" >SUBSHELL (61599)_[s]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (21,661 us, 0.00%)</title><rect x="2175.5" y="55" width="0.2" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="2178.51" y="69.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,850,510 us, 0.34%)</title><rect x="3510.4" y="31" width="13.7" height="23.0" fill="rgb(175,192,94)" rx="2" ry="2" />
+<text  x="3513.36" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,253,682 us, 0.23%)</title><rect x="195.8" y="31" width="9.3" height="23.0" fill="rgb(122,198,179)" rx="2" ry="2" />
+<text  x="198.83" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (520,344 us, 0.09%)</title><rect x="2838.1" y="31" width="3.9" height="23.0" fill="rgb(74,130,233)" rx="2" ry="2" />
+<text  x="2841.10" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (534,159 us, 0.10%)</title><rect x="2424.0" y="31" width="4.0" height="23.0" fill="rgb(72,130,233)" rx="2" ry="2" />
+<text  x="2427.00" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,953,093 us, 0.35%)</title><rect x="737.5" y="31" width="14.5" height="23.0" fill="rgb(184,181,80)" rx="2" ry="2" />
+<text  x="740.52" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (404,134 us, 0.07%)</title><rect x="944.4" y="31" width="3.0" height="23.0" fill="rgb(59,107,242)" rx="2" ry="2" />
+<text  x="947.39" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,154,969 us, 0.39%)</title><rect x="1154.7" y="31" width="16.0" height="23.0" fill="rgb(200,154,61)" rx="2" ry="2" />
+<text  x="1157.70" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (577,865 us, 0.10%)</title><rect x="3285.9" y="31" width="4.3" height="23.0" fill="rgb(81,143,227)" rx="2" ry="2" />
+<text  x="3288.93" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,091,487 us, 0.20%)</title><rect x="528.2" y="31" width="8.1" height="23.0" fill="rgb(101,175,206)" rx="2" ry="2" />
+<text  x="531.23" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,997,225 us, 0.36%)</title><rect x="1683.3" y="31" width="14.8" height="23.0" fill="rgb(191,169,70)" rx="2" ry="2" />
+<text  x="1686.32" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,636,827 us, 0.30%)</title><rect x="1709.6" y="31" width="12.1" height="23.0" fill="rgb(156,206,123)" rx="2" ry="2" />
+<text  x="1712.56" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,167,213 us, 3.12%)</title><rect x="2304.9" y="55" width="127.0" height="23.0" fill="rgb(226.382073501213,187.9921721004,242.087033165181)" rx="2" ry="2" />
+<text  x="2307.86" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (4,004,188 us, 0.73%)</title><rect x="2711.3" y="31" width="29.7" height="23.0" fill="rgb(242,89,40)" rx="2" ry="2" />
+<text  x="2714.32" y="45.5" >cks..</text>
+</g>
+<g >
+<title>SUBSHELL (61573)_[s] (550,800,124 us, 100.00%)</title><rect x="10.0" y="151" width="4076.0" height="23.0" fill="rgb(236.666666666655,188.33333333329,221.666666666645)" rx="2" ry="2" />
+<text  x="13.01" y="165.5" >SUBSHELL (61573)_[s]</text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,058,463 us, 0.19%)</title><rect x="590.1" y="31" width="7.8" height="23.0" fill="rgb(96,169,211)" rx="2" ry="2" />
+<text  x="593.09" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (40,292 us, 0.01%)</title><rect x="3864.5" y="55" width="0.3" height="23.0" fill="rgb(54,102,244)" rx="2" ry="2" />
+<text  x="3867.50" y="69.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,097,435 us, 0.38%)</title><rect x="2618.2" y="31" width="15.5" height="23.0" fill="rgb(195,163,66)" rx="2" ry="2" />
+<text  x="2621.22" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,706,088 us, 0.31%)</title><rect x="2661.0" y="31" width="12.7" height="23.0" fill="rgb(165,201,108)" rx="2" ry="2" />
+<text  x="2664.03" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,176,181 us, 0.40%)</title><rect x="68.2" y="31" width="16.1" height="23.0" fill="rgb(202,150,58)" rx="2" ry="2" />
+<text  x="71.22" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (569,000 us, 0.10%)</title><rect x="1879.7" y="31" width="4.2" height="23.0" fill="rgb(83,145,228)" rx="2" ry="2" />
+<text  x="1882.71" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61596)_[s] (17,568,731 us, 3.19%)</title><rect x="420.9" y="79" width="130.0" height="23.0" fill="rgb(236.666658085296,188.33330212835,221.666651064175)" rx="2" ry="2" />
+<text  x="423.88" y="93.5" >SUBSHELL (61596)_[s]</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (2,802,191 us, 0.51%)</title><rect x="2449.6" y="31" width="20.7" height="23.0" fill="rgb(216,126,49)" rx="2" ry="2" />
+<text  x="2452.56" y="45.5" >c..</text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (657,212 us, 0.12%)</title><rect x="2292.8" y="31" width="4.9" height="23.0" fill="rgb(90,159,218)" rx="2" ry="2" />
+<text  x="2295.85" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (24,264 us, 0.00%)</title><rect x="3866.8" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3869.82" y="69.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,295,261 us, 0.42%)</title><rect x="887.6" y="31" width="16.9" height="23.0" fill="rgb(203,149,59)" rx="2" ry="2" />
+<text  x="890.56" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,119,789 us, 0.20%)</title><rect x="2411.6" y="31" width="8.2" height="23.0" fill="rgb(106,181,200)" rx="2" ry="2" />
+<text  x="2414.56" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (361,130 us, 0.07%)</title><rect x="278.2" y="31" width="2.7" height="23.0" fill="rgb(57,105,242)" rx="2" ry="2" />
+<text  x="281.19" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,383,538 us, 0.25%)</title><rect x="2150.0" y="31" width="10.3" height="23.0" fill="rgb(126,202,171)" rx="2" ry="2" />
+<text  x="2153.03" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (2,785,777 us, 0.51%)</title><rect x="3751.6" y="31" width="20.6" height="23.0" fill="rgb(215,124,47)" rx="2" ry="2" />
+<text  x="3754.57" y="45.5" >c..</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (24,813 us, 0.00%)</title><rect x="2694.3" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2697.27" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61730)_[s] (17,672,784 us, 3.21%)</title><rect x="3161.9" y="79" width="130.8" height="23.0" fill="rgb(236.666656472533,188.333296263756,221.666648131878)" rx="2" ry="2" />
+<text  x="3164.95" y="93.5" >SUBSHELL (61730)_[s]</text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,934,981 us, 0.35%)</title><rect x="3215.6" y="31" width="14.3" height="23.0" fill="rgb(182,184,83)" rx="2" ry="2" />
+<text  x="3218.58" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,262,873 us, 0.59%)</title><rect x="565.9" y="31" width="24.2" height="23.0" fill="rgb(231,100,43)" rx="2" ry="2" />
+<text  x="568.92" y="45.5" >ck..</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (24,739 us, 0.00%)</title><rect x="3586.3" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3589.34" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (530,840 us, 0.10%)</title><rect x="672.8" y="31" width="3.9" height="23.0" fill="rgb(72,129,233)" rx="2" ry="2" />
+<text  x="675.80" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61716)_[s] (21,859,754 us, 3.97%)</title><rect x="2847.1" y="79" width="161.7" height="23.0" fill="rgb(236.666664861817,188.333326770245,221.666663385122)" rx="2" ry="2" />
+<text  x="2850.06" y="93.5" >SUBSHELL (61716)_[s]</text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (669,990 us, 0.12%)</title><rect x="3578.6" y="31" width="4.9" height="23.0" fill="rgb(94,163,217)" rx="2" ry="2" />
+<text  x="3581.56" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,834,029 us, 0.33%)</title><rect x="255.5" y="31" width="13.6" height="23.0" fill="rgb(172,195,97)" rx="2" ry="2" />
+<text  x="258.52" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (18,069,762 us, 3.28%)</title><rect x="813.7" y="55" width="133.7" height="23.0" fill="rgb(226.402822136161,188.040754270036,242.096395354122)" rx="2" ry="2" />
+<text  x="816.66" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (630,913 us, 0.11%)</title><rect x="2164.9" y="31" width="4.7" height="23.0" fill="rgb(85,151,222)" rx="2" ry="2" />
+<text  x="2167.94" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (17,011 us, 0.00%)</title><rect x="1613.1" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1616.09" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (23,864 us, 0.00%)</title><rect x="3161.4" y="55" width="0.1" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3164.37" y="69.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,108,183 us, 0.20%)</title><rect x="187.6" y="31" width="8.2" height="23.0" fill="rgb(103,178,203)" rx="2" ry="2" />
+<text  x="190.63" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,854,453 us, 0.34%)</title><rect x="3109.6" y="31" width="13.7" height="23.0" fill="rgb(175,191,92)" rx="2" ry="2" />
+<text  x="3112.57" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,095,266 us, 0.20%)</title><rect x="3269.2" y="31" width="8.1" height="23.0" fill="rgb(101,176,205)" rx="2" ry="2" />
+<text  x="3272.20" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,612,643 us, 0.29%)</title><rect x="635.7" y="31" width="11.9" height="23.0" fill="rgb(151,208,132)" rx="2" ry="2" />
+<text  x="638.69" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,251,051 us, 0.23%)</title><rect x="3713.2" y="31" width="9.3" height="23.0" fill="rgb(120,198,179)" rx="2" ry="2" />
+<text  x="3716.25" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,451,357 us, 0.45%)</title><rect x="2778.7" y="31" width="18.2" height="23.0" fill="rgb(208,138,52)" rx="2" ry="2" />
+<text  x="2781.72" y="45.5" >s..</text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (573,453 us, 0.10%)</title><rect x="3281.7" y="31" width="4.2" height="23.0" fill="rgb(79,141,228)" rx="2" ry="2" />
+<text  x="3284.69" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (38,333 us, 0.01%)</title><rect x="286.0" y="55" width="0.3" height="23.0" fill="rgb(205,211,213)" rx="2" ry="2" />
+<text  x="289.01" y="69.5" ></text>
+</g>
+<g >
+<title>((nWait--)) (81,037 us, 0.01%)</title><rect x="3877.3" y="79" width="0.6" height="23.0" fill="rgb(46,87,245)" rx="2" ry="2" />
+<text  x="3880.27" y="93.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (22,244 us, 0.00%)</title><rect x="1613.2" y="55" width="0.2" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1616.21" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (469,178 us, 0.09%)</title><rect x="1887.4" y="31" width="3.5" height="23.0" fill="rgb(65,116,239)" rx="2" ry="2" />
+<text  x="1890.44" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,548,439 us, 0.28%)</title><rect x="1698.1" y="31" width="11.5" height="23.0" fill="rgb(144,208,142)" rx="2" ry="2" />
+<text  x="1701.10" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (578,483 us, 0.11%)</title><rect x="540.6" y="31" width="4.2" height="23.0" fill="rgb(81,144,226)" rx="2" ry="2" />
+<text  x="543.56" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61708)_[s] (20,542,462 us, 3.73%)</title><rect x="2695.0" y="79" width="152.1" height="23.0" fill="rgb(236.666662348626,188.333317631368,221.666658815684)" rx="2" ry="2" />
+<text  x="2698.04" y="93.5" >SUBSHELL (61708)_[s]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (23,954 us, 0.00%)</title><rect x="1743.4" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="1746.40" y="69.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,803,569 us, 0.33%)</title><rect x="2486.5" y="31" width="13.4" height="23.0" fill="rgb(170,197,101)" rx="2" ry="2" />
+<text  x="2489.51" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (995,375 us, 0.18%)</title><rect x="1930.6" y="31" width="7.4" height="23.0" fill="rgb(91,161,216)" rx="2" ry="2" />
+<text  x="1933.62" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (445,854 us, 0.08%)</title><rect x="1754.9" y="31" width="3.3" height="23.0" fill="rgb(64,115,240)" rx="2" ry="2" />
+<text  x="1757.92" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61692)_[s] (17,165,321 us, 3.12%)</title><rect x="2434.4" y="79" width="127.0" height="23.0" fill="rgb(236.666654916945,188.333290607074,221.666645303537)" rx="2" ry="2" />
+<text  x="2437.40" y="93.5" >SUBSHELL (61692)_[s]</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,501,616 us, 0.27%)</title><rect x="2847.3" y="31" width="11.1" height="23.0" fill="rgb(141,208,147)" rx="2" ry="2" />
+<text  x="2850.27" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (26,554 us, 0.00%)</title><rect x="3161.7" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3164.72" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (25,396 us, 0.00%)</title><rect x="3008.4" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3011.44" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (429,134 us, 0.08%)</title><rect x="941.2" y="31" width="3.2" height="23.0" fill="rgb(60,109,241)" rx="2" ry="2" />
+<text  x="944.21" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,109,431 us, 0.38%)</title><rect x="1005.4" y="31" width="15.6" height="23.0" fill="rgb(196,160,63)" rx="2" ry="2" />
+<text  x="1008.42" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (32,025 us, 0.01%)</title><rect x="1348.9" y="55" width="0.3" height="23.0" fill="rgb(50,95,244)" rx="2" ry="2" />
+<text  x="1351.92" y="69.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (2,950,837 us, 0.54%)</title><rect x="3177.0" y="31" width="21.8" height="23.0" fill="rgb(220,117,45)" rx="2" ry="2" />
+<text  x="3180.00" y="45.5" >c..</text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,774,709 us, 0.32%)</title><rect x="2499.9" y="31" width="13.1" height="23.0" fill="rgb(169,198,102)" rx="2" ry="2" />
+<text  x="2502.86" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,807,306 us, 3.23%)</title><rect x="287.1" y="55" width="131.8" height="23.0" fill="rgb(226.756684988393,188.052882935451,242.447415550397)" rx="2" ry="2" />
+<text  x="290.08" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,956,303 us, 0.36%)</title><rect x="752.0" y="31" width="14.5" height="23.0" fill="rgb(186,178,77)" rx="2" ry="2" />
+<text  x="754.98" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,692,417 us, 0.31%)</title><rect x="385.8" y="31" width="12.5" height="23.0" fill="rgb(164,202,111)" rx="2" ry="2" />
+<text  x="388.82" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (23,692 us, 0.00%)</title><rect x="3292.5" y="55" width="0.2" height="23.0" fill="rgb(49,93,245)" rx="2" ry="2" />
+<text  x="3295.52" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (28,851 us, 0.01%)</title><rect x="3457.9" y="55" width="0.2" height="23.0" fill="rgb(51,96,244)" rx="2" ry="2" />
+<text  x="3460.88" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (27,688 us, 0.01%)</title><rect x="3161.2" y="55" width="0.2" height="23.0" fill="rgb(50,96,244)" rx="2" ry="2" />
+<text  x="3164.16" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (23,442 us, 0.00%)</title><rect x="3008.6" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3011.63" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (31,579 us, 0.01%)</title><rect x="680.9" y="55" width="0.2" height="23.0" fill="rgb(55,103,243)" rx="2" ry="2" />
+<text  x="683.86" y="69.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,018,301 us, 0.18%)</title><rect x="1652.5" y="31" width="7.5" height="23.0" fill="rgb(92,162,215)" rx="2" ry="2" />
+<text  x="1655.46" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,194,673 us, 0.22%)</title><rect x="1660.0" y="31" width="8.8" height="23.0" fill="rgb(119,196,184)" rx="2" ry="2" />
+<text  x="1662.99" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (587,684 us, 0.11%)</title><rect x="3747.2" y="31" width="4.4" height="23.0" fill="rgb(83,146,226)" rx="2" ry="2" />
+<text  x="3750.22" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (25,100 us, 0.00%)</title><rect x="3866.6" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3869.63" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p0 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p0, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (14,878 us, 0.00%)</title><rect x="143.9" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="146.90" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (27,623 us, 0.01%)</title><rect x="3735.1" y="55" width="0.2" height="23.0" fill="rgb(50,96,244)" rx="2" ry="2" />
+<text  x="3738.12" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (27,795 us, 0.01%)</title><rect x="3292.1" y="55" width="0.2" height="23.0" fill="rgb(53,99,244)" rx="2" ry="2" />
+<text  x="3295.08" y="69.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (548,699 us, 0.10%)</title><rect x="3468.8" y="31" width="4.0" height="23.0" fill="rgb(77,136,230)" rx="2" ry="2" />
+<text  x="3471.79" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (27,046 us, 0.00%)</title><rect x="2846.7" y="55" width="0.2" height="23.0" fill="rgb(51,97,244)" rx="2" ry="2" />
+<text  x="2849.65" y="69.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,283,508 us, 3.14%)</title><rect x="3162.3" y="55" width="127.9" height="23.0" fill="rgb(226.038442206462,187.655654769244,241.740491612597)" rx="2" ry="2" />
+<text  x="3165.31" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (436,211 us, 0.08%)</title><rect x="1491.2" y="31" width="3.2" height="23.0" fill="rgb(62,111,240)" rx="2" ry="2" />
+<text  x="1494.18" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,538,786 us, 0.28%)</title><rect x="2898.8" y="31" width="11.4" height="23.0" fill="rgb(143,208,143)" rx="2" ry="2" />
+<text  x="2901.78" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p13 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p13, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (16,671 us, 0.00%)</title><rect x="1891.7" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1894.69" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p16 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p16, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (23,754 us, 0.00%)</title><rect x="2303.6" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2306.59" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (23,771 us, 0.00%)</title><rect x="1611.8" y="55" width="0.2" height="23.0" fill="rgb(48,92,245)" rx="2" ry="2" />
+<text  x="1614.83" y="69.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,682,322 us, 0.31%)</title><rect x="904.5" y="31" width="12.5" height="23.0" fill="rgb(161,204,115)" rx="2" ry="2" />
+<text  x="907.54" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,920,962 us, 0.71%)</title><rect x="3025.2" y="31" width="29.0" height="23.0" fill="rgb(241,90,40)" rx="2" ry="2" />
+<text  x="3028.22" y="45.5" >ck..</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,474,253 us, 0.27%)</title><rect x="3736.3" y="31" width="10.9" height="23.0" fill="rgb(138,207,154)" rx="2" ry="2" />
+<text  x="3739.31" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61630)_[s] (20,036,009 us, 3.64%)</title><rect x="1744.1" y="79" width="148.3" height="23.0" fill="rgb(236.666662960084,188.333319854852,221.666659927426)" rx="2" ry="2" />
+<text  x="1747.14" y="93.5" >SUBSHELL (61630)_[s]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (14,553 us, 0.00%)</title><rect x="2434.1" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="2437.09" y="69.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,476,016 us, 0.27%)</title><rect x="1892.8" y="31" width="11.0" height="23.0" fill="rgb(139,208,154)" rx="2" ry="2" />
+<text  x="1895.84" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (580,870 us, 0.11%)</title><rect x="2445.3" y="31" width="4.3" height="23.0" fill="rgb(83,146,226)" rx="2" ry="2" />
+<text  x="2448.26" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (35,664 us, 0.01%)</title><rect x="2559.2" y="55" width="0.3" height="23.0" fill="rgb(51,95,244)" rx="2" ry="2" />
+<text  x="2562.20" y="69.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (484,323 us, 0.09%)</title><rect x="960.2" y="31" width="3.6" height="23.0" fill="rgb(70,124,237)" rx="2" ry="2" />
+<text  x="963.19" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,314,274 us, 0.24%)</title><rect x="2065.9" y="31" width="9.8" height="23.0" fill="rgb(123,200,175)" rx="2" ry="2" />
+<text  x="2068.94" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,146,762 us, 0.21%)</title><rect x="1721.7" y="31" width="8.5" height="23.0" fill="rgb(112,189,193)" rx="2" ry="2" />
+<text  x="1724.67" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,130,380 us, 0.21%)</title><rect x="1395.8" y="31" width="8.4" height="23.0" fill="rgb(107,183,198)" rx="2" ry="2" />
+<text  x="1398.84" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,628,806 us, 0.30%)</title><rect x="2267.9" y="31" width="12.0" height="23.0" fill="rgb(155,207,126)" rx="2" ry="2" />
+<text  x="2270.87" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,404,145 us, 0.62%)</title><rect x="301.6" y="31" width="25.2" height="23.0" fill="rgb(233,97,41)" rx="2" ry="2" />
+<text  x="304.63" y="45.5" >ck..</text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,150,249 us, 0.21%)</title><rect x="1455.5" y="31" width="8.6" height="23.0" fill="rgb(113,190,193)" rx="2" ry="2" />
+<text  x="1458.54" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,145,679 us, 0.21%)</title><rect x="1196.5" y="31" width="8.5" height="23.0" fill="rgb(110,187,194)" rx="2" ry="2" />
+<text  x="1199.52" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p19 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p19, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (24,810 us, 0.00%)</title><rect x="2694.1" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2697.09" y="69.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (2,041,174 us, 0.37%)</title><rect x="1854.1" y="31" width="15.1" height="23.0" fill="rgb(193,167,69)" rx="2" ry="2" />
+<text  x="1857.10" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (25,231 us, 0.00%)</title><rect x="3457.3" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3460.27" y="69.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,321,031 us, 3.14%)</title><rect x="1220.7" y="55" width="128.2" height="23.0" fill="rgb(226.030278914805,187.985705441478,241.736754201959)" rx="2" ry="2" />
+<text  x="1223.74" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (2,828,625 us, 0.51%)</title><rect x="3472.8" y="31" width="21.0" height="23.0" fill="rgb(218,120,46)" rx="2" ry="2" />
+<text  x="3475.85" y="45.5" >c..</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (17,978 us, 0.00%)</title><rect x="1892.0" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1894.96" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (22,923 us, 0.00%)</title><rect x="2561.0" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2564.03" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (260,458 us, 0.05%)</title><rect x="3583.9" y="55" width="1.9" height="23.0" fill="rgb(210,211,212)" rx="2" ry="2" />
+<text  x="3586.88" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (183,936 us, 0.03%)</title><rect x="3864.9" y="55" width="1.4" height="23.0" fill="rgb(208,211,212)" rx="2" ry="2" />
+<text  x="3867.90" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (604,826 us, 0.11%)</title><rect x="1340.2" y="31" width="4.4" height="23.0" fill="rgb(85,150,223)" rx="2" ry="2" />
+<text  x="1343.17" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (32,512 us, 0.01%)</title><rect x="1218.7" y="55" width="0.2" height="23.0" fill="rgb(50,95,244)" rx="2" ry="2" />
+<text  x="1221.71" y="69.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (442,566 us, 0.08%)</title><rect x="3597.3" y="31" width="3.3" height="23.0" fill="rgb(61,110,240)" rx="2" ry="2" />
+<text  x="3600.28" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,558,066 us, 0.28%)</title><rect x="2256.3" y="31" width="11.6" height="23.0" fill="rgb(146,208,140)" rx="2" ry="2" />
+<text  x="2259.34" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (593,156 us, 0.11%)</title><rect x="1214.3" y="31" width="4.4" height="23.0" fill="rgb(84,149,224)" rx="2" ry="2" />
+<text  x="1217.32" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,747,986 us, 0.32%)</title><rect x="3293.1" y="31" width="12.9" height="23.0" fill="rgb(167,199,104)" rx="2" ry="2" />
+<text  x="3296.09" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,435,542 us, 0.26%)</title><rect x="3633.8" y="31" width="10.6" height="23.0" fill="rgb(131,205,164)" rx="2" ry="2" />
+<text  x="3636.82" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (2,086,069 us, 0.38%)</title><rect x="2955.8" y="31" width="15.5" height="23.0" fill="rgb(194,163,65)" rx="2" ry="2" />
+<text  x="2958.85" y="45.5" ></text>
+</g>
+<g >
+<title>lseek $fd_read 0 SEEK_CUR fd_read_pos (86,096 us, 0.02%)</title><rect x="3875.9" y="79" width="0.7" height="23.0" fill="rgb(46,87,245)" rx="2" ry="2" />
+<text  x="3878.94" y="93.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (2,296,982 us, 0.42%)</title><rect x="2971.3" y="31" width="17.0" height="23.0" fill="rgb(204,147,57)" rx="2" ry="2" />
+<text  x="2974.28" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (21,594,149 us, 3.92%)</title><rect x="2847.3" y="55" width="159.8" height="23.0" fill="rgb(227.396503551173,189.096652228427,242.923470303638)" rx="2" ry="2" />
+<text  x="2850.27" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (579,998 us, 0.11%)</title><rect x="406.9" y="31" width="4.3" height="23.0" fill="rgb(83,147,226)" rx="2" ry="2" />
+<text  x="409.87" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (504,172 us, 0.09%)</title><rect x="415.1" y="31" width="3.8" height="23.0" fill="rgb(68,121,236)" rx="2" ry="2" />
+<text  x="418.12" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,919,499 us, 0.35%)</title><rect x="2810.3" y="31" width="14.3" height="23.0" fill="rgb(181,185,84)" rx="2" ry="2" />
+<text  x="2813.35" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (20,109 us, 0.00%)</title><rect x="1891.8" y="55" width="0.2" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1894.81" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (24,564 us, 0.00%)</title><rect x="1081.7" y="55" width="0.2" height="23.0" fill="rgb(49,93,245)" rx="2" ry="2" />
+<text  x="1084.75" y="69.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,850,366 us, 0.34%)</title><rect x="241.8" y="31" width="13.7" height="23.0" fill="rgb(174,193,94)" rx="2" ry="2" />
+<text  x="244.83" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (303,406 us, 0.06%)</title><rect x="155.3" y="31" width="2.2" height="23.0" fill="rgb(59,108,242)" rx="2" ry="2" />
+<text  x="158.25" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (16,809,715 us, 3.05%)</title><rect x="2434.8" y="55" width="124.4" height="23.0" fill="rgb(225.705406122426,187.692183114621,241.39893855684)" rx="2" ry="2" />
+<text  x="2437.81" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (526,164 us, 0.10%)</title><rect x="1903.8" y="31" width="3.9" height="23.0" fill="rgb(75,132,233)" rx="2" ry="2" />
+<text  x="1906.76" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,520,244 us, 0.46%)</title><rect x="3362.8" y="31" width="18.6" height="23.0" fill="rgb(211,134,51)" rx="2" ry="2" />
+<text  x="3365.78" y="45.5" >s..</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (24,143 us, 0.00%)</title><rect x="1743.6" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="1746.57" y="69.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,762,970 us, 3.22%)</title><rect x="1480.4" y="55" width="131.4" height="23.0" fill="rgb(226.383567355785,187.995669906228,242.087707221513)" rx="2" ry="2" />
+<text  x="1483.39" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,210,038 us, 0.58%)</title><rect x="3600.6" y="31" width="23.7" height="23.0" fill="rgb(229,101,42)" rx="2" ry="2" />
+<text  x="3603.56" y="45.5" >ck..</text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,558,803 us, 0.28%)</title><rect x="2513.0" y="31" width="11.5" height="23.0" fill="rgb(147,208,139)" rx="2" ry="2" />
+<text  x="2515.99" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (19,846 us, 0.00%)</title><rect x="947.4" y="55" width="0.1" height="23.0" fill="rgb(48,92,245)" rx="2" ry="2" />
+<text  x="950.38" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (27,970 us, 0.01%)</title><rect x="3457.5" y="55" width="0.2" height="23.0" fill="rgb(51,96,244)" rx="2" ry="2" />
+<text  x="3460.46" y="69.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,777,981 us, 0.32%)</title><rect x="1183.4" y="31" width="13.1" height="23.0" fill="rgb(169,198,102)" rx="2" ry="2" />
+<text  x="1186.36" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61723)_[s] (20,692,571 us, 3.76%)</title><rect x="3008.8" y="79" width="153.1" height="23.0" fill="rgb(236.666661340686,188.333313966129,221.666656983065)" rx="2" ry="2" />
+<text  x="3011.82" y="93.5" >SUBSHELL (61723)_[s]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (23,353 us, 0.00%)</title><rect x="2304.1" y="55" width="0.2" height="23.0" fill="rgb(49,93,245)" rx="2" ry="2" />
+<text  x="2307.12" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (144,353 us, 0.03%)</title><rect x="3733.8" y="55" width="1.1" height="23.0" fill="rgb(209,211,212)" rx="2" ry="2" />
+<text  x="3736.83" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (159,080 us, 0.03%)</title><rect x="3290.5" y="55" width="1.2" height="23.0" fill="rgb(208,211,212)" rx="2" ry="2" />
+<text  x="3293.55" y="69.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,155,409 us, 0.21%)</title><rect x="3207.0" y="31" width="8.6" height="23.0" fill="rgb(112,189,191)" rx="2" ry="2" />
+<text  x="3210.03" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (4,070,199 us, 0.74%)</title><rect x="157.5" y="31" width="30.1" height="23.0" fill="rgb(244,89,41)" rx="2" ry="2" />
+<text  x="160.50" y="45.5" >cks..</text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p21 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p21, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (25,109 us, 0.00%)</title><rect x="3007.9" y="55" width="0.2" height="23.0" fill="rgb(52,98,244)" rx="2" ry="2" />
+<text  x="3010.91" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (653,173 us, 0.12%)</title><rect x="3573.7" y="31" width="4.9" height="23.0" fill="rgb(91,159,219)" rx="2" ry="2" />
+<text  x="3576.73" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,480,823 us, 0.27%)</title><rect x="2750.0" y="31" width="11.0" height="23.0" fill="rgb(138,208,152)" rx="2" ry="2" />
+<text  x="2753.02" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (88,484 us, 0.02%)</title><rect x="3160.3" y="55" width="0.7" height="23.0" fill="rgb(206,211,213)" rx="2" ry="2" />
+<text  x="3163.33" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61601)_[s] (18,520,364 us, 3.36%)</title><rect x="1083.3" y="79" width="137.1" height="23.0" fill="rgb(236.666658483811,188.333303577496,221.666651788748)" rx="2" ry="2" />
+<text  x="1086.31" y="93.5" >SUBSHELL (61601)_[s]</text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,170,631 us, 0.39%)</title><rect x="1021.0" y="31" width="16.1" height="23.0" fill="rgb(201,153,60)" rx="2" ry="2" />
+<text  x="1024.03" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,956,191 us, 0.36%)</title><rect x="3123.3" y="31" width="14.5" height="23.0" fill="rgb(185,179,79)" rx="2" ry="2" />
+<text  x="3126.29" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (24,412 us, 0.00%)</title><rect x="2846.9" y="55" width="0.1" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2849.85" y="69.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,562,486 us, 0.28%)</title><rect x="1432.0" y="31" width="11.6" height="23.0" fill="rgb(147,208,137)" rx="2" ry="2" />
+<text  x="1435.02" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (26,842 us, 0.00%)</title><rect x="3735.7" y="55" width="0.2" height="23.0" fill="rgb(50,96,244)" rx="2" ry="2" />
+<text  x="3738.69" y="69.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,614,017 us, 0.47%)</title><rect x="3381.4" y="31" width="19.4" height="23.0" fill="rgb(214,128,49)" rx="2" ry="2" />
+<text  x="3384.43" y="45.5" >s..</text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (438,292 us, 0.08%)</title><rect x="136.7" y="31" width="3.2" height="23.0" fill="rgb(60,109,240)" rx="2" ry="2" />
+<text  x="139.67" y="45.5" ></text>
+</g>
+<g >
+<title>trap - EXIT INT TERM HUP USR1 (25,924 us, 0.00%)</title><rect x="4085.6" y="127" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="4088.64" y="141.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,667,218 us, 0.30%)</title><rect x="3009.2" y="31" width="12.3" height="23.0" fill="rgb(160,205,117)" rx="2" ry="2" />
+<text  x="3012.20" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (496,575 us, 0.09%)</title><rect x="3726.3" y="31" width="3.7" height="23.0" fill="rgb(66,119,237)" rx="2" ry="2" />
+<text  x="3729.32" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,707,432 us, 0.31%)</title><rect x="2021.5" y="31" width="12.7" height="23.0" fill="rgb(166,201,107)" rx="2" ry="2" />
+<text  x="2024.54" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (474,769 us, 0.09%)</title><rect x="1883.9" y="31" width="3.5" height="23.0" fill="rgb(63,114,239)" rx="2" ry="2" />
+<text  x="1886.92" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (577,411 us, 0.10%)</title><rect x="1344.6" y="31" width="4.3" height="23.0" fill="rgb(80,143,227)" rx="2" ry="2" />
+<text  x="1347.65" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (22,018,428 us, 4.00%)</title><rect x="3293.1" y="55" width="162.9" height="23.0" fill="rgb(229.923659065258,189.522887559285,245.596372149472)" rx="2" ry="2" />
+<text  x="3296.09" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,281,852 us, 0.23%)</title><rect x="3624.3" y="31" width="9.5" height="23.0" fill="rgb(122,199,176)" rx="2" ry="2" />
+<text  x="3627.33" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61648)_[s] (17,399,925 us, 3.16%)</title><rect x="1892.4" y="79" width="128.8" height="23.0" fill="rgb(236.666657162937,188.333298774316,221.666649387158)" rx="2" ry="2" />
+<text  x="1895.41" y="93.5" >SUBSHELL (61648)_[s]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (26,761 us, 0.00%)</title><rect x="2020.7" y="55" width="0.2" height="23.0" fill="rgb(50,96,244)" rx="2" ry="2" />
+<text  x="2023.75" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (26,716 us, 0.00%)</title><rect x="2694.5" y="55" width="0.2" height="23.0" fill="rgb(50,96,244)" rx="2" ry="2" />
+<text  x="2697.46" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (152,860 us, 0.03%)</title><rect x="681.2" y="55" width="1.1" height="23.0" fill="rgb(209,211,212)" rx="2" ry="2" />
+<text  x="684.15" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (551,491 us, 0.10%)</title><rect x="2014.5" y="31" width="4.1" height="23.0" fill="rgb(77,137,230)" rx="2" ry="2" />
+<text  x="2017.52" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,623,304 us, 0.29%)</title><rect x="766.5" y="31" width="12.0" height="23.0" fill="rgb(154,207,128)" rx="2" ry="2" />
+<text  x="769.45" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,066,215 us, 0.19%)</title><rect x="1519.8" y="31" width="7.9" height="23.0" fill="rgb(99,172,209)" rx="2" ry="2" />
+<text  x="1522.80" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,221,864 us, 0.22%)</title><rect x="2741.0" y="31" width="9.0" height="23.0" fill="rgb(118,196,181)" rx="2" ry="2" />
+<text  x="2743.98" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (534,230 us, 0.10%)</title><rect x="2428.0" y="31" width="3.9" height="23.0" fill="rgb(75,132,232)" rx="2" ry="2" />
+<text  x="2430.95" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (19,800,271 us, 3.59%)</title><rect x="3587.0" y="55" width="146.6" height="23.0" fill="rgb(225.997147198006,188.362492966847,241.534389770503)" rx="2" ry="2" />
+<text  x="3590.03" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (312,998 us, 0.06%)</title><rect x="283.6" y="31" width="2.3" height="23.0" fill="rgb(61,112,242)" rx="2" ry="2" />
+<text  x="286.56" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (28,547 us, 0.01%)</title><rect x="1742.3" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="1745.29" y="69.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (367,238 us, 0.07%)</title><rect x="2858.4" y="31" width="2.7" height="23.0" fill="rgb(59,108,242)" rx="2" ry="2" />
+<text  x="2861.38" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,338,449 us, 3.15%)</title><rect x="683.1" y="55" width="128.3" height="23.0" fill="rgb(226.395189946776,188.022883777818,242.09295156135)" rx="2" ry="2" />
+<text  x="686.12" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (614,045 us, 0.11%)</title><rect x="1209.8" y="31" width="4.5" height="23.0" fill="rgb(86,151,223)" rx="2" ry="2" />
+<text  x="1212.78" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (533,110 us, 0.10%)</title><rect x="1070.3" y="31" width="3.9" height="23.0" fill="rgb(75,133,233)" rx="2" ry="2" />
+<text  x="1073.26" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,897,302 us, 0.34%)</title><rect x="1960.8" y="31" width="14.0" height="23.0" fill="rgb(178,189,88)" rx="2" ry="2" />
+<text  x="1963.75" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,334,791 us, 3.15%)</title><rect x="1614.0" y="55" width="128.3" height="23.0" fill="rgb(227.097452376868,188.382667549773,242.79263541488)" rx="2" ry="2" />
+<text  x="1617.01" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,166,198 us, 0.21%)</title><rect x="1061.6" y="31" width="8.7" height="23.0" fill="rgb(114,191,189)" rx="2" ry="2" />
+<text  x="1064.63" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (116,459 us, 0.02%)</title><rect x="2302.7" y="55" width="0.9" height="23.0" fill="rgb(206,211,213)" rx="2" ry="2" />
+<text  x="2305.72" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (28,404 us, 0.01%)</title><rect x="418.9" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="421.85" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (548,298 us, 0.10%)</title><rect x="803.1" y="31" width="4.1" height="23.0" fill="rgb(76,135,231)" rx="2" ry="2" />
+<text  x="806.13" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,649,461 us, 0.30%)</title><rect x="100.2" y="31" width="12.2" height="23.0" fill="rgb(158,205,119)" rx="2" ry="2" />
+<text  x="103.16" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (595,129 us, 0.11%)</title><rect x="1464.1" y="31" width="4.4" height="23.0" fill="rgb(84,148,224)" rx="2" ry="2" />
+<text  x="1467.05" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,054,481 us, 0.19%)</title><rect x="721.5" y="31" width="7.8" height="23.0" fill="rgb(95,167,212)" rx="2" ry="2" />
+<text  x="724.47" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,182,286 us, 0.21%)</title><rect x="1265.3" y="31" width="8.8" height="23.0" fill="rgb(116,193,187)" rx="2" ry="2" />
+<text  x="1268.33" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (30,932 us, 0.01%)</title><rect x="2018.6" y="55" width="0.2" height="23.0" fill="rgb(50,95,244)" rx="2" ry="2" />
+<text  x="2021.60" y="69.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,687,357 us, 0.67%)</title><rect x="827.3" y="31" width="27.3" height="23.0" fill="rgb(237,92,41)" rx="2" ry="2" />
+<text  x="830.32" y="45.5" >ck..</text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (568,242 us, 0.10%)</title><rect x="3306.0" y="31" width="4.2" height="23.0" fill="rgb(78,139,229)" rx="2" ry="2" />
+<text  x="3309.03" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,116,563 us, 0.20%)</title><rect x="2212.3" y="31" width="8.3" height="23.0" fill="rgb(106,182,201)" rx="2" ry="2" />
+<text  x="2215.33" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (354,410 us, 0.06%)</title><rect x="3004.4" y="31" width="2.7" height="23.0" fill="rgb(56,103,243)" rx="2" ry="2" />
+<text  x="3007.44" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (636,393 us, 0.12%)</title><rect x="2554.5" y="31" width="4.7" height="23.0" fill="rgb(88,155,220)" rx="2" ry="2" />
+<text  x="2557.49" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (560,816 us, 0.10%)</title><rect x="2419.8" y="31" width="4.2" height="23.0" fill="rgb(78,138,229)" rx="2" ry="2" />
+<text  x="2422.85" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,605,811 us, 0.29%)</title><rect x="2649.1" y="31" width="11.9" height="23.0" fill="rgb(150,208,132)" rx="2" ry="2" />
+<text  x="2652.15" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (452,340 us, 0.08%)</title><rect x="2572.5" y="31" width="3.4" height="23.0" fill="rgb(64,115,239)" rx="2" ry="2" />
+<text  x="2575.54" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,045,329 us, 0.19%)</title><rect x="1388.1" y="31" width="7.7" height="23.0" fill="rgb(94,165,213)" rx="2" ry="2" />
+<text  x="1391.10" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (498,297 us, 0.09%)</title><rect x="3021.5" y="31" width="3.7" height="23.0" fill="rgb(69,122,237)" rx="2" ry="2" />
+<text  x="3024.53" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,876,607 us, 3.25%)</title><rect x="949.5" y="55" width="132.2" height="23.0" fill="rgb(226.06640700143,188.069278846681,241.753294771739)" rx="2" ry="2" />
+<text  x="952.46" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (15,717 us, 0.00%)</title><rect x="2020.6" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="2023.63" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (88,625 us, 0.02%)</title><rect x="1742.6" y="55" width="0.6" height="23.0" fill="rgb(205,211,213)" rx="2" ry="2" />
+<text  x="1745.56" y="69.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,420,492 us, 0.26%)</title><rect x="1869.2" y="31" width="10.5" height="23.0" fill="rgb(131,204,167)" rx="2" ry="2" />
+<text  x="1872.20" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (25,594 us, 0.00%)</title><rect x="2561.2" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2564.20" y="69.5" ></text>
+</g>
+<g >
+<title>case ${nWait} in (81,362 us, 0.01%)</title><rect x="3873.6" y="79" width="0.6" height="23.0" fill="rgb(46,86,245)" rx="2" ry="2" />
+<text  x="3876.56" y="93.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,233,507 us, 0.22%)</title><rect x="3780.5" y="31" width="9.1" height="23.0" fill="rgb(121,198,180)" rx="2" ry="2" />
+<text  x="3783.47" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (2,950,090 us, 0.54%)</title><rect x="1366.2" y="31" width="21.9" height="23.0" fill="rgb(219,119,46)" rx="2" ry="2" />
+<text  x="1369.25" y="45.5" >c..</text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (519,276 us, 0.09%)</title><rect x="2685.6" y="31" width="3.9" height="23.0" fill="rgb(73,129,234)" rx="2" ry="2" />
+<text  x="2688.62" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61594)_[s] (19,237,588 us, 3.49%)</title><rect x="144.4" y="79" width="142.4" height="23.0" fill="rgb(236.666665629914,188.333329563324,221.666664781662)" rx="2" ry="2" />
+<text  x="147.40" y="93.5" >SUBSHELL (61594)_[s]</text>
+</g>
+<g >
+<title>read -r -u 21 _ (98,198 us, 0.02%)</title><rect x="143.2" y="55" width="0.7" height="23.0" fill="rgb(208,211,212)" rx="2" ry="2" />
+<text  x="146.17" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (152,261 us, 0.03%)</title><rect x="947.6" y="55" width="1.1" height="23.0" fill="rgb(210,211,212)" rx="2" ry="2" />
+<text  x="950.57" y="69.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (599,545 us, 0.11%)</title><rect x="668.4" y="31" width="4.4" height="23.0" fill="rgb(88,153,223)" rx="2" ry="2" />
+<text  x="671.37" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,722,319 us, 0.68%)</title><rect x="2038.4" y="31" width="27.5" height="23.0" fill="rgb(238,91,40)" rx="2" ry="2" />
+<text  x="2041.37" y="45.5" >ck..</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,387,027 us, 0.25%)</title><rect x="3458.5" y="31" width="10.3" height="23.0" fill="rgb(127,203,169)" rx="2" ry="2" />
+<text  x="3461.53" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (683,703 us, 0.12%)</title><rect x="2549.4" y="31" width="5.1" height="23.0" fill="rgb(95,164,216)" rx="2" ry="2" />
+<text  x="2552.44" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,114,603 us, 0.20%)</title><rect x="729.3" y="31" width="8.2" height="23.0" fill="rgb(103,179,203)" rx="2" ry="2" />
+<text  x="732.27" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,625,750 us, 0.30%)</title><rect x="1037.1" y="31" width="12.0" height="23.0" fill="rgb(154,207,126)" rx="2" ry="2" />
+<text  x="1040.09" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61605)_[s] (18,055,834 us, 3.28%)</title><rect x="1480.0" y="79" width="133.7" height="23.0" fill="rgb(236.666661365748,188.333314057267,221.666657028634)" rx="2" ry="2" />
+<text  x="1483.05" y="93.5" >SUBSHELL (61605)_[s]</text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,129,696 us, 0.39%)</title><rect x="1536.1" y="31" width="15.8" height="23.0" fill="rgb(199,156,61)" rx="2" ry="2" />
+<text  x="1539.11" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,462,691 us, 0.63%)</title><rect x="2575.9" y="31" width="25.6" height="23.0" fill="rgb(235,96,42)" rx="2" ry="2" />
+<text  x="2578.89" y="45.5" >ck..</text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (633,526 us, 0.12%)</title><rect x="2544.7" y="31" width="4.7" height="23.0" fill="rgb(87,154,221)" rx="2" ry="2" />
+<text  x="2547.75" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61595)_[s] (18,123,928 us, 3.29%)</title><rect x="286.8" y="79" width="134.1" height="23.0" fill="rgb(236.666659313767,188.333306595516,221.666653297758)" rx="2" ry="2" />
+<text  x="289.76" y="93.5" >SUBSHELL (61595)_[s]</text>
+</g>
+<g >
+<title>case ${REPLY} in (83,668 us, 0.02%)</title><rect x="3874.2" y="79" width="0.6" height="23.0" fill="rgb(46,86,245)" rx="2" ry="2" />
+<text  x="3877.16" y="93.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (23,724 us, 0.00%)</title><rect x="2175.9" y="55" width="0.1" height="23.0" fill="rgb(49,93,245)" rx="2" ry="2" />
+<text  x="2178.85" y="69.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,572,796 us, 0.47%)</title><rect x="1801.5" y="31" width="19.0" height="23.0" fill="rgb(212,130,49)" rx="2" ry="2" />
+<text  x="1804.50" y="45.5" >s..</text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,608,064 us, 0.47%)</title><rect x="3663.6" y="31" width="19.3" height="23.0" fill="rgb(214,127,48)" rx="2" ry="2" />
+<text  x="3666.59" y="45.5" >s..</text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,686,370 us, 0.31%)</title><rect x="1315.0" y="31" width="12.5" height="23.0" fill="rgb(163,203,113)" rx="2" ry="2" />
+<text  x="1317.98" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,587,818 us, 0.47%)</title><rect x="3644.4" y="31" width="19.2" height="23.0" fill="rgb(213,129,49)" rx="2" ry="2" />
+<text  x="3647.44" y="45.5" >s..</text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,140,901 us, 0.39%)</title><rect x="84.3" y="31" width="15.9" height="23.0" fill="rgb(200,154,60)" rx="2" ry="2" />
+<text  x="87.32" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,114,729 us, 0.38%)</title><rect x="1139.1" y="31" width="15.6" height="23.0" fill="rgb(198,158,62)" rx="2" ry="2" />
+<text  x="1142.05" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (588,072 us, 0.11%)</title><rect x="1473.2" y="31" width="4.4" height="23.0" fill="rgb(82,145,225)" rx="2" ry="2" />
+<text  x="1476.20" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (668,506 us, 0.12%)</title><rect x="3849.7" y="31" width="4.9" height="23.0" fill="rgb(92,161,217)" rx="2" ry="2" />
+<text  x="3852.67" y="45.5" ></text>
+</g>
+<g >
+<title>read -u ${fd_nAuto} -t 0.1 (4,060,574 us, 0.74%)</title><rect x="3877.9" y="79" width="30.0" height="23.0" fill="rgb(212,211,209)" rx="2" ry="2" />
+<text  x="3880.89" y="93.5" >rea..</text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,717,381 us, 0.31%)</title><rect x="1170.7" y="31" width="12.7" height="23.0" fill="rgb(167,199,105)" rx="2" ry="2" />
+<text  x="1173.65" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,151,200 us, 0.21%)</title><rect x="398.3" y="31" width="8.6" height="23.0" fill="rgb(112,189,192)" rx="2" ry="2" />
+<text  x="401.35" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (111,653 us, 0.02%)</title><rect x="1219.0" y="55" width="0.9" height="23.0" fill="rgb(206,211,213)" rx="2" ry="2" />
+<text  x="1222.05" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (158,781 us, 0.03%)</title><rect x="811.7" y="55" width="1.2" height="23.0" fill="rgb(209,211,212)" rx="2" ry="2" />
+<text  x="814.73" y="69.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (514,300 us, 0.09%)</title><rect x="1231.4" y="31" width="3.9" height="23.0" fill="rgb(69,124,235)" rx="2" ry="2" />
+<text  x="1234.45" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,184,969 us, 0.22%)</title><rect x="59.4" y="31" width="8.8" height="23.0" fill="rgb(116,193,187)" rx="2" ry="2" />
+<text  x="62.45" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (23,884 us, 0.00%)</title><rect x="3586.5" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3589.52" y="69.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,921,305 us, 0.35%)</title><rect x="490.7" y="31" width="14.2" height="23.0" fill="rgb(181,184,83)" rx="2" ry="2" />
+<text  x="493.68" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (656,244 us, 0.12%)</title><rect x="2288.0" y="31" width="4.8" height="23.0" fill="rgb(91,160,218)" rx="2" ry="2" />
+<text  x="2290.99" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,412,600 us, 0.26%)</title><rect x="2434.8" y="31" width="10.5" height="23.0" fill="rgb(129,203,168)" rx="2" ry="2" />
+<text  x="2437.81" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (19,096,933 us, 3.47%)</title><rect x="144.6" y="55" width="141.3" height="23.0" fill="rgb(226.215212456953,188.066698845685,241.821422570653)" rx="2" ry="2" />
+<text  x="147.55" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,615,507 us, 0.29%)</title><rect x="647.6" y="31" width="12.0" height="23.0" fill="rgb(152,208,130)" rx="2" ry="2" />
+<text  x="650.63" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (85,779 us, 0.02%)</title><rect x="3007.3" y="55" width="0.6" height="23.0" fill="rgb(209,211,212)" rx="2" ry="2" />
+<text  x="3010.28" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61767)_[s] (17,743,200 us, 3.22%)</title><rect x="3735.9" y="79" width="131.3" height="23.0" fill="rgb(236.666653780426,188.333286474276,221.666643237138)" rx="2" ry="2" />
+<text  x="3738.91" y="93.5" >SUBSHELL (61767)_[s]</text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,965,737 us, 0.36%)</title><rect x="1839.5" y="31" width="14.6" height="23.0" fill="rgb(189,173,73)" rx="2" ry="2" />
+<text  x="1842.55" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (23,759 us, 0.00%)</title><rect x="3586.0" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3588.98" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (31,400 us, 0.01%)</title><rect x="3456.0" y="55" width="0.3" height="23.0" fill="rgb(50,95,244)" rx="2" ry="2" />
+<text  x="3459.03" y="69.5" ></text>
+</g>
+<g >
+<title>[[ -f &quot;${tmpDir}&quot;/.quit ]] (85,820 us, 0.02%)</title><rect x="3874.8" y="79" width="0.6" height="23.0" fill="rgb(46,87,245)" rx="2" ry="2" />
+<text  x="3877.80" y="93.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (22,608 us, 0.00%)</title><rect x="2846.3" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2849.30" y="69.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,458,061 us, 0.26%)</title><rect x="1480.4" y="31" width="10.8" height="23.0" fill="rgb(134,206,158)" rx="2" ry="2" />
+<text  x="1483.39" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,529,042 us, 0.28%)</title><rect x="1974.8" y="31" width="11.3" height="23.0" fill="rgb(143,208,144)" rx="2" ry="2" />
+<text  x="1977.79" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,550,648 us, 0.28%)</title><rect x="504.9" y="31" width="11.5" height="23.0" fill="rgb(145,208,142)" rx="2" ry="2" />
+<text  x="507.90" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,715,614 us, 0.31%)</title><rect x="917.0" y="31" width="12.7" height="23.0" fill="rgb(166,200,106)" rx="2" ry="2" />
+<text  x="919.99" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (23,748 us, 0.00%)</title><rect x="2303.8" y="55" width="0.1" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2306.76" y="69.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,373,310 us, 0.43%)</title><rect x="3092.0" y="31" width="17.6" height="23.0" fill="rgb(207,141,53)" rx="2" ry="2" />
+<text  x="3095.01" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (38,244 us, 0.01%)</title><rect x="2302.4" y="55" width="0.3" height="23.0" fill="rgb(55,103,243)" rx="2" ry="2" />
+<text  x="2305.37" y="69.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,279,545 us, 0.23%)</title><rect x="1781.8" y="31" width="9.5" height="23.0" fill="rgb(123,199,178)" rx="2" ry="2" />
+<text  x="1784.78" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,384,229 us, 0.25%)</title><rect x="1791.3" y="31" width="10.2" height="23.0" fill="rgb(126,202,170)" rx="2" ry="2" />
+<text  x="1794.25" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (479,732 us, 0.09%)</title><rect x="2689.5" y="31" width="3.5" height="23.0" fill="rgb(65,117,238)" rx="2" ry="2" />
+<text  x="2692.47" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61598)_[s] (17,651,781 us, 3.20%)</title><rect x="682.8" y="79" width="130.6" height="23.0" fill="rgb(236.66666008505,188.333309400181,221.666654700091)" rx="2" ry="2" />
+<text  x="685.78" y="93.5" >SUBSHELL (61598)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (forkrun)_[f] (550,801,479 us, 100.00%)</title><rect x="10.0" y="175" width="4076.0" height="23.0" fill="rgb(221.666666665371,188.333333330741,236.666666665954)" rx="2" ry="2" />
+<text  x="13.00" y="189.5" >FUNCTION (forkrun)_[f]</text>
+</g>
+<g >
+<title>${lseekPosFlag} (82,814 us, 0.02%)</title><rect x="3869.3" y="79" width="0.6" height="23.0" fill="rgb(46,86,245)" rx="2" ry="2" />
+<text  x="3872.25" y="93.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (34,358 us, 0.01%)</title><rect x="3583.5" y="55" width="0.3" height="23.0" fill="rgb(51,95,244)" rx="2" ry="2" />
+<text  x="3586.52" y="69.5" ></text>
+</g>
+<g >
+<title>${nLinesAutoFlag} (247,301 us, 0.04%)</title><rect x="3869.9" y="79" width="1.8" height="23.0" fill="rgb(47,88,245)" rx="2" ry="2" />
+<text  x="3872.87" y="93.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (511,487 us, 0.09%)</title><rect x="432.4" y="31" width="3.8" height="23.0" fill="rgb(70,125,235)" rx="2" ry="2" />
+<text  x="435.40" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (111,173 us, 0.02%)</title><rect x="1082.0" y="55" width="0.8" height="23.0" fill="rgb(208,211,212)" rx="2" ry="2" />
+<text  x="1085.00" y="69.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,130,032 us, 0.21%)</title><rect x="2478.1" y="31" width="8.4" height="23.0" fill="rgb(107,183,199)" rx="2" ry="2" />
+<text  x="2481.15" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (34,702 us, 0.01%)</title><rect x="1477.6" y="55" width="0.2" height="23.0" fill="rgb(54,101,244)" rx="2" ry="2" />
+<text  x="1480.56" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p24 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p24, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (26,412 us, 0.00%)</title><rect x="3457.1" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3460.08" y="69.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,964,308 us, 0.36%)</title><rect x="2135.5" y="31" width="14.5" height="23.0" fill="rgb(188,175,75)" rx="2" ry="2" />
+<text  x="2138.49" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (539,725 us, 0.10%)</title><rect x="3173.0" y="31" width="4.0" height="23.0" fill="rgb(75,134,231)" rx="2" ry="2" />
+<text  x="3176.01" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,762,868 us, 0.32%)</title><rect x="3244.1" y="31" width="13.0" height="23.0" fill="rgb(170,200,107)" rx="2" ry="2" />
+<text  x="3247.07" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,355,412 us, 0.25%)</title><rect x="2988.3" y="31" width="10.0" height="23.0" fill="rgb(125,202,172)" rx="2" ry="2" />
+<text  x="2991.28" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (506,762 us, 0.09%)</title><rect x="693.9" y="31" width="3.8" height="23.0" fill="rgb(71,125,236)" rx="2" ry="2" />
+<text  x="696.93" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (215,340 us, 0.04%)</title><rect x="1477.9" y="55" width="1.6" height="23.0" fill="rgb(209,211,212)" rx="2" ry="2" />
+<text  x="1480.94" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61590)_[s] (77,716 us, 0.01%)</title><rect x="3867.4" y="103" width="0.6" height="23.0" fill="rgb(236.666370404839,188.332256017597,221.666128008799)" rx="2" ry="2" />
+<text  x="3870.41" y="117.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (21,006 us, 0.00%)</title><rect x="3007.1" y="55" width="0.1" height="23.0" fill="rgb(60,112,243)" rx="2" ry="2" />
+<text  x="3010.07" y="69.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (16,890,801 us, 3.07%)</title><rect x="3458.5" y="55" width="125.0" height="23.0" fill="rgb(225.68491636774,187.645105463974,241.389425456451)" rx="2" ry="2" />
+<text  x="3461.53" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p14 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p14, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (32,891 us, 0.01%)</title><rect x="2020.4" y="55" width="0.2" height="23.0" fill="rgb(51,97,244)" rx="2" ry="2" />
+<text  x="2023.39" y="69.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,985,126 us, 0.36%)</title><rect x="3682.9" y="31" width="14.7" height="23.0" fill="rgb(190,171,71)" rx="2" ry="2" />
+<text  x="3685.89" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p17 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p17, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (27,778 us, 0.01%)</title><rect x="2433.5" y="55" width="0.2" height="23.0" fill="rgb(51,96,244)" rx="2" ry="2" />
+<text  x="2436.51" y="69.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,881,218 us, 0.34%)</title><rect x="3524.1" y="31" width="13.9" height="23.0" fill="rgb(177,190,91)" rx="2" ry="2" />
+<text  x="3527.06" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (33,157 us, 0.01%)</title><rect x="2174.3" y="55" width="0.3" height="23.0" fill="rgb(51,95,244)" rx="2" ry="2" />
+<text  x="2177.31" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (547,971 us, 0.10%)</title><rect x="1734.1" y="31" width="4.1" height="23.0" fill="rgb(76,135,231)" rx="2" ry="2" />
+<text  x="1737.12" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,569,519 us, 0.47%)</title><rect x="1820.5" y="31" width="19.0" height="23.0" fill="rgb(211,132,50)" rx="2" ry="2" />
+<text  x="1823.53" y="45.5" >s..</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,445,920 us, 0.26%)</title><rect x="3162.3" y="31" width="10.7" height="23.0" fill="rgb(132,205,162)" rx="2" ry="2" />
+<text  x="3165.31" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,225,564 us, 0.40%)</title><rect x="871.1" y="31" width="16.5" height="23.0" fill="rgb(202,150,58)" rx="2" ry="2" />
+<text  x="874.09" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,822,405 us, 0.33%)</title><rect x="2796.9" y="31" width="13.4" height="23.0" fill="rgb(170,196,99)" rx="2" ry="2" />
+<text  x="2799.86" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p10 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p10, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (15,109 us, 0.00%)</title><rect x="1479.5" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1482.53" y="69.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,503,243 us, 0.45%)</title><rect x="223.3" y="31" width="18.5" height="23.0" fill="rgb(210,135,51)" rx="2" ry="2" />
+<text  x="226.30" y="45.5" >s..</text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (2,058,123 us, 0.37%)</title><rect x="358.5" y="31" width="15.2" height="23.0" fill="rgb(193,166,68)" rx="2" ry="2" />
+<text  x="361.45" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (121,063 us, 0.02%)</title><rect x="2559.6" y="55" width="0.9" height="23.0" fill="rgb(205,211,213)" rx="2" ry="2" />
+<text  x="2562.60" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61600)_[s] (18,125,877 us, 3.29%)</title><rect x="949.2" y="79" width="134.1" height="23.0" fill="rgb(236.666661460199,188.333314400723,221.666657200362)" rx="2" ry="2" />
+<text  x="952.18" y="93.5" >SUBSHELL (61600)_[s]</text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,025,436 us, 0.19%)</title><rect x="2342.8" y="31" width="7.6" height="23.0" fill="rgb(92,163,215)" rx="2" ry="2" />
+<text  x="2345.77" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,051,275 us, 0.19%)</title><rect x="51.7" y="31" width="7.7" height="23.0" fill="rgb(95,166,213)" rx="2" ry="2" />
+<text  x="54.67" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,662,045 us, 0.30%)</title><rect x="1567.5" y="31" width="12.3" height="23.0" fill="rgb(159,205,118)" rx="2" ry="2" />
+<text  x="1570.52" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (22,557 us, 0.00%)</title><rect x="1613.4" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1616.38" y="69.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,189,004 us, 0.22%)</title><rect x="2350.4" y="31" width="8.8" height="23.0" fill="rgb(118,195,185)" rx="2" ry="2" />
+<text  x="2353.36" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,315,980 us, 0.24%)</title><rect x="3054.3" y="31" width="9.7" height="23.0" fill="rgb(125,201,175)" rx="2" ry="2" />
+<text  x="3057.26" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (575,447 us, 0.10%)</title><rect x="536.3" y="31" width="4.3" height="23.0" fill="rgb(81,144,227)" rx="2" ry="2" />
+<text  x="539.30" y="45.5" ></text>
+</g>
+<g >
+<title>fallocate -p -o ${fd_read_pos_old} -l $(( ${fd_read_pos} - ${fd_read_pos_old} )) &quot;${fPath}&quot; (63,155 us, 0.01%)</title><rect x="3875.4" y="79" width="0.5" height="23.0" fill="rgb(72,127,240)" rx="2" ry="2" />
+<text  x="3878.43" y="93.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (25,361 us, 0.00%)</title><rect x="3866.4" y="55" width="0.2" height="23.0" fill="rgb(50,96,245)" rx="2" ry="2" />
+<text  x="3869.44" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (468,079 us, 0.08%)</title><rect x="1604.9" y="31" width="3.5" height="23.0" fill="rgb(62,112,239)" rx="2" ry="2" />
+<text  x="1607.93" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61662)_[s] (20,930,936 us, 3.80%)</title><rect x="2021.2" y="79" width="154.9" height="23.0" fill="rgb(236.666659435842,188.333307039427,221.666653519714)" rx="2" ry="2" />
+<text  x="2024.17" y="93.5" >SUBSHELL (61662)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (20,644,293 us, 3.75%)</title><rect x="2021.5" y="55" width="152.8" height="23.0" fill="rgb(229.542734125526,189.438822131492,245.235569253626)" rx="2" ry="2" />
+<text  x="2024.54" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (28,721 us, 0.01%)</title><rect x="2431.9" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2434.90" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p26 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p26, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (30,613 us, 0.01%)</title><rect x="3734.9" y="55" width="0.2" height="23.0" fill="rgb(65,118,241)" rx="2" ry="2" />
+<text  x="3737.90" y="69.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (397,333 us, 0.07%)</title><rect x="21.5" y="31" width="2.9" height="23.0" fill="rgb(59,108,242)" rx="2" ry="2" />
+<text  x="24.46" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,059,501 us, 0.19%)</title><rect x="2601.5" y="31" width="7.9" height="23.0" fill="rgb(98,170,210)" rx="2" ry="2" />
+<text  x="2604.53" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (364,357 us, 0.07%)</title><rect x="280.9" y="31" width="2.7" height="23.0" fill="rgb(63,114,241)" rx="2" ry="2" />
+<text  x="283.86" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,141,805 us, 0.21%)</title><rect x="3841.2" y="31" width="8.5" height="23.0" fill="rgb(110,187,196)" rx="2" ry="2" />
+<text  x="3844.22" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (18,250,317 us, 3.31%)</title><rect x="1083.7" y="55" width="135.0" height="23.0" fill="rgb(226.827326893777,188.22033041488,242.47881195279)" rx="2" ry="2" />
+<text  x="1086.65" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,453,089 us, 0.26%)</title><rect x="10.7" y="31" width="10.8" height="23.0" fill="rgb(133,206,160)" rx="2" ry="2" />
+<text  x="13.70" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (526,396 us, 0.10%)</title><rect x="3156.2" y="31" width="3.8" height="23.0" fill="rgb(73,130,233)" rx="2" ry="2" />
+<text  x="3159.15" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (24,226 us, 0.00%)</title><rect x="3586.2" y="55" width="0.1" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3589.16" y="69.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (519,277 us, 0.09%)</title><rect x="1601.1" y="31" width="3.8" height="23.0" fill="rgb(73,129,234)" rx="2" ry="2" />
+<text  x="1604.09" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,115,820 us, 0.20%)</title><rect x="3772.2" y="31" width="8.3" height="23.0" fill="rgb(106,181,202)" rx="2" ry="2" />
+<text  x="3775.22" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (557,860 us, 0.10%)</title><rect x="676.7" y="31" width="4.2" height="23.0" fill="rgb(79,140,229)" rx="2" ry="2" />
+<text  x="679.73" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (26,530 us, 0.00%)</title><rect x="2433.9" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2436.89" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (25,050 us, 0.00%)</title><rect x="2303.9" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2306.94" y="69.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,330,380 us, 0.24%)</title><rect x="2824.6" y="31" width="9.8" height="23.0" fill="rgb(124,201,173)" rx="2" ry="2" />
+<text  x="2827.55" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,832,291 us, 0.33%)</title><rect x="2242.8" y="31" width="13.5" height="23.0" fill="rgb(172,195,98)" rx="2" ry="2" />
+<text  x="2245.78" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (463,284 us, 0.08%)</title><rect x="2707.9" y="31" width="3.4" height="23.0" fill="rgb(65,117,239)" rx="2" ry="2" />
+<text  x="2710.90" y="45.5" ></text>
+</g>
+<g >
+<title>wait &quot;${p_PID[@]}&quot; &amp;&gt; /dev/null (23,886,619 us, 4.34%)</title><rect x="3908.9" y="103" width="176.7" height="23.0" fill="rgb(212,211,211)" rx="2" ry="2" />
+<text  x="3911.87" y="117.5" >wait "${p_PID[@]}" &amp;&gt; /dev/..</text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,565,804 us, 0.28%)</title><rect x="3549.5" y="31" width="11.6" height="23.0" fill="rgb(148,208,136)" rx="2" ry="2" />
+<text  x="3552.50" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,193,104 us, 0.22%)</title><rect x="996.6" y="31" width="8.8" height="23.0" fill="rgb(118,195,184)" rx="2" ry="2" />
+<text  x="999.59" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,091,298 us, 0.20%)</title><rect x="1257.3" y="31" width="8.0" height="23.0" fill="rgb(101,175,207)" rx="2" ry="2" />
+<text  x="1260.26" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,673,436 us, 0.30%)</title><rect x="2524.5" y="31" width="12.4" height="23.0" fill="rgb(161,205,118)" rx="2" ry="2" />
+<text  x="2527.53" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,742,514 us, 3.22%)</title><rect x="2561.7" y="55" width="131.3" height="23.0" fill="rgb(226.424471866522,188.091446321612,242.106164134894)" rx="2" ry="2" />
+<text  x="2564.72" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (61750)_[s] (17,379,417 us, 3.16%)</title><rect x="3458.1" y="79" width="128.6" height="23.0" fill="rgb(236.666655012563,188.333290954776,221.666645477388)" rx="2" ry="2" />
+<text  x="3461.12" y="93.5" >SUBSHELL (61750)_[s]</text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (561,853 us, 0.10%)</title><rect x="2006.2" y="31" width="4.2" height="23.0" fill="rgb(78,139,229)" rx="2" ry="2" />
+<text  x="2009.20" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61677)_[s] (17,357,545 us, 3.15%)</title><rect x="2176.1" y="79" width="128.4" height="23.0" fill="rgb(236.666654635931,188.333289585205,221.666644792603)" rx="2" ry="2" />
+<text  x="2179.06" y="93.5" >SUBSHELL (61677)_[s]</text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,957,813 us, 0.36%)</title><rect x="3400.8" y="31" width="14.5" height="23.0" fill="rgb(187,176,75)" rx="2" ry="2" />
+<text  x="3403.77" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,459,421 us, 0.45%)</title><rect x="205.1" y="31" width="18.2" height="23.0" fill="rgb(209,136,51)" rx="2" ry="2" />
+<text  x="208.10" y="45.5" >s..</text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,939,981 us, 0.35%)</title><rect x="1288.5" y="31" width="14.3" height="23.0" fill="rgb(183,183,82)" rx="2" ry="2" />
+<text  x="1291.49" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (461,451 us, 0.08%)</title><rect x="133.3" y="31" width="3.4" height="23.0" fill="rgb(63,114,239)" rx="2" ry="2" />
+<text  x="136.25" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,258,104 us, 0.23%)</title><rect x="1129.7" y="31" width="9.4" height="23.0" fill="rgb(122,199,178)" rx="2" ry="2" />
+<text  x="1132.74" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61602)_[s] (17,566,540 us, 3.19%)</title><rect x="1220.4" y="79" width="130.0" height="23.0" fill="rgb(236.66665658039,188.333296655965,221.666648327982)" rx="2" ry="2" />
+<text  x="1223.37" y="93.5" >SUBSHELL (61602)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,013,173 us, 3.09%)</title><rect x="2176.5" y="55" width="125.9" height="23.0" fill="rgb(225.690116596685,187.65705360905,241.391839848461)" rx="2" ry="2" />
+<text  x="2179.47" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,682,846 us, 0.67%)</title><rect x="24.4" y="31" width="27.2" height="23.0" fill="rgb(236,93,41)" rx="2" ry="2" />
+<text  x="27.40" y="45.5" >ck..</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,446,832 us, 0.26%)</title><rect x="1220.7" y="31" width="10.7" height="23.0" fill="rgb(132,205,161)" rx="2" ry="2" />
+<text  x="1223.74" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (589,345 us, 0.11%)</title><rect x="1361.9" y="31" width="4.3" height="23.0" fill="rgb(87,151,224)" rx="2" ry="2" />
+<text  x="1364.89" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,874,288 us, 3.25%)</title><rect x="10.7" y="55" width="132.3" height="23.0" fill="rgb(226.418847529072,188.078277141242,242.103626324093)" rx="2" ry="2" />
+<text  x="13.70" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,640,650 us, 0.30%)</title><rect x="1302.8" y="31" width="12.2" height="23.0" fill="rgb(157,206,124)" rx="2" ry="2" />
+<text  x="1305.84" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,655,406 us, 0.30%)</title><rect x="2399.3" y="31" width="12.3" height="23.0" fill="rgb(159,205,119)" rx="2" ry="2" />
+<text  x="2402.31" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,974,993 us, 0.36%)</title><rect x="621.1" y="31" width="14.6" height="23.0" fill="rgb(189,172,72)" rx="2" ry="2" />
+<text  x="624.08" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,603,682 us, 0.29%)</title><rect x="3817.4" y="31" width="11.9" height="23.0" fill="rgb(150,208,134)" rx="2" ry="2" />
+<text  x="3820.40" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (96,102 us, 0.02%)</title><rect x="3456.4" y="55" width="0.7" height="23.0" fill="rgb(204,211,213)" rx="2" ry="2" />
+<text  x="3459.37" y="69.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (76,387 us, 0.01%)</title><rect x="1891.1" y="55" width="0.6" height="23.0" fill="rgb(206,211,213)" rx="2" ry="2" />
+<text  x="1894.12" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (23,996 us, 0.00%)</title><rect x="2845.6" y="55" width="0.2" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="2848.62" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (21,328 us, 0.00%)</title><rect x="3008.3" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="3011.28" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p23 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p23, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (24,124 us, 0.00%)</title><rect x="3291.7" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3294.73" y="69.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,915,592 us, 0.35%)</title><rect x="3229.9" y="31" width="14.2" height="23.0" fill="rgb(180,185,85)" rx="2" ry="2" />
+<text  x="3232.90" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,808,323 us, 0.69%)</title><rect x="2861.1" y="31" width="28.2" height="23.0" fill="rgb(240,89,40)" rx="2" ry="2" />
+<text  x="2864.10" y="45.5" >ck..</text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,429,549 us, 0.62%)</title><rect x="1494.4" y="31" width="25.4" height="23.0" fill="rgb(234,95,41)" rx="2" ry="2" />
+<text  x="1497.40" y="45.5" >ck..</text>
+</g>
+<g >
+<title>read -r -u 21 _ (195,668 us, 0.04%)</title><rect x="2018.9" y="55" width="1.5" height="23.0" fill="rgb(210,211,212)" rx="2" ry="2" />
+<text  x="2021.94" y="69.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,195,825 us, 0.22%)</title><rect x="2609.4" y="31" width="8.8" height="23.0" fill="rgb(118,196,183)" rx="2" ry="2" />
+<text  x="2612.37" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (645,899 us, 0.12%)</title><rect x="1205.0" y="31" width="4.8" height="23.0" fill="rgb(91,158,220)" rx="2" ry="2" />
+<text  x="1208.00" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (23,755 us, 0.00%)</title><rect x="2434.2" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2437.20" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61757)_[s] (20,159,231 us, 3.66%)</title><rect x="3586.7" y="79" width="149.2" height="23.0" fill="rgb(236.666662045344,188.333316528523,221.666658264262)" rx="2" ry="2" />
+<text  x="3589.73" y="93.5" >SUBSHELL (61757)_[s]</text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,096,985 us, 0.20%)</title><rect x="1998.1" y="31" width="8.1" height="23.0" fill="rgb(102,177,205)" rx="2" ry="2" />
+<text  x="2001.08" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,466,532 us, 0.27%)</title><rect x="3064.0" y="31" width="10.8" height="23.0" fill="rgb(136,207,155)" rx="2" ry="2" />
+<text  x="3067.00" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61740)_[s] (22,350,174 us, 4.06%)</title><rect x="3292.7" y="79" width="165.4" height="23.0" fill="rgb(236.666659431476,188.333307023548,221.666653511774)" rx="2" ry="2" />
+<text  x="3295.73" y="93.5" >SUBSHELL (61740)_[s]</text>
+</g>
+<g >
+<title>${fallocateFlag} (168,324 us, 0.03%)</title><rect x="3868.0" y="79" width="1.2" height="23.0" fill="rgb(47,88,245)" rx="2" ry="2" />
+<text  x="3870.99" y="93.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,117,171 us, 0.57%)</title><rect x="1098.5" y="31" width="23.1" height="23.0" fill="rgb(223,111,44)" rx="2" ry="2" />
+<text  x="1101.49" y="45.5" >c..</text>
+</g>
+<g >
+<title>${nSpawnFlag} (249,037 us, 0.05%)</title><rect x="3871.7" y="79" width="1.8" height="23.0" fill="rgb(48,89,244)" rx="2" ry="2" />
+<text  x="3874.70" y="93.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (516,347 us, 0.09%)</title><rect x="1094.7" y="31" width="3.8" height="23.0" fill="rgb(70,125,235)" rx="2" ry="2" />
+<text  x="1097.67" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,445,859 us, 0.26%)</title><rect x="144.6" y="31" width="10.7" height="23.0" fill="rgb(131,205,163)" rx="2" ry="2" />
+<text  x="147.55" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (24,343 us, 0.00%)</title><rect x="2304.3" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2307.29" y="69.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,134,684 us, 0.21%)</title><rect x="929.7" y="31" width="8.4" height="23.0" fill="rgb(107,184,197)" rx="2" ry="2" />
+<text  x="932.69" y="45.5" ></text>
+</g>
+<g >
+<title>all (550,801,479 us, 100%)</title><rect x="10.0" y="223" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="237.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,318,942 us, 0.42%)</title><rect x="3074.8" y="31" width="17.2" height="23.0" fill="rgb(205,145,55)" rx="2" ry="2" />
+<text  x="3077.85" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,166,928 us, 0.21%)</title><rect x="2220.6" y="31" width="8.6" height="23.0" fill="rgb(115,192,189)" rx="2" ry="2" />
+<text  x="2223.60" y="45.5" ></text>
+</g>
+<g >
+<title>trap '\rm -rf &quot;'&quot;${tmpDir}&quot;'&quot; 2&gt;/dev/null' EXIT (14,276 us, 0.00%)</title><rect x="4085.9" y="127" width="0.1" height="23.0" fill="rgb(203,211,213)" rx="2" ry="2" />
+<text  x="4088.89" y="141.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,209,948 us, 0.22%)</title><rect x="3501.4" y="31" width="9.0" height="23.0" fill="rgb(121,197,183)" rx="2" ry="2" />
+<text  x="3504.41" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (173,892 us, 0.03%)</title><rect x="2432.2" y="55" width="1.3" height="23.0" fill="rgb(209,211,212)" rx="2" ry="2" />
+<text  x="2435.22" y="69.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (2,821,257 us, 0.51%)</title><rect x="2191.4" y="31" width="20.9" height="23.0" fill="rgb(217,122,47)" rx="2" ry="2" />
+<text  x="2194.43" y="45.5" >c..</text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (546,111 us, 0.10%)</title><rect x="3147.8" y="31" width="4.0" height="23.0" fill="rgb(74,132,231)" rx="2" ry="2" />
+<text  x="3150.76" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p12 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p12, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (23,970 us, 0.00%)</title><rect x="1743.2" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="1746.22" y="69.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,027,350 us, 0.19%)</title><rect x="3493.8" y="31" width="7.6" height="23.0" fill="rgb(93,164,214)" rx="2" ry="2" />
+<text  x="3496.81" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,860,579 us, 0.34%)</title><rect x="3789.6" y="31" width="13.8" height="23.0" fill="rgb(176,191,91)" rx="2" ry="2" />
+<text  x="3792.60" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (629,560 us, 0.11%)</title><rect x="2297.7" y="31" width="4.7" height="23.0" fill="rgb(86,152,222)" rx="2" ry="2" />
+<text  x="2300.71" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,274,591 us, 3.14%)</title><rect x="421.3" y="55" width="127.8" height="23.0" fill="rgb(227.130558015273,188.461707261465,242.807119131682)" rx="2" ry="2" />
+<text  x="424.26" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,143,145 us, 0.21%)</title><rect x="597.9" y="31" width="8.5" height="23.0" fill="rgb(109,186,195)" rx="2" ry="2" />
+<text  x="600.92" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,614,904 us, 0.29%)</title><rect x="3829.3" y="31" width="11.9" height="23.0" fill="rgb(151,208,131)" rx="2" ry="2" />
+<text  x="3832.27" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (23,882 us, 0.00%)</title><rect x="3735.3" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3738.33" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61603)_[s] (17,525,110 us, 3.18%)</title><rect x="1350.4" y="79" width="129.6" height="23.0" fill="rgb(236.66665533318,188.333292120655,221.666646060328)" rx="2" ry="2" />
+<text  x="1353.36" y="93.5" >SUBSHELL (61603)_[s]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (23,789 us, 0.00%)</title><rect x="2694.7" y="55" width="0.1" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2697.65" y="69.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (20,311,004 us, 3.69%)</title><rect x="2695.3" y="55" width="150.3" height="23.0" fill="rgb(229.596622707409,189.577603684835,245.256238846678)" rx="2" ry="2" />
+<text  x="2698.32" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>read -r -u 21 _ (132,402 us, 0.02%)</title><rect x="549.4" y="55" width="1.0" height="23.0" fill="rgb(208,211,212)" rx="2" ry="2" />
+<text  x="552.42" y="69.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61597)_[s] (17,822,634 us, 3.24%)</title><rect x="550.9" y="79" width="131.9" height="23.0" fill="rgb(236.666658844073,188.333304887539,221.666652443769)" rx="2" ry="2" />
+<text  x="553.89" y="93.5" >SUBSHELL (61597)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (61688)_[s] (17,552,285 us, 3.19%)</title><rect x="2304.5" y="79" width="129.9" height="23.0" fill="rgb(236.66665845041,188.333303456036,221.666651728018)" rx="2" ry="2" />
+<text  x="2307.51" y="93.5" >SUBSHELL (61688)_[s]</text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (495,410 us, 0.09%)</title><rect x="2842.0" y="31" width="3.6" height="23.0" fill="rgb(69,122,237)" rx="2" ry="2" />
+<text  x="2844.95" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (606,154 us, 0.11%)</title><rect x="3451.5" y="31" width="4.5" height="23.0" fill="rgb(85,150,223)" rx="2" ry="2" />
+<text  x="3454.55" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (171,573 us, 0.03%)</title><rect x="419.1" y="55" width="1.3" height="23.0" fill="rgb(209,211,212)" rx="2" ry="2" />
+<text  x="422.12" y="69.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p20 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p20, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (24,440 us, 0.00%)</title><rect x="2846.1" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2849.12" y="69.5" ></text>
+</g>
+<g >
+<title>xxhsum &quot;${@}&quot; (641,714 us, 0.12%)</title><rect x="1468.5" y="31" width="4.7" height="23.0" fill="rgb(89,156,220)" rx="2" ry="2" />
+<text  x="1471.46" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (16,994,985 us, 3.09%)</title><rect x="1892.8" y="55" width="125.8" height="23.0" fill="rgb(226.74359542008,188.02185581056,242.44159796448)" rx="2" ry="2" />
+<text  x="1895.84" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1' USR1 (17,759 us, 0.00%)</title><rect x="1892.3" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="1895.25" y="69.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (566,393 us, 0.10%)</title><rect x="2034.2" y="31" width="4.2" height="23.0" fill="rgb(78,139,229)" rx="2" ry="2" />
+<text  x="2037.18" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (20,385,287 us, 3.70%)</title><rect x="3009.2" y="55" width="150.8" height="23.0" fill="rgb(228.887799949292,189.197255872215,244.555119979717)" rx="2" ry="2" />
+<text  x="3012.20" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,450,571 us, 0.26%)</title><rect x="949.5" y="31" width="10.7" height="23.0" fill="rgb(133,206,160)" rx="2" ry="2" />
+<text  x="952.46" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (419,660 us, 0.08%)</title><rect x="2998.3" y="31" width="3.1" height="23.0" fill="rgb(59,108,241)" rx="2" ry="2" />
+<text  x="3001.31" y="45.5" ></text>
+</g>
+<g >
+<title>xxhsum -H3 &quot;${@}&quot; (556,891 us, 0.10%)</title><rect x="1738.2" y="31" width="4.1" height="23.0" fill="rgb(80,140,230)" rx="2" ry="2" />
+<text  x="1741.17" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (3,137,320 us, 0.57%)</title><rect x="2910.2" y="31" width="23.2" height="23.0" fill="rgb(225,109,45)" rx="2" ry="2" />
+<text  x="2913.17" y="45.5" >s..</text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,085,581 us, 0.20%)</title><rect x="1327.5" y="31" width="8.0" height="23.0" fill="rgb(99,173,208)" rx="2" ry="2" />
+<text  x="1330.46" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (485,551 us, 0.09%)</title><rect x="562.3" y="31" width="3.6" height="23.0" fill="rgb(66,119,238)" rx="2" ry="2" />
+<text  x="565.33" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (24,088 us, 0.00%)</title><rect x="2693.0" y="55" width="0.2" height="23.0" fill="rgb(49,93,245)" rx="2" ry="2" />
+<text  x="2696.02" y="69.5" ></text>
+</g>
+<g >
+<title>lseek $fd_write 0 SEEK_CUR fd_write_pos (85,680 us, 0.02%)</title><rect x="3876.6" y="79" width="0.6" height="23.0" fill="rgb(46,87,245)" rx="2" ry="2" />
+<text  x="3879.58" y="93.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,684,772 us, 0.31%)</title><rect x="112.4" y="31" width="12.4" height="23.0" fill="rgb(162,203,113)" rx="2" ry="2" />
+<text  x="115.37" y="45.5" ></text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,186,416 us, 0.22%)</title><rect x="334.8" y="31" width="8.8" height="23.0" fill="rgb(116,193,186)" rx="2" ry="2" />
+<text  x="337.78" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61576)_[s] (550,743,402 us, 99.99%)</title><rect x="10.1" y="127" width="4075.5" height="23.0" fill="rgb(236.666666666663,188.333333333321,221.666666666661)" rx="2" ry="2" />
+<text  x="13.06" y="141.5" >SUBSHELL (61576)_[s]</text>
+</g>
+<g >
+<title>sha1sum &quot;${@}&quot; (1,646,617 us, 0.30%)</title><rect x="3350.6" y="31" width="12.2" height="23.0" fill="rgb(158,206,121)" rx="2" ry="2" />
+<text  x="3353.59" y="45.5" ></text>
+</g>
+<g >
+<title>cksum &quot;${@}&quot; (590,212 us, 0.11%)</title><rect x="2187.1" y="31" width="4.3" height="23.0" fill="rgb(85,149,224)" rx="2" ry="2" />
+<text  x="2190.06" y="45.5" ></text>
+</g>
+<g >
+<title>trap ': &gt;&quot;/dev/shm/.forkrun.LZ8dux&quot;/.quit, $'\n'[[ -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p5 ]] &amp;&amp; \rm -f &quot;/dev/shm/.forkrun.LZ8dux&quot;/.run/p5, $'\n'printf '&quot;'&quot;'\n'&quot;'&quot;' &gt;&amp;21' EXIT (14,316 us, 0.00%)</title><rect x="812.9" y="55" width="0.1" height="23.0" fill="rgb(48,93,245)" rx="2" ry="2" />
+<text  x="815.90" y="69.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (535,412 us, 0.10%)</title><rect x="1730.2" y="31" width="3.9" height="23.0" fill="rgb(74,132,232)" rx="2" ry="2" />
+<text  x="1733.16" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,700,049 us, 0.31%)</title><rect x="2695.3" y="31" width="12.6" height="23.0" fill="rgb(165,202,110)" rx="2" ry="2" />
+<text  x="2698.32" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,616,040 us, 0.29%)</title><rect x="1443.6" y="31" width="11.9" height="23.0" fill="rgb(152,208,129)" rx="2" ry="2" />
+<text  x="1446.58" y="45.5" ></text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (592,418 us, 0.11%)</title><rect x="3277.3" y="31" width="4.4" height="23.0" fill="rgb(83,148,224)" rx="2" ry="2" />
+<text  x="3280.30" y="45.5" ></text>
+</g>
+<g >
+<title>cksum -a sm3 &quot;${@}&quot; (3,134,203 us, 0.57%)</title><rect x="436.2" y="31" width="23.2" height="23.0" fill="rgb(224,110,44)" rx="2" ry="2" />
+<text  x="439.18" y="45.5" >c..</text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (23,982 us, 0.00%)</title><rect x="3161.5" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="3164.55" y="69.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,283,025 us, 0.23%)</title><rect x="2889.3" y="31" width="9.5" height="23.0" fill="rgb(123,200,176)" rx="2" ry="2" />
+<text  x="2892.29" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,419,735 us, 0.26%)</title><rect x="1744.4" y="31" width="10.5" height="23.0" fill="rgb(129,204,168)" rx="2" ry="2" />
+<text  x="1747.41" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,131,181 us, 0.21%)</title><rect x="2673.7" y="31" width="8.3" height="23.0" fill="rgb(107,183,198)" rx="2" ry="2" />
+<text  x="2676.66" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,640,804 us, 0.30%)</title><rect x="373.7" y="31" width="12.1" height="23.0" fill="rgb(157,206,122)" rx="2" ry="2" />
+<text  x="376.68" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -INT 61576 ${BASHPID}' INT (25,248 us, 0.00%)</title><rect x="2846.5" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="2849.46" y="69.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,060,054 us, 0.19%)</title><rect x="854.6" y="31" width="7.9" height="23.0" fill="rgb(97,170,209)" rx="2" ry="2" />
+<text  x="857.63" y="45.5" ></text>
+</g>
+<g >
+<title>sum -r &quot;${@}&quot; (1,090,832 us, 0.20%)</title><rect x="2279.9" y="31" width="8.1" height="23.0" fill="rgb(101,174,207)" rx="2" ry="2" />
+<text  x="2282.92" y="45.5" ></text>
+</g>
+<g >
+<title>FUNCTION (ff)_[f] (17,322,265 us, 3.14%)</title><rect x="3736.3" y="55" width="128.2" height="23.0" fill="rgb(226.742783900999,188.019932209776,242.441237289333)" rx="2" ry="2" />
+<text  x="3739.31" y="69.5" >FUNCTION (ff)_[f]</text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,103,195 us, 0.20%)</title><rect x="3198.9" y="31" width="8.1" height="23.0" fill="rgb(104,178,204)" rx="2" ry="2" />
+<text  x="3201.86" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,841,391 us, 0.33%)</title><rect x="2121.9" y="31" width="13.6" height="23.0" fill="rgb(173,194,96)" rx="2" ry="2" />
+<text  x="2124.87" y="45.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,683,273 us, 0.31%)</title><rect x="778.5" y="31" width="12.4" height="23.0" fill="rgb(162,204,115)" rx="2" ry="2" />
+<text  x="781.47" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,504,731 us, 0.27%)</title><rect x="421.3" y="31" width="11.1" height="23.0" fill="rgb(144,208,147)" rx="2" ry="2" />
+<text  x="424.26" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,560,726 us, 0.28%)</title><rect x="2387.8" y="31" width="11.5" height="23.0" fill="rgb(146,208,138)" rx="2" ry="2" />
+<text  x="2390.76" y="45.5" ></text>
+</g>
+<g >
+<title>sha256sum &quot;${@}&quot; (1,959,363 us, 0.36%)</title><rect x="2373.3" y="31" width="14.5" height="23.0" fill="rgb(188,175,75)" rx="2" ry="2" />
+<text  x="2376.26" y="45.5" ></text>
+</g>
+<g >
+<title>md5sum &quot;${@}&quot; (1,057,056 us, 0.19%)</title><rect x="2470.3" y="31" width="7.8" height="23.0" fill="rgb(97,168,212)" rx="2" ry="2" />
+<text  x="2473.33" y="45.5" ></text>
+</g>
+<g >
+<title>sha384sum &quot;${@}&quot; (1,556,877 us, 0.28%)</title><rect x="3538.0" y="31" width="11.5" height="23.0" fill="rgb(146,208,141)" rx="2" ry="2" />
+<text  x="3540.98" y="45.5" ></text>
+</g>
+<g >
+<title>read -r -u 21 _ (35,241 us, 0.01%)</title><rect x="2845.9" y="55" width="0.2" height="23.0" fill="rgb(190,210,216)" rx="2" ry="2" />
+<text  x="2848.85" y="69.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (2,330,327 us, 0.42%)</title><rect x="2087.3" y="31" width="17.2" height="23.0" fill="rgb(205,144,55)" rx="2" ry="2" />
+<text  x="2090.27" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (25,206 us, 0.00%)</title><rect x="3735.5" y="55" width="0.2" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3738.50" y="69.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,905,605 us, 0.35%)</title><rect x="2359.2" y="31" width="14.1" height="23.0" fill="rgb(178,188,87)" rx="2" ry="2" />
+<text  x="2362.16" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,912,254 us, 0.35%)</title><rect x="1946.6" y="31" width="14.2" height="23.0" fill="rgb(179,187,87)" rx="2" ry="2" />
+<text  x="1949.60" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,830,489 us, 0.33%)</title><rect x="2229.2" y="31" width="13.6" height="23.0" fill="rgb(171,196,99)" rx="2" ry="2" />
+<text  x="2232.23" y="45.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (61591)_[s] (5,469,397 us, 0.99%)</title><rect x="3868.0" y="103" width="40.5" height="23.0" fill="rgb(236.469771502674,187.617350918814,221.308675459407)" rx="2" ry="2" />
+<text  x="3870.99" y="117.5" >SUBS..</text>
+</g>
+<g >
+<title>sum -s &quot;${@}&quot; (650,015 us, 0.12%)</title><rect x="3441.8" y="31" width="4.9" height="23.0" fill="rgb(88,156,220)" rx="2" ry="2" />
+<text  x="3444.84" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,957,433 us, 0.36%)</title><rect x="1668.8" y="31" width="14.5" height="23.0" fill="rgb(186,177,76)" rx="2" ry="2" />
+<text  x="1671.83" y="45.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -HUP 61576 ${BASHPID}' HUP (23,801 us, 0.00%)</title><rect x="2433.7" y="55" width="0.2" height="23.0" fill="rgb(49,94,245)" rx="2" ry="2" />
+<text  x="2436.72" y="69.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (27,961 us, 0.01%)</title><rect x="3160.0" y="55" width="0.3" height="23.0" fill="rgb(50,95,245)" rx="2" ry="2" />
+<text  x="3163.05" y="69.5" ></text>
+</g>
+<g >
+<title>trap 'trap - TERM INT HUP USR1, kill -TERM 61576 ${BASHPID}' TERM (28,098 us, 0.01%)</title><rect x="3457.7" y="55" width="0.2" height="23.0" fill="rgb(51,96,244)" rx="2" ry="2" />
+<text  x="3460.67" y="69.5" ></text>
+</g>
+<g >
+<title>sha512sum &quot;${@}&quot; (1,697,029 us, 0.31%)</title><rect x="1579.8" y="31" width="12.6" height="23.0" fill="rgb(164,202,110)" rx="2" ry="2" />
+<text  x="1582.82" y="45.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,461,698 us, 0.27%)</title><rect x="683.1" y="31" width="10.8" height="23.0" fill="rgb(136,207,158)" rx="2" ry="2" />
+<text  x="686.12" y="45.5" ></text>
+</g>
+<g >
+<title>mapfile -t -n ${nLinesCur} -u 27 -t -d '' A (28,012 us, 0.01%)</title><rect x="811.4" y="55" width="0.2" height="23.0" fill="rgb(50,94,245)" rx="2" ry="2" />
+<text  x="814.42" y="69.5" ></text>
+</g>
+<g >
+<title>b2sum &quot;${@}&quot; (1,500,758 us, 0.27%)</title><rect x="1614.0" y="31" width="11.1" height="23.0" fill="rgb(142,208,149)" rx="2" ry="2" />
+<text  x="1617.01" y="45.5" ></text>
+</g>
+<g >
+<title>sha224sum &quot;${@}&quot; (1,986,215 us, 0.36%)</title><rect x="606.4" y="31" width="14.7" height="23.0" fill="rgb(191,170,71)" rx="2" ry="2" />
+<text  x="609.38" y="45.5" ></text>
+</g>
+</g>
+</svg>

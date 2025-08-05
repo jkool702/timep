@@ -1776,28 +1776,28 @@ _timep_COMBINE_FLAMEGRAPH() {
         svgWall="${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.${fullSVGStr}"
         svgCpu="${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.${fullSVGStr}"
 
-        f1="$(sed -E 's/^(<text id="title" .*)\(WALL-CLOCK TIMES\)(.*)$/\1(UPPER: WALL-CLOCK TIME) (LOWER: CPU TIME)\2/' <"${svgWall}")"
+
+        f1="$(<"${svgWall}")"
         f1="${f1%\<\/g\>$'\n'\<\/svg\>}"
 
         y1="$(grep -F '<title>all' -r "${svgWall}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')"
         y2="$(grep -F '<title>all' -r "${svgCpu}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')"
         (( yShift = y1 - y2 + 32 ))
 
-        imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
-        imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
-        (( imgHeight = imgHeightWall + imgHeightCpu + 32 ))
-        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/' <<<"$f1")"
-
-
         mapfile -t -d '' f2 < <(sed -zE s/'^.*\n<g id="frames">\n//; s/<\/g>\n<\/svg>\n?$//; s/(<\/g>)\n/\1\x00/g; s/ y="([0-9.]+)"/ y="'$'\034''\1'$'\034''"/g' <"${svgCpu}")
 
+        yMax=0
+        yMin=$((1<<31))
         for kk in "${!f2[@]}"; do
             F=()
             for (( kk0=0; kk0<5; kk0++)); do
                 read -r -d $'\034' y 
                 if [[ "${kk0}" = '1' ]] || [[ ${kk0} == '3' ]]; then
-                    (( F[$kk0] = ${y%.*} + yShift ))
+                    (( yNew = ${y%.*} + yShift ))
+                    F[$kk0]="${yNew}"
                     [[ "${y##*.}" == "${y}" ]] || F[$kk0]="${F[$kk0]}.${y##*.}"
+                    (( yNew > yMax )) && yMax="${yNew}"
+                    (( yNew < yMin )) && yMin="${yNew}"
                 else
                     F[$kk0]="$y"
                 fi
@@ -1808,6 +1808,15 @@ _timep_COMBINE_FLAMEGRAPH() {
         done
 
         f1+='</g>'$'\n''</svg>'
+
+        imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
+        imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
+        titleY="$(grep -E '^<text id="title"' <"${svgCpu}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)"
+
+        (( imgHeight = yMax + yMin + titleY/2 ))
+        (( titleYnew = imgHeight - yMin + titleY ))
+
+        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)\(WALL-CLOCK TIMES\)(.*)$/\1\2\3(UPPER: WALL-CLOCK TIME)\4\n\1'"${titleYnew}"'\3(LOWER: CPU TIME)\4/' <<<"$f1")"
 
         printf '%s\n' "$f1" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.${fullSVGStr}"
 
