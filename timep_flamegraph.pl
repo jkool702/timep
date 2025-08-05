@@ -435,10 +435,10 @@ sub color_timep {
       if (defined $sum_wall & defined $sum_cpu && $sum_cpu > 0) {
           $count_cpu = ($sum_wall * $count_cpu / $sum_cpu);
 	  $max_cpu = ($sum_wall * $max_cpu / $sum_cpu);
-      ) elsif (defined $max_cpu && $max_cpu > 0) {
+      } elsif (defined $max_cpu && $max_cpu > 0) {
 	  $count_cpu = $count_cpu * $max_wall / $max_cpu;
           $max_cpu = $max_wall;
-      )
+      }
   }
 
     if ($type eq "timep") {
@@ -468,7 +468,7 @@ sub color_timep {
 		   #        $saturation = $ind_wall / (2 * $n_samples);       
 		   #} else {
                            $saturation = 1 - (1 / (2 + ($count_cpu / $count_wall)) ** 2);
-			   #}
+		   #}
            } else {
                    $saturation = 1
            }
@@ -488,7 +488,7 @@ sub color_timep {
   $saturation = 1 if $saturation > 1;
   $saturation = 0 if $saturation < 0;
 
-  $saturation  = (4 / 3) * (1 - (1 / (1 + (saturation ** 2)) ** 2));
+  $saturation  = (4 / 3) * (1 - (1 / (1 + ($saturation ** 2)) ** 2));
 
   if ($colors =~ /^timep/) {
     if ($name =~ m:_\[f\]$:) { 
