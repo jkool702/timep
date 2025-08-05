@@ -1791,7 +1791,7 @@ _timep_COMBINE_FLAMEGRAPH() {
         (( yShift = y1 - y2 + 32 ))
     else
         read -r e0 e1 < <(echo $(grep -oE 'y="[0-9.]+"' <"${svgWall}" | grep -oe '[0-9.]*' | sed -E 's/\.[0-9]+//' | sort -nu | tail -n 2))
-        (( yShift = ( 2 * e1 ) - e0 ))
+        (( yShift = ( 2 * e1 ) - e0 + 64 ))
     fi
 
     mapfile -t -d '' f2 < <(sed -zE s/'^.*\n<g id="frames">\n//; s/<\/g>\n<\/svg>\n?$//; s/(<\/g>)\n/\1\x00/g; s/ y="([0-9.]+)"/ y="'$'\034''\1'$'\034''"/g' <"${svgCpu}")
@@ -1822,18 +1822,20 @@ _timep_COMBINE_FLAMEGRAPH() {
     imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
     imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
     mapfile -t titleY < <(grep -E '^<text id="title"' <"${svgCpu}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
+    mapfile -t titleYY < <(grep -E '^<text id="title"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
 
-    (( imgHeight = yMax + titleY[0] +32 ))
+    (( imgHeight = yMax + titleY[0] + 32 ))
     (( titleYnew = imgHeight - yMin + titleY[0] ))
 
     if [[ ${#y1[@]} > 1 ]]; then
-        (( titleYnew = titleYnew  + yMin  - 2 * titleY[0] ))
-        (( titleY0new = imgHeight - titleYnew + yMin ))
-        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)\(LOWER: CPU TIME\)(.*)$/\1\2\3(LOWER: WALL-CLOCK TIME)\4\n\1'"${titleY0new}"'\3(FULL) (UPPER: WALL-CLOCK TIME)\4\n\1'"${titleYnew}"'\3(FULL) (LOWER: CPU TIME)\4/' <<<"$f1")"
+        (( titleYYnew = yMin - titleYY[0] - 32 ))
+        (( titleYnew = titleYnew  + yMin - titleYY[0] - titleY[0]/2 ))
+        (( titleY0new = imgHeight - titleYnew + yMin  - titleYY[0] - titleY[0] ))
+        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)\(LOWER: CPU TIME\)(.*)$/\1'"${titleYYnew}"'\3(LOWER: CPU TIME)\4\n\1'"${titleY0new}"'\3(FULL) (UPPER: WALL-CLOCK TIME)\4\n\1'"${titleYnew}"'\3(FULL) (LOWER: CPU TIME)\4/' <<<"$f1")"
 
     else
         (( imgHeight = imgHeight + yMin - titleY[0] ))
-        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)\(WALL-CLOCK TIMES\)(.*)$/\1\2\3(UPPER: WALL-CLOCK TIME)\4\n\1'"${titleYnew}"'\3(LOWER: CPU TIME)\4/' <<<"$f1")"
+        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)(FlameGraph: .*)\(WALL-CLOCK TIMES\)(.*)$/\1\2\3\4(UPPER: WALL-CLOCK TIME)\5\n\1'"${titleYnew}"'\3(LOWER: CPU TIME)\5/' <<<"$f1")"
     fi
 
     f1="$(sed -E 's/^(<svg.*viewBox="[0-9]+ [0-9]+ [0-9]+) [0-9]+/\1 '"${imgHeight}"'/' <<<"${f1}")"
