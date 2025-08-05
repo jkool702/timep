@@ -91,7 +91,7 @@ timep() {
 
     local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp clktck
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
-    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA flameGraphLogA
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
     getCPUtime &>/dev/null || _timep_SETUP
@@ -1226,7 +1226,7 @@ _timep_PROCESS_LOG() {
         set -xv
     }
 
-    logCur="${1}"
+    logCur="${timep_LOG_NAME[${1}]}"
 
     [[ -e "${logCur}" ]] || return 1
 
@@ -1461,7 +1461,7 @@ printf '%s;' "${fgA[@]}")"
             continue
         }
         #  write out flamegraph stack trace line for standard commands
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${timep_LOG_NESTING_CUR}"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${timep_LOG_NESTING_CUR}.${1}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
@@ -1919,7 +1919,7 @@ while true; do
     if "${debugFlag}"; then
         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
     else
-        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
+        _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     fi
     if (( $? == 0 )); then
         printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
@@ -2148,7 +2148,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     # reverse flamegraph input so it starts at the parent and ends at the depest child
     printf '\nREORDERING FLAMEGRAPH INPUTS\n' >&2
     #echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^([0-9]+)\:/\1 /' | sort -nr -k1,1 | sed -E 's/^[0-9]+ //')" >"${timep_TMPDIR}/.log/out.flamegraph.full"
-    cat "${timep_TMPDIR}"/.log/out.flamegraph.full.* >"${timep_TMPDIR}/.log/out.flamegraph.full"
+    mapfile -t flameGraphLogA < <(sort -V "${timep_TMPDIR}"/.log/out.flamegraph.full.*)
+    cat "${flameGraphLogA[@]}" >"${timep_TMPDIR}/.log/out.flamegraph.full"
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # fold flamegrapoh stack traces
@@ -2376,6 +2377,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg"
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.svg"
 
+            printf '\nCOMBINING FLAMEGRAPHS INTO VERTICALLY STACKED SVG IMAGES\n' >&2
+
             _timep_COMBINE_FLAMEGRAPH "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg"
             _timep_COMBINE_FLAMEGRAPH "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg"
             _timep_COMBINE_FLAMEGRAPH  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
@@ -2416,7 +2419,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
-    type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles
+    printf '\n\nTHE PROFIL HAS FINISHED PROCESSING!\nAll profiles can be found at "%s"' "${timep_TMPDIR}/profiles" >&2
+    type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles && printf ' or accessed via the symlink "./timep.profiles"' >&2
+    ${timep_flameGraphFlag} && [[ "${timep_flameGraphPath}" ]] && printf '\nAll flamegrapohs can be found in the "flamegraphs" sub-directory ("%s")' "${timep_TMPDIR}/profiles/flamegraphs"  >&2
+    printf '\n\n  >&2
 
     ) {timep_FD0}<&0 {timep_FD1}>&1 {timep_FD2}>&2 {fd_sleep}<><(:)
 }
@@ -2494,7 +2500,7 @@ _timep_base64_to_file() {
             chmod +x "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
         }
     else
-        timep_git_branch='timep_testing'
+        timep_git_branch='main'
         type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl -O "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null
         type -p timep_flamegraph.pl &>/dev/null || {
             type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl >"/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" 2>/dev/null
