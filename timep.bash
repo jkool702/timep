@@ -1664,9 +1664,9 @@ _timep_PROCESS_FLAMEGRAPH() {
         cpuTimeFlag=true
         (( ${#wallTimeA[@]} == ${#cpuTimeA[@]} )) && {
             IFS='+'
-           (( wallTimeSum =  ${wallTimeA[*]} ))
-           (( cpuTimeSum = ${cpuTimeA[*]} ))
-           ratioFactor=20
+            (( wallTimeSum = ${wallTimeA[*]} ))
+            (( cpuTimeSum = ${cpuTimeA[*]} ))
+            ratioFactor=20
         }
     else
         cpuTimeFlag=false
@@ -1679,7 +1679,7 @@ _timep_PROCESS_FLAMEGRAPH() {
         for kk in "${!wallTimeA[@]}"; do
             (( ratioFactor * wallTimeSum * cpuTimeA[$kk] < cpuTimeSum * wallTimeA[$kk] )) && {
                 wallTimeA[$kk]="${wallTimeA[$kk]}.1"
-                cpuTimeA[$kk]="${cpuTimeA[$kk]}.1"
+                #cpuTimeA[$kk]="${cpuTimeA[$kk]}.1"
             }
         done
     }
@@ -1733,13 +1733,13 @@ _timep_PROCESS_FLAMEGRAPH() {
          while read -r a b c; do
             { [[ $a ]] && [[ $b ]] && [[ $c ]]; } || continue
             (( n = ( ( b - 1 ) << 1 ) + a ))
-            if [[ "${c}" == *'.1' ]]; then
-                c="${c%.*}"
-                (( cpuTimeN = cpuTimeN - a ))
-                (( cpuTimeCDF_map[$n] = cpuTimeCDF_map[$n] ))
-            else
+            #if [[ "${c}" == *'.1' ]]; then
+            #    c="${c%.*}"
+            #    (( cpuTimeN = cpuTimeN - a ))
+            #    (( cpuTimeCDF_map[$n] = cpuTimeCDF_map[$n] ))
+            #else
                 (( cpuTimeCDF_map[$n] = ${cpuTimeCDF_map[$n]:-0} + a * c ))
-            fi
+            #fi
             cpuTimeCDF_map0[${c%.*}]="$n"
         done < <(printf '%s\n' "${cpuTimeSortA[@]}" | uniq -c -f1)
 
@@ -1767,6 +1767,60 @@ _timep_PROCESS_FLAMEGRAPH() {
             printf '%s\t%s:%s\n' "${stackA[$kk]}" "${wallTimeA[$kk]%.*}" "${wallTimeCDF_map[${wallTimeCDF_map0[${wallTimeA[$kk]%.*}]}]}"
         done
     fi
+}
+
+_timep_COMBINE_FLAMEGRAPH() {
+
+    for fullSVGStr in 'svg' 'full.svg' ; do
+
+        svgWall="${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.${fullSVGStr}"
+        svgCpu="${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.${fullSVGStr}"
+
+
+        f1="$(<"${svgWall}")"
+        f1="${f1%\<\/g\>$'\n'\<\/svg\>}"
+
+        y1="$(grep -F '<title>all' -r "${svgWall}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')"
+        y2="$(grep -F '<title>all' -r "${svgCpu}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')"
+        (( yShift = y1 - y2 + 32 ))
+
+        mapfile -t -d '' f2 < <(sed -zE s/'^.*\n<g id="frames">\n//; s/<\/g>\n<\/svg>\n?$//; s/(<\/g>)\n/\1\x00/g; s/ y="([0-9.]+)"/ y="'$'\034''\1'$'\034''"/g' <"${svgCpu}")
+
+        yMax=0
+        yMin=$((1<<31))
+        for kk in "${!f2[@]}"; do
+            F=()
+            for (( kk0=0; kk0<5; kk0++)); do
+                read -r -d $'\034' y 
+                if [[ "${kk0}" = '1' ]] || [[ ${kk0} == '3' ]]; then
+                    (( yNew = ${y%.*} + yShift ))
+                    F[$kk0]="${yNew}"
+                    [[ "${y##*.}" == "${y}" ]] || F[$kk0]="${F[$kk0]}.${y##*.}"
+                    (( yNew > yMax )) && yMax="${yNew}"
+                    (( yNew < yMin )) && yMin="${yNew}"
+                else
+                    F[$kk0]="$y"
+                fi
+            done <<<"${f2[$kk]}"
+            printf -v Y '%s' "${F[@]}"
+            f1+="${Y}"$'\n'
+            printf '\rFINISHED %s OF %s FRAMES' "$kk" "${#f2[@]}"
+        done
+
+        f1+='</g>'$'\n''</svg>'
+
+        imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
+        imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
+        titleY="$(grep -E '^<text id="title"' <"${svgCpu}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)"
+
+        (( imgHeight = yMax + yMin + titleY/2 ))
+        (( titleYnew = imgHeight - yMin + titleY ))
+
+        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)\(WALL-CLOCK TIMES\)(.*)$/\1\2\3(UPPER: WALL-CLOCK TIME)\4\n\1'"${titleYnew}"'\3(LOWER: CPU TIME)\4/' <<<"$f1")"
+
+        printf '%s\n' "$f1" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.${fullSVGStr}"
+
+    done
 }
 
 # # # # # # # # # # # # # # # # POST PROCESSING BEGINS HERE # # # # # # # # # # # # # # # #
@@ -2293,8 +2347,15 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 c) timep_TITLE='Various Commands' ;;
             esac
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraph.full.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraph.svg"
+            mkdir -p "${timep_TMPDIR}/profiles/flamegraphs"
+
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"            
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg"
+
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.svg"
+
+            _timep_COMBINE_FLAMEGRAPH
         }
     }
 
@@ -2390,8 +2451,8 @@ _timep_base64_to_file() {
     PATH="${PATH}${PATH:+:}/dev/shm/.timep/lib/${USER}-${EUID}"
     export PATH="${PATH}"
 
-    if PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl &>/dev/null; then
-        mapfile -t timep_flameGraphPathA < <(PATH="${PATH}:${PWD}" type -p -a timep_flamegraph.pl)
+    if PATH="${PATH}:${PWD}$([[ -d "${PWD}/timep" ]] && printf ':%s/timep' "${PWD}")" type -p -a timep_flamegraph.pl &>/dev/null; then
+        mapfile -t timep_flameGraphPathA < <(PATH="${PATH}:${PWD}$([[ -d "${PWD}/timep" ]] && printf ':%s/timep' "${PWD}")" type -p -a timep_flamegraph.pl)
         mapfile -t timep_flameGraphPathA < <(printf '%s\n' "${timep_flameGraphPathA[@]}" | grep -F '/dev/shm/.timep/lib/'"${USER}-${EUID}"; printf '%s\n' "${timep_flameGraphPathA[@]}" | grep -vF '/dev/shm/.timep/lib/'"${USER}-${EUID}")
         if (( ${#timep_flameGraphPathA[@]} > 1 )) && type -p date &>/dev/null; then
             t=$(date -r "${timep_flameGraphPathA[0]}" '+%s')
