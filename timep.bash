@@ -1791,7 +1791,7 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     #trap 'echo "ERROR AT $LINENO: $BASH_COMMAND" >&2' ERR
 
-    local svgWall svgCpu f1 e0 e12 y y1 y2 yMax yMin yNew Y kk kk0 imgHeightWall imgHeightCpu imgHeight titleY titleYnew fType a
+    local svgWall svgCpu f1 e0  y y1 y2 yMax yMin yNew Y kk kk0 imgHeight titleY a runType fTitleStr0 fTitleStr fTitleKK
     local -a F f2 fTitleA
 
     if [[ "$1" == '--type='@(f|F|w|c|fF|wc) ]] && (( $# == 3 )) then
@@ -1800,20 +1800,23 @@ _timep_COMBINE_FLAMEGRAPH() {
         runType="${runType//["'"'"']/}"
         while read -r -N 1 a; do
             case "$a" in
-                f)  fTitleA+=('{FOLDED}: WALL-CLOCK' '{FOLDED}: CPU-TIME')  ;;
-                F)  fTitleA+=('{FULL}: WALL-CLOCK' '{FULL}: CPU-TIME')  ;;
-                w   fTitleA+=('{WALL-CLOCK}: FOLDED' '{WALL-CLOCK}: FULL')  ;;
-                c)  fTitleA+=('{CPU-TIME}: FOLDED' '{CPU-TIME}: FULL')  ;;
+                f)  fTitleA+=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME')  ;;
+                F)  fTitleA+=('' '{FULL}: WALL-CLOCK' '' '{FULL}: CPU-TIME')  ;;
+                w)  fTitleA+=('' '{WALL-CLOCK}: FOLDED' '' '{WALL-CLOCK}: FULL')  ;;
+                c)  fTitleA+=('' '{CPU-TIME}: FOLDED' '' '{CPU-TIME}: FULL')  ;;
             esac
         done <<<"${runType}"
         shift 1
     elif (( $# == 2 )); then
-        altType='FOLDED'
-        fTitleA=('{FOLDED}: WALL-CLOCK' '{FOLDED}: CPU-TIME') 
+        runType=f
+        fTitleA=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME') 
+    else
+         printf '\nERROR: INCORRECT NUMBER OF INPUTS. ABORTING!!!\n\n' >&2
+         return 1
     fi
 
     { [[ ${1} ]] && [[ ${2} ]] && [[ -e "${1}" ]] && [[ -e "${2}" ]]; } || {
-         printf '\nERROR: at least one SVG was not found or could not be accesses. \nensure the paths are correct and that you have reqyuisite file permissions to read the SVG file.\nABORTING!!!\n\n'
+         printf '\nERROR: at least one SVG was not found or could not be accesses. \nensure the paths are correct and that you have reqyuisite file permissions to read the SVG file.\nABORTING!!!\n\n' >&2
          return 1
     }
 
@@ -1826,10 +1829,10 @@ _timep_COMBINE_FLAMEGRAPH() {
     mapfile -t y1 < <(grep -F '<title>all' -r "${svgWall}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')
     if [[ ${#y1[@]} == 1 ]]; then
         mapfile -t y2 < <(grep -F '<title>all' -r "${svgCpu}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')
-        (( yShift = y1 - y2 + 32 ))
+        (( yShift = y1 - y2 + 64 ))
     else
         read -r e0 e1 < <(echo $(grep -oE 'y="[0-9.]+"' <"${svgWall}" | grep -oe '[0-9.]*' | sed -E 's/\.[0-9]+//' | sort -nu | tail -n 2))
-        (( yShift = ( 2 * e1 ) - e0 + 64 ))
+        (( yShift = ( 2 * e1 ) - e0 + 96 ))
     fi
 
     mapfile -t -d '' f2 < <(sed -zE s/'^.*\n<g id="frames">\n//; s/<\/g>\n<\/svg>\n?$//; s/(<\/g>)\n/\1\x00/g; s/ y="([0-9.]+)"/ y="'$'\034''\1'$'\034''"/g' <"${svgCpu}")
@@ -1857,54 +1860,31 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     f1+='</g>'$'\n''</svg>'
 
-    imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
-    imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
+    #imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
+    #imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
     mapfile -t titleY < <(grep -E '^<text id="title"' <"${svgCpu}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
     mapfile -t titleYY < <(grep -E '^<text id="title"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
 
     (( imgHeight = yMax + titleY[0] + 32 ))
-    (( titleYnew = imgHeight - yMin + titleY[0] ))
+    (( fTitleA[0] = titleY[0] + 16 ))
 
-    if [[ ${#y1[@]} > 1 ]]; then
-        (( titleYYnew = yMin - titleYY[0] - 32 ))
-        (( titleYnew = titleYnew  + yMin - titleYY[0] - titleY[0]/2 ))
-        (( titleY0new = imgHeight - titleYnew + yMin  - titleYY[0] - titleY[0] ))
-
-        if ${altFlag}; then
-            label1="${altType}"': FOLDED'
-            label2="${altType}"': FULL'
-            if [[ "${altType}" == 'WALL-CLOCK' ]]; then
-                altType0='CPU TIME'
-            else
-                altType0='WALL-CLOCK'
-            fi
-            label0="${altType0}"': FULL'
-        else
-            label1="${altType}"': WALL-CLOCK'
-            label2="${altType}"': CPU-TIME'
-            if [[ "${altType}" == 'FOLDED' ]]; then
-                altType0='FULL'
-            else
-                altType0='FOLDED'
-            fi
-            label0="${altType0}"': CPU TIME'
-        fi
-
-        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)\([^\(]+ TIMES?\)(.*)$/\1'"${titleYYnew}"'\3'"${label0}"'\4\n\1'"${titleY0new}"'\3'"${label1}"'\4\n\1'"${titleYnew}"'\3'"${label2}"'\4/' <<<"$f1")"
-
+    if [[ ${#runType[@]} == 2 ]]; then
+        (( fTitleA[2] = yMin - titleYY[0] - 32 ))
+        (( fTitleA[4] =  imgHeight - titleYY[0] + titleY[0]/2 ))
+        (( fTitleA[6] = 2 * ( yMin  - titleY[0] )  - titleYY[0] ))
     else
-        (( imgHeight = imgHeight + yMin - titleY[0] ))
-        if ${altFlag}; then
-            label1="${altType}"': FOLDED'
-            label2="${altType}"': FULL'
-        else
-            label1="${altType}"': WALL-CLOCK'
-            label2="${altType}"': CPU-TIME'
-        fi
-        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)(FlameGraph: .*)\([^\(]+ TIMES?\)(.*)$/\1\2\3\4'"${label1}"'\5\n\1'"${titleYnew}"'\3'"${label2}"'\5/' <<<"$f1")"
+        (( fTitleA[2] = imgHeight - yMin + titleY[0] ))
     fi
 
-    f1="$(sed -E 's/^(<svg.*viewBox="[0-9]+ [0-9]+ [0-9]+) [0-9]+/\1 '"${imgHeight}"'/' <<<"${f1}")"
+    fTitleStr0="$(grep -E '^<text id="title" ' <./timep.profiles/flamegraphs/flamegraph.wall.full.svg | sed -E 's/^(<text id=")(title" .* y=")[0-9\.]+(" >).*$/\1sub\2%s\3\%s\<\/text\>\\n/')"
+    printf -v fTitleStr "${fTitleStr0}" "${fTitleA[@]}"
+    fTitleStr="${fTitleStr%$'\n'}"
+
+    fTitleKK="$(grep -n '' <<<"$f1" | grep -E '^[0-9:]+<text id="title" ' | grep -oE '^[0-9]+')"
+
+    f1="$( { head -n "${fTitleKK}" <<<"$f1"; printf '\n%s\n' "${fTitleStr}"; tail -n +$((fTitleKK+1)) <<<"$f1"; } | grep -E '.+' )"
+
+    f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<svg.*viewBox="[0-9]+ [0-9]+ [0-9]+) [0-9]+/\1 '"${imgHeight}"'/' <<<"$f1")"
 
     printf '%s\n' "$f1"
 
@@ -2438,24 +2418,24 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             mkdir -p "${timep_TMPDIR}/profiles/flamegraphs"
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"            
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.R.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"            
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg"
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg"
 
             printf '\nCOMBINING FLAMEGRAPHS INTO VERTICALLY STACKED SVG IMAGES\n' >&2
 
-            _timep_COMBINE_FLAMEGRAPH --type=f "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=f "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg"
             _timep_COMBINE_FLAMEGRAPH --type=F "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg"
 
-            _timep_COMBINE_FLAMEGRAPH --type=w "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.A.svg"
-            _timep_COMBINE_FLAMEGRAPH --type=c "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.A.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=w "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=c "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg"
 
-            _timep_COMBINE_FLAMEGRAPH --type=fF "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
-            _timep_COMBINE_FLAMEGRAPH --type=wc  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.A.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.A.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.A.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=fF "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=wc  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.R.svg"
         }
     }
 
