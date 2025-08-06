@@ -1791,13 +1791,16 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     #trap 'echo "ERROR AT $LINENO: $BASH_COMMAND" >&2' ERR
 
-    local svgWall svgCpu f1 e0  y y1 y2 yMax yMin yNew Y kk kk0 imgHeight titleY a runType fTitleStr0 fTitleStr fTitleKK
+    local svgWall svgCpu f1 e0  y y1 y2 yMax yMin yNew Y kk kk0 imgHeight titleY a runType fTitleStr0 fTitleStr fTitleKK quadStackFlag
     local -a F f2 fTitleA
+
+    quadStackFlag=false
 
     if [[ "$1" == '--type='@(f|F|w|c|fF|wc) ]] && (( $# == 3 )) then
         fTitleA=()
         runType="${1##--title=}"
         runType="${runType//["'"'"']/}"
+        kk=0
         while read -r -N 1 a; do
             case "$a" in
                 f)  fTitleA+=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME')  ;;
@@ -1805,7 +1808,9 @@ _timep_COMBINE_FLAMEGRAPH() {
                 w)  fTitleA+=('' '{WALL-CLOCK}: FOLDED' '' '{WALL-CLOCK}: FULL')  ;;
                 c)  fTitleA+=('' '{CPU-TIME}: FOLDED' '' '{CPU-TIME}: FULL')  ;;
             esac
+            ((kk++))
         done <<<"${runType}"
+        (( kk >= 2 )) && quadStackFlag=true
         shift 1
     elif (( $# == 2 )); then
         runType=f
@@ -1829,10 +1834,10 @@ _timep_COMBINE_FLAMEGRAPH() {
     mapfile -t y1 < <(grep -F '<title>all' -r "${svgWall}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')
     if [[ ${#y1[@]} == 1 ]]; then
         mapfile -t y2 < <(grep -F '<title>all' -r "${svgCpu}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')
-        (( yShift = y1 - y2 + 64 ))
+        (( yShift = y1 - y2 ))
     else
         read -r e0 e1 < <(echo $(grep -oE 'y="[0-9.]+"' <"${svgWall}" | grep -oe '[0-9.]*' | sed -E 's/\.[0-9]+//' | sort -nu | tail -n 2))
-        (( yShift = ( 2 * e1 ) - e0 + 96 ))
+        (( yShift = ( 2 * e1 ) - e0 + 32 ))
     fi
 
     mapfile -t -d '' f2 < <(sed -zE s/'^.*\n<g id="frames">\n//; s/<\/g>\n<\/svg>\n?$//; s/(<\/g>)\n/\1\x00/g; s/ y="([0-9.]+)"/ y="'$'\034''\1'$'\034''"/g' <"${svgCpu}")
@@ -1859,7 +1864,8 @@ _timep_COMBINE_FLAMEGRAPH() {
     done
 
     IFS=' ' read -r yMin0 yMax0 < <(grep -oE '^.* y="[0-9\.]+"' <"${svgWall}" | grep -vE '^<((rect)|(text id))' | grep -oE ' y="[0-9\.]+"' | sed -E 's/^ y="//; s/(\.5)?"$//' | sort -n | sed -zE 's/^([0-9]+)\n.*\n([0-9]+)\n?$/\1 \2/')
-    mapfile -t titleY < <(grep -E '^<text id="title"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
+    IFS=' ' read -r yMin1 yMax1 < <(grep -oE '^.* y="[0-9\.]+"' <"${svgCpu}" | grep -vE '^<((rect)|(text id))' | grep -oE ' y="[0-9\.]+"' | sed -E 's/^ y="//; s/(\.5)?"$//' | sort -n | sed -zE 's/^([0-9]+)\n.*\n([0-9]+)\n?$/\1 \2/')
+ mapfile -t titleY < <(grep -E '^<text id="title"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
     mapfile -t subtitleY < <(grep -E '^<text id="subtitle"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
   
     (( titlePad = subtitleY[0] - titleY[0] ))
@@ -1872,15 +1878,14 @@ _timep_COMBINE_FLAMEGRAPH() {
     (( fTitleA[2] = yMax0 + subtitlePad ))
 
 
-    if [[ ${#runType[@]} == 2 ]]; then
-        (( fTitleA[4] =  yMin - subtitlePad ))
-        (( fTitleA[6] =  yMax + subtitlePad))
+    if ${quadStackFlag}; then
+        (( fTitleA[4] =  fTitleA[2] + subtitlePad + titlePad))
+        (( fTitleA[6] =  fTitleA[4] + ( 2 * subtitlePad ) + yMax1 - yMin1  ))
     fi
 
     fTitleStr0="$(grep -E '^<text id="title" ' <./timep.profiles/flamegraphs/flamegraph.wall.full.svg | sed -E 's/^(<text id=")(title" .* y=")[0-9\.]+(" >).*$/\1sub\2%s\3\%s\<\/text\>\\n/')"
     printf -v fTitleStr "${fTitleStr0}" "${fTitleA[@]}"
     fTitleStr="${fTitleStr%$'\n'}"
-    declare -p fTitleStr fTitleStr0 >&2
 
     fTitleKK="$(grep -n '' <<<"$f1" | grep -E '^[0-9:]+<text id="title" ' | grep -oE '^[0-9]+')"
 
