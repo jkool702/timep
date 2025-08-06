@@ -1771,26 +1771,51 @@ _timep_PROCESS_FLAMEGRAPH() {
 }
 
 _timep_COMBINE_FLAMEGRAPH() {
+## Vertically stack flamegraph SVG images
+# 
+# USAGE: --type=<type> svg1 svg2
+#
+# <type> can be one of the following: f, F  w, c, fF, wc
+# Note that inputs must be in the order shown below.
+#
+#   For the below 4 types, input 1 is a single normal flamegraph and input 2 is a single inverted flamegraph.
+#     f: folded.   inputs are folded wall-clock and folded cpu.        output is dual-folded.
+#     F: full.     inputs are full wall-clock and full cpu.            output is dual-full.
+#     w: wall.     inputs are folded wall-clock and full wall-clock.   output is dual-wall.
+#     c: CPU.      inputs are folded CPU and full CPU.                 output is dual-cpu.
+#
+#   For the below 2 types, each input is a double flamegraph producedusing one of the above 4 modes
+#     fF: folded+full. inputs are dual-folded and dual-full
+#     wc: wall+cpu.    inputs are dual-wall and dual-cpu
+
 
     #trap 'echo "ERROR AT $LINENO: $BASH_COMMAND" >&2' ERR
 
-    local svgWall svgCpu f1 e0 e12 y y1 y2 yMax yMin yNew Y kk kk0 imgHeightWall imgHeightCpu imgHeight titleY titleYnew altFlag altType label0 label1 label2
-    local -a F f2 
+    local svgWall svgCpu f1 e0 e12 y y1 y2 yMax yMin yNew Y kk kk0 imgHeightWall imgHeightCpu imgHeight titleY titleYnew fType a
+    local -a F f2 fTitleA
 
-    if [[ "$1" == '-A'[wcf] ]]; then
-        case "$1" in
-            -Aw) altType='WALL-CLOCK'; altFlag=true ;;
-            -Ac) altType='CPU TIME'; altFlag=true  ;;
-            -Af) altType='FULL'; altFlag=false ;;
-            *) altType=('WALL-CLOCK' 'CPU TIME')
-         esac
+    if [[ "$1" == '--type='@(f|F|w|c|fF|wc) ]] && (( $# == 3 )) then
+        fTitleA=()
+        runType="${1##--title=}"
+        runType="${runType//["'"'"']/}"
+        while read -r -N 1 a; do
+            case "$a" in
+                f)  fTitleA+=('{FOLDED}: WALL-CLOCK' '{FOLDED}: CPU-TIME')  ;;
+                F)  fTitleA+=('{FULL}: WALL-CLOCK' '{FULL}: CPU-TIME')  ;;
+                w   fTitleA+=('{WALL-CLOCK}: FOLDED' '{WALL-CLOCK}: FULL')  ;;
+                c)  fTitleA+=('{CPU-TIME}: FOLDED' '{CPU-TIME}: FULL')  ;;
+            esac
+        done <<<"${runType}"
         shift 1
-    else
-        altFlag=false
+    elif (( $# == 2 )); then
         altType='FOLDED'
+        fTitleA=('{FOLDED}: WALL-CLOCK' '{FOLDED}: CPU-TIME') 
     fi
 
-    { [[ ${1} ]] && [[ ${2} ]] && [[ -e "${1}" ]] && [[ -e "${2}" ]]; } || return
+    { [[ ${1} ]] && [[ ${2} ]] && [[ -e "${1}" ]] && [[ -e "${2}" ]]; } || {
+         printf '\nERROR: at least one SVG was not found or could not be accesses. \nensure the paths are correct and that you have reqyuisite file permissions to read the SVG file.\nABORTING!!!\n\n'
+         return 1
+    }
 
     svgWall="${1}"
     svgCpu="${2}"
@@ -2423,14 +2448,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             printf '\nCOMBINING FLAMEGRAPHS INTO VERTICALLY STACKED SVG IMAGES\n' >&2
 
-            _timep_COMBINE_FLAMEGRAPH "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg"
-            _timep_COMBINE_FLAMEGRAPH -Af "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=f "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=F "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg"
 
-            _timep_COMBINE_FLAMEGRAPH -Aw "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.A.svg"
-            _timep_COMBINE_FLAMEGRAPH -Ac "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.A.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=w "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.A.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=c "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.A.svg"
 
-            _timep_COMBINE_FLAMEGRAPH "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
-            _timep_COMBINE_FLAMEGRAPH -A "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.A.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.A.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.A.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=fF "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
+            _timep_COMBINE_FLAMEGRAPH --type=wc  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.A.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.A.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.A.svg"
         }
     }
 
