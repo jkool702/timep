@@ -1858,34 +1858,39 @@ _timep_COMBINE_FLAMEGRAPH() {
         printf '\rFINISHED %s OF %s FRAMES' "$((kk+1))" "${#f2[@]}" >&2
     done
 
-    f1+='</g>'$'\n''</svg>'
+    IFS=' ' read -r yMin0 yMax0 < <(grep -oE '^.* y="[0-9\.]+"' <"${svgWall}" | grep -vE '^<((rect)|(text id))' | grep -oE ' y="[0-9\.]+"' | sed -E 's/^ y="//; s/(\.5)?"$//' | sort -n | sed -zE 's/^([0-9]+)\n.*\n([0-9]+)\n?$/\1 \2/')
+    mapfile -t titleY < <(grep -E '^<text id="title"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
+    mapfile -t subtitleY < <(grep -E '^<text id="subtitle"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
+  
+    (( titlePad = subtitleY[0] - titleY[0] ))
+    (( subtitlePad = yMin0 - subtitleY[0] ))
 
-    #imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
-    #imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
-    mapfile -t titleY < <(grep -E '^<text id="title"' <"${svgCpu}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
-    mapfile -t titleYY < <(grep -E '^<text id="title"' <"${svgWall}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
+    (( imgHeight = yMax + subtitlePad + titlePad ))
 
-    (( imgHeight = yMax + titleY[0] + 32 ))
-    (( fTitleA[0] = titleY[0] + 16 ))
+
+    (( fTitleA[0] = yMin0 - subtitlePad ))
+    (( fTitleA[2] = yMax0 + subtitlePad ))
+
 
     if [[ ${#runType[@]} == 2 ]]; then
-        (( fTitleA[2] = yMin - titleYY[0] - 32 ))
-        (( fTitleA[4] =  imgHeight - titleYY[0] + titleY[0]/2 ))
-        (( fTitleA[6] = 2 * ( yMin  - titleY[0] )  - titleYY[0] ))
-    else
-        (( fTitleA[2] = imgHeight - yMin + titleY[0] ))
+        (( fTitleA[4] =  yMin - subtitlePad ))
+        (( fTitleA[6] =  yMax + subtitlePad))
     fi
 
     fTitleStr0="$(grep -E '^<text id="title" ' <./timep.profiles/flamegraphs/flamegraph.wall.full.svg | sed -E 's/^(<text id=")(title" .* y=")[0-9\.]+(" >).*$/\1sub\2%s\3\%s\<\/text\>\\n/')"
     printf -v fTitleStr "${fTitleStr0}" "${fTitleA[@]}"
     fTitleStr="${fTitleStr%$'\n'}"
+    declare -p fTitleStr fTitleStr0 >&2
 
     fTitleKK="$(grep -n '' <<<"$f1" | grep -E '^[0-9:]+<text id="title" ' | grep -oE '^[0-9]+')"
+
+    f1="$(grep -vE '^<text id="subtitle"' <<<"${f1}")"
 
     f1="$( { head -n "${fTitleKK}" <<<"$f1"; printf '\n%s\n' "${fTitleStr}"; tail -n +$((fTitleKK+1)) <<<"$f1"; } | grep -E '.+' )"
 
     f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<svg.*viewBox="[0-9]+ [0-9]+ [0-9]+) [0-9]+/\1 '"${imgHeight}"'/' <<<"$f1")"
 
+    f1+='</g>'$'\n''</svg>'
     printf '%s\n' "$f1"
 
 }
@@ -2420,7 +2425,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             mkdir -p "${timep_TMPDIR}/profiles/flamegraphs"
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"            
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"            
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg"
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg"
 
