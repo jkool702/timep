@@ -89,9 +89,9 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp clktck
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp clktck svgCombineInd titlePad subtitlePad
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
-    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA flameGraphLogA
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
     getCPUtime &>/dev/null || _timep_SETUP
@@ -1226,7 +1226,7 @@ _timep_PROCESS_LOG() {
         set -xv
     }
 
-    logCur="${1}"
+    logCur="${timep_LOG_NAME[${1}]}"
 
     [[ -e "${logCur}" ]] || return 1
 
@@ -1451,6 +1451,8 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
+    read -r timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX <"${timep_TMPDIR}/.log/.log_nesting_cur_max"
+
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
@@ -1459,7 +1461,7 @@ printf '%s;' "${fgA[@]}")"
             continue
         }
         #  write out flamegraph stack trace line for standard commands
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${timep_LOG_NESTING_CUR}.${1}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
@@ -1527,7 +1529,6 @@ printf '%s;' "${fgA[@]}")"
 
     done
 
-    read -r timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX <"${timep_TMPDIR}/.log/.log_nesting_cur_max"
     (( spacerN = 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${timep_LOG_NESTING_CUR:-0} ) )) || spacerN=1
 
     # write out new merged-upward log
@@ -1770,57 +1771,144 @@ _timep_PROCESS_FLAMEGRAPH() {
 }
 
 _timep_COMBINE_FLAMEGRAPH() {
+## Vertically stack flamegraph SVG images
+# 
+# USAGE: --type=<type> svg0 svg1
+#
+# <type> can be one of the following: f, F  w, c, fF, wc
+# Note that inputs must be in the order shown below.
+#
+#   For the below 4 types, input 1 is a single normal flamegraph and input 2 is a single inverted flamegraph.
+#     f: folded.   inputs are folded wall-clock and folded cpu.        output is dual-folded.
+#     F: full.     inputs are full wall-clock and full cpu.            output is dual-full.
+#     w: wall.     inputs are folded wall-clock and full wall-clock.   output is dual-wall.
+#     c: CPU.      inputs are folded CPU and full CPU.                 output is dual-cpu.
+#
+#   For the below 2 types, each input is a double flamegraph producedusing one of the above 4 modes
+#     fF: folded+full. inputs are dual-folded and dual-full
+#     wc: wall+cpu.    inputs are dual-wall and dual-cpu
 
-    for fullSVGStr in 'svg' 'full.svg' ; do
 
-        svgWall="${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.${fullSVGStr}"
-        svgCpu="${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.${fullSVGStr}"
+    #trap 'echo "ERROR AT $LINENO: $BASH_COMMAND" >&2' ERR
 
+    local svg0 svg1 f1 e0 y y1 y2 yMax yMin yMax0 yMin0 yMax1 yMin1 yNew Y kk kk0 kk1 imgHeight subtitleY titleY a runType fTitleStr0 fTitleStr fTitleKK quadStackFlag titlePad subtitlePad
+    local -a F f2 fTitleA
 
-        f1="$(<"${svgWall}")"
-        f1="${f1%\<\/g\>$'\n'\<\/svg\>}"
+    quadStackFlag=false
+    ((svgCombineInd++))
 
-        y1="$(grep -F '<title>all' -r "${svgWall}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')"
-        y2="$(grep -F '<title>all' -r "${svgCpu}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')"
-        (( yShift = y1 - y2 + 32 ))
+    if [[ "$1" == '--type='* ]] && (( $# == 3 )); then
+        runType="${1##*=}"
+        runType="${runType//\'\"/}"
+        case "${runType}" in
+            f)  fTitleA=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME')  ;;
+            F)  fTitleA=('' '{FULL}: WALL-CLOCK' '' '{FULL}: CPU-TIME')  ;;
+            w)  fTitleA=('' '{WALL-CLOCK}: FOLDED' '' '{WALL-CLOCK}: FULL')  ;;
+            c)  fTitleA=('' '{CPU-TIME}: FOLDED' '' '{CPU-TIME}: FULL')  ;;
+            fF) fTitleA=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME' '' '{FULL}: WALL-CLOCK' '' '{FULL}: CPU-TIME'); quadStackFlag=true  ;;
+            wc) fTitleA=('' '{WALL-CLOCK}: FOLDED' '' '{WALL-CLOCK}: FULL' '' '{CPU-TIME}: FOLDED' '' '{CPU-TIME}: FULL'); quadStackFlag=true  ;;
+        esac
+        shift 1
+    elif (( $# == 2 )); then
+        runType=f
+        fTitleA=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME') 
+    else
+         printf '\nERROR: INCORRECT NUMBER OF INPUTS. \nABORTING!!!\n\n' >&2
+         return 2
+    fi
 
-        mapfile -t -d '' f2 < <(sed -zE s/'^.*\n<g id="frames">\n//; s/<\/g>\n<\/svg>\n?$//; s/(<\/g>)\n/\1\x00/g; s/ y="([0-9.]+)"/ y="'$'\034''\1'$'\034''"/g' <"${svgCpu}")
+    { [[ ${1} ]] && [[ ${2} ]] && [[ -e "${1}" ]] && [[ -e "${2}" ]]; } || {
+         printf '\nERROR: at least one SVG was not found or could not be accesses. \nEnsure the paths are correct and that you have requisite file permissions to read the SVG file.\nABORTING!!!\n\n' >&2
+         return 1
+    }
 
-        yMax=0
-        yMin=$((1<<31))
-        for kk in "${!f2[@]}"; do
-            F=()
-            for (( kk0=0; kk0<5; kk0++)); do
-                read -r -d $'\034' y 
-                if [[ "${kk0}" = '1' ]] || [[ ${kk0} == '3' ]]; then
-                    (( yNew = ${y%.*} + yShift ))
-                    F[$kk0]="${yNew}"
-                    [[ "${y##*.}" == "${y}" ]] || F[$kk0]="${F[$kk0]}.${y##*.}"
-                    (( yNew > yMax )) && yMax="${yNew}"
-                    (( yNew < yMin )) && yMin="${yNew}"
-                else
-                    F[$kk0]="$y"
-                fi
-            done <<<"${f2[$kk]}"
-            printf -v Y '%s' "${F[@]}"
-            f1+="${Y}"$'\n'
-            printf '\rFINISHED %s OF %s FRAMES' "$kk" "${#f2[@]}"
-        done
+    svg0="${1}"
+    svg1="${2}"
 
-        f1+='</g>'$'\n''</svg>'
+    f1="$(grep -vE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg0}")"
+    f1="${f1%\<\/g\>$'\n'\<\/svg\>}"
 
-        imgHeightWall="$(grep 'height' <"${svgWall}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
-        imgHeightCpu="$(grep 'height' <"${svgCpu}" | grep -E '^<svg' | sed -E s/'^.* height="([0-9\.]+)".*$'/'\1'/)"
-        titleY="$(grep -E '^<text id="title"' <"${svgCpu}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)"
+    mapfile -t y1 < <(grep -F '<title>all' -r "${svg0}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')
+    if [[ ${#y1[@]} == 1 ]]; then
+        mapfile -t y2 < <(grep -F '<title>all' -r "${svg1}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')
+        (( yShift = y1 - y2 ))
+    else
+        read -r e0 e1 < <(echo $(grep -oE ' y="[0-9.]+"' <"${svg0}" | grep -oe '[0-9.]*' | sed -E 's/\.[0-9]+//' | sort -nu | tail -n 2))
+        (( yShift = ( 2 * e1 ) - e0 + 32 ))
+    fi
 
-        (( imgHeight = yMax + yMin + titleY/2 ))
-        (( titleYnew = imgHeight - yMin + titleY ))
+    mapfile -t -d '' f2 < <(sed -zE s/'^.*\n<g id="frames">\n//; s/<\/g>\n<\/svg>\n?$//; s/(<\/g>)\n/\1\x00/g; s/ y="([0-9.]+)"/ y="'$'\034''\1'$'\034''"/g' <"${svg1}")
 
-        f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<text id="title" .*y=")([0-9.]+)(" .*)\(WALL-CLOCK TIMES\)(.*)$/\1\2\3(UPPER: WALL-CLOCK TIME)\4\n\1'"${titleYnew}"'\3(LOWER: CPU TIME)\4/' <<<"$f1")"
-
-        printf '%s\n' "$f1" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.${fullSVGStr}"
-
+    yMax=0
+    yMin=$((1<<31))
+    for kk in "${!f2[@]}"; do
+        F=()
+        for (( kk0=0; kk0<5; kk0++)); do
+            read -r -d $'\034' y 
+            if [[ "${kk0}" = '1' ]] || [[ ${kk0} == '3' ]]; then
+                (( yNew = ${y%.*} + yShift ))
+                F[$kk0]="${yNew}"
+                [[ "${y##*.}" == "${y}" ]] || F[$kk0]="${F[$kk0]}.${y##*.}"
+                (( yNew > yMax )) && yMax="${yNew}"
+                (( yNew < yMin )) && yMin="${yNew}"
+            else
+                F[$kk0]="$y"
+            fi
+        done <<<"${f2[$kk]}"
+        printf -v Y '%s' "${F[@]}"
+        f1+="${Y}"$'\n'
+        (( kk1 = kk + 1 ))
+        printf '\rPROGRESS: FINISHED %s OF %s FRAMES (%s of 6) %16.d' "${kk1}" "${#f2[@]}" "${svgCombineInd}" '' >&2
     done
+
+    IFS=' ' read -r yMin0 yMax0 < <(grep -oE '^.* y="[0-9\.]+"' <"${svg0}" | grep -vE '^<((rect)|(text id))' | grep -oE ' y="[0-9\.]+"' | sed -E 's/^ y="//; s/(\.5)?"$//' | sort -n | sed -zE 's/^([0-9]+)\n.*\n([0-9]+)\n?$/\1 \2/')
+    IFS=' ' read -r yMin1 yMax1 < <(grep -oE '^.* y="[0-9\.]+"' <"${svg1}" | grep -vE '^<((rect)|(text id))' | grep -oE ' y="[0-9\.]+"' | sed -E 's/^ y="//; s/(\.5)?"$//' | sort -n | sed -zE 's/^([0-9]+)\n.*\n([0-9]+)\n?$/\1 \2/')
+    mapfile -t titleY < <(grep -E '^<text id="title"' <"${svg0}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
+    mapfile -t subtitleY < <(grep -E '^<text id="subtitle"' <"${svg0}" | sed -E s/'^.*y="([0-9.]+)" .*$'/'\1'/)
+
+    grep -qE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg0}" && echo "$(grep -vE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg0}")" >"${svg0}"
+    grep -qE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg1}" && echo "$(grep -vE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg1}")" >"${svg1}"
+  
+    if (( ${#titleY[@]} == 0 )) || [[ -z "${titleY[0]}" ]]; then
+        titleY[0]=24
+    fi
+
+    if (( ${#subtitleY[@]} == 0 )) || [[ -z "${subtitleY[0]}" ]]; then
+        (( subtitleY[0] = titleY[0] + 24 ))
+    fi
+
+    (( titlePad = subtitleY[0] - titleY[0] ))
+    (( subtitlePad = yMin0 - subtitleY[0] ))
+
+    (( imgHeight = yMax + subtitlePad + 2 * titlePad ))
+
+    (( fTitleA[0] = yMin0 - subtitlePad ))
+
+    if ${quadStackFlag}; then
+        (( fTitleA[2] = yMax0 + subtitlePad + titlePad ))
+        (( fTitleA[4] = yMin1 - subtitlePad + yShift ))
+        (( fTitleA[6] = yMax1 + subtitlePad + titlePad + yShift ))
+    else
+        (( fTitleA[2] = imgHeight - titlePad ))    
+        fTitleA=("${fTitleA[0]}" "${fTitleA[1]}" "${fTitleA[2]}" "${fTitleA[3]}")
+    fi
+
+    fTitleStr0="$(grep -E '^<text id="title" ' <"${svg0}" | head -n 1 | sed -E 's/^(<text id=")(title" .* y=")[0-9\.]+(" >).*$/\1sub\2%s\3\%s\<\/text\>\\n/')"
+    printf -v fTitleStr "${fTitleStr0}" "${fTitleA[@]}"
+    fTitleStr="${fTitleStr%$'\n'}"
+
+    fTitleKK="$(grep -n '' <<<"${f1}" | grep -E '^[0-9:]+<text id="title" ' | grep -oE '^[0-9]+')"
+
+    f1="$(grep -vE '^<text id="subtitle"' <<<"${f1}")"
+
+    f1="$( { head -n "${fTitleKK}" <<<"${f1}"; printf '\n%s\n' "${fTitleStr}"; tail -n +$((fTitleKK+1)) <<<"${f1}"; } | grep -E '.+' )"
+
+    f1="$(sed -E 's/(^<svg.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/(^<rect.* height=")([0-9\.]+)(".*)$/\1'"${imgHeight}"'\3/; s/^(<svg.*viewBox="[0-9]+ [0-9]+ [0-9]+) [0-9]+/\1 '"${imgHeight}"'/' <<<"${f1}")"
+
+    f1+='</g>'$'\n''</svg>'
+    f1="$(sed -E 's/[[:space:]]+$//' <<< "${f1}" | grep -vE '^<text id="subtitle"[^>]*>[0-9 ]*</text>$')"
+    printf '%s\n' "${f1}"
+
 }
 
 # # # # # # # # # # # # # # # # POST PROCESSING BEGINS HERE # # # # # # # # # # # # # # # #
@@ -1898,7 +1986,7 @@ while true; do
     if "${debugFlag}"; then
         timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
     else
-        _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
+        _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     fi
     if (( $? == 0 )); then
         printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
@@ -2126,13 +2214,15 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # reverse flamegraph input so it starts at the parent and ends at the depest child
     printf '\nREORDERING FLAMEGRAPH INPUTS\n' >&2
-    echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^([0-9]+)\:/\1 /' | sort -nr -k1,1 | sed -E 's/^[0-9]+ //')" >"${timep_TMPDIR}/.log/out.flamegraph.full"
-
+    #echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^([0-9]+)\:/\1 /' | sort -nr -k1,1 | sed -E 's/^[0-9]+ //')" >"${timep_TMPDIR}/.log/out.flamegraph.full"
+    #mapfile -t flameGraphLogA < <(sort -V "${timep_TMPDIR}"/.log/out.flamegraph.full.*)
+    #cat "${flameGraphLogA[@]}" >"${timep_TMPDIR}/.log/out.flamegraph.full"
+    cat "${timep_TMPDIR}"/.log/out.flamegraph.full.* >"${timep_TMPDIR}/.log/out.flamegraph.full"
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
-    # fold flamegrapoh stack traces
+    # fold flamegraph stack traces
     printf '\nFOLDING FLAMEGRAPH INPUTS\n' >&2
-    sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sort -u | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\2/' | sed -zE 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\3/' | sed -zE 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "${tw}" "${tc}"; done >"${timep_TMPDIR}/.log/out.flamegraph"
+    sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | grep -n '' | sort -u -t: -k2 | sort -n -t: -k1,1 | sed -E s/'^[0-9]*://' | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\2/' | sed -zE 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\3/' | sed -zE 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "${tw}" "${tc}"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
 
@@ -2332,6 +2422,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ${timep_flameGraphFlag} && {
         printf '\nGENERATING FLAMEGRAPHS\n' >&2
 
+        # FUTURE TO-DO: investigate the possiblity of making each frame's height non-uniform and instead based on another (3rd) orthogonal data source
+
         if type -p "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null; then
             timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
         else
@@ -2348,14 +2440,30 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             esac
 
             mkdir -p "${timep_TMPDIR}/profiles/flamegraphs"
+            printf '\nGENERATING FLAMEGRAPHS\n' >&2
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"            
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10  --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"            
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timepr <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --countname "us" --fontsize 10  --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg"
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (WALL-CLOCK TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg"
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE} (CPU TIMES) (FULL)" --width 4096 --height 24 --flamechart --countname "us" --fontsize 10 --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10 --color timep <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --countname "us" --fontsize 10 --color timep --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg"
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --countname "us" --fontsize 10 --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg"
 
-            _timep_COMBINE_FLAMEGRAPH
+            printf '\nCOMBINING FLAMEGRAPHS INTO VERTICALLY STACKED SVG IMAGES\n' >&2
+
+            svgCombineInd=0
+
+            _timep_COMBINE_FLAMEGRAPH --type="f" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg"
+            _timep_COMBINE_FLAMEGRAPH --type="F" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg"
+
+            _timep_COMBINE_FLAMEGRAPH --type="w" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"
+            _timep_COMBINE_FLAMEGRAPH --type="c" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg"
+
+            _timep_COMBINE_FLAMEGRAPH --type="fF" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
+            _timep_COMBINE_FLAMEGRAPH --type="wc"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.R.svg"
+
+            printf '...DONE!\n' >&2
         }
     }
 
@@ -2393,7 +2501,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
-    type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles
+    printf '\n\nTHE PROFILE HAS FINISHED PROCESSING!\nAll profiles can be found at "%s"' "${timep_TMPDIR}/profiles" >&2
+    type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles && printf ' or accessed via the symlink "./timep.profiles"' >&2
+    ${timep_flameGraphFlag} && [[ "${timep_flameGraphPath}" ]] && printf '\nAll flamegraphs can be found in the "flamegraphs" sub-directory ("%s")' "${timep_TMPDIR}/profiles/flamegraphs"  >&2
+    printf '\n\n'  >&2
 
     ) {timep_FD0}<&0 {timep_FD1}>&1 {timep_FD2}>&2 {fd_sleep}<><(:)
 }
@@ -2471,7 +2582,7 @@ _timep_base64_to_file() {
             chmod +x "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
         }
     else
-        timep_git_branch='timep_testing'
+        timep_git_branch='main'
         type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl -O "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null
         type -p timep_flamegraph.pl &>/dev/null || {
             type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/timep_flamegraph.pl >"/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" 2>/dev/null
