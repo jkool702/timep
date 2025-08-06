@@ -420,6 +420,8 @@ sub random_namehash {
         return rand(1)
 }
 
+# FUTURE TO-DO: investigate the possiblity of making each frame's height non-uniform and instead based on anothern (3rd) orthogonal data source
+
 my $sum_wall;
 my $sum_cpu;
 my $max_wall;
