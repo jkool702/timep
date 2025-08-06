@@ -1791,7 +1791,7 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     #trap 'echo "ERROR AT $LINENO: $BASH_COMMAND" >&2' ERR
 
-    local svgWall svgCpu f1 e0  y y1 y2 yMax yMin yNew Y kk kk0 imgHeight titleY a runType fTitleStr0 fTitleStr fTitleKK quadStackFlag
+    local svgWall svgCpu f1 e0 y y1 y2 yMax yMin yMax0 yMin0 yMax1 yMin1 yNew Y kk kk0 kk1 imgHeight titleY a runType fTitleStr0 fTitleStr fTitleKK quadStackFlag
     local -a F f2 fTitleA
 
     quadStackFlag=false
@@ -1836,7 +1836,7 @@ _timep_COMBINE_FLAMEGRAPH() {
         mapfile -t y2 < <(grep -F '<title>all' -r "${svgCpu}" | sed -E 's/^.* y="([0-9.]+)".*$/\1/')
         (( yShift = y1 - y2 ))
     else
-        read -r e0 e1 < <(echo $(grep -oE 'y="[0-9.]+"' <"${svgWall}" | grep -oe '[0-9.]*' | sed -E 's/\.[0-9]+//' | sort -nu | tail -n 2))
+        read -r e0 e1 < <(echo $(grep -oE ' y="[0-9.]+"' <"${svgWall}" | grep -oe '[0-9.]*' | sed -E 's/\.[0-9]+//' | sort -nu | tail -n 2))
         (( yShift = ( 2 * e1 ) - e0 + 32 ))
     fi
 
@@ -1873,14 +1873,14 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     (( imgHeight = yMax + subtitlePad + titlePad ))
 
-
     (( fTitleA[0] = yMin0 - subtitlePad ))
-    (( fTitleA[2] = yMax0 + subtitlePad ))
-
 
     if ${quadStackFlag}; then
-        (( fTitleA[4] =  fTitleA[2] + subtitlePad + titlePad))
-        (( fTitleA[6] =  fTitleA[4] + ( 2 * subtitlePad ) + yMax1 - yMin1  ))
+        (( fTitleA[2] = yMax0 + subtitlePad + titlePad ))
+        (( fTitleA[4] = yMin1 - subtitlePad + yShift ))
+        (( fTitleA[6] = yMax1 + subtitlePad + titlePad + yShift ))
+    else
+        (( fTitleA[2] = yMax1 + subtitlePad + titlePad + yShift ))        
     fi
 
     fTitleStr0="$(grep -E '^<text id="title" ' <./timep.profiles/flamegraphs/flamegraph.wall.full.svg | sed -E 's/^(<text id=")(title" .* y=")[0-9\.]+(" >).*$/\1sub\2%s\3\%s\<\/text\>\\n/')"
@@ -2448,6 +2448,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             _timep_COMBINE_FLAMEGRAPH --type=fF "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
             _timep_COMBINE_FLAMEGRAPH --type=wc  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.R.svg"
+
+            printf '...DONE!\n' >&2
         }
     }
 
