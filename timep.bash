@@ -2401,6 +2401,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ${timep_flameGraphFlag} && {
         printf '\nGENERATING FLAMEGRAPHS\n' >&2
 
+        # FUTURE TO-DO: investigate the possiblity of making each frame's height non-uniform and instead based on another (3rd) orthogonal data source
+
         if type -p "/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl" &>/dev/null; then
             timep_flameGraphPath="/dev/shm/.timep/lib/${USER}-${EUID}/timep_flamegraph.pl"
         else
