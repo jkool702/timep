@@ -1238,7 +1238,7 @@ _timep_PROCESS_LOG() {
     cTimeTotal=0
 
     # get current log nesting depth
-    logDepth="${1##*\/.log\/log.}"
+    logDepth="${logCur##*\/.log\/log.}"
     logDepth="${logDepth//[^.]/}"
     logDepth="${#logDepth}"
 
@@ -1452,8 +1452,6 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
-    read -r timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX <"${timep_TMPDIR}/.log/.log_nesting_cur_max"
-
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
@@ -1462,7 +1460,7 @@ printf '%s;' "${fgA[@]}")"
             continue
         }
         #  write out flamegraph stack trace line for standard commands
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${timep_LOG_NESTING_CUR}.${1}"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
@@ -1483,9 +1481,15 @@ printf '%s;' "${fgA[@]}")"
 
         # combine times for lines with same lineno + same command
 
+
+        cmd="${cmdA[$kk]}"
+        
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]%.*}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}.${pidA[$kk]@Q}"
 
+        # dont allow merging of << ... >> indicators. subtrees are merged later
+        [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]] && until [[ -z ${linenoUniqMapAA["${keyCur}"]} ]]; do keyCur+='_'; done
+ 
         if [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
             linenoUniqMapA[$kk]="${linenoUniqMapAA["${keyCur}"]}"
         else
@@ -1530,7 +1534,7 @@ printf '%s;' "${fgA[@]}")"
 
     done
 
-    (( spacerN = 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${timep_LOG_NESTING_CUR:-0} ) )) || spacerN=1
+    (( spacerN = 1 + 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${logDepth:-0} ) )) || spacerN=1
 
     # write out new merged-upward log
     inPipeFlag=false
@@ -1556,22 +1560,25 @@ printf '%s;' "${fgA[@]}")"
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
         fi
-        (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
+        (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
 
         # add merged up log to current << ... >> log line, including for "in the middle of a pipeline" commands
         [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}.out" ]] && {
             mapfile -t logMergeA < <(grep -vE '^[[:space:]]*$' <"${mergeA[$kk]}.out")
             if (( ${#logMergeA[@]} == 0 )); then
                 continue
-            elif (( ${#logMergeA[@]} <= 2 )); then
-                printf '\n|-- %s' "${logMergeA[@]}"
+            elif (( ${#logMergeA[@]} == 1 )); then
+                printf '\n%s\t└─ %s' "${logMergeA[0]}"
+            elif (( ${#logMergeA[@]} == 2 )); then
+                printf '\n├─ %s' "${logMergeA[0]}"
+                printf '\n└─ %s' "${logMergeA[-1]}"
             elif (( ${#logMergeA[@]} > 2 )); then
-                printf '\n|-- %s' "${logMergeA[0]}"
-                printf '\n|   %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
-                printf '\n|-- %s' "${logMergeA[-1]}"
+                printf '\n├─ %s' "${logMergeA[0]}"
+                printf '\n│  %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
+                printf '\n└─ %s' "${logMergeA[-1]}"
             fi
         }
-        (( timep_LOG_NESTING_CUR == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
+        (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out"
 
@@ -1595,23 +1602,25 @@ printf '%s;' "${fgA[@]}")"
         # check if this is the start of a pipeline
         [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
 
-        # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
+        # (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
         [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
-            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}((\|-- )|(\|   ))*\.')
-                if (( ${#logMergeA[@]} > 0 )); then
-                    printf '\n%s\t|-- %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
+            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}[├│└└] *\.')
+                if (( ${#logMergeA[@]} == 1 )); then
+                    printf '\n%s\t└─ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
+                elif (( ${#logMergeA[@]} > 1 )); then
+                    printf '\n%s\t├─ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
                     for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
-                        printf '\n%s\t|   %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
+                        printf '\n%s\t│  %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
                     done
-                    (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t|-- %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
+                    (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t└─ %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
                 fi)")
         done
 
         printf '%s' "${logMergeAll[@]}"
 
-        (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n|'
+        (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out.combined"
 
@@ -2039,7 +2048,6 @@ done
 
         # get lowest log index for this nesting lvl
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
-        printf '%s %s\n' "${timep_LOG_NESTING_CUR}" "${timep_LOG_NESTING_MAX}" >"${timep_TMPDIR}/.log/.log_nesting_cur_max"
 
         (( kkDiff = kk - kkMin + 1 ))
 
@@ -2236,9 +2244,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     done
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
-    sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
+    sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        echo "$(sed -E 's/^(\|   [0-9])/|\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\|   ([^\n]+)\n\|(\n\n+TOTAL RUN TIME)/\n\|-- \1\2/')" >"${timep_LOG_NESTING[0]}.out.combined"
+        echo "$(sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/')" >"${timep_LOG_NESTING[0]}.out.combined"
     fi
 
     # get total runtime
@@ -2246,11 +2254,16 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
+    declare -p >/mnt/ramdisk/vars
+
     # combine lines/times/percentages for main (combined) profile
     printf '\nMERGING REPEATED COMMANDS IN COMBINED PROFILE\n' >&2
-    mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n\|\n?$/\n/; s/\n\|?\n/\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
-    A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
+    mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n│\n?$/\n/; s/\n(│?)[ \t]*\n/\1\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
+    A_end="$(sed -zE 's/^.*(\n│?[ \t]*\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
+
+    # for functions the top level is always just the function. So, allow combining at the 1st lvl
+    [[ ${#A[@]} == 1 ]] && mapfile -t -d '' A < <(printf '%s\0' "${A[@]}" | sed -zE 's/\n([-0-9]+ [0-9]+ [0-9]+ [0-9]+ [0-9]+\t│  [0-9])/\n\x00\1/g')
 
     # allow top-level subshell/bg fork/function subtrees to be merged by grouping them together
     A=("${A[@]//\$"'"\\n"'"/$'\034'}")
@@ -2269,9 +2282,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     spacerN=0
     while read -r nn; do
 
-        if [[ "${nn}" == *\|*\:* ]]; then
-            nnn="\|${nn#*\|}"
-            nnn="${nnn%%\:*}"
+        if [[ "${nn}" == *│*\:* ]]; then
+            nnn="│${nn#*│}"
+            nnn="${nnn%%\:*}:"
         else
             nnn=''
         fi
@@ -2295,7 +2308,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             for jj in "${!A0[@]}"; do
                 t="${A0[$jj]%%$'\t'*}"
                 l="${A0[$jj]#*$'\t'}"
-                l0="${l/'|-- '/'|   '}"
+                l0="${l/'├─ '/'│  '}"
+                l0="${l/'└─ '/'│  '}"
                 if [[ -z ${AA[${l@Q}]} ]]; then
                     if [[ ${AA[${l0@Q}]} ]]; then
                         AA[${l@Q}]=${AA[${l0@Q}]}
@@ -2343,7 +2357,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 Lstart="${L[$jj]%%\:*}"
                 Lstart0="${Lstart%%[0-9]*}"
                 (( spacerCur = spacerN - ${#Lstart} ))
-                [[ ${timep_runType} == 'f' ]] && [[ ${Lstart0} ]] && (( ${#Lstart0} < 5  )) && printf '|\n'
+                #[[ ${timep_runType} == 'f' ]] && [[ ${Lstart0} ]] && (( ${#Lstart0} < 5  )) && printf '|\n'
 
                 Lend="${L[$jj]#*\:}"
                 Lend="${Lend##*([[:space:]])}"
@@ -2352,7 +2366,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 [[ ${Lstart} ]] && printf '%s:%'"${spacerCur}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx)\t%s\n' "${Lstart}" '' "${wTime}" "${wTimeP}" "${cTime}" "${cTimeP}" "${count}" "${Lend}"
 
             done
-            printf '\n'
+                if [[ "${timep_runType}" == 'f' ]] && (( kk < ${#A[@]} - 1 )); then
+                    printf '│\n'
+                else
+                    printf '\n'
+                fi
         done
 
         printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES' "${#A[@]}" "${#A[@]}" >&2
@@ -2369,6 +2387,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         logCurTmp="$( {
             printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
             printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
+
             sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
 
                 IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
@@ -2392,7 +2411,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 a00="${a0%%[0-9\.]*}";
 
                 if [[ "${timep_runType}" == 'f' ]]; then
-                    a000="${a00#\|[ \-][ \-] }"
+                    a000="${a00#*[├│└] }"
                 else
                     a000="${a00}"
                 fi
@@ -2409,7 +2428,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
             done
         } | grep -n '' | sed -E s/':'/' '/ | sort -k2)"
-        logCurTmp="$({ grep -vE '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*\|?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(\|?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g')"
+        logCurTmp="$({ grep -vE '^[0-9]+[[:space:]]*│?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*│?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(│?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g')"
 
         # remove some (all?) of the spurious '(&)' marks caused by process substitutions and remove double logged command in full profiles
         if [[ "${logPathCur}" == "${timep_TMPDIR}/profiles/out.profile.full" ]]; then
@@ -2417,7 +2436,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         else
             while read -r nn; do
                 logCurTmp="$(sed -E 's/^('"${nn}"'.*) \(\&\)$/\1/' <<<"${logCurTmp}")"
-            done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//;s/^.* //;s/\..*$//' | sort -u)
+            done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//; s/^.* //; s/\..*$//' | sort -u)
             # primary sort by lineno remove spaces between top-level commands of thge same line
             mapfile -t -d '' logCurTmpA < <(sed -zE 's/\n\n([0-9])/\x00\1/g;s/\n\nTOTAL/\x00TOTAL/' <<<"${logCurTmp}" | sort -z -n)
             logCurTmp="$(printf '%s\n' "${logCurTmpA[0]}" "${logCurTmpA[2]}"
@@ -2430,7 +2449,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             printf '\n%s\n' "${logCurTmpA[1]}")"
         fi
 
-        sed -E 's/ \\\(\\\^\\\)$//' <<<"${logCurTmp}" | sed -zE 's/\n\n\n+/\n\n\n/' >"${logPathCur}"
+        logCurTmp="$(sed -E 's/ \\\(\\\^\\\)$//; s/(\t\([0-9]+x\))[ \t]+/\1\t/' <<<"${logCurTmp}" | sed -zE 's/\n\n\n+/\n\n\n/')"
+
+        [[ ${timep_runType} == 'f' ]] && logCurTmp="$(printf -v spacerS 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \t       \t' '' 
+            spacerS="${spacerS//[^$'\t']/ }"
+            head -n 5 <<<"${logCurTmp}"
+            tail -n +6 <<<"${logCurTmp}" | sed -E ' s/(\t\([0-9]+x\)\t)/\1│  /; s/^│[ \t]*$/│'"$(printf "${spacerS}")"'│/' | sed -zE 's/│  ([^│]+)$/└─ \1/')"
+
+        echo "${logCurTmp}" >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
