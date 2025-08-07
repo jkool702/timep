@@ -133,6 +133,9 @@ timep() {
             -F|-[Ff]lame|--[Ff]lame|--[Ff]lame[Gg]raph) timep_flameGraphFlag=true  ;;
             -o|--output) shift 1; IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true ;;
             -o=*|--output=*) IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true  ;;
+			--setup|--extract-scripts)  _timep_setup; [[ "${1}" == '--extract-scripts' ]] && printf '\nThe extracted "timep.so" and "timep_flamegraph.pl" files have been extracted to "/dev/shm/.timep/lib/%s-%s"\n' "${USER}" "${EUID}"; return 0  ;;
+			--setup=*|--extract-scripts=*)  _timep_setup --download="${1#*=}"; [[ "${1}" == '--extract-scripts' ]] && printf '\nThe extracted "timep.so" and "timep_flamegraph.pl" files have been extracted to "/dev/shm/.timep/lib/%s-%s"\n' "${USER}" "${EUID}"; return 0  ;;
+   
             --)  shift 1 && break  ;;
              *)  break  ;;
         esac
@@ -2621,7 +2624,7 @@ _timep_base64_to_file() {
     if ${downloadFlag}; then
 	if [[ ${timep_git_branch} ]]; then
 	    type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/LIB/LOADABLES/BIN/${ARCH}/timep.so -O "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" &>/dev/null
-       type -p timep.so &>/dev/null || {
+        type -p timep.so &>/dev/null || {
                 type -p curl &>/dev/null && curl https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/LIB//LOADABLES/${ARCH}/timep.so >"/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" 2>/dev/null
             }
             type -p timep.so &>/dev/null && gotLoadableFlag=true
