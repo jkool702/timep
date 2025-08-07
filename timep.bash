@@ -2262,6 +2262,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     A_end="$(sed -zE 's/^.*(\n│?[ \t]*\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
 
+    # for functions the top level is always just the function. So, allow combining at the 1st lvl
+    [[ ${#A[@]} == 1 ]] && mapfile -t -d '' A < <(printf '%s\0' "${A[@]}" | sed -zE 's/\n([-0-9]+ [0-9]+ [0-9]+ [0-9]+ [0-9]+\t│  [0-9])/\n\x00\1/g')
+
     # allow top-level subshell/bg fork/function subtrees to be merged by grouping them together
     A=("${A[@]//\$"'"\\n"'"/$'\034'}")
     mapfile -t A0A < <(printf '%s\n\n' "${A[@]//$'\n'/\$"'"\\n"'"}" | sed -zE 's/\n\n([^\t]+\t-)/$'"'"'\\n'"'"'$'"'"'\\n'"'"'\1/g; s/\n\n/\n/g')
@@ -2273,7 +2276,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     done
     mapfile -t A_mapN < <(printf '%s\n' "${A1A[@]}" | sort -V -u)
    
-    mapfile -t -d '' A < <(for kk in "${!A_mapN[@]}"; do A_tmp="${A_map["${A_mapN[$kk]}"]}"; printf '%s\n\n\n' "${A_tmp//\$"'"\\n"'"/$'\n'}"; done | sed -zE 's/\n\n\n+/\x00/g; s/\n\n/\n/g; s/│\n/│\x00/g; s/\x00/\n\x00/g')
+    mapfile -t -d '' A < <(for kk in "${!A_mapN[@]}"; do A_tmp="${A_map["${A_mapN[$kk]}"]}"; printf '%s\n\n\n' "${A_tmp//\$"'"\\n"'"/$'\n'}"; done | sed -zE 's/\n\n\n+/\x00/g; s/\n\n/\n/g; s/\x00/\n\x00/g')
     A=("${A[@]//$'\034'/\$"'"\\n"'"}")
 
     spacerN=0
@@ -2354,7 +2357,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 Lstart="${L[$jj]%%\:*}"
                 Lstart0="${Lstart%%[0-9]*}"
                 (( spacerCur = spacerN - ${#Lstart} ))
-                [[ ${timep_runType} == 'f' ]] && [[ ${Lstart0} ]] && (( ${#Lstart0} < 5  )) && printf '|\n'
+                #[[ ${timep_runType} == 'f' ]] && [[ ${Lstart0} ]] && (( ${#Lstart0} < 5  )) && printf '|\n'
 
                 Lend="${L[$jj]#*\:}"
                 Lend="${Lend##*([[:space:]])}"
@@ -2363,7 +2366,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 [[ ${Lstart} ]] && printf '%s:%'"${spacerCur}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx)\t%s\n' "${Lstart}" '' "${wTime}" "${wTimeP}" "${cTime}" "${cTimeP}" "${count}" "${Lend}"
 
             done
-            printf '\n'
+                if [[ "${timep_runType}" == 'f' ]] && (( kk < ${#A[@]} - 1 )); then
+                    printf '│\n'
+                else
+                    printf '\n'
+                fi
         done
 
         printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES' "${#A[@]}" "${#A[@]}" >&2
@@ -2380,6 +2387,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         logCurTmp="$( {
             printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
             printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
+
             sed -E 's/^([^\(]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)([[:space:]]+)\(([0-9\.]+)s\|([0-9\. ]+)\%\)(.+)$/\1'$'\034''\2'$'\034''\3'$'\034''\4'$'\034''\5'$'\034''\6'$'\034''\7/' <"${logPathCur}" | while read -r lineOrig; do
 
                 IFS=$'\034' read -r a0 tw pw s tc pc a1 <<<"${lineOrig}"
@@ -2428,7 +2436,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         else
             while read -r nn; do
                 logCurTmp="$(sed -E 's/^('"${nn}"'.*) \(\&\)$/\1/' <<<"${logCurTmp}")"
-            done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//;s/^.* //;s/\..*$//' | sort -u)
+            done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//; s/^.* //; s/\..*$//' | sort -u)
             # primary sort by lineno remove spaces between top-level commands of thge same line
             mapfile -t -d '' logCurTmpA < <(sed -zE 's/\n\n([0-9])/\x00\1/g;s/\n\nTOTAL/\x00TOTAL/' <<<"${logCurTmp}" | sort -z -n)
             logCurTmp="$(printf '%s\n' "${logCurTmpA[0]}" "${logCurTmpA[2]}"
@@ -2441,7 +2449,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             printf '\n%s\n' "${logCurTmpA[1]}")"
         fi
 
-        sed -E 's/ \\\(\\\^\\\)$//' <<<"${logCurTmp}" | sed -zE 's/\n\n\n+/\n\n\n/' >"${logPathCur}"
+        logCurTmp="$(sed -E 's/ \\\(\\\^\\\)$//; s/(\t\([0-9]+x\))[ \t]+/\1\t/' <<<"${logCurTmp}" | sed -zE 's/\n\n\n+/\n\n\n/')"
+
+        [[ ${timep_runType} == 'f' ]] && logCurTmp="$(printf -v spacerS 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \t       \t' '' 
+            spacerS="${spacerS//[^$'\t']/ }"
+            head -n 5 <<<"${logCurTmp}"
+            tail -n +6 <<<"${logCurTmp}" | sed -E ' s/(\t\([0-9]+x\)\t)/\1│  /; s/^│[ \t]*$/│'"$(printf "${spacerS}")"'│/' | sed -zE 's/│  ([^│]+)$/└─ \1/')"
+
+        echo "${logCurTmp}" >"${logPathCur}"
     done
 
     # if '--flame' flag given create flamegraphs
