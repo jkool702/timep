@@ -89,10 +89,11 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp clktck svgCombineInd titlePad subtitlePad
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp clktck svgCombineInd titlePad subtitlePad A_mapN
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
-    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA flameGraphLogA
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA flameGraphLogA A0A A1A
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
+    local -A A_map
 
     getCPUtime &>/dev/null || _timep_SETUP
 
@@ -2251,6 +2252,23 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
 
+    declare -p >vars0
+
+    # allow top-level subshell/bg fork/function subtrees to be merged by grouping them together
+    A=("${A[@]//\$"'"\\n"'"/$'\034'}")
+    mapfile -t A0A < <(printf '%s\n\n' "${A[@]//$'\n'/\$"'"\\n"'"}" | sed -zE 's/\n\n([^\t]+\t-)/$'"'"'\\n'"'"'$'"'"'\\n'"'"'\1/g; s/\n\n/\n/g')
+    A1A=("${A0A[@]%%:*}")
+    A1A=("${A1A[@]#*$'\t'}")
+    declare -A A_map
+    for kk in "${!A0A[@]}"; do 
+        A_map["${A1A[$kk]}"]+="${A0A[$kk]%$'\n'}"$'\n'; 
+    done
+    mapfile -t A_mapN < <(printf '%s\n' "${A1A[@]}" | sort -V -u)
+   
+    mapfile -t -d '' A < <(for kk in "${!A_mapN[@]}"; do A_tmp="${A_map["${A_mapN[$kk]}"]}"; printf '%s\n\n\n' "${A_tmp//\$"'"\\n"'"/$'\n'}"; done | sed -zE 's/\n\n\n+/\x00/g; s/\n\n/\n/g; s/\x00/\n\x00/g')
+    A=("${A[@]//$'\034'/\$"'"\\n"'"}")
+
+declare -p >vars1
     spacerN=0
     while read -r nn; do
 
@@ -2263,6 +2281,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         (( spacerN = ${#nnn} > spacerN ? ${#nnn} : spacerN ))
     done <"${timep_LOG_NESTING[0]}.out.combined"
     (( spacerN < 20 )) && spacerN=20
+
+    declare -p >/mnt/ramdisk/vars
 
    {
         for kk in "${!A[@]}"; do
@@ -2440,7 +2460,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             esac
 
             mkdir -p "${timep_TMPDIR}/profiles/flamegraphs"
-            printf '\nGENERATING FLAMEGRAPHS\n' >&2
 
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"            
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timepr <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg"
