@@ -2252,8 +2252,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
 
-    declare -p >vars0
-
     # allow top-level subshell/bg fork/function subtrees to be merged by grouping them together
     A=("${A[@]//\$"'"\\n"'"/$'\034'}")
     mapfile -t A0A < <(printf '%s\n\n' "${A[@]//$'\n'/\$"'"\\n"'"}" | sed -zE 's/\n\n([^\t]+\t-)/$'"'"'\\n'"'"'$'"'"'\\n'"'"'\1/g; s/\n\n/\n/g')
@@ -2268,7 +2266,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     mapfile -t -d '' A < <(for kk in "${!A_mapN[@]}"; do A_tmp="${A_map["${A_mapN[$kk]}"]}"; printf '%s\n\n\n' "${A_tmp//\$"'"\\n"'"/$'\n'}"; done | sed -zE 's/\n\n\n+/\x00/g; s/\n\n/\n/g; s/\x00/\n\x00/g')
     A=("${A[@]//$'\034'/\$"'"\\n"'"}")
 
-declare -p >vars1
     spacerN=0
     while read -r nn; do
 
@@ -2281,8 +2278,6 @@ declare -p >vars1
         (( spacerN = ${#nnn} > spacerN ? ${#nnn} : spacerN ))
     done <"${timep_LOG_NESTING[0]}.out.combined"
     (( spacerN < 20 )) && spacerN=20
-
-    declare -p >/mnt/ramdisk/vars
 
    {
         for kk in "${!A[@]}"; do
