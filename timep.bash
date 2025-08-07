@@ -47,6 +47,9 @@ timep() {
     #                      <type> : p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
     #                               NOTE: all 4 profiles will always be available on disk after profiling is finished in timep's tmpdir
     #
+    #           --setup[=<branch>]: calls `_timep_setup [--download=<branch>]` and then returns. this will set up the timep.so loadable and the timep_flamegraph.pl scripts.
+    # --extract-scripts[=<branch>]: the same as --setup, but will print then paths of these to stdout on return.
+    #
     # RUNTIME CONDITIONS/REQUIREMENTS:
     #    timep adds a several variables (all which start with "timep_") + function(s) to the runtime env of whatever is being profiled. The code being profiled must NOT modify these.
     #        FUNCTIONS:  _timep_*    trap
