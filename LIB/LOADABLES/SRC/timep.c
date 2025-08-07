@@ -38,7 +38,7 @@
 
 // Helpers for builtins
 extern int add_builtin(struct builtin *bp, int keep);
-extern char **make_builtin_argv();
+//extern char **make_builtin_argv(WORD_LIST * list);
 
 // define function prototypes
 static int timep_builtin(WORD_LIST * list);
