@@ -1238,7 +1238,7 @@ _timep_PROCESS_LOG() {
     cTimeTotal=0
 
     # get current log nesting depth
-    logDepth="${1##*\/.log\/log.}"
+    logDepth="${logCur##*\/.log\/log.}"
     logDepth="${logDepth//[^.]/}"
     logDepth="${#logDepth}"
 
@@ -1452,8 +1452,6 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
-    read -r timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX <"${timep_TMPDIR}/.log/.log_nesting_cur_max"
-
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
@@ -1462,7 +1460,7 @@ printf '%s;' "${fgA[@]}")"
             continue
         }
         #  write out flamegraph stack trace line for standard commands
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${timep_LOG_NESTING_CUR}.${1}"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
@@ -1483,9 +1481,15 @@ printf '%s;' "${fgA[@]}")"
 
         # combine times for lines with same lineno + same command
 
+
+        cmd="${cmdA[$kk]}"
+        
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]%.*}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}.${pidA[$kk]@Q}"
 
+        # dont allow merging of << ... >> indicators. subtrees are merged later
+        [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]] && until [[ -z ${linenoUniqMapAA["${keyCur}"]} ]]; do keyCur+='_'; done
+ 
         if [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
             linenoUniqMapA[$kk]="${linenoUniqMapAA["${keyCur}"]}"
         else
@@ -1530,7 +1534,7 @@ printf '%s;' "${fgA[@]}")"
 
     done
 
-    (( spacerN = 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${timep_LOG_NESTING_CUR:-0} ) )) || spacerN=1
+    (( spacerN = 1 + 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${logDepth:-0} ) )) || spacerN=1
 
     # write out new merged-upward log
     inPipeFlag=false
@@ -1556,7 +1560,7 @@ printf '%s;' "${fgA[@]}")"
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
         fi
-        (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
+        (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
 
         # add merged up log to current << ... >> log line, including for "in the middle of a pipeline" commands
         [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}.out" ]] && {
@@ -1564,17 +1568,17 @@ printf '%s;' "${fgA[@]}")"
             if (( ${#logMergeA[@]} == 0 )); then
                 continue
             elif (( ${#logMergeA[@]} == 1 )); then
-                printf '\n%s\t└ %s' "${logMergeA[0]}"
+                printf '\n%s\t└─ %s' "${logMergeA[0]}"
             elif (( ${#logMergeA[@]} == 2 )); then
-                printf '\n├ %s' "${logMergeA[0]}"
-                printf '\n└ %s' "${logMergeA[-1]}"
+                printf '\n├─ %s' "${logMergeA[0]}"
+                printf '\n└─ %s' "${logMergeA[-1]}"
             elif (( ${#logMergeA[@]} > 2 )); then
-                printf '\n├ %s' "${logMergeA[0]}"
-                printf '\n│ %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
-                printf '\n└ %s' "${logMergeA[-1]}"
+                printf '\n├─ %s' "${logMergeA[0]}"
+                printf '\n│  %s' "${logMergeA[@]:1:$((${#logMergeA[@]}-2))}"
+                printf '\n└─ %s' "${logMergeA[-1]}"
             fi
         }
-        (( timep_LOG_NESTING_CUR == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
+        (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out"
 
@@ -1598,25 +1602,25 @@ printf '%s;' "${fgA[@]}")"
         # check if this is the start of a pipeline
         [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
 
-        # (( timep_LOG_NESTING_CUR == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n|'
+        # (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
         [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
             [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}[├│└└] *\.')
                 if (( ${#logMergeA[@]} == 1 )); then
-                    printf '\n%s\t└ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
+                    printf '\n%s\t└─ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
                 elif (( ${#logMergeA[@]} > 1 )); then
-                    printf '\n%s\t├ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
+                    printf '\n%s\t├─ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
                     for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
-                        printf '\n%s\t│ %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
+                        printf '\n%s\t│  %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
                     done
-                    (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t└ %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
+                    (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t└─ %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
                 fi)")
         done
 
         printf '%s' "${logMergeAll[@]}"
 
-        (( timep_LOG_NESTING_CUR <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
+        (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out.combined"
 
@@ -2044,7 +2048,6 @@ done
 
         # get lowest log index for this nesting lvl
         kkMin="${timep_LOG_NESTING_IND[${timep_LOG_NESTING_CUR}]}"
-        printf '%s %s\n' "${timep_LOG_NESTING_CUR}" "${timep_LOG_NESTING_MAX}" >"${timep_TMPDIR}/.log/.log_nesting_cur_max"
 
         (( kkDiff = kk - kkMin + 1 ))
 
@@ -2241,9 +2244,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     done
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
-    sed -zE 's/\n\│ ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
+    sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        echo "$(sed -E 's/^(│ [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│ ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└ \1\2/')" >"${timep_LOG_NESTING[0]}.out.combined"
+        echo "$(sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/')" >"${timep_LOG_NESTING[0]}.out.combined"
     fi
 
     # get total runtime
@@ -2251,10 +2254,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
+    declare -p >/mnt/ramdisk/vars
+
     # combine lines/times/percentages for main (combined) profile
     printf '\nMERGING REPEATED COMMANDS IN COMBINED PROFILE\n' >&2
-    mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n\│\n?$/\n/; s/\n\│?\n/\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
-    A_end="$(sed -zE 's/^.*(\n\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
+    mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n│\n?$/\n/; s/\n(│?)[ \t]*\n/\1\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
+    A_end="$(sed -zE 's/^.*(\n│?[ \t]*\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
 
     # allow top-level subshell/bg fork/function subtrees to be merged by grouping them together
@@ -2268,7 +2273,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     done
     mapfile -t A_mapN < <(printf '%s\n' "${A1A[@]}" | sort -V -u)
    
-    mapfile -t -d '' A < <(for kk in "${!A_mapN[@]}"; do A_tmp="${A_map["${A_mapN[$kk]}"]}"; printf '%s\n\n\n' "${A_tmp//\$"'"\\n"'"/$'\n'}"; done | sed -zE 's/\n\n\n+/\x00/g; s/\n\n/\n/g; s/\x00/\n\x00/g')
+    mapfile -t -d '' A < <(for kk in "${!A_mapN[@]}"; do A_tmp="${A_map["${A_mapN[$kk]}"]}"; printf '%s\n\n\n' "${A_tmp//\$"'"\\n"'"/$'\n'}"; done | sed -zE 's/\n\n\n+/\x00/g; s/\n\n/\n/g; s/│\n/│\x00/g; s/\x00/\n\x00/g')
     A=("${A[@]//$'\034'/\$"'"\\n"'"}")
 
     spacerN=0
@@ -2276,7 +2281,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         if [[ "${nn}" == *│*\:* ]]; then
             nnn="│${nn#*│}"
-            nnn="${nnn%%\:*}"
+            nnn="${nnn%%\:*}:"
         else
             nnn=''
         fi
@@ -2300,8 +2305,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             for jj in "${!A0[@]}"; do
                 t="${A0[$jj]%%$'\t'*}"
                 l="${A0[$jj]#*$'\t'}"
-                l0="${l/'├ '/'│ '}"
-                l0="${l/'└ '/'│ '}"
+                l0="${l/'├─ '/'│  '}"
+                l0="${l/'└─ '/'│  '}"
                 if [[ -z ${AA[${l@Q}]} ]]; then
                     if [[ ${AA[${l0@Q}]} ]]; then
                         AA[${l@Q}]=${AA[${l0@Q}]}
@@ -2408,7 +2413,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
                 if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${a1}" == $'\t(1x)' ]] || [[ "${a1}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
                             continue
-                elif [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 3 )); } || (( "${#a00}" <= 1 )); }; then
+                elif [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
                     printf '%s( %ss |%s%% )          %s( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${s}" "${tc}" "${pc}" "${a1%%x\)$'\t'*}" "${a000}" "${a1#*x\)$'\t'}"
                 else
                     printf '%s( %ss |%s%% |%s%% )   %s( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${s}" "${tc}" "${pc}" "${p1c}" "${a1%%x\)$'\t'*}" "${a000}" "${a1#*x\)$'\t'}"
