@@ -36,10 +36,10 @@ timep() {
     #
     #        -t | --time          : Run the code being profiled through `time` to get the standard wallclock / user / sys times for the code that was profiles (in addition to all the timep-generated profiles)
     #
-    #   --flame | --flamegraph    : automatically generate a flamegraph using Flamegraph.pl and save them in the "profiles" dir
+    # -F |--flame | --flamegraph  : automatically generate a flamegraph using Flamegraph.pl and save them in the "profiles" dir
     #                                   Will attempt to download Flamegraph.pl from "https://github.com/brendangregg/FlameGraph" if not available locally.
     #
-    #           --                : stop arg parsing (allows profiling something with the same name as a flag)
+    #             --              : stop arg parsing (allows profiling something with the same name as a flag)
     #
     # -o <type> | --output=<type> : tell timep which type of profile(s) to print to stdout.
     #                                   pass a comma-seperated list to output more than one profile type.
@@ -47,8 +47,8 @@ timep() {
     #                      <type> : p --> out.profile (DEFAULT)    pf --> out.profile.full    f --> out.flamegraph    ff -> out.flamegraph.full
     #                               NOTE: all 4 profiles will always be available on disk after profiling is finished in timep's tmpdir
     #
-    #           --setup[=<branch>]: calls `_timep_setup [--download=<branch>]` and then returns. this will set up the timep.so loadable and the timep_flamegraph.pl scripts.
-    # --extract-scripts[=<branch>]: the same as --setup, but will print then paths of these to stdout on return.
+    #  --setup[="<flag>[,<flag>]"]    : calls `_timep_setup [--download=<branch>]` and then returns. this will set up the timep.so loadable and the timep_flamegraph.pl script. See _timep_setup header (bottom of this script) for valid <flags
+    # --extract[="<flag>[,<flag>]"]   : the same as --setup, but will print the paths of the timep.so loadable and the timep_flamegraph.pl scriptto stdout on return. default path in a directory at /dev/shm/.timep/lib/$USER-$EUID/
     #
     # RUNTIME CONDITIONS/REQUIREMENTS:
     #    timep adds a several variables (all which start with "timep_") + function(s) to the runtime env of whatever is being profiled. The code being profiled must NOT modify these.
@@ -94,7 +94,7 @@ timep() {
 
     local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID timep_flameGraphFlag timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 a000 spacerCur p1w p1c logPathCur A_end jj0 tA a0 l t l0 jj1 n wTime cTime wTimeP cTimeP count Lstart Lstart0 spacerCur Lend logCurTmp clktck svgCombineInd titlePad subtitlePad A_mapN
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE
-    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA flameGraphLogA A0A A1A
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 T L logCurTmpA flameGraphLogA A0A A1A timep_setupFuncFlags
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
     local -A A_map
 
@@ -134,7 +134,7 @@ timep() {
             -o|--output) shift 1; IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true ;;
             -o=*|--output=*) IFS0="${IFS@Q}"; IFS0="${IFS0/["'"\$]/IFS\=&}"; IFS=',' read -r -a timep_outTypeA <<<"${1#*=}"; eval "${IFS0:-unset IFS}"; unset IFS0; (( ${#timep_outTypeA[@]} == 0 )) && timep_noOutFlag=true  ;;
 			--setup|--extract-scripts)  _timep_setup; [[ "${1}" == '--extract-scripts' ]] && printf '\nThe extracted "timep.so" and "timep_flamegraph.pl" files have been extracted to "/dev/shm/.timep/lib/%s-%s"\n' "${USER}" "${EUID}"; return 0  ;;
-			--setup=*|--extract-scripts=*)  _timep_setup --download="${1#*=}"; [[ "${1}" == '--extract-scripts' ]] && printf '\nThe extracted "timep.so" and "timep_flamegraph.pl" files have been extracted to "/dev/shm/.timep/lib/%s-%s"\n' "${USER}" "${EUID}"; return 0  ;;
+			--setup=*|--extract-scripts=*)  mapfile -t -d ',' timep_setupFuncFlags <<<"${1#*=}"; _timep_setup "${timep_setupFuncFlags[@]}"; [[ "${1}" == '--extract-scripts' ]] && printf '\nThe extracted "timep.so" and "timep_flamegraph.pl" files have been extracted to "/dev/shm/.timep/lib/%s-%s"\n' "${USER}" "${EUID}"; return 0  ;;
    
             --)  shift 1 && break  ;;
              *)  break  ;;
