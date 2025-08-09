@@ -2560,7 +2560,7 @@ _timep_SETUP() {
     [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
 
 _timep_base64_to_file() {
-    local b kk fd0 fd1 out0 out nnSum nnSum0 nnLast noVerifyFlag
+    local b kk fd0 fd1 out0 out nnSum nnSum0 nnLast nnLast0 noVerifyFlag
     local compressV compressI
 
     [[ -t 0 ]] && {
@@ -2584,7 +2584,7 @@ _timep_base64_to_file() {
         noVerifyFlag=true
     else
         {
-            read -r nnLast nnSum0
+            read -r nnLast0 nnSum0
             mapfile -t compressV 
         } <<<"${out0}"
 
@@ -2596,32 +2596,39 @@ _timep_base64_to_file() {
             done
         }
         nnSum=0
+        nnLast=0
         noVerifyFlag=false
     fi
 
     doneFlag=false
-    until ${doneFlag}; do
+    outF="$(until ${doneFlag}; do
         read -r -N 4 b0 || doneFlag=true
         (( nnSum = nnSum + 64#${b0} ))
+        (( nnLast = nnLast + 3 ))
+        (( nnDiff = nnLast0 - nnLast0 ))
         [[ $b0 ]] && printf -v b '%0.6X' "$(( 64#${b0} ))"
-        if ${doneFlag}; then
-            case "${nnLast}" in
-                2) printf '\\x%s' "${b:0:2}" "${b:2:2}" ;;
-                1) printf '\\x%s' "${b:0:2}" ;;
-                0) [[ ${b0} ]] && printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
-            esac
-        else
-            printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
-        fi
-    done <<<"${out}" >&"${fd1}"    
+        case "${nnDiff}" in
+            2) printf '\\x%s' "${b:0:2}" "${b:2:2}"; doneFlag=true ;;
+            1) printf '\\x%s' "${b:0:2}"; doneFlag=true  ;;
+            *) [[ ${b0} ]] && printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
+        esac
+    done <<<"${out}"
 
-    ${noVerifyFlag} || (( nnSum == nnSum0 )) || { printf '\n\nWARNING: EXTRACTED LOADABLE CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' >^&2; sleep 5; }
+    printf ' %s' "${nnSum}")"
+    nnSum="${outF##* }"
+    outF="${outF% *}"
+
+    ${noVerifyFlag} || (( nnSum == nnSum0 )) || { printf '\n\nWARNING: EXTRACTED LOADABLE CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' >^&2; }
+# { read -r -p 'DO YOU WANT TO CONTINUE? TO CONTINUE, TYPE "YES": ' -t 10 -N 3 <$"{timep_PTY_PATH}" && [[ "$REPLY" == 'YES' ]]; } || exit 1;
+    printf "${outF%\\x*\\x*\\x*\\x*\\x*}" >&${fd1}
 
     exec {fd0}>&-
     exec {fd1}>&-
+echo "nnLast = $nnLast0" >&2
 
     (( $# > 0 )) && chmod +x "${1}"
 }
+
     downloadFlag=false
     localFlag=false 
     forceFlag=false
@@ -2785,20 +2792,34 @@ _timep_file_to_base64() {
     out=''
     nnSum=0
 
-    until $doneFlag; do
-        read -r -N 3 nn || {
+    out="$(until $doneFlag; do
+        read -r -N 3 nn 
+           
+        [[ ${nn} ]] || {
             doneFlag=true
-            nnLast="${#nn}"
+            nnLast="${#nn}"  
+            
             until (( ${#nn} == 3 )); do 
                 nn="${nn}"'0'
             done
+        
+            (( nnSum = nnSum + 64#${nn} ))
+
+            break
         }
+  
         (( nnSum = nnSum + 64#${nn} ))
         (( k1 = ( 16#${nn} >> 6 ) ));
         (( k2 = ( 16#${nn} % 64 ) ));
-        printf -v outAdd '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
-        out+="${outAdd}"
+  
+        printf '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
+
     done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g')
+
+    printf $'\034''%s %s' "${nnLast}" "${nnSum}")"
+
+    IFS=' ' read -r nnLast nnSum <<<"${out##*$'\034'}"
+    out="${out%$'\034'*}"
 
     ${noCompressFlag} || {
         compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
@@ -2810,7 +2831,6 @@ _timep_file_to_base64() {
     }
     printf -v out0 '%s\n' "${nnLast} ${nnSum}" "${compressV[@]}"
     printf -v out '%s'$'\034''%s' "${out0}" "${out}"
-
 
     if ${quoteFlag}; then
         printf '%s' "${out@Q}"
