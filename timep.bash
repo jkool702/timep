@@ -2615,7 +2615,7 @@ _timep_base64_to_file() {
         fi
     done <<<"${out}" >&"${fd1}"    
 
-    ${noVerifyFlag} || (( nnSum == nnSum0 )) || { printf'\n\nWARNING: EXTRACTED LOADABLE CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' >^&2; sleep 5; }
+    ${noVerifyFlag} || (( nnSum == nnSum0 )) || { printf '\n\nWARNING: EXTRACTED LOADABLE CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' >^&2; sleep 5; }
 
     exec {fd0}>&-
     exec {fd1}>&-
@@ -2798,7 +2798,7 @@ _timep_file_to_base64() {
         (( k2 = ( 16#${nn} % 64 ) ));
         printf -v outAdd '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
         out+="${outAdd}"
-    done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g');)"
+    done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g')
 
     ${noCompressFlag} || {
         compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
