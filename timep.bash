@@ -2560,7 +2560,7 @@ _timep_SETUP() {
     [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
 
 _timep_base64_to_file() {
-    local b kk fd0 fd1 out0 out
+    local b kk fd0 fd1 out0 out nnSum nnSum0 nnLast noVerifyFlag
     local compressV compressI
 
     [[ -t 0 ]] && {
@@ -2581,36 +2581,41 @@ _timep_base64_to_file() {
 
     if [[ -z ${out} ]]; then
         out="${out0}"
+        noVerifyFlag=true
     else
         {
-            read -r nnLast
+            read -r nnLast nnSum0
             mapfile -t compressV 
         } <<<"${out0}"
-        compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
 
-        for (( kk=${#compressV[@]}-1; kk>=0; kk-- )); do
-            out="${out//"${compressI[$kk]}"/"${compressV[$kk]}"}"
-        done
+        (( ${#compressV[@]} > 0 )) && {
+            compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
+
+            for (( kk=${#compressV[@]}-1; kk>=0; kk-- )); do
+                out="${out//"${compressI[$kk]}"/"${compressV[$kk]}"}"
+            done
+        }
+        nnSum=0
+        noVerifyFlag=false
     fi
 
-    outO=''
-    doneFlag=fALSE
+    doneFlag=false
     until ${doneFlag}; do
         read -r -N 4 b0 || doneFlag=true
+        (( nnSum = nnSum + 64#${b0} ))
         printf -v b '%0.6X' "$(( 64#${b0} ))"
         if ${doneFlag}; then
             case "${nnLast}" in
-                2) printf -v outAdd '\\x%s' "${b:0:2}" "${b:2:2}" ;;
-                1) printf -v outAdd '\\x%s' "${b:0:2}" ;;
-                0) [[ ${b0} ]] && printf -v outAdd '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
+                2) printf -v '\\x%s' "${b:0:2}" "${b:2:2}" ;;
+                1) printf -v '\\x%s' "${b:0:2}" ;;
+                0) [[ ${b0} ]] && printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
             esac
         else
             printf -v outAdd '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
         fi
-    done <<<"${out}"
-    
-    printf '%s' "${outO}" >&"${fd1}"
-    
+    done <<<"${out}" >&"${fd1}"    
+
+    ${noVerifyFlag} || (( nnSum == nnSum0 )) || { printf'\n\nWARNING: EXTRACTED LOADABLE CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' >^&2; sleep 5; }
 
     exec {fd0}>&-
     exec {fd1}>&-
@@ -2748,7 +2753,7 @@ _timep_SETUP --force
 
 _timep_file_to_base64() {
 
-    local nn k1 k2 out out0 v1 v2 quoteFlag noCompressFlag doneFlag IFS nnLast outAdd
+    local nn k1 k2 out out0 v1 v2 quoteFlag noCompressFlag doneFlag IFS nnLast nnSum outAdd
     local -a charmap compressI compressV
 
     quoteFlag=false
@@ -2778,6 +2783,7 @@ _timep_file_to_base64() {
 
     doneFlag=false
     out=''
+    nnSum=0
 
     until $doneFlag; do
         read -r -N 3 nn || {
@@ -2787,6 +2793,7 @@ _timep_file_to_base64() {
                 nn="${nn}"'0'
             done
         }
+        (( nnSum = nnSum + 64#${nn} ))
         (( k1 = ( 16#${nn} >> 6 ) ));
         (( k2 = ( 16#${nn} % 64 ) ));
         printf -v outAdd '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
@@ -2800,10 +2807,10 @@ _timep_file_to_base64() {
         for kk in "${!compressV[@]}"; do
             out="${out//"${compressV[$kk]}"/"${compressI[$kk]}"}"
         done
-
-        printf -v out0 '%s\n' "${nnLast}" "${compressV[@]}"
-        printf -v out '%s'$'\034''%s' "${out0}" "${out}"
     }
+    printf -v out0 '%s\n' "${nnLast} ${nnSum}" "${compressV[@]}"
+    printf -v out '%s'$'\034''%s' "${out0}" "${out}"
+
 
     if ${quoteFlag}; then
         printf '%s' "${out@Q}"
