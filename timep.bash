@@ -2606,12 +2606,12 @@ _timep_base64_to_file() {
         printf -v b '%0.6X' "$(( 64#${b0} ))"
         if ${doneFlag}; then
             case "${nnLast}" in
-                2) printf -v '\\x%s' "${b:0:2}" "${b:2:2}" ;;
-                1) printf -v '\\x%s' "${b:0:2}" ;;
+                2) printf '\\x%s' "${b:0:2}" "${b:2:2}" ;;
+                1) printf '\\x%s' "${b:0:2}" ;;
                 0) [[ ${b0} ]] && printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
             esac
         else
-            printf -v outAdd '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
+            printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
         fi
     done <<<"${out}" >&"${fd1}"    
 
@@ -2647,7 +2647,7 @@ _timep_base64_to_file() {
 
     mkdir --mode=777 -p "/dev/shm/.timep"
     mkdir --mode=777 -p "/dev/shm/.timep/lib"
-    mkdir --mode 755 -p "${outDir}"
+    mkdir --mode 700 -p "${outDir}"
 
     BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH//\:${outDir}?(\/):/:}"
     BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH#${outDir}?(\/)?(:)}"
