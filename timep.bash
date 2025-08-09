@@ -2799,9 +2799,9 @@ _timep_file_to_base64() {
             doneFlag=true
             nnLast="${#nn}"  
             
-            until (( ${#nn} == 3 )); do 
-                nn="${nn}"'0'
-            done
+#            until (( ${#nn} == 3 )); do 
+#                nn="${nn}"'0'
+#            done
         
             (( nnSum = nnSum + 64#${nn} ))
 
