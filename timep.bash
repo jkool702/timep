@@ -2603,7 +2603,7 @@ _timep_base64_to_file() {
     until ${doneFlag}; do
         read -r -N 4 b0 || doneFlag=true
         (( nnSum = nnSum + 64#${b0} ))
-        printf -v b '%0.6X' "$(( 64#${b0} ))"
+        [[ $b0 ]] && printf -v b '%0.6X' "$(( 64#${b0} ))"
         if ${doneFlag}; then
             case "${nnLast}" in
                 2) printf '\\x%s' "${b:0:2}" "${b:2:2}" ;;
