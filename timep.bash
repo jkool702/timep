@@ -2585,7 +2585,7 @@ _timep_base64_to_file() {
         mapfile -t compressV <<<"${out0}"
         compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
 
-        for kk in "${!compressV[@]}"; do
+        for (( kk=${#compressV[@]}-1; kk>=0; kk-- )); do
             out="${out//"${compressI[$kk]}"/"${compressV[$kk]}"}"
         done
     fi
@@ -2747,7 +2747,7 @@ _timep_file_to_base64() {
                 shift 1
             ;;
             -n|-nc|--no-compress)
-                noCompressFlag=false
+                noCompressFlag=true
                 shift 1
             ;;
             *) break ;;
@@ -2761,8 +2761,6 @@ _timep_file_to_base64() {
         printf '\nERROR: "%s" not found. ABORTING.\n' "${1}" >&2
         return 1
     }
-
-    charmap=($(printf '%s ' {0..9} {a..z} {A..Z} '@' '_'))
 
     out="$(while read -r -N 3 nn; do
         (( k1 = ( 16#${nn} >> 6 ) ));
