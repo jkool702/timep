@@ -2553,7 +2553,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 _timep_SETUP() {
     local -A b64
     local -a filePathA 
-    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag
+    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 nnLast doneFlag
 
     shopt -s extglob
 
@@ -2582,7 +2582,10 @@ _timep_base64_to_file() {
     if [[ -z ${out} ]]; then
         out="${out0}"
     else
-        mapfile -t compressV <<<"${out0}"
+        {
+            read -r nnLast
+            mapfile -t compressV 
+        } <<<"${out0}"
         compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
 
         for (( kk=${#compressV[@]}-1; kk>=0; kk-- )); do
@@ -2590,13 +2593,24 @@ _timep_base64_to_file() {
         done
     fi
 
-    {
-        printf "$(while read -r -N 4 b; do
-
-        printf -v b '%0.6X' "$(( 64#${b} ))"
-        printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
-        done <<<"${out}")" >&"${fd1}"
-    }
+    outO=''
+    doneFlag=fALSE
+    until ${doneFlag}; do
+        read -r -N 4 b0 || doneFlag=true
+        printf -v b '%0.6X' "$(( 64#${b0} ))"
+        if ${doneFlag}; then
+            case "${nnLast}" in
+                2) printf -v outAdd '\\x%s' "${b:0:2}" "${b:2:2}" ;;
+                1) printf -v outAdd '\\x%s' "${b:0:2}" ;;
+                0) [[ ${b0} ]] && printf -v outAdd '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
+            esac
+        else
+            printf -v outAdd '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
+        fi
+    done <<<"${out}"
+    
+    printf '%s' "${outO}" >&"${fd1}"
+    
 
     exec {fd0}>&-
     exec {fd1}>&-
@@ -2734,7 +2748,7 @@ _timep_SETUP --force
 
 _timep_file_to_base64() {
 
-    local nn k1 k2 out out0 v1 v2 quoteFlag noCompressFlag IFS
+    local nn k1 k2 out out0 v1 v2 quoteFlag noCompressFlag doneFlag IFS nnLast outAdd
     local -a charmap compressI compressV
 
     quoteFlag=false
@@ -2762,10 +2776,21 @@ _timep_file_to_base64() {
         return 1
     }
 
-    out="$(while read -r -N 3 nn; do
+    doneFlag=false
+    out=''
+
+    until $doneFlag; do
+        read -r -N 3 nn || {
+            doneFlag=true
+            nnLast="${#nn}"
+            until (( ${#nn} == 3 )); do 
+                nn="${nn}"'0'
+            done
+        }
         (( k1 = ( 16#${nn} >> 6 ) ));
         (( k2 = ( 16#${nn} % 64 ) ));
-        printf '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
+        printf -v outAdd '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
+        out+="${outAdd}"
     done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g');)"
 
     ${noCompressFlag} || {
@@ -2776,7 +2801,7 @@ _timep_file_to_base64() {
             out="${out//"${compressV[$kk]}"/"${compressI[$kk]}"}"
         done
 
-        printf -v out0 '%s\n' "${compressV[@]}"
+        printf -v out0 '%s\n' "${nnLast}" "${compressV[@]}"
         printf -v out '%s'$'\034''%s' "${out0}" "${out}"
     }
 
