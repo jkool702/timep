@@ -2612,7 +2612,7 @@ _timep_base64_to_file() {
     ${noVerifyFlag} || (( nnSum == nnSum0 )) || { printf '\n\nWARNING: EXTRACTED LOADABLE CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' >^&2; }
 # { read -r -p 'DO YOU WANT TO CONTINUE? TO CONTINUE, TYPE "YES": ' -t 10 -N 3 <$"{timep_PTY_PATH}" && [[ "$REPLY" == 'YES' ]]; } || exit 1;
     IFS=
-    printf "${outA[*]::${outN}}" >&${fd1}
+    printf "${outA[*]::${outN:-${#outA[@]}}}" >&${fd1}
 
     exec {fd0}>&-
     exec {fd1}>&-
