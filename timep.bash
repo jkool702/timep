@@ -2553,15 +2553,15 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 _timep_SETUP() {
     local -A b64
     local -a filePathA 
-    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 nnLast doneFlag
+    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 doneFlag
 
     shopt -s extglob
 
     [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
 
 _timep_base64_to_file() {
-    local b kk fd0 fd1 out0 out nnSum nnSum0 nnLast nnLast0 noVerifyFlag
-    local compressV compressI
+    local b b0 k kk fd0 fd1 out0 out outN nnSum nnSum0 noVerifyFlag doneFlag IFS
+    local compressV compressI outA
 
     [[ -t 0 ]] && {
         printf '\nERROR: pass the base64-encoded sequence on stdin. ABORTING.\n'  >&2
@@ -2584,7 +2584,7 @@ _timep_base64_to_file() {
         noVerifyFlag=true
     else
         {
-            read -r nnLast0 nnSum0
+            read -r outN nnSum0
             mapfile -t compressV 
         } <<<"${out0}"
 
@@ -2596,35 +2596,26 @@ _timep_base64_to_file() {
             done
         }
         nnSum=0
-        nnLast=0
         noVerifyFlag=false
     fi
 
     doneFlag=false
-    outF="$(until ${doneFlag}; do
+    until ${doneFlag}; do
         read -r -N 4 b0 || doneFlag=true
+        [[ $b0 ]] || break
         (( nnSum = nnSum + 64#${b0} ))
-        (( nnLast = nnLast + 3 ))
-        (( nnDiff = nnLast0 - nnLast0 ))
-        [[ $b0 ]] && printf -v b '%0.6X' "$(( 64#${b0} ))"
-        case "${nnDiff}" in
-            2) printf '\\x%s' "${b:0:2}" "${b:2:2}"; doneFlag=true ;;
-            1) printf '\\x%s' "${b:0:2}"; doneFlag=true  ;;
-            *) [[ ${b0} ]] && printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
-        esac
+        printf -v b '%0.6X' "$(( 64#${b0} ))"
+        outA+=("${b:0:2}" "${b:2:2}" "${b:4}")            
     done <<<"${out}"
 
-    printf ' %s' "${nnSum}")"
-    nnSum="${outF##* }"
-    outF="${outF% *}"
 
     ${noVerifyFlag} || (( nnSum == nnSum0 )) || { printf '\n\nWARNING: EXTRACTED LOADABLE CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' >^&2; }
 # { read -r -p 'DO YOU WANT TO CONTINUE? TO CONTINUE, TYPE "YES": ' -t 10 -N 3 <$"{timep_PTY_PATH}" && [[ "$REPLY" == 'YES' ]]; } || exit 1;
-    printf "${outF%\\x*\\x*\\x*\\x*\\x*}" >&${fd1}
+    IFS=
+    printf "${outA[*]::${outN}}" >&${fd1}
 
     exec {fd0}>&-
     exec {fd1}>&-
-echo "nnLast = $nnLast0" >&2
 
     (( $# > 0 )) && chmod +x "${1}"
 }
@@ -2760,8 +2751,11 @@ _timep_SETUP --force
 
 _timep_file_to_base64() {
 
-    local nn k1 k2 out out0 v1 v2 quoteFlag noCompressFlag doneFlag IFS nnLast nnSum outAdd
-    local -a charmap compressI compressV
+    local nn k1 k2 out out0 outF outN v1 v2 quoteFlag noCompressFlag doneFlag IFS IFS0 nnLast nnSum LOCALE LC_ALL
+    local -a charmap compressI compressV outA
+
+    LOCALE=C
+    LC_ALL=C
 
     quoteFlag=false
     noCompressFlag=false
@@ -2789,37 +2783,33 @@ _timep_file_to_base64() {
     }
 
     doneFlag=false
-    out=''
     nnSum=0
+    outN=0
 
-    out="$(until $doneFlag; do
+    until $doneFlag; do
         read -r -N 3 nn 
+        (( outN = outN + ${#nn} ))
            
-        [[ ${nn} ]] || {
+        (( ${#nn} == 3 )) || {
             doneFlag=true
-            nnLast="${#nn}"  
             
-#            until (( ${#nn} == 3 )); do 
-#                nn="${nn}"'0'
-#            done
+            until (( ${#nn} == 3 )); do 
+                nn="${nn}"'0'
+            done
         
-            (( nnSum = nnSum + 64#${nn} ))
-
-            break
         }
   
         (( nnSum = nnSum + 64#${nn} ))
         (( k1 = ( 16#${nn} >> 6 ) ));
         (( k2 = ( 16#${nn} % 64 ) ));
   
-        printf '%s%s' "${charmap[$k1]}" "${charmap[$k2]}";
+       outA+=("${charmap[$k1]}" "${charmap[$k2]}")
 
     done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g')
 
-    printf $'\034''%s %s' "${nnLast}" "${nnSum}")"
-
-    IFS=' ' read -r nnLast nnSum <<<"${out##*$'\034'}"
-    out="${out%$'\034'*}"
+    IFS0="${IFS}"
+    IFS=
+    out="${outA[*]}"
 
     ${noCompressFlag} || {
         compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
@@ -2829,12 +2819,12 @@ _timep_file_to_base64() {
             out="${out//"${compressV[$kk]}"/"${compressI[$kk]}"}"
         done
     }
-    printf -v out0 '%s\n' "${nnLast} ${nnSum}" "${compressV[@]}"
-    printf -v out '%s'$'\034''%s' "${out0}" "${out}"
+    printf -v out0 '%s\n' "${outN} ${nnSum}" "${compressV[@]}"
+    printf -v outF '%s'$'\034''%s' "${out0}" "${out}"
 
     if ${quoteFlag}; then
-        printf '%s' "${out@Q}"
+        printf '%s' "${outF@Q}"
     else
-        printf '%s' "${out}"
+        printf '%s' "${outF}"
     fi
 }
