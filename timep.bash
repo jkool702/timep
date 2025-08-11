@@ -2820,14 +2820,16 @@ _timep_file_to_base64() {
         (( outN = outN + ${#nn} ))
         (( nnSum = nnSum + 16#${nn} ))
            
-        if (( ${#nn} < 3 )) || [[ "${nn}" == *$'\n' ]]; then
+        if (( ${#nn} < 6 )) || [[ "${nn}" == *$'\n' ]]; then
             doneFlag=true
             outA+="${nn}"
             break
         else
-            (( k1 = ( 16#${nn} >> 6 ) ))
-            (( k2 = ( 16#${nn} % 64 ) ))
-           outA+=("${charmap[$k1]}" "${charmap[$k2]}")
+            (( k1 = ( 16#${nn:0:3} >> 6 ) ))
+            (( k2 = ( 16#${nn:0:3} % 64 ) ))
+            (( k3 = ( 16#${nn:3} >> 6 ) ))
+            (( k4 = ( 16#${nn:3} % 64 ) ))
+           outA+=("${charmap[$k1]}" "${charmap[$k2]}" "${charmap[$k3]}" "${charmap[$k4]}")
        fi
     done < <("${hexProg}" -v -x <"${1}" | sed -zE 's/\n[0-9a-f]+//g; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[ \n]//g')
 
