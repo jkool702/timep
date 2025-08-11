@@ -11,7 +11,7 @@ timep() {
     #
     # OUTPUT: timep generates 4-6 types of outputs that will be saved to disk in the "profiles" dir in timep's tmpdir directory (by default: /dev/shm/.timep/timep-XXXXXXXX -- printed to stderr at the end):
     #        2 are time profiles: "out.profile.full" and "out.profile"
-    #             out.profile.full:    contains all individual commands and metadata info like the chain of FUNCNAME's and the chain of subshell PIDs
+    #             out.profile.full:    contains all individual commands and metadata info like the chain of FUNCNAME's and the chain of subshell PIDs || [[ "${nn}" == *$'\n' ]]
     #             out.profile:         commands repeated by loops have been collapsed into combined entries that show the number of times the command was repeated and the total run time from all of them
     #        2 are stack traces intended to be passed to "timep_flamegraph.pl": "out.flamegraph.full" and "out.flamegraph"
     #             out.flamegraph.full: contains stack traces from all commands
@@ -2820,7 +2820,7 @@ _timep_file_to_base64() {
         (( outN = outN + ${#nn} ))
         (( nnSum = nnSum + 16#${nn} ))
            
-        if (( ${#nn} < 6 )) || [[ "${nn}" == *$'\n' ]]; then
+        if (( ${#nn} < 6 )); then
             doneFlag=true
             outA+="${nn}"
             break
