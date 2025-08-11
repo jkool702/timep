@@ -2602,29 +2602,32 @@ _timep_base64_to_file() {
         #declare -p out outN nnSum0 compressV >&2
     fi
 
-        printf "$(while read -r -N 4 b; do
+    printf "$(while read -r -N 4 b; do
+        b="${b%$'\n'}"    
         (( b = 64#${b} ))
-        if (( outN > 6 )); then
-            printf -v b '%0.6X' "${b}"
-            (( outN = outN - 6 ))
-            printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
-            echo "${outN}" >&2
-        else
-            printf -v b '%0.'"${outN}"'X' "${b}"
-            b="${b:0:${outN}}"
-            case outN in 
-                5|6) printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
+        printf -v b '%0.6X' "${b}"
+        printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
+        ${noVerifyFlag} || {
+        (( outN = outN - 6 ))
+        (( nnSum = nnSum - 16#${b} ))
+        if (( outN < 6 )); then
+           (( outN == 0 )) && break
+            read -r -N ${outN} b
+            case "${outN}" in 
+                5) printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
                 3|4) printf '\\x%s' "${b:0:2}" "${b:2}" ;;
                 1|2) printf '\\x%s' "${b}" ;;
             esac
             outN=0
-             echo "${outN}" >&2
-           break
+            (( nnSum = nnSum - 16#${b} ))
+            break
         fi
-        done <<<"${out}")" >&"${fd1}"
+        }
+    done <<<"${out}"
+    ${noVerifyFlag} || [[ "${nnSum}" == '0' ]] || { printf '\n\nWARNING: EXTRACTED LOADABLE "%s" : CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' "${1:-\(STDOUT\)}" >&2; sleep 5; }
+    )" >&"${fd1}"
 
 
-#    ${noVerifyFlag} || [[ "${nnSum}" == '0' ]] || { printf '\n\nWARNING: EXTRACTED LOADABLE "%s" : CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' "${1:-\(STDOUT\)}" >&2; sleep 5; }
 # { read -r -p 'DO YOU WANT TO CONTINUE? TO CONTINUE, TYPE "YES": ' -t 10 -N 3 <$"{timep_PTY_PATH}" && [[ "$REPLY" == 'YES' ]]; } || exit 1;
     
     exec {fd0}>&-
@@ -2767,7 +2770,7 @@ _timep_SETUP --force
 
 _timep_file_to_base64() {
 
-    local nn k1 k2 out out0 outF outN v1 v2 nnSum quoteFlag noCompressFlag doneFlag IFS IFS0 LOCALE LC_ALL
+    local nn k1 k2 out out0 outF outN v1 v2 nnSum hexProg quoteFlag noCompressFlag doneFlag IFS IFS0 LOCALE LC_ALL
     local -a charmap compressI compressV outA
 
     LOCALE=C
@@ -2802,36 +2805,40 @@ _timep_file_to_base64() {
     outN=0
     outA=()
 
+    if type -p od &>/dev/null; then
+        hexProg='od'
+    elif type -p hexdump &>/dev/null; then
+        hexProg='hexdump'
+    else
+        return 1
+    fi
+
     until $doneFlag; do
-        read -r nn || doneFlag=true
+        read -r -N 6 nn || doneFlag=true
+        nn="${nn%$'\n'}"
         [[ $nn ]] || break
         (( outN = outN + ${#nn} ))
         (( nnSum = nnSum + 16#${nn} ))
            
-        { (( ${#nn} < 3 )) || [[ "${nn}" == $'\n' ]]; } && {
+        if (( ${#nn} < 3 )) || [[ "${nn}" == *$'\n' ]]; then
             doneFlag=true
+            outA+="${nn}"
+            break
+        else
+            (( k1 = ( 16#${nn} >> 6 ) ))
+            (( k2 = ( 16#${nn} % 64 ) ))
+           outA+=("${charmap[$k1]}" "${charmap[$k2]}")
+       fi
+    done < <("${hexProg}" -v -x <"${1}" | sed -zE 's/\n[0-9a-f]+//g; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[ \n]//g')
 
-            nn="${nn%$'\n'}"
-            
-
-
-        }
-  
-        (( k1 = ( 16#${nn} >> 6 ) ));
-        (( k2 = ( 16#${nn} % 64 ) ));
-  
-       outA+=("${charmap[$k1]}" "${charmap[$k2]}")
-
-    done < <(od -v -x <"${1}" | sed -zE 's/\n[0-9a-f]+//g; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[ \n]//g; s/(...)/\1\n/g')
-
-    (( outN = ( 2 * ( ( outN - 1 ) / 2 ) ) - 1 ))
+    #(( outN = ( 2 * ( ( outN - 1 ) / 2 ) ) - 1 ))
 
     IFS=
     out="${outA[*]}"
     unset IFS
 
     if ${noCompressFlag}; then
-        printf -v out0 '%s\n' "${outN} ${nnSum}"
+        printf -v out0 '%s %s\n' "${outN}" "${nnSum}"
     else
         compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
         mapfile -t compressV < <(sed -E 's/(00+)(([^0]+0?[^0]+)*)/\1\n\2/g; s/([^0]+)/\1\n/g' <<<"${out}" | grep -E '..' | sort | uniq -c | sed -E 's/^[ \t]+//' | grep -vE '^1 ' | sort -nr -k1,1 | while read -r v1 v2; do (( v0 = v1 * ${#v2} - v1 )); printf '%s %s %s %s\n' "$v0" "${#v2}" "$v1" "$v2"; done |grep -vE '^-' | sort -nr -k 1,1 | head -n 27 | sort -nr -k2,2 | sed -E 's/^([0-9]+ ){3}//')
