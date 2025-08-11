@@ -2607,14 +2607,12 @@ _timep_base64_to_file() {
         noVerifyFlag=false
     fi
 
-    printf "$(while read -r -N 4 b; do
-        b="${b%$'\n'}"    
-        (( b = 64#${b} ))
-        printf -v b '%0.6X' "${b}"
-        printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
+    printf "$(while read -r -N 4 b0; do
+        (( b1 = 64#${b0%$'\n'} ))
+        printf -v b '%0.6X' "${b1}"
         ${noVerifyFlag} || {
             (( outN = outN - 6 ))
-            (( nnSum = nnSum - 16#${b} ))
+            (( nnSum = nnSum - b1 ))
             if (( outN < 6 )); then
                (( outN == 0 )) && break
                 read -r -N ${outN} b
