@@ -2807,11 +2807,12 @@ _timep_file_to_base64() {
     outN=0
     outA=()
 
-    
-    if type -p hexdump &>/dev/null; then
+     
+    if type -p od &>/dev/null; then
+        hexProg='od -x' 
+    elif type -p hexdump &>/dev/null; then
         hexProg='hexdump'
-    elif type -p od &>/dev/null; then
-        hexProg='od'else
+    else
         return 1
     fi
 
@@ -2824,7 +2825,7 @@ _timep_file_to_base64() {
         (( k1 = ( 16#${nn} >> 6 ) ));
         (( k2 = ( 16#${nn} % 64 ) ));
         outA+=("${charmap[$k1]}" "${charmap[$k2]}")
-  done < <(hexdump -v -x <"${1}" | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g');
+  done < <(${hexProg} -v <"${1}" | head -n -1 | sed -E 's/^[0-9a-f]+[[:space:]]+//; s/([0-9a-f]{2})([0-9a-f]{2})/\2\1/g; s/[[:space:]]//g' | sed -zE 's/\n//g');
 
     IFS=
     out="${outA[*]}"
