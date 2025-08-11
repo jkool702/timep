@@ -657,7 +657,15 @@ _timep_getFuncSrc() {
                 timep_NEXEC_A+=(0)
                 ((timep_NEXEC_N++))
     exec() {
-        export -f timep
+        export -f timepLC_ALL for od/hexdump — local LC_ALL=C doesn’t propagate to the external command. If you want stable output, wrap calls as:
+
+bash
+￼Copy
+￼Edit
+LC_ALL=C "$hexProg" ...
+rather than just setting a local var.
+
+sed -zE — fine if you’re targeting GNU sed, but BSD/macOS sed doesn’t have -z.
         local -a cmd0=()
         shift 1
         while [[ "$1" == '"'"'-'"'"'* ]]; do
@@ -2560,11 +2568,9 @@ _timep_SETUP() {
     [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
 
 _timep_base64_to_file() {
-    local b b0 k kk fd0 fd1 out0 out outN nnSum noVerifyFlag doneFlag IFS LOCALE LC_ALL
+    local b b0 k kk fd0 fd1 out0 out outN nnSum noVerifyFlag doneFlag IFS 
     local compressV compressI outA
-
-    LOCALE=C
-    LC_ALL=C
+    local -x LC_ALL=C
 
     [[ -t 0 ]] && {
         printf '\nERROR: pass the base64-encoded sequence on stdin. ABORTING.\n'  >&2
@@ -2599,7 +2605,6 @@ _timep_base64_to_file() {
             done
         }
         noVerifyFlag=false
-        #declare -p out outN nnSum0 compressV >&2
     fi
 
     printf "$(while read -r -N 4 b; do
@@ -2608,32 +2613,27 @@ _timep_base64_to_file() {
         printf -v b '%0.6X' "${b}"
         printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}";
         ${noVerifyFlag} || {
-        (( outN = outN - 6 ))
-        (( nnSum = nnSum - 16#${b} ))
-        if (( outN < 6 )); then
-           (( outN == 0 )) && break
-            read -r -N ${outN} b
-            case "${outN}" in 
-                5) printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
-                3|4) printf '\\x%s' "${b:0:2}" "${b:2}" ;;
-                1|2) printf '\\x%s' "${b}" ;;
-            esac
-            outN=0
+            (( outN = outN - 6 ))
             (( nnSum = nnSum - 16#${b} ))
-            break
-        fi
+            if (( outN < 6 )); then
+               (( outN == 0 )) && break
+                read -r -N ${outN} b
+                case "${outN}" in 
+                    5) printf '\\x%s' "${b:0:2}" "${b:2:2}" "${b:4}" ;;
+                    3|4) printf '\\x%s' "${b:0:2}" "${b:2}" ;;
+                    1|2) printf '\\x%s' "${b}" ;;
+                esac
+                outN=0
+                (( nnSum = nnSum - 16#${b} ))
+                break
+            fi
         }
     done <<<"${out}"
-    ${noVerifyFlag} || [[ "${nnSum}" == '0' ]] || { printf '\n\nWARNING: EXTRACTED LOADABLE "%s" : CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' "${1:-\(STDOUT\)}" >&2; sleep 5; }
-    )" >&"${fd1}"
-
-
-# { read -r -p 'DO YOU WANT TO CONTINUE? TO CONTINUE, TYPE "YES": ' -t 10 -N 3 <$"{timep_PTY_PATH}" && [[ "$REPLY" == 'YES' ]]; } || exit 1;
+    ${noVerifyFlag} || [[ "${nnSum}" == '0' ]] || { printf '\n\nWARNING: EXTRACTED LOADABLE "%s" : CHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\n         DO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\n' "${1:-\(STDOUT\)}" >&2; sleep 5; }; )" >&"${fd1}"
+    
     
     exec {fd0}>&-
     exec {fd1}>&-
-
-    #echo "DEBUG: ${outN} ${#outA[@]} | ${nnSum0} ${nnSum}" >&2
 
     (( $# > 0 )) && chmod +x "${1}"
 }
@@ -2770,11 +2770,9 @@ _timep_SETUP --force
 
 _timep_file_to_base64() {
 
-    local nn k1 k2 out out0 outF outN v1 v2 nnSum hexProg quoteFlag noCompressFlag doneFlag IFS IFS0 LOCALE LC_ALL
+    local nn k1 k2 out out0 outF outN v1 v2 nnSum hexProg quoteFlag noCompressFlag doneFlag IFS IFS0 
     local -a charmap compressI compressV outA
-
-    LOCALE=C
-    LC_ALL=C
+    local -x LC_ALL=C
 
     quoteFlag=false
     noCompressFlag=false
@@ -2813,7 +2811,7 @@ _timep_file_to_base64() {
         return 1
     fi
 
-    until $doneFlag; do
+    until ${doneFlag}; do
         read -r -N 6 nn || doneFlag=true
         nn="${nn%$'\n'}"
         [[ $nn ]] || break
