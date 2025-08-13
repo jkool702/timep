@@ -104,6 +104,8 @@ timep() {
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
     local -A A_map
 
+    SECONDS=0
+    
     getCPUtime &>/dev/null || _timep_SETUP
 
     unset a
@@ -995,7 +997,7 @@ timep_SKIP_DEBUG_FLAG=false
     fi
     (( timep_WTIME_DONE = 10#${EPOCHREALTIME//[^0-9]/} ))
 
-    printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s"\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" >&2
+    printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s" (+%s)\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" "${SECONDS}" >&2
     unset IFS
 
     # DEBUG OUTPUT - print log contents
@@ -2027,7 +2029,6 @@ done
 \rm -f "${timep_TMPDIR}/.worker/${BASHPID}"'
 
     # loop through logs from deepest nested upwards and run each through post processing function
-    printf '\n\n' >&2
 
     # export helper functions
     export -f _timep_EPOCHREALTIME_DIFF
@@ -2094,7 +2095,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 ((nWorker--))
             done
 
-            printf '\n\nPROCESSING NESTING LVL %s (%s LOGS) -- USING %s WORKERS (MAX: %s)\n' "${timep_LOG_NESTING_CUR}" "${kkDiff}" "${nWorker}" "${nWorkerMax}" >&2
+	    printf '\n\nPROCESSING NESTING LVL %s (%s LOGS) -- USING %s WORKERS (MAX: %s) (+%s)\n' "${timep_LOG_NESTING_CUR}" "${kkDiff}" "${nWorker}" "${nWorkerMax}" "${SECONDS}" >&2
 
             read -r -u "${fd_sleep}" -t 0.01 _ || :
 
@@ -2219,7 +2220,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
     printf '\n\nFINALIZING OUTPUTS\n' >&2
-    printf '\nGETTING TOTAL TIMES\n' >&2
+    printf '\nGETTING TOTAL TIMES (+%s)\n' "${SECONDS}" >&2
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out"
     printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out.combined"
 
@@ -2241,7 +2242,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # reverse flamegraph input so it starts at the parent and ends at the depest child
-    printf '\nREORDERING FLAMEGRAPH INPUTS\n' >&2
+    printf '\nREORDERING FLAMEGRAPH INPUTS (+%s)\n' "${SECONDS}"  >&2
     #echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^([0-9]+)\:/\1 /' | sort -nr -k1,1 | sed -E 's/^[0-9]+ //')" >"${timep_TMPDIR}/.log/out.flamegraph.full"
     #mapfile -t flameGraphLogA < <(sort -V "${timep_TMPDIR}"/.log/out.flamegraph.full.*)
     #cat "${flameGraphLogA[@]}" >"${timep_TMPDIR}/.log/out.flamegraph.full"
@@ -2249,7 +2250,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     # fold flamegraph stack traces
-    printf '\nFOLDING FLAMEGRAPH INPUTS\n' >&2
+    printf '\nFOLDING FLAMEGRAPH INPUTS (+%s)\n' "${SECONDS}"  >&2
     sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/\1/' <"${timep_TMPDIR}/.log/out.flamegraph.full" | grep -n '' | sort -u -t: -k2 | sort -n -t: -k1,1 | sed -E s/'^[0-9]*://' | while read -r u; do (( tw = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\2/' | sed -zE 's/\n//g') )); (( tc = 0 $(grep -F "$u" <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^(.+)[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]*$/+\3/' | sed -zE 's/\n//g') )); printf '%s\t%s\t%s\n' "${u}" "${tw}" "${tc}"; done >"${timep_TMPDIR}/.log/out.flamegraph"
 
     # copy final outputs to profiles dir
@@ -2257,7 +2258,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
 
     # for flamegraph.pl inputs - convert times to screen-size-normalized CDF index (to maximize colorspace usage)
-    printf '\nGENERATING COLOR MAPPING FOR FLAMEGRAPH INPUTS\n' >&2
+    printf '\nGENERATING COLOR MAPPING FOR FLAMEGRAPH INPUTS (+%s)\n' "${SECONDS}" >&2
     for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
         _timep_PROCESS_FLAMEGRAPH "${fgCur}" >"${timep_TMPDIR}/profiles/${fgCur##*\/}"
     done
@@ -2276,7 +2277,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     #declare -p >/mnt/ramdisk/vars
 
     # combine lines/times/percentages for main (combined) profile
-    printf '\nMERGING REPEATED COMMANDS IN COMBINED PROFILE\n' >&2
+    printf '\nMERGING REPEATED COMMANDS IN COMBINED PROFILE (+%s)\n' "${SECONDS}"  >&2
     mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n│\n?$/\n/; s/\n(│?)[ \t]*\n/\1\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
     A_end="$(sed -zE 's/^.*(\n│?[ \t]*\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
     unset "AA"
@@ -2318,7 +2319,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             # each T[$jj] will contain all times/percentages/counts from all the different lines represented by the unique line in L[$jj] iun a newline-seperated list
             # AA is an associative array that determines/maps the unique lines to the index $jj
 
-            printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES' "$kk" "${#A[@]}" >&2
+	    printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES (+%s)' "$kk" "${#A[@]}"  "${SECONDS}" >&2
 
             T=();
             L=();
@@ -2392,12 +2393,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
         done
 
-        printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES' "${#A[@]}" "${#A[@]}" >&2
+	printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES (+%s)' "${#A[@]}" "${#A[@]}" "${SECONDS}"  >&2
         echo "${A_end}"
     } >"${timep_TMPDIR}/profiles/out.profile"
 
     # add another percentage showing "percent of total runtime" to final outputs
-    printf '...DONE\n\nADDING PERCENT OF TOTAL TIME TO PROFILES\n' >&2
+    printf '...DONE\n\nADDING PERCENT OF TOTAL TIME TO PROFILES (+%s)\n' "${SECONDS}"  >&2
 
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile"; do
 
@@ -2480,7 +2481,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
-        printf '\nGENERATING FLAMEGRAPHS\n' >&2
+	    printf '\nGENERATING FLAMEGRAPHS (+%s)\n' "${SECONDS}"  >&2
 
         # FUTURE TO-DO: investigate the possiblity of making each frame's height non-uniform and instead based on another (3rd) orthogonal data source
 
@@ -2509,7 +2510,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --countname "us" --fontsize 10 --color timep --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg"
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --countname "us" --fontsize 10 --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph.full" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg"
 
-            printf '\nCOMBINING FLAMEGRAPHS INTO VERTICALLY STACKED SVG IMAGES\n' >&2
+	    printf '\nCOMBINING FLAMEGRAPHS INTO VERTICALLY STACKED SVG IMAGES (+%s)\n' "${SECONDS}"  >&2
 
             svgCombineInd=0
 
