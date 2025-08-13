@@ -85,6 +85,11 @@ timep() {
     # check that basic requirements to run timep are met
     # to disable this check, call timep via 'timep_DISABLE_CHECKS=1 timep <...>'
     [[ ${timep_DISABLE_CHECKS} ]] || { [[ -f /proc/self/stat ]] && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
+    local -a missingA=(sed grep sort uniq)
+    
+    for nn in "${missingA[@]}"; do
+        type -p "$nn" &>/dev/null || { printf '\n\nERROR: timep requires %s. Please install it (or add it to your PATH if alreay installed) before running timep. ABORTING!\n\n' "$nn" >&2; return 1; }
+    done    
 
     shopt -s extglob
 
@@ -2892,4 +2897,86 @@ _timep_file_to_base64() {
     else
         printf '%s' "${outF}"
     fi
+}
+
+# Fallback for head -n N and head -n -N
+if ! type -p head >/dev/null; then
+head() {
+    local -a A A1
+    local n kk
+    if (( $# == 0 )); then
+      mapfile -t -n 20 A
+    else
+      [[ $1 == -n ]] && shift 1
+      case $1 in
+         [0-9]*)  n=$1; mapfile -t -n "$n" A ;;
+        -[0-9]*)   
+		    n=${1#-}; 
+			(( kk = n < 20 ? 20 : n )); 
+			mapfile -t -n $kk A; 
+			(( ${#A[@]} >= n )) && while true; do
+			    mapfile -t -n $kk A1 
+				if (( ${#A1[@]} < kk )); then
+				    A=("${A[@]}" "${A1[@]}")
+					break
+				else
+					printf '%s\n' "${A[@]}"
+				fi
+			    mapfile -t -n $kk A
+				if (( ${#A[@]} < kk )); then
+				    A=("${A1[@]}" "${A[@]}")
+					break
+				else
+					printf '%s\n' "${A1[@]}"
+				fi				
+			done
+			if (( ( ${#A[@]} - n ) >= 0 )); then
+			    A=("${A[@]:0:${#A[@]}-n}")
+			else
+			    return 0
+			fi 
+		;;
+		*) return 1 ;;
+      esac
+    fi
+    printf '%s\n' "${A[@]}"
+}
+fi
+
+# Fallback for tail -n N and tail -n +N
+if ! type -p tail >/dev/null; then
+tail() {
+    local -a A A1
+    local n kk
+    if (( $# == 0 )); then
+        n=20
+	else
+      [[ $1 == -n ]] && shift 1
+      case $1 in
+        +[0-9]*)  (( n = ${1#+} - 1 ));  mapfile -t -n $n _; mapfile -t A; printf '%s\n' "${A[@]}"; return 0  ;;
+         [0-9]*)  n=$1 ;;
+         *) return 1  ;;
+      esac
+	  
+    fi
+	(( kk = n < 20 ? 20 : n )); 
+    mapfile -t -n $kk A; 
+    (( ${#A[@]} >= n )) && while true; do
+        mapfile -t -n $kk A1 
+        if (( ${#A1[@]} < kk )); then
+            A=("${A[@]}" "${A1[@]}")
+            break
+        else
+            printf '%s\n' "${A[@]}"
+        fi
+        mapfile -t -n $kk A
+        if (( ${#A[@]} < kk )); then
+            A=("${A1[@]}" "${A[@]}")
+            break
+        else
+            printf '%s\n' "${A1[@]}"
+        fi                
+    done
+    (( ( ${#A[@]} - n ) >= 0 )) && A=("${A[@]:${#A[@]}-n}") ;
+    printf '%s\n' "${A[@]}"
 }
