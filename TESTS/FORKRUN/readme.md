@@ -37,7 +37,7 @@ export -f _forkrun_getVal
 . /mnt/ramdisk/timep/timep.bash
 
 
-timep --flame -c 'forkrun ff </mnt/ramdisk/flist >/dev/null' 'forkrun -z ff </mnt/ramdisk/flist0 >/dev/null'
+time { timep -t --flame -c 'forkrun ff </mnt/ramdisk/flist >/dev/null' 'forkrun -z ff </mnt/ramdisk/flist0 >/dev/null'; }
 ```
 
 In total, this is around 67,800 individual bash commands. It is a rather demanding test:
