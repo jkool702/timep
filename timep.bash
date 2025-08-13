@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if shopt extglob | grep -qE 'off$'; then
+	timep_extglobState='-u'
+else
+    timep_extglobState='-s'
+fi
 shopt -s extglob
 
 timep() {
@@ -2566,17 +2571,29 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 _timep_SETUP() {
     local -A b64
     local -a filePathA 
-    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 doneFlag
+    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 doneFlag extglobState
 
+    if shopt extglob | grep -qE 'off$'; then
+	    extglobState='-u'
+	else
+        extglobState='-s'
+	fi
     shopt -s extglob
-
+	
     [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
 
 _timep_base64_to_file() {
-    local b b0 b1 k kk fd0 fd1 out0 out outC outN outF outB outFile nnSum noVerifyFlag doneFlag IFS 
-    local compressV compressI outA
+    local b b0 b1 k kk fd0 fd1 out0 out outC outN outF outB outFile nnSum noVerifyFlag doneFlag IFS extglobState
+    local -a compressV compressI outA
     local -x LC_ALL=C
 
+    if shopt extglob | grep -qE 'off$'; then
+	    extglobState='-u'
+	else
+        extglobState='-s'
+	fi
+    shopt -s extglob
+ 
     [[ -t 0 ]] && {
         printf '\nERROR: pass the base64-encoded sequence on stdin. ABORTING.\n'  >&2
         return 1
@@ -2653,7 +2670,8 @@ _timep_base64_to_file() {
         (( outB > 0 )) && type -p truncate &>/dev/null && truncate --size="${outB}" "${outFile}"
         ${noVerifyFlag} || [[ "${nnSum}" == '0' ]] || { nnSumF="$("${nnSum%%\:*}" "${outFile}")"; nnSumF="${nnSumF%% *}"; grep -qF "${nnSum#*\:}" <<<"${nnSumF}" || { printf '\n\nWARNING FOR EXTRACTED LOADABLE:\n"%s"\n\nCHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\nDO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\nEXPECTED: %s\nGOT: %s\n\nTHIS CODE WILL NOW REMOVE THE EXTRACTTED .SO FILE AND ABORT\nTO FORCE KEEPING THE [POTENTIALLY CORRUPT] .SO FILE, RE-RUN THIS CODE WITH THE "--force" FLAG'  "${outFile:-\(STDOUT\)}" "${nnSum}" "${nnSumF}" >&2; sleep 2; \rm -f "${outFile}"; return 1; }; };
     }
-    
+
+    shopt ${extglobState} extglob
 }
 
     downloadFlag=false
@@ -2763,10 +2781,11 @@ _timep_base64_to_file() {
 
     if ${forceFlag} || ! { ${gotFlamegraphFlag} && ${gotLoadableFlag}; }; then
 
-        # note: this base64 binary blob is generatred by using _timep_base64_to_file  on the arch-specific coimpiled shared .so file for the builtin.
+        # note: this base64 binary blob is generatred by using _timep_base64_to_file  on the arch-specific compiled shared .so file for the builtin.
         # passing this blob to the stdin of _timep_base64_to_file <path> will restore the original .so file (needed for the loadable builtin to get cpu time with getCPUtime) at <path>.
         # the .so file, source code and compile instructions are all available in the "timep" repo on github (https://github.com/jkool702/timep) at LOADABLES/SRC/timep.c.
         # The compiled .so file that this binary blob re-creates is avaiilable in the repo at LIB/LOADABLES/BIN/$ARCH/timep.so. timep_flamegraph is available at LIB/timep_flamegraph.so.
+		# Note: these base64 blobs have been compressed. The information needed to decompress them is built into the start of the blob, as are the sha256 and md5 checksums for the original .so file
 
         declare -A b64
 
@@ -2785,6 +2804,8 @@ _timep_write_flamegraph() {
 
         enable -f "${outDir}/timep.so" getCPUtime
     fi
+
+     shopt ${extglobState} extglob
 }
 
 _timep_SETUP --force
@@ -2980,3 +3001,6 @@ tail() {
     (( ( ${#A[@]} - n ) >= 0 )) && A=("${A[@]:${#A[@]}-n}") ;
     printf '%s\n' "${A[@]}"
 }
+
+shopt ${timep_extglobState} extglob
+unset timep_extglobState
