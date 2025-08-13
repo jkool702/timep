@@ -2699,7 +2699,7 @@ _timep_base64_to_file() {
 
     mkdir --mode=1777 -p "/dev/shm/.timep"
     mkdir --mode=1777 -p "/dev/shm/.timep/lib"
-    mkdir --mode 700 "${outDir}"
+    mkdir --mode 700 -p "${outDir}"
 
     BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH//\:${outDir}?(\/):/:}"
     BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH#${outDir}?(\/)?(:)}"
@@ -3001,6 +3001,7 @@ tail() {
     (( ( ${#A[@]} - n ) >= 0 )) && A=("${A[@]:${#A[@]}-n}") ;
     printf '%s\n' "${A[@]}"
 }
+fi
 
 shopt ${timep_extglobState} extglob
 unset timep_extglobState
