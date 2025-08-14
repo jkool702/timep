@@ -163,7 +163,7 @@ timep() {
     printf -v timep_outType ' %s ' "${timep_outTypeA[@]}"
 
     # figure out where to setup a tmpdir to use (prefferably on a ramdisk/tmpfs)
-    [[ "${timep_TMPDIR}" ]] && mkdir -p "${timep_TMPDIR}"
+    [[ "${timep_TMPDIR}" ]] && mkdir --mode=700 -p "${timep_TMPDIR}"
 
     # try /dev/shm
     [[ -z "$timep_TMPDIR" ]] && [[ -d /dev/shm ]] && {
@@ -171,7 +171,7 @@ timep() {
         until ! [[ -d "$timep_TMPDIR" ]]; do
             timep_TMPDIR=/dev/shm/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
-        mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
+        mkdir --mode=700 -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
 
     # try $TMPDIR, if set
@@ -180,7 +180,7 @@ timep() {
         until ! [[ -d "$timep_TMPDIR" ]]; do
             timep_TMPDIR="${TMPDIR}"/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
-        mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
+        mkdir --mode=700 -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
 
     # try /tmp
@@ -189,7 +189,7 @@ timep() {
         until ! [[ -d "$timep_TMPDIR" ]]; do
             timep_TMPDIR=/tmp/.timep/timep."$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
-        mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
+        mkdir --mode=700 -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
 
     # try $PWD
@@ -198,7 +198,7 @@ timep() {
         until ! [[ -d "$timep_TMPDIR" ]]; do
             timep_TMPDIR="$PWD/.timep/timep.$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
         done
-        mkdir -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
+        mkdir --mode=700 -p "$timep_TMPDIR" &>/dev/null || timep_TMPDIR=''
     }
 
     # ABORT if we couldnt get a writable TMPDIR
@@ -207,7 +207,6 @@ timep() {
          return 1
     }
 
-    mkdir --mode=700 "${timep_TMPDIR}"
     mkdir -p "${timep_TMPDIR}"/.log/.{end,run}times
     mkdir -p "${timep_TMPDIR}/profiles"
 
@@ -2596,7 +2595,7 @@ _timep_base64_to_file() {
         return 1
     }
 
-    determine if we are outputting to stout or to a file
+    # determine if we are outputting to stout or to a file
     exec {fd0}<&0
     if (( $# > 0 )); then
         [[ -f "$1" ]] && { \rm -f "$1" || return 1; }
@@ -2711,7 +2710,7 @@ _timep_base64_to_file() {
     # create required dirs
     mkdir --mode=1777 -p "/dev/shm/.timep"
     mkdir --mode=1777 -p "/dev/shm/.timep/lib"
-    mkdir --mode 700 -p "${outDir}"
+    mkdir --mode=700 -p "${outDir}"
 
     # add to PATH and BASH_LOADABLES_PATH
     BASH_LOADABLES_PATH="${BASH_LOADABLES_PATH//\:${outDir}?(\/):/:}"

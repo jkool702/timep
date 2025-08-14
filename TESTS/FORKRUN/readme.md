@@ -49,52 +49,51 @@ perf stat -d -d -d  "$BASH" -O extglob  -c 'forkrun ff </mnt/ramdisk/flist >/dev
 gives
 
 ```
-
  Performance counter stats for '/usr/bin/bash -O extglob -c forkrun ff </mnt/ramdisk/flist >/dev/null; forkrun -z ff </mnt/ramdisk/flist0 >/dev/null':
 
-      1,006,809.99 msec task-clock                       #   22.765 CPUs utilized             
-            75,085      context-switches                 #   74.577 /sec                      
-            10,528      cpu-migrations                   #   10.457 /sec                      
-        13,072,088      page-faults                      #   12.984 K/sec                     
- 6,021,119,138,347      instructions                     #    1.49  insn per cycle              (38.46%)
- 4,030,208,270,125      cycles                           #    4.003 GHz                         (38.47%)
-   283,281,503,152      branches                         #  281.365 M/sec                       (38.47%)
-     2,415,987,569      branch-misses                    #    0.85% of all branches             (38.47%)
-   706,997,289,462      L1-dcache-loads                  #  702.215 M/sec                       (38.47%)
-    29,472,351,677      L1-dcache-load-misses            #    4.17% of all L1-dcache accesses   (30.78%)
-     3,513,778,842      LLC-loads                        #    3.490 M/sec                       (30.78%)
-     2,874,334,001      LLC-load-misses                  #   81.80% of all LL-cache accesses    (30.77%)
-    26,384,005,984      L1-icache-load-misses                                                   (30.77%)
-   706,782,039,909      dTLB-loads                       #  702.001 M/sec                       (30.75%)
-       239,914,225      dTLB-load-misses                 #    0.03% of all dTLB cache accesses  (30.75%)
-       291,435,141      iTLB-loads                       #  289.464 K/sec                       (30.76%)
-       204,748,181      iTLB-load-misses                 #   70.26% of all iTLB cache accesses  (30.77%)
+        932,357.49 msec task-clock                       #   23.198 CPUs utilized             
+            61,856      context-switches                 #   66.344 /sec                      
+            12,400      cpu-migrations                   #   13.300 /sec                      
+        13,098,061      page-faults                      #   14.048 K/sec                     
+ 5,416,131,085,693      instructions                     #    1.45  insn per cycle              (38.46%)
+ 3,733,733,934,203      cycles                           #    4.005 GHz                         (38.47%)
+   277,515,547,361      branches                         #  297.649 M/sec                       (38.47%)
+     2,446,979,868      branch-misses                    #    0.88% of all branches             (38.47%)
+   652,935,209,234      L1-dcache-loads                  #  700.306 M/sec                       (38.47%)
+    27,283,190,852      L1-dcache-load-misses            #    4.18% of all L1-dcache accesses   (30.78%)
+     3,240,284,982      LLC-loads                        #    3.475 M/sec                       (30.78%)
+     2,594,296,464      LLC-load-misses                  #   80.06% of all LL-cache accesses    (30.77%)
+    26,578,857,860      L1-icache-load-misses                                                   (30.76%)
+   652,932,689,182      dTLB-loads                       #  700.303 M/sec                       (30.76%)
+       239,082,304      dTLB-load-misses                 #    0.04% of all dTLB cache accesses  (30.75%)
+       272,519,199      iTLB-loads                       #  292.290 K/sec                       (30.76%)
+       210,660,969      iTLB-load-misses                 #   77.30% of all iTLB cache accesses  (30.77%)
 
-      44.226257320 seconds time elapsed
+      40.190558718 seconds time elapsed
 
-     811.313597000 seconds user
-     187.668289000 seconds sys
-
+     740.127443000 seconds user
+     185.103912000 seconds sys
 ```
 
-Total CPU time here is user time + sys time = 1006 seconds. runtime is 44.2 seconds. Average CPU utilization (on a 14C/28T cpu) is just under 23 cores.
+Total CPU time here is user time + sys time = 932.35749 seconds.
+CPU time that timep calculated (from summing the cpu time of the >65000 individual commands that were run): 930.520805 seconds.
+
+This indicates that timep's error in total CPU time was LESS THAN 0.2%.
 
 Running the command with time gives
 
 ```
-real    0m44.174s
-user    13m31.967s
-sys     3m12.772s
+real    0m40.318s
+user    12m18.914s
+sys     3m14.704s
 ```
 
 Compared to the time output timep outputs when you pass the `--time` flag
 
 ```
-real    0m47.793s
-user    14m52.670s
-sys     3m7.439s
+real    0m44.635s
+user    13m59.374s
+sys     3m8.388s
 ```
 
-And we see that the timing instrumentation overhead is ~8% for both wall clock time (44.174 sec vs 47.793 sec) and total CPU time (~1080 sec vs ~1004 sec). Note that the vast majority of that overhead happens between one commands end timestamp and the next commands start timestamp, and as such does not effect the time profile that was generated. In fact, for this test case the overall total CPU time that timep computed (by summinbg together the CPU times of all ~65000 individual bash commands run in this test) was 999.913 seconds - an error of only ~0.5% compared to running the same code without any timep triming instrumentation!
-
-
+And we see that the timing instrumentation overhead (on this very demanding parallel workload) is ~10% for both wall clock time (40.318 sec vs 47.793 sec) and total CPU time (~1028 sec vs ~934 sec). Note that the vast majority of that overhead happens between one commands end timestamp and the next commands start timestamp, and as such does not effect the time profile that was generated. In fact, for this test case the overall total CPU time that timep computed (by summinbg together the CPU times of all ~65000 individual bash commands run in this test) was 999.913 seconds - an error of only ~0.5% compared to running the same code without any timep timing instrumentation!
