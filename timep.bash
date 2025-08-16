@@ -1222,6 +1222,34 @@ _timep_NUM_RUNNING() {
     pAll_PID=("${pAll_PID0[@]}")
 }
 
+_timep_MERGE_SUM() {
+
+    local -a v1A v2A
+    local jj v1 v2 var var1 ind mult IFS
+
+    var="${1}"
+    var1="${var:0:1}"
+    ind="$2"
+    mult="${3}"
+    [[ ${mult} ]] || mult=1
+
+    local -n v1="${var}"
+    local -n v2="linenoUniq${var1^^}${var:1}"
+
+    IFS=$'\t' read -r -a v1A <<<"${v1[${2}]}"
+    IFS=$'\t' read -r -a v2A <<<"${v2[${2}]}"
+
+    for jj in "${!v1A[@]}"; do
+        (( v1A[$jj] += mult * v2A[$jj] ))
+    done
+
+    IFS=$'\t'
+    v1[${2}]="${v1A[*]}"
+    unset IFS
+
+    local +n v1 v2
+}
+
 _timep_DEBUG_PRINTVARS() {
 
 declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimePA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimePA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimePA)|(linenoUniqCTimeA)|(linenoUniqCTimePA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_wtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_)|(Time)|(.+A))=' | sed -E s/'^declare \-. '//
@@ -1336,6 +1364,7 @@ _timep_PROCESS_LOG() {
         # check if cmd is a subshell/bg fork/function that needs to be merged up
         if [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]]; then
             normalCmdFlagA[$kk]=false
+            isMergeIndicatorA[$kk]=true
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
@@ -1350,7 +1379,9 @@ _timep_PROCESS_LOG() {
             }
         else
             normalCmdFlagA[$kk]=true
+            isMergeIndicatorA[$kk]=false
         fi
+
 
         # see if we need to merge up the endtime/runtime from the child log
         [[ "${endWTimeA[$kk]}" == '-' ]] && {
@@ -1482,7 +1513,13 @@ printf '%s;' "${fgA[@]}")"
         else
             lineno1=0
         fi
-        linenoA[$kk]="${linenoA[$kk]}.${logDepth}.${lineno1}"
+
+        linenoA[$kk]="${linenoA[$kk]}.${logDepth}"
+        cmdIndexA[$kk]="${lineno1}"
+
+        nestDiagramA[$kk]=''
+        countA[$kk]=1
+        count0A[$kk]=1
 
         # figure out "percent for current nesting depth" for wall/cpu times
         (( wTimeP0 =  wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
@@ -1495,11 +1532,30 @@ printf '%s;' "${fgA[@]}")"
 
         # combine times for lines with same lineno + same command
 
-
-        cmd="${cmdA[$kk]}"
+        if ${normalCmdFlagA[$kk]}; then
+            #  write out flamegraph stack trace line for standard commands
+            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
+        elif ${isMergeIndicatorA[$kk]} && [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}" ]]; then
+            # merge up log indo kk index vars
+            while true; do
+                IFS=' ' read -r -d $'\t' tw pw tc pc cnt || break
+                [[ $tw ]] && [[ $pw ]] || continue
+                IFS=$'\t' read -r nd lno cind cmd 
+                wTimeA[$kk]+=$'\t'"${tw}"
+                wTimePA[$kk]+=$'\t'"${pw}"
+                cTimeA[$kk]+=$'\t'"${tc}"
+                cTimePA[$kk]+=$'\t'"${pc}"
+                countA[$kk]+=$'\t'"${cnt}"
+                nestDiagramA[$kk]+=$'\t'"${nd}"
+                linenoA[$kk]+=$'\t'"${lno}"
+                cmdIndexA[$kk]+=$'\t'"${cind}"
+                cmdA[$kk]+=$'\t'"${cmd}"
+                ((count0A[$kk]++))
+            done
+        fi
         
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
-        keyCur="${linenoA[$kk]%.*}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}.${pidA[$kk]@Q}"
+        keyCur="${linenoA[$kk]}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}"
 
         # dont allow merging of << ... >> indicators. subtrees are merged later
         [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]] && until [[ -z ${linenoUniqMapAA["${keyCur}"]} ]]; do keyCur+='_'; done
@@ -1507,30 +1563,40 @@ printf '%s;' "${fgA[@]}")"
         if [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
             linenoUniqMapA[$kk]="${linenoUniqMapAA["${keyCur}"]}"
         else
-            linenoUniqA[$kk]="${keyCur}"
-            linenoUniqMapA[$kk]="${keyCur}"
-            linenoUniqMapAA["${keyCur}"]="${keyCur}"
+            linenoUniqA[$kk]="${kk}"
+            linenoUniqMapA[$kk]="${kk}"
+            linenoUniqMapAA["${keyCur}"]="${kk}"
         fi
 
         # aggregate the various profile times/metadata from each command in the group at the index(kk) of 1st line in the group
         if [[ ${linenoUniqLineA[${linenoUniqMapA[$kk]}]} ]]; then
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
-            (( linenoUniqCountA[${linenoUniqMapA[$kk]}] = linenoUniqCountA[${linenoUniqMapA[$kk]}] + 1 ))
-            linenoUniqWTimeA[${linenoUniqMapA[$kk]}]+=" ${wTimeA[$kk]:-1}"
-            linenoUniqCTimeA[${linenoUniqMapA[$kk]}]+=" ${cTimeA[$kk]:-1}"
+            (( linenoUniqCount0A[${linenoUniqMapA[$kk]}] = linenoUniqCount0A[${linenoUniqMapA[$kk]}] + 1 ))
+
+            _timep_MERGE_SUM 'wTimeA' "$kk" 
+            _timep_MERGE_SUM 'cTimeA' "$kk"
+            _timep_MERGE_SUM 'wTimePA' "$kk" "${countA[$kk]}"
+            _timep_MERGE_SUM 'cTimePA' "$kk" "${countA[$kk]}"
+            _timep_MERGE_SUM 'countA' "$kk"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
+            linenoUniqCount0A[${linenoUniqMapA[$kk]}]=1
+            linenoUniqCountA[${linenoUniqMapA[$kk]}]="${countA[$kk]}"
             linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]}"
-            linenoUniqCountA[${linenoUniqMapA[$kk]}]=1
-            linenoUniqWTimeA[${linenoUniqMapA[$kk]}]="${wTimeA[$kk]:-1}"
+            linenoUniqWTimeA[${linenoUniqMapA[$kk]}]="${wTimeA[$kk]:-0}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]="${cTimeA[$kk]:-1}"
-        fi
+            (( linenoUniqWTimePA[${linenoUniqMapA[$kk]}] = ${wTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
+            (( linenoUniqCTimePA[${linenoUniqMapA[$kk]}] = ${cTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
+            linenoUniqNestDiagramA[${linenoUniqMapA[$kk]}]="${nestDiagramA[$kk]}"
+            linenoUniqCmdIndexA[${linenoUniqMapA[$kk]}]="${cmdIndex[$kk]}"
+            linenoUniqLinenoA[${linenoUniqMapA[$kk]}]="${linenoA[$kk]}"
+      fi
 
         kk1=${kk}
     done
 
     # get runtime sums for the combined uniq lineno's
-    for kk in "${!linenoUniqWTimeA[@]}"; do
+    for kk in "${linenoUniqA[@]}"; do
 
         linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]//[^0-9 ]/}"
         linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]//[^0-9 ]/}"
@@ -1611,7 +1677,7 @@ printf '%s;' "${fgA[@]}")"
         cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
 
         # write line
-        logMergeAll=("$(printf '\n%s %s %s %s %s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${linenoA[$kk]}" '' "${cmd}")")
+        logMergeAll=("$(printf '\n%s %s %s %s %s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${nestDiagramA[$kk]}"  "${linenoA[$kk]}" "${cmdIndexA[$kk]}" '' "${cmd}")")
 
         # check if this is the start of a pipeline
         [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
