@@ -1682,8 +1682,22 @@ printf '%s;' "${fgA[@]}")"
         cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
 
         # write line
-        logMergeAll=("$(printf '\n%s %s %s %s %s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${nestDiagramA[$kk]}"  "${linenoA[$kk]}" "${cmdIndexA[$kk]}" '' "${cmd}")")
-
+		if ${isIndicatorFlag[$kk]}; then
+            printf -v spacerNS '%'"${spacerN}"'.s' ''
+            printf -v tmpOut '\n%s %%s %%%%s %%%%%%%%s %%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s:'"${spacerNS}"'\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}"
+			printf -v tmpOut "${tmpOut}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "
+            printf -v tmpOut "${tmpOut}" ${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
+			printf -v tmpOut "${tmpOut}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}"
+            printf -v tmpOut "${tmpOut}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" 
+			printf -v tmpOut "${tmpOut}" "${nestDiagramA[$kk]}"  
+            printf -v tmpOut "${tmpOut}" 
+			printf -v tmpOut "${tmpOut}" "${linenoA[$kk]}" 
+            printf -v tmpOut "${tmpOut}" "${cmdIndexA[$kk]}"
+            printf "${tmpOut}" "${cmd}"
+        else
+            printf '\n%s %s %s %s %s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${nestDiagramA[$kk]}"  "${linenoA[$kk]}" "${cmdIndexA[$kk]}" '' "${cmd}"
+        fi
+		
         # check if this is the start of a pipeline
         [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
 
@@ -2337,127 +2351,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
-    # combine lines/times/percentages for main (combined) profile
-    printf '\nMERGING REPEATED COMMANDS IN COMBINED PROFILE (+%s)\n' "${SECONDS}"  >&2
-    mapfile -t -d '' A < <(sed -zE 's/\n\n+TOTAL RUN TIME.*$//; s/\n│\n?$/\n/; s/\n(│?)[ \t]*\n/\1\x00/g' <"${timep_LOG_NESTING[0]}.out.combined")
-    A_end="$(sed -zE 's/^.*(\n│?[ \t]*\n+TOTAL RUN TIME)/\1/' <"${timep_LOG_NESTING[0]}.out.combined")"
-    unset "AA"
-
-    # for functions the top level is always just the function. So, allow combining at the 1st lvl
-    [[ ${#A[@]} == 1 ]] && mapfile -t -d '' A < <(printf '%s\0' "${A[@]}" | sed -zE 's/\n([-0-9]+ [0-9]+ [0-9]+ [0-9]+ [0-9]+\t│  [0-9])/\n\x00\1/g')
-
-    # allow top-level subshell/bg fork/function subtrees to be merged by grouping them together
-    A=("${A[@]//\$"'"\\n"'"/$'\034'}")
-    mapfile -t A0A < <(printf '%s\n\n' "${A[@]//$'\n'/\$"'"\\n"'"}" | sed -zE 's/\n\n([^\t]+\t-)/$'"'"'\\n'"'"'$'"'"'\\n'"'"'\1/g; s/\n\n/\n/g')
-    A1A=("${A0A[@]%%:*}")
-    A1A=("${A1A[@]#*$'\t'}")
-    declare -A A_map
-    for kk in "${!A0A[@]}"; do 
-        A_map["${A1A[$kk]}"]+="${A0A[$kk]%$'\n'}"$'\n'; 
-    done
-    mapfile -t A_mapN < <(printf '%s\n' "${A1A[@]}" | sort -V -u)
-   
-    mapfile -t -d '' A < <(for kk in "${!A_mapN[@]}"; do A_tmp="${A_map["${A_mapN[$kk]}"]}"; printf '%s\n\n\n' "${A_tmp//\$"'"\\n"'"/$'\n'}"; done | sed -zE 's/\n\n\n+/\x00/g; s/\n\n/\n/g; s/\x00/\n\x00/g')
-    A=("${A[@]//$'\034'/\$"'"\\n"'"}")
-
-    spacerN=0
-    while read -r nn; do
-
-        if [[ "${nn}" == *│*\:* ]]; then
-            nnn="│${nn#*│}"
-            nnn="${nnn%%\:*}:"
-        else
-            nnn=''
-        fi
-        (( spacerN = ${#nnn} > spacerN ? ${#nnn} : spacerN ))
-    done <"${timep_LOG_NESTING[0]}.out.combined"
     (( spacerN < 20 )) && spacerN=20
 
-   {
-        for kk in "${!A[@]}"; do
-            # each element of A is one top-level sub-tree
-            # L will contain unique lines (minus times) from ${A[$kk]}
-            # each T[$jj] will contain all times/percentages/counts from all the different lines represented by the unique line in L[$jj] in a newline-seperated list
-            # AA is an associative array that determines/maps the unique lines to the index $jj
-
-	    printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES (+%s)' "$kk" "${#A[@]}"  "${SECONDS}" >&2
-
-            T=();
-            L=();
-            local -A AA;
-            mapfile -t A0 <<<"${A[$kk]}"
-            for jj in "${!A0[@]}"; do
-                t="${A0[$jj]%%$'\t'*}"
-                l="${A0[$jj]#*$'\t'}"
-                l0="${l/'├─ '/'│  '}"
-                l0="${l/'└─ '/'│  '}"
-                if [[ -z ${AA[${l@Q}]} ]]; then
-                    if [[ ${AA[${l0@Q}]} ]]; then
-                        AA[${l@Q}]=${AA[${l0@Q}]}
-                        L[${AA[${l0@Q}]}]="${l}";
-                    else
-                        AA[${l@Q}]=$jj;
-                        L[$jj]="${l}";
-                    fi
-                fi
-                T[${AA[${l@Q}]}]+="${t}"$'\n';
-            done
-            unset "AA"
-
-            # loop over each T and sum times/counts and average percentages
-            for jj in "${!T[@]}"; do
-                jj0=0;
-                tA=(0 0 0 0 0);
-                while read -r -a tA0; do
-                    for jj1 in {0..4}; do
-                        (( tA[$jj1] = 10#0${tA[$jj1]} + 10#0${tA0[$jj1]} ));
-                    done;
-                    ((jj0++));
-                done  <<<"${T[$jj]}"
-                (( jj0 > 0 )) && {
-                    (( tA[1] = 10#0${tA[1]} / ( jj0 - 1 ) ));
-                    (( tA[3] = 10#0${tA[3]} / ( jj0 - 1 ) ));
-                }
-
-                # convert integer times (microseconds) and percents (# per 10000) into decimal values (seconds, %)
-                printf -v wTime0 '%0.7d' "${tA[0]}"
-                (( d6 = ${#wTime0} - 6 ))
-                printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
-
-                printf -v cTime0 '%0.7d' "${tA[2]}"
-                (( d6 = ${#cTime0} - 6 ))
-                printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
-
-                printf -v wTimeP '%5.3d' "${tA[1]}"
-                wTimeP="${wTimeP:0:3}.${wTimeP:3}"
-
-                printf -v cTimeP '%5.3d' "${tA[3]}"
-                cTimeP="${cTimeP:0:3}.${cTimeP:3}"
-
-                count="${tA[4]}"
-                Lstart="${L[$jj]%%\:*}"
-                Lstart0="${Lstart%%[0-9]*}"
-                (( spacerCur = spacerN - ${#Lstart} ))
-                #[[ ${timep_runType} == 'f' ]] && [[ ${Lstart0} ]] && (( ${#Lstart0} < 5  )) && printf '|\n'
-
-                Lend="${L[$jj]#*\:}"
-                Lend="${Lend##*([[:space:]])}"
-
-                # write out final profile line
-                [[ ${Lstart} ]] && printf '%s:%'"${spacerCur}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t(%sx)\t%s\n' "${Lstart}" '' "${wTime}" "${wTimeP}" "${cTime}" "${cTimeP}" "${count}" "${Lend}"
-
-            done
-                if [[ "${timep_runType}" == 'f' ]] && (( kk < ${#A[@]} - 1 )); then
-                    printf '│\n'
-                else
-                    printf '\n'
-                fi
-        done
-
-	printf '\rPROGRESS: FINISHED MERGING %s OF %s TOP-LEVEL COMMAND TREES (+%s)' "${#A[@]}" "${#A[@]}" "${SECONDS}"  >&2
-        echo "${A_end}"
-    } >"${timep_TMPDIR}/profiles/out.profile"
-
+    sed -E 's/\t([0-9]+\.[0-9]+)\t([0-9]+\: *\t)/\1.\2/' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile"; 
+   
     # add another percentage showing "percent of total runtime" to final outputs
     printf '...DONE\n\nADDING "PERCENT OF TOTAL TIME" TO PROFILES (+%s)\n' "${SECONDS}"  >&2
 
