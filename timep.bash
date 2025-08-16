@@ -1604,7 +1604,7 @@ printf '%s;' "${fgA[@]}")"
             (( linenoUniqWTimePA[${linenoUniqMapA[$kk]}] = ${wTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
             (( linenoUniqCTimePA[${linenoUniqMapA[$kk]}] = ${cTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
             linenoUniqNestDiagramA[${linenoUniqMapA[$kk]}]="${nestDiagramA[$kk]}"
-            linenoUniqCmdIndexA[${linenoUniqMapA[$kk]}]="${cmdIndex[$kk]}"
+            linenoUniqCmdIndexA[${linenoUniqMapA[$kk]}]="${cmdIndexA[$kk]}"
             linenoUniqLinenoA[${linenoUniqMapA[$kk]}]="${linenoA[$kk]}"
       fi
 
@@ -1682,7 +1682,7 @@ printf '%s;' "${fgA[@]}")"
         cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
 
         # write line
-		if ${isIndicatorFlag[$kk]}; then
+		if ${isMergeIndicatorA[$kk]}; then
             printf -v spacerNS '%'"${spacerN}"'.s' ''
             printf -v tmpOut '\n%s %%s %%%%s %%%%%%%%s %%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s:'"${spacerNS}"'\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}"
 			printf -v tmpOut "${tmpOut}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "
