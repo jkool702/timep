@@ -1225,7 +1225,7 @@ _timep_NUM_RUNNING() {
 _timep_MERGE_SUM() {
 
     local -a v1A v2A
-    local jj v1 v2 var var1 ind mult IFS
+    local jj v1 v2 var var1 ind mult divideFlag IFS
 
     var="${1}"
     var1="${var:0:1}"
@@ -1233,21 +1233,37 @@ _timep_MERGE_SUM() {
     mult="${3}"
     [[ ${mult} ]] || mult=1
 
-    local -n v1="${var}"
-    local -n v2="linenoUniq${var1^^}${var:1}"
+    divideFlag=false
+    (( mult < 0 )) && {
+        divideFlag=true
+        (( mult = mult * -1 ))
+        (( mult == 1 )) && return
+    }
 
-    IFS=$'\t' read -r -a v1A <<<"${v1[${2}]}"
-    IFS=$'\t' read -r -a v2A <<<"${v2[${2}]}"
+    local -n v1="linenoUniq${var1^^}${var:1}"
+    IFS=$'\t' read -r -a v1A <<<"${v1[${ind}]}"
+    if ${divideFlag}; then
 
-    for jj in "${!v1A[@]}"; do
-        (( v1A[$jj] += mult * v2A[$jj] ))
-    done
+        for jj in "${!v1A[@]}"; do
+            (( v1A[$jj] = ( v1A[$jj] + ( mult / 2 ) ) / mult ))
+            [[ $4 ]] && ((  v1A[$jj] = 10#0${v1A[$jj]//[^0-9]/} > 0 ? 10000 * 10#0${v1A[$jj]//[^0-9]/} / "$4" : 0 ))
+        done        
+
+    else
+        local -n v2="${var}"
+        IFS=$'\t' read -r -a v2A <<<"${v2[${ind}]}"
+
+        for jj in "${!v1A[@]}"; do
+            (( v1A[$jj] += mult * v2A[$jj] ))
+        done
+    fi
 
     IFS=$'\t'
-    v1[${2}]="${v1A[*]}"
+    v1[${ind}]="${v1A[*]}"
     unset IFS
 
-    local +n v1 v2
+    local +n v1
+    ${divideFlag} || local +n v2
 }
 
 _timep_DEBUG_PRINTVARS() {
@@ -1598,19 +1614,8 @@ printf '%s;' "${fgA[@]}")"
     # get runtime sums for the combined uniq lineno's
     for kk in "${linenoUniqA[@]}"; do
 
-        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]//[^0-9 ]/}"
-        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]//[^0-9 ]/}"
-
-        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]##*( )}"
-        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]##*( )}"
-        linenoUniqWTimeA[$kk]="${linenoUniqWTimeA[$kk]%%*( )}"
-        linenoUniqCTimeA[$kk]="${linenoUniqCTimeA[$kk]%%*( )}"
-
-        [[ ${linenoUniqWTimeA[$kk]} ]] && (( linenoUniqWTimeA[$kk] = ${linenoUniqWTimeA[$kk]// /\+} )) #|| linenoUniqWTimeA[$kk]=0
-        [[ ${linenoUniqCTimeA[$kk]} ]] && (( linenoUniqCTimeA[$kk] = ${linenoUniqCTimeA[$kk]// /\+} )) #|| linenoUniqCTimeA[$kk]=0
-
-        (( linenoUniqWTimePA[$kk] = 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqWTimeA[$kk]//[^0-9]/} / wTimeTotal : 0 ))
-        (( linenoUniqCTimePA[$kk] = 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} > 0 ? 10000 * 10#0${linenoUniqCTimeA[$kk]//[^0-9]/} / cTimeTotal : 0 ))
+        _timep_MERGE_SUM 'wTimePA' "$kk" '-'"${linenoUniqCountA[$kk]}" "${wTimeTotal}"
+        _timep_MERGE_SUM 'cTimePA' "$kk" '-'"${linenoUniqCountA[$kk]}" "${cTimeTotal}"
 
     done
 
