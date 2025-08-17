@@ -1237,11 +1237,11 @@ _timep_MERGE_SUM() {
     (( mult < 0 )) && {
         divideFlag=true
         (( mult = mult * -1 ))
-        (( mult == 1 )) && return
+        (( mult = 1 )) && return
     }
 
     local -n v1="linenoUniq${var1^^}${var:1}"
-    IFS=$'\t' read -r -a v1A <<<"${v1[${ind}]}"
+    IFS=$'\t' read -r -a v1A <<<${v1[${ind}]}
     if ${divideFlag}; then
 
         for jj in "${!v1A[@]}"; do
@@ -1251,7 +1251,7 @@ _timep_MERGE_SUM() {
 
     else
         local -n v2="${var}"
-        IFS=$'\t' read -r -a v2A <<<"${v2[${ind}]}"
+        IFS=$'\t' read -r -a v2A <<<${v2[${ind}]}
 
         for jj in "${!v1A[@]}"; do
             (( v1A[$jj] += mult * v2A[$jj] ))
@@ -1513,6 +1513,7 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
+    set -xv
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
@@ -1537,15 +1538,17 @@ printf '%s;' "${fgA[@]}")"
         countA[$kk]=1
         count0A[$kk]=1
 
-        # figure out "percent for current nesting depth" for wall/cpu times
-        (( wTimeP0 =  wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
-        printf -v wTimeP '%5.3d' "${wTimeP0}"
-        wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}"
 
-        (( cTimeP0 =  cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
-        printf -v cTimeP '%5.3d' "${cTimeP0}"
-        cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}"
+            # figure out "percent for current nesting depth" for wall/cpu times
+            (( wTimePA[$kk] = wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
+            #printf -v wTimeP '%5.3d' "${wTimeP0}"
+            #wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}"
 
+            (( cTimePA[$kk] = cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
+            #printf -v cTimeP '%5.3d' "${cTimeP0}"
+            #cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}"
+
+        
         # combine times for lines with same lineno + same command
 
         if ${normalCmdFlagA[$kk]}; then
@@ -1553,21 +1556,26 @@ printf '%s;' "${fgA[@]}")"
             printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
         elif ${isMergeIndicatorA[$kk]} && [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}" ]]; then
             # merge up log indo kk index vars
-            while true; do
-                IFS=' ' read -r -d $'\t' tw pw tc pc cnt || break
+            mapfile -t mergeACur <"${mergeA[$kk]}"
+            for kkCur in "${mergeACur[@]}"; do
+                IFS=' ' read -r -d $'\t' tw pw tc pc cnt nd lno cind cmd <<<"${mergeACur[$kkCur]}"
                 [[ $tw ]] && [[ $pw ]] || continue
-                IFS=$'\t' read -r nd lno cind cmd 
                 wTimeA[$kk]+=$'\t'"${tw}"
                 wTimePA[$kk]+=$'\t'"${pw}"
                 cTimeA[$kk]+=$'\t'"${tc}"
                 cTimePA[$kk]+=$'\t'"${pc}"
                 countA[$kk]+=$'\t'"${cnt}"
-                nestDiagramA[$kk]+=$'\t'"${nd}"
                 linenoA[$kk]+=$'\t'"${lno}"
                 cmdIndexA[$kk]+=$'\t'"${cind}"
                 cmdA[$kk]+=$'\t'"${cmd}"
-                ((count0A[$kk]++))
-            done
+                if (( kk == ${#mergeACur[@]} - 1 )); then
+                    nestDiagramA[$kk]+=$'\t''└─ '"${nd}"
+                elif (( kk == 0 )); then
+                    nestDiagramA[$kk]+=$'\t''├─ '"${nd}"
+                else
+                    nestDiagramA[$kk]+=$'\t''│  '"${nd}"
+                fi
+           done 
         fi
         
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
@@ -1632,10 +1640,10 @@ printf '%s;' "${fgA[@]}")"
             (( kk == 0  )) || printf '\n\n'
 
             # convert microseconds to seconds
-            printf -v wTime0 '%0.7d' "${wTimeA[$kk]}"
+            printf -v wTime0 '%0.7d' "${wTimeA[$kk]%%$'\n'*}"
             (( d6 = ${#wTime0} - 6 ))
             printf -v wTime '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
-            printf -v cTime0 '%0.7d'  "${cTimeA[$kk]}"
+            printf -v cTime0 '%0.7d'  "${cTimeA[$kk]%%$'\n'*}"
             (( d6 = ${#cTime0} - 6 ))
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
@@ -1668,6 +1676,7 @@ printf '%s;' "${fgA[@]}")"
     done >"${logCur}.out"
 
     # write out new combined (uniq lineno) merged-upward log
+    set -xv
     inPipeFlag=false
     for kk in "${!linenoUniqA[@]}"; do
         [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
@@ -1683,19 +1692,16 @@ printf '%s;' "${fgA[@]}")"
 
         # write line
 		if ${isMergeIndicatorA[$kk]}; then
-            printf -v spacerNS '%'"${spacerN}"'.s' ''
-            printf -v tmpOut '\n%s %%s %%%%s %%%%%%%%s %%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s:'"${spacerNS}"'\t%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}"
-			printf -v tmpOut "${tmpOut}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "
-            printf -v tmpOut "${tmpOut}" ${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
-			printf -v tmpOut "${tmpOut}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}"
-            printf -v tmpOut "${tmpOut}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" 
-			printf -v tmpOut "${tmpOut}" "${nestDiagramA[$kk]}"  
-            printf -v tmpOut "${tmpOut}" 
-			printf -v tmpOut "${tmpOut}" "${linenoA[$kk]}" 
-            printf -v tmpOut "${tmpOut}" "${cmdIndexA[$kk]}"
-            printf "${tmpOut}" "${cmd}"
+            mapfile -t wTimeOutCurA <<<"${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" 
+            mapfile -t wTimeOutCurPA <<<"${linenoUniqWTimePA[${linenoUniqA[$kk]}]}"
+            mapfile -t cTimeOutCurA <<<"${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
+            mapfile -t cTimeOutCurPA <<<"${linenoUniqCTimePA[${linenoUniqA[$kk]}]}"
+            mapfile -t countOutCurA <<<"${linenoUniqCountA[${linenoUniqA[$kk]}]}"
+            for kkOut in "${!wTimeOutCurA[@]}"; do
+                 printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${wTimeOutCurA[$kkOut]}" "${wTimeOutCurPA[$kkOut}" "${cTimeOutCurA[$kkOut]}" "${cTimeOutCurPA[$kkOut]}" "${countOutCurA[$kkOut]}" "${nestDiagramA[$kk]}" "${linenoA[$kk]}" "${cmdIndexA[$kk]}"
+               done
         else
-            printf '\n%s %s %s %s %s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${nestDiagramA[$kk]}"  "${linenoA[$kk]}" "${cmdIndexA[$kk]}" '' "${cmd}"
+            printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${nestDiagramA[$kk]}"  "${linenoA[$kk]}" "${cmdIndexA[$kk]}" '' "${cmd}"
         fi
 		
         # check if this is the start of a pipeline
@@ -1705,7 +1711,7 @@ printf '%s;' "${fgA[@]}")"
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
         [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
-            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}[├│└└] *\.')
+            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}[├│└] *\.')
                 if (( ${#logMergeA[@]} == 1 )); then
                     printf '\n%s\t└─ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
                 elif (( ${#logMergeA[@]} > 1 )); then
@@ -1717,11 +1723,11 @@ printf '%s;' "${fgA[@]}")"
                 fi)")
         done
 
-        printf '%s' "${logMergeAll[@]}"
 
         (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out.combined"
+    set +xv
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
