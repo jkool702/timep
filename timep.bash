@@ -1229,9 +1229,8 @@ _timep_MERGE_SUM() {
 
     var="${1}"
     var1="${var:0:1}"
-    ind="$2"
-    mult="${3}"
-    [[ ${mult} ]] || mult=1
+    ind="${2:-$kk}"
+    mult="${3:-1}"
 
     divideFlag=false
     (( mult < 0 )) && {
@@ -1241,7 +1240,10 @@ _timep_MERGE_SUM() {
     }
 
     local -n v1="linenoUniq${var1^^}${var:1}"
+    local -n v2="${var}"
+    
     IFS=$'\t' read -r -a v1A <<<${v1[${ind}]}
+    
     if ${divideFlag}; then
 
         for jj in "${!v1A[@]}"; do
@@ -1250,12 +1252,12 @@ _timep_MERGE_SUM() {
         done        
 
     else
-        local -n v2="${var}"
-        IFS=$'\t' read -r -a v2A <<<${v2[${ind}]}
 
-        for jj in "${!v1A[@]}"; do
-            (( v1A[$jj] += mult * v2A[$jj] ))
-        done
+        IFS=$'\t' read -r -a v2A <<<${v2[${ind}]}
+   
+            for jj in "${!v1A[@]}"; do
+                (( v1A[$jj] = 10#0${v1A[$jj]} + mult * 10#0${v2A[$jj]} ))
+            done
     fi
 
     IFS=$'\t'
@@ -1673,6 +1675,8 @@ printf '%s;' "${fgA[@]}")"
         (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out"
+
+    declare -p >"${logCur}.vars"
 
     # write out new combined (uniq lineno) merged-upward log
     set -xv
