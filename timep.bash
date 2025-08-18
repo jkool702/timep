@@ -911,7 +911,7 @@ timep_SKIP_DEBUG_FLAG=false
 
     [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
 
-    echo "timep_TMPDIR = ${timep_TMPDIR}" >&2
+    printf '\ntimep_TMPDIR = %s\n\n' "${timep_TMPDIR}" >&2
 
     export -p -f timep &>/dev/null && export -n -f timep
     export -f timep
@@ -995,7 +995,7 @@ timep_SKIP_DEBUG_FLAG=false
 
     # DEBUG OUTPUT - print log contents
     ${timep_DEBUG_FLAG} && {
-        mapfile -t timep_LOG_A < <(printf '%s\n' "${timep_TMPDIR}/.log/log"* | sort -V)
+        mapfile -t timep_LOG_A < <(printf '%s\n' "${timep_TMPDIR}"/.log/log* | sort -V)
         for nn in "${timep_LOG_A[@]}"; do
             printf '\n\n------------------------------------------------------------------\n%s\n\n' "$nn"; sort -n -k2 <"$nn";
         done >&2
@@ -1558,7 +1558,7 @@ printf '%s;' "${fgA[@]}")"
             # merge up log indo kk index vars
             mapfile -t mergeACur <"${mergeA[$kk]}.out.combined"
            while IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd; do
-                [[ $tw ]] && [[ $pw ]] || continue
+                { [[ $tw ]] && [[ $pw ]]; } || continue
                 wTimeA[$kk]+=$'\t'"${tw}"
                 wTimePA[$kk]+=$'\t'"${pw}"
                 cTimeA[$kk]+=$'\t'"${tc}"
@@ -2348,7 +2348,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
     sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        echo "$(sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/')" >"${timep_LOG_NESTING[0]}.out.combined"
+        sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' | sed -E 's/([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t/\1 \2 \3 \4 \5\t/; s/\t([0-9]+\.[0-9]+)\t([0-9]+\: *\t)/\1.\2/' >"${timep_TMPDIR}/profiles/out.profile"; 
     fi
 
     # get total runtime
@@ -2357,8 +2357,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
     (( spacerN < 20 )) && spacerN=20
-
-    sed -E 's/\t([0-9]+\.[0-9]+)\t([0-9]+\: *\t)/\1.\2/' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile"; 
    
     # add another percentage showing "percent of total runtime" to final outputs
     printf '...DONE\n\nADDING "PERCENT OF TOTAL TIME" TO PROFILES (+%s)\n' "${SECONDS}"  >&2
@@ -2648,9 +2646,9 @@ _timep_base64_to_file() {
     if [[ ${outFile} ]] && [[ -e "${outFile}" ]]; then
         chmod +x "${outFile}"
         (( outB > 0 )) && type -p truncate &>/dev/null && truncate --size="${outB}" "${outFile}"
-        ${noVerifyFlag} || [[ "${nnSum}" == '0' ]] || { nnSumF="$("${nnSum%%\:*}" "${outFile}")"; nnSumF="${nnSumF%% *}"; grep -qF "${nnSum#*\:}" <<<"${nnSumF}" || { printf '\n\nWARNING FOR EXTRACTED LOADABLE:\n"%s"\n\nCHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\nDO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\nEXPECTED: %s\nGOT: %s\n\nTHIS CODE WILL NOW REMOVE THE EXTRACTTED .SO FILE AND ABORT\nTO FORCE KEEPING THE [POTENTIALLY CORRUPT] .SO FILE, RE-RUN THIS CODE WITH THE "--force" FLAG'  "${outFile:-\(STDOUT\)}" "${nnSum}" "${nnSumF}" >&2; sleep 2; \rm -f "${outFile}"; return 1; }; };
+        ${noVerifyFlag} || [[ "${nnSum}" == '0' ]] || { nnSumF="$("${nnSum%%\:*}" "${outFile}")"; nnSumF="${nnSumF%% *}"; grep -qF "${nnSum#*\:}" <<<"${nnSumF}" || { printf '\n\nWARNING FOR EXTRACTED LOADABLE:\n"%s"\n\nCHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\nDO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\nEXPECTED: %s\nGOT: %s\n\nTHIS CODE WILL NOW REMOVE THE EXTRACTTED .SO FILE AND ABORT\nTO FORCE KEEPING THE [POTENTIALLY CORRUPT] .SO FILE, RE-RUN THIS CODE WITH THE "--force" FLAG'  "${outFile:-\(STDOUT\)}" "${nnSum}" "${nnSumF}" >&2; read -r -u ${fd_sleep} -t 2; \rm -f "${outFile}"; return 1; }; };
     elif ! { ${noVerifyFlag} || [[ "${nnSum}" == '0' ]]; }; then
-        nnSumF="$("${nnSum%%\:*}" <(printf '%b' "${outF}"))"; nnSumF="${nnSumF%% *}"; grep -qF "${nnSum#*\:}" <<<"${nnSumF}" || { printf '\n\nWARNING FOR EXTRACTED LOADABLE:\n"%s"\n\nCHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\nDO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\nEXPECTED: %s\nGOT: %s\n\nTHIS CODE WILL NOW REMOVE THE EXTRACTTED .SO FILE AND ABORT\nTO FORCE KEEPING THE [POTENTIALLY CORRUPT] .SO FILE, RE-RUN THIS CODE WITH THE "--force" FLAG'  "${outFile:-\(STDOUT\)}" "${nnSum}" "${nnSumF}" >&2; sleep 2; \rm -f "${outFile}"; return 1; };
+        nnSumF="$("${nnSum%%\:*}" <(printf '%b' "${outF}"))"; nnSumF="${nnSumF%% *}"; grep -qF "${nnSum#*\:}" <<<"${nnSumF}" || { printf '\n\nWARNING FOR EXTRACTED LOADABLE:\n"%s"\n\nCHECKSUM DOES NOT MATCH EXPECTED VALUE!!!\nDO NOT CONTINUE UNLESS THIS WAS EXPECTED!!!\n\nEXPECTED: %s\nGOT: %s\n\nTHIS CODE WILL NOW REMOVE THE EXTRACTTED .SO FILE AND ABORT\nTO FORCE KEEPING THE [POTENTIALLY CORRUPT] .SO FILE, RE-RUN THIS CODE WITH THE "--force" FLAG'  "${outFile:-\(STDOUT\)}" "${nnSum}" "${nnSumF}" >&2; read -r -u ${fd_sleep} -t 2; \rm -f "${outFile}"; return 1; };
     fi
 
     shopt ${extglobState} extglob
