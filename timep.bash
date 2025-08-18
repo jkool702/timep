@@ -1554,9 +1554,9 @@ printf '%s;' "${fgA[@]}")"
         if ${normalCmdFlagA[$kk]}; then
             #  write out flamegraph stack trace line for standard commands
             printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
-        elif ${isMergeIndicatorA[$kk]} && [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}" ]]; then
+        elif ${isMergeIndicatorA[$kk]} && [[ "${mergeA[$kk]}.out.combined" ]] && [[ -e "${mergeA[$kk]}.out.combined" ]]; then
             # merge up log indo kk index vars
-            mapfile -t mergeACur <"${mergeA[$kk]}"
+            mapfile -t mergeACur <"${mergeA[$kk]}.out.combined"
             for kkCur in "${mergeACur[@]}"; do
                 IFS=' ' read -r -d $'\t' tw pw tc pc cnt nd lno cind cmd <<<"${mergeACur[$kkCur]}"
                 [[ $tw ]] && [[ $pw ]] || continue
@@ -2810,7 +2810,7 @@ _timep_SETUP --force
 
 _timep_file_to_base64() {
 
-    local nn k1 k2 out out0 outF outN v1 v2 nnSum hexProg quoteFlag noCompressFlag doneFlag IFS IFS0 
+    local nn kk kk0 k1 k2 out out0 outF outN v1 v2 nnSum hexProg quoteFlag noCompressFlag doneFlag IFS IFS0 
     local -a charmap compressI compressV outA nnSumA
     local -x LC_ALL=C
 
@@ -2825,7 +2825,7 @@ _timep_file_to_base64() {
                 quoteFlag=true
                 shift 1
             ;;
-            -n|-nc|--no-compress)
+            -n|-nc|--no-compress|--no-compression)
                 noCompressFlag=true
                 shift 1
             ;;
@@ -2902,11 +2902,16 @@ _timep_file_to_base64() {
         printf -v out0 '%s\n' "${outN} ${outB}" "${nnSumA[@]}"
     else
         compressI=('~' '`' '!' '#' '$' '%' '^' '&' '*' '(' ')' '-' '+' '=' '{' '[' '}' ']' ':' ';' '<' ',' '>' '.' '?' '/' '|')
-        mapfile -t compressV < <(sed -E 's/(00+)(([^0]+0?[^0]+)*)/\1\n\2/g; s/([^0]+)/\1\n/g' <<<"${out}" | grep -E '..' | sort | uniq -c | sed -E 's/^[ \t]+//' | grep -vE '^1 ' | sort -nr -k1,1 | while read -r v1 v2; do (( v0 = v1 * ${#v2} - v1 )); printf '%s %s %s %s\n' "$v0" "${#v2}" "$v1" "$v2"; done |grep -vE '^-' | sort -nr -k 1,1 | head -n 27 | sort -nr -k2,2 | sed -E 's/^([0-9]+ ){3}//')
-
+        mapfile -t compressV < <(sed -E 's/(00+)(([^0]+0?[^0]+)*)/\1\n\2/g; s/([^0]+)/\1\n/g' <<<"${out}" | grep -E '..' | sort | uniq -c | sed -E 's/^[ \t]+//' | grep -vE '^1 ' | sort -nr -k1,1 | while read -r v1 v2; do (( v0 = v1 * ${#v2} - v1 - ${#v2} )); printf '%s %s %s %s\n' "$v0" "${#v2}" "$v1" "$v2"; done | grep -vE '^-' | sort -nr -k 1,1 | head -n 25 | sort -nr -k2,2 | sed -E 's/^([0-9]+ ){3}//')
         for kk in "${!compressV[@]}"; do
             out="${out//"${compressV[$kk]}"/"${compressI[$kk]}"}"
         done
+        for kk0 in 1 2; do
+            ((kk++))
+            compressV[$kk]="$({ sed -E 's/(00+)(([^0]+0?[^0]+)*)/\1\n\2/g; s/([^0]+)/\1\n/g' <<<"${out}" | grep -E '..' | sort | uniq -c | sed -E 's/^[ \t]+//'; { read -r -N 1 y; while read -r -N 1 x; do if [[ "$x" == "${y: -1}" ]]; then y+="$x"; else echo "$y"; read -r -N 1 y; fi; done; } <<<"${out}" | grep -E '..' | sort | uniq -c| sed -E 's/^[ \t]+//' | while read -r v1 v2; do if ((${#v2} > 32 )); then (( v1 = v1 * ( ${#v2} / 32 ) )); v2="${v2:0:32}"; fi; printf '%s %s\n' "$v1" "$v2"; done } | grep -vE '^1 '   | sort -nr -k1,1 | while read -r v1 v2; do (( v0 = v1 * ${#v2} - v1 - ${#v2} )); printf '%s %s %s %s\n' "$v0" "${#v2}" "$v1" "$v2"; done | grep -vE '^-' | sort -nr -k 1,1 | head -n 1 | sed -E 's/^([0-9]+ ){3}//')"
+            out="${out//"${compressV[$kk]}"/"${compressI[$kk]}"}"
+        done
+      
         printf -v out0 '%s\n' "${outN} ${outB}" "${nnSumA[@]}" "${compressV[@]}"
     fi
 
