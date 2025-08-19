@@ -1282,7 +1282,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj
-    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA 
+    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA 
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1518,10 +1518,8 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
-    set -xv
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
-        declare -p >"${logCur}.vars0"
     for kk in "${!logA[@]}"; do
         [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
             (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
@@ -1538,7 +1536,7 @@ printf '%s;' "${fgA[@]}")"
         fi
 
         linenoA[$kk]="${linenoA[$kk]}.${logDepth}"
-        cmdIndexA[$kk]="${lineno1}"
+        cmdIndexA[$kk]="${lineno1}: "
 
         nestDiagramA[$kk]='x'
         countA[$kk]=1
@@ -1570,7 +1568,7 @@ printf '%s;' "${fgA[@]}")"
                 cTimePA[$kk]+=$'\n'"${pc:-0}"
                 countA[$kk]+=$'\n'"${cnt:-1}"
                 linenoA[$kk]+=$'\n'"${lno:-0.0}"
-                cmdIndexA[$kk]+=$'\n'"${cind:-0}"
+                cmdIndexA[$kk]+=$'\n'"${cind:-0}    "
                 cmd="${cmd//$'\n'/}"
                 cmd="${cmd##+([[:space:]])}"
                 cmd="${cmd%%+([[:space:]])}"
@@ -1620,7 +1618,6 @@ printf '%s;' "${fgA[@]}")"
 
         kk1=${kk}
     done
-    declare -p >"${logCur}.vars1"
 
     # get runtime sums for the combined uniq lineno's
 #    for kk in "${linenoUniqA[@]}"; do
@@ -1651,7 +1648,7 @@ printf '%s;' "${fgA[@]}")"
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
             # write line
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]}" '' "${wTime}" "${wTimePA[$kk]}" "${cTime}" "${cTimePA[$kk]}" "${cmdA[$kk]}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]%%$'\n'*}" '' "${wTime}" "${wTimePA[$kk]%%$'\n'*}" "${cTime}" "${cTimePA[$kk]%%$'\n'*}" "${cmdA[$kk]%%$'\n'*}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1680,7 +1677,6 @@ printf '%s;' "${fgA[@]}")"
 
 
     # write out new combined (uniq lineno) merged-upward log
-    set -xv
     inPipeFlag=false
 
     mapfile -t wTimeOutCurA < <(printf '%s\n\n' "${linenoUniqWTimeA[@]}")
@@ -1692,9 +1688,7 @@ printf '%s;' "${fgA[@]}")"
     mapfile -t linenoOutCurA < <(printf '%s\n\n' "${linenoUniqLinenoA[@]}")
     mapfile -t cmdIndexOutCurA < <(printf '%s\n\n' "${linenoUniqCmdIndexA[@]}")
     mapfile -t cmdOutCurA < <(printf '%s\n\n' "${linenoUniqCmdA[@]}")
-
-    declare -p >"${logCur}.vars2"
-
+        declare -p >"${logCur}.vars"
     for kk in "${!wTimeOutCurA[@]}"; do
         #[[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
 
@@ -1718,32 +1712,7 @@ printf '%s;' "${fgA[@]}")"
 
         # write line
 
-             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" '' "${cmd}"
-
-
-		
-        # check if this is the start of a pipeline
-       # [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
-
-        # (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
-
-        :<<'EOF'
-
-        # add merged up log to log, including for "in the middle of a pipeline" commands
-        [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
-            [[ ${mergeA[$kk1]} ]] && [[ -e "${mergeA[$kk1]}.out.combined" ]] && logMergeAll+=("$(mapfile -t logMergeA < <(grep -E '^[0-9]' <"${mergeA[$kk1]}.out.combined" |  grep -vE '^([0-9]+[[:space:]]+){5}[├│└] *\.')
-                if (( ${#logMergeA[@]} == 1 )); then
-                    printf '\n%s\t└─ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
-                elif (( ${#logMergeA[@]} > 1 )); then
-                    printf '\n%s\t├─ %s' "${logMergeA[0]%%$'\t'*}" "${logMergeA[0]#*$'\t'}"
-                    for (( jj =1; jj<${#logMergeA[@]}-1; jj++ )); do
-                        printf '\n%s\t│  %s' "${logMergeA[$jj]%%$'\t'*}" "${logMergeA[$jj]#*$'\t'}"
-                    done
-                    (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t└─ %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
-                fi)")
-        done
-EOF
-
+             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
     set +xv
