@@ -1597,7 +1597,7 @@ printf '%s;' "${fgA[@]}")"
         fi
 
         # aggregate the various profile times/metadata from each command in the group at the index(kk) of 1st line in the group
-        if [[ ${linenoUniqLineA[${linenoUniqMapA[$kk]}]} ]]; then
+        if [[ "${linenoUniqMapA[$kk]}" != "$kk" ]]; then
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
             _timep_MERGE_SUM 'wTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
             _timep_MERGE_SUM 'cTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
