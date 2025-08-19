@@ -1252,8 +1252,9 @@ _timep_MERGE_SUM() {
 
     if ${divideFlag}; then
         for jj in "${!v1A[@]}"; do
-            (( v1A[$jj] = ( v1A[$jj] + ( mult / 2 ) ) / mult ))
-            [[ $5 ]] && ((  v1A[$jj] = 10#0${v1A[$jj]//[^0-9]/} > 0 ? 10000 * 10#0${v1A[$jj]//[^0-9]/} / "$5" : 0 ))
+            (( 10#0${mult[$jj]} == 0 )) && mult[$jj]=1
+            (( v1A[$jj] = ( v1A[$jj] + ( mult[$jj] / 2 ) ) / mult[$jj] ))
+            [[ ${5} ]] && ((  v1A[$jj] = 10#0${v1A[$jj]//[^0-9]/} > 0 ? 10000 * 10#0${v1A[$jj]//[^0-9]/} / ${5} : 0 ))
         done        
     else
          mapfile -t v2A <<<${v2[${ind2}]}
@@ -1520,6 +1521,7 @@ printf '%s;' "${fgA[@]}")"
     set -xv
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
+        declare -p >"${logCur}.vars0"
     for kk in "${!logA[@]}"; do
         [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
             (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
@@ -1554,7 +1556,6 @@ printf '%s;' "${fgA[@]}")"
 
         
         # combine times for lines with same lineno + same command
-
         if ${normalCmdFlagA[$kk]}; then
             #  write out flamegraph stack trace line for standard commands
             printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
@@ -1598,8 +1599,6 @@ printf '%s;' "${fgA[@]}")"
         # aggregate the various profile times/metadata from each command in the group at the index(kk) of 1st line in the group
         if [[ ${linenoUniqLineA[${linenoUniqMapA[$kk]}]} ]]; then
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
-            (( linenoUniqCount0A[${linenoUniqMapA[$kk]}] = linenoUniqCount0A[${linenoUniqMapA[$kk]}] + 1 ))
-
             _timep_MERGE_SUM 'wTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
             _timep_MERGE_SUM 'cTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
             _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" "${countA[$kk]}"
@@ -1607,20 +1606,20 @@ printf '%s;' "${fgA[@]}")"
             _timep_MERGE_SUM 'countA' "${linenoUniqMapA[$kk]}" "${kk}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
-            linenoUniqCount0A[${linenoUniqMapA[$kk]}]=1
-            linenoUniqCountA[${linenoUniqMapA[$kk]}]="${countA[$kk]}"
-            linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]}"
+            linenoUniqCountA[${linenoUniqMapA[$kk]}]="${countA[$kk]:-1}"
+            linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]:-_}"
             linenoUniqWTimeA[${linenoUniqMapA[$kk]}]="${wTimeA[$kk]:-0}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]="${cTimeA[$kk]:-1}"
             (( linenoUniqWTimePA[${linenoUniqMapA[$kk]}] = ${wTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
             (( linenoUniqCTimePA[${linenoUniqMapA[$kk]}] = ${cTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
-            linenoUniqNestDiagramA[${linenoUniqMapA[$kk]}]="${nestDiagramA[$kk]}"
-            linenoUniqCmdIndexA[${linenoUniqMapA[$kk]}]="${cmdIndexA[$kk]}"
-            linenoUniqLinenoA[${linenoUniqMapA[$kk]}]="${linenoA[$kk]}"
+            linenoUniqNestDiagramA[${linenoUniqMapA[$kk]}]="${nestDiagramA[$kk]:-x}"
+            linenoUniqCmdIndexA[${linenoUniqMapA[$kk]}]="${cmdIndexA[$kk]:-x}"
+            linenoUniqLinenoA[${linenoUniqMapA[$kk]}]="${linenoA[$kk]:-x.x}"
       fi
 
         kk1=${kk}
     done
+    declare -p >"${logCur}.vars1"
 
     # get runtime sums for the combined uniq lineno's
     for kk in "${linenoUniqA[@]}"; do
@@ -1678,7 +1677,7 @@ printf '%s;' "${fgA[@]}")"
 
     done >"${logCur}.out"
 
-    declare -p >"${logCur}.vars"
+    declare -p >"${logCur}.vars2"
 
     # write out new combined (uniq lineno) merged-upward log
     set -xv
