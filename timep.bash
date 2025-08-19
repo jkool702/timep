@@ -1226,7 +1226,7 @@ _timep_NUM_RUNNING() {
 _timep_MERGE_SUM() {
 
     local -a v1A v2A mult
-    local jj v1 v2 var var1 ind1 ind2  divideFlag IFS
+    local jj v1 v2 var var1 ind1 ind2 divideFlag IFS
 
     var="${1}"
     var1="${var:0:1}"
@@ -1245,7 +1245,7 @@ _timep_MERGE_SUM() {
     local -n v2="${var}"
 
 
-    mapfile -t v1A <<<${v1[${ind1}]}
+    mapfile -t v1A <<<"${v1[${ind1}]}"
     (( ${#mult[@]} == 1 )) && for jj in "${!v1A[@]}"; do
         mult[$jj]="${mult[0]}"
     done
@@ -1257,7 +1257,7 @@ _timep_MERGE_SUM() {
             [[ ${5} ]] && ((  v1A[$jj] = 10#0${v1A[$jj]//[^0-9]/} > 0 ? 10000 * 10#0${v1A[$jj]//[^0-9]/} / ${5} : 0 ))
         done        
     else
-         mapfile -t v2A <<<${v2[${ind2}]}
+         mapfile -t v2A <<<"${v2[${ind2}]}"
    
         for jj in "${!v1A[@]}"; do
             (( v1A[$jj] = 10#0${v1A[$jj]} + ( 10#0${mult[$jj]} * 10#0${v2A[$jj]} ) ))
