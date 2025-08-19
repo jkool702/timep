@@ -1232,7 +1232,7 @@ _timep_MERGE_SUM() {
     var1="${var:0:1}"
 	ind1="${2:-${linenoUniqMapA[$kk]}}"
     ind2="${3:-$kk}"
-    mapfile -t mult <<<"${3:-1}"
+    mapfile -t mult <<<"${4:-1}"
 
     divideFlag=false
     (( mult < 0 )) && {
@@ -1251,19 +1251,16 @@ _timep_MERGE_SUM() {
     done
 
     if ${divideFlag}; then
-
         for jj in "${!v1A[@]}"; do
             (( v1A[$jj] = ( v1A[$jj] + ( mult / 2 ) ) / mult ))
-            [[ $4 ]] && ((  v1A[$jj] = 10#0${v1A[$jj]//[^0-9]/} > 0 ? 10000 * 10#0${v1A[$jj]//[^0-9]/} / "$4" : 0 ))
+            [[ $5 ]] && ((  v1A[$jj] = 10#0${v1A[$jj]//[^0-9]/} > 0 ? 10000 * 10#0${v1A[$jj]//[^0-9]/} / "$5" : 0 ))
         done        
-
     else
-
          mapfile -t v2A <<<${v2[${ind2}]}
    
-            for jj in "${!v1A[@]}"; do
-                (( v1A[$jj] = 10#0${v1A[$jj]} + ( 10#0${mult[$jj]} * 10#0${v2A[$jj]} ) ))
-            done
+        for jj in "${!v1A[@]}"; do
+            (( v1A[$jj] = 10#0${v1A[$jj]} + ( 10#0${mult[$jj]} * 10#0${v2A[$jj]} ) ))
+        done
     fi
 
     IFS=$'\n'
