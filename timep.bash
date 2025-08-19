@@ -1542,7 +1542,6 @@ printf '%s;' "${fgA[@]}")"
 
         nestDiagramA[$kk]='x'
         countA[$kk]=1
-        count0A[$kk]=1
 
 
             # figure out "percent for current nesting depth" for wall/cpu times
@@ -1562,8 +1561,8 @@ printf '%s;' "${fgA[@]}")"
         elif ${isMergeIndicatorA[$kk]} && [[ "${mergeA[$kk]}.out.combined" ]] && [[ -e "${mergeA[$kk]}.out.combined" ]]; then
             # merge up log indo kk index vars
             mapfile -t mergeACur <"${mergeA[$kk]}.out.combined"
-			mergeInd=0
-            while IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd; do
+			for mergeInd in "${!mergeACur[@]}"; do
+                IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${mergeACur[$mergeInd]}"
                 { [[ $tw ]] && [[ $pw ]]; } || continue
                 wTimeA[$kk]+=$'\n'"${tw:-1}"
                 wTimePA[$kk]+=$'\n'"${pw:-0}"
@@ -1572,7 +1571,10 @@ printf '%s;' "${fgA[@]}")"
                 countA[$kk]+=$'\n'"${cnt:-1}"
                 linenoA[$kk]+=$'\n'"${lno:-0.0}"
                 cmdIndexA[$kk]+=$'\n'"${cind:-0}"
-                cmdA[$kk]+=$'\n'"${cmd//$'\n'/}"
+                cmd="${cmd//$'\n'/}"
+                cmd="${cmd##+([[:space:]])}"
+                cmd="${cmd%%+([[:space:]])}"
+                cmdA[$kk]+=$'\n'"${cmd}"
                 if (( mergeInd == ${#mergeACur[@]} - 1 )); then
                     nestDiagramA[$kk]+=$'\n''└─ '"${nd//x/}"
                 elif (( mergeInd == 0 )); then
@@ -1580,8 +1582,7 @@ printf '%s;' "${fgA[@]}")"
                 else
                     nestDiagramA[$kk]+=$'\n''│  '"${nd//x/}"
                 fi
-                ((mergeInd++))
-           done < <(printf '%s\n' "${mergeACur[@]}")
+           done 
         fi
         
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
@@ -1682,15 +1683,15 @@ printf '%s;' "${fgA[@]}")"
     set -xv
     inPipeFlag=false
 
-    mapfile -t wTimeOutCurA < <(printf '%s\n' "${linenoUniqWTimeA[@]}")
-    mapfile -t wTimeOutCurPA < <(printf '%s\n' "${linenoUniqWTimePA[@]}")
-    mapfile -t cTimeOutCurA < <(printf '%s\n' "${linenoUniqCTimeA[@]}")
-    mapfile -t cTimeOutCurPA < <(printf '%s\n' "${linenoUniqCTimePA[@]}")
-    mapfile -t countOutCurA < <(printf '%s\n' "${linenoUniqCountA[@]}")
-    mapfile -t nestDiagramOutCurA < <(printf '%s\n' "${linenoUniqNestDiagramA[@]}")
-    mapfile -t linenoOutCurA < <(printf '%s\n' "${linenoUniqLinenoA[@]}")
-    mapfile -t cmdIndexOutCurA < <(printf '%s\n' "${linenoUniqCmdIndexA[@]}")
-    mapfile -t cmdOutCurA < <(printf '%s\n' "${linenoUniqCmdA[@]}")
+    mapfile -t wTimeOutCurA < <(printf '%s\n\n' "${linenoUniqWTimeA[@]}")
+    mapfile -t wTimeOutCurPA < <(printf '%s\n\n' "${linenoUniqWTimePA[@]}")
+    mapfile -t cTimeOutCurA < <(printf '%s\n\n' "${linenoUniqCTimeA[@]}")
+    mapfile -t cTimeOutCurPA < <(printf '%s\n\n' "${linenoUniqCTimePA[@]}")
+    mapfile -t countOutCurA < <(printf '%s\n\n' "${linenoUniqCountA[@]}")
+    mapfile -t nestDiagramOutCurA < <(printf '%s\n\n' "${linenoUniqNestDiagramA[@]}")
+    mapfile -t linenoOutCurA < <(printf '%s\n\n' "${linenoUniqLinenoA[@]}")
+    mapfile -t cmdIndexOutCurA < <(printf '%s\n\n' "${linenoUniqCmdIndexA[@]}")
+    mapfile -t cmdOutCurA < <(printf '%s\n\n' "${linenoUniqCmdA[@]}")
 
     declare -p >"${logCur}.vars2"
 
@@ -1703,7 +1704,7 @@ printf '%s;' "${fgA[@]}")"
         #(( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] ))
 
         [[ -z ${cmdOutCurA[$kk]} ]] && {
-            if (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]]; then
+            if (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]]; then
                 printf '\n│'
             elif (( logDepth == 0 )); then
                 printf '\n'
@@ -1713,11 +1714,11 @@ printf '%s;' "${fgA[@]}")"
 
         cmd="${cmdOutCurA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
-        cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
+        cmd="${cmd/#<< \(FUNCTION\): *([.])/<< (FUNCTION): "${funcA[$kk]#* }".}"
 
         # write line
 
-             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
+             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" '' "${cmd}"
 
 
 		
@@ -1744,7 +1745,7 @@ printf '%s;' "${fgA[@]}")"
 EOF
 
 
-    done >"${logCur}.out.combined"
+    done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
     set +xv
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
