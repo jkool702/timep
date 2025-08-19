@@ -1226,11 +1226,12 @@ _timep_NUM_RUNNING() {
 _timep_MERGE_SUM() {
 
     local -a v1A v2A mult
-    local jj v1 v2 var var1 ind  divideFlag IFS
+    local jj v1 v2 var var1 ind1 ind2  divideFlag IFS
 
     var="${1}"
     var1="${var:0:1}"
-    ind="${2:-$kk}"
+	ind1="${2:-${linenoUniqMapA[$kk]}}"
+    ind2="${3:-$kk}"
     mapfile -t mult <<<"${3:-1}"
 
     divideFlag=false
@@ -1244,7 +1245,7 @@ _timep_MERGE_SUM() {
     local -n v2="${var}"
 
 
-    mapfile -t v1A <<<${v1[${ind}]}
+    mapfile -t v1A <<<${v1[${ind1}]}
     (( ${#mult[@]} == 1 )) && for jj in "${!v1A[@]}"; do
         mult[$jj]="${mult[0]}"
     done
@@ -1258,7 +1259,7 @@ _timep_MERGE_SUM() {
 
     else
 
-         mapfile -t v2A <<<${v2[${ind}]}
+         mapfile -t v2A <<<${v2[${ind2}]}
    
             for jj in "${!v1A[@]}"; do
                 (( v1A[$jj] = 10#0${v1A[$jj]} + ( 10#0${mult[$jj]} * 10#0${v2A[$jj]} ) ))
@@ -1266,7 +1267,7 @@ _timep_MERGE_SUM() {
     fi
 
     IFS=$'\n'
-    v1[${ind}]="${v1A[*]}"
+    v1[${ind1}]="${v1A[*]}"
     unset IFS
 
     local +n v1 v2
@@ -1602,11 +1603,11 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
             (( linenoUniqCount0A[${linenoUniqMapA[$kk]}] = linenoUniqCount0A[${linenoUniqMapA[$kk]}] + 1 ))
 
-            _timep_MERGE_SUM 'wTimeA' "$kk" 
-            _timep_MERGE_SUM 'cTimeA' "$kk"
-            _timep_MERGE_SUM 'wTimePA' "$kk" "${countA[$kk]}"
-            _timep_MERGE_SUM 'cTimePA' "$kk" "${countA[$kk]}"
-            _timep_MERGE_SUM 'countA' "$kk"
+            _timep_MERGE_SUM 'wTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
+            _timep_MERGE_SUM 'cTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
+            _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" "${countA[$kk]}"
+            _timep_MERGE_SUM 'cTimePA' "${linenoUniqMapA[$kk]}" "${kk}" "${countA[$kk]}"
+            _timep_MERGE_SUM 'countA' "${linenoUniqMapA[$kk]}" "${kk}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
             linenoUniqCount0A[${linenoUniqMapA[$kk]}]=1
@@ -1627,8 +1628,8 @@ printf '%s;' "${fgA[@]}")"
     # get runtime sums for the combined uniq lineno's
     for kk in "${linenoUniqA[@]}"; do
 
-        _timep_MERGE_SUM 'wTimePA' "$kk" '-'"${linenoUniqCountA[$kk]}" "${wTimeTotal}"
-        _timep_MERGE_SUM 'cTimePA' "$kk" '-'"${linenoUniqCountA[$kk]}" "${cTimeTotal}"
+        _timep_MERGE_SUM 'wTimePA' "$kk" "$kk" '-'"${linenoUniqCountA[$kk]}" "${wTimeTotal}"
+        _timep_MERGE_SUM 'cTimePA' "$kk" "$kk" '-'"${linenoUniqCountA[$kk]}" "${cTimeTotal}"
 
     done
 
