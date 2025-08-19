@@ -1225,13 +1225,13 @@ _timep_NUM_RUNNING() {
 
 _timep_MERGE_SUM() {
 
-    local -a v1A v2A
-    local jj v1 v2 var var1 ind mult divideFlag IFS
+    local -a v1A v2A mult
+    local jj v1 v2 var var1 ind  divideFlag IFS
 
     var="${1}"
     var1="${var:0:1}"
     ind="${2:-$kk}"
-    mult="${3:-1}"
+    mapfile -t mult <<<"${3:-1}"
 
     divideFlag=false
     (( mult < 0 )) && {
@@ -1242,9 +1242,13 @@ _timep_MERGE_SUM() {
 
     local -n v1="linenoUniq${var1^^}${var:1}"
     local -n v2="${var}"
-    
-    IFS=$'\t' read -r -a v1A <<<${v1[${ind}]}
-    
+
+
+    mapfile -t v1A <<<${v1[${ind}]}
+    (( ${#mult[@]} == 1 )) && for jj in "${!v1A[@]}"; do
+        mult[$jj]="${mult[0]}"
+    done
+
     if ${divideFlag}; then
 
         for jj in "${!v1A[@]}"; do
@@ -1254,19 +1258,18 @@ _timep_MERGE_SUM() {
 
     else
 
-        IFS=$'\t' read -r -a v2A <<<${v2[${ind}]}
+         mapfile -t v2A <<<${v2[${ind}]}
    
             for jj in "${!v1A[@]}"; do
-                (( v1A[$jj] = 10#0${v1A[$jj]} + mult * 10#0${v2A[$jj]} ))
+                (( v1A[$jj] = 10#0${v1A[$jj]} + ( 10#0${mult[$jj]} * 10#0${v2A[$jj]} ) ))
             done
     fi
 
-    IFS=$'\t'
+    IFS=$'\n'
     v1[${ind}]="${v1A[*]}"
     unset IFS
 
-    local +n v1
-    ${divideFlag} || local +n v2
+    local +n v1 v2
 }
 
 _timep_DEBUG_PRINTVARS() {
@@ -1563,22 +1566,22 @@ printf '%s;' "${fgA[@]}")"
 			mergeInd=0
             while IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd; do
                 { [[ $tw ]] && [[ $pw ]]; } || continue
-                wTimeA[$kk]+=$'\t'"${tw:-1}"
-                wTimePA[$kk]+=$'\t'"${pw:-0}"
-                cTimeA[$kk]+=$'\t'"${tc:-1}"
-                cTimePA[$kk]+=$'\t'"${pc:-0}"
-                countA[$kk]+=$'\t'"${cnt:-1}"
-                linenoA[$kk]+=$'\t'"${lno:-.}"
-                cmdIndexA[$kk]+=$'\t'"${cind:-0}"
-                cmdA[$kk]+=$'\t'"${cmd:-_}"
+                wTimeA[$kk]+=$'\n'"${tw:-1}"
+                wTimePA[$kk]+=$'\n'"${pw:-0}"
+                cTimeA[$kk]+=$'\n'"${tc:-1}"
+                cTimePA[$kk]+=$'\n'"${pc:-0}"
+                countA[$kk]+=$'\n'"${cnt:-1}"
+                linenoA[$kk]+=$'\n'"${lno:-.}"
+                cmdIndexA[$kk]+=$'\n'"${cind:-0}"
+                cmdA[$kk]+=$'\n'"${cmd:-_}"
                 if (( mergeInd == ${#mergeACur[@]} - 1 )); then
-                    nestDiagramA[$kk]+=$'\t''└─ '"${nd//x/}"
+                    nestDiagramA[$kk]+=$'\n''└─ '"${nd//x/}"
                 elif (( mergeInd == 0 )); then
-                    nestDiagramA[$kk]+=$'\t''├─ '"${nd//x/}"
+                    nestDiagramA[$kk]+=$'\n''├─ '"${nd//x/}"
                 else
-                    nestDiagramA[$kk]+=$'\t''│  '"${nd//x/}"
+                    nestDiagramA[$kk]+=$'\n''│  '"${nd//x/}"
                 fi
-				((mergeInd++))
+                ((mergeInd++))
            done < <(printf '%s\n' "${mergeACur[@]}")
         fi
         
@@ -1696,14 +1699,14 @@ printf '%s;' "${fgA[@]}")"
 
         # write line
 		if ${isMergeIndicatorA[$kk]}; then
-            mapfile -t wTimeOutCurA <<<"${linenoUniqWTimeA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}" 
-            mapfile -t wTimeOutCurPA <<<"${linenoUniqWTimePA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
-            mapfile -t cTimeOutCurA <<<"${linenoUniqCTimeA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
-            mapfile -t cTimeOutCurPA <<<"${linenoUniqCTimePA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
-            mapfile -t countOutCurA <<<"${linenoUniqCountA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
-            mapfile -t nestDiagramOutCurA <<<"${nestDiagramA[$kk]//$'\t'/$'\n'}"
-            mapfile -t linenoOutCurA <<<"${linenoA[$kk]//[ $'\t']/$'\n'}"
-            mapfile -t cmdIndexOutCurA <<<"${cmdIndexA[$kk]//[ $'\t']/$'\n'}"
+            mapfile -t wTimeOutCurA <<<"${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" 
+            mapfile -t wTimeOutCurPA <<<"${linenoUniqWTimePA[${linenoUniqA[$kk]}]}"
+            mapfile -t cTimeOutCurA <<<"${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
+            mapfile -t cTimeOutCurPA <<<"${linenoUniqCTimePA[${linenoUniqA[$kk]}]}"
+            mapfile -t countOutCurA <<<"${linenoUniqCountA[${linenoUniqA[$kk]}]}"
+            mapfile -t nestDiagramOutCurA <<<"${nestDiagramA[$kk]}"
+            mapfile -t linenoOutCurA <<<"${linenoA[$kk]}"
+            mapfile -t cmdIndexOutCurA <<<"${cmdIndexA[$kk]}"
             mapfile -t cmdOutCurA <<<"${cmd}"
             for kkOut in "${!wTimeOutCurA[@]}"; do
                  printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${wTimeOutCurA[$kkOut]}" "${wTimeOutCurPA[$kkOut]}" "${cTimeOutCurA[$kkOut]}" "${cTimeOutCurPA[$kkOut]}" "${countOutCurA[$kkOut]}" "${nestDiagramOutCurA[$kkOut]}" "${linenoOutCurA[$kkOut]}" "${cmdIndexOutCurA[$kkOut]}" "${cmdOutCurA[$kkOut]}"
@@ -1716,6 +1719,8 @@ printf '%s;' "${fgA[@]}")"
         [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
 
         # (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
+
+        :<<'EOF'
 
         # add merged up log to log, including for "in the middle of a pipeline" commands
         [[ ${linenoUniqLineA[${linenoUniqA[$kk]}]} ]] && for kk1 in ${linenoUniqLineA[${linenoUniqA[$kk]}]}; do
@@ -1730,7 +1735,7 @@ printf '%s;' "${fgA[@]}")"
                     (( ${#logMergeA[@]} > 1 )) && printf '\n%s\t└─ %s' "${logMergeA[-1]%%$'\t'*}" "${logMergeA[-1]#*$'\t'}"
                 fi)")
         done
-
+EOF
 
         (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
