@@ -1677,43 +1677,52 @@ printf '%s;' "${fgA[@]}")"
 
     done >"${logCur}.out"
 
-    declare -p >"${logCur}.vars2"
 
     # write out new combined (uniq lineno) merged-upward log
     set -xv
     inPipeFlag=false
-    for kk in "${!linenoUniqA[@]}"; do
-        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
+
+    mapfile -t wTimeOutCurA < <(printf '%s\n' "${linenoUniqWTimeA[@]}")
+    mapfile -t wTimeOutCurPA < <(printf '%s\n' "${linenoUniqWTimePA[@]}")
+    mapfile -t cTimeOutCurA < <(printf '%s\n' "${linenoUniqCTimeA[@]}")
+    mapfile -t cTimeOutCurPA < <(printf '%s\n' "${linenoUniqCTimePA[@]}")
+    mapfile -t countOutCurA < <(printf '%s\n' "${linenoUniqCountA[@]}")
+    mapfile -t nestDiagramOutCurA < <(printf '%s\n' "${linenoUniqNestDiagramA[@]}")
+    mapfile -t linenoOutCurA < <(printf '%s\n' "${linenoUniqLinenoA[@]}")
+    mapfile -t cmdIndexOutCurA < <(printf '%s\n' "${linenoUniqCmdIndexA[@]}")
+    mapfile -t cmdOutCurA < <(printf '%s\n' "${linenoUniqCmdA[@]}")
+
+    declare -p >"${logCur}.vars2"
+
+    for kk in "${!wTimeOutCurA[@]}"; do
+        #[[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
 
         # add line to log
-        (( kk == 0  )) || printf '\n\n'
+        #(( kk == 0  )) || printf '\n\n'
 
         #(( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] ))
 
-        cmd="${cmdA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
+        [[ -z ${cmdOutCurA[$kk]} ]] && {
+            if (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]]; then
+                printf '\n│'
+            elif (( logDepth == 0 )); then
+                printf '\n'
+            fi
+        }
+
+
+        cmd="${cmdOutCurA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
         cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
 
         # write line
-		if ${isMergeIndicatorA[$kk]}; then
-            mapfile -t wTimeOutCurA <<<"${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" 
-            mapfile -t wTimeOutCurPA <<<"${linenoUniqWTimePA[${linenoUniqA[$kk]}]}"
-            mapfile -t cTimeOutCurA <<<"${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
-            mapfile -t cTimeOutCurPA <<<"${linenoUniqCTimePA[${linenoUniqA[$kk]}]}"
-            mapfile -t countOutCurA <<<"${linenoUniqCountA[${linenoUniqA[$kk]}]}"
-            mapfile -t nestDiagramOutCurA <<<"${nestDiagramA[$kk]}"
-            mapfile -t linenoOutCurA <<<"${linenoA[$kk]}"
-            mapfile -t cmdIndexOutCurA <<<"${cmdIndexA[$kk]}"
-            mapfile -t cmdOutCurA <<<"${cmd}"
-            for kkOut in "${!wTimeOutCurA[@]}"; do
-                 printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${wTimeOutCurA[$kkOut]}" "${wTimeOutCurPA[$kkOut]}" "${cTimeOutCurA[$kkOut]}" "${cTimeOutCurPA[$kkOut]}" "${countOutCurA[$kkOut]}" "${nestDiagramOutCurA[$kkOut]}" "${linenoOutCurA[$kkOut]}" "${cmdIndexOutCurA[$kkOut]}" "${cmdOutCurA[$kkOut]}"
-               done
-        else
-            printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${nestDiagramA[$kk]}"  "${linenoA[$kk]}" "${cmdIndexA[$kk]}" '' "${cmd}"
-        fi
+
+             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
+
+
 		
         # check if this is the start of a pipeline
-        [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
+       # [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
 
         # (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
 
@@ -1734,7 +1743,6 @@ printf '%s;' "${fgA[@]}")"
         done
 EOF
 
-        (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out.combined"
     set +xv
