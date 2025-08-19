@@ -1278,7 +1278,7 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN  logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA logDepth keyCur
+    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN  logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA logDepth keyCur mergeInd
     local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA linenoUniqMapA
     local -A linenoUniqLineA linenoUniqCountA linenoUniqWTimeA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA linenoUniqMapAA
 
@@ -1559,7 +1559,8 @@ printf '%s;' "${fgA[@]}")"
         elif ${isMergeIndicatorA[$kk]} && [[ "${mergeA[$kk]}.out.combined" ]] && [[ -e "${mergeA[$kk]}.out.combined" ]]; then
             # merge up log indo kk index vars
             mapfile -t mergeACur <"${mergeA[$kk]}.out.combined"
-           while IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd; do
+			mergeInd=0
+            while IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd; do
                 { [[ $tw ]] && [[ $pw ]]; } || continue
                 wTimeA[$kk]+=$'\t'"${tw}"
                 wTimePA[$kk]+=$'\t'"${pw}"
@@ -1569,13 +1570,14 @@ printf '%s;' "${fgA[@]}")"
                 linenoA[$kk]+=$'\t'"${lno}"
                 cmdIndexA[$kk]+=$'\t'"${cind}"
                 cmdA[$kk]+=$'\t'"${cmd}"
-                if (( kk == ${#mergeACur[@]} - 1 )); then
+                if (( mergeInd == ${#mergeACur[@]} - 1 )); then
                     nestDiagramA[$kk]+=$'\t''└─ '"${nd}"
-                elif (( kk == 0 )); then
+                elif (( mergeInd == 0 )); then
                     nestDiagramA[$kk]+=$'\t''├─ '"${nd}"
                 else
                     nestDiagramA[$kk]+=$'\t''│  '"${nd}"
                 fi
+				((mergeInd++))
            done < <(printf '%s\n' "${mergeACur[@]}")
         fi
         
