@@ -1537,7 +1537,7 @@ printf '%s;' "${fgA[@]}")"
         linenoA[$kk]="${linenoA[$kk]}.${logDepth}"
         cmdIndexA[$kk]="${lineno1}"
 
-        nestDiagramA[$kk]=''
+        nestDiagramA[$kk]='x'
         countA[$kk]=1
         count0A[$kk]=1
 
@@ -1563,20 +1563,20 @@ printf '%s;' "${fgA[@]}")"
 			mergeInd=0
             while IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd; do
                 { [[ $tw ]] && [[ $pw ]]; } || continue
-                wTimeA[$kk]+=$'\t'"${tw}"
-                wTimePA[$kk]+=$'\t'"${pw}"
-                cTimeA[$kk]+=$'\t'"${tc}"
-                cTimePA[$kk]+=$'\t'"${pc}"
-                countA[$kk]+=$'\t'"${cnt}"
-                linenoA[$kk]+=$'\t'"${lno}"
-                cmdIndexA[$kk]+=$'\t'"${cind}"
-                cmdA[$kk]+=$'\t'"${cmd}"
+                wTimeA[$kk]+=$'\t'"${tw:-1}"
+                wTimePA[$kk]+=$'\t'"${pw:-0}"
+                cTimeA[$kk]+=$'\t'"${tc:-1}"
+                cTimePA[$kk]+=$'\t'"${pc:-0}"
+                countA[$kk]+=$'\t'"${cnt:-1}"
+                linenoA[$kk]+=$'\t'"${lno:-.}"
+                cmdIndexA[$kk]+=$'\t'"${cind:-0}"
+                cmdA[$kk]+=$'\t'"${cmd:-_}"
                 if (( mergeInd == ${#mergeACur[@]} - 1 )); then
-                    nestDiagramA[$kk]+=$'\t''└─ '"${nd}"
+                    nestDiagramA[$kk]+=$'\t''└─ '"${nd//x/}"
                 elif (( mergeInd == 0 )); then
-                    nestDiagramA[$kk]+=$'\t''├─ '"${nd}"
+                    nestDiagramA[$kk]+=$'\t''├─ '"${nd//x/}"
                 else
-                    nestDiagramA[$kk]+=$'\t''│  '"${nd}"
+                    nestDiagramA[$kk]+=$'\t''│  '"${nd//x/}"
                 fi
 				((mergeInd++))
            done < <(printf '%s\n' "${mergeACur[@]}")
@@ -1585,9 +1585,7 @@ printf '%s;' "${fgA[@]}")"
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}"
 
-        # dont allow merging of << ... >> indicators. subtrees are merged later
-        [[ "${cmdA[$kk]//"'"/}" == '<< ('*'): '*' >>' ]] && until [[ -z ${linenoUniqMapAA["${keyCur}"]} ]]; do keyCur+='_'; done
- 
+        # get merging key
         if [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
             linenoUniqMapA[$kk]="${linenoUniqMapAA["${keyCur}"]}"
         else
@@ -1698,13 +1696,17 @@ printf '%s;' "${fgA[@]}")"
 
         # write line
 		if ${isMergeIndicatorA[$kk]}; then
-            mapfile -t wTimeOutCurA <<<"${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" 
-            mapfile -t wTimeOutCurPA <<<"${linenoUniqWTimePA[${linenoUniqA[$kk]}]}"
-            mapfile -t cTimeOutCurA <<<"${linenoUniqCTimeA[${linenoUniqA[$kk]}]}"
-            mapfile -t cTimeOutCurPA <<<"${linenoUniqCTimePA[${linenoUniqA[$kk]}]}"
-            mapfile -t countOutCurA <<<"${linenoUniqCountA[${linenoUniqA[$kk]}]}"
+            mapfile -t wTimeOutCurA <<<"${linenoUniqWTimeA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}" 
+            mapfile -t wTimeOutCurPA <<<"${linenoUniqWTimePA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
+            mapfile -t cTimeOutCurA <<<"${linenoUniqCTimeA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
+            mapfile -t cTimeOutCurPA <<<"${linenoUniqCTimePA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
+            mapfile -t countOutCurA <<<"${linenoUniqCountA[${linenoUniqA[$kk]}]//[ $'\t']/$'\n'}"
+            mapfile -t nestDiagramOutCurA <<<"${nestDiagramA[$kk]//[ $'\t']/$'\n'}"
+            mapfile -t linenoOutCurA <<<"${linenoA[$kk]//[ $'\t']/$'\n'}"
+            mapfile -t cmdIndexOutCurA <<<"${cmdIndexA[$kk]//[ $'\t']/$'\n'}"
+            mapfile -t cmdOutCurA <<<"${cmd}"
             for kkOut in "${!wTimeOutCurA[@]}"; do
-                 printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${wTimeOutCurA[$kkOut]}" "${wTimeOutCurPA[$kkOut]}" "${cTimeOutCurA[$kkOut]}" "${cTimeOutCurPA[$kkOut]}" "${countOutCurA[$kkOut]}" "${nestDiagramA[$kk]}" "${linenoA[$kk]}" "${cmdIndexA[$kk]}"
+                 printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${wTimeOutCurA[$kkOut]}" "${wTimeOutCurPA[$kkOut]}" "${cTimeOutCurA[$kkOut]}" "${cTimeOutCurPA[$kkOut]}" "${countOutCurA[$kkOut]}" "${nestDiagramOutCurA[$kkOut]}" "${linenoOutCurA[$kkOut]}" "${cmdIndexOutCurA[$kkOut]}" "${cmdOutCurA[$kkOut]}"
                done
         else
             printf '\n%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%'"${spacerN}"'.s\t%s' "${linenoUniqWTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqWTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimeA[${linenoUniqA[$kk]}]}" "${linenoUniqCTimePA[${linenoUniqA[$kk]}]}" "${linenoUniqCountA[${linenoUniqA[$kk]}]}" "${nestDiagramA[$kk]}"  "${linenoA[$kk]}" "${cmdIndexA[$kk]}" '' "${cmd}"
