@@ -1232,20 +1232,21 @@ _timep_MERGE_SUM() {
     var1="${var:0:1}"
 	ind1="${2:-${linenoUniqMapA[$kk]}}"
     ind2="${3:-$kk}"
-    mapfile -t mult <<<"${4:-1}"
-
-    divideFlag=false
-    (( mult < 0 )) && {
-        divideFlag=true
-        (( mult = mult * -1 ))
-        (( mult = 1 )) && return
-    }
 
     local -n v1="linenoUniq${var1^^}${var:1}"
     local -n v2="${var}"
 
-
     mapfile -t v1A <<<"${v1[${ind1}]}"
+        
+    divideFlag=false
+    case "${4}" in 
+        '+') mapfile -t mult <<<"${countA[$ind2]}" ;;
+        '-') divideFlag=true;  mapfile -t mult <<<"${linenoUniqCountA[$ind1]}" ;;
+        [0-9]*) for jj in "${!v1A[@]}"; do mult[$jj]="${4}"; done ;;
+        *) for jj in "${!v1A[@]}"; do mult[$jj]=1; done ;;
+    esac
+
+
     (( ${#mult[@]} == 1 )) && for jj in "${!v1A[@]}"; do
         mult[$jj]="${mult[0]}"
     done
@@ -1601,8 +1602,8 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
             _timep_MERGE_SUM 'wTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
             _timep_MERGE_SUM 'cTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
-            _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" "${countA[$kk]}"
-            _timep_MERGE_SUM 'cTimePA' "${linenoUniqMapA[$kk]}" "${kk}" "${countA[$kk]}"
+            _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" '+'
+            _timep_MERGE_SUM 'cTimePA' "${linenoUniqMapA[$kk]}" "${kk}" '+'
             _timep_MERGE_SUM 'countA' "${linenoUniqMapA[$kk]}" "${kk}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
@@ -1610,11 +1611,11 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]:-_}"
             linenoUniqWTimeA[${linenoUniqMapA[$kk]}]="${wTimeA[$kk]:-0}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]="${cTimeA[$kk]:-1}"
-            (( linenoUniqWTimePA[${linenoUniqMapA[$kk]}] = ${wTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
-            (( linenoUniqCTimePA[${linenoUniqMapA[$kk]}] = ${cTimePA[$kk]:-1} * ${countA[$kk]:-1} ))
             linenoUniqNestDiagramA[${linenoUniqMapA[$kk]}]="${nestDiagramA[$kk]:-x}"
             linenoUniqCmdIndexA[${linenoUniqMapA[$kk]}]="${cmdIndexA[$kk]:-x}"
             linenoUniqLinenoA[${linenoUniqMapA[$kk]}]="${linenoA[$kk]:-x.x}"
+            _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" "${countA[$kk]}"
+            _timep_MERGE_SUM 'cTimePA' "${linenoUniqMapA[$kk]}" "${kk}" "${countA[$kk]}"
       fi
 
         kk1=${kk}
@@ -1624,8 +1625,8 @@ printf '%s;' "${fgA[@]}")"
     # get runtime sums for the combined uniq lineno's
     for kk in "${linenoUniqA[@]}"; do
 
-        _timep_MERGE_SUM 'wTimePA' "$kk" "$kk" '-'"${linenoUniqCountA[$kk]}" "${wTimeTotal}"
-        _timep_MERGE_SUM 'cTimePA' "$kk" "$kk" '-'"${linenoUniqCountA[$kk]}" "${cTimeTotal}"
+        _timep_MERGE_SUM 'wTimePA' "$kk" "$kk" '-' "${wTimeTotal:-1}"
+        _timep_MERGE_SUM 'cTimePA' "$kk" "$kk" '-' "${cTimeTotal:-1}"
 
     done
 
