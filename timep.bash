@@ -2337,8 +2337,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
     sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     if [[ "${timep_runType}" == 'f' ]]; then
-        sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' | sed -E 's/([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t/\1 \2 \3 \4 \5\t/; s/\t([0-9]+\.[0-9]+)\t([0-9]+\: *\t)/\1.\2/' >"${timep_TMPDIR}/profiles/out.profile"; 
+        echo "$(sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' >"${timep_LOG_NESTING[0]}.out.combined")"
     fi
+    sed -E 's/([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t/\1 \2 \3 \4 \5\t/; s/\t([0-9]+\.[0-9]+)\t([0-9]+\: *\t)/\1.\2/' <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g' >"${timep_TMPDIR}/profiles/out.profile"; 
+return
 
     # get total runtime
     read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
