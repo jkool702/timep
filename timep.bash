@@ -1676,7 +1676,7 @@ printf '%s;' "${fgA[@]}")"
                 printf '\n└─ %s' "${logMergeA[-1]}"
             fi
         }
-        (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
+        (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out"
 
@@ -1693,7 +1693,7 @@ printf '%s;' "${fgA[@]}")"
     mapfile -t linenoOutCurA < <(printf '%s\n\n' "${linenoUniqLinenoA[@]}")
     mapfile -t cmdIndexOutCurA < <(printf '%s\n\n' "${linenoUniqCmdIndexA[@]}")
     mapfile -t cmdOutCurA < <(printf '%s\n\n' "${linenoUniqCmdA[@]}")
-        declare -p >"${logCur}.vars"
+
     for kk in "${!wTimeOutCurA[@]}"; do
         #[[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
 
@@ -1702,9 +1702,9 @@ printf '%s;' "${fgA[@]}")"
 
         #(( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] ))
 
-        [[ -z ${cmdOutCurA[$kk]} ]] && {
+        [[ "${nestDiagramOutCurA}" == 'x' ]] && {
             if (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]]; then
-                printf '\n│'
+                printf '│  \n│'
             elif (( logDepth == 0 )); then
                 printf '\n'
             fi
@@ -1719,7 +1719,6 @@ printf '%s;' "${fgA[@]}")"
              printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
-    set +xv
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
@@ -2340,10 +2339,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
     sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
-    if [[ "${timep_runType}" == 'f' ]]; then
-        echo "$(sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/')" >"${timep_LOG_NESTING[0]}.out.combined"
-    fi
-
     sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g; s/(\n([0-9]+\t){5})\t/\1/g' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile"; 
 
 
