@@ -1586,9 +1586,9 @@ printf '%s;' "${fgA[@]}")"
         fi
 
         cmd0="${cmdA[$kk]}" 
-        cmd0=("${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}")
-        cmd0=("${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}")
-        cmd0=("${cmd0/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}")
+        cmd0="${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
+        cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
+        cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
         
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]}.${cmd0@Q}.${funcA[$kk]@Q}"
@@ -1714,7 +1714,7 @@ printf '%s;' "${fgA[@]}")"
 
         cmd="${cmdOutCurA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
-        cmd="${cmd/#<< \(FUNCTION\): *([.])/<< (FUNCTION): "${funcA[$kk]#* }".}"
+        cmd="${cmd/#<< \(FUNCTION\): * >>/<< (FUNCTION): ${funcA[$kk]# } >>}"
 
         # write line
 
