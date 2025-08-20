@@ -1653,7 +1653,7 @@ printf '%s;' "${fgA[@]}")"
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
             # write line
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%)\t(%ss|%s%%)\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]%%$'\n'*}" '' "${wTime}" "${wTimePA[$kk]%%$'\n'*}" "${cTime}" "${cTimePA[$kk]%%$'\n'*}" "${cmdA[$kk]%%$'\n'*}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%|'$'\034''%s'$'\034'')\t(%ss|%s%%|'$'\034''%s'$'\034'')\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]%%$'\n'*}" '' "${wTime}" "${wTimePA[$kk]%%$'\n'*}" "${wTimeA[$kk]}" "${cTime}" "${cTimePA[$kk]%%$'\n'*}" "${cTimeA[$kk]}" "${cmdA[$kk]%%$'\n'*}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -2364,8 +2364,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     (( spacerN0 = spacerN > 23 ? spacerN - 23 : 0 ))
     (( spacerNN = spacerN - 1 ))
 
-    for logPathCur in "${timep_TMPDIR}/profiles/out.profile"; do  # "${timep_TMPDIR}/profiles/out.profile.full"
-
+    logPathCur="${timep_TMPDIR}/profiles/out.profile"
+	
         # split lines into start, time, percent, endr
         logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
             printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
@@ -2440,7 +2440,27 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         set +xv
 
         printf '%s' "${logOut[@]}" >"${logPathCur}"
-    done
+    
+
+    logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
+	
+    logCurTmp="$(while read -r lineOrig; do
+
+        IFS=$'\034' read -r a0 tw a1 tc a2 <<<"${lineOrig}"
+
+                (( p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL ))
+                printf -v p1w '%5.3d' "${p1w//[^0-9]/}"
+                p1w="${p1w:0:3}.${p1w:3}"
+
+                # get percent of total cpu time
+                (( p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL ))
+                printf -v p1c '%5.3d' "${p1c//[^0-9]/}"
+                p1c="${p1c:0:3}.${p1c:3}"
+
+	        printf '%s%s%s%s%s\n' "${a0}" "${p1w}" "${a1}" "${p1c}" "${a2}"
+
+    done <"${logPathCur}")"
+	echo "${logCurTmp}" >"${logPathCur}"
 
 
     # if '--flame' flag given create flamegraphs
