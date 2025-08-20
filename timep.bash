@@ -1281,8 +1281,8 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP0 cTimeP0 wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj
-    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA
+    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj
+    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA0 cTimePA0 linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1544,10 +1544,12 @@ printf '%s;' "${fgA[@]}")"
 
             # figure out "percent for current nesting depth" for wall/cpu times
             (( wTimePA[$kk] = wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
+            wTimePA0[$kk]="${wTimePA[$kk]}"
             #printf -v wTimeP '%5.3d' "${wTimeP0}"
             #wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}"
 
             (( cTimePA[$kk] = cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
+            cTimePA0[$kk]="${cTimePA[$kk]}"
             #printf -v cTimeP '%5.3d' "${cTimeP0}"
             #cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}"
 
@@ -1653,7 +1655,7 @@ printf '%s;' "${fgA[@]}")"
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
             # write line
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%|'$'\034''%s'$'\034'')\t(%ss|%s%%|'$'\034''%s'$'\034'')\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]%%$'\n'*}" '' "${wTime}" "${wTimePA[$kk]%%$'\n'*}" "${wTimeA[$kk]}" "${cTime}" "${cTimePA[$kk]%%$'\n'*}" "${cTimeA[$kk]}" "${cmdA[$kk]%%$'\n'*}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%|'$'\034''%s'$'\034'')\t(%ss|%s%%|'$'\034''%s'$'\034'')\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]%%$'\n'*}" '' "${wTime}" "${wTimePA0[$kk]}" "${wTimeA[$kk]%%$'\n'*}" "${cTime}" "${cTimePA0[$kk]}" "${cTimeA[$kk]%%$'\n'*}" "${cmdA[$kk]%%$'\n'*}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -2357,10 +2359,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     # add another percentage showing "percent of total runtime" to final outputs
     printf '...DONE\n\nADDING "PERCENT OF TOTAL TIME" TO PROFILES (+%s)\n' "${SECONDS}"  >&2
 
-    declare -p >/mnt/ramdisk/vars
-    #return
-    #set -xv
-
     (( spacerN0 = spacerN > 23 ? spacerN - 23 : 0 ))
     (( spacerNN = spacerN - 1 ))
 
@@ -2430,7 +2428,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             done <"${logPathCur}"
         })"
         mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n\n([^\-])/\n\x00\1/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/\n\n/\n\n\x00/g')
-        set -xv
         logOutL=("${logOut[@]%%\.*}")
         logOutLL=("${logOutL[@]:1}")
         for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
@@ -2448,16 +2445,18 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         IFS=$'\034' read -r a0 tw a1 tc a2 <<<"${lineOrig}"
 
-                (( p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL ))
-                printf -v p1w '%5.3d' "${p1w//[^0-9]/}"
-                p1w="${p1w:0:3}.${p1w:3}"
+        { [[ ${tw} ]] && [[ ${tc} ]]; } || continue
 
-                # get percent of total cpu time
-                (( p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL ))
-                printf -v p1c '%5.3d' "${p1c//[^0-9]/}"
-                p1c="${p1c:0:3}.${p1c:3}"
+        (( p1w = (10000 * 10#0${tw//[^0-9]/}) / timep_wtimeALL ))
+        printf -v p1w '%5.3d' "${p1w//[^0-9]/}"
+        p1w="${p1w:0:3}.${p1w:3}"
 
-	        printf '%s%s%s%s%s\n' "${a0}" "${p1w}" "${a1}" "${p1c}" "${a2}"
+        # get percent of total cpu time
+        (( p1c = (10000 * 10#0${tc//[^0-9]/}) / timep_ctimeALL ))
+        printf -v p1c '%5.3d' "${p1c//[^0-9]/}"
+        p1c="${p1c:0:3}.${p1c:3}"
+
+        printf '%s%s%%%s%s%%%s\n' "${a0}" "${p1w#* }" "${a1}" "${p1c#* }" "${a2}"
 
     done <"${logPathCur}")"
 	echo "${logCurTmp}" >"${logPathCur}"
