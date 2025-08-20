@@ -1391,13 +1391,13 @@ _timep_PROCESS_LOG() {
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
 
             # read in the endtime + runtime from the log
-            [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
+           # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
                 if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"; then
                     IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
                     [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
                     [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
                 fi
-            }
+          #  }
         else
             normalCmdFlagA[$kk]=true
             isMergeIndicatorA[$kk]=false
@@ -1607,8 +1607,8 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
             _timep_MERGE_SUM 'wTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
             _timep_MERGE_SUM 'cTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
-            _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" 
-            _timep_MERGE_SUM 'cTimePA' "${linenoUniqMapA[$kk]}" "${kk}" 
+            _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" '+'
+            _timep_MERGE_SUM 'cTimePA' "${linenoUniqMapA[$kk]}" "${kk}" '+'
             _timep_MERGE_SUM 'countA' "${linenoUniqMapA[$kk]}" "${kk}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
@@ -1627,12 +1627,10 @@ printf '%s;' "${fgA[@]}")"
     done
 
     # get runtime sums for the combined uniq lineno's
-#    for kk in "${linenoUniqA[@]}"; do
-#
-#        _timep_MERGE_SUM 'wTimePA' "$kk" "$kk" '-' "${wTimeTotal:-1}"
-#        _timep_MERGE_SUM 'cTimePA' "$kk" "$kk" '-' "${cTimeTotal:-1}"
-#
-#    done
+    for kk in "${linenoUniqA[@]}"; do
+        _timep_MERGE_SUM 'wTimePA' "$kk" "$kk" '-'
+        _timep_MERGE_SUM 'cTimePA' "$kk" "$kk" '-'
+    done
 
     (( spacerN = 1 + 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${logDepth:-0} ) )) || spacerN=1
 
@@ -1714,7 +1712,7 @@ printf '%s;' "${fgA[@]}")"
 
         cmd="${cmdOutCurA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
-        cmd="${cmd/#<< \(FUNCTION\): * >>/<< (FUNCTION): ${funcA[$kk]# } >>}"
+        cmd="${cmd/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
 
         # write line
 
@@ -2354,12 +2352,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
-    (( spacerN < 24 )) && spacerN=24
+    (( spacerN < 22 )) && spacerN=22
    
     # add another percentage showing "percent of total runtime" to final outputs
     printf '...DONE\n\nADDING "PERCENT OF TOTAL TIME" TO PROFILES (+%s)\n' "${SECONDS}"  >&2
 
-    (( spacerN0 = spacerN > 23 ? spacerN - 23 : 0 ))
+    (( spacerN0 = spacerN > 22 ? spacerN - 22 : 0 ))
     (( spacerNN = spacerN - 1 ))
 
     logPathCur="${timep_TMPDIR}/profiles/out.profile"
@@ -2411,19 +2409,18 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 depthCur="${nd##*.}"
 
-                a0="${nd}.${cind}"
+                a0="${nd}.${cind%%*([[:space:]])}"
 
                 a00="${a0%%[0-9\.]*}";
 
                 [[ "${timep_runType}" == 'f' ]] && a00="${a00#*[├│└] }"
 
-                # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-                #if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${cmd}" == $'\t(1x)' ]] || [[ "${cmd}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
-                #            continue
-                if  { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); then
-                    printf '%-'"${spacerNN}"'s\t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a00}" "${cmd}"
+                (( spacerN0 = spacerN -${#a0} ))
+
+                if  { { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); } && { [[ ${pw##*( )} == '0.00' ]] || [[ "${pw##*( )}" == "${p1w##*( )}" ]]; } &&  { [[ ${pc##*( )} == '0.00' ]] || [[ "${pc##*( )}" == "${p1c##*( )}" ]]; }; then
+                    printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" '' "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 else
-                    printf '%-'"${spacerN}"'s\t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a00}" "${cmd}"
+                    printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" '' "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a00}" "${cmd}"
                 fi
             done <"${logPathCur}"
         })"
@@ -2549,7 +2546,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
-    printf '\n\nTHE PROFILE HAS FINISHED PROCESSING! (+%s)\nAll profiles can be found at "%s"' "${timep_TMPDIR}/profiles" "${SECONDS}" >&2
+    printf '\n\nTHE PROFILE HAS FINISHED PROCESSING! (+%s)\nAll profiles can be found at "%s"' "${SECONDS}" "${timep_TMPDIR}/profiles" >&2
     type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles 2>/dev/null && printf ' or accessed via the symlink "./timep.profiles"' >&2
     ${timep_flameGraphFlag} && [[ "${timep_flameGraphPath}" ]] && printf '\nAll flamegraphs can be found in the "flamegraphs" sub-directory ("%s")' "${timep_TMPDIR}/profiles/flamegraphs"  >&2
     printf '\n\n'  >&2
