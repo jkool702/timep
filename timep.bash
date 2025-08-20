@@ -1558,9 +1558,9 @@ printf '%s;' "${fgA[@]}")"
             printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
         elif ${isMergeIndicatorA[$kk]} && [[ "${mergeA[$kk]}.out.combined" ]] && [[ -e "${mergeA[$kk]}.out.combined" ]]; then
             # merge up log indo kk index vars
-            mapfile -t mergeACur <"${mergeA[$kk]}.out.combined"
-			for mergeInd in "${!mergeACur[@]}"; do
-                IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${mergeACur[$mergeInd]}"
+            mapfile -t mergeCurA <"${mergeA[$kk]}.out.combined"
+			for mergeInd in "${!mergeCurA[@]}"; do
+                IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${mergeCurA[$mergeInd]}"
                 { [[ $tw ]] && [[ $pw ]]; } || continue
                 wTimeA[$kk]+=$'\n'"${tw:-1}"
                 wTimePA[$kk]+=$'\n'"${pw:-0}"
@@ -1573,7 +1573,7 @@ printf '%s;' "${fgA[@]}")"
                 cmd="${cmd##+([[:space:]])}"
                 cmd="${cmd%%+([[:space:]])}"
                 cmdA[$kk]+=$'\n'"${cmd}"
-                if (( mergeInd == ${#mergeACur[@]} - 1 )); then
+                if (( mergeInd == ${#mergeCurA[@]} - 2 )); then
                     nestDiagramA[$kk]+=$'\n''└─ '"${nd//x/}"
                 elif (( mergeInd == 0 )); then
                     nestDiagramA[$kk]+=$'\n''├─ '"${nd//x/}"
@@ -1582,9 +1582,14 @@ printf '%s;' "${fgA[@]}")"
                 fi
            done 
         fi
+
+        cmd0="${cmdA[$kk]}" 
+        cmd0=("${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}")
+        cmd0=("${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}")
+        cmd0=("${cmd0/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}")
         
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
-        keyCur="${linenoA[$kk]}.${cmdA[$kk]@Q}.${funcA[$kk]@Q}"
+        keyCur="${linenoA[$kk]}.${cmd0@Q}.${funcA[$kk]@Q}"
 
         # get merging key
         if [[ ${linenoUniqMapAA["${keyCur}"]} ]]; then
@@ -1704,7 +1709,6 @@ printf '%s;' "${fgA[@]}")"
                 printf '\n'
             fi
         }
-
 
         cmd="${cmdOutCurA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
@@ -2340,7 +2344,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         echo "$(sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' >"${timep_LOG_NESTING[0]}.out.combined")"
     fi
 
-    sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile"; 
+    sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g; s/(\n([0-9]+\t){5})\t/\1/g' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile"; 
 
 
     # get total runtime
@@ -2348,90 +2352,29 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
-    (( spacerN < 20 )) && spacerN=20
+    (( spacerN < 24 )) && spacerN=24
    
     # add another percentage showing "percent of total runtime" to final outputs
     printf '...DONE\n\nADDING "PERCENT OF TOTAL TIME" TO PROFILES (+%s)\n' "${SECONDS}"  >&2
-:<<'EOF'
-    for logPathCur in "${timep_TMPDIR}/profiles/out.profile"*; do
-        logNew="$(local tmpFile="${logPathCur}.tmp"
-
-        # Recreate the exact header from your reference output
-        printf 'LINE.DEPTH.CMD NUMBER\tCOMBINED WALL-CLOCK TIME        \tCOMBINED CPU TIME               \tCOMMAND                             \n' > "$tmpFile"
-        printf '<line>.<depth>.<cmd>:\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n' >> "$tmpFile"
-        printf '_____________________\t________________________________\t________________________________\t____________________________________\n\n' >> "$tmpFile"
-
-        # Process the main content, separating it from the footer
-        local main_content
-        local footer_content
-        mapfile -t main_content < <(sed -n '/^LINE\.DEPTH/,$!p' "$logPathCur" | sed '/^TOTAL RUN TIME/,$d')
-        footer_content="$(sed -n '/^TOTAL RUN TIME/,$p' "$logPathCur")"
-
-        for line in "${main_content[@]}"; do
-            [[ -n "$line" ]] || continue
-            
-            IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<< "$line"
-
-            # --- 1. Data Conversion and Calculation ---
-            printf -v wTimeS '%s.%06d' "${tw:0:-6}" "${tw: -6}"
-            printf -v cTimeS '%s.%06d' "${tc:0:-6}" "${tc: -6}"
-            printf -v wTimeP '%s.%02d' "${pw:0:-2}" "${pw: -2}"
-            printf -v cTimeP '%s.%02d' "${pc:0:-2}" "${pc: -2}"
-            (( p1w = (10000 * (10#0${tw})) / timep_wtimeALL ))
-            printf -v p1w_f '%s.%02d' "${p1w:0:-2}" "${p1w: -2}"
-            (( p1c = (10000 * (10#0${tc})) / timep_ctimeALL ))
-            printf -v p1c_f '%s.%02d' "${p1c:0:-2}" "${p1c: -2}"
-
-            # --- 2. Formatting (Using your improved logic) ---
-            local depth="${lno#*.}" # Extracts "depth.cmd" from "line.depth.cmd"
-            depth="${depth%.*}"     # Extracts just "depth"
-
-            local is_toplevel=false
-            if [[ "${timep_runType}" == 'f' ]]; then
-                # For functions, depth 0 (the call) and 1 (direct children) are top-level.
-                (( 10#${depth} <= 1 )) && is_toplevel=true
-            else
-                # For scripts, only depth 0 is top-level.
-                (( 10#${depth} == 0 )) && is_toplevel=true
-            fi
-            
-            local lineInfo="${lno}.${cind}:"
-            local nestPrefix=""
-            case "$nd" in
-                'x')   nestPrefix="" ;;
-                *)     nestPrefix="  ${nd/x/ }" ;;
-            esac
-            local fullLinePrefix="${nestPrefix}${lineInfo}"
-
-            # --- 3. Print the formatted line ---
-            if ${is_toplevel}; then
-                printf '%-20s \t( %ss | %6s%% )          \t( %ss | %6s%% )             \t(%sx)\t%s\n' \
-                    "${fullLinePrefix}" "${wTimeS}" "${wTimeP}" "${cTimeS}" "${cTimeP}" "${cnt}" "${cmd}" >> "$tmpFile"
-            else
-                printf '%-20s \t( %ss | %6s%% | %6s%% )   \t( %ss | %6s%% | %6s%% )    \t(%sx)\t%s\n' \
-                    "${fullLinePrefix}" "${wTimeS}" "${wTimeP}" "${p1w_f}" "${cTimeS}" "${cTimeP}" "${p1c_f}" "${cnt}" "${cmd}" >> "$tmpFile"
-            fi
-        done
-        
-        printf '\n%s\n' "$footer_content")"
-
-        echo "${logNew}" >"$logPathCur"
-    done
-EOF
 
     declare -p >/mnt/ramdisk/vars
-    set -xv
+    #return
+    #set -xv
+
+    (( spacerN0 = spacerN > 23 ? spacerN - 23 : 0 ))
+    (( spacerNN = spacerN - 1 ))
 
     for logPathCur in "${timep_TMPDIR}/profiles/out.profile"; do  # "${timep_TMPDIR}/profiles/out.profile.full"
 
         # split lines into start, time, percent, endr
-        (( spacerN0 = spacerN > 20 ? spacerN - 20 : 0 ))
+        logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
+            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
+
         logCurTmp="$( {
-            printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
-            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
+            
              while read -r lineOrig; do
 
-                IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${lineOrig}"
+                IFS=$'\t' read -r tw pw tc pc cnt nd cind cmd <<<"${lineOrig}"
 
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $cnt ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
@@ -2449,6 +2392,7 @@ EOF
                 printf -v p1c '%5.3d' "${p1c//[^0-9]/}"
                 p1c="${p1c:0:3}.${p1c:3}"
 
+
                 printf -v wTime0 '%0.7d' "${tw}"
                 (( d6 = ${#wTime0} - 6 ))
                 printf -v tw '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
@@ -2461,9 +2405,15 @@ EOF
                     (( pc = pc / cnt ))
                 }
 
-                depthCur="${lno#*.}"
+                # make current depth percentages correct
+                printf -v pw '%5.3d' "${pw//[^0-9]/}"
+                printf -v pc '%5.3d' "${pc//[^0-9]/}"
+                pw="${pw:0:3}.${pw:3}"  
+                pc="${pc:0:3}.${pc:3}"  
 
-                a0="${nd//x/} ${lno}.${cind}"
+                depthCur="${nd##*.}"
+
+                a0="${nd}.${cind}"
 
                 a00="${a0%%[0-9\.]*}";
 
@@ -2471,45 +2421,27 @@ EOF
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
                 #if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${cmd}" == $'\t(1x)' ]] || [[ "${cmd}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
-                            continue
+                #            continue
                 if  { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); then
-                    printf '%s( %ss |%s%% )          ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a000}" "${cmd}"
+                    printf '%-'"${spacerNN}"'s\t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a000}" "${cmd}"
                 else
-                    printf '%s( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a000}" "${cmd}"
+                    printf '%-'"${spacerN}"'s\t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a000}" "${cmd}"
                 fi
             done <"${logPathCur}"
-        } | grep -n '' | sed -E s/':'/' '/ | sort -k2)"
-        logCurTmp="$({ grep -vE '^[0-9]+[[:space:]]*│?$'<<<"${logCurTmp}" | sort -u -k2; grep -E '^[0-9]+[[:space:]]*│?$'<<<"${logCurTmp}"; } | sort -n -k1,1 | sed -E 's/^[0-9]+ //; s/^(│?)[[:space:]]+$/\1/' | sed -zE 's/\n\n+/\n\n/g')"
+        })"
+        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n\n([^\-])/\n\x00\1/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/\n\n/\n\n\x00/g')
+        set -xv
+        logOutL=("${logOut[@]%%\.*}")
+        logOutLL=("${logOutL[@]:1}")
+        for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
+            [[ "${logOutL[$kk]}" == "${logOutLL[$kk]}" ]] || logOut[$kk]+=$'\n'
+        done
+        logOut[-1]=$'\n\n'"${logOut[-1]}"
+        set +xv
 
-        # remove some (all?) of the spurious '(&)' marks caused by process substitutions and remove double logged command in full profiles
-        if [[ "${logPathCur}" == *'.full' ]]; then
-            logCurTmp="$(sed -E 's/( cpu\:\([0-9]*\-\>[0-9]*\)).*$/\1/' <<<"${logCurTmp}")"
-        else
-            while read -r nn; do
-                logCurTmp="$(sed -E 's/^('"${nn}"'.*) \(\&\)$/\1/' <<<"${logCurTmp}")"
-            done < <(grep -E '\\\(\\\^\\\)$' <<<"${logCurTmp}" | sed -E 's/\:.*$//; s/^.* //; s/\..*$//' | sort -u)
-            # primary sort by lineno remove spaces between top-level commands of thge same line
-            mapfile -t -d '' logCurTmpA < <(sed -zE 's/\n\n([0-9])/\x00\1/g;s/\n\nTOTAL/\x00TOTAL/' <<<"${logCurTmp}" | sort -z -n)
-            logCurTmp="$(printf '%s\n' "${logCurTmpA[0]}" "${logCurTmpA[2]}"
-                kk0=2
-                for (( kk=3; kk<${#A[@]}; kk++)); do
-                    { [[ ${logCurTmpA[$kk]%%.*} ]] && [[ ${logCurTmpA[$kk0]%%.*} ]] && [[ "${logCurTmpA[$kk]%%.*}" == "${logCurTmpA[$kk0]%%.*}" ]]; } || printf '\n'
-                    printf '%s\n' "${logCurTmpA[$kk]}"
-                    kk0="$kk"
-                done
-            printf '\n%s\n' "${logCurTmpA[1]}")"
-        fi
-
-        logCurTmp="$(sed -E 's/ \\\(\\\^\\\)$//; s/(\t\([0-9]+x\))[ \t]+/\1\t/' <<<"${logCurTmp}" | sed -zE 's/\n\n\n+/\n\n\n/')"
-
-        [[ ${timep_runType} == 'f' ]] && logCurTmp="$(printf -v spacerS 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \t       \t' '' 
-            spacerS="${spacerS//[^$'\t']/ }"
-            head -n 5 <<<"${logCurTmp}"
-            tail -n +6 <<<"${logCurTmp}" | sed -E ' s/(\t\([0-9]+x\)\t)/\1│  /; s/^│[ \t]*$/│'"$(printf "${spacerS}")"'│/' | sed -zE 's/│  ([^│]+)$/└─ \1/')"
-
-        echo "${logCurTmp}" >"${logPathCur}"
+        printf '%s' "${logOut[@]}" >"${logPathCur}"
     done
-EOF
+
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
