@@ -2339,8 +2339,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     if [[ "${timep_runType}" == 'f' ]]; then
         echo "$(sed -E 's/^(│  [0-9])/│\n\1'/ <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\│  ([^\n]+)\n\│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' >"${timep_LOG_NESTING[0]}.out.combined")"
     fi
-    sed -E 's/([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t([0-9]+)\t/\1 \2 \3 \4 \5\t/; s/\t([0-9]+\.[0-9]+)\t([0-9]+\: *\t)/\1.\2/' <"${timep_LOG_NESTING[0]}.out.combined" | sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g' >"${timep_TMPDIR}/profiles/out.profile"; 
-return
+
+    sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile"; 
+
 
     # get total runtime
     read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
@@ -2351,8 +2352,77 @@ return
    
     # add another percentage showing "percent of total runtime" to final outputs
     printf '...DONE\n\nADDING "PERCENT OF TOTAL TIME" TO PROFILES (+%s)\n' "${SECONDS}"  >&2
+:<<'EOF'
+    for logPathCur in "${timep_TMPDIR}/profiles/out.profile"*; do
+        logNew="$(local tmpFile="${logPathCur}.tmp"
 
-    for logPathCur in "${timep_TMPDIR}/profiles/out.profile" "${timep_TMPDIR}/profiles/out.profile.full"; do
+        # Recreate the exact header from your reference output
+        printf 'LINE.DEPTH.CMD NUMBER\tCOMBINED WALL-CLOCK TIME        \tCOMBINED CPU TIME               \tCOMMAND                             \n' > "$tmpFile"
+        printf '<line>.<depth>.<cmd>:\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n' >> "$tmpFile"
+        printf '_____________________\t________________________________\t________________________________\t____________________________________\n\n' >> "$tmpFile"
+
+        # Process the main content, separating it from the footer
+        local main_content
+        local footer_content
+        mapfile -t main_content < <(sed -n '/^LINE\.DEPTH/,$!p' "$logPathCur" | sed '/^TOTAL RUN TIME/,$d')
+        footer_content="$(sed -n '/^TOTAL RUN TIME/,$p' "$logPathCur")"
+
+        for line in "${main_content[@]}"; do
+            [[ -n "$line" ]] || continue
+            
+            IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<< "$line"
+
+            # --- 1. Data Conversion and Calculation ---
+            printf -v wTimeS '%s.%06d' "${tw:0:-6}" "${tw: -6}"
+            printf -v cTimeS '%s.%06d' "${tc:0:-6}" "${tc: -6}"
+            printf -v wTimeP '%s.%02d' "${pw:0:-2}" "${pw: -2}"
+            printf -v cTimeP '%s.%02d' "${pc:0:-2}" "${pc: -2}"
+            (( p1w = (10000 * (10#0${tw})) / timep_wtimeALL ))
+            printf -v p1w_f '%s.%02d' "${p1w:0:-2}" "${p1w: -2}"
+            (( p1c = (10000 * (10#0${tc})) / timep_ctimeALL ))
+            printf -v p1c_f '%s.%02d' "${p1c:0:-2}" "${p1c: -2}"
+
+            # --- 2. Formatting (Using your improved logic) ---
+            local depth="${lno#*.}" # Extracts "depth.cmd" from "line.depth.cmd"
+            depth="${depth%.*}"     # Extracts just "depth"
+
+            local is_toplevel=false
+            if [[ "${timep_runType}" == 'f' ]]; then
+                # For functions, depth 0 (the call) and 1 (direct children) are top-level.
+                (( 10#${depth} <= 1 )) && is_toplevel=true
+            else
+                # For scripts, only depth 0 is top-level.
+                (( 10#${depth} == 0 )) && is_toplevel=true
+            fi
+            
+            local lineInfo="${lno}.${cind}:"
+            local nestPrefix=""
+            case "$nd" in
+                'x')   nestPrefix="" ;;
+                *)     nestPrefix="  ${nd/x/ }" ;;
+            esac
+            local fullLinePrefix="${nestPrefix}${lineInfo}"
+
+            # --- 3. Print the formatted line ---
+            if ${is_toplevel}; then
+                printf '%-20s \t( %ss | %6s%% )          \t( %ss | %6s%% )             \t(%sx)\t%s\n' \
+                    "${fullLinePrefix}" "${wTimeS}" "${wTimeP}" "${cTimeS}" "${cTimeP}" "${cnt}" "${cmd}" >> "$tmpFile"
+            else
+                printf '%-20s \t( %ss | %6s%% | %6s%% )   \t( %ss | %6s%% | %6s%% )    \t(%sx)\t%s\n' \
+                    "${fullLinePrefix}" "${wTimeS}" "${wTimeP}" "${p1w_f}" "${cTimeS}" "${cTimeP}" "${p1c_f}" "${cnt}" "${cmd}" >> "$tmpFile"
+            fi
+        done
+        
+        printf '\n%s\n' "$footer_content")"
+
+        echo "${logNew}" >"$logPathCur"
+    done
+EOF
+
+    declare -p >/mnt/ramdisk/vars
+    set -xv
+
+    for logPathCur in "${timep_TMPDIR}/profiles/out.profile"; do  # "${timep_TMPDIR}/profiles/out.profile.full"
 
         # split lines into start, time, percent, endr
         (( spacerN0 = spacerN > 20 ? spacerN - 20 : 0 ))
@@ -2361,10 +2431,7 @@ return
             printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}"
              while read -r lineOrig; do
 
-               {
-                IFS=' ' read -r d $'\t' tw pw tc pc cnt
-                IFS=$'\t' read -r a0 a1
-               } <<<"${lineOrig}"
+                IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${lineOrig}"
 
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $cnt ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
@@ -2382,23 +2449,33 @@ return
                 printf -v p1c '%5.3d' "${p1c//[^0-9]/}"
                 p1c="${p1c:0:3}.${p1c:3}"
 
+                printf -v wTime0 '%0.7d' "${tw}"
+                (( d6 = ${#wTime0} - 6 ))
+                printf -v tw '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
+                printf -v cTime0 '%0.7d'  "${tc}"
+                (( d6 = ${#cTime0} - 6 ))
+                printf -v tc '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
+
+                (( cnt > 0 )) && {
+                    (( pw = pw / cnt ))
+                    (( pc = pc / cnt ))
+                }
+
+                depthCur="${lno#*.}"
+
+                a0="${nd//x/} ${lno}.${cind}"
+
                 a00="${a0%%[0-9\.]*}";
 
-                if [[ "${timep_runType}" == 'f' ]]; then
-                    a000="${a00#*[├│└] }"
-                else
-                    a000="${a00}"
-                fi
-
-                a1="${a1#*\(}"
+                [[ "${timep_runType}" == 'f' ]] && a00="${a00#*[├│└] }"
 
                 # if percents are equal (i.e., it is a top-level log line) reprint unmodified. Otherwise add in new "percent of total" field.
-                if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${a1}" == $'\t(1x)' ]] || [[ "${a1}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
+                #if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${cmd}" == $'\t(1x)' ]] || [[ "${cmd}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
                             continue
-                elif [[ "${pw}" == "${p1w}" ]] && [[ "${pc}" == "${p1c}" ]] && { { [[ "${timep_runType}" == 'f' ]] && (( "${#a00}" <= 5 )); } || (( "${#a00}" <= 1 )); }; then
-                    printf '%s( %ss |%s%% )          ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a000}" "${a1}"
+                if  { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); then
+                    printf '%s( %ss |%s%% )          ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a000}" "${cmd}"
                 else
-                    printf '%s( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a000}" "${a1}"
+                    printf '%s( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a000}" "${cmd}"
                 fi
             done <"${logPathCur}"
         } | grep -n '' | sed -E s/':'/' '/ | sort -k2)"
@@ -2432,6 +2509,7 @@ return
 
         echo "${logCurTmp}" >"${logPathCur}"
     done
+EOF
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
