@@ -2423,9 +2423,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 #if [[ "${tw}" == '0.000001' ]] && [[ "${tc}" == '0.000001' ]] && [[ "${a0}" == *' .0:'* ]]  && { [[ "${cmd}" == $'\t(1x)' ]] || [[ "${cmd}" == $'\t\t{{  |  |  }}\twall:(->) cpu:(->)' ]]; }; then
                 #            continue
                 if  { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); then
-                    printf '%-'"${spacerNN}"'s\t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a000}" "${cmd}"
+                    printf '%-'"${spacerNN}"'s\t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 else
-                    printf '%-'"${spacerN}"'s\t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a000}" "${cmd}"
+                    printf '%-'"${spacerN}"'s\t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a00}" "${cmd}"
                 fi
             done <"${logPathCur}"
         })"
