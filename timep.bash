@@ -2378,6 +2378,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $cnt ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
+                    [[ "${timep_runType}" == 'f' ]] && [[ "${lineOrig}" == 'TOTAL RUN'* ]] && printf '\n\n'
                     printf '%s\n' "${lineOrig}"
                     continue
                 }
@@ -2437,7 +2438,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             done <"${logPathCur}"
         })"
-        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n\n([^\-])/\n\x00\1/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/\n\n/\n\n\x00/g')
+        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n(│?\n)([^\-])/\1\x00\2/g' <<<"${logCurTmp}" | sort -z -V -k"$([[ "${timep_runType}" == 'f' ]] && printf '1,3' || printf '1,1')" | sed -zE 's/\n\n/\n\n\x00/g')
         logOutL=("${logOut[@]%%\.*}")
         logOutLL=("${logOutL[@]:1}")
         for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
