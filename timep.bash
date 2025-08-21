@@ -1281,7 +1281,7 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj
+    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag
     local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA0 cTimePA0 linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA
     local -A linenoUniqMapAA
 
@@ -1575,7 +1575,7 @@ printf '%s;' "${fgA[@]}")"
                 cmd="${cmd##+([[:space:]])}"
                 cmd="${cmd%%+([[:space:]])}"
                 cmdA[$kk]+=$'\n'"${cmd}"
-                if (( mergeInd == ${#mergeCurA[@]} - 2 )); then
+                if (( mergeInd == ${#mergeCurA[@]} - 1 )); then
                     nestDiagramA[$kk]+=$'\n''└─ '"${nd//x/}"
                 elif (( mergeInd == 0 )); then
                     nestDiagramA[$kk]+=$'\n''├─ '"${nd//x/}"
@@ -1694,6 +1694,8 @@ printf '%s;' "${fgA[@]}")"
     mapfile -t cmdIndexOutCurA < <(printf '%s\n\n' "${linenoUniqCmdIndexA[@]}")
     mapfile -t cmdOutCurA < <(printf '%s\n\n' "${linenoUniqCmdA[@]}")
 
+    (( kkLast = ${#wTimeOutCurA[@]} - 2 ))
+        [[ "${timep_runType}" == 'f' ]] && firstFlag=false
     for kk in "${!wTimeOutCurA[@]}"; do
         #[[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || continue
 
@@ -1703,8 +1705,13 @@ printf '%s;' "${fgA[@]}")"
         #(( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] ))
 
         [[ "${nestDiagramOutCurA}" == 'x' ]] && {
-            if (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]]; then
-                printf '│\n'
+            if (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && [[ "${nestDiagramOutCurA[$kk]}" == 'x'* ]] ; then
+                case "$kk" in
+                    $kkLast) printf '└─ \n' ;;
+                    0|1) : ;;
+                    2) printf '├─ \n' ;;
+                    *) printf '│  \n' ;;
+                esac
             elif (( logDepth == 0 )); then
                 printf '\n'
             fi
@@ -1717,6 +1724,8 @@ printf '%s;' "${fgA[@]}")"
         # write line
 
         printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
+
+        (( kk == kkLast )) && break
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
 
@@ -2350,7 +2359,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     (( spacerN < 22 )) && spacerN=22
    
     # add another percentage showing "percent of total runtime" to final outputs
-    printf '...DONE\n\nADDING "PERCENT OF TOTAL TIME" TO PROFILES (+%s)\n' "${SECONDS}"  >&2
+    printf '\n\nGENERATING FINAL PROFILE OUTPUTS (+%s)\n' "${SECONDS}"  >&2
 
     (( spacerN0 = spacerN > 22 ? spacerN - 22 : 0 ))
     (( spacerNN = spacerN - 1 ))
@@ -2365,7 +2374,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             
              while read -r lineOrig; do
 
-                IFS=$'\t' read -r tw pw tc pc cnt nd cind cmd <<<"${lineOrig}"
+                IFS=$'\t' read -r tw pw tc pc cnt nd cind cmd <<<"${lineOrig#}"
 
                 { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $cnt ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
@@ -2406,17 +2415,26 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 a0="${nd}.${cind%%*([[:space:]])}"
 
-                a00="${a0%%[0-9\.]*}";
+                a00="${a0%% [0-9\.]*}";
 
-                [[ "${timep_runType}" == 'f' ]] && a00="${a00#*[├│└] }"
+                [[ "${timep_runType}" == 'f' ]] && {
+                    a00="${a00#*+([─├│└])+( )*( )}"
+                    [[ "${a0}" == [├└]─* ]] && a00="${a00#[├└]─}"
+                }
 
                 (( spacerN0 = spacerN -${#a0} ))
+
+                [[ "${timep_runType}" == 'f' ]] && {
+                    [[ ${a00} ]] || printf '│\n'
+                }
 
                 if  { { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); } && { [[ ${pw##*( )} == '0.00' ]] || [[ "${pw##*( )}" == "${p1w##*( )}" ]]; } &&  { [[ ${pc##*( )} == '0.00' ]] || [[ "${pc##*( )}" == "${p1c##*( )}" ]]; }; then
                     printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" '' "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 else
                     printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" '' "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a00}" "${cmd}"
                 fi
+
+
             done <"${logPathCur}"
         })"
         mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n\n([^\-])/\n\x00\1/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/\n\n/\n\n\x00/g')
