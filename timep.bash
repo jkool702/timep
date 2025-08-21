@@ -2438,7 +2438,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             done <"${logPathCur}"
         })"
-        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n(│?\n)([^\-])/\1\x00\2/g' <<<"${logCurTmp}" | sort -z -V -k"$([[ "${timep_runType}" == 'f' ]] && printf '1,3' || printf '1,1')" | sed -zE 's/\n\n/\n\n\x00/g')
+		# resort the final output by lineno. keep records together by using sort -z and adding NULs between records. for functions temporairly relocate the box drawing characters to the endof the line, then sort, then move them back.
+        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n(│?\n)([^\-])/\1\x00\2/g; s/\n([─├│└]+[[:space:]]*)([^\n]+)\n/\n\2\034\1/\n/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/\n([^\n\034]+)\034([^\n]+)\n/\n\2\1\n/g; s/\n\n/\n\n\x00/g')
         logOutL=("${logOut[@]%%\.*}")
         logOutLL=("${logOutL[@]:1}")
         for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
