@@ -2355,20 +2355,24 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     (( spacerNN = spacerN - 1 ))
 
     logPathCur="${timep_TMPDIR}/profiles/out.profile"
+    declare -p >./vars
+    
 	
         # split lines into start, time, percent, endr
         logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
             printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
 
+        logFooter="$(grep -E '^TOTAL' <"${logPathCur}")"
+
         logCurTmp="$( {
             
              while read -r lineOrig; do
 
-                IFS=$'\t' read -r tw Tw tc Tc cnt nd cind cmd <<<"${lineOrig#}"
+                IFS=$'\t' read -r tw Tw tc Tc cnt nd cind cmd <<<"${lineOrig}"
+
 
                 { [[ $tw ]] && [[ $Tw ]] && [[ $tc ]] && [[ $Tc ]] && [[ $cnt ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
-                    [[ "${timep_runType}" == 'f' ]] && [[ "${lineOrig}" == 'TOTAL RUN'* ]] && printf '\n\n'
                     printf '%s\n' "${lineOrig}"
                     continue
                 }
@@ -2405,7 +2409,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 a0="${nd}.${cind%%*([[:space:]])}"
 
-                a00="${a0%% [0-9\.]*}";
+                a00="${a0%%?( )[0-9\.]*}";
 
                 [[ "${timep_runType}" == 'f' ]] && {
                     a00="${a00#*+([─├│└])+( )*( )}"
@@ -2428,19 +2432,30 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             done <"${logPathCur}"
         })"
         declare -p >./vars
+        logFooter="TOTAL RUN${logCurTmp##*$'\n'TOTAL RUN}"
 		# resort the final output by lineno. keep records together by using sort -z and adding NULs between records. for functions temporairly relocate the box drawing characters to the endof the line, then sort, then move them back.
-        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n\n([^\-])/\n\x00\1/g; s/'$'\034''/\x00'$'\034''/g; s/^('$'\034''[─├│└]+[[:space:]]*)(.*)$/\2\1/' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/^(.*)'$'\034''([^'$'\034'']+)$/\2\1\n/g; s/\n\n/\n\n\x00/g')
+        if [[ "${timep_runType}" == 'f' ]]; then
+            mapfile -t -d '' logOut < <(sed -E s/'^([^0-9][^0-9]?[^0-9]?)(.*)?$/\2'$'\034''\1/; s/^[^0-9 ]{,3}$/\x00/' <<<"${logCurTmp%%$'\n'TOTAL RUN*}" | sort -z -V -k1,1 | sed -E 's/^[^0-9 ]{,3}$/│/; s/^(.*)'$'\034''(.*)$/\2\1/; s/^\└─/│ /; ' | sed -zE 's/\n. ([^\n]+)\n.$/\n└─\1/; s/^.\n//; s/\n.\n/\n/')
+        else
+            mapfile -t -d '' logOut < <(sed -zE 's/\n([0-9])/\x00\1/g' <<<"${logCurTmp%%$'\n'TOTAL RUN*}"  | sort -z -V -k1,1 | sed -zE 's/\n\n/\n\n\x00/g')
+        fi
         logOutL=("${logOut[@]%%\.*}")
         logOutLL=("${logOutL[@]:1}")
         for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
             [[ "${logOutL[$kk]}" == "${logOutLL[$kk]}" ]] || logOut[$kk]+=$'\n'
         done
         logOut[-1]=$'\n\n'"${logOut[-1]}"
-        set +xv
 
-        printf '%s' "${logOut[@]}" >"${logPathCur}"
+        {
+            echo "${logHeader}";
+            if [[ "${timep_runType}" == 'f' ]]; then
+                printf '%s' "${logOut[@]}" #| sed -zE 's/\n\n/\n\x00/g; s/^(.*)'$'\034''([^'$'\034'']+)$/\2\1\n/g' 
+            else
+                printf '%s' "${logOut[@]#$'\n'}"
+            fi
+            printf '\n\n%s\n' "${logFooter}"
+        }  | sed -zE 's/\n\n\n+/\n\n/g' >"${logPathCur}"
     
-echo 'doing full log' >&2
     logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
 	
     logCurTmp="$(while read -r lineOrig; do
