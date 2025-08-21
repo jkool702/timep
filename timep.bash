@@ -1273,7 +1273,7 @@ _timep_MERGE_SUM() {
 
 _timep_DEBUG_PRINTVARS() {
 
-declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimePA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimePA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimePA)|(linenoUniqCTimeA)|(linenoUniqCTimePA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_wtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_)|(Time)|(.+A))=' | sed -E s/'^declare \-. '//
+declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimeTA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimeTA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimeTA)|(linenoUniqCTimeA)|(linenoUniqCTimeTA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_fd_lock)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_wtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_)|(Time)|(.+A))=' | sed -E s/'^declare \-. '//
 
 }
 
@@ -1282,7 +1282,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag
-    local -a logA nPipeA wTimePA cTimePA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA0 cTimePA0 linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimePA linenoUniqCTimeA linenoUniqCTimePA linenoUniqCmdA wTimeOutCurA wTimeOutCurPA cTimeOutCurA cTimeOutCurPA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA
+    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1541,17 +1541,13 @@ printf '%s;' "${fgA[@]}")"
         nestDiagramA[$kk]='x'
         countA[$kk]=1
 
+        # figure out "percent for current nesting depth" for wall/cpu times
+        (( wTimePA[$kk] = wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
+        (( cTimePA[$kk] = cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
 
-            # figure out "percent for current nesting depth" for wall/cpu times
-            (( wTimePA[$kk] = wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
-            wTimePA0[$kk]="${wTimePA[$kk]}"
-            #printf -v wTimeP '%5.3d' "${wTimeP0}"
-            #wTimePA[$kk]="${wTimeP:0:3}.${wTimeP:3}"
-
-            (( cTimePA[$kk] = cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
-            cTimePA0[$kk]="${cTimePA[$kk]}"
-            #printf -v cTimeP '%5.3d' "${cTimeP0}"
-            #cTimePA[$kk]="${cTimeP:0:3}.${cTimeP:3}"
+        # record current nesting depth total time
+        wTimeTA[$kk]="${wTimeTotal}"
+        cTimeTA[$kk]="${cTimeTotal}"
 
         
         # combine times for lines with same lineno + same command
@@ -1565,9 +1561,9 @@ printf '%s;' "${fgA[@]}")"
                 IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${mergeCurA[$mergeInd]}"
                 { [[ $tw ]] && [[ $pw ]]; } || continue
                 wTimeA[$kk]+=$'\n'"${tw:-1}"
-                wTimePA[$kk]+=$'\n'"${pw:-0}"
+                wTimeTA[$kk]+=$'\n'"${pw:-0}"
                 cTimeA[$kk]+=$'\n'"${tc:-1}"
-                cTimePA[$kk]+=$'\n'"${pc:-0}"
+                cTimeTA[$kk]+=$'\n'"${pc:-0}"
                 countA[$kk]+=$'\n'"${cnt:-1}"
                 linenoA[$kk]+=$'\n'"${lno:-0.0}"
                 cmdIndexA[$kk]+=$'\n'"${cind:-0}    "
@@ -1607,8 +1603,8 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
             _timep_MERGE_SUM 'wTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
             _timep_MERGE_SUM 'cTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
-            _timep_MERGE_SUM 'wTimePA' "${linenoUniqMapA[$kk]}" "${kk}" '+'
-            _timep_MERGE_SUM 'cTimePA' "${linenoUniqMapA[$kk]}" "${kk}" '+'
+            _timep_MERGE_SUM 'wTimeTA' "${linenoUniqMapA[$kk]}" "${kk}" 
+            _timep_MERGE_SUM 'cTimeTA' "${linenoUniqMapA[$kk]}" "${kk}" 
             _timep_MERGE_SUM 'countA' "${linenoUniqMapA[$kk]}" "${kk}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
@@ -1616,20 +1612,14 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqCmdA[${linenoUniqMapA[$kk]}]="${cmdA[$kk]}"
             linenoUniqWTimeA[${linenoUniqMapA[$kk]}]="${wTimeA[$kk]:-0}"
             linenoUniqCTimeA[${linenoUniqMapA[$kk]}]="${cTimeA[$kk]:-1}"
-            linenoUniqWTimePA[${linenoUniqMapA[$kk]}]="${wTimePA[$kk]:-0}"
-            linenoUniqCTimePA[${linenoUniqMapA[$kk]}]="${cTimePA[$kk]:-1}"
+            linenoUniqWTimeTA[${linenoUniqMapA[$kk]}]="${wTimeTA[$kk]:-0}"
+            linenoUniqCTimeTA[${linenoUniqMapA[$kk]}]="${cTimeTA[$kk]:-1}"
             linenoUniqNestDiagramA[${linenoUniqMapA[$kk]}]="${nestDiagramA[$kk]:-x}"
             linenoUniqCmdIndexA[${linenoUniqMapA[$kk]}]="${cmdIndexA[$kk]:-0}"
             linenoUniqLinenoA[${linenoUniqMapA[$kk]}]="${linenoA[$kk]:-0.0}"
       fi
 
         kk1=${kk}
-    done
-
-    # get runtime sums for the combined uniq lineno's
-    for kk in "${linenoUniqA[@]}"; do
-        _timep_MERGE_SUM 'wTimePA' "$kk" "$kk" '-'
-        _timep_MERGE_SUM 'cTimePA' "$kk" "$kk" '-'
     done
 
     (( spacerN = 1 + 4 * ( 10#0${timep_LOG_NESTING_MAX:-0} - 10#0${logDepth:-0} ) )) || spacerN=1
@@ -1653,7 +1643,7 @@ printf '%s;' "${fgA[@]}")"
             printf -v cTime '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
 
             # write line
-            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%|'$'\034''%s'$'\034'')\t(%ss|%s%%|'$'\034''%s'$'\034'')\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]%%$'\n'*}" '' "${wTime}" "${wTimePA0[$kk]}" "${wTimeA[$kk]%%$'\n'*}" "${cTime}" "${cTimePA0[$kk]}" "${cTimeA[$kk]%%$'\n'*}" "${cmdA[$kk]%%$'\n'*}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
+            printf '%s:%'"${spacerN}"'.s\t(%ss|%s%%|'$'\034''%s'$'\034'')\t(%ss|%s%%|'$'\034''%s'$'\034'')\t%s\t{{ %s | %s | %s }}\twall:(%s->%s) cpu:(%s->%s)' "${linenoA[$kk]%%$'\n'*}" '' "${wTime}" "${wTimePA[$kk]}" "${wTimeA[$kk]%%$'\n'*}" "${cTime}" "${cTimePA[$kk]}" "${cTimeA[$kk]%%$'\n'*}" "${cmdA[$kk]%%$'\n'*}" "${funcA[$kk]}" "${pidA[$kk]}" "${nexecA[$kk]}" "${startWTimeA[$kk]}" "${endWTimeA[$kk]}" "${startCTimeA[$kk]}" "${endCTimeA[$kk]}"
 
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
@@ -1685,9 +1675,9 @@ printf '%s;' "${fgA[@]}")"
     inPipeFlag=false
 
     mapfile -t wTimeOutCurA < <(printf '%s\n\n' "${linenoUniqWTimeA[@]}")
-    mapfile -t wTimeOutCurPA < <(printf '%s\n\n' "${linenoUniqWTimePA[@]}")
+    mapfile -t wTimeOutCurTA < <(printf '%s\n\n' "${linenoUniqWTimeTA[@]}")
     mapfile -t cTimeOutCurA < <(printf '%s\n\n' "${linenoUniqCTimeA[@]}")
-    mapfile -t cTimeOutCurPA < <(printf '%s\n\n' "${linenoUniqCTimePA[@]}")
+    mapfile -t cTimeOutCurTA < <(printf '%s\n\n' "${linenoUniqCTimeTA[@]}")
     mapfile -t countOutCurA < <(printf '%s\n\n' "${linenoUniqCountA[@]}")
     mapfile -t nestDiagramOutCurA < <(printf '%s\n\n' "${linenoUniqNestDiagramA[@]}")
     mapfile -t linenoOutCurA < <(printf '%s\n\n' "${linenoUniqLinenoA[@]}")
@@ -1723,7 +1713,7 @@ printf '%s;' "${fgA[@]}")"
 
         # write line
 
-        printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
+        printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurTA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurTA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
 
         (( kk == kkLast )) && break
 
@@ -2374,9 +2364,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             
              while read -r lineOrig; do
 
-                IFS=$'\t' read -r tw pw tc pc cnt nd cind cmd <<<"${lineOrig#}"
+                IFS=$'\t' read -r tw Tw tc Tc cnt nd cind cmd <<<"${lineOrig#}"
 
-                { [[ $tw ]] && [[ $pw ]] && [[ $tc ]] && [[ $pc ]] && [[ $cnt ]]; } || {
+                { [[ $tw ]] && [[ $Tw ]] && [[ $tc ]] && [[ $Tc ]] && [[ $cnt ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
                     [[ "${timep_runType}" == 'f' ]] && [[ "${lineOrig}" == 'TOTAL RUN'* ]] && printf '\n\n'
                     printf '%s\n' "${lineOrig}"
@@ -2393,24 +2383,23 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 printf -v p1c '%5.3d' "${p1c//[^0-9]/}"
                 p1c="${p1c:0:3}.${p1c:3}"
 
+                # get percent of current depth runtime
+                (( pw = (10000 * 10#0${tw//[^0-9]/}) / 10#0${Tw//[^0-9]/} ))
+                printf -v pw '%5.3d' "${pw//[^0-9]/}"
+                pw="${pw:0:3}.${pw:3}"
 
+                # get percent of current cpu runtime
+                (( pc = (10000 * 10#0${tc//[^0-9]/}) / 10#0${Tc//[^0-9]/} ))
+                printf -v pc '%5.3d' "${pc//[^0-9]/}"
+                pc="${pc:0:3}.${pc:3}"
+
+                # convert times to seconds
                 printf -v wTime0 '%0.7d' "${tw}"
                 (( d6 = ${#wTime0} - 6 ))
                 printf -v tw '%s.%s' "${wTime0:0:${d6}}" "${wTime0:${d6}}"
                 printf -v cTime0 '%0.7d'  "${tc}"
                 (( d6 = ${#cTime0} - 6 ))
                 printf -v tc '%s.%s' "${cTime0:0:${d6}}" "${cTime0:${d6}}"
-
-                (( cnt > 0 )) && {
-                    (( pw = pw / cnt ))
-                    (( pc = pc / cnt ))
-                }
-
-                # make current depth percentages correct
-                printf -v pw '%5.3d' "${pw//[^0-9]/}"
-                printf -v pc '%5.3d' "${pc//[^0-9]/}"
-                pw="${pw:0:3}.${pw:3}"  
-                pc="${pc:0:3}.${pc:3}"  
 
                 depthCur="${nd##*.}"
 
@@ -2426,7 +2415,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 (( spacerN0 = spacerN -${#a0} ))
 
                 [[ "${timep_runType}" == 'f' ]] && {
-                    [[ ${a00} ]] || printf '│\n'
+                    [[ ${a00} ]] || printf '│\n'$'\034'
                 }
 
                 if  { { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); } && { [[ ${pw##*( )} == '0.00' ]] || [[ "${pw##*( )}" == "${p1w##*( )}" ]]; } &&  { [[ ${pc##*( )} == '0.00' ]] || [[ "${pc##*( )}" == "${p1c##*( )}" ]]; }; then
@@ -2438,8 +2427,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             done <"${logPathCur}"
         })"
+        declare -p >./vars
 		# resort the final output by lineno. keep records together by using sort -z and adding NULs between records. for functions temporairly relocate the box drawing characters to the endof the line, then sort, then move them back.
-        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n(│?\n)([^\-])/\1\x00\2/g; s/\n([─├│└]+[[:space:]]*)([^\n]+)\n/\n\2\034\1/\n/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/\n([^\n\034]+)\034([^\n]+)\n/\n\2\1\n/g; s/\n\n/\n\n\x00/g')
+        mapfile -t -d '' logOut < <(echo "${logHeader}"; sed -zE 's/\n\n([^\-])/\n\x00\1/g; s/'$'\034''/\x00'$'\034''/g; s/^('$'\034''[─├│└]+[[:space:]]*)(.*)$/\2\1/' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/^(.*)'$'\034''([^'$'\034'']+)$/\2\1\n/g; s/\n\n/\n\n\x00/g')
         logOutL=("${logOut[@]%%\.*}")
         logOutLL=("${logOutL[@]:1}")
         for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
@@ -2450,7 +2440,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         printf '%s' "${logOut[@]}" >"${logPathCur}"
     
-
+echo 'doing full log' >&2
     logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
 	
     logCurTmp="$(while read -r lineOrig; do
