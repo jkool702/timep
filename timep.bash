@@ -1704,7 +1704,7 @@ printf '%s;' "${fgA[@]}")"
 
         [[ "${nestDiagramOutCurA}" == 'x' ]] && {
             if (( logDepth == 1 )) && [[ "${timep_runType}" == 'f' ]]; then
-                printf '│  \n│'
+                printf '│\n'
             elif (( logDepth == 0 )); then
                 printf '\n'
             fi
@@ -1716,7 +1716,7 @@ printf '%s;' "${fgA[@]}")"
 
         # write line
 
-             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
+        printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurPA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurPA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
 
