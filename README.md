@@ -1,9 +1,11 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**MAJOR UPDATE RELEASED**: The new `timep` (currently v1.2) now profiles cpu time and wall-clock time, uses a custom spatially-equalized colorscale that colors based on runtime, has refactored most of the post-processing workflow, and has overhauled + fixed numerous minor errors in the profiler output. The old `timep` (v0.9) (without cpu time support) is available under the "legacy" branch in this repo.
+**MAJOR UPDATE RELEASED**: The new `timep` (currently v1.3) now includes the required loadable binary as a compressed base64 encoded string inside timep.bash. timep_flamegraph.pl is also included inside timep.bash, making the script 100% self contained. This version also includes a major refactor of the log merging logic, making it more robust, more reliable, and much faster. THe forkrun test (involving 67000 or so individual commands) previously took 20 m,inutes and now only takes 5 minutes (or 2 minutes if you only want a profile and not a flamegraph). This is between a 4x and 10x speedup!
 
 **BUILTIN FLAMEGRAPH GENERATOR**:  One standout feature of `timep` is that, in addition to the time profile, `timep` will generate outputs consisting of call-stack traces that can be directly used with `timep_flamegraph.pl` (in this repo - a modified version of `flamegraph.pl` from Brendan Gregg's [FlameGraph repo](https://github.com/brendangregg/FlameGraph) with a new `--color=timep` option for use with `timep`). If you pass `timep` the `--flame` flag, timep will automatically download (if needed) a copy of `flamegraph.pl` and use it to generate both "full" and a "folded" flamegraphs SVG images. However, unlike typical flamegraphs (which are built using stack traces), these flamegraphs are built using bash commands and their associated runtimes, and the different levels represent combined function+subshell nesting depth. Additionally, these flamegraphs use a custom 'timep' coloring scheme, which colors based on the time it took the command to run and uses a perceptually and spatially equalized color mapping to produce flamegraphs that are easy to interpret and use.
+
+note: use the timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT at the top of the code to control if you want timep to generate flamegraphs automatically by default (without requiring passing a flag).
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 # USING TIMEP
@@ -14,7 +16,7 @@ In other words, source `timep.bash` and then simply add `timep` before the funct
 
 ***
 
-OUTPUTS: `timep` generates 2 time profiles, 2 stack traces (for making flamegraphs), and (if `-F` or `--flame` is passed) several flamegraph svg images. These outputs are always saved to disk in the "profiles" directory in the timep tmpdir (by default: /dev/shm/.timep/timep-XXXXXXXX). Upon finishing, `timep` will create a symlink in your PWD at `./timep.profiles` that links to the "profiles" dir that contains all the `timep` outputs.
+OUTPUTS: `timep` generates 2 time profilesand (if `-F` or `--flame` is passed) several flamegraph svg images plus 2 stack traces (flamegraph inputs), . These outputs are always saved to disk in the "profiles" directory in the timep tmpdir (by default: /dev/shm/.timep/timep-XXXXXXXX). Upon finishing, `timep` will create a symlink in your PWD at `./timep.profiles` that links to the "profiles" dir that contains all the `timep` outputs.
 
 DETAILS ON OUTPUTS:
 
@@ -22,13 +24,14 @@ DETAILS ON OUTPUTS:
 
 1. out.profile.full:    contains all individual commands and metadata info like the chain of FUNCNAME's and the chain of subshell PIDs
 2. out.profile:         commands repeated by loops have been collapsed into combined entries that show the number of times the command was repeated and the total run time from all of them. By default this is printed to the screen upon completion.
-    
+
+if `--flame` is passed as a flag:  
+
 2 stack traces (intended to be passed to "timep_flamegraph.pl"): "out.flamegraph.full" and "out.flamegraph"
 
-3. out.flamegraph.full: contains stack traces from all commands
-4. out.flamegraph:      contains "folded" stack traces where the times from otherwise identical stack traces have been summed together in a single stack trace
+2 flamegraphs: out.flamegraph.ALL.svg and out.flamegraph.ALL.R.svg:  there are both "quad stack": 4-in-1 flamegraphs. they contain the same info, but that info is grouped differently.
      
-if `--flame` is passed as a flag: several flamegraph .svg files are genertated from the above two "out.flamegraph" files and savei in the "flamegraphs" subdirectory of the profile dir. there are 4 "base" SVG's that show wall-clock time and cpu time for the full and the folded stack traces. These 4 SVGs are then combined (vertically stacked) in various combinations to produce extremely informaive dual- and quad-stacked flamegraphs. The qaad-stacked `flamegraph.ALL.svg` and `flamegraph.ALL.R.svg` flamegraphs both contain all 4 "base flamegraphs" (they group them in dfferent ways), and are probably the ones you want to use.
+ several flamegraph .svg files are genertated from the above two "out.flamegraph" files and savei in the "flamegraphs" subdirectory of the profile dir. there are 4 "base" SVG's that show wall-clock time and cpu time for the full and the folded stack traces. These 4 SVGs are then combined (vertically stacked) in various combinations to produce extremely informaive dual- and quad-stacked flamegraphs. The qaad-stacked `flamegraph.ALL.svg` and `flamegraph.ALL.R.svg` flamegraphs both contain all 4 "base flamegraphs" (they group them in dfferent ways), and are probably the ones you want to use.
 
 **NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE**: 
 * the "TOTAL RUN TIME"  represents the combined sum of the "wall-clock time" from the main process being profiled + all of its bash descendant processes. If it has no descendants (i.e., it never forks a background process that runs asynchronously) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is similiar to the "total CPU time (sys+user)", except that it combines the wall-clock time that each process ran for.
