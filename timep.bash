@@ -79,7 +79,7 @@ timep() {
     # DEPENDENCIES:
     #    1) bash 5.0+ (required to support the $EPOCHREALTIME variable)
     #    2) mounted proc filesystem at '/proc'
-    #    3) REQUIRED binaries: cat chmod find grep mkdir mv rm sed sort 
+    #    3) REQUIRED binaries: cat chmod find grep mkdir mv rm sed sort uniq
     #    4) OPTIONAL binaries (needed for extra/enhanced/optional functionality): ln file [realpath|readlink] [wget|curl]
 	#    5) accurate cpu time measrements require the use of a loadable builtin. currently, this is supported on x86_64, aarch64, ppc64le and i686. timep will try to use /proc/stat when this loadable builtin is not available, but the quality of the timing result will be significantly worse.
     #
@@ -89,8 +89,8 @@ timep() {
 	#    3. timep uses a loadable builtin to get accurate cpu time measureements. This loadable builtin's .so file is included in this timep.bash file as a compressed base64-encoded string. When timep.bash is sourced, this .so file will automatically be extracted and the loadable builtin will be enabled automatically.
     #
     # KNOWN LIMITATIONS / BUGS: timep handles *almost* every aspect of the bash execution model, but there are a few edge cases where, due to the limitations or trap-based profiling, the output is slightly off.
-    #    1. For return traps, when the trap is triggered (by a function returning) timep records the event with the command listed is a repeat of the last command run by the returning function. This issue *only* happens for return traps...all other traps are profiled correctly.
-    #    2. In some deeply nested chains of combined subshells + background forks with multiple subshells + forks before the 1st command in the sequence, some commands may have an incorrect subshell PID and will be grouped seperately.
+    #    1. For function calls that immediately spawn subshells (e.g., ff() ( ... ) ), the lineno for the subshell is incorrect
+    #    2. In some deeply nested chains of combined subshells + background forks with multiple subshells + forks before the 1st command in the sequence, some commands may have an incorrect nesting level. That said, commands should still be grouped together roughtly correctly, and will still have accurate timing info.
     #
     ################################################################################################################################################################
 (
@@ -1348,6 +1348,8 @@ _timep_PROCESS_LOG() {
         # deal with commands run by traps / signal handlers
         if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
             (( kk1 = kk + 1 ))
+            cmdA[$kk1]="${logA[$kk]@Q}"
+            ((kk1++))
             while (( linenoA[$kk1] < 0 )) && (( kk1 < ${nlogA} )); do
                 cmdA[$kk1]="${logA[$kk]@Q}"
                 ((kk1++))
@@ -2383,7 +2385,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
             printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
 
-        logFooter="$(grep -E '^TOTAL' <"${logPathCur}")"
+        logFooter="$(grep --text -E '^TOTAL' <"${logPathCur}")"
 
         logCurTmp="$( {
             
@@ -2430,7 +2432,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 a0="${nd}.${cind%%*([[:space:]])}"
 
-                a00="${a0%%?( )[0-9\.]*}";
+                a00="${a0%%?( )?(-)?("'")[0-9\.]*}";
 
                 [[ "${timep_runType}" == 'f' ]] && {
                     a00="${a00#*+([─├│└])+( )*( )}"
