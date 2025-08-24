@@ -19,10 +19,10 @@ timep() {
     #             out.profile.full:    contains all individual commands and metadata info like the chain of FUNCNAME's and the chain of subshell PIDs || [[ "${nn}" == *$'\n' ]]
     #             out.profile:         commands repeated by loops have been collapsed into combined entries that show the number of times the command was repeated and the total run time from all of them
     #   if flamegraph generation is enabled, you will also get
-	#        2 flamegraph SVGs: "flamegraph.ALL.svg" and "flamegraph.ALL.R.svg"
+	  #        2 flamegraph SVGs: "flamegraph.ALL.svg" and "flamegraph.ALL.R.svg"
     #             these are both "quad-stack" 4-in-1 flamegraphs. They contain the same information but are arranged/grouped differently.
-	#             the flamegraphs that were used to build these quad-stacked ones are also available in the "flamegraphs" sub-directory in the "profiles" dir.
-	#        2 stack traces intended to be passed to "timep_flamegraph.pl": "out.flamegraph.full" and "out.flamegraph"
+	  #             the flamegraphs that were used to build these quad-stacked ones are also available in the "flamegraphs" sub-directory in the "profiles" dir.
+	  #        2 stack traces intended to be passed to "timep_flamegraph.pl": "out.flamegraph.full" and "out.flamegraph"
     #             out.flamegraph.full: contains stack traces from all commands
     #             out.flamegraph:      contains "folded" stack traces where the times from otherwise identical stack traces have been summed together in a single stack trace
     #              ("timep_flamegraph.pl" is a modified version of "flamegraph.pl" from Brendan Gregg's "FlameGraph" repo at "https://github.com/brendangregg/FlameGraph")
@@ -46,8 +46,10 @@ timep() {
     #
     # -F | --flame | --flamegraph  : automatically generate a flamegraph using Flamegraph.pl and save them in the "profiles" dir
     # +F | ++flame | ++flamegraph  : do NOT automatically generate a flamegraph using Flamegraph.pl and save them in the "profiles" dir
-    # 
-    #     NOTE: you can choose whether or not to generate flamegraphs by default by setting the timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT variable at the very top of thje script. 
+    #
+
+    #     NOTE: you can choose whether or not to generate flamegraphs by default by setting the timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT variable at the very top of thje script.
+
     #           If this is set to any non-empty value, flamegraphs will be generated automatically unless the +F | ++flame | ++flamegraph flag is passed (the [+=]F flag, if passed, will always override the timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT var)
     #
     #             --              : stop arg parsing (allows profiling something with the same name as a flag)
@@ -100,11 +102,12 @@ timep() {
     # check that basic requirements to run timep are met
     # to disable this check, call timep via 'timep_DISABLE_CHECKS=1 timep <...>'
     [[ ${timep_DISABLE_CHECKS} ]] || { [[ -f /proc/self/stat ]] && (( BASH_VERSINFO[0]>= 5 )); } || { printf '\n\nERROR: timep requires a mounted procfs and bash 5+. ABORTING!\n\n' >&2; return 1; }
-    
+
 	local -a missingA=(sed grep sort uniq perl)
     for nn in "${missingA[@]}"; do
         type -p "$nn" &>/dev/null || { printf '\n\nERROR: timep requires %s. Please install it (or add it to your PATH if already installed) before running timep. ABORTING!\n\n' "$nn" >&2; return 1; }
-    done    
+    done
+
 	unset missingA
 
     shopt -s extglob
@@ -116,7 +119,7 @@ timep() {
     local -A A_map
 
     SECONDS=0
-    
+
     getCPUtime &>/dev/null || _timep_SETUP
 
     unset a
@@ -144,7 +147,7 @@ timep() {
     fi
 
     # parse flags
-    
+
     timep_deleteFlag=true
     timep_noOutFlag=false
     timep_timeFlag=false
@@ -1060,7 +1063,7 @@ _timep_GET_RUNTIME_CORRECTION() {
 
     local N NN kk a b
     local -a tSum0 tSum1
-	
+
     if [[ "$1" == *[0-9]* ]]; then
         N="$1"
     else
@@ -1253,15 +1256,15 @@ _timep_MERGE_SUM() {
     local -n v2="${var}"
 
     mapfile -t v1A <<<"${v1[${ind1}]}"
-        
+
     divideFlag=false
-    case "${4}" in 
+    case "${4}" in
+
         '+') mapfile -t mult <<<"${countA[$ind2]}" ;;
         '-') divideFlag=true;  mapfile -t mult <<<"${linenoUniqCountA[$ind1]}" ;;
         [0-9]*) for jj in "${!v1A[@]}"; do mult[$jj]="${4}"; done ;;
         *) for jj in "${!v1A[@]}"; do mult[$jj]=1; done ;;
     esac
-
 
     (( ${#mult[@]} == 1 )) && for jj in "${!v1A[@]}"; do
         mult[$jj]="${mult[0]}"
@@ -1272,10 +1275,11 @@ _timep_MERGE_SUM() {
             (( 10#0${mult[$jj]} == 0 )) && mult[$jj]=1
             (( v1A[$jj] = ( v1A[$jj] + ( mult[$jj] / 2 ) ) / mult[$jj] ))
             [[ ${5} ]] && ((  v1A[$jj] = 10#0${v1A[$jj]//[^0-9]/} > 0 ? 10000 * 10#0${v1A[$jj]//[^0-9]/} / ${5} : 0 ))
-        done        
+        done
+
     else
          mapfile -t v2A <<<"${v2[${ind2}]}"
-   
+
         for jj in "${!v1A[@]}"; do
             (( v1A[$jj] = 10#0${v1A[$jj]} + ( 10#0${mult[$jj]} * 10#0${v2A[$jj]} ) ))
         done
@@ -1298,8 +1302,8 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag
-    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA
+    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag skipNextSimpleTrapFlag
+    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1313,6 +1317,7 @@ _timep_PROCESS_LOG() {
 
     inPipeFlag=false
     nPipeNextIgnoreFlag=false
+    skipNextSimpleTrapFlag=false
 
     wTimeTotal=0
     cTimeTotal=0
@@ -1372,33 +1377,51 @@ _timep_PROCESS_LOG() {
         linenoA[$kk]="${lineno}"
 
         # unquote the cmd string
-        cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
+        #cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
+        [[ "${cmd}" == *"'"' ('[\?\^\&]')' ]] && cmd="${cmd%*([[:space:]])"'"*}${cmd##**([[:space:]])"'"}'"
 
         cmd="${cmd//"'\\''"/"'"'"'"'"'"'"'"}"
         read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
-        cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
+        #cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
+#        if [[ "${cmd%%*([ \t])}" == *\(\^\) ]]; then
+#            skipNextSimpleTrapFlag=true
+#            cmd="${cmd%%*([ \t])\(\^\)*([ \t])}"
+#        elif  ${skipNextSimpleTrapFlag} && [[ "${cmd%%*([ \t])}" == *'(&)' ]]; then
+#            skipNextSimpleTrapFlag=false
+#            cmd="${cmd%%*([ \t])\(\&\)*([ \t]}"
+
+#        fi
+
         cmdA[$kk]="${cmd}"
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
         if ${nPipeNextIgnoreFlag}; then
+            set -xv
             nPipe=1
             nPipeA[$kk]=1
             nPipeNextIgnoreFlag=false
-        elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "'${cmdA[$kk]//"'"/"'"'"'"'"'"'"'"}'" == '(('*[\<\>\=]*'))' ]]; then
+			inPipeFlag=false
+	 		inPipeFlagA[$kk]=false
+            set +xv
+	    elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
+            set -xv
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {
                 cmd0="${cmd0#@([[:print:]])}"
                 cmd0="${cmd0%@([[:print:]])*([[:space:]])}"
-                [[ "${cmd0}" == '(('*\=*'))' ]] && {
+                [[ "${cmd0//"'"/}" == '(('*\=*'))' ]] && {
                     nPipe=1
                     nPipeA[$kk]=1
                     nPipeNextIgnoreFlag=true
+					inPipeFlag=false
+	 				inPipeFlagA[$kk]=false
                 }
             }
+            set +xv
         fi
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
@@ -1421,7 +1444,6 @@ _timep_PROCESS_LOG() {
             normalCmdFlagA[$kk]=true
             isMergeIndicatorA[$kk]=false
         fi
-
 
         # see if we need to merge up the endtime/runtime from the child log
         [[ "${endWTimeA[$kk]}" == '-' ]] && {
@@ -1464,6 +1486,7 @@ _timep_PROCESS_LOG() {
             (( isPipeA[$kk] = isPipeA[$kk1] + 1 ))
             [[ ${endWTimeA[$kk1]} ]] && endWTimeA[$kk]="${endWTimeA[$kk1]}"
             [[ ${endCTimeA[$kk1]} ]] && endCTimeA[$kk]="${endCTimeA[$kk1]}"
+            ${isMergeIndicatorA[$kk1]} && { isMergeIndicatorA[$kk]=true; mergeA[$kk]+=$'\n'"${mergeA[$kk1]}"; }
             cmdA[$kk]+=" | ${cmdA[$kk1]// \(\&\)/}"
             (( nPipeA[$kk] == 1 )) && inPipeFlag=false
         elif (( nPipeA[$kk] > 1 )); then
@@ -1471,7 +1494,12 @@ _timep_PROCESS_LOG() {
             inPipeFlag=true
             isPipeA[$kk]=1
         fi
-        ${inPipeFlag} && normalCmdFlagA[$kk]=false
+        if ${inPipeFlag}; then
+            normalCmdFlagA[$kk]=false
+            inPipeFlagA[$kk]=true
+        else
+            inPipeFlagA[$kk]=false
+        fi
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
         [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
@@ -1501,7 +1529,7 @@ _timep_PROCESS_LOG() {
             cTimeA[$kk]=1
         fi
 
-       ${timep_flameGraphFlag} && ${normalCmdFlagA[$kk]} && {
+       ${timep_flameGraphFlag} && ${normalCmdFlagA[$kk]} && ! ${inPipeFlag} && {
             [[ -z ${fg0} ]] && {
                 # get base stack (showing all the parents) for this log
                 fg0="$(IFS0="${IFS@Q}"
@@ -1530,6 +1558,8 @@ printf '%s;' "${fgA[@]}")"
         }
     done
 
+    declare -p >"${logCur}.vars"
+
     (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
     (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
 
@@ -1538,18 +1568,17 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
-    kk1=-1
+    kk1=0
     for kk in "${!logA[@]}"; do
-        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
-            (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
-            continue
-        }
+
+        ${inPipeFlagA[$kk]} && continue
+
         #  write out flamegraph stack trace line for standard commands
         ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
-            ((lineno1 = lineno1 + 1))
+            (( lineno1 = lineno1 + 1 ))
         else
             lineno1=0
         fi
@@ -1568,14 +1597,20 @@ printf '%s;' "${fgA[@]}")"
         wTimeTA[$kk]="${wTimeTotal}"
         cTimeTA[$kk]="${cTimeTotal}"
 
-        
-        # combine times for lines with same lineno + same command
-        if ${normalCmdFlagA[$kk]}; then
-            #  write out flamegraph stack trace line for standard commands
-            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
-        elif ${isMergeIndicatorA[$kk]} && [[ "${mergeA[$kk]}.out.combined" ]] && [[ -e "${mergeA[$kk]}.out.combined" ]]; then
+        if ${isMergeIndicatorA[$kk]}; then
             # merge up log indo kk index vars
-            mapfile -t mergeCurA <"${mergeA[$kk]}.out.combined"
+            mergeA[$kk]="${mergeA[$kk]//+($'\n')/$'\n'}"
+            mergeA[$kk]="${mergeA[$kk]#$'\n'}"
+            #mergeA[$kk]="${mergeA[$kk]%$'\n'}"
+            mapfile -t mergeA0 <<<"${mergeA[$kk]}"
+			mergeCurA=()
+            for kk1 in "${!mergeA0[@]}"; do
+                [[ "${mergeA0[$kk1]}.out.combined" ]] && [[ -e "${mergeA0[$kk1]}.out.combined" ]] && {
+                    mapfile -t mergeCurA0 <"${mergeA0[$kk1]}.out.combined"
+                    mergeCurA+=("${mergeCurA0[@]}")
+                }
+            done
+
 			for mergeInd in "${!mergeCurA[@]}"; do
                 IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${mergeCurA[$mergeInd]}"
                 { [[ $tw ]] && [[ $pw ]]; } || continue
@@ -1597,14 +1632,16 @@ printf '%s;' "${fgA[@]}")"
                 else
                     nestDiagramA[$kk]+=$'\n''│  '"${nd//x/}"
                 fi
-           done 
+           done
+
         fi
 
-        cmd0="${cmdA[$kk]}" 
+        cmd0="${cmdA[$kk]}"
+
         cmd0="${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
         cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
-        
+
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]}.${cmd0@Q}.${funcA[$kk]@Q}"
 
@@ -1622,8 +1659,10 @@ printf '%s;' "${fgA[@]}")"
             linenoUniqLineA[${linenoUniqMapA[$kk]}]+=" $kk"
             _timep_MERGE_SUM 'wTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
             _timep_MERGE_SUM 'cTimeA' "${linenoUniqMapA[$kk]}" "${kk}"
-            _timep_MERGE_SUM 'wTimeTA' "${linenoUniqMapA[$kk]}" "${kk}" 
-            _timep_MERGE_SUM 'cTimeTA' "${linenoUniqMapA[$kk]}" "${kk}" 
+            _timep_MERGE_SUM 'wTimeTA' "${linenoUniqMapA[$kk]}" "${kk}"
+
+            _timep_MERGE_SUM 'cTimeTA' "${linenoUniqMapA[$kk]}" "${kk}"
+
             _timep_MERGE_SUM 'countA' "${linenoUniqMapA[$kk]}" "${kk}"
         else
             linenoUniqLineA[${linenoUniqMapA[$kk]}]="$kk"
@@ -1688,7 +1727,6 @@ printf '%s;' "${fgA[@]}")"
         (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out"
-
 
     # write out new combined (uniq lineno) merged-upward log
     inPipeFlag=false
@@ -1896,7 +1934,8 @@ _timep_PROCESS_FLAMEGRAPH() {
 
 _timep_COMBINE_FLAMEGRAPH() {
 ## Vertically stack flamegraph SVG images
-# 
+#
+
 # USAGE: --type=<type> svg0 svg1
 #
 # <type> can be one of the following: f, F  w, c, fF, wc
@@ -1911,7 +1950,6 @@ _timep_COMBINE_FLAMEGRAPH() {
 #   For the below 2 types, each input is a double flamegraph producedusing one of the above 4 modes
 #     fF: folded+full. inputs are dual-folded and dual-full
 #     wc: wall+cpu.    inputs are dual-wall and dual-cpu
-
 
     #trap 'echo "ERROR AT $LINENO: $BASH_COMMAND" >&2' ERR
 
@@ -1935,7 +1973,8 @@ _timep_COMBINE_FLAMEGRAPH() {
         shift 1
     elif (( $# == 2 )); then
         runType=f
-        fTitleA=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME') 
+        fTitleA=('' '{FOLDED}: WALL-CLOCK' '' '{FOLDED}: CPU-TIME')
+
     else
          printf '\nERROR: INCORRECT NUMBER OF INPUTS. \nABORTING!!!\n\n' >&2
          return 2
@@ -1968,7 +2007,8 @@ _timep_COMBINE_FLAMEGRAPH() {
     for kk in "${!f2[@]}"; do
         F=()
         for (( kk0=0; kk0<5; kk0++)); do
-            read -r -d $'\034' y 
+            read -r -d $'\034' y
+
             if [[ "${kk0}" = '1' ]] || [[ ${kk0} == '3' ]]; then
                 (( yNew = ${y%.*} + yShift ))
                 F[$kk0]="${yNew}"
@@ -1992,7 +2032,7 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     grep -qE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg0}" && echo "$(grep -vE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg0}")" >"${svg0}"
     grep -qE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg1}" && echo "$(grep -vE '^<text id="subtitle".*_THIS_IS_A_TEMP_SUBTITLE_' <"${svg1}")" >"${svg1}"
-  
+
     if (( ${#titleY[@]} == 0 )) || [[ -z "${titleY[0]}" ]]; then
         titleY[0]=24
     fi
@@ -2013,7 +2053,8 @@ _timep_COMBINE_FLAMEGRAPH() {
         (( fTitleA[4] = yMin1 - subtitlePad + yShift ))
         (( fTitleA[6] = yMax1 + subtitlePad + titlePad + yShift ))
     else
-        (( fTitleA[2] = imgHeight - titlePad ))    
+        (( fTitleA[2] = imgHeight - titlePad ))
+
         fTitleA=("${fTitleA[0]}" "${fTitleA[1]}" "${fTitleA[2]}" "${fTitleA[3]}")
     fi
 
@@ -2351,7 +2392,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         # copy final outputs to profiles dir
 
-
         # for flamegraph.pl inputs - convert times to screen-size-normalized CDF index (to maximize colorspace usage)
         printf '\nGENERATING COLOR MAPPING FOR FLAMEGRAPH INPUTS (+%s)\n' "${SECONDS}" >&2
         for fgCur in "${timep_TMPDIR}/.log/out.flamegraph.full" "${timep_TMPDIR}/.log/out.flamegraph"; do
@@ -2361,8 +2401,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
     sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
-    sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g; s/(\n([0-9]+\t){5})\t/\1/g' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile"; 
-
+    sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g; s/(\n([0-9]+\t){5})\t/\1/g' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile";
 
     # get total runtime
     read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
@@ -2370,7 +2409,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
     (( spacerN < 22 )) && spacerN=22
-   
+
     # add another percentage showing "percent of total runtime" to final outputs
     printf '\n\nGENERATING FINAL PROFILE OUTPUTS (+%s)\n' "${SECONDS}"  >&2
 
@@ -2379,20 +2418,18 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     logPathCur="${timep_TMPDIR}/profiles/out.profile"
     declare -p >./vars
-    
-	
+
         # split lines into start, time, percent, endr
         logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
-            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
+            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | total %% | cur depth %% )   \t( time | total %% | cur depth %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
 
         logFooter="$(grep --text -E '^TOTAL' <"${logPathCur}")"
 
         logCurTmp="$( {
-            
+
              while read -r lineOrig; do
 
                 IFS=$'\t' read -r tw Tw tc Tc cnt nd cind cmd <<<"${lineOrig}"
-
 
                 { [[ $tw ]] && [[ $Tw ]] && [[ $tc ]] && [[ $Tc ]] && [[ $cnt ]]; } || {
                     # this is a blank/seperator line. re-print it unmodified
@@ -2448,9 +2485,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 if  { { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); } && { [[ ${pw##*( )} == '0.00' ]] || [[ "${pw##*( )}" == "${p1w##*( )}" ]]; } &&  { [[ ${pc##*( )} == '0.00' ]] || [[ "${pc##*( )}" == "${p1c##*( )}" ]]; }; then
                     printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" '' "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 else
-                    printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" '' "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a00}" "${cmd}"
+                    printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" '' "${tw}" "${p1w}" "${pw}" "${tc}" "${p1c}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 fi
-
 
             done <"${logPathCur}"
         })"
@@ -2469,19 +2505,35 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         done
         logOut[-1]=$'\n\n'"${logOut[-1]}"
 
-        {
+        logOutF0="$({
             echo "${logHeader}";
             if [[ "${timep_runType}" == 'f' ]]; then
-                printf '%s' "${logOut[@]}" #| sed -zE 's/\n\n/\n\x00/g; s/^(.*)'$'\034''([^'$'\034'']+)$/\2\1\n/g' 
+                printf '%s' "${logOut[@]}" #| sed -zE 's/\n\n/\n\x00/g; s/^(.*)'$'\034''([^'$'\034'']+)$/\2\1\n/g'
+
             else
                 printf '%s' "${logOut[@]#$'\n'}"
             fi
             printf '\n\n%s\n' "${logFooter}"
-        }  | sed -zE 's/\n\n\n+/\n\n/g' >"${logPathCur}"
-    
-    logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
-	
-    logCurTmp="$(while read -r lineOrig; do
+        }  | sed -zE 's/\n\n\n+/\n\n/g')"
+
+        # removed the incorrect '(&) marks from commands that have 1+ commands indicated with '(^)' in the same grouping
+        # these correspond to process substitutions that timep initially thinks are simple forks.
+
+        # timep identifies these, but not until the commands that occur after the (&) is logged. So we need to remove those spurious marks here.
+
+        # sometimes there are multiple (^) lines indicating a single (&) line. remove all but the first (^) symbols
+        logOutF="$(sed -zE 's/(\(\^\)[ \t]*\n([^\n]*[^\(][^\^][^\)][ \t]*\n)*[^\n]*)\(\^\)[ \t]*./\1\n/g' <<<"${logOutF0}")"
+        until [[ "${logOutF}" == "${logOutF0}" ]]; do
+            logOutF0="${logOutF}"
+            logOutF="$(sed -zE 's/(\(\^\)[ \t]*\n([^\n]*[^\(][^\^][^\)][ \t]*\n)*[^\n]*)\(\^\)[ \t]*./\1\n/g' <<<"${logOutF0}")"
+        done
+
+        # remove the (^) indicator and the corresponding (&)
+        sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" >"${logPathCur}"
+
+        logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
+
+        logCurTmp="$(while read -r lineOrig; do
 
         IFS=$'\034' read -r a0 tw a1 tc a2 <<<"${lineOrig}"
 
@@ -2500,7 +2552,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     done <"${logPathCur}")"
 	echo "${logCurTmp}" >"${logPathCur}"
-
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
@@ -2525,7 +2576,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             mkdir -p "${timep_TMPDIR}/profiles/flamegraphs"
 
-            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"            
+            "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timep <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"
+
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --subtitle '_THIS_IS_A_TEMP_SUBTITLE_' --countname "us" --fontsize 10  --color timepr <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg"
             "${timep_flameGraphPath}" --title "FlameGraph: ${timep_TITLE}" --width 4096 --height 24 --flamechart --bgcolors=grey --countname "us" --fontsize 10  --color timepr --inverted <"${timep_TMPDIR}/profiles/out.flamegraph" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg"
 
@@ -2598,7 +2650,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 }
 
 _timep_SETUP() {
-    local -a filePathA 
+    local -a filePathA
+
     local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 doneFlag extglobState supportedArchFlag b64
 
     if shopt extglob | grep -qE 'off$'; then
@@ -2607,7 +2660,7 @@ _timep_SETUP() {
         extglobState='-s'
 	fi
     shopt -s extglob
-	
+
     [[ "${FUNCNAME[1]}" == 'timep' ]] || local timep_flameGraphPath
 
 _timep_base64_to_file() {
@@ -2622,7 +2675,7 @@ _timep_base64_to_file() {
         extglobState='-s'
 	fi
     shopt -s extglob
- 
+
     [[ -t 0 ]] && {
         printf '\nERROR: pass the base64-encoded sequence on stdin. ABORTING.\n'  >&2
         return 1
@@ -2659,7 +2712,8 @@ _timep_base64_to_file() {
             read -r outN outB
             read -r nnSum_md5
             read -r nnSum_sha256
-            mapfile -t compressV 
+            mapfile -t compressV
+
         } <<<"${out0}"
 
         # determine checksum to use. prefer sha256
@@ -2685,9 +2739,11 @@ _timep_base64_to_file() {
 	# this generates outF which is a string that contains the hex values formatted like: \x00\xFF\x9A\x...'
     # printf '%b' then will write out the binary data using that string
     while read -r -N 4 b0; do
-        b0="${b0%%*([^0-9a-zA-Z@_])$'\n'}" 
+        b0="${b0%%*([^0-9a-zA-Z@_])$'\n'}"
+
         [[ ${b0} ]] || break
-        (( b1 = 64#0${b0}))       
+        (( b1 = 64#0${b0}))
+
         if ((outN < 6 )); then
             printf -v b '%0.'"${outN}"'X' "${b1}"
             b="${b:0:${outN}}"
@@ -2717,13 +2773,16 @@ _timep_base64_to_file() {
 }
 
     downloadFlag=false
-    localFlag=false 
+    localFlag=false
+
     forceFlag=false
     outDir="/dev/shm/.timep/lib/${USER}-${EUID}"
 
     # parse inputs
-    while true; do 
-        case "${1}" in 
+    while true; do
+
+        case "${1}" in
+
             -?(-)d?(ownload)*) case "${1}" in
                 -?(-)d?(ownload)) downloadFlag=true; localFlag=true; timep_git_branch='main'  ;;
                 -?(-)d?(ownload)?(=)local)  downloadFlag=true; localFlag=true  ;;
@@ -2734,7 +2793,8 @@ _timep_base64_to_file() {
             -?(-)f?(orce)) forceFlag=true  ;;
             *)  break  ;;
         esac
-        shift 1 
+        shift 1
+
     done
 
     gotFlamegraphFlag=false
@@ -2811,7 +2871,7 @@ _timep_base64_to_file() {
                 chmod +x "${outDir}/timep_flamegraph.pl"
             fi
         }
-        
+
         ${gotLoadableFlag} || {
             type -p wget &>/dev/null && wget https://raw.githubusercontent.com/jkool702/timep/${timep_git_branch:-main}/LIB/BIN/${ARCH}/timep.so -O "${outDir}/timep.so" &>/dev/null
             type -p "${outDir}/timep.so" &>/dev/null || {
@@ -2827,7 +2887,7 @@ _timep_base64_to_file() {
 
     if ${forceFlag} || ! { ${gotFlamegraphFlag} && ${gotLoadableFlag}; }; then
 	    # use the versions built into theis time.bash file
-	 
+
         # note: this base64 binary blob is generatred by using _timep_base64_to_file  on the arch-specific compiled shared .so file for the builtin.
         # passing this blob to the stdin of _timep_base64_to_file <path> will restore the original .so file (needed for the loadable builtin to get cpu time with getCPUtime) at <path>.
         # the .so file, source code and compile instructions are all available in the "timep" repo on github (https://github.com/jkool702/timep) at LOADABLES/SRC/timep.c.
@@ -2836,16 +2896,19 @@ _timep_base64_to_file() {
 
         supportedArchFlag=true
 		case "${ARCH}" in
-		    x86_64)			
+		    x86_64)
+
 b64=$'24366 12184\nmd5sum:6c1971176b33b128c534257cb440c5ad\nsha256sum:ff7559b87b26d02b0c8598da442da406a894296b96cf341ecf444a409a999184\n00000000000000000000000000000\n0000000000000000000000000000\n00000000000000000000000000\n0000000000000000000000000\n000000000000000000000000\n0000000000000000000000\n000000000000000000000\n00000000000000000000\n0000000000000000000\n000000000000000000\n000000000000000\n00000000000000\n0000000000000\n0000000000\n000000000\n00000000\n0000000\n000000\n00000\n0000\nhQ4A\n000\n04\n0g\n00\n0s[I1M}2M7[b\n0jdxcg1p7w}5Au[2;1}g?<\034vQlchw81.=?c0fw01-1=1wD+4?e?b>?8w0v?o;4;g{1=4=q08}1E0w[w{1:g,2E0w}aw2[G08}1k{5g{2=1;1~}7wc[u0M{4{4;5;u0M}1U7[7ws[B.}2k1=g{g;o;g4g}10N[434[80w}f0e{1{1;1w,20j[84c[wgM[w1[2g4{4{8;6;614[ocg}1wN[M>}30.[w{kelQp.;Y2w}3Ma[f0E[A{2g{1{1jVnhA1;aw2[G08}2E0w}3=c=8{57Bt6g6~~4{kKlQp.;g4g}10N[434[80w}f0e{g{4;8:k,17jBk0.01M.;1=8?s>:g{4;5:c,17jBk0BKei85SUoe3VR5JynbhbvX0oYHs]g,14;1;6w}20110.4g,a0QqnmHwUPN~{I;w#1E;w#3o;w#5:g#5U;g#6M;g#7U;g#8g;g#9:i#9A;i#as;i#b4;y#c:i#cA;i#d:i#ds;i#ew;h01A0w4c[M{fE;i0180Y2{s=1Iqm9zbDdLbzo0nRZDrmZKnTdQon9QnRY0nQBkjlZApn9BpSBPt6lOl4R3r6ZKplhxoCNB05Z9l4RvsClDqndQpn9kjkdIrSVBl65yr6k0oCBKp5ZSon9Fom9Ipg1ytmBIt6BKnSlOsCZO06RxqSlvoDlFr7hFrBZxsCtS07xCsClB065Ap5ZytmBIt6BK07dKs79FrDhC06dIrSdHnStBt7hFrmk0pSlQsDlPomtB05ZvoTxxnSpFrC5IqnFB07dQsClOsCZO071OqmVQpw1Pt79zrn?nRZBsD9KrRZIrSdxt6BLrw1Dpnh3k5lQqmRBnTdQsDlzt01PpnhRs5ZytmBIt6BKnThFrmlM>tcik93nP8KcyUR>tcik93nP8Kcjs]g010>0.010>0.01?8?M02?8?w02?8?w010>0.020>;g{7kqqgA,803w4?1;2nApo6,301E1+10N[2=gcg}dwO[2=g7w}e0O[2{1g7w}213[2{272w}2x3[2{1g3[313[2{272w}3x3[2{1M2M}413[2{3g2w}4x3[2{272w}513[2{3o2M}5x3[2=o2M}613[2{272w}813[2{1Y2w}8x3[2{208[9x3[2=wgM}a13[2{2U2M}f0O[1w;4-fwO[1w;8)0P[1w;c-10P[1w;M)wP[1w,14-cx3[1M;g-d13[1M;k-dx3[1M;o-e13[1M;s-ex3[1M;w-f13[1M;A-fx3[1M;E)14[1M;I)x4[1M;Q-114[1M;U-1x4[1M;Y-214[1M,1)1g=nFi?5U4>r30s8A>0>M;s;K1g?1Y2;gwUgzM923xye0Q8e88Q4gwUEz0l13z261A4ee8c7hMXg0wcN.Eee4gec44ea48e848e648e448e244b;a;6M,285w?q:113x260A4e68c3h0UMvgEe64ce444e24Ab,o;C;cMm,s:4ge45se2+4r0PJ8____0M,2gk?1A____h1o?bj___@Q5w?Uf___ThFrmlMey1RrCJKrTtK86dLrmRxrCgw9OlP9M1Dpnh3k5lQqmRB?1DpnhOtndxpSkwa5d5j4oF86pxqmNBp3Ew9nc09mNIp0E09mNIp,pSlQgR1lt6BJpjEwt6ZL86RxrDAwon9DtmRBrDhP?1xr6MwpCBKqndEpmgwoSxFr6gws79LoSlPsSlP865Kp21xr6Mwt6xBqn8wpCBKqndEpmgwp6lPoSlKp6lKt7cK=19py0YlA5inRd5j4o@86BP865IsSYwpSBSpmUI865PsSBDrDcwsSlIpy13k5kwt6BJpi0ErCYwoSxFr6hOpmUF87hL87hEongwtC5Oqm5yr6kK[kClQtn9K86xFpSwJsClPrSNRt6BLry13k5kwt6BJpi0ErmBzsCZPpmdLrChPai1RsSlA869V87hEqncws79LoSlPsO1xrCg0pSlQgR1lt6BJpi1rf5p1kzUwmPNmgl9vkQlchzVtng19py0YlA5ify1FsO1DqnpBryMwondPqmtKsO1Qq6kwtC5Itmkwt6Ywt6xxt21Son9Fom9IpjIwrThEpn9TqndB871OqmVQsO1Ft2U]6tBt79RsS5Dpi0EgQx9j4hihkUF86pxqmNBp3Ew9nc=01lkQ57hjEwpSlQgR1lt6BJpi1rf5p1kzUwmPNmgl9vkQlchzVtng?YMYu@Ay3X0x8wYg8MM,fcf7LF8w@M8i8I5mho0>y5M7g2_Z18wYg8MM)03P3NXWglf_dvMC?3_9vUC?3cPcPcPcPcPcPcPcPcP46X:fYBX2o?cPcPcN1KM4,3_9ugC?3cPcPcgrI2;_Ons9w?PcPcP46X0M,fYBR2o?cPcPcN1KMg,3_9sMC?3cPcPcgrI5;_On49w?PcPcP46X1w,fYBL2o?cPcPcN1KMs,3_9rgC?3cPcPcgrI8;_OmI9w?PcPcP46X2g,fYBF2o?cPcPcN1KME,3_9pMC?3cPcPcgrIb;_Omk9w?PcPcPfYBuxk?cPc=18zjS19w?i8Q5uyo0>wV@7gli8I5fxk0>y5M7g9_@0f7U]MMYvw:18zjRh9w?i8QRiyo0>wF_Ay9Y4z1XzZ8Mvw3i076id7@t1h8yMk55g?i8n0t0z_U6of7Qg?ccf7U]YMYu@E0Z3io,1RaRl8wPTG5;4y9Vngci8QZTx8?exp____W6j____61ukB,1nscf7M333N@]fcf7LHFt____YPcPcPcPcN1lQ5mgll1l5lji87I6>?8f_0M@fxw4?8f_0nUFi8JK2370w7Q0>wfhex5cui3_MdR64Obpx11w3MA>Mfhe3H2gYvg?NXkkNV4Odr2h0LM8,1cyuXEsvX__Un03UnF;i8Jc94xczrgAw;4yUP_tjUWmrN218qlMAg4123M18Z@B8MvA_ic7W1QwFOAw1QQO9ZH______W3L@__Z1ysq5M0@5c>0>xFx2ig;g48f>xFz2i:g48f>w3z2i8;i071i0ec99w,180tB8xuQfxdA,1czglsW___LA;18yusNM4O9MKz0_v__ct98yup8yu_Eo_T__QS5V7gFj8Q5cuL__QO9XQy9Sj70j8D2LA;3EALT__P7ij8DKj8DDW3nZ__Z8wsgo.?h8DMmRR1n45tglV1nYdczrgAw;37_j8DSW7XZ__@5M0@5Bw,4xFx2ig;g48f>xFD2i:g48f>w3D2i8;i073i0es99w,3F_LX__Sof7Qg0>ydfqDG__YNMezi_f__grU1;WUlCbwYvx}i8Dei8QZuKH__P70W2_Z___Fpv___SoK3N@4]3Ee_T__UIUW0jZ__Z8zjTlW___i8D6cs3Ew_P__@KLAewr_v__yPzEVfP__QydfhnG__Z8ysoNMexz_f__WU@glld8w@Moi8RQ90PEofP__QyddunF__Z8yOx8ysd8yu_EO_P__Un0tiubv2gci8DuWaLZ__@9Nky9T@x1_f__i8f468DEmRT33N@4]18yuV8zjS6Wv__cs2Z.,ezW@___WYYf7Ug]4y3X0x8yPQd4w?Lw4,3E2_P__P70i8f42cc:434[1=4{1M[1M1w[w{@>[9{1w{5M[1E2{8{8>[k=s=M[2MgM[o{a0c[b{1w{1g[3M1{E{9g4[p{e0O[6M{8{1E{S38[s=w{Yf__rM:m1w}fX__SY:f0o}3___ZL]4{3{287{Q{u1M}3R_LZL}3~~~~&41U}1g7w~~$xME}1g3[8sa[s0I}3g2w}8sa[S0I[o2M}8sa~=0v0E}208{4{84c}2U2M(634~I1M}2M7[b///0s[2;1}g?<0jdxcg2w7g}a0t[2;1}g?<0jdxcg287[9Us[2;1}g?<0jdxcg1U7[80s[2;1}g?<0jdxcg2w7g}5Au[2;1}g?<||0jdxcg2u7[acs[2;1}g?<0jdxcg207[8ks[rmZIp20ObzgMbz4wa6dLrn1xt6Byr6kwtSBQq217jBkwr6gF?17gQcW82x7jBkF834QbzcKci0Oc38Rc3kOcO0EkClA84xxt20Nd2UPbz4JciA?2VKrThBbCtKtiVMsCZMpn9Qug0KrCZQpiVDrDkKoDlFr6gJqmg0bCtKtiVEondE02VAumVPumQ0bChVrDdQsw0KpSVRbDpBsDdFrSU0bCtKtiVSpn9PqmZKnT80bD9Br64Kp7BK02VOpmNxbD1It?KpmxvpD9xrmk0bClEnSpOomRBnSxAsw0KsCZAonhxbDdQsz4Kcg0KsCZAonhxbDdQsz4Ke?KpCBKqg0KqmVFt?Ks6NQ02VMr7gKpSZQ02VQpnxQ02VAonhxbD9Br2VOrM0Kp7BKomRFoM0KpCBKqlZxsD9xug0KqmVFt5ZxsD9xug0KpSZQ02VOpmNOrRZMomhAqmVD02VAonhx02VDrTgKs6NQ02VQrlZzr6ZKplZQom9Ipg0KoDdP02VDrDkKoDlFr6gKonhQsCBytnhBsM0KoSZJrmlKt?KsSxPt79Qom80bDdQsDhxow0KsTBJt65y?1yqmVAnTpxsCBxoCNB971It01ytmBIt6BKnSlOsCZO971It01JomJBnS9RqmNQqmVvon9DtyhMr7g0u6pOpmkAs6NQ065Ap5ZytmBIt6BK971It01PrD1OqmVQpyhMr7g0oSNLoSJvpSlQt6BJpihMr7g0pSlQsDlPomtB971It01Pt79BsD9LsyhMr7g0s79FrDhC971It01Pt79zrn0As6NQ05Zvpn9OrCZvr6ZzonhFrSUAs6NQ05ZvoTxxnSpFrC5IqnFB971It6tLt01vnStJrSVvsThxsDhvnOhDrTg0nQBkjlZApn9BpSBPt6lOl4R3r6ZKplhxoCNB96tLt01vilhdnT9BpSBPt6lOl4R3r6ZKplhxoCNB96tLt01Dpnh3k5lQqmRBnTdQsDlzt2hDrTg0nRZzu65vpCBKomNFuCkApSZQ05ZvpSRLrBZPt65Ot5Zv05ZFrCBQ05ZCqmVF05Zvl4R3nQN9kRhvnM1Apn9BpSBPt6lOnThJnSdIrSVBsM1OpmtFsThBsBZQrlZzr6ZKpnc0nRZArRZDr6ZyomNvp7hLsDdvonlU06dLrn1IpnhBp2UM05Zvp6ZvpSNLoC5InShQrT9PnS5Ru5ZCqmVFnS5OsC5VnSlKt79V06pOomRBnShRrmRV05ZvpD9xrmlvp7lJrnBvqmVFt5ZxsD9xulZBrDhOug1vilhdnShBsClDqndQpn9kjkdIrSVBl65yr6k0nQBkjlZOpmtFsThBsBhdgSNLrClkom9Ipg1vnShPrRZEomVAr6k0nRZkjkdvhkV4nRY0nRZBq6hOnTdQon9Q05ZvqmVFt5ZxsD9xulZPt65Ot01vnSBKqnhvon9OonBvpmVA05ZvpCBKqlZxsD9xulZPt65Ot01vnSpFrCBvon9OonBvpmVA05Zvs79BqmVFt5ZxsD9xulZPt65Ot01vnT1OpmBKqnhvon9OonBvpmVA05Z4mkV1jkB305Z7j4Z2gkNvjQp6kQlknRh1gAN5nM1vk59fgQl4ll95nQN9jAJ1hQlvl452j4lv05ZvoDdPnTdQon9Q05ZBrCg0nSlQpnxQ05ZBp65Qog1vnSlUpmdRt65yr6lvsThxsDg0nRZOpmNxnSBMr7hvsThxsDg0nRZOpmNxnSBMr7hvpmVA05ZvhQVlnQl8nQpigkR5nQx4kw1BrCg0pnhBu7g0pmhxt640nRhckRZdjQhlj4lvgA5jhlY0nRZPt65Ot5Z5i4hi05ZvsThLs5Z5i4hi05ZvsThxsDhvk4x4kw1vnTdQrT1vk4x4kw0Yon9QqmpFoSBxr3U0pSlQgR1lt6BJplZJomBK07hFrmlMnS9RqmNQqmU0pSlQgR1lt6BJplZArSc0bAN3cM0Kj4cM02VcgPg0bAN3cw0Kj4cN02VcgPk0bAN3dw1yqmVAnTpxsCBxoCNB069RqmNQqmVvpn9OrT80rm5HplZytmBIt6BKnS5OpTo0u6pOpmk0sSlQtn1voDlFr7hFrBZQqmRBs01Dpnh3k5lQqmRBnTdQsDlzt01xp6hvoDlFr7hFrw1PrD1OqmVQpw1zr6ZzqRZDpnhQqmRB06tBt79RsS5Dpg1vnSdUolZCqmVxr6BWpg1Pt79BsD9Lsw1MsCBKt6o0sThOoSRM05Zvpn9OrCZvr6ZzonhFrSU~-c0.2E0w$c?w3o0w$c?M,M$c01?E0M$c01g3M1#c01w0m1w$c01M0Y1w$c0201M1w$c02g1E2#c02w282g$c02M0Y2w$c0301w2w$c03g2M2w$c03w1U7#c03M287#c>02M7#c>g2g7g$c>w2w7g$c>M.cg$c05?ocg$c05g3ocw$c05w3wcw$c05M3Ecw$c06?ocM$c06g0wgM$c06w2MgM$c06M0Eh#c07?Eh#c07g`c07w`c07M`c08~c08g%.;8>03g7*4M;8>03w7*9g;8>03M7*eM;8>,7g(hg;8>0.7g(lg;8>?w7g(ow;8>?M7g(t:8>0107g(ww;8>01g7g(zM;8>01w7g(Cw;8>01M7g(Fg;8>0207g(Kw;8>g2g7g(Q:405M3Mcw(UM;405M3Ucw*M4,405M?cM(8g4,405M08cM(dM4,405M.cM(mg4,823M287*nM4,823w1U7*pg4,406M0Eh*sw4,8>w2w7g(xM4,8>w3g7g(Cw4,8>w.7w(I>,407?Eh{4{L>,405g3ocw(UM4,8>w1g7w(XM4,405w3wcw(h08,424M.cg(kg8,426M0Eh*ng8]g%qw8:5w3wcw(vg8:5w3Ecw(zw8:5g3ocw(Eg8:5g3wcw(Iw8:8g%O08:8g%T08:5?ocg(Vg8:6w2MgM(@M8:402M7*5gc:7?Eh*8gc:7?Fh*9wc:4w0c8g(bgc:6M0Eh*d0c]g%hMc:YvY^mgc:YvY^qgc:2M0Y2w(v0c:7?Fh*w0c:4w0c8g(xwc:6M0Eh*z0c,o0.%Dwc:8g%GMc:8g%JMc:8g%N0c:8g%Q0c,g0YvY^Tgc,8>w1w7w}1Y2[Xgc,8>w208[6w{@Mc,406g0wgM}5=2wg:302G2w(3Mg:3g2M2w(5.:302A2w(6gg:3g0E3*7wg:30282w(8Mg:301Y2w(a.:301w2w(iw4?2!3w8?2!aw8?2!bgg?1!eMg?1!igg?1!mMg?1!ogg?18>w3M8[1M{tgg?1406g2.M}3=xMg?1!AMg?18#D.?18#Gwg?18#J.?28#MMg?18#P.?18#QMg?18#Swg?18~~~$4;7:w[2E0w}aw2[c^w&k;1M;8{S08}3o0w}2g&4&9M,fr__SY2=03=c[A=g{2&34;b:w{E0M}2w3[O>[5:g;w{6=V:M;8{Y.}3M1[2k1*1&gg,f___SY2{1o6[5wo[C=g=w{2{4U,3@__ZL0w{Y1w}3M6[c=5:g;g*1t;1:8{s0o}1M1w}fw1[1=8{1w{pM;g;2{6w8[q0w[w.[g;q;2=o{74;1:w[282g}8w9[J^w*1X:g;8{f0E[Y2w}2g&4&yg;4;O{60a[o0E}1f^g{1{9w;1;cw[2M2w}b0a[O>*w=g[2D:g;o{u1M}1U3{Q&4&Hg;4;6{8ws[y0M[r&1&bc;1;1w[2M7[b0c[U&1&2U:g;o{A1Q}2g3g[w&g&Mg;4;6{a0t[E0Q}1I0M(4&cs;1:M{gcg}10h[2^w*3k;1w;c{634[o4g}c01[1g{8{1=Tg;Y;3{dwO[S18[8&2&eA;e:M[3wcw}e0i[2^w*3R:g;c{W38}3E4w}3^8&@w;w;3{1wP[61c}3E3&g&A1,1:M{wgM}20j[A&2^f.,g;c{I4c}2M4M}7w&8&6>,4;3{2x4[a1g~2&2w1,8:M{Eh[2wk{g&4&J.?1M#E5[201*4&gM4,4;M&i1k}1k^g{1{4M1,3#9Ml[pw4*4*1m.,M#25M}eI4*1&nw4,8#Y1I[E2M}2;1B;2=o['
 			;;
 			aarch64)
 b64=$'141950 70976\nmd5sum:3bc2421c99a9f0349b95dc1f47470b11\nsha256sum:a7f5d2892a6d4cee2ae87c8fa9a2ccd12ebfaebf890f046cabd18b7c10d4cd5e\n0cjaLlrgGDToQeFYRd1GvRXRWz\n00000000000000000000000000\n0000000000000000000000000\n000000000000000000000000\n00000000000000000000000\n000000000000000000000\n00000000000000000000\n0000000000000000000\n000000000000000000\n00000000000000000\n000000000000000\n00000000000000\n00000000000\n17gig1cS4N\n0000000000\n000000000\n00000000\n0000000\n000000\n00000\n0000\n000\n04\n0g\n00\n````````````````````````````````\n////////////////////////////////\034vQlchw81.+0c0JM01-1+0e.+4?e?7>?7g0s0><5`{U14]3w4g+g]g<o,3w_g]e3Z.:UfQ1]g0M]1w3+1]2<1w,fzZ}@fQ1:3U_g4:c01}M>}8{g<4<O>]38.]cw1}9{A{g[kelQp.<w4}2.}81}14[4g[1[1hVnhA1w``;g[5bBt6g4<UfQ]3w_g4:e3Z.:808}w0w}4[1<1g<3<hQVl0d6N_fQNF7EbRVET6KZZzF7mGn6Z:8<j;g<o;g.0.g?1c[GEecYq4Qqnk`+0M090bw8!M0m07,w(g<8!27<4!16<8w#1l<4w#2l<4w#35<4!1@<4w!1<8!2u<4!1z<4w#2@<4w#2I<4`I<8!2n<4w#1J<4w#3N<4!3b<4w0b0cgd}9[3v<4g0m0c,w:c+nRZDrmZKnTdQon9QnRY0nQBkjlZApn9BpSBPt6lOl4R3r6ZKplhxoCNB05Z9l4RvsClDqndQpn9kjkdIrSVBl65yr6k0nRZzu65vpCBKomNFuCk0oSNLoSJvpSlQt6BJpg1DpnhOtndxpSk0nRZBsD9KrRZIrSdxt6BLrw1Pt79BsD9Lsw1ytmBIt6BKnSlOsCZO07dKs79FrDhC069FrChvtC5Oqm5yr6k0rm5HplZytmBIt6BKnS5OpTo0sThOoSRM07xCsClB07dBt7lMnS9RqmNQqmVvt6BJpn?pSlQgR1lt6BJplZPt79RoTg0omhAnS9RqmNQqmU0r6ByoOVPrOUS>tcik93nP8Kcjs{g01?8?w020>?w010>?w020>0.02?80.010>]40.3Z<4[2nApo6,2?s1}UfQ1]31}c0a}WfQ1]31}6Ma}YfQ1]31}f3Z.:s?2]31}50f}u?2]31}a0e}w?2]31}50f}y?2]31}cwe}A?2]31}10f}C?2]31}50f}E?2]31}5wf}G?2]31}awf}I?2]31}50f}M?2]31}70e}O?2]31}40d}S?2]31}7,w:U?2]31{g}MfY1]11<M-OfY1]11,1g-QfY1]11,2w-SfY1]11,3M-UfY1]11,5*2]21,1)2?2]21,1g-4?2]21,1w-6?2]21,1M-8?2]21,2)a?2]21,2g-c?2]21,2w-e?2]21,2M-g?2]21,3)i?2]21,3g-k?2]21,3w-m?2]21,4)o?2]21,4g-q?2]21,4w-fOc3RvRXLWDZ0M2hhM?BfRXMqy_8MflM0dvRw)f1XLWDM?3M4vV7@h3yfV4w0x_m7O03RhYw0Zkv80fl4>0A142gfAg0w2h808vRx01090h1A3V4280Ai027Zog.2g4gF0@h12094w0x_m4>0A14egfAgow2h808vRx01090h4A3V4880Ai027Zog.2g4hp0@h2y094w0x_m4>0A14qgfAgMw2h808vRx01090h7A3V4e80Ai027Zog.2g4i90@h020p4w0x_m4>0A14CgfAg8w6h808vRx01090haA3V4481Ai027Zog.2g4iV0@h1y0p4w0x_m4>0A14OgfAgww6h808vRx01090hdA3V4a81Ai027Zrw?3M0ex7@k,bjt__YnM0dvRxYw0Zkv80fl7O03Rg0109?M0eh.40A27?V4_?3HM,le4?f0xU4vVog?Jf030qE?x_mM0dvRw0109?M0eh.40A27?V4x?3b8LN_QQ4cwoIx_46jMg?Je8?f12X4vVow?Jf030GE?x_mM0dvRLRXLGDZ0M2hYMI0@hc1091wMAcVg>0d@,f?V4vVw,Je,f?M3uhDL__BZD__Vsw081ioc83evcbgfDZuYaEM0dvRxYw0Zkv80fl7O03RtP__Nsv80fl7O03RhYw0Zkv80fl7O03RhYw0Zkv80fl_nKFGvQ3097PkM6F7MM0siMe05jRmMaFZSc3GhY4074d1w1kd0h0@hk0wda20A0VnM?spgiDVEv301Nogk0l3k8gfDTwMahUgcnGG02g3Av?1Ng020kHkiDVFV__@nU.0de630V4?81iUiY0@oP__Vv03g0RU1deGg98ydbS3Q@FUw6wYK4LgfA>0arRw82CM?w1bm0webwv__B_c302H01?QzL__BM0.bAP081ir___B@430aE,2g,VAlv__VvRmQaFZSd3Gu034OHPkQ6F_nLnGc03nZok083i5g20QLu30F5?81iUgcnGBf__Vtw@_YRZwJaGu3VDJ9wqHPO0Qy8QG1QQ_bz0q3Ow1zAYK630V50v42r0fN7AMbYwII?80iRwE3CRP__VvP0M0GwfL_du0jjGA1i8ziUMJfGu41Ef8>06roM01CSc?EJz01qbl0k0Jfy30p7V8M3V6g?A3C3ep7y0NCG.y0QK036aER__@nUgcoGK035aE2081igv__BZk20bjz0NqGUwcpGK035WE1283ia___B@435WHw0NmG0w20kzv__VvV8Q3VU~?R_m<A3c0w58?3yh4f__BXL__NvV8Q3VU~?R_mUgc3Gw,9?E3Chcf__B@034OHRmQaFZSd3GvdjgqDZuZuEM0dvRyT__Vs0>2VcM20kwX__Vvx0M2G<A020e97S_L@nZlJ2GvtzgWCv__Yn7O03RhYw0ZnZuXSF_gc0Au6P097PkM6F5f__BM4?90k>3VYMc0Gy70ep7w0NiG2L__BS0103nwbQ2VUgcjGBH__VvQ0M0GU0cjGK_@_Vvw0NgGYRd1GvRXMWz?R_mUgckGw,9,3GhR_X_B@034WEQ081iVfX_B@0352HPkQ6F_nL3Gc03nZrw?3M0f17@vRXLWAx081i_gc0AvX@_Vs?81i_nL1Gc03nZo_8Mfl_nK_GvQ3097ZuY6ELOc3Rs03nZpDpnh3k5lQqmRBey1QrSYwrm5Kui1xsCtRrmlKt7c?6tBt79RsS5Dpi0EkQlchyAwpC5Fr6lAey0BsM:pSlQsDlPomtB82x3i4Bch595jyAwpC5Fr6lAey0BsM0Br6NA;2lIr6ga<pSlQgR1lt6BJpg]7hFrmlMey1RrCJKrTtK86dLrmRxrCgw9OlP9M:lld1hQkW86tBt4dglnhFrmkwmPNmgl8@85IYlA5inRd5j4o@nlQ?59Bt7lOry1EqmtEbn9BsSZItnhFrSUwgR1l87hFrmkwa6RFoT9LsSlzrSVAsOAwtndBp21yui1Qq6BP871OrSdBsTcwomVA065Ir21CqmVFsSxBp21zq6BIp21MsCZzpndPpncwomVA865Ir21Qq6lFsy1CqmVFsSxBp21ApndzpmVApmVQsOU{4BC83Nmgl8@86BP86tFtClKb21xsTdFpSVP87hEpi1SomNRpi1QrO1Qq65Q87pxsCBxoCNBeO1Lt6xBsDtFsSkws79FrDhP86BQbw:imowf5p1kBZjhkN6fy1FsO1xr7dL86tFtClKb21xsTdFpSVP87dBr6owgR1l87hFrmkwa6VL86dEqmNAsClKai1QrO1Qq65Q87pxsCBxoCNBbw]6tBt4dglnhFrmkwmPNmgl8@85IYlA5inRd5j4o@nlQ?hI3eQg<7<UfD__RM<g@L__s<4PW__@4<EfH__Ww,30@L__M<23Z__ZI.?FfT__VM1}4{1uB8017wu0hIc7M.<6<7PV__YM[1;I<CfD__PM[8<4<30@v__i;113y2t19U3gFc2jJXtQMU;5<6g,3M@v__1)G<7M,3U@v__m08,113L02DiWubkejb9gHgFoFBiF1C2una6PmRk7oRQfuTtfk3w113L02AOOkaVkGByCna9wDDiWubmap9BnpgJrlgtzngJXtQZge>4eY0ajb9gHDiWubkmlaFoFBOyo9VACgtB2RJl1Sdt2TJTjR0U.gXM0FcIB2KlaFoFBOyo9VQKDyR62JrlgtzngJXtQZge>4bitrlgtzn02M<E.?HfL__Ug;ggUMDgqu1kej19g3kgHuTtfk3w112QHuTtfk3w,1M,1o.,fP__Og;gMUgDgau0knuTgU|||``````````````````````````(M0E]1I2w]f3Z.]g}3Z{M[K0w}d[ewd}6g}3w_g4:1I[2{q[ezZ.:7{8[fn@_SY;Y>}5[1>}1w[o0w}E[4w4}b[1w{M}3E_M4]8[k>}k{s[5M}1E1M}s[s0k}8[fw1}2g[o[fX__SY;k0k]3___ZL:4[Yf__rM;y1g]fD__SY;4````+0fzZ.```+?e08}U0w]3w2}e08}U0w]3w2}e08}U0w]3w2}e08}U0w]3w2}e08}U0w]1g3M]a0e}k0Y]383w]10f}k0Y]1o3M]awf}k0Y*70e}g0Q}1[7,w]1&4t3gPEwa4teliAwcjgKcyUN838MczgMej4O82xipmgwi65Q84dOrTdP834Qbz8KciQOag08<4:1?=0e09}Z0A}8<4:1?=0bw8}O0w}8<4:1?=0ewd}Z0Q}8<4:1?=,a}N0E}8<4:1?=0ewd}W0Q}8<4:1?=0ewd}W0Q}8<4:1?=0cw8}R0w}8<4:1?=0fgd{U`!c0.38.#c?w3M.#c?M0o0w#c010.1!c01g0y1g#c01w1g1g#c01M1M1g#c0201E1M#c02g2U2!c02w3w2!c02M3w2g#c0303E3g#c03g?3w#c03w0w4!c03M1E4!c>03w_g4$c>g3E_g4$c>w3M_g4$c>M3U_g4$c0502U_M4$c05g3E_M4$c05w1M?8$c05M3M?8$c06`,c06g3U?8*g<g0YvY%2]2M3w2g*2M<802M3w2g]1g[2]2g2U2&2]303E3g*6;g0YvY%2]2g382&2]303Q3g*7M<g0YvY%2]2M?2w*aw<802M?2w*b;802M0M2w*fM:4w3M_g4(gw<802M1I2w*m;405M3M?8]4[fM:4g3E_g4(p;4>g3E_g4(yM<802M302w*fM:403w_g4(BM<4>03w_g4(fM:3M1Y4&fM:5M3M?8$g0YvY%fM:3g?3w*2]2M3w2w*Jw<802M3w2w]5w2}Nw<802M103g]8g[fM:5w1M?8(R;405w1M?8:5{fM:3M3w4&7M<g0YvY%fM:3M3s4g*UM<403M3s4g#g0YvY%Yg<80303E3g*ZM<4>w3M_g4(1>,40Yv_U_g4(3g4;3w0w4&8>,405w3M?8(b>,40Yv@U_M4(gw4,802g2U2&2]2w3w2&i>?2`p>?1`sw4?28!z>?18!Fg4?1802M343g]2g[Kg4?18!Pg4?1`QM4?18!VM4?2`Zw4?1`108?18!6g8?18!aM8?1`fg8?2`KM4?18!lM8?18!sM8?1`vM8?1405w3,8:3+6dOt6AKrM0Au01zomNInTtBomJvpCU0oT9QryVL06dOt7dQtmpCbCc0p6lOpmtFsThBsBZQrlZzr6ZKpnc096g0nRZArRZDr6ZyomNvp7hLsDdvonlU06dLrn1IpnhBp2UM05Zvp6ZvpSNLoC5InShQrT9PnS5Ru5ZCqmVFnS5OsC5VnSlKt79V06pOomRBnShRrmRV05ZvpD9xrmlvp7lJrnBvqmVFt5ZxsD9xulZBrDhOug1Dpnh3k5lQqmRBnSRxqmU0t6BJpn1voDlFr7hFrw1Dpnh3k5lQqmRBnShLoM1vnQpigkR5nQleh5Zv05ZCqmVF05Zvp7dLnSxxrChIpg1vh5BegkR9gM1vnQtellZ5i5Z6kA5dhlZ8h580nRZkjkdvhkV4nRY0nQtcjQ91j5ZfhApjhlhvl452j4lv05ZFrCBQ05Z9l4Rvp6lOpmtFsThBsBhdgSNLrClkom9Ipg1ytmBIt6BKnSlOsCZO05ZvoTxxnSpFrC5IqnFBg4tcik93nP8Kcjs0oSNLoSJvpSlQt6BJpk17j4B2gRYObz4T07dBt7lMnS9RqmNQqmVvt6BJpn?sSVMsCBKt6p0hQN9gAdvcyUNdM1UpD9Bpg1Pt79BsD9LsA17j4B2gRYObz4T05ZvpSRLrBZPt65Ot5Zv069FrChvtC5Oqm5yr6k0pSlQsDlPomtBg4tcik93nP8Kcjs0sThOoSRMg4tcik93nP8Kcjs0rm5HplZytmBIt6BKnS5OpTo0nQBkjlZOpmtFsThBsBhdgSNLrClkom9Ipg1vnSlOsCVLnSNLoS5QqmZKg4tcik93nP8Kcjs0omhAnS9RqmNQqmU0pSlQgR1lt6BJplZPt79RoTg?2VPumRQom80bDdQsDhxow0KsSxPt79Qom80bCVLt6kKpSVRbC9RqmNAbmBA02VDrDkKq65Pq?Kp7BKsTBJ02VAumVPt780bCtKtiVSpn9PqmZK02VDrDkKtClOsSBLrBZO02VOpmNxbChVrw0KsClIoiVMr7g0bCBKqng0bDhBu7g0bCpFrCA0bD9Lp65Qog0KpmxvpD9xrmlvq6hO02VBq5ZCsC5Jpg0KqmVFt5ZxsD9xug0KpCBKqlZxsD9xug0Kp65QoiVOpmMKsCY0bChVrC5Jqmc0bCtLt?KpSZQbD1It?Kp65Qog0KoDdP02VzrSRJpmVQ02VDrDkKoDlFr6gKonhQsCBytnhBsM```(1I<7;w}38.]cw1}9%g^K<ZL__rM8[Y>]3M.]2w{M[8^e;I<2[1w2}608]3U.}g<3<2{o[4;3;w[g1}1>}4w4&4&18<____rM8[8wk}y1g]2E{M[2{8[lg,fX__SY2[505}k0k}w{g<1<2^6g<4;w}1M1g]705}@>}3{w[6[1K<1<48[q0s]1E1M]501[M,1k<8[1w[u;4<6[bw8}K0w}s^1^7c<1<1w}3w2}e08{4*1^1@;g<o[U0A]3w2g}w4&w^x;4<6[ewd}W0Q}o^1^8E<1<cw{3w[e}808&w{g}2i;g<8[81[w4}4g^4^E;4<2[6wg}q1}1U.*2^aE<e;M}3w_g4:e3Z}2%w[2[2S<3M<c[WfQ1:3E_g}w^8{w[Mw<4<3[f3Z.:YfQ}8^2^cY<6;M}3U_g4:fzZ}M>}4{w[4[3o;g<c[KfY1:2U_M]3%8{w[Tg<4<3[ez_.:WfY]28^2{8[eo<1;M}1M?8:7,g:w^1^3I<2;c[Y?2:3M0>]w^1^Yg<4<M^Y?1]Q%g[1[fE<7-3U?8:2g1.:8>&g^1;w#180w4:108}6M,4g<8[1w[2g<c!m0E1:2h0w&g&14<3!eAc.:4>&4&'
 			;;
-			ppc64le)		
+			ppc64le)
+
 b64=$'142350 71176\nmd5sum:62a3e47191cb0df2060de062d53da32d\nsha256sum:7a1a74ab32920ec9baa255c47ffc794308ee1a02cfd04ff7867754b4284ccda2\n0000000000000000000000000\n000000000000000000000000\n00000000000000000000000\n0000000000000000000000\n000000000000000000000\n00000000000000000000\n0000000000000000000\n000000000000000000\n00000000000000000\n0g4tcik93nP8Kcjs\n000000000000000\n00000000000000\n000000000000\n00000000000\n0000000000\n000000000\n00000000\n0000000\n000000\n00000\n0Mc3\n0000\n000\n0g\n00\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n////////////////////////////////\034vQlchw81.+c05g01-1=wf.]w>4?e?704?7?r?4,5~=81k}w5g=g]g,o,8_g}zZ.:2fQ1:3U0M[4=1]2,1w>23Z}8fQ1]w_g4:e01}U04}8{g,4,O04]38.]cw1}9{A{g[kelQp.>3M4M]f0j}Y1c}I[2M[1[1hVnhA1w~~]g[5bBt6g4,2fQ}8_g4]zZ.:@08]3U0w}4[1,1g,3,hQVl0b2ialf0ISt6qoHAE6E34DIDThNq:8,j;g,o;g.0.g?1c[GEecYq4Qqnk~+0M090c08~M0l08>w*g,8~2u,4~16,8C`1l,4C`1J,4C`2@,4~2l,4C~1,8~1S,4~1z,4C`34,4C`2I,4~0I,8~1L,4C`24,4C`3N,4~3t,4C0a0f.}i[3b,4g0l0d>w:c=nRZDrmZKnTdQon9QnRY0nQBkjlZApn9BpSBPt6lOl4R3r6ZKplhxoCNB05Z9l4RvsClDqndQpn9kjkdIrSVBl65yr6k0nRZzu65vpCBKomNFuCk0oSNLoSJvpSlQt6BJpg1DpnhOtndxpSk0sSVMsCBKt6o0oCBKp5ZSon9Fom9Ipg1vnSlOsCVLnSNLoS5QqmZK07dQsClOsCZO069RqmNQqmVvpn9OrT80rm5HplZytmBIt6BKnS5OpTo0u6pOpmk0sThOoSRM06tBt4dglnhFrmlvsThOtmdQ07dBt7lMnS9RqmNQqmVvt6BJpn?omhAnS9RqmNQqmU0r6ByoOVPrOUS04tcik93nP8Kcjs{g01?8?w02?4?w01?4?w02?40.02?80.01?4]40.3Z,4[2nApo6>2?s1}2fQ1]m=c}4fQ1]m[90b}6fQ1]m[1zZ.:w?2]m[20j}y?2]m[70i}A?2]m[20j}C?2]m[9wi}E?2]m[e0i}G?2]m[20j}I?2]m[2wj}K?2]m[7wj}M?2]m[20j}Q?2]m[40i}S?2]m[40f}W?2]m[8>w:Y?2]m[d0j}2fY1]C,2w-4fY1]C;M-6fY1]C,3M-8fY1]C,1g-afY1]C,5)4?2]l,1)6?2]l,1g-8?2]l,1w-a?2]l,1M-c?2]l,2)e?2]l,2g-g?2]l,2w-i?2]l,2M-k?2]l,3)m?2]l,3g-o?2]l,3w-q?2]l,4)s?2]l,4g-u?2]l,4w~o047Ug862Wqo3ynQw181e#80j3MwtA8UFw88v1>vyh_O7U,o0y?Kw?a0L303@grT__QIo047Es?xe1>uyC0MxY8020jw;o047U8862Wqo3ynQw181e$1w.vxUwobFFwe9vi04w4U$6011@121wKCC0UBZ80i0jw$o047Um862Wqo3ynQw181e$1w.vwMwobFFwe9vi04w4U$6011@4y1wKCC0UBZ80i0jw$o047U6862Wqo3ynQw181e$1w.vxEwobFFwe9vi04w4U$6011@621wKCC0UBZ80i0jw$o047Us862Wqo3ynQw181e$1w.vwUwobFFwe9vi04w4U$6011@521wKCC0UBZ80i0jw$o047Ua862Wqo3ynQw181e#80j3N0t48U,o,6?wC8U088yeg0oanMw089d,o120wKA?2MI8022jqo227OC0UBZ4?1@e7_8vwo047U8gi0jxw.uww024U4?1Wao327Mw081e?12o080j3PwsQ8U,o,6?wC8U08a2e50wwTNQ7EhYt0W4v9k1x7Mw089d,o1y0wKA?2MI8022jqo227OC0UBZ4?1@e7_8vwo047U8gi0jxw.uww024U4?1Wao327Mw081e,o>gC0204MYs7d2e,6?wya9>9b2?wAOC0wxY,o2208KA?2AI4?1@e7_8vwk0891__Zyf1x@oPwl_LZb6011Wfn@_QIw024U.0weg>6.?7E088yCqo327Mw081e,o,6>49w0w1cf01Pgzww__Zb,o080j3PMsA8UFw88v0c?OPM_Y7X4?1@47@8vxA0E51.23bVw1ovKw0o7XG06x@Xw1UvJI0pR0202AWM?foA?8AL202ug>E3I?60XA0a2gv?wjI2060Uuee4vX7Y_QIo047E>3b5w1wA3U047Fk@cwfsgw03TM0e7EFpI8os_Tam4e?BV3M3wfV98aDR.LZzQzD_vTr@iDRw084U__Zwe7g@anRgi4FZ55b_vXTZ_QIo047E>3b7wrvDNA0o90o031W7?Uuwf020Zq?1Wnw.uA?3QIg48Fot8NOnPieiBZ54b6v1haNDMkkIpY5fH6vag1wA680i7X_LYyfV01gvIM0k4Xc9cVeQ?w3xUOOl_udd3vT7Z_QIo047E?2we7zjh7ZUWWd_vvP_iNw.uw?3IIc022gnzb9nZ?80UufLCvTzzwTYZ_vZb6011W>E3xUUUh_udJzvQDY_QIo047Ey04xWV01guKo0m7HE061WXg7MT@E0q7HK07xWY018jwg?7EYf_1WWo327Mw081e?2weM?o3LM084X0w1we7zzx7Zt@_Zb6011W,OOM_E91o021e>o3xM0o7UEvP_iNw.uw>cI9062g6?UuJM0e7E3M0wfmw?uBU047F__Zwe412am5M0o7EQLDFvZ8VanQkgLZ_54H_vNhi_TZt_fZb6011W,ONU6TVYFfW2ggDY_QIo047E0w1zW1TY_QIo047Eu1JAvfX_ozMgAScU2vL_iNw.uyo0m7HE061WWw1EuKU0u7H.30eY018jyQ1Yd_4?1Wf3_MuKC0MxY8020jw0.C3@_S8Y.30eZ2ioPz5@LZb6011Wd3__QI>1w?12ofX_ozNUcYhYe9dze4nX_QIo047EC05xWW01wuKE0q7HK07xWY018jyQ1Yd_4?1Wf3_MuKC0MxY8020jw0.C.06jH>Xyg?2iNE_o9>1weXj@_QI>1w?12o37X_QIo047E0w1zW4nX_QIo047Eu1JAvfX_ozPMACcUaf__iM[1w0s>80j3P0rQ8UFw88vf3_MvLU_@7X4?1@87_8vxw084UMvH_iNw.uz@_U8Yg9e4e>M@JU6TZY80n9uY0faiPw081080m9uc0faiPk0810Cvo0v9ACE7Sc0O.?10egpEE14620.lSQ0Y0ocE17?9x130k046M2011D?xY__YEenx0anTQ0OBZ54EGvqV8p7OKi3VZk4xzv,ON?890ow1xW7zXV7YJ_fZbu1J@v7zXUT@F@vZb6011W8?8jyQ1Yd_4?1Wf3_MuLU_@7HFwc8v2?w4U?49w_LZyf7zPN7ZgAScU.30eP7V_QIo047EufLzvSnV_QIo047Ew?xebg7MTYg?7EYf_1W_z_UuKC0MxY8020jDzPMTYt@vZb6011W73__QIg040VClq@vpBmx7Q620Qg1C2J4ltJ0f063a0haf@og20.3CplHVZClq4vgo83h06oaQhlSQ0Y0ocE148_Vx0c010epBmLDSplEhZ1wwd40pwHh5nrg3M1wMw4ez@C41?8gUg01@eaDU_QIo047E_fX_iM[1w08>80j3MgrA8UFw88v,60Ew6bE.20e1>vzx_O7Ucvz_iNw.uww024U?1we1>uyC0MxY8020jw[1w,bzK.:Fw88v0k0DQaC0CxZFwc8vf3_2@xgo8JZ55Fwvtj_33w?8LFwL?uao3ynQ806LF80i0jIP__QL8__ZbNf__iY3__QKY__ZbKf__iXj__QKM__ZbHf__iWz__QKA__ZbEf__iVP__QKo__Zb0w1cf5hJgzyC0wxY4?1@97_8vxM024U4?1Wao327Mw081epSlQgR1lt6BJpjEwt6ZL86RxrDAwon9DtmRBrDhP?1DpnhOtndxpSkwa5d5j4oF86pxqmNBp3Ew9nc:6tBt79RsS5Dpi0EgQx9j4hihkUF86pxqmNBp3Ew9nc09mNIp:Br6NA2w>6tBt4dglnhFrmk]1QqmRBs3EwtmVHrCZTry1zrSRJomVA82sBsOs:5ljgkt5ey1Dpnh3k5lQqmRB85IYlA5ify1rf5p1kBZjhkN6fBRt?1ipnhRsCUwq6BDq2ROpndLr7lQqmZK84dgli1QqmRB82xJqmdOrTdBoSZKp7cF87lPpmgwoDAwt6xFsO1MsCZzpndP865Kp01xr6MwpCBKqndEpmgwoSxFr6gws79LoSlPsSlP865Kp21xr6Mwt6xBqn8wpCBKqndEpmgwp6lPoSlKp6lKt7cK{19py0YlA5ify1FsO1DqnpBryMwondPqmtKsO1Qq6kwtC5Itmkwt6Ywt6xxt21Son9Fom9IpjIwrThEpn9TqndB871OqmVQsO1Ft2U:4BC83Nmgl9vkQlchzUwqncwomNPrO1DqnpBryMwondPqmtKsO1PpmNC84dgli1QqmRB82xKrO1zq6BIp79BryAwt6Ywt6xxt21Son9Fom9IpiU]1Dpnh3k5lQqmRB85IYlA5ify1rf5p1kBZjhkN6fBRt?4r0PIE,1,23U__Zo,kfL__Zw;_v__304?53Z__Z;4{1uB8017x10hIc.0k,6;zZ__ZI;489gg121A5Y,c,c3T__YM0M>4seM0chgnWu0Aer1k6s146t0Q6v0nip1Qaq1BHpgtF1SQ7sgJR1TQ4e04c6gtV13I03CMms19Q3Dwav0h51vCTrgtN1Tk7vgwEe04g6gtV22Qyr1pM4Dgev0koaSQ7sgtR1TQ4e04g6gtV22M>3,2M,sfH__X01,hMW?h51vFU2DM5G2wU0hgp1TZV22QEa3w151A7vTA4b>s,V,ePX__Z8;4we8151vAce04c6gg|||//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&M]2g2M]1zZ.]g}3Z{M[U0w}d[aMh}6g[8_g4:1I[2{q[13Z.:7{8[fn@_SY;Y04}5[104}1w[o0w}E[4w4}b[1w{M+8]8[k04}k{s[5M}1E1M=7:l14}3?1M)01M}1M1g}w[@04}9[1w[_L__rM,1g1g]f___SY:g}3M__ZL;285}@v__rM;g~~~~*7Y2~~~~~~~~~~~~~~~~~~~~}81c]1M4w]20j}C18]3w4w]20j}a1c]1U4M]20j&104w]40f[g}2>8:d0j&17gQcW82x7jBkF834Qbz8Kci0Oc38Qc3ANcy0EkClA84xxt213sCZPsO0Nd2UObz4JcyA02,1]g?hQ4A0jdxcg302w]c0a}2,1]g?hQ4A0jdxcg3w2[M9}2,1]g?hQ4A0jdxcg2I4g]c0h}2,1]g?hQ4A0jdxcg302w}Mc}2,1]g?hQ4A0jdxcg0U4g]3wh}2,1]g?hQ4A0jdxcg0U4g]3wh}2,1]g?hQ4A0jdxcg0c2g]1M9}2,1]g?hQ4A0jdxcg304g]d0h~~03?40O04`3?80Y04`3?c0608`30.04.`3?k08wk`3?o0k0k`3?s0s0k`3?w0q0s`3?A0M0w`3?E080A`3?I0H14`3?M0Q14`3?Q0Y1c`3?U071g`3?Y02fQ1!301?4fQ1!301406fQ1!301808fQ1!301c?fY1!301g,2!301k0w?2!301o>42!301s~>301w02042&4,40f7_#M,2o0E0M0E^U,2o0E080I&24,2o0E0A0I&3s,101o>42]1[4c,101?4fQ1*6E,2o0E>M&7o,1?Y02fQ1!40f7_$9k,2o0E040M}M0M]ak,2o0E.0Y]2M.]bc,101k0w?2:1g{4,40f7_$c8,1?U071k`40f7_$d}E0U0A&fQ]E0w0E&2k1:A0M0w&4o1>2o0I0H14&4M1:E080E&701:E.14&8c1:E0E0A&9I1:E0w0A&c01:E080A&eM1:E.0E&1I2>101406fQ1*2w2:E0M0A&4w2:E0E0E&6Y2:E.0A&8Q2>101808fQ1*9o2:E0o0E&bQ2:Q0Y1c&d02>101k>42*dM2>101c?7Y2*e82:E0o0A^83>2o0A0U0w^w3:E>E&2Q3>w~fg2>g~4A3>yo`6c3>io`7M3>io0E0Y1}18[903>io`9k1>g~ag3>io`3s1>w~3E2>g~bw3>io`cQ3>io`5U1>g~dY3>w~983>io`fA3>io`842>g~1k4>h01k0Q?2]M{1zsDhPt7lCpyVz06hBsClDqndQpn9vt6RvoSNLrClP05Zvp6ZvpSNLoC5InShQrT9PnS5Ru01zrSRMr6lQpmgKc01vnShLnStIrS9xr5ZAt6ZOsRZxtnxvpCBKqlZxsD9xulZBrDhOug1CsC5JplZAtmRJug1vnSpOomRBnShRrmRVnSBKqnhvon9OonBvpmVQsDA0pSlQgR1lt6BJplZJomBK07hFrmlMnS9RqmNQqmU0pSlQgR1lt6BJplZArSc0nRZ6kA5dhlZ5jAhvnM<<0NoiVMr7hvoS5Ir2VvnSdUolZCqmVxr6BWpk10hQN9gAdvcyUNdM<<0NoiVMr7hvoS5Ir2VDpnhOtndxpSl(0c3<0McmkKs6NQnSdxr6MKnRZDrmZKnTdQon9QnRY0nSpFrCA0c3<0Mcm4Ks6NQnSdxr6MKrm5HplZytmBIt6BKnS5OpTo0nRZDr6BKqRZgj5hOpndLr7pB03<<5xbD1It5ZzomNIbDxCsClB03<<5xbD1It5ZzomNIbDdQsCdJs410hQN9gAdvcyUNdM<<0NoiVMr7hvoS5Ir2Vzr6ZzqRZDpnhQqmRBg417j4B2gRYObz4T03<<5xbD1It5ZzomNIbBZvpn9OrCZvr6ZzonhFrSV(0nRZAsSZvq65Kp6NB03<<5xbD1It5ZzomNIbC9FrChvtC5Oqm5yr6k0c3<0Mcm4Ks6NQnSdxr6MKsSVMsCBKt6p(0c3<0Mcm4Ks6NQnSdxr6MKomhAnS9RqmNQqmU0nQhpjA5dikc0c3<0Mcm4Ks6NQnSdxr6MKsThOpn9OrT9(0nRZ7jBlvhkxvhB91jklvi4hi05Zvl4R3nQleh5Zv02VkjQcK03<<5xbD1It5ZzomNIbC9RqmNQqmVvpn9OrT80nSBKqng0c3<0Mcm4Ks6NQnSdxr6MKs79FrDhCg417j4B2gRYObz4T05Z9l4Rvp6lOpmtFsThBsBhdgSNLrClkom9Ipg1vnSdUolZCqmVxr6BWpk17j4B2gRYObz4T06dIrSdHnStBt7hFrml0hQN9gAdvcyUNdM1PpnhRs5ZytmBIt6BKnThFrmlM07dKs79FrDhCg4tcik93nP8Kcjs0sThOpn9OrT90hQN9gAdvcyUNdM1DpnhOtndxpSl0hQN9gAdvcyUNdM1Pt79zrn10hQN9gAdvcyUNdM1vilhdnT9BpSBPt6lOl4R3r6ZKplhxoCNB05Zvpn9OrCZvr6ZzonhFrSV0hQN9gAdvcyUNdM1Dpnh3k5lQqmRBnTdQsDlzt>bDdVrnhxow0KsThOt65y02VPq7dQsDhxow0KrCZQpiVDrDkKoDlFr6gJqmg0bCtKtiVEondE02VAumVPumQ0bChVrDdQsw0KpSVRbDpBsDdFrSU0bCtKtiVSpn9PqmZKnT80bD9Br64Kp7BK02VOpmNxbD1It?KqmVFt?Kt6lUt?KpCBKqg0KsCZAonhx02VBq5ZCsC5JplZEp780bClEnSpOomRB02VFrCBQnS5OsC5V02VCqmVFnS5OsC5V02VAonhxbD9Br2VOrM0Kp7BKomRFoM0KpSZQ02VAonhx02VysTc0bCdLrmRBrDg0bCtKtiVytmBIp2Vxt7hOqm9Rt6lP~~~-1I,7;w}38.]cw1}9$g%K,ZL__rM8[Y04]3M.]2w{M[8%e;I,2[1w2}608]3U.}g,3,2{o[4;3;w[g1}104}4w4^4^18,____rM8[8wk}y1g]2E{M[2{8[lg>fX__SY2[505}k0k}w{g,1,2%6g,4;w}1M1g]705}@04}3{w[6[1K,1,48[q0s]1E1M]501[M>1g,8[1w[u;4,6[c08}M0w]1s%8%7U,1,1w[w2g]209}z0w&2%24;g,o[H14]2I4g]2g%4%yw,4,O[d0h}Q14}w0w&2{1[98,1;w}3M4M]f0j}b$g^2w;g,8[71g}s5[g1^4%Gw,U,3{zZ.:2fQ}8%2{8[bo,f;M[g_g4:13Z}2$w[2[32;g,c[6fQ1]o_g}w%8%PM,o,3[23Z.:8fQ]3w.}g[2{g[dw,1;M{_M4]3_}c#1}2[1P,2;c+2]M_M]8$8{w[Tg,4,3[8>w:w?1:2$4%ec,8;M=g8}1.:2$4^3E;g>3!g4:3g%1{4[Yg,s)w10w:d041]w.&1$4,2~5w2.:w0s}q,fw,w[6{9;M`3o2g4:2s4^1%4g,c~_MQ1]7.^g&'
 			;;
-			i686)		
+			i686)
+
 b64=$'22968 11484\nmd5sum:654de60fd2c6d1125bbe936ab6f70212\nsha256sum:dfc79c40456f42167ffda27b50bb6e1e18b2f2923147815100f7be20b7d3d316\n00000000000000000000\n000000000000000000\n0000000000000000\n000000000000000\n00000000000000\n0000000000000\n0hQN9gAdvcyUM\n000000000000\n0000000000\n17gig1cS4N\n000000000\n00000000\n07xCsClB\n04Poj4\n000000\n0AweA\n00000\n0983F\n0000\n000\n00\n0g\n04\n01\n0w\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n_____\034vQlchw41,&c<M.)3g:Ia-3g08<a02w07w0t<4~c1M<30s;k}4:g}g:4:1;8g8<242;1{g;1:Z1U<fgK<3Qbw<z><9.;6}1:8}7M;2Y:L<3w:U}o:4:1:7g1<1Q,<t><2g:A:1}g:4:@1k<fwl<3U5g<a:2w:4:1:5fBt6jU5g<@1k<fwl;E:a}g:4:kelQp20m;w5w<81o<3g:Q:1}g;1hVnhA~{06:4:5bBt6jQ7w<Z2U<fgK;c,<3>;g:1:1:1g:3:hQVl03yzF7Hb_atZjGNfWNEJXMOsc2WukUfI2ez_:wsdjbw<yUfQ____xs1Q0L_gwYg8mYc*f@P1:f@z2)3_EMM;1E}eDw|Wcg:q?;3FQf____@z5:6wg:Ws3|ENw;1E6:eCM|Wcs:q2:3FEf____@z8:6wE:Wp3|EOg;1Ec:eC0|WcE:q3w;3Fsf____@zb:6x}Wm3|EP:1Ei:eBg|WcQ:q5:3Fgf____@ze:6xo:Wj3|EPM;1Eo:eAw____yNMAMSqgpF1CA6qgpF1CAezA:ws8_bg<zoGc:zoac:esxQ7oK2Xf___Un0t1dlyum3X1hh_Z23N139MOWdt2o0MUSQ9w:3EF:872_OM<5m9VledyEM;2dwEM;23X,FO8D3MuwvMvI20tzh@7gkyVbU____xt9Q2EfI251h_Za3N12bnvP9MOWdJ2o}Afcf7LJlyuljW5f___@1MWsI<23X0i0KUM}tiybw_3___@5M7giw@Mczoc8____keyE_L__wYggW33____6wUM:1yRTYOsedt2o0YMYu@@Bn____yNgAMSqgA5lnW4M3<21NQQI<1mkU7I_:8fU0M@fUw4<8fU0nUJySE4csD7h2gk}81Z;fheC3@0dR7EJ2280U<Z5O8Bc91jH3OWdt2o0NQgA5{NXofI28DXzkgAs8B4921gqwbEYvT__Uf448n03Uke,<K4123M3Tr2hEyTgAr8D1Kdddox29Q_vKMvUvyt31@0oFY8SQ9aw;2p0s4hQUBc90y9n2gcw@M8yvJmqL_E8_X__UB49123N125M0@5z><8Kc9aM;2Ug48f0fuI9aw;29OY7X7M71K4123M0hQ_uI9b}1O8Kc9bg:hSEDbMvIv0swhSwd49?jl2gcxuQfx1w1<23X0O9@RadBZ3B__ZgkEBk93hGg8RQ94hmW7HZ__@3N1NG05plW5XZ__@bt2gAwYggxvpQaEfI3fZQ91z_t2go_TgAc6F0ySMAd5nEifT__Uf476E0llrEbfT__Uf448I49874_:5JunRT3zno?@M8zrgAI:5pG0ex6_v__wYggxs0fxtI;2Ug48f0fuI9aw;29MoK49aM;29QVA1Mrx,wY>tfTH2iM:ygMAylMA18D1yUgAJ}cc98Dj4RMA19A1Mh7jykMA28Bs90PFKfX__OWdJ2o}w@Mczos0Vf__yvJgW2_Y__@3N13712g1:yMgAwsjY:mRVvnsedJ2o}w@M4yvJik8S7Run__R3E3vP__Uf448I49874_:5JunRT3zngC0exz_f__w@Mc_P3EavP__RFpk8S78ej__R3EOLL__Uf44eKpbERQ9w3Ee_P__UfI3fYMW07Y__Zunl2dxXjB__ZgWabX__@3N13FrL___OWdJ2o}pF1nlBfEifP__U73D2A<8fI68R491hg_TgAbew1_f__yPy9NBydwZLB__Zqk5vEjLL__Uf448n0tiubh2gcyvbE3fT__UD7w@MclKxN@___wYgwyvxrnB_3bESQ9w:23X0ydw@rB__ZnLM4;1gW1LX__@3N13HP8SS}5fEOLL__U737yA<8fI46E1_XfY____WajX__@3N1wNM5L3yPMAMM1jw@M8W9_X__@1M_cE<23N0xrMM////~~~~~~~~~~~~~~~~~~~~~~~~!8:h}g:k:x1<w4g-2GwUPNEjhFtg~2@#i:4#8:8g$1:1L#i:lg$4w;ck$1:16#y:EM$4w:4$2:1S#g:rg$4w;98$18;2I#g:b#8:6c$18;3N#g:OM;d06;z:4w>0dY;1Ec;6:1405M<nRZDrmZKnTdQon9QnRY0nQBkjlZApn9BpSBPt6lOl4R3r6ZKplhxoCNB05Z9l4RvsClDqndQpn9kjkdIrSVBl65yr6k0nRZzu65vpCBKomNFuCk0oSNLoSJvpSlQt6BJpg1DpnhOtndxpSk0sSVMsCBKt6o0oCBKp5ZSon9Fom9Ipg1ytmBIt6BKnSlOsCZO05Zvpn9OrCZvr6ZzonhFrSU0sThOpn9OrT80rm5HplZytmBIt6BKnS5OpTo0sThOoSRM+07dBt7lMnS9RqmNQqmVvt6BJpn<pSlQgR1lt6BJplZPt79RoTg0omhAnS9RqmNQqmU0r6ByoOVPrOUS>tcik93nP8KciUP>tcik93nP8Kcjs^}w.<4<w03<4.<2<4<g02<8<g.<8<g.<4:1<c0_g;1*sNZF2g<1<7,<4:9uhBwo;c>M4<1}gqmAd;2.U1-Z2U;w;3Ubw<2:fMK;8:g3:w;14c;2:4wM;8:j3:w;1gc;2:5gM;8:m3:w;1sc;2:60M;8:q3:w;1Ic;2:7gM;8:u3:w;3wbM<1w8<egL;61M<W2Y;o9<3IbM<1wU<f0L;64w;3:s1;4c;1Mc;wM;71;33:s5;gc;1Mo<1gM;71M<63:s8;sc;1ME<20M;72M<93:sc;Ec;1MQ<2MM;73M<c3:sg<1Dpnh3k5lQqmRBey1QrSYwrm5Kui1xsCtRrmlKt7c<6tBt79RsS5Dpi0EgQx9j4hihkUF86pxqmNBp3Ew9nc0lld1hQkW86tBt4dglnhFrmkwmPNmgl8@85IYlA5inRd5j4o@nlQ<59Bt7lOry1EqmtEbn9BsSZItnhFrSUwgR1l87hFrmkwa6RFoT9LsSlzrSVAsOAwtndBp21yui1Qq6BP871OrSdBsTcwomVA065Ir21CqmVFsSxBp21zq6BIp21MsCZzpndPpncwomVA865Ir21Qq6lFsy1CqmVFsSxBp21ApndzpmVApmVQsOU}imowf5p1kzUwqncwpSBSpmUI865PsSBDrDcwt6xB87pxr7lB87hL87hEongwtC5Oqm5yr6kX86ZQq6lOtSBPpi1MsCBKt7cwqngK>BC83Nmgl9vkQlchzUwqncwomNPrO1DqnpBryMwondPqmtKsO1PpmNC84dgli1QqmRB82xKrO1zq6BIp79BryAwt6Ywt6xxt21Son9Fom9IpiU<6tBt4dglnhFrmkwmPNmgl8@85IYlA5inRd5j4o@nlQ0pSlQsDlPomtB82xjhkN6ai1ComBIpmgW82lP02lIr6g09mNIp0E0pSlQgR1lt6BJpg1QqmRBs3EwtmVHrCZTry1zrSRJomVA82sBsOs:4:6}k;17jBk<g.M,:1}w.M,:1}hI3eP}5:EeL__QM;20Xv__s:33M___<g<If3__Og2<3jYf__j08<1g*nFi<5Y2>r3,4y><2}s:jeL__@{3wx63wNa3MJQ17w0fNEXaz8A8AM1<1}2eT__Wo2:ggU8xg913wO70QMe48o4ggUkwMl63F020AweC09b3FM2gwWw[082ggWo0AceD0923G02j0Wg?9n3FM2gMWw0AseF0913Gw2hwWI0AkeI]g2gwWo0A4eD0913G02j0Wg0AseD0943G02h0WA0AgeG0923GM2hgWM0AweB0923Fw2ggWs0A4eE]02igEe54733x11NwUcgsse24753wh42QceC]M2gwWw[082pwWs0AAeE]02k0Ee54733x11NwUcgsse24753wh82QceB0933Fw2ggWs0AseE]02igEe54733x11NwUcgsse24753wh52QweD0923G02hwWs0A4eC0913FM2hMWw[09f3FM2gwWw0AoeD0913Fw2ggWs0AseE]0206:2g,<qeX__TE}ggU8xM913wO60Q4e48c4jwUEhgUIh0UMiwUIhMUEggUIggUMi0Uwl0UIggUMi0UggYce34763wx1NMU4igUwwMi60Us2gMUEhMUIhwUMi0Uw;A:Z><8jK__Yz}44e28c2jwUogwUshwUwi0U8gYce1;4:1M2<1_XL__1///~~~~~~~~~~~~~~&903<1<M<_2U;4;3Z:3:9w1;d:@0o<1A;3Qbw<6M:g:q:@2U<1M:4:ZvX_rM,;5:l14;o:A4;2w;2w1;b:4}c;3QbM;w;6w:k:4g;1s;2c4M<4g;egi;i:G:1c:8:_L__rWgi<3___ZL,;f3__SZY4w<@L__rN~~~~{bM&3m,<Vw4<fo1;6?<5w8<2o2;S?<hw8<5o2<1C?<tw8<8o2<2m?`Pxk<3gk<3e5g<n1g<agk<3e5g<W1g<3gl<3e5g{0cYl<1g1w;g;40M<285g{>t3gPEwa4teliAwcjkKciUN838MczkMdj8N82xipmgwi65Q834Rbz4KciQOag:w:8{4<4t19=0E08<a02;8:2{1<(09w1<2P,<2}w{g<hQ4A0jdxcg3U1w<1Ms;w:8{4<4t19=0I08<9A3;8:2{1<(0fs6<3T1w<2}w{g<hQ4A0jdxcg3T1w<ZMo;w:8{4<4t19=0IM4<bw1;8:2{1<(<s7;c1M~:4#g0YvYd:I08-2<g03M;f02)w>028;1<M-8.<U:w3:4:1.w0h:fwK)g0i06I;2g0M-8..T:Z2U-1.4!.03N_Vo;2w0M<Fw8;8.02C:k0o<7E:2<g0J:40M;E}g0n0cc#g0Yv_d:w1w-1.`103N_ZI;2w?<1}8.03N:@0o-2<k0ZM;9A3)w><Q1<3Ybw-4>M0q,;2Y-1.g08M4<20m*0f03o1<20c)405M12,<Z2Y-1.o0m><fc6)w>06U1<2o,-8<w1Q,%i:xg4%8:a41%1}L?%i:HM4%4w;cw1<3g1w<8M;18.03s,%g:Uw4%8w;fQ1%18:g?%w:7M8%4:2Q2%18;1<w%i:mM8%4:6Q2%2:27?%i:CM8%4:as2<1Ec;6:1405M<oT9QoClDqmVjbCY0p6lOpmtFsThBsBZQrlZzr6ZKpnc0nRZArRZDr6ZyomNvp7hLsDdvonlU06dLrn1IpnhBp2UM05Zvp6ZvpSNLoC5InShQrT9PnS5Ru5ZCqmVFnS5OsC5VnSlKt79V06pOomRBnShRrmRV05ZvpD9xrmlvp7lJrnBvqmVFt5ZxsD9xulZBrDhOug1Dpnh3k5lQqmRBnSRxqmU0t6BJpn1voDlFr7hFrw1Dpnh3k5lQqmRBnShLoM1zsDhBrChjbCY0nRZ6kA5dhlZ5jAhvnM1vnTwUdyVDpnhvs6dvt6xRrCIKoDw0nSpFrCA0nRZUe3oKpSlQnT1znThEtmVHbChU05Zvp7dLnSxxrChIpg1vh5BegkR9gM1vnQtellZ5i5Z6kA5dhlZ8h580nRZkjkdvhkV4nRY0nQtcjQ91j5ZfhApjhlhvl452j4lv05Zvu3wSbCtBt5ZMoRZQq7lKqOVAqg1vqmVFt.Pt79zrn1^05Z9l4Rvp6lOpmtFsThBsBhdgSNLrClkom9Ipg1ytmBIt6BKnSlOsCZO06dIrSdHnStBt7hFrml0hQN9gAdvcyUNdM1PpnhRs5ZytmBIt6BKnThFrmlM+05ZvoTxxnSpFrC5IqnFBg4tcik93nP8KciUP07dQsClOsCZOg4tcik93nP8Kc.vnStJrSVvsThxsDhvnM1yqmVAnTpxsCBxoCNB07dKs79FrDhCg4tcik93nP8Kc.vnSlOsCVLnSNLoS5QqmZKg4tcik93nP8Kc.JomJBnS9RqmNQqmVvon9Dtw1vilhdnT9BpSBPt6lOl4R3r6ZKplhxoCNB06tBt79RsS5Dpk17j4B2gRYObz<omhAnS9RqmNQqmU0pSlQgR1lt6BJplZPt79RoTg<2VPumRQom80bDdQsDhxow0KsSxPt79Qom80bCVLt6kKpSVRbC9RqmNAbmBA02VFrCBQ02VQpnxQ02VCqmVF02VDrDkKq65Pq<Kp7BKsTBJ02VAumVPt780bCtKtiVSpn9PqmZK02VDrDkKtClOsSBLrBZO02VOpmMKp7BK02VOpmMKs6NQ02VOrShxt640bCVLt6kKpSVRbD1OrT1BsDhV02VBq5ZCsC5JplZEp780bClEnSpOomRB02VFrCBQnS5OsC5V02VCqmVFnS5OsC5V02VAonhxbD9Br2VOrM0Kp7BKomRFoM0KpSZQ02VDrTgKs6NQ02VAonhx02VysTc0bCdLrmRBrDg0bCtKtiVytmBIp2Vxt7hOqm9Rt6lP~~!.I:7}w;7g1<1Q,<9#1*K}g:o;2o,<C><2!g)wM:4:6:M><c.<3w#g:1:3g:1:1w;a02<2w?<lMg%4*W}g:o;3U1w<@0o<1g#g)g:fr__SY2}1}g;A:1M)4:1:4E:b}w;2gg;A4;c>;w:1:1:1:1i}M:8;1k4g<l14<2w1$4)mw;f___SY2:v18<7Mi;C:1M)2}w;6s;3@__ZL?;agi<2A4w<g}w:1:1)1S:2g:8;3A4w<V18<aw:7*g:8:vM:A;12:z1c<8Mj<1E:1M;1o:4:2:8w:1:cw;fgj<3Q4M;w8%1}4;2g:1M:8;3U5g<@1k<2w#g)EM:4:2:81o<20m;Q#4)b4:1}w;5gm<1k5w<c08%1)2X:3w:c;3Qbw<Z1U;g#g:4:NM:Y:3:@2U<fwu;4#4:1:dc:1}M;fMK<3Y7w<1#1)3w:1w:c}bM;1Y<e}8*g:8:Wg:4:3:U2Y<e0v;k#4:1:eU:1}M;fgL<3Q7M<g#1}g;3T}g:c;10c;g2;4#2*_g:w:3:w3;8?;4#1*81;1:c)208;bw#g:4:b,<1M-24c;I2;e!g*g:8$90x<3<w<7:1E:4:4}A:3$1g9;Kg8$g)h}M$2is<241$4)'
 			;;
             *)  supportedArchFlag=false  ;;
@@ -2869,7 +2932,8 @@ _timep_SETUP --force
 
 _timep_file_to_base64() {
 
-    local nn kk kk0 k1 k2 out out0 outF outN v1 v2 nnSum hexProg quoteFlag noCompressFlag doneFlag IFS IFS0 
+    local nn kk kk0 k1 k2 out out0 outF outN v1 v2 nnSum hexProg quoteFlag noCompressFlag doneFlag IFS IFS0
+
     local -a charmap compressI compressV outA nnSumA
     local -x LC_ALL=C
 
@@ -2890,7 +2954,7 @@ _timep_file_to_base64() {
             ;;
             *) break ;;
         esac
-    done    
+    done
 
     [[ -f "${1}" ]] || {
 
@@ -2906,7 +2970,8 @@ _timep_file_to_base64() {
 
     # to dump the binary as ascii hexidecimals , we need od or hexdump
     if type -p od &>/dev/null; then
-        hexProg='od -x' 
+        hexProg='od -x'
+
     elif type -p hexdump &>/dev/null; then
         hexProg='hexdump'
     else
@@ -2929,7 +2994,7 @@ _timep_file_to_base64() {
     out="${outA[*]}"
     unset IFS
 
-    (( outN = ( outN >> 1 ) << 1 )) 
+    (( outN = ( outN >> 1 ) << 1 ))
 
     # get orig file size
     if type -p stat &>/dev/null; then
@@ -2972,7 +3037,7 @@ _timep_file_to_base64() {
             compressV[$kk]="$({ sed -E 's/(00+)(([^0]+0?[^0]+)*)/\1\n\2/g; s/([^0]+)/\1\n/g' <<<"${out}" | grep -E '..' | sort | uniq -c | sed -E 's/^[ \t]+//'; { read -r -N 1 y; while read -r -N 1 x; do if [[ "$x" == "${y: -1}" ]]; then y+="$x"; else echo "$y"; read -r -N 1 y; fi; done; } <<<"${out}" | grep -E '..' | sort | uniq -c| sed -E 's/^[ \t]+//' | while read -r v1 v2; do if ((${#v2} > 32 )); then (( v1 = v1 * ( ${#v2} / 32 ) )); v2="${v2:0:32}"; fi; printf '%s %s\n' "$v1" "$v2"; done } | grep -vE '^1 '   | sort -nr -k1,1 | while read -r v1 v2; do (( v0 = v1 * ${#v2} - v1 - ${#v2} )); printf '%s %s %s %s\n' "$v0" "${#v2}" "$v1" "$v2"; done | grep -vE '^-' | sort -nr -k 1,1 | head -n 1 | sed -E 's/^([0-9]+ ){3}//')"
             out="${out//"${compressV[$kk]}"/"${compressI[$kk]}"}"
         done
-      
+
         printf -v out0 '%s\n' "${outN} ${outB}" "${nnSumA[@]}" "${compressV[@]}"
     fi
 
@@ -2998,12 +3063,17 @@ head() {
       [[ $1 == -n ]] && shift 1
       case $1 in
          [0-9]*)  n=$1; mapfile -t -n "$n" A ;;
-        -[0-9]*)   
-		    n=${1#-}; 
-			(( kk = n < 20 ? 20 : n )); 
-			mapfile -t -n $kk A; 
+        -[0-9]*)
+
+		    n=${1#-};
+
+			(( kk = n < 20 ? 20 : n ));
+
+			mapfile -t -n $kk A;
+
 			(( ${#A[@]} >= n )) && while true; do
-			    mapfile -t -n $kk A1 
+			    mapfile -t -n $kk A1
+
 				if (( ${#A1[@]} < kk )); then
 				    A=("${A[@]}" "${A1[@]}")
 					break
@@ -3016,13 +3086,15 @@ head() {
 					break
 				else
 					printf '%s\n' "${A1[@]}"
-				fi				
+				fi
+
 			done
 			if (( ( ${#A[@]} - n ) >= 0 )); then
 			    A=("${A[@]:0:${#A[@]}-n}")
 			else
 			    return 0
-			fi 
+			fi
+
 		;;
 		*) return 1 ;;
       esac
@@ -3045,12 +3117,15 @@ tail() {
          [0-9]*)  n=$1 ;;
          *) return 1  ;;
       esac
-	  
+
     fi
-	(( kk = n < 20 ? 20 : n )); 
-    mapfile -t -n $kk A; 
+	(( kk = n < 20 ? 20 : n ));
+
+    mapfile -t -n $kk A;
+
     (( ${#A[@]} >= n )) && while true; do
-        mapfile -t -n $kk A1 
+        mapfile -t -n $kk A1
+
         if (( ${#A1[@]} < kk )); then
             A=("${A[@]}" "${A1[@]}")
             break
@@ -3063,7 +3138,8 @@ tail() {
             break
         else
             printf '%s\n' "${A1[@]}"
-        fi                
+        fi
+
     done
     (( ( ${#A[@]} - n ) >= 0 )) && A=("${A[@]:${#A[@]}-n}") ;
     printf '%s\n' "${A[@]}"
@@ -3072,4 +3148,3 @@ fi
 
 shopt ${timep_extglobState} extglob
 unset timep_extglobState
-
