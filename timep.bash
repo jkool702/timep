@@ -1536,6 +1536,8 @@ printf '%s;' "${fgA[@]}")"
         }
     done
 
+    declare -p >"${logCur}.vars"
+
     (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
     (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
 
@@ -1548,15 +1550,14 @@ printf '%s;' "${fgA[@]}")"
     for kk in "${!logA[@]}"; do
        
         #  write out flamegraph stack trace line for standard commands
-        cmdFG="${cmdA[$kk]//\;/\,}"
-        [[ ${isPipeA[$kk]} ]] && cmdFG="${cmdFG##*\|*( )}"
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdFG}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
+        [[ ${isPipeA[$kk]} ]] && cmdFG="${cmdA[$kk]%%*( )\|*}"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdFG//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
 
         ${inPipeFlagA[$kk]} && continue
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
-            ((lineno1 = lineno1 + 1))
+            (( lineno1 = lineno1 + 1 ))
         else
             lineno1=0
         fi
@@ -1576,17 +1577,13 @@ printf '%s;' "${fgA[@]}")"
         cTimeTA[$kk]="${cTimeTotal}"
 
         
-        # combine times for lines with same lineno + same command
-        if ${normalCmdFlagA[$kk]}; then
-            #  write out flamegraph stack trace line for standard commands
-            printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
-        elif ${isMergeIndicatorA[$kk]}; then
+        if ${isMergeIndicatorA[$kk]}; then
             # merge up log indo kk index vars
             mergeA[$kk]="${mergeA[$kk]//+($'\n')/$'\n'}"
             mergeA[$kk]="${mergeA[$kk]#$'\n'}"
-            mergeA[$kk]="${mergeA[$kk]%$'\n'}"
+            #mergeA[$kk]="${mergeA[$kk]%$'\n'}"
             mapfile -t mergeA0 <<<"${mergeA[$kk]}"
-			mergeCurA=()
+			mergeCurA=("${cmdFG}")
             for kk1 in "${!mergeA0[@]}"; do
                 [[ "${mergeA0[$kk1]}.out.combined" ]] && [[ -e "${mergeA0[$kk1]}.out.combined" ]] && {
                     mapfile -t mergeCurA0 <"${mergeA0[$kk1]}.out.combined"
@@ -2401,7 +2398,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 	
         # split lines into start, time, percent, endr
         logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____   \tCOMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
-            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | cur depth %% | total %% )   \t( time | cur depth %% | total %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
+            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | total %% | cur depth %% )   \t( time | total %% | cur depth %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
 
         logFooter="$(grep --text -E '^TOTAL' <"${logPathCur}")"
 
@@ -2466,7 +2463,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 if  { { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); } && { [[ ${pw##*( )} == '0.00' ]] || [[ "${pw##*( )}" == "${p1w##*( )}" ]]; } &&  { [[ ${pc##*( )} == '0.00' ]] || [[ "${pc##*( )}" == "${p1c##*( )}" ]]; }; then
                     printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" '' "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 else
-                    printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" '' "${tw}" "${pw}" "${p1w}" "${tc}" "${pc}" "${p1c}" "${cnt}" "${a00}" "${cmd}"
+                    printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" '' "${tw}" "${p1w}" "${pw}" "${tc}" "${p1c}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 fi
 
 
