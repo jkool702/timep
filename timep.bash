@@ -486,7 +486,8 @@ _timep_getFuncSrc() {
     '"${timep_END_CTIME_STR}"
 
     timep_DEBUG_TRAP_STR_1='[[ "$-" == *m* ]] || {
-        printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\n\n'"'"' >&2
+        printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\nAutomatic relaying of signals to background processes will be disabled.\n\n'"'"' >&2
+        echo 1 > "${timep_TMPDIR}/.log/.disableSignalRelay"
         set -m
     }
     [[ "${FUNCNAME[0]}" == "trap" ]] && ! ${timep_SKIP_DEBUG_FLAG} && {
@@ -896,15 +897,15 @@ timep_SKIP_DEBUG_FLAG=false
         timep_FNEST=("${#FUNCNAME[@]}")
         timep_FNEST_CUR="${#FUNCNAME[@]}"
 
+        echo "${BASHPID}" >"${timep_TMPDIR}/.log/.pid.all"
+
         timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
         timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
         timep_STARTTIME[${timep_FNEST_CUR}]="${EPOCHREALTIME}"
         timep_LINENO[${timep_FNEST_CUR}]="${LINENO}"
-
-        echo "${BASHPID}" >"${timep_TMPDIR}/.log/.pid.all"
 '
         for nn in INT TERM QUIT HUP; do 
-            printf -v trapAddCur 'builtin trap '"'"'builtin trap - SIG%s DEBUG EXIT RETURN; timep_pidA=(); while read -r timep_pidCur; do case "$timep_pidCur" in -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;; *) timep_pidA[${timep_pidCur}]=1 ;; esac; done <"%s/.log/.pid.all"; kill -%s "${timep_pidA[@]}" "${BASHPID}"'"'"' SIG%s\n' "$nn" "${timep_TMPDIR}" "$nn" "$nn"; 
+            printf -v trapAddCur 'builtin trap '"'"'builtin trap - SIG%s DEBUG EXIT RETURN; if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then kill -%s "$BASHPID"; else; timep_pidA=(); while read -r timep_pidCur; do case "$timep_pidCur" in -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;; *) timep_pidA[${timep_pidCur}]=1 ;; esac; done <"${timep_TMPDIR}/.log/.pid.all"; kill -%s "${timep_pidA[@]}" "${BASHPID}"'"'"' SIG%s\n; fi' "$nn" "$nn "$nn" "$nn"; 
             timep_runFuncSrc+=$'\n'"${trapAddCur}"$'\n'; 
         done
 
