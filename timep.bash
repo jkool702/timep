@@ -1501,7 +1501,7 @@ _timep_PROCESS_LOG() {
             cTimeA[$kk]=1
         fi
 
-       ${timep_flameGraphFlag} && ${normalCmdFlagA[$kk]} && {
+       ${timep_flameGraphFlag} && ${normalCmdFlagA[$kk]} && ! ${inPipeFlag} && {
             [[ -z ${fg0} ]] && {
                 # get base stack (showing all the parents) for this log
                 fg0="$(IFS0="${IFS@Q}"
@@ -1538,10 +1538,10 @@ printf '%s;' "${fgA[@]}")"
     printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
 
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
-    kk1=-1
+    kk1=0
     for kk in "${!logA[@]}"; do
-        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
-            (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
+        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 == 0 )) || ! ${normalCmdFlagA[$kk]} || {
+            #(( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
             continue
         }
         #  write out flamegraph stack trace line for standard commands
