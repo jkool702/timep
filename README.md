@@ -1,11 +1,11 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**MAJOR UPDATE RELEASED**: The new `timep` (currently v1.3) now includes the required loadable binary as a compressed base64 encoded string inside timep.bash. timep_flamegraph.pl is also included inside timep.bash, making the script 100% self contained. This version also includes a major refactor of the log merging logic, making it more robust, more reliable, and much faster. THe forkrun test (involving 67000 or so individual commands) previously took 20 m,inutes and now only takes 5 minutes (or 2 minutes if you only want a profile and not a flamegraph). This is between a 4x and 10x speedup!
+**MAJOR UPDATE RELEASED**: The new `timep` (currently v1.3) now includes the required loadable binary as a compressed base64 encoded string inside timep.bash. timep_flamegraph.pl is also included inside timep.bash, making the script 100% self contained. This version also includes a major refactor of the log merging logic, making it more robust, more reliable, and much faster. The forkrun test (involving 67000 or so individual commands) previously took 20 minutes and now only takes 5 minutes (or 2 minutes 30 seconds if you only want a profile and not a flamegraph). This is between a 4x and 8x speedup!
 
 **BUILTIN FLAMEGRAPH GENERATOR**:  One standout feature of `timep` is that, in addition to the time profile, `timep` will generate outputs consisting of call-stack traces that can be directly used with `timep_flamegraph.pl` (in this repo - a modified version of `flamegraph.pl` from Brendan Gregg's [FlameGraph repo](https://github.com/brendangregg/FlameGraph) with a new `--color=timep` option for use with `timep`). If you pass `timep` the `--flame` flag, timep will automatically download (if needed) a copy of `flamegraph.pl` and use it to generate both "full" and a "folded" flamegraphs SVG images. However, unlike typical flamegraphs (which are built using stack traces), these flamegraphs are built using bash commands and their associated runtimes, and the different levels represent combined function+subshell nesting depth. Additionally, these flamegraphs use a custom 'timep' coloring scheme, which colors based on the time it took the command to run and uses a perceptually and spatially equalized color mapping to produce flamegraphs that are easy to interpret and use.
 
-note: use the timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT at the top of the code to control if you want timep to generate flamegraphs automatically by default (without requiring passing a flag).
+note: use the timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT at the top of the code to control if you want timep to generate flamegraphs automatically by default (without requiring passing a flag). Current default is to automatically generate them.
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 # USING TIMEP
@@ -75,61 +75,59 @@ timep testfunc
 ```
 gives
 ```
-OUTPUT PROFILE (COMBINED):
-
 LINE.DEPTH.CMD NUMBER   COMBINED WALL-CLOCK TIME                COMBINED CPU TIME                       COMMAND                             
-<line>.<depth>.<cmd>:   ( time | cur depth % | total % )        ( time | cur depth % | total % )        (count) <command>
+<line>.<depth>.<cmd>:   ( time | total % | cur depth % )        ( time | total % | cur depth % )        (count) <command>
 _____________________   ________________________________        ________________________________        ____________________________________
-9.0.0:                  ( 0.025939s |100.00% )                  ( 0.024928s |100.00% )                  (1x)    << (FUNCTION): main.testfunc "${@}" >>
-├─ 1.1.0:               ( 0.000062s |  0.23% )                  ( 0.000075s |  0.30% )                  (1x)    ├─ testfunc "${@}"
-│                                                                                                               │
-│  8.1.0:               ( 0.000068s |  0.26% )                  ( 0.000081s |  0.32% )                  (1x)    │  echo 0
-│                                                                                                               │
-│  9.1.0:               ( 0.000989s |  3.81% )                  ( 0.000892s |  3.57% )                  (1x)    │  echo 1
-│                                                                                                               │
-│  10.1.0:              ( 0.000073s |  0.28% )                  ( 0.000088s |  0.35% )                  (1x)    │  << (SUBSHELL) >>
-│  └─ 10.2.0:           ( 0.000073s |100.00% |  0.28% )         ( 0.000088s |100.00% |  0.35% )         (1x)    │  └─ echo 2
-│                                                                                                               │
-│  11.1.0:              ( 0.000507s |  1.95% )                  ( 0.000525s |  2.10% )                  (1x)    │  echo 3 (&)
-│                                                                                                               │
-│  12.1.0:              ( 0.003416s | 13.16% )                  ( 0.000001s |  0.00% )                  (1x)    │  << (BACKGROUND FORK) >>
-│  └─ 12.2.0:           ( 0.000297s |100.00% |  1.14% )         ( 0.000341s |100.00% |  1.36% )         (1x)    │  └─ echo 4
-│                                                                                                               │
-│  13.1.0:              ( 0.000432s |  1.66% )                  ( 0.000447s |  1.79% )                  (1x)    │  echo 5
-│                                                                                                               │
-│  13.1.1:              ( 0.000362s |  1.39% )                  ( 0.000376s |  1.50% )                  (1x)    │  cat
-│                                                                                                               │
-│  13.1.2:              ( 0.003441s | 13.26% )                  ( 0.006943s | 27.85% )                  (1x)    │  tee | ((kk=6)) | ((kk<10))
-│                                                                                                               │
-│  15.1.0:              ( 0.000242s |  0.93% )                  ( 0.000295s |  1.18% )                  (4x)    │  ((kk++ ))
-│                                                                                                               │
-│  16.1.0:              ( 0.000289s |  1.11% )                  ( 0.000344s |  1.37% )                  (4x)    │  echo $kk
-│                                                                                                               │
-│  17.1.0:              ( 0.003737s |  3.59% | 14.40% )         ( 0.003476s |  3.48% | 13.94% )         (4x)    │  << (FUNCTION): main.testfunc.h $kk >>
-│  ├─ 1.2.0:            ( 0.000231s |  6.20% |  0.89% )         ( 0.000285s |  8.22% |  1.14% )         (4x)    │  ├─ h $kk
-│  │  8.2.0:            ( 0.000302s |  8.07% |  1.16% )         ( 0.000376s | 10.84% |  1.50% )         (4x)    │  │  echo "h: $*"
-│  │  9.2.0:            ( 0.000548s | 14.72% |  2.11% )         ( 0.000656s | 18.96% |  2.63% )         (4x)    │  │  << (FUNCTION): main.testfunc.h.f "$@" >>
-│  │  ├─ 1.3.0:         ( 0.000232s | 42.57% |  0.89% )         ( 0.000287s | 43.92% |  1.15% )         (4x)    │  │  ├─ f "$@"
-│  │  └─ 8.3.0:         ( 0.000316s | 57.41% |  1.21% )         ( 0.000369s | 56.06% |  1.48% )         (4x)    │  │  └─ echo "f: $*"
-│  │  10.2.0:           ( 0.002656s | 70.98% | 10.23% )         ( 0.002159s | 61.94% |  8.66% )         (4x)    │  │  << (FUNCTION): main.testfunc.h.g "$@" >>
-│  │  ├─ 1.3.0:         ( 0.002308s | 86.90% |  8.89% )         ( 0.001753s | 81.17% |  7.03% )         (4x)    │  │  ├─ g "$@"
-│  │  │  408.3.0:       ( 0.000348s | 13.08% |  1.34% )         ( 0.000406s | 18.81% |  1.62% )         (4x)    │  │  │  << (SUBSHELL) >>
-│  └─ └─ └─ 408.4.0:    ( 0.000348s |100.00% |  1.34% )         ( 0.000406s |100.00% |  1.62% )         (4x)    │  └─ └─ └─ echo "g: $*"
-│                                                                                                               │
-│  18.1.0:              ( 0.000716s |  2.76% )                  ( 0.000873s |  3.50% )                  (12x)   │  for jj in {1..3}
-│                                                                                                               │
-│  19.1.0:              ( 0.001597s |  0.50% |  6.15% )         ( 0.001907s |  0.63% |  7.65% )         (12x)   │  << (FUNCTION): main.testfunc.f $kk $jj >>
-│  ├─ 1.2.0:            ( 0.000693s | 43.40% |  2.67% )         ( 0.000844s | 44.26% |  3.38% )         (12x)   │  ├─ f $kk $jj
-│  └─ 8.2.0:            ( 0.000904s | 56.58% |  3.48% )         ( 0.001063s | 55.72% |  4.26% )         (12x)   │  └─ echo "f: $*"
-│                                                                                                               │
-│  20.1.0:              ( 0.009758s |  3.12% | 37.61% )         ( 0.008306s |  2.77% | 33.31% )         (12x)   │  << (FUNCTION): main.testfunc.g $kk $jj >>
-│  ├─ 1.2.0:            ( 0.008494s | 86.78% | 32.74% )         ( 0.006829s | 81.25% | 27.39% )         (12x)   │  ├─ g $kk $jj
-│  │  408.2.0:          ( 0.001264s | 13.20% |  4.87% )         ( 0.001477s | 18.73% |  5.92% )         (12x)   │  │  << (SUBSHELL) >>
-└─ └─ └─ 408.3.0:       ( 0.001264s |100.00% |  4.87% )         ( 0.001477s |100.00% |  5.92% )         (12x)   └─ └─ └─ └─ echo "g: $*"
 
+9.0.0:                  ( 0.026651s |100.00% )            ( 0.032214s |100.00% )                (1x)    << (FUNCTION): main.testfunc "${@}" >>
+├─ 1.1.0:               ( 0.000062s |  0.23% )            ( 0.000076s |  0.23% )                (1x)    testfunc "${@}"
+│
+│  8.1.0:               ( 0.000074s |  0.27% )            ( 0.000089s |  0.27% )                (1x)    echo 0
+│
+│  9.1.0:               ( 0.000571s |  2.14% )            ( 0.000430s |  1.33% )                (1x)    echo 1
+│
+│  10.1.0:              ( 0.000077s |  0.28% )            ( 0.000092s |  0.28% )                (1x)    << (SUBSHELL) >>
+│  └─ 10.2.0:           ( 0.000077s |  0.28% |100.00% )   ( 0.000092s |  0.28% |100.00% )       (1x)     └─echo 2
+│
+│  11.1.0:              ( 0.000582s |  2.18% )            ( 0.000595s |  1.84% )                (1x)    echo 3 (&)
+│
+│  12.1.0:              ( 0.000091s |  0.34% )            ( 0.000112s |  0.34% )                (1x)    << (BACKGROUND FORK) >>
+│  └─ 12.2.0:           ( 0.000091s |  0.34% |100.00% )   ( 0.000112s |  0.34% |100.00% )       (1x)     └─echo 4
+│
+│  13.1.0:              ( 0.004605s | 17.27% )            ( 0.010900s | 33.83% )                (1x)    echo 5 | cat | tee
+│
+│  15.1.0:              ( 0.000063s |  0.23% )            ( 0.000077s |  0.23% )                (1x)    ((kk=6))
+│
+│  15.1.0:              ( 0.000248s |  0.93% |  0.23% )   ( 0.000302s |  0.93% |  0.23% )       (4x)    ((kk++ ))
+│
+│  15.1.1:              ( 0.000313s |  1.17% |  0.23% )   ( 0.000380s |  1.17% |  0.23% )       (5x)    ((kk<10))
+│
+│  16.1.0:              ( 0.000312s |  1.17% |  0.29% )   ( 0.000350s |  1.08% |  0.27% )       (4x)    echo $kk
+│
+│  17.1.0:              ( 0.004861s | 18.23% |  4.55% )   ( 0.004706s | 14.60% |  3.65% )       (4x)    << (FUNCTION): main.testfunc.h $kk >>
+│  ├─ 1.2.0:            ( 0.000242s |  0.90% |  4.97% )   ( 0.000297s |  0.92% |  6.31% )       (4x)     ├─h $kk
+│  │  8.2.0:            ( 0.000290s |  1.08% |  5.96% )   ( 0.000346s |  1.07% |  7.35% )       (4x)     │ echo "h: $*"
+│  │  9.2.0:            ( 0.000519s |  1.94% | 10.67% )   ( 0.000630s |  1.95% | 13.38% )       (4x)     │ << (FUNCTION): .f "$@" >>
+│  │  ├─ 1.3.0:         ( 0.000231s |  0.86% | 44.50% )   ( 0.000286s |  0.88% | 45.39% )       (4x)     │  ├─f "$@"
+│  │  └─ 8.3.0:         ( 0.000288s |  1.08% | 55.49% )   ( 0.000344s |  1.06% | 54.60% )       (4x)     │  └─echo "f: $*"
+│  │  10.2.0:           ( 0.003810s | 14.29% | 78.37% )   ( 0.003433s | 10.65% | 72.94% )       (4x)     │ << (FUNCTION): .g "$@" >>
+│  │  ├─ 1.3.0:         ( 0.003390s | 12.71% | 88.97% )   ( 0.002951s |  9.16% | 85.95% )       (4x)     │  ├─g "$@"
+│  │  │  408.3.0:       ( 0.000420s |  1.57% | 11.02% )   ( 0.000482s |  1.49% | 14.04% )       (4x)     │  │ << (SUBSHELL) >>
+│  └─ └─ └─ 408.4.0:    ( 0.000420s |  1.57% |100.00% )   ( 0.000482s |  1.49% |100.00% )       (4x)     └─ └─ └─echo "g: $*"
+│
+│  18.1.0:              ( 0.000729s |  2.73% |  0.22% )   ( 0.000892s |  2.76% |  0.23% )       (12x)   for jj in {1..3}
+│
+│  19.1.0:              ( 0.001644s |  6.16% |  0.51% )   ( 0.001973s |  6.12% |  0.51% )       (12x)   << (FUNCTION): main.testfunc.f $kk $jj >>
+│  ├─ 1.2.0:            ( 0.000723s |  2.71% | 43.97% )   ( 0.000883s |  2.74% | 44.75% )       (12x)    ├─f $kk $jj
+│  └─ 8.2.0:            ( 0.000921s |  3.45% | 56.02% )   ( 0.001090s |  3.38% | 55.24% )       (12x)    └─echo "f: $*"
+│
+│  20.1.0:              ( 0.012419s | 46.59% |  3.88% )   ( 0.011240s | 34.89% |  2.90% )       (12x)   << (FUNCTION): main.testfunc.g $kk $jj >>
+│  ├─ 1.2.0:            ( 0.010556s | 39.60% | 84.99% )   ( 0.009078s | 28.18% | 80.76% )       (12x)    ├─g $kk $jj
+│  │  408.2.0:          ( 0.001863s |  6.99% | 15.00% )   ( 0.002162s |  6.71% | 19.23% )       (12x)    │ << (SUBSHELL) >>
+└─ └─ └─ 408.3.0:       ( 0.001863s |  6.99% |100.00% )   ( 0.002162s |  6.71% |100.00% )       (12x)    └─ └─echo "g: $*"
 
-TOTAL RUN TIME: 0.025939s
-TOTAL CPU TIME: 0.024928s
+TOTAL RUN TIME: 0.026651s
+TOTAL CPU TIME: 0.032214s
 ```
 ***
 
