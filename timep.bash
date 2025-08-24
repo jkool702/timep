@@ -1299,7 +1299,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag
-    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA
+    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1464,6 +1464,7 @@ _timep_PROCESS_LOG() {
             (( isPipeA[$kk] = isPipeA[$kk1] + 1 ))
             [[ ${endWTimeA[$kk1]} ]] && endWTimeA[$kk]="${endWTimeA[$kk1]}"
             [[ ${endCTimeA[$kk1]} ]] && endCTimeA[$kk]="${endCTimeA[$kk1]}"
+            ${isMergeIndicatorA[$kk1]} && { isMergeIndicatorA[$kk]=true; mergeA[$kk]+=$'\n'"${mergeA[$kk1]}"; }
             cmdA[$kk]+=" | ${cmdA[$kk1]// \(\&\)/}"
             (( nPipeA[$kk] == 1 )) && inPipeFlag=false
         elif (( nPipeA[$kk] > 1 )); then
@@ -1471,7 +1472,12 @@ _timep_PROCESS_LOG() {
             inPipeFlag=true
             isPipeA[$kk]=1
         fi
-        ${inPipeFlag} && normalCmdFlagA[$kk]=false
+        if ${inPipeFlag}; then
+            normalCmdFlagA[$kk]=false
+            inPipeFlagA[$kk]=true
+        else
+            inPipeFlagA[$kk]=false
+        fi
 
         # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
         [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
@@ -1540,12 +1546,13 @@ printf '%s;' "${fgA[@]}")"
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=-1
     for kk in "${!logA[@]}"; do
-        [[ -z ${isPipeA[$kk]} ]] || (( nPipeA[$kk] == 1 )) || (( kk1 < 0 )) || ! ${normalCmdFlagA[$kk]} || {
-            (( ${#linenoUniqMapA[@]} == 0 )) || linenoUniqLineA[${linenoUniqMapA[$kk1]}]+=" $kk"
-            continue
-        }
+       
         #  write out flamegraph stack trace line for standard commands
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
+        cmdFG="${cmdA[$kk]//\;/\,}"
+        [[ ${isPipeA[$kk]} ]] && cmdFG="${cmdFG##*\|*( )}"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdFG}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
+
+        ${inPipeFlagA[$kk]} && continue
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
@@ -1573,9 +1580,19 @@ printf '%s;' "${fgA[@]}")"
         if ${normalCmdFlagA[$kk]}; then
             #  write out flamegraph stack trace line for standard commands
             printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
-        elif ${isMergeIndicatorA[$kk]} && [[ "${mergeA[$kk]}.out.combined" ]] && [[ -e "${mergeA[$kk]}.out.combined" ]]; then
+        elif ${isMergeIndicatorA[$kk]}; then
             # merge up log indo kk index vars
-            mapfile -t mergeCurA <"${mergeA[$kk]}.out.combined"
+            mergeA[$kk]="${mergeA[$kk]//+($'\n')/$'\n'}"
+            mergeA[$kk]="${mergeA[$kk]#$'\n'}"
+            mergeA[$kk]="${mergeA[$kk]%$'\n'}"
+            mapfile -t mergeA0 <<<"${mergeA[$kk]}"
+            for kk1 in "${!mergeA0[@]}"; do
+                [[ "${mergeA0[$kk1]}.out.combined" ]] && [[ -e "${mergeA0[$kk1]}.out.combined" ]] && {
+                    mapfile -t mergeCurA0 <"${mergeA0[$kk1]}.out.combined"
+                    mergeCurA+=("${mergeCurA0[@]}")
+                }
+            done
+
 			for mergeInd in "${!mergeCurA[@]}"; do
                 IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${mergeCurA[$mergeInd]}"
                 { [[ $tw ]] && [[ $pw ]]; } || continue
