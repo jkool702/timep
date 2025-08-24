@@ -900,6 +900,8 @@ timep_SKIP_DEBUG_FLAG=false
         timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
         timep_STARTTIME[${timep_FNEST_CUR}]="${EPOCHREALTIME}"
         timep_LINENO[${timep_FNEST_CUR}]="${LINENO}"
+
+        echo "${BASHPID}" >"${timep_TMPDIR}/.log/.pid.all"
 '
         for nn in INT TERM QUIT HUP; do 
             printf -v trapAddCur 'builtin trap '"'"'builtin trap - SIG%s DEBUG EXIT RETURN; timep_pidA=(); while read -r timep_pidCur; do case "$timep_pidCur" in -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;; *) timep_pidA[${timep_pidCur}]=1 ;; esac; done <"%s/.log/.pid.all"; kill -%s "${timep_pidA[@]}" "${BASHPID}"'"'"' SIG%s\n' "$nn" "${timep_TMPDIR}" "$nn" "$nn"; 
