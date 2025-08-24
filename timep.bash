@@ -1372,7 +1372,8 @@ _timep_PROCESS_LOG() {
         linenoA[$kk]="${lineno}"
 
         # unquote the cmd string
-        cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
+        #cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
+        [[ "${cmd}" == *"'"*"'"* ]] && cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
 
         cmd="${cmd//"'\\''"/"'"'"'"'"'"'"'"}"
         read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
@@ -1384,18 +1385,21 @@ _timep_PROCESS_LOG() {
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
         if ${nPipeNextIgnoreFlag}; then
+            set -xv
             nPipe=1
             nPipeA[$kk]=1
             nPipeNextIgnoreFlag=false
 			inPipeFlag=false
 	 		inPipeFlagA[$kk]=false
-	    elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "'${cmdA[$kk]//"'"/"'"'"'"'"'"'"'"}'" == '(('*[\<\>\=]*'))' ]]; then
+            set +xv
+	    elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
+            set -xv
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {
                 cmd0="${cmd0#@([[:print:]])}"
                 cmd0="${cmd0%@([[:print:]])*([[:space:]])}"
-                [[ "${cmd0}" == '(('*\=*'))' ]] && {
+                [[ "${cmd0//"'"/}" == '(('*\=*'))' ]] && {
                     nPipe=1
                     nPipeA[$kk]=1
                     nPipeNextIgnoreFlag=true
@@ -1403,6 +1407,7 @@ _timep_PROCESS_LOG() {
 	 				inPipeFlagA[$kk]=false
                 }
             }
+            set +xv
         fi
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
