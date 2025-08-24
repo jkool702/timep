@@ -486,10 +486,10 @@ _timep_getFuncSrc() {
     '"${timep_END_CTIME_STR}"
 
     timep_DEBUG_TRAP_STR_1='[[ "$-" == *m* ]] || {
-        printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\nAutomatic relaying of signals to background processes will be disabled.\n\n'"'"' >&2
-        echo 1 > "${timep_TMPDIR}/.log/.disableSignalRelay"
+        printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\n\n'"'"' >&2
         set -m
     }
+    [[ "${BASH_COMMAND}" == '"'"'set -'"'"'*m* ]] && echo 1 > "${timep_TMPDIR}/.log/.disableSignalRelay"
     [[ "${FUNCNAME[0]}" == "trap" ]] && ! ${timep_SKIP_DEBUG_FLAG} && {
         timep_SKIP_DEBUG_NEXT_FLAG=true
     }
