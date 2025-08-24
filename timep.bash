@@ -1549,11 +1549,10 @@ printf '%s;' "${fgA[@]}")"
     kk1=-1
     for kk in "${!logA[@]}"; do
        
-        #  write out flamegraph stack trace line for standard commands
-        [[ ${isPipeA[$kk]} ]] && cmdFG="${cmdA[$kk]%%*( )\|*}"
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdFG//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
-
         ${inPipeFlagA[$kk]} && continue
+		
+        #  write out flamegraph stack trace line for standard commands
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmdA[$kk]//\;/\,}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
@@ -1583,7 +1582,7 @@ printf '%s;' "${fgA[@]}")"
             mergeA[$kk]="${mergeA[$kk]#$'\n'}"
             #mergeA[$kk]="${mergeA[$kk]%$'\n'}"
             mapfile -t mergeA0 <<<"${mergeA[$kk]}"
-			mergeCurA=("${cmdFG}")
+			mergeCurA=()
             for kk1 in "${!mergeA0[@]}"; do
                 [[ "${mergeA0[$kk1]}.out.combined" ]] && [[ -e "${mergeA0[$kk1]}.out.combined" ]] && {
                     mapfile -t mergeCurA0 <"${mergeA0[$kk1]}.out.combined"
