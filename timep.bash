@@ -1387,7 +1387,9 @@ _timep_PROCESS_LOG() {
             nPipe=1
             nPipeA[$kk]=1
             nPipeNextIgnoreFlag=false
-        elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "'${cmdA[$kk]//"'"/"'"'"'"'"'"'"'"}'" == '(('*[\<\>\=]*'))' ]]; then
+			inPipeFlag=false
+	 		inPipeFlagA[$kk]=false
+	    elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "'${cmdA[$kk]//"'"/"'"'"'"'"'"'"'"}'" == '(('*[\<\>\=]*'))' ]]; then
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {
@@ -1397,6 +1399,8 @@ _timep_PROCESS_LOG() {
                     nPipe=1
                     nPipeA[$kk]=1
                     nPipeNextIgnoreFlag=true
+					inPipeFlag=false
+	 				inPipeFlagA[$kk]=false
                 }
             }
         fi
