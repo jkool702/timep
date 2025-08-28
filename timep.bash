@@ -1604,8 +1604,6 @@ printf '%s;' "${fgA[@]}")"
         }
     done
 
-    declare -p >"${logCur}.vars"
-
     (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
     (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
 
@@ -2462,7 +2460,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     (( spacerNN = spacerN - 1 ))
 
     logPathCur="${timep_TMPDIR}/profiles/out.profile"
-    declare -p >./vars
 
         # split lines into start, time, percent, endr
         logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____     COMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
@@ -2535,7 +2532,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             done <"${logPathCur}"
         })"
-        declare -p >./vars
         logFooter="TOTAL RUN${logCurTmp##*$'\n'TOTAL RUN}"
         # resort the final output by lineno. keep records together by using sort -z and adding NULs between records. for functions temporairly relocate the box drawing characters to the endof the line, then sort, then move them back.
         if [[ "${timep_runType}" == 'f' ]]; then
