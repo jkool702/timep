@@ -491,7 +491,7 @@ _timep_getFuncSrc() {
         printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\n\n'"'"' >&2
         set -m
     }
-    timep_BASH_COMMAND_CUR="${BASH_COMMAND::16384}"
+    (( ${#BASH_COMMAND} > 16384 )) && timep_BASH_COMMAND_CUR="${BASH_COMMAND::16384}" || timep_BASH_COMMAND_CUR="${BASH_COMMAND}"
 	timep_FUNCNAME_N="${#FUNCNAME[@]}"
 	: "${timep_FUNCNAME_N:=0}"
     [[ "${timep_BASH_COMMAND_CUR}" == '"'"'set -'"'"'*m* ]] && echo 1 > "${timep_TMPDIR}/.log/.disableSignalRelay"
