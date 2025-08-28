@@ -1400,10 +1400,21 @@ _timep_PROCESS_LOG() {
         # deal with commands run by traps / signal handlers
         if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
             (( kk1 = kk + 1 ))
+            cmd0="${cmdA[$kk1]}"
             cmdA[$kk1]="${logA[$kk]@Q}"
             ((kk1++))
-            while (( linenoA[$kk1] < 0 )) && (( kk1 < ${nlogA} )); do
-                cmdA[$kk1]="${logA[$kk]@Q}"
+            while { (( linenoA[$kk1] < 0 )) || [[ "${cmdA[$kk1]}" == "${cmd0}" ]]; } && (( kk1 < ${nlogA} )); do
+                unset "cmdA[$kk1]"
+                unset "nPipeA[$kk1]"
+                unset "startWTimeA[$kk1]"
+                unset "endWTimeA[$kk1]"
+                unset "startCTimeA[$kk1]"
+                unset "endCTimeA[$kk1]"
+                unset "funcA[$kk1]"
+                unset "pidA[$kk1]"
+                unset "nexecA[$kk1]"
+                unset "linenoA[$kk1]"
+                unset "logA[$kk1]"
                 ((kk1++))
             done
             nPipeA[$kk]=-1
