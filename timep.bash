@@ -87,7 +87,7 @@ timep() {
     #
     # NOTES:
     #    1. timep attempts to find the raw source code for functions being profiled, but in some instances (example: functions defined via `. <(...)` or functions defined in terminal when history is off) this isnt possible...In these cases,  `declare -f <func>` will be treated as the source, and the line numbers may not correspond exactly to the line numbers in the original code. Commamds are, however, still ordered correctly.
-    #    2. To define a custom TMPDIR (other than /dev/shm/.timep.XXXXXX), pass `timep_TMPDIR` as an environment variable. e.g., timep_TMPDIR=/path/to/tmpdir timep [...]
+    #    2. To define a custom TMPDIR (other than /dev/shm/.timep.XXXXXX), pass `TIMEP_TMPDIR` as an environment variable. e.g., TIMEP_TMPDIR=/path/to/tmpdir timep [...]
     #    3. timep uses a loadable builtin to get accurate cpu time measureements. This loadable builtin's .so file is included in this timep.bash file as a compressed base64-encoded string. When timep.bash is sourced, this .so file will automatically be extracted and the loadable builtin will be enabled automatically.
     #
     # KNOWN LIMITATIONS / BUGS: timep handles *almost* every aspect of the bash execution model, but there are a few edge cases where, due to the limitations or trap-based profiling, the output is slightly off.
@@ -182,7 +182,14 @@ timep() {
     printf -v timep_outType ' %s ' "${timep_outTypeA[@]}"
 
     # figure out where to setup a tmpdir to use (prefferably on a ramdisk/tmpfs)
-    [[ "${timep_TMPDIR}" ]] && mkdir --mode=700 -p "${timep_TMPDIR}"
+	if [[ ${TIMEP_TMPDIR} ]]; then
+        timep_TMPDIR="${TIMEP_TMPDIR}"
+		export -n TIMEP_TMPDIR
+        unset TIMEP_TMPDIR
+        mkdir --mode=700 -p "${timep_TMPDIR}"
+	else
+         timep_TMPDIR=''
+    fi
 
     # try /dev/shm
     [[ -z "$timep_TMPDIR" ]] && [[ -d /dev/shm ]] && {
@@ -721,9 +728,9 @@ _timep_getFuncSrc() {
         done
         unset exec
         if [[ -t 0 ]]; then
-            timep_TMPDIR="${timep_TMPDIR}/.exec/${timep_NEXEC_0}" builtin exec "${BASH}" -m -O extglob -o functrace "${cmd0[@]}" -c '"'"'timep "${@}"'"'"' _ "${@}"
+            TIMEP_TMPDIR="${timep_TMPDIR}/.exec/${timep_NEXEC_0}" builtin exec "${BASH}" -m -O extglob -o functrace "${cmd0[@]}" -c '"'"'timep "${@}"'"'"' _ "${@}"
         else
-            timep_TMPDIR="${timep_TMPDIR}/.exec/${timep_NEXEC_0}" builtin exec "${BASH}" -m -O extglob -o functrace "${cmd0[@]}" -c '"'"'timep "${@}" <&0'"'"' _ "${@}"
+            TIMEP_TMPDIR="${timep_TMPDIR}/.exec/${timep_NEXEC_0}" builtin exec "${BASH}" -m -O extglob -o functrace "${cmd0[@]}" -c '"'"'timep "${@}" <&0'"'"' _ "${@}"
         fi
     }
             fi
