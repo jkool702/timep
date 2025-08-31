@@ -1843,7 +1843,7 @@ printf '%s;' "${fgA[@]}")"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
 
-    ${timep_deleteFlag} && [[ ${timep_WORKER_COPROC_PID} ]] && (( timep_WORKER_COPROC_PID > 0 )) && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+    ${timep_deleteFlag} && [[ ${timep_WORKER_PID} ]] && (( timep_WORKER_PID > 0 )) && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
@@ -2208,8 +2208,8 @@ _timep_COMBINE_FLAMEGRAPH() {
     timep_coprocSrc='declare logID
 
 shopt -s extglob
-: >"${timep_TMPDIR}/.worker/${BASHPID}
-while true; do"'$'\n'
+: >"${timep_TMPDIR}/.worker/${BASHPID}"
+while true; do'$'\n'
 ${timep_deleteFlag} && timep_coprocSrc+='    : >"${timep_TMPDIR}/.worker/delete/${BASHPID}"'$'\n'
 timep_coprocSrc+='    read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
@@ -2717,7 +2717,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
-    [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles
+    [[ -L ./timep.profiles ]] && \rm -f ./timep.profiles 2>/dev/null
     printf '\n\nTHE PROFILE HAS FINISHED PROCESSING! (+%s)\nAll profiles can be found at "%s"' "${SECONDS}" "${timep_TMPDIR}/profiles" >&2
     type -p ln &>/dev/null && ln -sf "${timep_TMPDIR}/profiles" ./timep.profiles 2>/dev/null && printf ' or accessed via the symlink "./timep.profiles"' >&2
     ${timep_flameGraphFlag} && [[ "${timep_flameGraphPath}" ]] && printf '\nAll flamegraphs can be found in the "flamegraphs" sub-directory ("%s")' "${timep_TMPDIR}/profiles/flamegraphs"  >&2
