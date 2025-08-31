@@ -114,7 +114,7 @@ timep() {
 
     local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE logOut logOutL logOutLL
-    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_setupFuncFlags
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_LOG_DELETE_CUR timep_setupFuncFlags
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
     SECONDS=0
@@ -1843,6 +1843,8 @@ printf '%s;' "${fgA[@]}")"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
 
+    ${timep_deleteFlag} && [[ ${timep_WORKER_COPROC_PID} ]] && (( timep_WORKER_COPROC_PID > 0 )) && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
 }
@@ -2183,7 +2185,11 @@ _timep_COMBINE_FLAMEGRAPH() {
     printf '\n' >&${timep_fd_lock}
 
     # create dir for worker status/state info
-    mkdir -p "${timep_TMPDIR}/.worker"
+	if ${timep_deleteFlag}; then
+        mkdir -p "${timep_TMPDIR}/.worker/delete"
+	else
+        mkdir -p "${timep_TMPDIR}/.worker"
+    fi
 
     # NOTE: $timep_TMPDIR/.worker/<workerPID> contasins info on current workers state
     # if the file exists and is empty --> worker is running but not post-processing a log
@@ -2202,9 +2208,10 @@ _timep_COMBINE_FLAMEGRAPH() {
     timep_coprocSrc='declare logID
 
 shopt -s extglob
-: >"${timep_TMPDIR}/.worker/${BASHPID}"
-while true; do
-    read -r -u "${timep_fd_lock}" _
+: >"${timep_TMPDIR}/.worker/${BASHPID}
+while true; do"'$'\n'
+${timep_deleteFlag} && timep_coprocSrc+='    : >"${timep_TMPDIR}/.worker/delete/${BASHPID}"'$'\n'
+timep_coprocSrc+='    read -r -u "${timep_fd_lock}" _
     read -r -u "${timep_fd_logID}" logID
     printf '"'"'\n'"'"' >&${timep_fd_lock}
     [[ ${logID} ]] || break
@@ -2216,13 +2223,18 @@ while true; do
     fi
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
     if "${debugFlag}"; then
-        timep_POSTPROC_DEBUG_FLAG=true _timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
-    else
-        _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
+        timep_POSTPROC_DEBUG_FLAG=true '
+		${timep_deleteFlag} && timep_coprocSrc+='timep_WORKER_PID="${BASHPID}" '
+timep_coprocSrc+='_timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
+    else'$'\n'
+${timep_deleteFlag} && timep_coprocSrc+='        timep_WORKER_PID="${BASHPID}" '
+timep_coprocSrc+='_timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     fi
     if (( $? == 0 )); then
-        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
-    else
+        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}'$'\n'
+${timep_deleteFlag} && timep_coprocSrc+='        mapfile -t timep_LOG_DELETE_CUR <"${timep_TMPDIR}/.worker/delete/${BASHPID}"
+        (( ${#timep_LOG_DELETE_CUR[@]} > 0 )) && \rm -f "${timep_LOG_DELETE_CUR[@]}"'$'\n'
+timep_coprocSrc+='    else
         printf '"'"'-%s\n'"'"' "${logID}" >&${timep_fd_done}
     fi
     : >"${timep_TMPDIR}/.worker/${BASHPID}"
@@ -2697,7 +2709,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     ${timep_deleteFlag} && {
-        \rm -rf "${timep_TMPDIR}/.log"
+        \rm -rf "${timep_TMPDIR}"/.{log,worker}
         for nn in "${timep_TMPDIR}"/*; do
             [[ -f "$nn" ]] && \rm -f "$nn"
         done
