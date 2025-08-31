@@ -2709,7 +2709,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     ${timep_deleteFlag} && {
-        \rm -rf "${timep_TMPDIR}"/.{log,worker}
+	    [[ -d  "${timep_TMPDIR}"/.log ]] && \rm -rf  "${timep_TMPDIR}"/.log
+	    [[ -d  "${timep_TMPDIR}"/.worker ]] && \rm -rf  "${timep_TMPDIR}"/.worker
         for nn in "${timep_TMPDIR}"/*; do
             [[ -f "$nn" ]] && \rm -f "$nn"
         done
