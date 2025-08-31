@@ -1,7 +1,14 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**MAJOR UPDATE RELEASED**: The new `timep` (currently v1.3) now includes the required loadable binary as a compressed base64 encoded string inside timep.bash. timep_flamegraph.pl is also included inside timep.bash, making the script 100% self contained. This version also includes a major refactor of the log merging logic, making it more robust, more reliable, and much faster. The forkrun test (involving 67000 or so individual commands) previously took 20 minutes and now only takes 5 minutes (or 2 minutes 30 seconds if you only want a profile and not a flamegraph). This is between a 4x and 8x speedup!
+**CURRENT TIMEP VERSION**: 1.4
+
+**CHANGES IN MOST RECENT UPDATE**: v1.4 brings several small improvements, including:
+* some minor bug fixes
+* further minor refinement of the profile output
+* hardening against extremly long individual commands
+* reduced runtime memory requirements (intermediate log files are deleted as they are processed and no longer needed instead of all at the end)
+See `CHANGELOG.md` for the changes introduced in previous `timep` updates.
 
 **BUILTIN FLAMEGRAPH GENERATOR**:  One standout feature of `timep` is that, in addition to the time profile, `timep` will generate outputs consisting of call-stack traces that can be directly used with `timep_flamegraph.pl` (in this repo - a modified version of `flamegraph.pl` from Brendan Gregg's [FlameGraph repo](https://github.com/brendangregg/FlameGraph) with a new `--color=timep` option for use with `timep`). If you pass `timep` the `--flame` flag, timep will automatically download (if needed) a copy of `flamegraph.pl` and use it to generate both "full" and a "folded" flamegraphs SVG images. However, unlike typical flamegraphs (which are built using stack traces), these flamegraphs are built using bash commands and their associated runtimes, and the different levels represent combined function+subshell nesting depth. Additionally, these flamegraphs use a custom 'timep' coloring scheme, which colors based on the time it took the command to run and uses a perceptually and spatially equalized color mapping to produce flamegraphs that are easy to interpret and use.
 
