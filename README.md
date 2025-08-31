@@ -8,7 +8,8 @@
 * further minor refinement of the profile output
 * hardening against extremly long individual commands
 * reduced runtime memory requirements (intermediate log files are deleted as they are processed and no longer needed instead of all at the end)
-See `CHANGELOG.md` for the changes introduced in previous `timep` updates.
+
+See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, switch to one of the `legacy_v*.*` branches in the timep repo.
 
 **BUILTIN FLAMEGRAPH GENERATOR**:  One standout feature of `timep` is that, in addition to the time profile, `timep` will generate outputs consisting of call-stack traces that can be directly used with `timep_flamegraph.pl` (in this repo - a modified version of `flamegraph.pl` from Brendan Gregg's [FlameGraph repo](https://github.com/brendangregg/FlameGraph) with a new `--color=timep` option for use with `timep`). If you pass `timep` the `--flame` flag, timep will automatically download (if needed) a copy of `flamegraph.pl` and use it to generate both "full" and a "folded" flamegraphs SVG images. However, unlike typical flamegraphs (which are built using stack traces), these flamegraphs are built using bash commands and their associated runtimes, and the different levels represent combined function+subshell nesting depth. Additionally, these flamegraphs use a custom 'timep' coloring scheme, which colors based on the time it took the command to run and uses a perceptually and spatially equalized color mapping to produce flamegraphs that are easy to interpret and use.
 
