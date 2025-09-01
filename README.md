@@ -4,6 +4,7 @@
 **CURRENT TIMEP VERSION**: 1.4
 
 **CHANGES IN MOST RECENT UPDATE**: v1.4 brings several small improvements, including:
+* introduces a "signal relay" to minic no-job-control behavior for INT, TERM, HUP, and QUIT signals
 * some minor bug fixes
 * further minor refinement of the profile output
 * hardening against extremly long individual commands
