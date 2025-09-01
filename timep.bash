@@ -744,20 +744,27 @@ _timep_getFuncSrc() {
 
     }'
 
-    timep_SIGNAL_RELAY_TRAP_STR='builtin trap - SIG%s DEBUG EXIT RETURN
+	export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
+
+    timep_SIGNAL_RELAY_TRAP_STR='builtin trap - DEBUG EXIT RETURN
 if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then
+    builtin trap - SIG%s
     kill -%s "$BASHPID"
 else
-    timep_pidA=()
+    builtin trap '"''"' SIG%s
+	jobs -p | { 
+        mapfile -t pidRelayA
+		kill -SIG%s "$pidRelayA[@]}"
+	timep_pidA=()
+    }
     while read -r timep_pidCur; do
         case "$timep_pidCur" in
             -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;;
             *) timep_pidA[${timep_pidCur}]=1 ;;
         esac
-    done <"${timep_TMPDIR}/.log/.pid.all"
+    builtin trap - SIG%s
     kill -%s "${!timep_pidA[@]}" "${BASHPID}"
 fi'
-    export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
 
     # overload the trap builtin to allow the use of custom EXIT/RETURN/DEBUG traps
 
