@@ -443,7 +443,7 @@ _timep_getFuncSrc() {
     # this allows timep to run without adding any new (and potentially conflicting) variables to the code being run / time profiled.
 
     export -p timep_EXIT_TRAP_STR &>/dev/null && export -n timep_EXIT_TRAP_STR
-    timep_EXIT_TRAP_STR='printf '"'"'%s\n'"'"' "-${BASHPID}" >>"${timep_TMPDIR}/.log/.pid.all"'
+    timep_EXIT_TRAP_STR=':'
 
     export -p timep_RETURN_TRAP_STR &>/dev/null && export -n timep_RETURN_TRAP_STR
 
@@ -611,7 +611,6 @@ _timep_getFuncSrc() {
             timep_PARENT_TPID0="$timep_PARENT_TPID"
             timep_PARENT_PGID="$timep_CHILD_PGID"
             timep_PARENT_TPID="$timep_CHILD_TPID"
-            printf '"'"'%s\n'"'"' "${BASHPID}" >>"${timep_TMPDIR}/.log/.pid.all"
         elif ${timep_SUBSHELL_INIT_FLAG}; then
             timep_SUBSHELL_INIT_FLAG=false
             timep_BASHPID_PREV="${timep_BASHPID_PREV_0}"
@@ -949,8 +948,6 @@ timep_SKIP_DEBUG_FLAG=false
 
         timep_FNEST=("${#FUNCNAME[@]}")
         timep_FNEST_CUR="${#FUNCNAME[@]}"
-
-        echo "${BASHPID}" >"${timep_TMPDIR}/.log/.pid.all"
 
         timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
         timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
