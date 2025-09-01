@@ -966,7 +966,7 @@ timep_SKIP_DEBUG_FLAG=false
         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
-        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 5 ))
+        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO - 13 ))
         timep_LINENO_OFFSET_0[${timep_FNEST_CUR}]="${timep_LINENO_OFFSET[${timep_FNEST_CUR}]}"
 
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
@@ -1472,15 +1472,12 @@ _timep_PROCESS_LOG() {
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
         if ${nPipeNextIgnoreFlag}; then
-            set -xv
             nPipe=1
             nPipeA[$kk]=1
             nPipeNextIgnoreFlag=false
             inPipeFlag=false
             inPipeFlagA[$kk]=false
-            set +xv
         elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
-            set -xv
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {
@@ -1494,7 +1491,6 @@ _timep_PROCESS_LOG() {
                     inPipeFlagA[$kk]=false
                 }
             }
-            set +xv
         fi
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
