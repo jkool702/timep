@@ -543,6 +543,12 @@ _timep_getFuncSrc() {
             printf '"'"'%s\n'"'"' "${timep_ENDTIME}" >>"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}"
             ((BASHPID < timep_BASHPID_PREV)) && ((timep_NPIDWRAP++))
             builtin trap '"'${timep_EXIT_TRAP_STR//"'"/"'"'"'"'"'"'"'"}'"' EXIT
+			'
+        for nn in INT TERM QUIT HUP; do
+            printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
+            timep_DEBUG_TRAP_STR_1+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
+        done
+        timep_DEBUG_TRAP_STR_1+='
             IFS='"'"' '"'"' read -r _ _ _ _ timep_CHILD_PGID _ _ timep_CHILD_TPID _ </proc/${BASHPID}/stat
             ((timep_CHILD_PGID == timep_PARENT_TPID)) || ((timep_CHILD_PGID == timep_CHILD_TPID)) || { ((timep_CHILD_PGID == timep_PARENT_PGID)) && ((timep_CHILD_TPID == timep_PARENT_TPID)); } || timep_IS_BG_FLAG=true
         fi
@@ -752,18 +758,13 @@ if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then
     kill -%s "$BASHPID"
 else
     builtin trap '"''"' SIG%s
-	jobs -p | { 
-        mapfile -t pidRelayA
-		kill -SIG%s "$pidRelayA[@]}"
-	timep_pidA=()
+    timep_pidA=()
+    jobs -p | { 
+        mapfile -t timep_pidA
+		(( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
     }
-    while read -r timep_pidCur; do
-        case "$timep_pidCur" in
-            -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;;
-            *) timep_pidA[${timep_pidCur}]=1 ;;
-        esac
     builtin trap - SIG%s
-    kill -%s "${!timep_pidA[@]}" "${BASHPID}"
+    kill -%s "${BASHPID}"
 fi'
 
     # overload the trap builtin to allow the use of custom EXIT/RETURN/DEBUG traps
@@ -957,8 +958,8 @@ timep_SKIP_DEBUG_FLAG=false
         timep_LINENO[${timep_FNEST_CUR}]="${LINENO}"
 '
         for nn in INT TERM QUIT HUP; do
-            printf -v trapAddCur 'builtin trap '"'"'builtin trap - SIG%s DEBUG EXIT RETURN; if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then kill -%s "$BASHPID"; else timep_pidA=(); while read -r timep_pidCur; do case "$timep_pidCur" in -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;; *) timep_pidA[${timep_pidCur}]=1 ;; esac; done <"${timep_TMPDIR}/.log/.pid.all"; kill -%s "${timep_pidA[@]}" "${BASHPID}"; fi'"'"' SIG%s' "$nn" "$nn" "$nn" "$nn";
-            timep_runFuncSrc+=$'\n'"${trapAddCur}"$'\n';
+            printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
+            timep_runFuncSrc+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
         done
 
         timep_runFuncSrc+='
