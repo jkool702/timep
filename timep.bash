@@ -589,7 +589,7 @@ fi'
         fi
         ${timep_LINENO_INIT_FLAG} && {
             timep_LINENO_INIT_FLAG=false
-            [ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 4 ))
+            [[ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 4 ))
         }
         if ${timep_IS_FUNC_FLAG}; then
             timep_LINENO_0=1
