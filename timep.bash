@@ -182,12 +182,12 @@ timep() {
     printf -v timep_outType ' %s ' "${timep_outTypeA[@]}"
 
     # figure out where to setup a tmpdir to use (prefferably on a ramdisk/tmpfs)
-	if [[ ${TIMEP_TMPDIR} ]]; then
+    if [[ ${TIMEP_TMPDIR} ]]; then
         timep_TMPDIR="${TIMEP_TMPDIR}"
-		export -n TIMEP_TMPDIR
+        export -n TIMEP_TMPDIR
         unset TIMEP_TMPDIR
         mkdir --mode=700 -p "${timep_TMPDIR}"
-	else
+    else
          timep_TMPDIR=''
     fi
 
@@ -447,14 +447,15 @@ _timep_getFuncSrc() {
 
     export -p timep_RETURN_TRAP_STR &>/dev/null && export -n timep_RETURN_TRAP_STR
 
-    timep_RETURN_TRAP_STR='[[ -z ${#FUNCNAME[@]} ]] || (( ${#FUNCNAME[@]} < 2 )) || {
-    timep_SKIP_DEBUG_FLAG=true
+    timep_RETURN_TRAP_STR='timep_SKIP_DEBUG_FLAG=true
+    [[ -z ${#FUNCNAME[@]} ]] || (( ${#FUNCNAME[@]} < 1 )) || {
     unset "timep_FNEST[-1]" "timep_NEXEC_A[-1]" "timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]" "timep_NPIPE[${timep_FNEST_CUR}]" "timep_STARTTIME[${timep_FNEST_CUR}]" "timep_LINENO[${timep_FNEST_CUR}]" "timep_LINENO_OFFSET[${timep_FNEST_CUR}]"
     timep_FUNCNAME_STR="${timep_FUNCNAME_STR%.*}"
     timep_FNEST_CUR="${timep_FNEST[-1]}"
     timep_NEXEC_0="${timep_NEXEC_0%.*}"
-    timep_SKIP_DEBUG_FLAG=false
-}'
+}
+timep_SKIP_DEBUG_FLAG=false
+'
 
     type -p getconf &>/dev/null && clktck=$(getconf CLK_TCK)
     if (( clktck >= 10 )) && ((clktck <= 10000 )); then
@@ -488,6 +489,23 @@ _timep_getFuncSrc() {
         (( timep_START_CTIME <= ${timep_ENDTIME#*$'"'"'\t'"'"'} )) && timep_START_CTIME=${timep_ENDTIME#*$'"'"'\t'"'"'}'$'\n'
     fi
 
+    export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
+
+    timep_SIGNAL_RELAY_TRAP_STR='builtin trap - DEBUG EXIT RETURN
+if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then
+    builtin trap - SIG%s
+    kill -%s "$BASHPID"
+else
+    builtin trap '"''"' SIG%s
+    timep_pidA=()
+    jobs -p | { 
+        mapfile -t timep_pidA
+        (( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
+    }
+    builtin trap - SIG%s
+    kill -%s "${BASHPID}"
+fi'
+
     export -p timep_DEBUG_TRAP_STR_0 &>/dev/null && export -n timep_DEBUG_TRAP_STR_0
     export -p timep_DEBUG_TRAP_STR_1 &>/dev/null && export -n timep_DEBUG_TRAP_STR_1
     timep_DEBUG_TRAP_STR_0='timep_NPIPE0="${#PIPESTATUS[@]}"
@@ -503,8 +521,8 @@ _timep_getFuncSrc() {
     else
         timep_BASH_COMMAND_CUR="${BASH_COMMAND}"
     fi
-	timep_FUNCNAME_N="${#FUNCNAME[@]}"
-	: "${timep_FUNCNAME_N:=0}"
+    timep_FUNCNAME_N="${#FUNCNAME[@]}"
+    : "${timep_FUNCNAME_N:=0}"
     [[ "${timep_BASH_COMMAND_CUR}" == '"'"'set -'"'"'*m* ]] && echo 1 > "${timep_TMPDIR}/.log/.disableSignalRelay"
     [[ "${FUNCNAME[0]}" == "trap" ]] && ! ${timep_SKIP_DEBUG_FLAG} && {
         timep_SKIP_DEBUG_NEXT_FLAG=true
@@ -543,7 +561,7 @@ _timep_getFuncSrc() {
             printf '"'"'%s\n'"'"' "${timep_ENDTIME}" >>"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}"
             ((BASHPID < timep_BASHPID_PREV)) && ((timep_NPIDWRAP++))
             builtin trap '"'${timep_EXIT_TRAP_STR//"'"/"'"'"'"'"'"'"'"}'"' EXIT
-			'
+            '
         for nn in INT TERM QUIT HUP; do
             printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
             timep_DEBUG_TRAP_STR_1+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
@@ -570,10 +588,14 @@ _timep_getFuncSrc() {
         else
             timep_CMD_TYPE="NORMAL COMMAND"
         fi
+        ${timep_LINENO_INIT_FLAG} && {
+            timep_LINENO_INIT_FLAG=false
+            [[ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 4 ))
+        }
         if ${timep_IS_FUNC_FLAG}; then
             timep_LINENO_0=1
         else
-            (( timep_LINENO_0 = LINENO - timep_LINENO_OFFSET[${timep_FNEST_CUR}] - timep_LINENO_OFFSET_0[${timep_FNEST_CUR}] ))
+            (( timep_LINENO_0 = LINENO - ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]:-0} ))
         fi
         if [[ -z ${timep_PARENT_PGID0} ]] && [[ -z ${timep_PARENT_TPID0} ]] && (( timep_PARENT_PGID == timep_CHILD_PGID )) && (( timep_PARENT_PGID == timep_PARENT_TPID )) && ! (( timep_PARENT_PGID == timep_CHILD_TPID )); then
             timep_IS_BG_INDICATOR='"'"'(^)'"'"'
@@ -749,23 +771,6 @@ _timep_getFuncSrc() {
 
     }'
 
-	export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
-
-    timep_SIGNAL_RELAY_TRAP_STR='builtin trap - DEBUG EXIT RETURN
-if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then
-    builtin trap - SIG%s
-    kill -%s "$BASHPID"
-else
-    builtin trap '"''"' SIG%s
-    timep_pidA=()
-    jobs -p | { 
-        mapfile -t timep_pidA
-		(( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
-    }
-    builtin trap - SIG%s
-    kill -%s "${BASHPID}"
-fi'
-
     # overload the trap builtin to allow the use of custom EXIT/RETURN/DEBUG traps
 
     export -p -f trap &>/dev/null && export -n -f trap
@@ -908,8 +913,8 @@ timep_SKIP_DEBUG_FLAG=false
 
         builtin trap - DEBUG EXIT RETURN
 
-        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N
-        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_0 timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA
+        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG
+        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA
 
         set -mT
 
@@ -945,6 +950,7 @@ timep_SKIP_DEBUG_FLAG=false
         timep_NO_PRINT_FLAG=false
         timep_IS_FUNC_FLAG_1=false
         timep_SUBSHELL_INIT_FLAG=false
+        timep_LINENO_INIT_FLAG=true
 
         timep_FNEST=("${#FUNCNAME[@]}")
         timep_FNEST_CUR="${#FUNCNAME[@]}"
@@ -952,7 +958,6 @@ timep_SKIP_DEBUG_FLAG=false
         timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
         timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
         timep_STARTTIME[${timep_FNEST_CUR}]="${EPOCHREALTIME}"
-        timep_LINENO[${timep_FNEST_CUR}]="${LINENO}"
 '
         for nn in INT TERM QUIT HUP; do
             printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
@@ -963,9 +968,8 @@ timep_SKIP_DEBUG_FLAG=false
         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
-        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO - 13 ))
-        timep_LINENO_OFFSET_0[${timep_FNEST_CUR}]="${timep_LINENO_OFFSET[${timep_FNEST_CUR}]}"
-
+        (( timep_LINENO[${timep_FNEST_CUR}] = LINENO + 5 ))
+        
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 
         '"$(${timep_timeFlag} && echo 'time {')"'
@@ -2186,9 +2190,9 @@ _timep_COMBINE_FLAMEGRAPH() {
     printf '\n' >&${timep_fd_lock}
 
     # create dir for worker status/state info
-	if ${timep_deleteFlag}; then
+    if ${timep_deleteFlag}; then
         mkdir -p "${timep_TMPDIR}/.worker/delete"
-	else
+    else
         mkdir -p "${timep_TMPDIR}/.worker"
     fi
 
@@ -2225,7 +2229,7 @@ timep_coprocSrc+='    read -r -u "${timep_fd_lock}" _
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
     if "${debugFlag}"; then
         timep_POSTPROC_DEBUG_FLAG=true '
-		${timep_deleteFlag} && timep_coprocSrc+='timep_WORKER_PID="${BASHPID}" '
+        ${timep_deleteFlag} && timep_coprocSrc+='timep_WORKER_PID="${BASHPID}" '
 timep_coprocSrc+='_timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
     else'$'\n'
 ${timep_deleteFlag} && timep_coprocSrc+='        timep_WORKER_PID="${BASHPID}" '
@@ -2710,8 +2714,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     ${timep_deleteFlag} && [[ ${timep_TMPDIR} ]] && {
-	    [[ -d  "${timep_TMPDIR}"/.log ]] && \rm -rf  "${timep_TMPDIR}"/.log
-	    [[ -d  "${timep_TMPDIR}"/.worker ]] && \rm -rf  "${timep_TMPDIR}"/.worker
+        [[ -d  "${timep_TMPDIR}"/.log ]] && \rm -rf  "${timep_TMPDIR}"/.log
+        [[ -d  "${timep_TMPDIR}"/.worker ]] && \rm -rf  "${timep_TMPDIR}"/.worker
         for nn in "${timep_TMPDIR}"/*; do
             [[ -f "$nn" ]] && \rm -f "$nn"
         done
