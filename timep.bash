@@ -447,14 +447,15 @@ _timep_getFuncSrc() {
 
     export -p timep_RETURN_TRAP_STR &>/dev/null && export -n timep_RETURN_TRAP_STR
 
-    timep_RETURN_TRAP_STR='[[ -z ${#FUNCNAME[@]} ]] || (( ${#FUNCNAME[@]} < 2 )) || {
-    timep_SKIP_DEBUG_FLAG=true
+    timep_RETURN_TRAP_STR='timep_SKIP_DEBUG_FLAG=true
+    [[ -z ${#FUNCNAME[@]} ]] || (( ${#FUNCNAME[@]} < 1 )) || {
     unset "timep_FNEST[-1]" "timep_NEXEC_A[-1]" "timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]" "timep_NPIPE[${timep_FNEST_CUR}]" "timep_STARTTIME[${timep_FNEST_CUR}]" "timep_LINENO[${timep_FNEST_CUR}]" "timep_LINENO_OFFSET[${timep_FNEST_CUR}]"
     timep_FUNCNAME_STR="${timep_FUNCNAME_STR%.*}"
     timep_FNEST_CUR="${timep_FNEST[-1]}"
     timep_NEXEC_0="${timep_NEXEC_0%.*}"
-    timep_SKIP_DEBUG_FLAG=false
-}'
+}
+timep_SKIP_DEBUG_FLAG=false
+'
 
     type -p getconf &>/dev/null && clktck=$(getconf CLK_TCK)
     if (( clktck >= 10 )) && ((clktck <= 10000 )); then
