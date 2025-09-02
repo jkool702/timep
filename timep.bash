@@ -760,7 +760,7 @@ else
     timep_pidA=()
     jobs -p | { 
         mapfile -t timep_pidA
-        (( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
+        (( ${#timep_pidA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
     }
     builtin trap - SIG%s
     kill -%s "${BASHPID}"
