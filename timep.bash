@@ -878,14 +878,14 @@ timep_SKIP_DEBUG_FLAG=false
                     timep_runCmd1='#!'"${BASH}"
                 fi
                 # start of wrapper code
-                timep_runFuncSrc="${timep_runCmd1}"$'\n'
+                timep_runFuncSrc[0]="${timep_runCmd1}"$'\n'
             ;;
             c)
                 printf -v timep_runCmd '%s\n' "${@}"
                 timep_runCmd1='#!'"${BASH}"
 
                 # start of wrapper code
-                timep_runFuncSrc="${timep_runCmd1}"$'\n'
+                timep_runFuncSrc[0]="${timep_runCmd1}"$'\n'
             ;;
             f)
                 timep_funcName="${1}"
@@ -898,13 +898,13 @@ timep_SKIP_DEBUG_FLAG=false
                 [[ -t 0 ]] || timep_runCmd+=" <&0"
 
                 # start of wrapper code
-                timep_runFuncSrc="${timep_runCmd1}"$'\n''timep_runFunc() '
+                timep_runFuncSrc[0]="${timep_runCmd1}"$'\n''timep_runFunc() '
             ;;
         esac
 
     ${timep_CLOCK_GETTIME_FLAG} && { export -f _timep_SETUP; export -f _timep_file_to_base64; }
     chmod +x "${timep_TMPDIR}/functions.bash"
-    timep_runFuncSrc+='(
+    timep_runFuncSrc[0]+='(
 
         builtin trap - DEBUG EXIT RETURN
 
@@ -963,7 +963,8 @@ timep_SKIP_DEBUG_FLAG=false
         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
-        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = @@@@@ ))
+        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = '
+        timep_runFuncSrc[1]=' ))
         timep_LINENO_OFFSET_0[${timep_FNEST_CUR}]="${timep_LINENO_OFFSET[${timep_FNEST_CUR}]}"
 
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
@@ -971,15 +972,17 @@ timep_SKIP_DEBUG_FLAG=false
         '"$(${timep_timeFlag} && echo 'time {')"'
             {
                 '
-      timep_LINENO_OFFSET_MAIN="${timep_runFuncSrc//[^$'\n']/}"
+      timep_LINENO_OFFSET_MAIN="${timep_runFuncSrc[@]//[^$'\n']/}"
       timep_LINENO_OFFSET_MAIN="${#timep_LINENO_OFFSET_MAIN}"
-      timep_runFuncSrc="${timep_runFuncSrc//'@@@@@'/${timep_LINENO_OFFSET_MAIN}"$'\n'"${timep_runCmd}"'
+      timep_runFuncSrc[2]=$'\n'"${timep_runCmd}"'
             } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
         '"$(${timep_timeFlag} && echo '} 1>&${timep_FD2}')"'
 
         builtin trap - DEBUG EXIT RETURN;
         exec {timep_LOCK_FD}>&-
     )'
+
+    printf -v timep_runFuncSrc '%s' "${timep_runFuncSrc[0]}" "${timep_LINENO_OFFSET_MAIN}" "${timep_runFuncSrc[@]:1}"
 
     [[ "${timep_runType}" == 'f' ]] && {
         timep_runFuncSrc+=$'\n\n''timep_runFunc "${@}"'
