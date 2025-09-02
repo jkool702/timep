@@ -443,7 +443,7 @@ _timep_getFuncSrc() {
     # this allows timep to run without adding any new (and potentially conflicting) variables to the code being run / time profiled.
 
     export -p timep_EXIT_TRAP_STR &>/dev/null && export -n timep_EXIT_TRAP_STR
-    timep_EXIT_TRAP_STR='printf '"'"'%s\n'"'"' "-${BASHPID}" >>"${timep_TMPDIR}/.log/.pid.all"'
+    timep_EXIT_TRAP_STR=':'
 
     export -p timep_RETURN_TRAP_STR &>/dev/null && export -n timep_RETURN_TRAP_STR
 
@@ -543,6 +543,12 @@ _timep_getFuncSrc() {
             printf '"'"'%s\n'"'"' "${timep_ENDTIME}" >>"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}"
             ((BASHPID < timep_BASHPID_PREV)) && ((timep_NPIDWRAP++))
             builtin trap '"'${timep_EXIT_TRAP_STR//"'"/"'"'"'"'"'"'"'"}'"' EXIT
+			'
+        for nn in INT TERM QUIT HUP; do
+            printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
+            timep_DEBUG_TRAP_STR_1+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
+        done
+        timep_DEBUG_TRAP_STR_1+='
             IFS='"'"' '"'"' read -r _ _ _ _ timep_CHILD_PGID _ _ timep_CHILD_TPID _ </proc/${BASHPID}/stat
             ((timep_CHILD_PGID == timep_PARENT_TPID)) || ((timep_CHILD_PGID == timep_CHILD_TPID)) || { ((timep_CHILD_PGID == timep_PARENT_PGID)) && ((timep_CHILD_TPID == timep_PARENT_TPID)); } || timep_IS_BG_FLAG=true
         fi
@@ -605,7 +611,6 @@ _timep_getFuncSrc() {
             timep_PARENT_TPID0="$timep_PARENT_TPID"
             timep_PARENT_PGID="$timep_CHILD_PGID"
             timep_PARENT_TPID="$timep_CHILD_TPID"
-            printf '"'"'%s\n'"'"' "${BASHPID}" >>"${timep_TMPDIR}/.log/.pid.all"
         elif ${timep_SUBSHELL_INIT_FLAG}; then
             timep_SUBSHELL_INIT_FLAG=false
             timep_BASHPID_PREV="${timep_BASHPID_PREV_0}"
@@ -744,20 +749,22 @@ _timep_getFuncSrc() {
 
     }'
 
-    timep_SIGNAL_RELAY_TRAP_STR='builtin trap - SIG%s DEBUG EXIT RETURN
+	export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
+
+    timep_SIGNAL_RELAY_TRAP_STR='builtin trap - DEBUG EXIT RETURN
 if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then
+    builtin trap - SIG%s
     kill -%s "$BASHPID"
 else
+    builtin trap '"''"' SIG%s
     timep_pidA=()
-    while read -r timep_pidCur; do
-        case "$timep_pidCur" in
-            -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;;
-            *) timep_pidA[${timep_pidCur}]=1 ;;
-        esac
-    done <"${timep_TMPDIR}/.log/.pid.all"
-    kill -%s "${!timep_pidA[@]}" "${BASHPID}"
+    jobs -p | { 
+        mapfile -t timep_pidA
+		(( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
+    }
+    builtin trap - SIG%s
+    kill -%s "${BASHPID}"
 fi'
-    export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
 
     # overload the trap builtin to allow the use of custom EXIT/RETURN/DEBUG traps
 
@@ -942,23 +949,21 @@ timep_SKIP_DEBUG_FLAG=false
         timep_FNEST=("${#FUNCNAME[@]}")
         timep_FNEST_CUR="${#FUNCNAME[@]}"
 
-        echo "${BASHPID}" >"${timep_TMPDIR}/.log/.pid.all"
-
         timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
         timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
         timep_STARTTIME[${timep_FNEST_CUR}]="${EPOCHREALTIME}"
         timep_LINENO[${timep_FNEST_CUR}]="${LINENO}"
 '
         for nn in INT TERM QUIT HUP; do
-            printf -v trapAddCur 'builtin trap '"'"'builtin trap - SIG%s DEBUG EXIT RETURN; if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then kill -%s "$BASHPID"; else timep_pidA=(); while read -r timep_pidCur; do case "$timep_pidCur" in -*) [[ "${timep_pidA[${timep_pidCur#-}]}" ]] && unset "timep_pidA[${timep_pidCur#-}]" ;; *) timep_pidA[${timep_pidCur}]=1 ;; esac; done <"${timep_TMPDIR}/.log/.pid.all"; kill -%s "${timep_pidA[@]}" "${BASHPID}"; fi'"'"' SIG%s' "$nn" "$nn" "$nn" "$nn";
-            timep_runFuncSrc+=$'\n'"${trapAddCur}"$'\n';
+            printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
+            timep_runFuncSrc+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
         done
 
         timep_runFuncSrc+='
         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
-        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 5 ))
+        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO - 13 ))
         timep_LINENO_OFFSET_0[${timep_FNEST_CUR}]="${timep_LINENO_OFFSET[${timep_FNEST_CUR}]}"
 
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
@@ -1464,15 +1469,12 @@ _timep_PROCESS_LOG() {
 
         # deal with issue where for (( ...; ...; ... )) loops inherit previous nPipe
         if ${nPipeNextIgnoreFlag}; then
-            set -xv
             nPipe=1
             nPipeA[$kk]=1
             nPipeNextIgnoreFlag=false
             inPipeFlag=false
             inPipeFlagA[$kk]=false
-            set +xv
         elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
-            set -xv
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {
@@ -1486,7 +1488,6 @@ _timep_PROCESS_LOG() {
                     inPipeFlagA[$kk]=false
                 }
             }
-            set +xv
         fi
 
         # check if cmd is a subshell/bg fork/function that needs to be merged up
