@@ -112,7 +112,7 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
+    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR timep_LINENO_OFFSET_MAIN
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE logOut logOutL logOutLL
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_LOG_DELETE_CUR timep_setupFuncFlags
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
@@ -182,12 +182,12 @@ timep() {
     printf -v timep_outType ' %s ' "${timep_outTypeA[@]}"
 
     # figure out where to setup a tmpdir to use (prefferably on a ramdisk/tmpfs)
-	if [[ ${TIMEP_TMPDIR} ]]; then
+    if [[ ${TIMEP_TMPDIR} ]]; then
         timep_TMPDIR="${TIMEP_TMPDIR}"
-		export -n TIMEP_TMPDIR
+        export -n TIMEP_TMPDIR
         unset TIMEP_TMPDIR
         mkdir --mode=700 -p "${timep_TMPDIR}"
-	else
+    else
          timep_TMPDIR=''
     fi
 
@@ -503,8 +503,8 @@ _timep_getFuncSrc() {
     else
         timep_BASH_COMMAND_CUR="${BASH_COMMAND}"
     fi
-	timep_FUNCNAME_N="${#FUNCNAME[@]}"
-	: "${timep_FUNCNAME_N:=0}"
+    timep_FUNCNAME_N="${#FUNCNAME[@]}"
+    : "${timep_FUNCNAME_N:=0}"
     [[ "${timep_BASH_COMMAND_CUR}" == '"'"'set -'"'"'*m* ]] && echo 1 > "${timep_TMPDIR}/.log/.disableSignalRelay"
     [[ "${FUNCNAME[0]}" == "trap" ]] && ! ${timep_SKIP_DEBUG_FLAG} && {
         timep_SKIP_DEBUG_NEXT_FLAG=true
@@ -543,7 +543,7 @@ _timep_getFuncSrc() {
             printf '"'"'%s\n'"'"' "${timep_ENDTIME}" >>"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}"
             ((BASHPID < timep_BASHPID_PREV)) && ((timep_NPIDWRAP++))
             builtin trap '"'${timep_EXIT_TRAP_STR//"'"/"'"'"'"'"'"'"'"}'"' EXIT
-			'
+            '
         for nn in INT TERM QUIT HUP; do
             printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
             timep_DEBUG_TRAP_STR_1+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
@@ -749,7 +749,7 @@ _timep_getFuncSrc() {
 
     }'
 
-	export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
+    export -p timep_SIGNAL_RELAY_TRAP_STR &>/dev/null && export -n timep_SIGNAL_RELAY_TRAP_STR
 
     timep_SIGNAL_RELAY_TRAP_STR='builtin trap - DEBUG EXIT RETURN
 if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then
@@ -760,7 +760,7 @@ else
     timep_pidA=()
     jobs -p | { 
         mapfile -t timep_pidA
-		(( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
+        (( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
     }
     builtin trap - SIG%s
     kill -%s "${BASHPID}"
@@ -963,14 +963,17 @@ timep_SKIP_DEBUG_FLAG=false
         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
-        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO - 13 ))
+        (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = @@@@@ ))
         timep_LINENO_OFFSET_0[${timep_FNEST_CUR}]="${timep_LINENO_OFFSET[${timep_FNEST_CUR}]}"
 
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 
         '"$(${timep_timeFlag} && echo 'time {')"'
             {
-                '"${timep_runCmd}"'
+                '
+      timep_LINENO_OFFSET_MAIN="${timep_runFuncSrc//[^$'\n']/}"
+      timep_LINENO_OFFSET_MAIN="${#timep_LINENO_OFFSET_MAIN}"
+      timep_runFuncSrc="${timep_runFuncSrc//'@@@@@'/${timep_LINENO_OFFSET_MAIN}"$'\n'"${timep_runCmd}"'
             } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
         '"$(${timep_timeFlag} && echo '} 1>&${timep_FD2}')"'
 
@@ -2186,9 +2189,9 @@ _timep_COMBINE_FLAMEGRAPH() {
     printf '\n' >&${timep_fd_lock}
 
     # create dir for worker status/state info
-	if ${timep_deleteFlag}; then
+    if ${timep_deleteFlag}; then
         mkdir -p "${timep_TMPDIR}/.worker/delete"
-	else
+    else
         mkdir -p "${timep_TMPDIR}/.worker"
     fi
 
@@ -2225,7 +2228,7 @@ timep_coprocSrc+='    read -r -u "${timep_fd_lock}" _
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
     if "${debugFlag}"; then
         timep_POSTPROC_DEBUG_FLAG=true '
-		${timep_deleteFlag} && timep_coprocSrc+='timep_WORKER_PID="${BASHPID}" '
+        ${timep_deleteFlag} && timep_coprocSrc+='timep_WORKER_PID="${BASHPID}" '
 timep_coprocSrc+='_timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
     else'$'\n'
 ${timep_deleteFlag} && timep_coprocSrc+='        timep_WORKER_PID="${BASHPID}" '
@@ -2710,8 +2713,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
     ${timep_deleteFlag} && [[ ${timep_TMPDIR} ]] && {
-	    [[ -d  "${timep_TMPDIR}"/.log ]] && \rm -rf  "${timep_TMPDIR}"/.log
-	    [[ -d  "${timep_TMPDIR}"/.worker ]] && \rm -rf  "${timep_TMPDIR}"/.worker
+        [[ -d  "${timep_TMPDIR}"/.log ]] && \rm -rf  "${timep_TMPDIR}"/.log
+        [[ -d  "${timep_TMPDIR}"/.worker ]] && \rm -rf  "${timep_TMPDIR}"/.worker
         for nn in "${timep_TMPDIR}"/*; do
             [[ -f "$nn" ]] && \rm -f "$nn"
         done
