@@ -1678,9 +1678,6 @@ printf '%s;' "${fgA[@]}")"
             cmd0="${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
             cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
             cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
-            
-            # truncate to 256 chars and quote
-            cmd0="${cmd0::256}"
             cmd0="${cmd0@Q}"
         
             # merge up log into kk index vars
@@ -1725,14 +1722,12 @@ printf '%s;' "${fgA[@]}")"
                 # if so, then cind has the command and should be added to the merge key instead of cmd
                 [[ -z ${cmd} ]] && [[ ${cind//[0-9]/} ]] && cmd="${cind}"
 
-                # truncate, quote, and add to merge key
-                cmd="${cmd::256}"
+                # quote and add to merge key
                 cmd0+=$'\n'"${cmd@Q}"
            done
-        else
-            # truncate merge key
-            cmd0="${cmd0::512}"
         fi
+
+        (( ${#cmd0} > 65536 )) && cmd0="$(sha512sum <<<"${cmd0}")"
 
         # generate mapping for all unique "lineno.depth + command + func" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]}.${cmd0@Q}.${funcA[$kk]@Q}"
