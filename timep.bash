@@ -1673,7 +1673,17 @@ printf '%s;' "${fgA[@]}")"
         cmd0="${cmdA[$kk]}"
 
         if ${isMergeIndicatorA[$kk]}; then
-            # merge up log indo kk index vars
+            # cmd0 forms the command part of the merge key
+            # remove pid from subshell / bg fork merege indicator to alliow subshells to be merged
+            cmd0="${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
+            cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
+            cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
+            
+            # truncate to 256 chars and quote
+            cmd0="${cmd0::256}"
+            cmd0="${cmd0@Q}"
+        
+            # merge up log into kk index vars
             mergeA[$kk]="${mergeA[$kk]//+($'\n')/$'\n'}"
             mergeA[$kk]="${mergeA[$kk]#$'\n'}"
             #mergeA[$kk]="${mergeA[$kk]%$'\n'}"
@@ -1686,6 +1696,7 @@ printf '%s;' "${fgA[@]}")"
                 }
             done
 
+            # append data from each line in all merged up logs to variables at current index ($kk)
             for mergeInd in "${!mergeCurA[@]}"; do
                 IFS=$'\t' read -r tw pw tc pc cnt nd lno cind cmd <<<"${mergeCurA[$mergeInd]}"
                 { [[ $tw ]] && [[ $pw ]]; } || continue
@@ -1700,7 +1711,8 @@ printf '%s;' "${fgA[@]}")"
                 cmd="${cmd##+([[:space:]])}"
                 cmd="${cmd%%+([[:space:]])}"
                 cmdA[$kk]+=$'\n'"${cmd}"
-                cmd0+=$'\n'"${cmd:-${cind}}"
+
+                # pre-pend a box drawing char to represent increase in nesting lvl
                 if (( mergeInd == ${#mergeCurA[@]} - 1 )); then
                     nestDiagramA[$kk]+=$'\n''└─ '"${nd//x/}"
                 elif (( mergeInd == 0 )); then
@@ -1708,15 +1720,19 @@ printf '%s;' "${fgA[@]}")"
                 else
                     nestDiagramA[$kk]+=$'\n''│  '"${nd//x/}"
                 fi
+
+                # hotfix - check if cmd is empty and if cind has non-numeric chars
+                # if so, then cind has the command and should be added to the merge key instead of cmd
+                [[ -z ${cmd} ]] && [[ ${cind//[0-9]/} ]] && cmd="${cind}"
+
+                # truncate, quote, and add to merge key
+                cmd="${cmd::256}"
+                cmd0+=$'\n'"${cmd@Q}"
            done
 
-            cmd0="${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
-            cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
-            cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
-        
         fi
 
-        # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
+        # generate mapping for all unique "lineno.depth + command + func" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]}.${cmd0@Q}.${funcA[$kk]@Q}"
 
         # get merging key
