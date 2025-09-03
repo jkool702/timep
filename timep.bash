@@ -1670,6 +1670,8 @@ printf '%s;' "${fgA[@]}")"
         wTimeTA[$kk]="${wTimeTotal}"
         cTimeTA[$kk]="${cTimeTotal}"
 
+        cmd0="${cmdA[$kk]}"
+
         if ${isMergeIndicatorA[$kk]}; then
             # merge up log indo kk index vars
             mergeA[$kk]="${mergeA[$kk]//+($'\n')/$'\n'}"
@@ -1698,6 +1700,7 @@ printf '%s;' "${fgA[@]}")"
                 cmd="${cmd##+([[:space:]])}"
                 cmd="${cmd%%+([[:space:]])}"
                 cmdA[$kk]+=$'\n'"${cmd}"
+                cmd0+=$'\n'"${cmd:-${cind}}"
                 if (( mergeInd == ${#mergeCurA[@]} - 1 )); then
                     nestDiagramA[$kk]+=$'\n''└─ '"${nd//x/}"
                 elif (( mergeInd == 0 )); then
@@ -1707,13 +1710,11 @@ printf '%s;' "${fgA[@]}")"
                 fi
            done
 
+            cmd0="${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
+            cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
+            cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
+        
         fi
-
-        cmd0="${cmdA[$kk]}"
-
-        cmd0="${cmd0/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
-        cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
-        cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
 
         # generate mapping for all unique "lineno.depth + command [+ func + pid]" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]}.${cmd0@Q}.${funcA[$kk]@Q}"
