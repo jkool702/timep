@@ -1729,7 +1729,9 @@ printf '%s;' "${fgA[@]}")"
                 cmd="${cmd::256}"
                 cmd0+=$'\n'"${cmd@Q}"
            done
-
+        else
+            # truncate merge key
+            cmd0="${cmd0::512}"
         fi
 
         # generate mapping for all unique "lineno.depth + command + func" groups into the lineno.depth.cmd from the first instanced in that group
