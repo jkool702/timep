@@ -1680,7 +1680,7 @@ printf '%s;' "${fgA[@]}")"
             mapfile -t mergeA0 <<<"${mergeA[$kk]}"
             mergeCurA=()
             for kk1 in "${!mergeA0[@]}"; do
-                [[ "${mergeA0[$kk1]}.out.combined" ]] && [[ -e "${mergeA0[$kk1]}.out.combined" ]] && {
+                [[ "${mergeA0[$kk1]}" ]] && [[ -e "${mergeA0[$kk1]}.out.combined" ]] && {
                     mapfile -t mergeCurA0 <"${mergeA0[$kk1]}.out.combined"
                     mergeCurA+=("${mergeCurA0[@]}")
                 }
