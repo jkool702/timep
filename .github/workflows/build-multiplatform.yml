@@ -1,0 +1,128 @@
+name: Build timep.so (multiarch) and encode
+
+on:
+  push:
+    paths:
+      - 'LIB/LOADABLES/SRC/timep.c'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build timep.so (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+            platform: linux/amd64
+            docker_image: fedora:39
+            gcc_flags: "-msse4.2"
+          - arch: aarch64
+            platform: linux/arm64
+            docker_image: fedora:39
+            gcc_flags: "-march=armv8-a+crc"
+          - arch: ppc64le
+            platform: linux/ppc64le
+            docker_image: fedora:39
+            gcc_flags: ""
+          - arch: s390x
+            platform: linux/s390x
+            docker_image: fedora:39
+            gcc_flags: ""
+          - arch: armv7
+            platform: linux/arm/v7
+            docker_image: arm32v7/fedora:39 # Community, not official
+            gcc_flags: ""
+          - arch: i386
+            platform: linux/386
+            docker_image: i386/fedora:39 # Community, not official
+            gcc_flags: ""
+          - arch: riscv64
+            platform: linux/riscv64
+            docker_image: riscv64/fedora:39 # Experimental
+            gcc_flags: ""
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build timep.so in Docker (${{ matrix.arch }})
+        run: |
+          set -e
+          mkdir -p LIB/LOADABLES/BIN/${{ matrix.arch }}
+          cp LIB/LOADABLES/SRC/timep.c .
+          docker run --rm \
+            -v $PWD:/src \
+            -w /src \
+            --platform=${{ matrix.platform }} \
+            ${{ matrix.docker_image }} \
+            bash -c "
+              (dnf install -y gcc make bash-devel || dnf install -y gcc make bash) && \
+              gcc -Wall -fPIC -flto -O3 ${{ matrix.gcc_flags }} -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND \
+                -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include \
+                -shared -o LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so timep.c
+            "
+      - name: Upload timep.so artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: timep.so-${{ matrix.arch }}
+          path: LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so
+
+  base64:
+    name: Base64 encode all timep.so files
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all timep.so artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Move all timep.so files to expected locations
+        run: |
+          set -e
+          for artifact_dir in artifacts/timep.so-*; do
+            arch=$(basename "$artifact_dir" | sed 's/timep.so-//')
+            mkdir -p LIB/LOADABLES/BIN/$arch
+            mv "$artifact_dir"/timep.so "LIB/LOADABLES/BIN/$arch/timep.so"
+          done
+
+      - name: Extract _timep_file_to_base64 from timep.bash
+        id: extract_base64_func
+        run: |
+          # Extract the _timep_file_to_base64 function from timep.bash using awk
+          awk '/^_timep_file_to_base64[ \t]*\(\)[ \t]*\{/,/^}/ { print }' timep.bash > _timep_file_to_base64.func
+
+      - name: Build LIB/LOADABLES/timep.all-arch.b64
+        shell: bash
+        run: |
+          source ./_timep_file_to_base64.func
+          out=LIB/LOADABLES/timep.all-arch.b64
+          echo > "$out"
+          for f in LIB/LOADABLES/BIN/*/timep.so; do
+            arch=$(echo "$f" | awk -F'/' '{print $(NF-1)}')
+            b64=$(_timep_file_to_base64 -q "$f")
+            if [[ -z "$b64" ]]; then
+              echo "Warning: failed to encode $f"
+            fi
+            if [[ "$arch" == "x86_64" ]]; then
+              echo "if [[ \"\${ARCH}\" == 'x86_64' ]]; then" >> "$out"
+            else
+              echo "elif [[ \"\${ARCH}\" == '$arch' ]]; then" >> "$out"
+            fi
+            echo "b64=$b64" >> "$out"
+          done
+          echo "fi" >> "$out"
+      - name: Upload all-arch b64 file
+        uses: actions/upload-artifact@v4
+        with:
+          name: timep.all-arch.b64
+          path: LIB/LOADABLES/timep.all-arch.b64
