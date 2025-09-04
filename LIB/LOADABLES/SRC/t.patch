@@ -1,0 +1,245 @@
+diff --git a/timep.c b/timep.c
+index 0000000..0000000 100644
+--- a/timep.c
++++ b/timep.c
+@@
+ #include <sys/types.h>
+ #include <sys/resource.h>
+ #include <sys/time.h>
+ #include <errno.h>
+ #include <time.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <string.h>
++#include <poll.h>
++#include <sys/stat.h>
++#include <unistd.h>
+ 
+ #ifdef HAVE_CONFIG_H
+ #include <config.h>
+ #endif
+ 
+@@
+ // define function prototypes
+ static int timep_builtin(WORD_LIST * list);
+ static int getCPUtime_main(int argc, char **argv);
++static int timep_checksum_main(int argc, char **argv);
+ 
+ /* ----------------------------- */
+ /* --------  getCPUtime -------- */
+ /* ----------------------------- */
+@@
+ struct builtin getCPUtime_struct = {
+     "getCPUtime",
+     timep_builtin,
+     BUILTIN_ENABLED,
+     getCPUtime_doc,
+     "getCPUtime [<VAR> [<VAR_SELF>]]",
+     0
+ };
+ 
++/* ----------------------------- */
++/* ------- timep_checksum ------ */
++/* ----------------------------- */
++
++static char *timep_checksum_doc[] = {
++    "",
++    "USAGE: timep_checksum <file|-> [<VAR>]",
++    "",
++    "Compute CRC32 (IEEE) of <file>. Use '-' or empty to read from stdin.",
++    "If <VAR> is provided the checksum (8 hex digits) is stored in that variable,",
++    "otherwise it is printed to stdout.",
++    NULL
++};
++
++/* Small, self-contained CRC32 implementation (polynomial 0xEDB88320) */
++static uint32_t crc32_table[256];
++static int crc32_table_inited = 0;
++
++static void
++crc32_init(void)
++{
++    if (crc32_table_inited)
++        return;
++    const uint32_t poly = 0xEDB88320u;
++    for (uint32_t i = 0; i < 256; ++i) {
++        uint32_t crc = i;
++        for (int j = 0; j < 8; ++j) {
++            if (crc & 1)
++                crc = (crc >> 1) ^ poly;
++            else
++                crc = crc >> 1;
++        }
++        crc32_table[i] = crc;
++    }
++    crc32_table_inited = 1;
++}
++
++static uint32_t
++crc32_update(uint32_t crc, const unsigned char *buf, size_t len)
++{
++    /* This helper inverts at entry and exit so it can be called repeatedly. */
++    crc = ~crc;
++    for (size_t i = 0; i < len; ++i)
++        crc = crc32_table[(crc ^ buf[i]) & 0xFF] ^ (crc >> 8);
++    return ~crc;
++}
++
++static int
++timep_checksum_main(int argc, char **argv)
++{
++    if (argc > 3) {
++        builtin_error("timep_checksum: too many arguments");
++        return EXECUTION_FAILURE;
++    }
++
++    /* If invoked as: timep_checksum '' ''  --> just initialize table and exit */
++    if (argc == 3 && argv[1][0] == '\0' && argv[2][0] == '\0') {
++        crc32_init();
++        return EXECUTION_SUCCESS;
++    }
++
++    /* Determine input source */
++    const char *filename = NULL;
++    if (argc >= 2 && argv[1][0] != '\0')
++        filename = argv[1];
++    else
++        filename = "-"; /* use stdin by default */
++
++    const char *varname = NULL;
++    if (argc == 3 && argv[2][0] != '\0')
++        varname = argv[2];
++
++    FILE *fp = NULL;
++    int using_stdin = 0;
++
++    /* Special handling for filename == "-" :
++       * If stdin currently has data (poll says POLLIN) use stdin.
++       * Otherwise, if a real file named "-" exists in the cwd, open that file.
++       * Else fall back to stdin.
++       */
++    if (strcmp(filename, "-") == 0) {
++        /* ensure table exists early for the user's possible empty-init pattern */
++        crc32_init();
++
++        struct pollfd pfd;
++        pfd.fd = STDIN_FILENO;
++        pfd.events = POLLIN;
++        int polres = poll(&pfd, 1, 0); /* non-blocking check */
++
++        if (polres > 0 && (pfd.revents & POLLIN)) {
++            fp = stdin;
++            using_stdin = 1;
++        } else {
++            struct stat st;
++            if (stat("-", &st) == 0) {
++                /* There is a file literally named "-" in the cwd; open it */
++                fp = fopen("-", "rb");
++                if (!fp) {
++                    builtin_error("timep_checksum: failed to open './-' : %s", strerror(errno));
++                    return EXECUTION_FAILURE;
++                }
++                using_stdin = 0;
++            } else {
++                /* No data on stdin and no local file '-' -- use stdin anyway */
++                fp = stdin;
++                using_stdin = 1;
++            }
++        }
++    } else {
++        fp = fopen(filename, "rb");
++        if (!fp) {
++            builtin_error("timep_checksum: failed to open '%s': %s", filename, strerror(errno));
++            return EXECUTION_FAILURE;
++        }
++    }
++
++    /* If we reached here and crc table not yet initialized, do it now */
++    crc32_init();
++
++    /* Read and compute */
++    const size_t BUF_SZ = 65536;
++    unsigned char *buf = (unsigned char *) xmalloc(BUF_SZ);
++    if (!buf) {
++        if (!using_stdin) fclose(fp);
++        builtin_error("timep_checksum: out of memory");
++        return EXECUTION_FAILURE;
++    }
++
++    uint32_t crc = 0; /* helper handles inversion internally */
++
++    size_t nread;
++    while ((nread = fread(buf, 1, BUF_SZ, fp)) > 0) {
++        crc = crc32_update(crc, buf, nread);
++    }
++    if (ferror(fp)) {
++        xfree(buf);
++        if (!using_stdin) fclose(fp);
++        builtin_error("timep_checksum: read error: %s", strerror(errno));
++        return EXECUTION_FAILURE;
++    }
++
++    xfree(buf);
++    if (!using_stdin) fclose(fp);
++
++    /* Format checksum as 8 hex digits (lowercase) */
++    char outbuf[32];
++    snprintf(outbuf, sizeof(outbuf), "%08x", (unsigned int)crc);
++
++    if (varname) {
++        bind_variable((char *)varname, outbuf, 0);
++    } else {
++        printf("%s\n", outbuf);
++    }
++
++    return EXECUTION_SUCCESS;
++}
++
++struct builtin timep_checksum_struct = {
++    "timep_checksum",
++    timep_builtin, /* dispatch via timep_builtin */
++    BUILTIN_ENABLED,
++    timep_checksum_doc,
++    "timep_checksum <file|-> [<VAR>]",
++    0
++};
++
+ /* --------------------------------------------*/
+ /* Register all builtins (under timep_builtin) */
+ /* --------------------------------------------*/
+ 
+ static int timep_builtin(WORD_LIST * list) {
+     // convert input WORD_LISTR to argc + argv
+     int argc;
+     char ** argv = make_builtin_argv(list, & argc);
+ 
+     char * sub = argv[0];
+ 
+     int ret;
+-    if (strcmp(sub, "getCPUtime") == 0) {
+-        ret = getCPUtime_main(argc, argv);
+-    } else {
+-        builtin_error("timep: unknown command '%s'", sub);
+-        ret = EXECUTION_FAILURE;
+-    }
++    if (strcmp(sub, "getCPUtime") == 0) {
++        ret = getCPUtime_main(argc, argv);
++    } else if (strcmp(sub, "timep_checksum") == 0) {
++        ret = timep_checksum_main(argc, argv);
++    } else {
++        builtin_error("timep: unknown command '%s'", sub);
++        ret = EXECUTION_FAILURE;
++    }
+ 
+     xfree(argv);
+     return ret;
+ }
+ 
+ int setup_builtin_timep(void) {
+-    add_builtin(&getCPUtime_struct, 1);
++    add_builtin(&getCPUtime_struct, 1);
++    add_builtin(&timep_checksum_struct, 1);
+     return 0;
+ }
+
