@@ -91,12 +91,10 @@ jobs:
         run: |
           set -e
           mkdir -p LIB/LOADABLES/BIN
-          for z in artifacts/timep.so-*; do
-            arch=$(basename "$z" | sed 's/timep.so-//')
+          for artifact_dir in artifacts/timep.so-*; do
+            arch=$(basename "$artifact_dir" | sed 's/timep.so-//')
             mkdir -p LIB/LOADABLES/BIN/$arch
-            # unzip always overwrites in-place
-            unzip -o "$z"/timep.so.zip -d "LIB/LOADABLES/BIN/$arch"
-            mv "LIB/LOADABLES/BIN/$arch/timep.so" "LIB/LOADABLES/BIN/$arch/timep.so"
+            mv "$artifact_dir"/timep.so "LIB/LOADABLES/BIN/$arch/timep.so"
           done
 
       - name: Extract _timep_file_to_base64 from timep.bash
