@@ -15,32 +15,33 @@ jobs:
         include:
           - arch: x86_64
             platform: linux/amd64
-            docker_image: fedora:39
+            docker_image: fedora:latest
             gcc_flags: "-msse4.2"
           - arch: aarch64
             platform: linux/arm64
-            docker_image: fedora:39
+            docker_image: fedora:latest
             gcc_flags: "-march=armv8-a+crc"
           - arch: ppc64le
             platform: linux/ppc64le
-            docker_image: fedora:39
+            docker_image: fedora:latest
             gcc_flags: ""
           - arch: s390x
             platform: linux/s390x
-            docker_image: fedora:39
+            docker_image: fedora:latest
             gcc_flags: ""
-#          - arch: armv7
-#            platform: linux/arm/v7
-#            docker_image: arm32v7/fedora:39 # Community, not official
-#            gcc_flags: ""
-#          - arch: i386
-#            platform: linux/386
-#            docker_image: i386/fedora:39 # Community, not official
-#            gcc_flags: ""
-#          - arch: riscv64
-#            platform: linux/riscv64
-#            docker_image: riscv64/fedora:39 # Experimental
-#            gcc_flags: ""
+          - arch: armv7
+            platform: linux/arm/v7
+            docker_image: arm32v7/fedora:latest # Community, not official Fedora
+            gcc_flags: ""
+          # The following two are commented out due to missing images:
+          # - arch: i386
+          #   platform: linux/386
+          #   docker_image: i386/fedora:latest # Not available
+          #   gcc_flags: ""
+          # - arch: riscv64
+          #   platform: linux/riscv64
+          #   docker_image: riscv64/fedora:latest # Not available
+          #   gcc_flags: ""
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -86,20 +87,22 @@ jobs:
         with:
           path: artifacts
 
-      - name: Move all timep.so files to expected locations
+      - name: Unzip all artifacts and move .so files
         run: |
           set -e
-          for artifact_dir in artifacts/timep.so-*; do
-            arch=$(basename "$artifact_dir" | sed 's/timep.so-//')
+          mkdir -p LIB/LOADABLES/BIN
+          for z in artifacts/timep.so-*; do
+            arch=$(basename "$z" | sed 's/timep.so-//')
             mkdir -p LIB/LOADABLES/BIN/$arch
-            mv "$artifact_dir"/timep.so "LIB/LOADABLES/BIN/$arch/timep.so"
+            # unzip always overwrites in-place
+            unzip -o "$z"/timep.so.zip -d "LIB/LOADABLES/BIN/$arch"
+            mv "LIB/LOADABLES/BIN/$arch/timep.so" "LIB/LOADABLES/BIN/$arch/timep.so"
           done
 
       - name: Extract _timep_file_to_base64 from timep.bash
         id: extract_base64_func
         run: |
-          # Extract the _timep_file_to_base64 function from timep.bash using awk
-          awk '/^_timep_file_to_base64[ \t]*\(\)[ \t]*\{/,/^}/ { print }' timep.bash > _timep_file_to_base64.func
+          awk '/^_timep_file_to_base64[[:space:]]*\(\)/{flag=1} flag; /^}/&&flag{flag=0}' timep.bash > _timep_file_to_base64.func
 
       - name: Build LIB/LOADABLES/timep.all-arch.b64
         shell: bash
@@ -107,20 +110,26 @@ jobs:
           source ./_timep_file_to_base64.func
           out=LIB/LOADABLES/timep.all-arch.b64
           echo > "$out"
-          for f in LIB/LOADABLES/BIN/*/timep.so; do
-            arch=$(echo "$f" | awk -F'/' '{print $(NF-1)}')
+
+          # Always x86_64 first, then aarch64, then the rest sorted
+          for arch in x86_64 aarch64 $(ls LIB/LOADABLES/BIN | grep -v -E '^(x86_64|aarch64)$' | sort); do
+            f="LIB/LOADABLES/BIN/$arch/timep.so"
+            [ -f "$f" ] || continue
             b64=$(_timep_file_to_base64 -q "$f")
             if [[ -z "$b64" ]]; then
               echo "Warning: failed to encode $f"
             fi
             if [[ "$arch" == "x86_64" ]]; then
               echo "if [[ \"\${ARCH}\" == 'x86_64' ]]; then" >> "$out"
+            elif [[ "$arch" == "aarch64" ]]; then
+              echo "elif [[ \"\${ARCH}\" == 'aarch64' ]]; then" >> "$out"
             else
               echo "elif [[ \"\${ARCH}\" == '$arch' ]]; then" >> "$out"
             fi
             echo "b64=$b64" >> "$out"
           done
           echo "fi" >> "$out"
+
       - name: Upload all-arch b64 file
         uses: actions/upload-artifact@v4
         with:
