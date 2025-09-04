@@ -1,6 +1,7 @@
 // timep.c
 // to compile loadable shared librrary file (timep.so): clone bash git tree, cd to bash/examples/loadables, copy "timep.c" to that dir, and run 
-// gcc -Wall -fPIC -flto -O3 -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -I. -shared -o timep.so timep.c
+// gcc -Wall -fPIC -flto -O3 -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -shared -o timep.so timep.c
+// ON x86_64 ADD: -msse4.2     ON armv8 ADD:  -march=armv8-a+crc
 // gcc -Wall -fPIC -flto -O3 -v -DSHELL -DHAVE_CONFIG_H -DSELECT_COMMAND -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -shared  -o timep.so timep.c
 // gcc -Wall -fPIC -flto -O3 -v -DSHELL -DHAVE_CONFIG_H -DSELECT_COMMAND -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include -static -c timep.c -o timep.o
 // gcc -shared -O3 -fPIC -flto -o timep.so timep.o
@@ -26,9 +27,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <string.h>
 #include <poll.h>
 #include <unistd.h>
+
+#if defined(__x86_64__) || defined(__i386__)
+#include <cpuid.h>
+#include <nmmintrin.h>
+#elif defined(__aarch64__)
+#include <sys/auxv.h>
+#include <asm/hwcap.h>
+#include <arm_acle.h>
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -162,9 +173,8 @@ struct builtin getCPUtime_struct = {
     0
 };
 
-
 /* ----------------------------- */
-/* ------- timep_crc32 ------ */
+/* ------- timep_crc32 ----------*/
 /* ----------------------------- */
 
 static char *timep_crc32_doc[] = {
@@ -177,43 +187,109 @@ static char *timep_crc32_doc[] = {
     "    otherwise it is printed to stdout.",
     "",
     "If both <FILE> and <VAR> are passed as empty (timep_crc32 '' ''),"
-    "    initialize crc32 tables but do not compute a crc32 hash.",
+    "    initialize tables but do not compute a crc32 hash.",
     NULL
 };
 
-/* Small, self-contained CRC32 implementation (polynomial 0xEDB88320) */
+
+/* ---------------- Software fallback ---------------- */
+#define CRC32_POLY 0xEDB88320UL
 static uint32_t crc32_table[256];
-static int crc32_table_inited = 0;
+static int crc32_table_initialized = 0;
 
-static void
-crc32_init(void)
-{
-    if (crc32_table_inited)
-        return;
-    const uint32_t poly = 0xEDB88320u;
-    for (uint32_t i = 0; i < 256; ++i) {
-        uint32_t crc = i;
-        for (int j = 0; j < 8; ++j) {
-            if (crc & 1)
-                crc = (crc >> 1) ^ poly;
-            else
-                crc = crc >> 1;
-        }
-        crc32_table[i] = crc;
+static void crc32_init_table(void) {
+    if (crc32_table_initialized) return;
+    for (int n = 0; n < 256; n++) {
+        uint32_t c = n;
+        for (int k = 0; k < 8; k++)
+            c = (c & 1) ? (CRC32_POLY ^ (c >> 1)) : (c >> 1);
+        crc32_table[n] = c;
     }
-    crc32_table_inited = 1;
+    crc32_table_initialized = 1;
 }
 
-static uint32_t
-crc32_update(uint32_t crc, const unsigned char *buf, size_t len)
-{
-    /* This helper inverts at entry and exit so it can be called repeatedly. */
-    crc = ~crc;
-    for (size_t i = 0; i < len; ++i)
-        crc = crc32_table[(crc ^ buf[i]) & 0xFF] ^ (crc >> 8);
-    return ~crc;
+static uint32_t crc32_sw(const void *data, size_t len) {
+    const unsigned char *p = data;
+    uint32_t crc = 0xFFFFFFFFU;
+    crc32_init_table();
+    while (len--) {
+        crc = crc32_table[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
+    }
+    return crc ^ 0xFFFFFFFFU;
 }
 
+/* ---------------- x86 SSE4.2 accelerated ---------------- */
+#if defined(__x86_64__) || defined(__i386__)
+static uint32_t crc32_hw_x86(const void *data, size_t len) {
+    const uint8_t *p = data;
+    uint32_t crc = 0xFFFFFFFFU;
+    while (len >= sizeof(uint64_t)) {
+        crc = (uint32_t)_mm_crc32_u64(crc, *(const uint64_t*)p);
+        p += 8; len -= 8;
+    }
+    while (len >= sizeof(uint32_t)) {
+        crc = _mm_crc32_u32(crc, *(const uint32_t*)p);
+        p += 4; len -= 4;
+    }
+    while (len--) {
+        crc = _mm_crc32_u8(crc, *p++);
+    }
+    return crc ^ 0xFFFFFFFFU;
+}
+#endif
+
+/* ---------------- ARMv8 CRC32 accelerated ---------------- */
+#if defined(__aarch64__)
+static uint32_t crc32_hw_arm(const void *data, size_t len) {
+    const uint8_t *p = data;
+    uint32_t crc = 0xFFFFFFFFU;
+    while (len >= sizeof(uint32_t)) {
+        crc = __crc32w(crc, *(const uint32_t*)p);
+        p += 4; len -= 4;
+    }
+    while (len--) {
+        crc = __crc32b(crc, *p++);
+    }
+    return crc ^ 0xFFFFFFFFU;
+}
+#endif
+
+/* ---------------- Runtime dispatch ---------------- */
+typedef uint32_t (*crc32_func_t)(const void*, size_t);
+static crc32_func_t crc32_impl = crc32_sw;
+
+static void detect_crc32_impl(void) {
+#if defined(__x86_64__) || defined(__i386__)
+    unsigned int eax, ebx, ecx, edx;
+    if (__get_cpuid(1, &eax, &ebx, &ecx, &edx)) {
+        if (ecx & bit_SSE4_2) {
+            crc32_impl = crc32_hw_x86;
+            return;
+        }
+    }
+#elif defined(__aarch64__)
+    unsigned long hwcap = getauxval(AT_HWCAP);
+#ifndef HWCAP_CRC32
+#define HWCAP_CRC32 (1 << 7)
+#endif
+    if (hwcap & HWCAP_CRC32) {
+        crc32_impl = crc32_hw_arm;
+        return;
+    }
+#endif
+    crc32_impl = crc32_sw;
+}
+
+static uint32_t crc32_dispatch(const void *data, size_t len) {
+    static int checked = 0;
+    if (!checked) {
+        detect_crc32_impl();
+        checked = 1;
+    }
+    return crc32_impl(data, len);
+}
+
+/* ---------------- Builtin entrypoint ---------------- */
 static int
 timep_crc32_main(int argc, char **argv)
 {
@@ -222,18 +298,18 @@ timep_crc32_main(int argc, char **argv)
         return EXECUTION_FAILURE;
     }
 
-    /* If invoked as: timep_crc32 '' ''  --> just initialize table and exit */
+    /* If invoked as: timep_crc32 '' '' -> init and exit */
     if (argc == 3 && argv[1][0] == '\0' && argv[2][0] == '\0') {
-        crc32_init();
+        crc32_init_table();
         return EXECUTION_SUCCESS;
     }
 
-    /* Determine input source */
+    /* Input source */
     const char *filename = NULL;
     if (argc >= 2 && argv[1][0] != '\0')
         filename = argv[1];
     else
-        filename = "-"; /* use stdin by default */
+        filename = "-"; /* default: stdin */
 
     const char *varname = NULL;
     if (argc == 3 && argv[2][0] != '\0')
@@ -242,35 +318,21 @@ timep_crc32_main(int argc, char **argv)
     FILE *fp = NULL;
     int using_stdin = 0;
 
-    /* Special handling for filename == "-" :
-       * If stdin currently has data (poll says POLLIN) use stdin.
-       * Otherwise, if a real file named "-" exists in the cwd, open that file.
-       * Else fall back to stdin.
-       */
     if (strcmp(filename, "-") == 0) {
-        /* ensure table exists early for the user's possible empty-init pattern */
-        crc32_init();
-
-        struct pollfd pfd;
-        pfd.fd = STDIN_FILENO;
-        pfd.events = POLLIN;
-        int polres = poll(&pfd, 1, 0); /* non-blocking check */
-
+        struct pollfd pfd = { .fd = STDIN_FILENO, .events = POLLIN };
+        int polres = poll(&pfd, 1, 0);
         if (polres > 0 && (pfd.revents & POLLIN)) {
             fp = stdin;
             using_stdin = 1;
         } else {
             struct stat st;
             if (stat("-", &st) == 0) {
-                /* There is a file literally named "-" in the cwd; open it */
                 fp = fopen("-", "rb");
                 if (!fp) {
-                    builtin_error("timep_crc32: failed to open './-' : %s", strerror(errno));
+                    builtin_error("timep_crc32: failed to open './-': %s", strerror(errno));
                     return EXECUTION_FAILURE;
                 }
-                using_stdin = 0;
             } else {
-                /* No data on stdin and no local file '-' -- use stdin anyway */
                 fp = stdin;
                 using_stdin = 1;
             }
@@ -283,9 +345,6 @@ timep_crc32_main(int argc, char **argv)
         }
     }
 
-    /* If we reached here and crc table not yet initialized, do it now */
-    crc32_init();
-
     /* Read and compute */
     const size_t BUF_SZ = 65536;
     unsigned char *buf = (unsigned char *) xmalloc(BUF_SZ);
@@ -295,11 +354,10 @@ timep_crc32_main(int argc, char **argv)
         return EXECUTION_FAILURE;
     }
 
-    uint32_t crc = 0; /* helper handles inversion internally */
-
+    uint32_t crc = 0;
     size_t nread;
     while ((nread = fread(buf, 1, BUF_SZ, fp)) > 0) {
-        crc = crc32_update(crc, buf, nread);
+        crc = crc32_dispatch(buf, nread);
     }
     if (ferror(fp)) {
         xfree(buf);
@@ -311,7 +369,6 @@ timep_crc32_main(int argc, char **argv)
     xfree(buf);
     if (!using_stdin) fclose(fp);
 
-    /* Format checksum as 8 hex digits (lowercase) */
     char outbuf[32];
     snprintf(outbuf, sizeof(outbuf), "%08x", (unsigned int)crc);
 
@@ -326,13 +383,12 @@ timep_crc32_main(int argc, char **argv)
 
 struct builtin timep_crc32_struct = {
     "timep_crc32",
-    timep_builtin, /* dispatch via timep_builtin */
+    timep_builtin, /* dispatch */
     BUILTIN_ENABLED,
     timep_crc32_doc,
     "timep_crc32 <file|-> [<VAR>]",
     0
 };
-
 
 /* ----------------------------- */
 /* ------- timep_fnv1a --------- */
