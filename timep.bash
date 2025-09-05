@@ -907,7 +907,7 @@ timep_SKIP_DEBUG_FLAG=false
             ;;
         esac
 
-    ${timep_CLOCK_GETTIME_FLAG} && { export -f _timep_SETUP; export -f _timep_file_to_base64; }
+    ${timep_CLOCK_GETTIME_FLAG} && { export -f _timep_SETUP; printf '\nexport -f _timep_SETUP\n\n' >> "${timep_TMPDIR}/functions.bash"; }
     chmod +x "${timep_TMPDIR}/functions.bash"
     timep_runFuncSrc+='(
 
