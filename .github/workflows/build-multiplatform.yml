@@ -62,7 +62,7 @@ jobs:
             --platform=${{ matrix.platform }} \
             ${{ matrix.docker_image }} \
             bash -c "
-              (dnf install -y awk gcc make bash bash-devel) && \
+              (dnf install -y gcc make bash-devel) && \
               gcc -Wall -fPIC -flto -O3 ${{ matrix.gcc_flags }} -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND \
                 -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include \
                 -shared -o LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so timep.c
