@@ -3295,7 +3295,7 @@ ${supportedArchFlag} && {
 
 EEEOOOFFF
 
-chmod 555 "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
+chmod 500 "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
 
 _timep_SETUP --force
 
