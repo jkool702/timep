@@ -62,7 +62,7 @@ jobs:
             --platform=${{ matrix.platform }} \
             ${{ matrix.docker_image }} \
             bash -c "
-              (dnf install -y gcc make bash-devel || dnf install -y gcc make bash) && \
+              (dnf install -y awk gcc make bash bash-devel) && \
               gcc -Wall -fPIC -flto -O3 ${{ matrix.gcc_flags }} -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND \
                 -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include \
                 -shared -o LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so timep.c
@@ -136,7 +136,7 @@ jobs:
             }
             /^######### END BASE64 ENCODED TIMEP.SO FILES #########/ && skip { copying=1; next }
             copying
-          ' timep.bash > timep.bash.new && mv timep.bash.new timep.bash
+          ' timep.bash > timep.bash.new && \mv timep.bash.new timep.bash
 
       - name: Clean up workflow temp files
         run: |
@@ -160,7 +160,7 @@ jobs:
           BASE_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
           UPDATE_BRANCH="update/timep-binaries-${BASE_BRANCH}-$(date +%Y%m%d-%H%M%S)"
           git checkout -b "$UPDATE_BRANCH"
-          git add -f LIB/LOADABLES/BIN timep.bash
+          git add -f -A LIB/LOADABLES/BIN LIB/LOADABLES/BIN/* LIB/LOADABLES/BIN/*/* timep.bash
           if git diff --staged --quiet; then
             echo "No changes to commit."
             echo "branch=" >> $GITHUB_OUTPUT
