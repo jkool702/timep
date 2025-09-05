@@ -160,14 +160,22 @@ jobs:
           BASE_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
           UPDATE_BRANCH="update/timep-binaries-${BASE_BRANCH}-$(date +%Y%m%d-%H%M%S)"
           git checkout -b "$UPDATE_BRANCH"
-          git add -f -A LIB/LOADABLES/BIN LIB/LOADABLES/BIN/* LIB/LOADABLES/BIN/*/* timep.bash
+          git add -f -A     # LIB/LOADABLES/BIN LIB/LOADABLES/BIN/* LIB/LOADABLES/BIN/*/* timep.bash
+          ls -lR LIB/LOADABLES/BIN
+          ls -l timep.bash
+          git status
+          git status --ignored
           if git diff --staged --quiet; then
             echo "No changes to commit."
             echo "branch=" >> $GITHUB_OUTPUT
             exit 0
           fi
-          git commit -m "Update timep.so for all architectures and refresh base64 in timep.bash"
+          git commit -m 'Update timep.so for all architectures and refresh base64 in timep.bash'
           git push origin "$UPDATE_BRANCH"
+          ls -lR LIB/LOADABLES/BIN
+          ls -l timep.bash
+          git status
+          git status --ignored
           echo "branch=$UPDATE_BRANCH" >> $GITHUB_OUTPUT
           echo "base_branch=$BASE_BRANCH" >> $GITHUB_OUTPUT
 
