@@ -142,11 +142,6 @@ jobs:
         run: |
           rm -f new_block.txt LIB/_timep_file_to_base64.func
 
-      - name: Configure git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
