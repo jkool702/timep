@@ -3298,7 +3298,8 @@ mkdir --mode=1777 -p "/dev/shm/.timep"
 mkdir --mode=1777 -p "/dev/shm/.timep/lib"
 mkdir --mode=700 -p "/dev/shm/.timep/lib/${USER}-${EUID}"
 
-chmod +w "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash" "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
+[[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash" ]] && chmod +w "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash" 
+[[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash" ]] && chmod +w  "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
 
 cat<<'EEEOOOFFF' >"/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
 #!/usr/bin/env bash
