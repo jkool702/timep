@@ -5,7 +5,7 @@
 
 **CHANGES IN MOST RECENT UPDATE**: 2 major changes are present in this version:
 1. fixes an issue where it was possible (albiet unlikely) that two sub-trees could be combined in the "combined" profile that shouldnt be. This fix involves computing hashs of all the command strings. To do this without sacraficing performance two new loadable builtins were added - timep_crc32 and timep_fnv1a. To ensure that the (now longer) loadable base64 strings didnt cause the environment size to exceed ARG_MAX, the way that the base64-embedded strings are stored and extracted was re-workedso that the base64 strings are never in a function.
-2. a github actions workflow was setup to automaticaly compile the timep.so binary from the C source code for several architectures (which is now feasible without any risk of exceeding ARG_MAX). As a result, timepo now supports several more architectures: x86_64, aarch64, armv7, ppc64le, risc-v and s390 are all now supported with a self-extracting base64-embedded timep.so file forn the timep loadables.
+2. a github actions workflow was setup to automaticaly compile the timep.so binary from the C source code for several architectures (which is now feasible without any risk of exceeding ARG_MAX). As a result, timep now supports several more architectures. In total, timep supports: x86_64, aarch64, armv7, ppc64le, risc-v and s390. Each of these architectures are all now supported with a self-extracting base64-embedded timep.so file to enable the timep loadables.
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
