@@ -139,11 +139,18 @@ timep() {
         *) timep_DEBUG_IDS_FLAG=false ;;
     esac
 
-    if [[ ${timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT} ]]; then
+    if [[ ${timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT} ]] && { [[ "${timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT}" == '1' ]] || [[ "${timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT}" == 'true' ]] || [[ "${timep_GENERATE_FLAMEGRAPHS_BY_DEFAULT%[Ee][Ss]}" == [Yy] ]]; }; then
         timep_flameGraphFlag=true
     else
         timep_flameGraphFlag=false
     fi
+    
+    if [[ ${timep_ALLOW_ORPHANS_FLAG} ]] && { [[ "${timep_ALLOW_ORPHANS_FLAG}" == '1' ]] || [[ "${timep_ALLOW_ORPHANS_FLAG}" == 'true' ]] || [[ "${timep_ALLOW_ORPHANS_FLAG%[Ee][Ss]}" == [Yy] ]]; }; then
+        timep_ALLOW_ORPHANS_FLAG=true
+    else
+        timep_ALLOW_ORPHANS_FLAG=false
+    fi
+    export timep_ALLOW_ORPHANS_FLAG="${timep_ALLOW_ORPHANS_FLAG}"
 
     # parse flags
 
@@ -515,7 +522,13 @@ fi'
     '"${timep_END_CTIME_STR}"
 
     timep_DEBUG_TRAP_STR_1='timep_TRAP_OPTS=${-//[^eu]/}; ${timep_TRAP_OPTS:+set +}${timep_TRAP_OPTS}
-[[ "$-" == *m* ]] || {
+'
+    ${timep_ALLOW_ORPHANS_FLAG} && timep_DEBUG_TRAP_STR_1+='if [[ -f "${timep_TMPDIR}/.profiling.done" ]] || ! [[ -d "${timep_TMPDIR}/.log" ]]; then 
+    kill -TERM "$BASHPID"
+    exit 0
+fi
+'
+    timep_DEBUG_TRAP_STR_1+='[[ "$-" == *m* ]] || {
         printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\n\n'"'"' >&2
         set -m
     }
@@ -1108,6 +1121,10 @@ timep_SKIP_DEBUG_FLAG=false
         \rm -f "${nn}"
     done
 
+    # indicate the profiling run is finished (will trigger orphans to exit)
+    ${timep_ALLOW_ORPHANS_FLAG} || : >"${timep_TMPDIR}/.profiling.done"
+
+    # remove empty log files
     # shellcheck disable=SC1001
     find  "${timep_TMPDIR}/.log" -maxdepth 1 -name 'log.*' -empty -exec rm \-f {} +
 
