@@ -2933,7 +2933,7 @@ _timep_SETUP() {
 
             if type -p "${outDir}/timep.so" &>/dev/null; then
                 chmod +x "${outDir}/timep.so"
-                enable -f "${outDir}/timep.so" getCPUtime timep_crc32 timep_fnv1a && [[ $(getCPUtime) ]] && [[ $(timep_crc32 '' <<<"${RANDOM}") ]] && [[ $(timep_fnv1a '' <<<"${RANDOM}") ]] && gotLoadableFlag=true
+                enable -f "${outDir}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash && [[ $(getCPUtime) ]] && [[ $(timep_crc32 '' <<<"${RANDOM}") ]] && [[ $(timep_fnv1a '' <<<"${RANDOM}") ]]  && [[ $(timep_hash '' <<<"${RANDOM}") ]] && gotLoadableFlag=true
             fi
         }
     fi
@@ -2952,7 +2952,7 @@ _timep_SETUP() {
         { ! ${forceFlag} && ${gotFlamegraphFlag}; } || "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
         chmod +x "${outDir}"/timep{.so,_flamegraph.pl}
 
-        enable -f "${outDir}/timep.so" getCPUtime timep_crc32 timep_fnv1a
+        enable -f "${outDir}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
     fi
 
      shopt ${extglobState} extglob
