@@ -997,6 +997,11 @@ timep_SKIP_DEBUG_FLAG=false
         '"$(${timep_timeFlag} && echo '} 1>&${timep_FD2}')"'
 
         builtin trap - DEBUG EXIT RETURN;
+
+        echo "${EPOCHREALTIME}" > "${timep_TMPDIR}/.log/.final.end.wtime"
+        '"${timep_END_CTIME_STR}"'
+        echo "${timep_END_CTIME}" >"${timep_TMPDIR}/.log/.final.end.ctime"
+
         exec {timep_LOCK_FD}>&-
     )'
 
@@ -1475,6 +1480,8 @@ _timep_PROCESS_LOG() {
     logDepth="${logDepth//[^.]/}"
     logDepth="${#logDepth}"
 
+    (( logDepth <= 2 )) && set -xv
+
     # load current log (sorted by NEXEC) into array
     mapfile -t logA < <(sed -zE 's/\n(TRAP [^\n]+)\n/'$'\034\035''\1\n/g' <"${logCur}" | sort -V -k11,11 | sed -E 's/'$'\034\035''(TRAP .*)$/\n\1/')
     #unset A
@@ -1586,15 +1593,16 @@ _timep_PROCESS_LOG() {
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
+            [[ -d "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }" ]] && \rm -f "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }"
 
             # read in the endtime + runtime from the log
-           # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
+            # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
                 if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"; then
                     IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecA[$kk]#* }"
                     [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
                     [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
                 fi
-          #  }
+            #  }
 
             cmdA[$kk]="${cmdA[$kk]/#<< \(FUNCTION\): /<< (FUNCTION): "${funcA[$kk]#* }".}"
 
@@ -1610,6 +1618,12 @@ _timep_PROCESS_LOG() {
                 [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
             fi
             (( startCTimeA[$kk] > 0 )) && [[ ${cTimeA[$kk]} ]] && (( cTimeA[$kk] > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
+
+            # if we still dont have a valid end cpu time then assume it took as much cpu time as it took wall-clock time
+            ${timep_CLOCK_GETTIME_FLAG} && if [[ "${endCTimeA[$kk]}" == '-' ]] || (( cTimeA[$kk]<= 1 )); then
+                cTimeA[$kk]="${wTimeA[$kk]}"
+                (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[[^0-9]/} + 10#0${wTimeA[$kk]//[[^0-9]/} ))
+            fi
         }
 
         # single-command command/process substitutions dont get a endtime logged (uses endWTime='+' as indicator), since they wont trigger a EXIT trap
@@ -2260,6 +2274,12 @@ _timep_COMBINE_FLAMEGRAPH() {
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log.*' | grep -vE '\.init_[csr]$' | sort -V)
 
+    # record each log name in the ".needsMerge" dir
+    mkdir -p "${timep_TMPDIR}/.log/.needsMerge"
+    for kk in "${!timep_TMPDIR[@]}"; do
+        : >"${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NAME[$kk]##*\/}"
+    done
+
     # get nesting lvl for each log
     timep_LOG_NESTING=()
     kk=0
@@ -2537,10 +2557,18 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
     #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
+    timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
+
+    # add in any logs that didnt get merged all thge way up to the top lvl. this way at least they arent entirely missing...
+    [[ -f "${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NESTING[0]##*\/}" ]] && \rm "${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NESTING[0]##*\/}"
+    for nn in "${timep_TMPDIR}"/.log/.needsMerge/*; do
+        printf '\n\n%s\n' "$(<"${nn}")" >>"${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NAME[$kk]##*\/}"
+    done
+
     printf '\n\nFINALIZING OUTPUTS\n' >&2
     printf '\nGETTING TOTAL TIMES (+%s)\n' "${SECONDS}" >&2
-    printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out"
-    printf '\n\n' >>"${timep_LOG_NESTING[0]%$'\n'}.out.combined"
+    printf '\n\n' >>"${timep_LOG_NESTING[0]}.out"
+    printf '\n\n' >>"${timep_LOG_NESTING[0]}.out.combined"
 
     for nn in "${timep_TMPDIR}"/.log/.runtimes/log.*; do
         read -r timep_wTimeCur timep_cTimeCur <"${nn}"
@@ -2559,7 +2587,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
-    timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
 
      ${timep_flameGraphFlag} && {
         # reverse flamegraph input so it starts at the parent and ends at the depest child

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Ultimate Bash Profiler Stress Test
+# Ultimate Bash Profiler Stress Test - Fixed Version
 # This script is designed to be extremely challenging to profile accurately
 
 set -m  # Enable job control
@@ -22,13 +22,13 @@ dynamic_code_generator() {
     
     if (( depth > 0 )); then
         code+="echo \"Depth: $depth\"; "
-        code+="counter+=depth; "
+        code+="((counter+=depth)); "
         code+="dynamic_array[depth_$depth]=$counter; "
         code+="$(dynamic_code_generator $((depth - 1)))"
         code+="kill -SIGUSR1 $$; "
     else
         code+="echo \"Base case reached\"; "
-        code+="counter+=100; "
+        code+="((counter+=100)); "
     fi
     
     echo "$code"
@@ -45,17 +45,17 @@ recursive_function() {
         return $level
     fi
     
-    # Create subshell with command substitution
-    local sub_result=$((
-        counter+=level
+    # Create subshell with command substitution - FIXED
+    local sub_result=$(
+        ((counter+=level))
         echo $counter
-    ))
+    )
     
     # Conditional background process
     if (( level % 2 == 0 )); then
         (
             sleep 0.$((level % 10))
-            counter+=level
+            ((counter+=level))
             echo "Background process at level $level: $counter"
             if (( level > 5 )); then
                 kill -SIGUSR2 $$
@@ -67,7 +67,7 @@ recursive_function() {
     # Process substitution with pipe
     while read -r line; do
         echo "Process substitution line: $line"
-        counter+=${#line}
+        ((counter+=${#line}))
     done < <(echo "Level $level processing" | tr ' ' '\n')
     
     # Recursive call in subshell
@@ -76,19 +76,19 @@ recursive_function() {
         recursive_results[level]=$counter
     )
     
-    # Command substitution with background process
-    local cmd_sub_result=$((
+    # Command substitution with background process - FIXED
+    local cmd_sub_result=$(
         sleep 0.0$((level % 5))
         echo "Command sub at level $level: $counter"
         if (( level % 3 == 0 )); then
             (
                 sleep 0.1
-                counter+=level
+                ((counter+=level))
                 echo "Nested background at level $level"
             ) &
             background_pids+=($!)
         fi
-    ))
+    )
     
     echo "$cmd_sub_result"
     recursive_results[level]=$counter
