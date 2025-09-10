@@ -1593,7 +1593,7 @@ _timep_PROCESS_LOG() {
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
-            [[ -d "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }" ]] && \rm -f "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }"
+            [[ -f "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }" ]] && \rm -f "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }"
 
             # read in the endtime + runtime from the log
             # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
@@ -1622,7 +1622,7 @@ _timep_PROCESS_LOG() {
             # if we still dont have a valid end cpu time then assume it took as much cpu time as it took wall-clock time
             ${timep_CLOCK_GETTIME_FLAG} && if [[ "${endCTimeA[$kk]}" == '-' ]] || (( cTimeA[$kk]<= 1 )); then
                 cTimeA[$kk]="${wTimeA[$kk]}"
-                (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[[^0-9]/} + 10#0${wTimeA[$kk]//[[^0-9]/} ))
+                (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
             fi
         }
 
@@ -2275,8 +2275,9 @@ _timep_COMBINE_FLAMEGRAPH() {
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log.*' | grep -vE '\.init_[csr]$' | sort -V)
 
     # record each log name in the ".needsMerge" dir
+    [[ -d "${timep_TMPDIR}/.log/.needsMerge" ]] && \rm -rf "${timep_TMPDIR}/.log/.needsMerge"
     mkdir -p "${timep_TMPDIR}/.log/.needsMerge"
-    for kk in "${!timep_TMPDIR[@]}"; do
+    for kk in "${!timep_LOG_NAME[@]}"; do
         : >"${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NAME[$kk]##*\/}"
     done
 
