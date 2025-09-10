@@ -403,7 +403,7 @@ static int timep_compute_crc32_and_fnv1a(const char *filename, uint32_t *out_crc
                 fp = fopen("-", "rb");
                 if (!fp) {
                     builtin_error("timep: failed to open literal file './-'");
-                    return -1;
+                    return EXECUTION_FAILURE;
                 }
                 using_stdin = 0;
             } else {
@@ -415,7 +415,7 @@ static int timep_compute_crc32_and_fnv1a(const char *filename, uint32_t *out_crc
         fp = fopen(fn, "rb");
         if (!fp) {
             builtin_error("timep: failed to open '%s': %s", fn, strerror(errno));
-            return -1;
+            return EXECUTION_FAILURE;
         }
     }
 
@@ -424,7 +424,7 @@ static int timep_compute_crc32_and_fnv1a(const char *filename, uint32_t *out_crc
     if (!buf) {
         if (!using_stdin) fclose(fp);
         builtin_error("timep: out of memory");
-        return -1;
+        return EXECUTION_FAILURE;
     }
 
     uint32_t crc = 0;          /* initial crc state for incremental API */
@@ -440,7 +440,7 @@ static int timep_compute_crc32_and_fnv1a(const char *filename, uint32_t *out_crc
         xfree(buf);
         if (!using_stdin) fclose(fp);
         builtin_error("timep: read error: %s", strerror(errno));
-        return -1;
+        return EXECUTION_FAILURE;
     }
 
     xfree(buf);
@@ -449,7 +449,7 @@ static int timep_compute_crc32_and_fnv1a(const char *filename, uint32_t *out_crc
     if (out_crc) *out_crc = crc;
     if (out_fnv) *out_fnv = fnv;
     if (used_stdin) *used_stdin = using_stdin;
-    return 0;
+    return EXECUTION_SUCCESS;
 }
 
 /* ---------------- timep_crc32 builtin ---------------- */
@@ -616,6 +616,6 @@ int setup_builtin_timep(void) {
     add_builtin(&timep_crc32_struct, 1);
     add_builtin(&timep_hash_struct, 1);
 
-    return 0;
+    return EXECUTION_SUCCESS;
 }
 
