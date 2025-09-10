@@ -1480,7 +1480,7 @@ _timep_PROCESS_LOG() {
     logDepth="${logDepth//[^.]/}"
     logDepth="${#logDepth}"
 
-    (( logDepth <= 2 )) && set -xv
+#    (( logDepth <= 2 )) && set -xv
 
     # load current log (sorted by NEXEC) into array
     mapfile -t logA < <(sed -zE 's/\n(TRAP [^\n]+)\n/'$'\034\035''\1\n/g' <"${logCur}" | sort -V -k11,11 | sed -E 's/'$'\034\035''(TRAP .*)$/\n\1/')
