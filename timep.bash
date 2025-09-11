@@ -1239,12 +1239,11 @@ timep_hash() {
     local __var_in __var_out
 
     if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
-            # Capture stdin
-            __var_in="$(cat <&0)"
-        else
-            # Process file path
-            __var_in="$1"
-        fi
+        # Capture stdin
+        __var_in="$(cat <&0)"
+    else
+        # Process file path
+        __var_in="$1"
     fi
     if [[ "$2" ]]; then
         declare -n __var_out="$2"
@@ -1521,7 +1520,7 @@ _timep_PROCESS_LOG() {
     cTimeTotal=0
 
     # get current log nesting depth
-    logDepth="${hashMapAA[${logCur##*\/]#log.}"
+    logDepth="${hashMapAA[${logCur##*\/}]#log.}"
     logDepth="${logDepth//[^.]/}"
     logDepth="${#logDepth}"
 
@@ -2325,7 +2324,7 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     # generate array to map hash-->nexec
     local -Agx hashMapAA
-    for nn in "${timep_LOG_NAME[@]}; do
+    for nn in "${timep_LOG_NAME[@]}"; do
         IFS= read -r nexec <"${nn%\/*}/.hash/${nn##*\/}"
         hashMapAA[${nn##*\/}]="${nexec}"
     done
