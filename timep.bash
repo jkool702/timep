@@ -1679,12 +1679,12 @@ _timep_PROCESS_LOG() {
             endWTime=0
             log_tmp="${hashMapAA[${logCur##*\/}]}"
             log_tmp="${log_tmp%.*}"
-            until [[ "${log_tmp}" == *'/log' ]]; do
-                [[ -s "${log_tmp}" ]] && {
-                    timep_hash - 'log_tmp_hash' <<<"${log_tmp}"
+            until [[ -z ${log_tmp} ]]; do
+                timep_hash - 'log_tmp_hash' <<<"${log_tmp}"
+                    [[ -s "${logCur%\/*}/log.${log_tmp_hash}" ]] && {
                     while read -r _ endWTime _ ; do
                         (( endWTime > startWTimeA[$kk] )) && break 2
-                    done <"${logCur%\/*}/${log_tmp_hash}"
+                    done <"${logCur%\/*}/log.${log_tmp_hash}"
                 }
                 log_tmp="${log_tmp%.*}"
             done
@@ -2320,13 +2320,13 @@ _timep_COMBINE_FLAMEGRAPH() {
 #       a given nesting lvl must finish before moving on to the next nesting lvl
 
     # get log names
-    mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log.*' | grep -vE '\.init_[csr]$' | sort -V)
+    mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -maxdepth 1 -name 'log.*' | grep -vE '\.((init_[csr])|(out.*))$' | sort -V)
 
     # generate array to map hash-->nexec
     local -Agx hashMapAA
     for nn in "${timep_LOG_NAME[@]}"; do
-        IFS= read -r nexec <"${nn%\/*}/.hash/${nn##*\/}"
-        hashMapAA[${nn##*\/}]="${nexec}"
+        IFS= read -r nexec <"${nn//\/.log\//\/.log\/.hash\/}"
+        hashMapAA[${nn##*\/log.}]="${nexec}"
     done
 
     # get nesting lvl for each log
@@ -2334,7 +2334,8 @@ _timep_COMBINE_FLAMEGRAPH() {
     while read -r nn; do
         nn0="${nn##*$'\t'}"
         timep_LOG_NESTING[${#nn0}]+="${timep_LOG_NAME[${nn%%$'\t'*}]}"$'\n'
-    done < <(for kk in "${!timep_LOG_NAME[@]}"; do printf '%s\t%s\n' "${kk}" "${hashMapAA[${timep_LOG_NAME[$kk]##*\/}]}"; done | sed -E 's/^([0-9]+)\tlog\.([^\/]*)$/\1\t\2/; s/^([0-9]*\t\.*)[^\.]/\1/g')
+    done < <(for kk in "${!timep_LOG_NAME[@]}"; do nn1="${hashMapAA[${timep_LOG_NAME[$kk]##*\/log\.}]}"; printf '%s\t%s\n' "${kk}" "${nn1//[^\.]/}"; done
+)
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
 
     # sort logs in nesting order
