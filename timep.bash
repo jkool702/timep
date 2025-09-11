@@ -466,28 +466,29 @@ ${timep_TRAP_OPTS:+set -}${timep_TRAP_OPTS}
 timep_SKIP_DEBUG_FLAG=false
 '
 
-    type -p getconf &>/dev/null && clktck=$(getconf CLK_TCK)
-    if (( clktck >= 10 )) && ((clktck <= 10000 )); then
-
-        (( timep_CPU_TIME_MULT = 1000000 / clktck ))
-    else
-        read -r _ a </proc/uptime
-        read -r _ _ _ _ b _ </proc/stat
-        a0="${a##*.}"
-        (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//[^0-9]/} / b ))
-    # clamp to CLK_TCK between 10-10000
-    (( timep_CPU_TIME_MULT < 100 )) && timep_CPU_TIME_MULT=100
-    (( timep_CPU_TIME_MULT > 100000 )) && timep_CPU_TIME_MULT=100000
-        until (( timep_CPU_TIME_MULT % 10 == 0 )); do
-
-            ((timep_CPU_TIME_MULT++))
-        done
-    fi
-
     if ${timep_CLOCK_GETTIME_FLAG}; then
         timep_END_CTIME_STR='getCPUtime timep_END_CTIME timep_END_CTIME_SELF'$'\n'
         timep_START_CTIME_STR='getCPUtime timep_START_CTIME timep_START_CTIME_SELF'$'\n'
     else
+            type -p getconf &>/dev/null && clktck=$(getconf CLK_TCK)
+        : "${clktck:=100}"
+        if (( clktck >= 10 )) && ((clktck <= 10000 )); then
+
+            (( timep_CPU_TIME_MULT = 1000000 / clktck ))
+        else
+            read -r _ a </proc/uptime
+            read -r _ _ _ _ b _ </proc/stat
+            a0="${a##*.}"
+            (( timep_CPU_TIME_MULT = ( 1000000  / ( 10 ** ${#a0} ) ) * ${a//[^0-9]/} / b ))
+
+            # clamp to CLK_TCK between 10-10000
+            (( timep_CPU_TIME_MULT < 100 )) && timep_CPU_TIME_MULT=100
+            (( timep_CPU_TIME_MULT > 100000 )) && timep_CPU_TIME_MULT=100000
+            until (( timep_CPU_TIME_MULT % 10 == 0 )); do
+
+                ((timep_CPU_TIME_MULT++))
+            done
+        fi
         timep_END_CTIME_STR+='read -r _ _ _ _ _ _ _ _ _ _ _ _ _ timep_END_UTIME timep_END_STIME timep_END_CUTIME timep_END_CSTIME _ </proc/${timep_BASHPID_PREV:-$BASHPID}/stat
         (( timep_END_CTIME = '"${timep_CPU_TIME_MULT}"' * ( timep_END_UTIME + timep_END_STIME + timep_END_CUTIME + timep_END_CSTIME ) ))
         (( timep_END_CTIME_SELF = '"${timep_CPU_TIME_MULT}"' * ( timep_END_UTIME + timep_END_STIME ) ))
@@ -529,8 +530,12 @@ fi'
 fi
 '
     timep_DEBUG_TRAP_STR_1+='[[ "$-" == *m* ]] || {
-        printf '"'"'\nWARNING: timep requires job control to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\n\n'"'"' >&2
+        printf '"'"'\nWARNING: timep requires job control (set -m) to be enabled.\n         Running "set +m" is not allowed!\n         Job control will automatically be re-enabled.\n\n'"'"' >&2
         set -m
+    }
+    [[ "$-" == *T* ]] || {
+        printf '"'"'\nWARNING: timep requires functrace (set -T) to be enabled.\n         Running "set +T" is not allowed!\n         functrace will automatically be re-enabled.\n\n'"'"' >&2
+        set -T
     }
     if (( ${#BASH_COMMAND} > 16384 )); then
         timep_BASH_COMMAND_CUR="${BASH_COMMAND::16384}"
@@ -931,8 +936,8 @@ timep_SKIP_DEBUG_FLAG=false
 
         builtin trap - DEBUG EXIT RETURN
 
-        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS
-        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA
+        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
+        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A
 
         set -mT
 
@@ -951,6 +956,9 @@ timep_SKIP_DEBUG_FLAG=false
         timep_CHILD_PGID="$timep_PARENT_PGID"
         timep_CHILD_TPID="$timep_PARENT_TPID"
 
+        timep_FNEST=("${#FUNCNAME[@]}")
+        timep_FNEST_CUR="${#FUNCNAME[@]}"
+
         timep_BASHPID_PREV="$BASHPID"
         timep_BG_PID_PREV="$!"
         timep_BG_PID_PREV_0='"''"'
@@ -959,8 +967,11 @@ timep_SKIP_DEBUG_FLAG=false
         timep_NEXEC_N=0
         timep_NPIDWRAP='"'"'0'"'"'
         timep_NEXEC_0="{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
+        timep_hash 'timep_NEXEC_HASH_CUR' <<<"${timep_NEXEC_0}"
+        timep_NEXEC_HASH_A[${timep_FNEST_CUR}]="${timep_NEXEC_HASH_CUR}"
         timep_BASHPID_STR="${BASHPID}"
         timep_FUNCNAME_STR="main"
+
         timep_SIMPLEFORK_NEXT_FLAG=false
         timep_SIMPLEFORK_CUR_FLAG=false
         timep_SKIP_DEBUG_FLAG=false
@@ -969,9 +980,6 @@ timep_SKIP_DEBUG_FLAG=false
         timep_IS_FUNC_FLAG_1=false
         timep_SUBSHELL_INIT_FLAG=false
         timep_LINENO_INIT_FLAG=true
-
-        timep_FNEST=("${#FUNCNAME[@]}")
-        timep_FNEST_CUR="${#FUNCNAME[@]}"
 
         timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
         timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
@@ -1162,53 +1170,74 @@ else
     # Check for an external 'crc32' utility as a "good" fallback.
     if type -p crc32 &>/dev/null; then
 
-        timep_crc32() {
-            local __var_out
-            if [[ "$2" ]]; then
-                declare -n __var_out="$2"
-                if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
-                    # Capture stdin
-                    __var_out="$(crc32 <&0)"
-                else
-                    # Process file path
-                    __var_out="$(crc32 "$1")"
-                fi
-                declare +n __var_out
-            else
-                if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
-                    crc32 <&0
-                else
-                    crc32 "$1"
-                fi
-            fi
-        }
+timep_crc32() {
+    local __var_out
+    if [[ "$2" ]]; then
+        declare -n __var_out="$2"
+        if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
+            # Capture stdin
+            __var_out="$(crc32 <&0)"
+        else
+            # Process file path
+            __var_out="$(crc32 "$1")"
+        fi
+        declare +n __var_out
+    else
+        if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
+            crc32 <&0
+        else
+            crc32 "$1"
+        fi
+    fi
+}
 
     else
         # If 'crc32' is not found, create a "best-effort" identity
         # function that uses 'cat'. This prevents crashes but will
         # degrade merge accuracy, which is the expected trade-off.
-        timep_crc32() {
-            local __var_out
-            if [[ "$2" ]]; then
-                declare -n __var_out="$2"
-                if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
-                    # Capture stdin
-                    __var_out="$(cat <&0)"
-                else
-                    # Process file path
-                    __var_out="$(cat "$1")"
-                fi
-                declare +n __var_out
-            else
-                if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
-                    cat <&0
-                else
-                    cat "$1"
-                fi
-            fi
-        }
+timep_crc32() {
+    local __var_out
+    if [[ "$2" ]]; then
+        declare -n __var_out="$2"
+        if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
+            # Capture stdin
+            __var_out="$(cat <&0)"
+        else
+            # Process file path
+            __var_out="$(cat "$1")"
+        fi
+        declare +n __var_out
+    else
+        if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
+            cat <&0
+        else
+            cat "$1"
+        fi
+    fi
+}
     fi
 fi
+}
+enable | grep -q 'timep_hash' || {
+timep_hash() {
+    local __var_in __var_out
+
+    if [[ -z "$1" ]] || [[ "$1" == '-' ]]; then
+            # Capture stdin
+            __var_in="$(cat <&0)"
+        else
+            # Process file path
+            __var_in="$1"
+        fi
+    fi
+    if [[ "$2" ]]; then
+        declare -n __var_out="$2"
+        __var_out="$(timep_crc32 <<<"${__var_in}")-$(timep_fnv1a <<<"${__var_in}")"
+        declare +n __var_out
+    else
+        printf '%s-%s\n' "$(timep_crc32 <<<"${__var_in}")" "$(timep_fnv1a <<<"${__var_in}")"
+    fi
+}
 }
 
 _timep_GET_RUNTIME_CORRECTION() {
