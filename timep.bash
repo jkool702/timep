@@ -1682,7 +1682,7 @@ _timep_PROCESS_LOG() {
             log_tmp="${log_tmp%.*}"
             until [[ "${log_tmp}" == *'/log' ]]; do
                 [[ -s "${log_tmp}" ]] && {
-                    timep_hash 'log-tmp_hash' <<<"${log_tmp}"
+                    timep_hash 'log_tmp_hash' <<<"${log_tmp}"
                     while read -r _ endWTime _ ; do
                         (( endWTime > startWTimeA[$kk] )) && break 2
                     done <"${logCur%\/*}/${log_tmp_hash}"
