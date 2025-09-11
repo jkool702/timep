@@ -240,7 +240,7 @@ timep() {
          return 1
     }
 
-    mkdir -p "${timep_TMPDIR}"/.log/.{end,run}times
+    mkdir -p "${timep_TMPDIR}"/.log/.{endtimes,runtimes,hash}
     mkdir -p "${timep_TMPDIR}/profiles"
 
     # determine if command being profiled is a shell script or not
@@ -676,20 +676,25 @@ fi
             done
             timep_KK="${timep_BASH_SUBSHELL_DIFF}"
             unset "timep_BASH_SUBSHELL_DIFF" "timep_BASH_SUBSHELL_DIFF_0"
-            [[ -s "${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_r" ]] && : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_r"
-            [[ -s "${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_c" ]] && : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${BASHPID}}.init_c"
+            timep_hash 'timep_NEXEC_HASH_CUR' <<<"${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
+            echo "${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+            [[ -s "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_r" ]] && : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_r"
+            [[ -s "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_c" ]] && : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_c"
             timep_NPIDWRAP="${timep_NPIDWRAP_PREV_0}"
             while ((timep_KK < ${#timep_BASHPID_ADD[@]})); do
                 ((timep_BASHPID_ADD[${timep_KK}] < timep_BASHPID_PREV)) && ((timep_NPIDWRAP++))
                 timep_BASHPID_PREV="${timep_BASHPID_ADD[${timep_KK}]}"
                 timep_BASH_COMMAND_PREV_0="<< (${timep_CMD_TYPE_PREV_0}): ${timep_BASHPID_PREV} >>"
-                [[ -s "${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}.init_s" ]] || printf '"'"'1\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}\t%s\t::\t%s\n'"'"' "${timep_ENDTIME_PREV_0}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_NPIDWRAP}" "${timep_BASHPID_PREV}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "${timep_BASH_COMMAND_PREV_0@Q}" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}.init_s"
+                timep_hash 'timep_NEXEC_HASH_CUR' <<<"${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
+                echo "${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+                [[ -s "${timep_TMPDIR}/.log/log.${timep_NEXEC_0}.${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}.init_s" ]] || printf '"'"'1\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}\t%s\t::\t%s\n'"'"' "${timep_ENDTIME_PREV_0}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_NPIDWRAP}" "${timep_BASHPID_PREV}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "${timep_BASH_COMMAND_PREV_0@Q}" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_s"
                 timep_BASHPID_STR+=".${timep_BASHPID_PREV}"
                 timep_NEXEC_0+=".${timep_NEXEC_A[-1]}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
                 timep_NEXEC_A+=(0)
                 ((timep_BASH_SUBSHELL_PREV++))
                 ((timep_KK++))
             done
+            timep_NEXEC_HASH_A[${timep_FNEST_CUR}]="${timep_NEXEC_HASH_CUR}"
             timep_BASHPID_PREV="${BASHPID}"
             timep_BASH_SUBSHELL_PREV="${BASH_SUBSHELL}"
             unset "timep_KK" "timep_BASHPID_ADD" "timep_BASH_COMMAND_PREV_0" "timep_NPIDWRAP_PREV_0" "timep_BASH_COMMAND_PREV_0" "timep_CMD_TYPE_PREV_0" "timep_BASHPID_PREV_0" "timep_ENDTIME_PREV_0" "timep_BASH_SUBSHELL_PREV_0"
@@ -728,6 +733,10 @@ fi
             timep_FNEST_CUR="${timep_FUNCNAME_N}"
             timep_NO_PRINT_FLAG=false
             timep_IS_FUNC_FLAG_1=true
+            timep_hash 'timep_NEXEC_HASH_CUR' <<<"${timep_NEXEC_0}"
+            echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+            echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+            timep_NEXEC_HASH_A[${timep_FNEST_CUR}]="${timep_NEXEC_HASH_CUR}"
         }
         if (( timep_LINENO_0 < 0 )) && [[ "${timep_BASH_COMMAND_CUR}" == "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]% \(\?\)}" ]]; then
             timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]="${timep_BASH_COMMAND_CUR} "'"'"'(?)'"'"'
@@ -754,6 +763,10 @@ fi
                 timep_NEXEC_0+=".${timep_NEXEC_A[-1]}"
                 timep_NEXEC_A+=(0)
                 ((timep_NEXEC_N++))
+                timep_hash 'timep_NEXEC_HASH_CUR' <<<"${timep_NEXEC_0}"
+                echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+                timep_NEXEC_HASH_A[${timep_FNEST_CUR}]="${timep_NEXEC_HASH_CUR}"
+
     exec() {
         export -f timep
         local -a cmd0=()
@@ -968,6 +981,7 @@ timep_SKIP_DEBUG_FLAG=false
         timep_NPIDWRAP='"'"'0'"'"'
         timep_NEXEC_0="{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
         timep_hash 'timep_NEXEC_HASH_CUR' <<<"${timep_NEXEC_0}"
+        echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
         timep_NEXEC_HASH_A[${timep_FNEST_CUR}]="${timep_NEXEC_HASH_CUR}"
         timep_BASHPID_STR="${BASHPID}"
         timep_FUNCNAME_STR="main"
@@ -1622,7 +1636,7 @@ _timep_PROCESS_LOG() {
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecA[$kk]#* }"
-            [[ -f "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }" ]] && \rm -f "${timep_TMPDIR}/.log/.needsMerge/log.${nexecA[$kk]#* }"
+            [[ -f "${timep_TMPDIR}/.log/.hash/log.${nexecA[$kk]#* }" ]] && \rm -f "${timep_TMPDIR}/.log/.hash/log.${nexecA[$kk]#* }"
 
             # read in the endtime + runtime from the log
             # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
@@ -2303,13 +2317,6 @@ _timep_COMBINE_FLAMEGRAPH() {
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -name 'log.*' | grep -vE '\.init_[csr]$' | sort -V)
 
-    # record each log name in the ".needsMerge" dir
-    [[ -d "${timep_TMPDIR}/.log/.needsMerge" ]] && \rm -rf "${timep_TMPDIR}/.log/.needsMerge"
-    mkdir -p "${timep_TMPDIR}/.log/.needsMerge"
-    for kk in "${!timep_LOG_NAME[@]}"; do
-        : >"${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NAME[$kk]##*\/}"
-    done
-
     # get nesting lvl for each log
     timep_LOG_NESTING=()
     kk=0
@@ -2590,9 +2597,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
 
     # add in any logs that didnt get merged all thge way up to the top lvl. this way at least they arent entirely missing...
-    [[ -f "${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NESTING[0]##*\/}" ]] && \rm "${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NESTING[0]##*\/}"
-    for nn in "${timep_TMPDIR}"/.log/.needsMerge/*; do
-        printf '\n\n%s\n' "$(<"${nn}")" >>"${timep_TMPDIR}/.log/.needsMerge/${timep_LOG_NAME[$kk]##*\/}"
+    [[ -f "${timep_TMPDIR}/.log/.hash/${timep_LOG_NESTING[0]##*\/}" ]] && \rm "${timep_TMPDIR}/.log/.hash/${timep_LOG_NESTING[0]##*\/}"
+    for nn in "${timep_TMPDIR}"/.log/.hash/*; do
+        printf '\n\n%s\n' "$(<"${nn}")" >>"${timep_TMPDIR}/.log/.hash/${timep_LOG_NAME[$kk]##*\/}"
     done
 
     printf '\n\nFINALIZING OUTPUTS\n' >&2
