@@ -113,7 +113,7 @@ timep() {
     shopt -s extglob
 
     local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
-    local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE logOut logOutL logOutLL
+    local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE timep_CTIME_DONE logOut logOutL logOutLL
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_LOG_DELETE_CUR timep_setupFuncFlags
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
 
@@ -1022,9 +1022,9 @@ timep_SKIP_DEBUG_FLAG=false
 
         builtin trap - DEBUG EXIT RETURN;
 
-        echo "${EPOCHREALTIME}" > "${timep_TMPDIR}/.log/.final.end.wtime"
+        echo "${EPOCHREALTIME//[^0-9]/}" > "${timep_TMPDIR}/.log/.final.end.wtime"
         '"${timep_END_CTIME_STR}"'
-        echo "${timep_END_CTIME}" >"${timep_TMPDIR}/.log/.final.end.ctime"
+        echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
 
         exec {timep_LOCK_FD}>&-
     )'
@@ -1118,7 +1118,6 @@ timep_SKIP_DEBUG_FLAG=false
            "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
-    (( timep_WTIME_DONE = 10#${EPOCHREALTIME//[^0-9]/} ))
 
     printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s" (+%s)\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" "${SECONDS}" >&2
     unset IFS
@@ -1499,7 +1498,7 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag skipNextSimpleTrapFlag
+    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag 
     local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
@@ -1514,7 +1513,6 @@ _timep_PROCESS_LOG() {
 
     inPipeFlag=false
     nPipeNextIgnoreFlag=false
-    skipNextSimpleTrapFlag=false
 
     wTimeTotal=0
     cTimeTotal=0
@@ -1597,13 +1595,6 @@ _timep_PROCESS_LOG() {
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
         #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         #cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
-#        if [[ "${cmd%%*([ \t])}" == *\(\^\) ]]; then
-#            skipNextSimpleTrapFlag=true
-#            cmd="${cmd%%*([ \t])\(\^\)*([ \t])}"
-#        elif  ${skipNextSimpleTrapFlag} && [[ "${cmd%%*([ \t])}" == *'(&)' ]]; then
-#            skipNextSimpleTrapFlag=false
-#            cmd="${cmd%%*([ \t])\(\&\)*([ \t]}"
-#        fi
 
         cmdA[$kk]="${cmd}"
         timep_hash - 'nexecHash' <<<"${nexecA[$kk]#* }"
@@ -1679,7 +1670,7 @@ _timep_PROCESS_LOG() {
             endWTime=0
             log_tmp="${hashMapAA[${logCur##*\/}]}"
             log_tmp="${log_tmp%.*}"
-            until [[ -z ${log_tmp} ]]; do
+            until [[ -z ${log_tmp//[^.]/} ]]; do
                 timep_hash - 'log_tmp_hash' <<<"${log_tmp}"
                     [[ -s "${logCur%\/*}/log.${log_tmp_hash}" ]] && {
                     while read -r _ endWTime _ ; do
@@ -1687,6 +1678,9 @@ _timep_PROCESS_LOG() {
                     done <"${logCur%\/*}/log.${log_tmp_hash}"
                 }
                 log_tmp="${log_tmp%.*}"
+                [[ -z ${log_tmp//[^.]/} ]] && {
+                    (( endWTime = timep_WTIME_DONE > startWTimeA[$kk] ? timep_WTIME_DONE : startWTimeA[$kk] + 1 ))
+                    
             done
 
             # if we still dont have a valid end time, use the global timep endtime
@@ -1694,6 +1688,7 @@ _timep_PROCESS_LOG() {
 
             endWTimeA[$kk]="${endWTime}"
             (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
+            (( timep_CTIME_DONE > startCTimeA[$kk] )) && (( timep_CTIME_DONE < endCTimeA[$kk] )) && endCTimeA[$kk]="${timep_CTIME_DONE}"
         }
 
         # merge pipelines commands upward into previous line cmdA
@@ -2318,6 +2313,10 @@ _timep_COMBINE_FLAMEGRAPH() {
 # # # # STEP 1: PROCESS LOGS, STARTING AT THE DEEPEST NESTING LVL AND MOVING UPWARDS
 #       Logs for each nesting level are processed in parallel, but all logs from
 #       a given nesting lvl must finish before moving on to the next nesting lvl
+
+    # get final end times
+    read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
+    read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
 
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -maxdepth 1 -name 'log.*' | grep -vE '\.((init_[csr])|(out.*))$' | sort -V)
