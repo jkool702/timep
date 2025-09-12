@@ -1678,9 +1678,7 @@ _timep_PROCESS_LOG() {
                     done <"${logCur%\/*}/log.${log_tmp_hash}"
                 }
                 log_tmp="${log_tmp%.*}"
-                [[ -z ${log_tmp//[^.]/} ]] && {
-                    (( endWTime = timep_WTIME_DONE > startWTimeA[$kk] ? timep_WTIME_DONE : startWTimeA[$kk] + 1 ))
-                    
+                [[ -z ${log_tmp//[^.]/} ]] && (( endWTime = 10#0${timep_WTIME_DONE} > 10#0${startWTimeA[$kk]} ? 10#0${timep_WTIME_DONE} : 10#0${startWTimeA[$kk]} + 1 ))
             done
 
             # if we still dont have a valid end time, use the global timep endtime
