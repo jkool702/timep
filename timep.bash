@@ -597,6 +597,7 @@ fi
             timep_CMD_TYPE="BACKGROUND FORK"
         elif ${timep_IS_SUBSHELL_FLAG}; then
             timep_CMD_TYPE="SUBSHELL"
+            ${timep_IS_FUNC_FLAG_1} && { timep_IS_FUNC_FLAG_1=false; [[ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 9 )); }
         elif [[ "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]}" == " (F) "* ]]; then
             timep_CMD_TYPE="FUNCTION (P)"
             timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]="${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]# (F) }"
@@ -606,7 +607,7 @@ fi
         elif ${timep_IS_FUNC_FLAG_1}; then
             timep_CMD_TYPE="FUNCTION (C)"
             timep_IS_FUNC_FLAG_1=false
-            [[ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO - 1 ))
+            [[ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 9 ))
         else
             timep_CMD_TYPE="NORMAL COMMAND"
         fi
@@ -1497,7 +1498,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag 
-    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
+    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1523,7 +1524,8 @@ _timep_PROCESS_LOG() {
 #    (( logDepth <= 2 )) && set -xv
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/\n(TRAP [^\n]+)\n/'$'\034\035''\1\n/g' <"${logCur}" | sort -V -k11,11 | sed -E 's/'$'\034\035''(TRAP .*)$/\n\1/')
+    #mapfile -t logA < <(sed -zE 's/\n(TRAP [^\n]+)\n/'$'\034\035''\1\n/g' <"${logCur}" | sort -V -k11,11 | sed -E 's/'$'\034\035''(TRAP .*)$/\n\1/')
+    mapfile -t logA < <(sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g' <"${logCur}" | sort -V -k11,11)
     #unset A
 
     log_dupe_flag=false
@@ -1546,30 +1548,29 @@ _timep_PROCESS_LOG() {
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
 
         # deal with commands run by traps / signal handlers
-        if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
-            (( kk1 = kk + 1 ))
-            cmd0="${cmdA[$kk1]}"
-            cmdA[$kk1]="${logA[$kk]@Q}"
-            ((kk1++))
-            while { (( linenoA[$kk1] < 0 )) || [[ "${cmdA[$kk1]}" == "${cmd0}" ]]; } && (( kk1 < ${nlogA} )); do
-                unset "cmdA[$kk1]"
-                unset "nPipeA[$kk1]"
-                unset "startWTimeA[$kk1]"
-                unset "endWTimeA[$kk1]"
-                unset "startCTimeA[$kk1]"
-                unset "endCTimeA[$kk1]"
-                unset "funcA[$kk1]"
-                unset "pidA[$kk1]"
-                unset "nexecA[$kk1]"
-                unset "nexecHashA[$kk1]"
-                unset "linenoA[$kk1]"
-                unset "logA[$kk1]"
-                ((kk1++))
-            done
-            nPipeA[$kk]=-1
-            unset "logA[$kk]"
-            continue
-        fi
+#        if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
+#            (( kk1 = kk + 1 ))
+#            cmd0="${cmdA[$kk1]}"
+#            cmdA[$kk1]="${logA[$kk]@Q}"
+#            ((kk1++))
+#            while { (( linenoA[$kk1] < 0 )) || [[ "${cmdA[$kk1]}" == "${cmd0}" ]]; } && (( kk1 < ${nlogA} )); do
+#                unset "cmdA[$kk1]"
+#                unset "nPipeA[$kk1]"
+#                unset "startWTimeA[$kk1]"
+#                unset "endWTimeA[$kk1]"
+#                unset "startCTimeA[$kk1]"
+#                unset "endCTimeA[$kk1]"
+#                unset "funcA[$kk1]"
+#                unset "pidA[$kk1]"
+#                unset "nexecA[$kk1]"
+#                unset "linenoA[$kk1]"
+#                unset "logA[$kk1]"
+#                ((kk1++))
+#            done
+#            nPipeA[$kk]=-1
+#            unset "logA[$kk]"
+#            continue
+#        fi
 
         # read log fields into variables
         IFS=$'\t' read -r nPipe startWTime startCTime endWTime endCTime func pid nexec lineno _ cmd <<<"${logA[$kk]}"
@@ -1585,12 +1586,19 @@ _timep_PROCESS_LOG() {
 
         # unquote the cmd string
         #cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
+        if [[ "${cmd}" == 'TRAP ('*'): '* ]]; then
+            cmd="${cmd@Q}"
+            isTrapA[$kk]=true
+        else
+            isTrapA[$kk]=false
+        fi
         [[ "${cmd}" == *"'"' ('[\?\^\&]')' ]] && cmd="${cmd%*([[:space:]])"'"*}${cmd##**([[:space:]])"'"}'"
 
         cmd="${cmd//"'\\''"/"'"'"'"'"'"'"'"}"
         read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
+
         #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
         #cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
 
@@ -1605,7 +1613,7 @@ _timep_PROCESS_LOG() {
             nPipeNextIgnoreFlag=false
             inPipeFlag=false
             inPipeFlagA[$kk]=false
-        elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
+        elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && ! ${isTrapA[$kk]} && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {

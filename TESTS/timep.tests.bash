@@ -1,5 +1,5 @@
 ff() { echo "${*}"; }
-gg() { echo "$*"; ff "$@"; }
+gg() ( echo "$*"; ff "$@"; )
 
 : | cat <&0 | cat | tee
 
