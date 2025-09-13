@@ -1,0 +1,1831 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="947" onload="init(evt)" viewBox="0 0 4096 947" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+                unzoombtn.classList.remove("hide");
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="947" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/gemini-2.5.test.2.bash</text>
+<text id="subtitle" x="2048.00" y="40" >{FOLDED}: WALL-CLOCK</text>
+<text id="subtitle" x="2048.00" y="432" >{FOLDED}: CPU-TIME</text>
+<text id="subtitle" x="2048.00" y="535" >{FULL}: WALL-CLOCK</text>
+<text id="subtitle" x="2048.00" y="927" >{FULL}: CPU-TIME</text>
+<text id="details" x="10.00" y="257" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="257" > </text>
+<g id="frames">
+<g >
+<title>'exec 3&gt;&amp;-' (240 us, 0.01%)</title><rect x="1590.0" y="147" width="0.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1593.05" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 2] Read from FIFO: '\''$line'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (137 us, 0.01%)</title><rect x="2036.7" y="147" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2039.74" y="161.5" ></text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot;' (2,709 us, 0.15%)</title><rect x="863.8" y="171" width="6.0" height="23.0" fill="rgb(12,16,252)" rx="2" ry="2" />
+<text  x="866.84" y="185.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 3] Running complex command.&quot; 1&gt;&amp;2' (88 us, 0.00%)</title><rect x="2037.6" y="147" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2040.62" y="161.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (103,399 us, 5.57%)</title><rect x="3858.8" y="99" width="227.2" height="23.0" fill="rgb(221.532307858837,188.064615717675,236.592769322361)" rx="2" ry="2" />
+<text  x="3861.77" y="113.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Test complete.&quot;' (79 us, 0.00%)</title><rect x="869.9" y="171" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="872.95" y="185.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (195 us, 0.01%)</title><rect x="4085.2" y="51" width="0.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4088.25" y="65.5" ></text>
+</g>
+<g >
+<title>'sleep 0.3' (302,005 us, 16.28%)</title><rect x="2037.8" y="147" width="663.7" height="23.0" fill="rgb(211,211,200)" rx="2" ry="2" />
+<text  x="2040.81" y="161.5" >'sleep 0.3'</text>
+</g>
+<g >
+<title>'echo &quot;$encoded_data&quot; | base64 -d' (4,405 us, 0.24%)</title><rect x="3398.2" y="123" width="9.7" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3401.20" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Cleaning up.&quot;' (119 us, 0.01%)</title><rect x="863.1" y="171" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="866.12" y="185.5" ></text>
+</g>
+<g >
+<title>'recursive_function 1' (65 us, 0.00%)</title><rect x="3407.9" y="123" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3410.88" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (82 us, 0.00%)</title><rect x="3632.6" y="99" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3635.59" y="113.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot;' (161 us, 0.01%)</title><rect x="1589.7" y="147" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1592.69" y="161.5" ></text>
+</g>
+<g >
+<title>'TMPDIR=$(mktemp -d)' (700 us, 0.04%)</title><rect x="10.2" y="171" width="1.6" height="23.0" fill="rgb(1,3,254)" rx="2" ry="2" />
+<text  x="13.23" y="185.5" ></text>
+</g>
+<g >
+<title>'set -o monitor' (103 us, 0.01%)</title><rect x="10.0" y="171" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="13.00" y="185.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot; 1&gt;&amp;3' (84 us, 0.00%)</title><rect x="2037.0" y="147" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2040.04" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Coprocess PID: $CPID_PID&quot;' (89 us, 0.00%)</title><rect x="69.2" y="171" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="72.22" y="185.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line' (322,654 us, 17.40%)</title><rect x="100.7" y="171" width="709.0" height="23.0" fill="rgb(246,41,16)" rx="2" ry="2" />
+<text  x="103.67" y="185.5" >'read -r -u 4 line'</text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (178 us, 0.01%)</title><rect x="3631.9" y="99" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3634.88" y="113.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;[TRAP] A child process has exited.&quot;'\'' SIGCHLD (&amp;)' (19,428 us, 1.05%)</title><rect x="26.4" y="171" width="42.6" height="23.0" fill="rgb(33,63,242)" rx="2" ry="2" />
+<text  x="29.35" y="185.5" >'trap..</text>
+</g>
+<g >
+<title>'read -r line' (323,485 us, 17.44%)</title><rect x="878.4" y="147" width="710.9" height="23.0" fill="rgb(212,211,210)" rx="2" ry="2" />
+<text  x="881.37" y="161.5" >'read -r line'</text>
+</g>
+<g >
+<title>SUBSHELL (773463)_[s] (359 us, 0.02%)</title><rect x="2036.4" y="171" width="0.8" height="23.0" fill="rgb(223.102741668367,139.009969703154,197.004984851577)" rx="2" ry="2" />
+<text  x="2039.43" y="185.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Data from BG 3&quot; | base64' (3,634 us, 0.20%)</title><rect x="2701.5" y="147" width="8.0" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="2704.50" y="161.5" ></text>
+</g>
+<g >
+<title>all (1,854,759 us, 100%)</title><rect x="10.0" y="219" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="233.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot; 1&gt;&amp;2' (198 us, 0.01%)</title><rect x="1589.3" y="147" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1592.26" y="161.5" ></text>
+</g>
+<g >
+<title>'mktemp -d' (3,752 us, 0.20%)</title><rect x="870.1" y="147" width="8.3" height="23.0" fill="rgb(18,27,250)" rx="2" ry="2" />
+<text  x="873.12" y="161.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (522 us, 0.03%)</title><rect x="4084.9" y="75" width="1.1" height="23.0" fill="rgb(197.060176282623,139.120352565247,223.133096955443)" rx="2" ry="2" />
+<text  x="4087.85" y="89.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Starting the main logic.&quot;' (79 us, 0.00%)</title><rect x="69.0" y="171" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="72.04" y="185.5" ></text>
+</g>
+<g >
+<title>'mkfifo &quot;$OUTPUT_PIPE&quot;' (2,876 us, 0.16%)</title><rect x="20.0" y="171" width="6.4" height="23.0" fill="rgb(12,16,252)" rx="2" ry="2" />
+<text  x="23.03" y="185.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773456)_[s] (3,752 us, 0.20%)</title><rect x="870.1" y="171" width="8.3" height="23.0" fill="rgb(222.959005683116,138.48729339315,196.743646696575)" rx="2" ry="2" />
+<text  x="873.12" y="185.5" ></text>
+</g>
+<g >
+<title>'decoded_data=$(echo &quot;$encoded_data&quot; | base64 -d)' (1,402 us, 0.08%)</title><rect x="3394.1" y="147" width="3.1" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="3397.13" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (265 us, 0.01%)</title><rect x="3397.6" y="171" width="0.6" height="23.0" fill="rgb(222.99074913799,138.602724138144,196.801362069072)" rx="2" ry="2" />
+<text  x="3400.61" y="185.5" ></text>
+</g>
+<g >
+<title>'return' (74 us, 0.00%)</title><rect x="4085.8" y="51" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4088.84" y="65.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (72 us, 0.00%)</title><rect x="3408.2" y="123" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3411.18" y="137.5" ></text>
+</g>
+<g >
+<title>'INPUT_PIPE=&quot;$TMPDIR/input.pipe&quot;' (140 us, 0.01%)</title><rect x="11.8" y="171" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="14.77" y="185.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (206,644 us, 11.14%)</title><rect x="3631.9" y="123" width="454.1" height="23.0" fill="rgb(221.616324180295,188.23264836059,236.638978299162)" rx="2" ry="2" />
+<text  x="3634.88" y="137.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>'read -r line &lt; &quot;$FIFO_PATH&quot;' (138 us, 0.01%)</title><rect x="2036.4" y="147" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2039.43" y="161.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (102,320 us, 5.52%)</title><rect x="3860.0" y="75" width="224.9" height="23.0" fill="rgb(166,207,202)" rx="2" ry="2" />
+<text  x="3863.00" y="89.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (80 us, 0.00%)</title><rect x="3408.3" y="123" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3411.34" y="137.5" ></text>
+</g>
+<g >
+<title>'mkfifo &quot;$INPUT_PIPE&quot;' (3,476 us, 0.19%)</title><rect x="12.4" y="171" width="7.6" height="23.0" fill="rgb(12,16,252)" rx="2" ry="2" />
+<text  x="15.39" y="185.5" ></text>
+</g>
+<g >
+<title>'OUTPUT_PIPE=&quot;$TMPDIR/output.pipe&quot;' (144 us, 0.01%)</title><rect x="12.1" y="171" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="15.07" y="185.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (159 us, 0.01%)</title><rect x="3859.4" y="75" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3862.44" y="89.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (308,576 us, 16.64%)</title><rect x="3407.9" y="147" width="678.1" height="23.0" fill="rgb(221.663398000458,188.326796000916,236.664868900252)" rx="2" ry="2" />
+<text  x="3410.88" y="161.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (4,405 us, 0.24%)</title><rect x="3398.2" y="171" width="9.7" height="23.0" fill="rgb(223.527718504867,138.435994462472,197.300817258924)" rx="2" ry="2" />
+<text  x="3401.20" y="185.5" ></text>
+</g>
+<g >
+<title>'true' (94 us, 0.01%)</title><rect x="863.6" y="171" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="866.64" y="185.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (13,138 us, 0.71%)</title><rect x="69.4" y="171" width="28.9" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="72.41" y="185.5" >'T..</text>
+</g>
+<g >
+<title>'local depth=$1' (74 us, 0.00%)</title><rect x="3408.0" y="123" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3411.02" y="137.5" ></text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot; (?)' (70 us, 0.00%)</title><rect x="869.8" y="171" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="872.80" y="185.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$decoded_data&quot; 1&gt;&amp;3' (92 us, 0.00%)</title><rect x="3397.4" y="147" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3400.41" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (308,576 us, 16.64%)</title><rect x="3407.9" y="171" width="678.1" height="23.0" fill="rgb(236.664868900252,188.326796000916,221.663398000458)" rx="2" ry="2" />
+<text  x="3410.88" y="185.5" >SUBSHELL (773466)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;[BG 3 - Child] Decoded data: '\''$decoded_data'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (93 us, 0.01%)</title><rect x="3397.2" y="147" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3400.21" y="161.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (70 us, 0.00%)</title><rect x="3632.4" y="99" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3635.44" y="113.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (102,840 us, 5.54%)</title><rect x="3632.8" y="99" width="226.0" height="23.0" fill="rgb(166,209,186)" rx="2" ry="2" />
+<text  x="3635.77" y="113.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'read -r encoded_data' (311,543 us, 16.80%)</title><rect x="2709.5" y="147" width="684.6" height="23.0" fill="rgb(211,211,211)" rx="2" ry="2" />
+<text  x="2712.48" y="161.5" >'read -r encoded_data'</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Waiting for background jobs to finish...&quot;' (75 us, 0.00%)</title><rect x="810.7" y="171" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="813.71" y="185.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (179 us, 0.01%)</title><rect x="4084.9" y="51" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4087.85" y="65.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (154 us, 0.01%)</title><rect x="3859.1" y="75" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3862.10" y="89.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 1] Writing to main FIFO.&quot; 1&gt;&amp;2' (104 us, 0.01%)</title><rect x="1590.6" y="147" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1593.57" y="161.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (101,641 us, 5.48%)</title><rect x="3408.5" y="123" width="223.4" height="23.0" fill="rgb(178,208,212)" rx="2" ry="2" />
+<text  x="3411.52" y="137.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (176 us, 0.01%)</title><rect x="3397.6" y="147" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3400.61" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Message from BG 1&quot; &gt; &quot;$FIFO_PATH&quot;' (80 us, 0.00%)</title><rect x="1590.8" y="147" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1593.80" y="161.5" ></text>
+</g>
+<g >
+<title>'wait' (23,590 us, 1.27%)</title><rect x="810.9" y="171" width="51.8" height="23.0" fill="rgb(202,211,213)" rx="2" ry="2" />
+<text  x="813.87" y="185.5" >'wait'</text>
+</g>
+<g >
+<title>'sleep 0.2' (202,702 us, 10.93%)</title><rect x="1591.0" y="147" width="445.4" height="23.0" fill="rgb(206,211,201)" rx="2" ry="2" />
+<text  x="1593.98" y="161.5" >'sleep 0.2'</text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (149 us, 0.01%)</title><rect x="3858.8" y="75" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3861.77" y="89.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (74 us, 0.00%)</title><rect x="4085.7" y="51" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4088.67" y="65.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (296 us, 0.02%)</title><rect x="809.7" y="171" width="0.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="812.73" y="185.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Read from coprocess: '\''$line'\''&quot;' (148 us, 0.01%)</title><rect x="810.4" y="171" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="813.38" y="185.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (95 us, 0.01%)</title><rect x="3859.8" y="75" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3862.79" y="89.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773434)_[s] (1,854,759 us, 100.00%)</title><rect x="10.0" y="195" width="4076.0" height="23.0" fill="rgb(236.666666658609,188.333333304032,221.666666652016)" rx="2" ry="2" />
+<text  x="13.00" y="209.5" >SUBSHELL (773434)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (773464)_[s] (305,908 us, 16.49%)</title><rect x="2037.2" y="171" width="672.3" height="23.0" fill="rgb(236.655136506481,188.291405478111,221.645702739055)" rx="2" ry="2" />
+<text  x="2040.22" y="185.5" >SUBSHELL (773464)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;[BG 4] Starting recursive function.&quot; 1&gt;&amp;2' (89 us, 0.00%)</title><rect x="3398.0" y="147" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3401.00" y="161.5" ></text>
+</g>
+<g >
+<title>'wait (?)' (188 us, 0.01%)</title><rect x="862.7" y="171" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="865.71" y="185.5" ></text>
+</g>
+<g >
+<title>'exec 4&lt; &quot;$OUTPUT_PIPE&quot; (&amp;)' (1,084 us, 0.06%)</title><rect x="98.3" y="171" width="2.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="101.29" y="185.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773459)_[s] (323,844 us, 17.46%)</title><rect x="878.4" y="171" width="711.6" height="23.0" fill="rgb(254.329757838211,196.01868976259,239.249309197964)" rx="2" ry="2" />
+<text  x="881.37" y="185.5" >SUBSHELL (773459)_[s]</text>
+</g>
+<g >
+<title>'local depth=$1' (75 us, 0.00%)</title><rect x="3632.3" y="99" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3635.27" y="113.5" ></text>
+</g>
+<g >
+<title>'kill &quot;$CPID_PID&quot; 2&gt; /dev/null' (114 us, 0.01%)</title><rect x="863.4" y="171" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="866.39" y="185.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (181 us, 0.01%)</title><rect x="2037.2" y="147" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2040.22" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773462)_[s] (203,126 us, 10.95%)</title><rect x="1590.0" y="171" width="446.4" height="23.0" fill="rgb(236.622013596163,188.1709585315,221.58547926575)" rx="2" ry="2" />
+<text  x="1593.05" y="185.5" >SUBSHELL (773462)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (773478)_[s] (4,405 us, 0.24%)</title><rect x="3398.2" y="147" width="9.7" height="23.0" fill="rgb(223.527718504867,138.435994462472,197.300817258924)" rx="2" ry="2" />
+<text  x="3401.20" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (313,130 us, 16.88%)</title><rect x="2709.5" y="171" width="688.1" height="23.0" fill="rgb(249.32507268922,193.91107659572,234.303206278331)" rx="2" ry="2" />
+<text  x="2712.48" y="185.5" >SUBSHELL (773465)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (1,317 us, 0.98%)</title><rect x="3606.7" y="267" width="39.8" height="23.0" fill="rgb(224.412034985428,140.150848341513,198.44112129381)" rx="2" ry="2" />
+<text  x="3609.68" y="281.5" >SUBS..</text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (211 us, 0.16%)</title><rect x="3878.1" y="339" width="6.4" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3881.08" y="353.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 1] Writing to main FIFO.&quot; 1&gt;&amp;2' (120 us, 0.09%)</title><rect x="3335.8" y="291" width="3.6" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3338.79" y="305.5" ></text>
+</g>
+<g >
+<title>'set -o monitor' (124 us, 0.09%)</title><rect x="10.0" y="267" width="3.8" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="13.03" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot; 1&gt;&amp;2' (224 us, 0.17%)</title><rect x="3315.3" y="291" width="6.7" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="3318.28" y="305.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (3,575 us, 2.65%)</title><rect x="3978.0" y="339" width="108.0" height="23.0" fill="rgb(199.903905528754,143.694758643948,224.947584833866)" rx="2" ry="2" />
+<text  x="3980.99" y="353.5" >FUNCTION (recurs..</text>
+</g>
+<g >
+<title>'echo &quot;[BG 3 - Child] Decoded data: '\''$decoded_data'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (107 us, 0.08%)</title><rect x="3640.2" y="291" width="3.2" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3643.15" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 3] Running complex command.&quot; 1&gt;&amp;2' (102 us, 0.08%)</title><rect x="3410.2" y="291" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3413.21" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773463)_[s] (417 us, 0.31%)</title><rect x="3391.6" y="267" width="12.6" height="23.0" fill="rgb(223.094809372881,138.981124992293,196.990562496147)" rx="2" ry="2" />
+<text  x="3394.57" y="281.5" ></text>
+</g>
+<g >
+<title>'exec 4&lt; &quot;$OUTPUT_PIPE&quot; (&amp;)' (1,103 us, 0.82%)</title><rect x="1546.5" y="267" width="33.3" height="23.0" fill="rgb(42,85,236)" rx="2" ry="2" />
+<text  x="1549.49" y="281.5" >'ex..</text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (265 us, 0.20%)</title><rect x="3327.8" y="291" width="8.0" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="3330.79" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Waiting for background jobs to finish...&quot;' (89 us, 0.07%)</title><rect x="3068.8" y="267" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3071.81" y="281.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line' (48,758 us, 36.14%)</title><rect x="1579.8" y="267" width="1473.1" height="23.0" fill="rgb(254,1,0)" rx="2" ry="2" />
+<text  x="1582.81" y="281.5" >'read -r -u 4 line'</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Test complete.&quot;' (93 us, 0.07%)</title><rect x="3179.9" y="267" width="2.8" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3182.90" y="281.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (1,558 us, 1.15%)</title><rect x="3831.0" y="315" width="47.1" height="23.0" fill="rgb(45,91,233)" rx="2" ry="2" />
+<text  x="3834.01" y="329.5" >'slee..</text>
+</g>
+<g >
+<title>'echo &quot;$line&quot; 1&gt;&amp;3' (100 us, 0.07%)</title><rect x="3401.1" y="291" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3404.14" y="305.5" ></text>
+</g>
+<g >
+<title>'read -r line &lt; &quot;$FIFO_PATH&quot;' (159 us, 0.12%)</title><rect x="3391.6" y="291" width="4.8" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3394.57" y="305.5" ></text>
+</g>
+<g >
+<title>'wait' (143 us, 0.11%)</title><rect x="3071.5" y="267" width="4.3" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3074.49" y="281.5" ></text>
+</g>
+<g >
+<title>'read -r line' (636 us, 0.47%)</title><rect x="3296.1" y="291" width="19.2" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3299.06" y="305.5" >'..</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Read from coprocess: '\''$line'\''&quot;' (176 us, 0.13%)</title><rect x="3063.5" y="267" width="5.3" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3066.49" y="281.5" ></text>
+</g>
+<g >
+<title>'true' (112 us, 0.08%)</title><rect x="3090.1" y="267" width="3.4" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3093.14" y="281.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (2,303 us, 1.71%)</title><rect x="3997.7" y="363" width="69.6" height="23.0" fill="rgb(60,126,219)" rx="2" ry="2" />
+<text  x="4000.72" y="377.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (6,882 us, 5.10%)</title><rect x="3878.1" y="315" width="207.9" height="23.0" fill="rgb(200.581570470317,145.063778727913,225.317220256537)" rx="2" ry="2" />
+<text  x="3881.08" y="329.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>'local depth=$1' (180 us, 0.13%)</title><rect x="3983.3" y="363" width="5.4" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3986.28" y="377.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Data from BG 3&quot; | base64' (4,465 us, 3.31%)</title><rect x="3471.8" y="291" width="134.9" height="23.0" fill="rgb(102,193,166)" rx="2" ry="2" />
+<text  x="3474.78" y="305.5" >'echo "Data from BG ..</text>
+</g>
+<g >
+<title>'local depth=$1' (229 us, 0.17%)</title><rect x="4073.7" y="387" width="6.9" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="4076.70" y="401.5" ></text>
+</g>
+<g >
+<title>'recursive_function 1' (79 us, 0.06%)</title><rect x="3820.5" y="315" width="2.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3823.52" y="329.5" ></text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot; (?)' (84 us, 0.06%)</title><rect x="3177.4" y="267" width="2.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3180.36" y="281.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (23,865 us, 17.69%)</title><rect x="825.5" y="267" width="721.0" height="23.0" fill="rgb(183,150,40)" rx="2" ry="2" />
+<text  x="828.47" y="281.5" >'TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'</text>
+</g>
+<g >
+<title>'sleep 0.2' (1,633 us, 1.21%)</title><rect x="3342.2" y="291" width="49.4" height="23.0" fill="rgb(50,104,229)" rx="2" ry="2" />
+<text  x="3345.23" y="305.5" >'sleep..</text>
+</g>
+<g >
+<title>'echo &quot;$decoded_data&quot; 1&gt;&amp;3' (102 us, 0.08%)</title><rect x="3643.4" y="291" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3646.39" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (299 us, 0.22%)</title><rect x="3646.5" y="267" width="9.0" height="23.0" fill="rgb(223.574831613846,138.610487458689,197.387191292051)" rx="2" ry="2" />
+<text  x="3649.47" y="281.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (83 us, 0.06%)</title><rect x="3887.1" y="339" width="2.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3890.14" y="353.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (94 us, 0.07%)</title><rect x="3828.2" y="315" width="2.8" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3831.17" y="329.5" ></text>
+</g>
+<g >
+<title>'OUTPUT_PIPE=&quot;$TMPDIR/output.pipe&quot;' (165 us, 0.12%)</title><rect x="33.7" y="267" width="5.0" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="36.72" y="281.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (89 us, 0.07%)</title><rect x="3884.5" y="339" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3887.45" y="353.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (8,787 us, 6.51%)</title><rect x="3820.5" y="291" width="265.5" height="23.0" fill="rgb(201.262192361807,147.524384723613,225.444205798994)" rx="2" ry="2" />
+<text  x="3823.52" y="305.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (773434)_[s] (134,911 us, 100.00%)</title><rect x="10.0" y="243" width="4076.0" height="23.0" fill="rgb(225.842299389747,148.971997780898,201.985998890449)" rx="2" ry="2" />
+<text  x="13.00" y="257.5" >SUBSHELL (773434)_[s]</text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot;' (2,775 us, 2.06%)</title><rect x="3093.5" y="267" width="83.9" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3096.52" y="281.5" >'rm -rf "$TM..</text>
+</g>
+<g >
+<title>SUBSHELL (773456)_[s] (3,752 us, 2.78%)</title><rect x="3182.7" y="267" width="113.4" height="23.0" fill="rgb(230.528339837431,141.381577816644,204.308703948964)" rx="2" ry="2" />
+<text  x="3185.71" y="281.5" >SUBSHELL (773456)..</text>
+</g>
+<g >
+<title>SUBSHELL (773462)_[s] (2,111 us, 1.56%)</title><rect x="3327.8" y="267" width="63.8" height="23.0" fill="rgb(224.767108893968,140.913618467804,199.097673049224)" rx="2" ry="2" />
+<text  x="3330.79" y="281.5" >SUBSHELL..</text>
+</g>
+<g >
+<title>'echo &quot;[BG 2] Read from FIFO: '\''$line'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (158 us, 0.12%)</title><rect x="3396.4" y="291" width="4.7" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3399.37" y="305.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (350 us, 0.26%)</title><rect x="3052.9" y="267" width="10.6" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="3055.91" y="281.5" ></text>
+</g>
+<g >
+<title>'decoded_data=$(echo &quot;$encoded_data&quot; | base64 -d)' (794 us, 0.59%)</title><rect x="3616.2" y="291" width="24.0" height="23.0" fill="rgb(39,78,238)" rx="2" ry="2" />
+<text  x="3619.17" y="305.5" >'d..</text>
+</g>
+<g >
+<title>'return' (89 us, 0.07%)</title><rect x="4083.3" y="387" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4086.31" y="401.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (175 us, 0.13%)</title><rect x="3978.0" y="363" width="5.3" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3980.99" y="377.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (188 us, 0.14%)</title><rect x="3988.7" y="363" width="5.7" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3991.72" y="377.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Coprocess PID: $CPID_PID&quot;' (103 us, 0.08%)</title><rect x="822.4" y="267" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="825.35" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Starting the main logic.&quot;' (94 us, 0.07%)</title><rect x="819.5" y="267" width="2.9" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="822.51" y="281.5" ></text>
+</g>
+<g >
+<title>'wait (?)' (204 us, 0.15%)</title><rect x="3075.8" y="267" width="6.2" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3078.81" y="281.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (89 us, 0.07%)</title><rect x="4080.6" y="387" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4083.62" y="401.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (212 us, 0.16%)</title><rect x="4067.3" y="387" width="6.4" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="4070.30" y="401.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (200 us, 0.15%)</title><rect x="3404.2" y="291" width="6.0" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3407.16" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773464)_[s] (6,703 us, 4.97%)</title><rect x="3404.2" y="267" width="202.5" height="23.0" fill="rgb(225.33715950556,145.13762779837,200.618125760193)" rx="2" ry="2" />
+<text  x="3407.16" y="281.5" >SUBSHELL (773464)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (619 us, 0.46%)</title><rect x="4067.3" y="363" width="18.7" height="23.0" fill="rgb(198.204414345769,139.090641521977,224.284020003324)" rx="2" ry="2" />
+<text  x="4070.30" y="377.5" >F..</text>
+</g>
+<g >
+<title>'read -r encoded_data' (314 us, 0.23%)</title><rect x="3606.7" y="291" width="9.5" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="3609.68" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (5,462 us, 4.05%)</title><rect x="3655.5" y="267" width="165.0" height="23.0" fill="rgb(232.858974138628,142.546894967243,206.639338250161)" rx="2" ry="2" />
+<text  x="3658.50" y="281.5" >SUBSHELL (773465)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (8,787 us, 6.51%)</title><rect x="3820.5" y="267" width="265.5" height="23.0" fill="rgb(225.444205798994,147.524384723613,201.262192361807)" rx="2" ry="2" />
+<text  x="3823.52" y="281.5" >SUBSHELL (773466)_[s]</text>
+</g>
+<g >
+<title>'sleep 0.1' (2,829 us, 2.10%)</title><rect x="3892.5" y="339" width="85.5" height="23.0" fill="rgb(72,149,207)" rx="2" ry="2" />
+<text  x="3895.52" y="353.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'sleep 0.3' (1,936 us, 1.44%)</title><rect x="3413.3" y="291" width="58.5" height="23.0" fill="rgb(55,116,224)" rx="2" ry="2" />
+<text  x="3416.29" y="305.5" >'sleep ..</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (95 us, 0.07%)</title><rect x="3889.6" y="339" width="2.9" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3892.65" y="353.5" ></text>
+</g>
+<g >
+<title>'mkfifo &quot;$INPUT_PIPE&quot;' (3,543 us, 2.63%)</title><rect x="38.7" y="267" width="107.0" height="23.0" fill="rgb(86,174,188)" rx="2" ry="2" />
+<text  x="41.70" y="281.5" >'mkfifo "$INPUT_..</text>
+</g>
+<g >
+<title>'TMPDIR=$(mktemp -d)' (496 us, 0.37%)</title><rect x="13.8" y="267" width="15.0" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="16.78" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Message from BG 1&quot; &gt; &quot;$FIFO_PATH&quot;' (93 us, 0.07%)</title><rect x="3339.4" y="291" width="2.8" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3342.42" y="305.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (86 us, 0.06%)</title><rect x="3825.6" y="315" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3828.57" y="329.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$encoded_data&quot; | base64 -d' (5,462 us, 4.05%)</title><rect x="3655.5" y="315" width="165.0" height="23.0" fill="rgb(112,201,152)" rx="2" ry="2" />
+<text  x="3658.50" y="329.5" >'echo "$encoded_data" | b..</text>
+</g>
+<g >
+<title>'INPUT_PIPE=&quot;$TMPDIR/input.pipe&quot;' (164 us, 0.12%)</title><rect x="28.8" y="267" width="4.9" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="31.76" y="281.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;[TRAP] A child process has exited.&quot;'\'' SIGCHLD (&amp;)' (19,369 us, 14.36%)</title><rect x="234.3" y="267" width="585.2" height="23.0" fill="rgb(145,202,97)" rx="2" ry="2" />
+<text  x="237.33" y="281.5" >'trap '\''echo "[TRAP] A child process has exited."'\'' SIGCHLD (&amp;)'</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Cleaning up.&quot;' (137 us, 0.10%)</title><rect x="3082.0" y="267" width="4.1" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3084.98" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773478)_[s] (5,462 us, 4.05%)</title><rect x="3655.5" y="291" width="165.0" height="23.0" fill="rgb(232.858974138628,142.546894967243,206.639338250161)" rx="2" ry="2" />
+<text  x="3658.50" y="305.5" >SUBSHELL (773478)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (773459)_[s] (1,050 us, 0.78%)</title><rect x="3296.1" y="267" width="31.7" height="23.0" fill="rgb(224.166935374589,139.230568670628,197.987918239807)" rx="2" ry="2" />
+<text  x="3299.06" y="281.5" >SUB..</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (110 us, 0.08%)</title><rect x="3994.4" y="363" width="3.3" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3997.40" y="377.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot;' (190 us, 0.14%)</title><rect x="3322.0" y="291" width="5.8" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3325.05" y="305.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (196 us, 0.15%)</title><rect x="3646.5" y="291" width="5.9" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3649.47" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 4] Starting recursive function.&quot; 1&gt;&amp;2' (103 us, 0.08%)</title><rect x="3652.4" y="291" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3655.39" y="305.5" ></text>
+</g>
+<g >
+<title>'mkfifo &quot;$OUTPUT_PIPE&quot;' (2,932 us, 2.17%)</title><rect x="145.7" y="267" width="88.6" height="23.0" fill="rgb(78,161,199)" rx="2" ry="2" />
+<text  x="148.74" y="281.5" >'mkfifo "$OUT..</text>
+</g>
+<g >
+<title>'local depth=$1' (88 us, 0.07%)</title><rect x="3822.9" y="315" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3825.91" y="329.5" ></text>
+</g>
+<g >
+<title>'kill &quot;$CPID_PID&quot; 2&gt; /dev/null' (133 us, 0.10%)</title><rect x="3086.1" y="267" width="4.0" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3089.12" y="281.5" ></text>
+</g>
+<g >
+<title>'mktemp -d' (3,752 us, 2.78%)</title><rect x="3182.7" y="291" width="113.4" height="23.0" fill="rgb(92,182,180)" rx="2" ry="2" />
+<text  x="3185.71" y="305.5" >'mktemp -d'</text>
+</g>
+<g >
+<title>all (134,911 us, 100%)</title><rect x="10.0" y="219" width="4076.0" height="23.0" fill="rgb(123,206,133)" rx="2" ry="2" />
+<text  x="13.00" y="233.5" ></text>
+</g><g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (1,972 us, 0.11%)</title><rect x="795.5" y="666" width="4.3" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="798.45" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Message from BG 1&quot; &gt; &quot;$FIFO_PATH&quot;' (80 us, 0.00%)</title><rect x="1590.8" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1593.80" y="656.5" ></text>
+</g>
+<g >
+<title>'INPUT_PIPE=&quot;$TMPDIR/input.pipe&quot;' (140 us, 0.01%)</title><rect x="11.8" y="666" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="14.77" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Data from BG 3&quot; | base64' (3,634 us, 0.20%)</title><rect x="2701.5" y="642" width="8.0" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="2704.50" y="656.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (1,980 us, 0.11%)</title><rect x="790.9" y="666" width="4.4" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="793.95" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 4] Starting recursive function.&quot; 1&gt;&amp;2' (89 us, 0.00%)</title><rect x="3398.0" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3401.00" y="656.5" ></text>
+</g>
+<g >
+<title>'return' (74 us, 0.00%)</title><rect x="4085.8" y="546" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4088.84" y="560.5" ></text>
+</g>
+<g >
+<title>'read -r line &lt; &quot;$FIFO_PATH&quot;' (138 us, 0.01%)</title><rect x="2036.4" y="642" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2039.43" y="656.5" ></text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot; (?)' (70 us, 0.00%)</title><rect x="869.8" y="666" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="872.80" y="680.5" ></text>
+</g>
+<g >
+<title>'read -r line' (3,725 us, 0.20%)</title><rect x="878.4" y="642" width="8.2" height="23.0" fill="rgb(106,165,231)" rx="2" ry="2" />
+<text  x="881.37" y="656.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (206,644 us, 11.14%)</title><rect x="3631.9" y="618" width="454.1" height="23.0" fill="rgb(221.616324180295,188.23264836059,236.638978299162)" rx="2" ry="2" />
+<text  x="3634.88" y="632.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (1,996 us, 0.11%)</title><rect x="786.4" y="666" width="4.4" height="23.0" fill="rgb(15,20,251)" rx="2" ry="2" />
+<text  x="789.40" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (82 us, 0.00%)</title><rect x="3632.6" y="594" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3635.59" y="608.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Coprocess PID: $CPID_PID&quot;' (89 us, 0.00%)</title><rect x="69.2" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="72.22" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot;' (73 us, 0.00%)</title><rect x="886.8" y="642" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="889.76" y="656.5" ></text>
+</g>
+<g >
+<title>all (1,854,759 us, 100%)</title><rect x="10.0" y="714" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="728.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (95 us, 0.01%)</title><rect x="3859.8" y="570" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3862.79" y="584.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (102,840 us, 5.54%)</title><rect x="3632.8" y="594" width="226.0" height="23.0" fill="rgb(167,209,185)" rx="2" ry="2" />
+<text  x="3635.77" y="608.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (159 us, 0.01%)</title><rect x="3859.4" y="570" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3862.44" y="584.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot;' (88 us, 0.00%)</title><rect x="1589.6" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1592.59" y="656.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 3] Running complex command.&quot; 1&gt;&amp;2' (88 us, 0.00%)</title><rect x="2037.6" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2040.62" y="656.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Test complete.&quot;' (79 us, 0.00%)</title><rect x="869.9" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="872.95" y="680.5" ></text>
+</g>
+<g >
+<title>'decoded_data=$(echo &quot;$encoded_data&quot; | base64 -d)' (1,402 us, 0.08%)</title><rect x="3394.1" y="642" width="3.1" height="23.0" fill="rgb(12,16,253)" rx="2" ry="2" />
+<text  x="3397.13" y="656.5" ></text>
+</g>
+<g >
+<title>'read -r encoded_data' (311,543 us, 16.80%)</title><rect x="2709.5" y="642" width="684.6" height="23.0" fill="rgb(211,211,211)" rx="2" ry="2" />
+<text  x="2712.48" y="656.5" >'read -r encoded_data'</text>
+</g>
+<g >
+<title>'wait' (23,590 us, 1.27%)</title><rect x="800.9" y="666" width="51.8" height="23.0" fill="rgb(202,211,213)" rx="2" ry="2" />
+<text  x="803.87" y="680.5" >'wait'</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (522 us, 0.03%)</title><rect x="4084.9" y="570" width="1.1" height="23.0" fill="rgb(197.060176282623,139.120352565247,223.133096955443)" rx="2" ry="2" />
+<text  x="4087.85" y="584.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$decoded_data&quot; 1&gt;&amp;3' (92 us, 0.00%)</title><rect x="3397.4" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3400.41" y="656.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (2,602 us, 0.14%)</title><rect x="852.7" y="666" width="5.7" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="855.71" y="680.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773462)_[s] (203,126 us, 10.95%)</title><rect x="1590.0" y="666" width="446.4" height="23.0" fill="rgb(236.622013596163,188.1709585315,221.58547926575)" rx="2" ry="2" />
+<text  x="1593.05" y="680.5" >SUBSHELL (773462)_[s]</text>
+</g>
+<g >
+<title>'read -r -u 4 line' (318,793 us, 17.19%)</title><rect x="85.8" y="666" width="700.6" height="23.0" fill="rgb(246,48,19)" rx="2" ry="2" />
+<text  x="88.83" y="680.5" >'read -r -u 4 line'</text>
+</g>
+<g >
+<title>'OUTPUT_PIPE=&quot;$TMPDIR/output.pipe&quot;' (144 us, 0.01%)</title><rect x="12.1" y="666" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="15.07" y="680.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (74 us, 0.00%)</title><rect x="3408.0" y="618" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3411.02" y="632.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (102,320 us, 5.52%)</title><rect x="3860.0" y="570" width="224.9" height="23.0" fill="rgb(168,208,201)" rx="2" ry="2" />
+<text  x="3863.00" y="584.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'read -r -u 4 line' (3,785 us, 0.20%)</title><rect x="72.5" y="666" width="8.4" height="23.0" fill="rgb(29,51,245)" rx="2" ry="2" />
+<text  x="75.55" y="680.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773434)_[s] (1,854,759 us, 100.00%)</title><rect x="10.0" y="690" width="4076.0" height="23.0" fill="rgb(236.666666658609,188.333333304032,221.666666652016)" rx="2" ry="2" />
+<text  x="13.00" y="704.5" >SUBSHELL (773434)_[s]</text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (181 us, 0.01%)</title><rect x="2037.2" y="642" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2040.22" y="656.5" ></text>
+</g>
+<g >
+<title>'read -r line' (319,641 us, 17.23%)</title><rect x="886.9" y="642" width="702.5" height="23.0" fill="rgb(212,211,211)" rx="2" ry="2" />
+<text  x="889.92" y="656.5" >'read -r line'</text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot;' (2,709 us, 0.15%)</title><rect x="859.6" y="666" width="5.9" height="23.0" fill="rgb(20,30,250)" rx="2" ry="2" />
+<text  x="862.56" y="680.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (181 us, 0.01%)</title><rect x="69.4" y="666" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="72.41" y="680.5" ></text>
+</g>
+<g >
+<title>'sleep 0.3' (302,005 us, 16.28%)</title><rect x="2037.8" y="642" width="663.7" height="23.0" fill="rgb(211,211,200)" rx="2" ry="2" />
+<text  x="2040.81" y="656.5" >'sleep 0.3'</text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (176 us, 0.01%)</title><rect x="3397.6" y="642" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3400.61" y="656.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (82 us, 0.00%)</title><rect x="799.8" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="802.79" y="680.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (101,641 us, 5.48%)</title><rect x="3408.5" y="618" width="223.4" height="23.0" fill="rgb(178,208,211)" rx="2" ry="2" />
+<text  x="3411.52" y="632.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'TMPDIR=$(mktemp -d)' (700 us, 0.04%)</title><rect x="10.2" y="666" width="1.6" height="23.0" fill="rgb(1,3,254)" rx="2" ry="2" />
+<text  x="13.23" y="680.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (4,405 us, 0.24%)</title><rect x="3398.2" y="666" width="9.7" height="23.0" fill="rgb(223.527718504867,138.435994462472,197.300817258924)" rx="2" ry="2" />
+<text  x="3401.20" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Read from coprocess: '\''$line'\''&quot;' (75 us, 0.00%)</title><rect x="85.7" y="666" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="88.66" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot; 1&gt;&amp;2' (95 us, 0.01%)</title><rect x="886.6" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="889.55" y="656.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (188 us, 0.01%)</title><rect x="800.3" y="666" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="803.30" y="680.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (1,947 us, 0.10%)</title><rect x="865.5" y="666" width="4.3" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="868.52" y="680.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773463)_[s] (359 us, 0.02%)</title><rect x="2036.4" y="666" width="0.8" height="23.0" fill="rgb(223.102741668367,139.009969703154,197.004984851577)" rx="2" ry="2" />
+<text  x="2039.43" y="680.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (149 us, 0.01%)</title><rect x="3858.8" y="570" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3861.77" y="584.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773478)_[s] (4,405 us, 0.24%)</title><rect x="3398.2" y="642" width="9.7" height="23.0" fill="rgb(223.527718504867,138.435994462472,197.300817258924)" rx="2" ry="2" />
+<text  x="3401.20" y="656.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (71 us, 0.00%)</title><rect x="795.3" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="798.30" y="680.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (71 us, 0.00%)</title><rect x="790.8" y="666" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="793.79" y="680.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (72 us, 0.00%)</title><rect x="85.5" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="88.50" y="680.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (75 us, 0.00%)</title><rect x="3632.3" y="594" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3635.27" y="608.5" ></text>
+</g>
+<g >
+<title>'true' (94 us, 0.01%)</title><rect x="859.4" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="862.36" y="680.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (179 us, 0.01%)</title><rect x="4084.9" y="546" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4087.85" y="560.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (160 us, 0.01%)</title><rect x="72.2" y="666" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="75.19" y="680.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (240 us, 0.01%)</title><rect x="1590.0" y="642" width="0.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1593.05" y="656.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773464)_[s] (305,908 us, 16.49%)</title><rect x="2037.2" y="666" width="672.3" height="23.0" fill="rgb(236.655136506481,188.291405478111,221.645702739055)" rx="2" ry="2" />
+<text  x="2040.22" y="680.5" >SUBSHELL (773464)_[s]</text>
+</g>
+<g >
+<title>'mktemp -d' (3,752 us, 0.20%)</title><rect x="870.1" y="642" width="8.3" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="873.12" y="656.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot; 1&gt;&amp;2' (103 us, 0.01%)</title><rect x="1589.4" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1592.36" y="656.5" ></text>
+</g>
+<g >
+<title>'sleep 0.2' (202,702 us, 10.93%)</title><rect x="1591.0" y="642" width="445.4" height="23.0" fill="rgb(206,211,201)" rx="2" ry="2" />
+<text  x="1593.98" y="656.5" >'sleep 0.2'</text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (72 us, 0.00%)</title><rect x="3408.2" y="618" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3411.18" y="632.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (2,112 us, 0.11%)</title><rect x="80.9" y="666" width="4.6" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="83.86" y="680.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line' (76 us, 0.00%)</title><rect x="800.1" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="803.13" y="680.5" ></text>
+</g>
+<g >
+<title>'wait (?)' (188 us, 0.01%)</title><rect x="858.4" y="666" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="861.43" y="680.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (178 us, 0.01%)</title><rect x="3631.9" y="594" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3634.88" y="608.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (74 us, 0.00%)</title><rect x="4085.7" y="546" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4088.67" y="560.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;[TRAP] A child process has exited.&quot;'\'' SIGCHLD (&amp;)' (19,428 us, 1.05%)</title><rect x="26.4" y="666" width="42.6" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="29.35" y="680.5" >'trap..</text>
+</g>
+<g >
+<title>'read -r line' (119 us, 0.01%)</title><rect x="1589.8" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1592.78" y="656.5" ></text>
+</g>
+<g >
+<title>'mkfifo &quot;$INPUT_PIPE&quot;' (3,476 us, 0.19%)</title><rect x="12.4" y="666" width="7.6" height="23.0" fill="rgb(23,38,248)" rx="2" ry="2" />
+<text  x="15.39" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 1] Writing to main FIFO.&quot; 1&gt;&amp;2' (104 us, 0.01%)</title><rect x="1590.6" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1593.57" y="656.5" ></text>
+</g>
+<g >
+<title>'set -o monitor' (103 us, 0.01%)</title><rect x="10.0" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="13.00" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$encoded_data&quot; | base64 -d' (4,405 us, 0.24%)</title><rect x="3398.2" y="618" width="9.7" height="23.0" fill="rgb(29,51,245)" rx="2" ry="2" />
+<text  x="3401.20" y="632.5" ></text>
+</g>
+<g >
+<title>'recursive_function 1' (65 us, 0.00%)</title><rect x="3407.9" y="618" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3410.88" y="632.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (313,130 us, 16.88%)</title><rect x="2709.5" y="666" width="688.1" height="23.0" fill="rgb(249.658891942795,193.91107659572,234.637025531907)" rx="2" ry="2" />
+<text  x="2712.48" y="680.5" >SUBSHELL (773465)_[s]</text>
+</g>
+<g >
+<title>'kill &quot;$CPID_PID&quot; 2&gt; /dev/null' (114 us, 0.01%)</title><rect x="859.1" y="666" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="862.11" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 2] Read from FIFO: '\''$line'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (137 us, 0.01%)</title><rect x="2036.7" y="642" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2039.74" y="656.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773456)_[s] (3,752 us, 0.20%)</title><rect x="870.1" y="666" width="8.3" height="23.0" fill="rgb(223.541569216151,138.48729339315,197.32621022961)" rx="2" ry="2" />
+<text  x="873.12" y="680.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773459)_[s] (323,844 us, 17.46%)</title><rect x="878.4" y="666" width="711.6" height="23.0" fill="rgb(236.995004028976,188.314829736946,221.990840719788)" rx="2" ry="2" />
+<text  x="881.37" y="680.5" >SUBSHELL (773459)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Read from coprocess: '\''$line'\''&quot;' (73 us, 0.00%)</title><rect x="800.0" y="666" width="0.1" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="802.97" y="680.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (103,399 us, 5.57%)</title><rect x="3858.8" y="594" width="227.2" height="23.0" fill="rgb(221.532307858837,188.064615717675,236.592769322361)" rx="2" ry="2" />
+<text  x="3861.77" y="608.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (70 us, 0.00%)</title><rect x="3632.4" y="594" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3635.44" y="608.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Starting the main logic.&quot;' (79 us, 0.00%)</title><rect x="69.0" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="72.04" y="680.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (195 us, 0.01%)</title><rect x="4085.2" y="546" width="0.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4088.25" y="560.5" ></text>
+</g>
+<g >
+<title>'exec 4&lt; &quot;$OUTPUT_PIPE&quot; (&amp;)' (1,084 us, 0.06%)</title><rect x="69.8" y="666" width="2.4" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="72.81" y="680.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (154 us, 0.01%)</title><rect x="3859.1" y="570" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3862.10" y="584.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (265 us, 0.01%)</title><rect x="3397.6" y="666" width="0.6" height="23.0" fill="rgb(222.99074913799,138.602724138144,196.801362069072)" rx="2" ry="2" />
+<text  x="3400.61" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot; 1&gt;&amp;3' (84 us, 0.00%)</title><rect x="2037.0" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2040.04" y="656.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (308,576 us, 16.64%)</title><rect x="3407.9" y="642" width="678.1" height="23.0" fill="rgb(221.663398000458,188.326796000916,236.664868900252)" rx="2" ry="2" />
+<text  x="3410.88" y="656.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (308,576 us, 16.64%)</title><rect x="3407.9" y="666" width="678.1" height="23.0" fill="rgb(236.664868900252,188.326796000916,221.663398000458)" rx="2" ry="2" />
+<text  x="3410.88" y="680.5" >SUBSHELL (773466)_[s]</text>
+</g>
+<g >
+<title>'mkfifo &quot;$OUTPUT_PIPE&quot;' (2,876 us, 0.16%)</title><rect x="20.0" y="666" width="6.4" height="23.0" fill="rgb(20,30,250)" rx="2" ry="2" />
+<text  x="23.03" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Waiting for background jobs to finish...&quot;' (75 us, 0.00%)</title><rect x="800.7" y="666" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="803.71" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (80 us, 0.00%)</title><rect x="3408.3" y="618" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3411.34" y="632.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Cleaning up.&quot;' (119 us, 0.01%)</title><rect x="858.8" y="666" width="0.3" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="861.85" y="680.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 3 - Child] Decoded data: '\''$decoded_data'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (93 us, 0.01%)</title><rect x="3397.2" y="642" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3400.21" y="656.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773434)_[s] (134,911 us, 100.00%)</title><rect x="10.0" y="738" width="4076.0" height="23.0" fill="rgb(225.842299389747,148.971997780898,201.985998890449)" rx="2" ry="2" />
+<text  x="13.00" y="752.5" >SUBSHELL (773434)_[s]</text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (197 us, 0.15%)</title><rect x="825.5" y="762" width="5.9" height="23.0" fill="rgb(32,58,243)" rx="2" ry="2" />
+<text  x="828.47" y="776.5" ></text>
+</g>
+<g >
+<title>'true' (112 us, 0.08%)</title><rect x="3031.3" y="762" width="3.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3034.31" y="776.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Coprocess PID: $CPID_PID&quot;' (103 us, 0.08%)</title><rect x="822.4" y="762" width="3.1" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="825.35" y="776.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (89 us, 0.07%)</title><rect x="4080.6" y="882" width="2.7" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="4083.62" y="896.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (265 us, 0.20%)</title><rect x="3327.8" y="786" width="8.0" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="3330.79" y="800.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (200 us, 0.15%)</title><rect x="3404.2" y="786" width="6.0" height="23.0" fill="rgb(32,58,243)" rx="2" ry="2" />
+<text  x="3407.16" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot; 1&gt;&amp;3' (100 us, 0.07%)</title><rect x="3401.1" y="786" width="3.1" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="3404.14" y="800.5" ></text>
+</g>
+<g >
+<title>'TMPDIR=$(mktemp -d)' (496 us, 0.37%)</title><rect x="13.8" y="762" width="15.0" height="23.0" fill="rgb(39,76,238)" rx="2" ry="2" />
+<text  x="16.78" y="776.5" ></text>
+</g>
+<g >
+<title>'sleep 0.2' (1,633 us, 1.21%)</title><rect x="3342.2" y="786" width="49.4" height="23.0" fill="rgb(52,107,228)" rx="2" ry="2" />
+<text  x="3345.23" y="800.5" >'sleep..</text>
+</g>
+<g >
+<title>'INPUT_PIPE=&quot;$TMPDIR/input.pipe&quot;' (164 us, 0.12%)</title><rect x="28.8" y="762" width="4.9" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="31.76" y="776.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (86 us, 0.06%)</title><rect x="1118.2" y="762" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1121.19" y="776.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (211 us, 0.16%)</title><rect x="3878.1" y="834" width="6.4" height="23.0" fill="rgb(34,65,242)" rx="2" ry="2" />
+<text  x="3881.08" y="848.5" ></text>
+</g>
+<g >
+<title>'OUTPUT_PIPE=&quot;$TMPDIR/output.pipe&quot;' (165 us, 0.12%)</title><rect x="33.7" y="762" width="5.0" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="36.72" y="776.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;[TRAP] A child process has exited.&quot;'\'' SIGCHLD (&amp;)' (19,369 us, 14.36%)</title><rect x="234.3" y="762" width="585.2" height="23.0" fill="rgb(192,131,30)" rx="2" ry="2" />
+<text  x="237.33" y="776.5" >'trap '\''echo "[TRAP] A child process has exited."'\'' SIGCHLD (&amp;)'</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (6,882 us, 5.10%)</title><rect x="3878.1" y="810" width="207.9" height="23.0" fill="rgb(201.131251576677,145.613459834273,225.866901362897)" rx="2" ry="2" />
+<text  x="3881.08" y="824.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (1,317 us, 0.98%)</title><rect x="3606.7" y="762" width="39.8" height="23.0" fill="rgb(224.412034985428,140.150848341513,198.44112129381)" rx="2" ry="2" />
+<text  x="3609.68" y="776.5" >SUBS..</text>
+</g>
+<g >
+<title>'mkfifo &quot;$INPUT_PIPE&quot;' (3,543 us, 2.63%)</title><rect x="38.7" y="762" width="107.0" height="23.0" fill="rgb(107,197,159)" rx="2" ry="2" />
+<text  x="41.70" y="776.5" >'mkfifo "$INPUT_..</text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (5,462 us, 4.05%)</title><rect x="3655.5" y="762" width="165.0" height="23.0" fill="rgb(235.189608439825,143.712212117841,208.969972551358)" rx="2" ry="2" />
+<text  x="3658.50" y="776.5" >SUBSHELL (773465)_[s]</text>
+</g>
+<g >
+<title>all (134,911 us, 100%)</title><rect x="10.0" y="714" width="4076.0" height="23.0" fill="rgb(125,206,130)" rx="2" ry="2" />
+<text  x="13.00" y="728.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (95 us, 0.07%)</title><rect x="2916.8" y="762" width="2.9" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="2919.81" y="776.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (8,787 us, 6.51%)</title><rect x="3820.5" y="786" width="265.5" height="23.0" fill="rgb(201.262192361807,147.524384723613,225.444205798994)" rx="2" ry="2" />
+<text  x="3823.52" y="800.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (2,612 us, 1.94%)</title><rect x="2938.1" y="762" width="78.9" height="23.0" fill="rgb(84,170,192)" rx="2" ry="2" />
+<text  x="2941.08" y="776.5" >'TRAP (SIGC..</text>
+</g>
+<g >
+<title>'mkfifo &quot;$OUTPUT_PIPE&quot;' (2,932 us, 2.17%)</title><rect x="145.7" y="762" width="88.6" height="23.0" fill="rgb(101,192,168)" rx="2" ry="2" />
+<text  x="148.74" y="776.5" >'mkfifo "$OUT..</text>
+</g>
+<g >
+<title>'echo &quot;Data from BG 3&quot; | base64' (4,465 us, 3.31%)</title><rect x="3471.8" y="786" width="134.9" height="23.0" fill="rgb(121,205,137)" rx="2" ry="2" />
+<text  x="3474.78" y="800.5" >'echo "Data from BG ..</text>
+</g>
+<g >
+<title>'kill &quot;$CPID_PID&quot; 2&gt; /dev/null' (133 us, 0.10%)</title><rect x="3027.3" y="762" width="4.0" height="23.0" fill="rgb(23,38,248)" rx="2" ry="2" />
+<text  x="3030.29" y="776.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773459)_[s] (1,050 us, 0.78%)</title><rect x="3296.1" y="762" width="31.7" height="23.0" fill="rgb(224.15564074191,140.761632377444,198.452008026835)" rx="2" ry="2" />
+<text  x="3299.06" y="776.5" >SUB..</text>
+</g>
+<g >
+<title>'read -r line' (360 us, 0.27%)</title><rect x="3306.0" y="786" width="10.9" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="3309.00" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Waiting for background jobs to finish...&quot;' (89 us, 0.07%)</title><rect x="2931.1" y="762" width="2.7" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="2934.07" y="776.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (88 us, 0.07%)</title><rect x="3822.9" y="810" width="2.7" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="3825.91" y="824.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (1,977 us, 1.47%)</title><rect x="2794.7" y="762" width="59.7" height="23.0" fill="rgb(65,136,214)" rx="2" ry="2" />
+<text  x="2797.72" y="776.5" >'TRAP (S..</text>
+</g>
+<g >
+<title>SUBSHELL (773478)_[s] (5,462 us, 4.05%)</title><rect x="3655.5" y="786" width="165.0" height="23.0" fill="rgb(235.189608439825,143.712212117841,208.969972551358)" rx="2" ry="2" />
+<text  x="3658.50" y="800.5" >SUBSHELL (773478)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (95 us, 0.07%)</title><rect x="3889.6" y="834" width="2.9" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="3892.65" y="848.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot; 1&gt;&amp;2' (121 us, 0.09%)</title><rect x="3316.9" y="786" width="3.6" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3319.88" y="800.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (299 us, 0.22%)</title><rect x="3646.5" y="762" width="9.0" height="23.0" fill="rgb(223.574831613846,138.610487458689,197.387191292051)" rx="2" ry="2" />
+<text  x="3649.47" y="776.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (89 us, 0.07%)</title><rect x="3884.5" y="834" width="2.6" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="3887.45" y="848.5" ></text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot; (?)' (84 us, 0.06%)</title><rect x="3177.4" y="762" width="2.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3180.36" y="776.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (212 us, 0.16%)</title><rect x="4067.3" y="882" width="6.4" height="23.0" fill="rgb(34,65,242)" rx="2" ry="2" />
+<text  x="4070.30" y="896.5" ></text>
+</g>
+<g >
+<title>'read -r line &lt; &quot;$FIFO_PATH&quot;' (159 us, 0.12%)</title><rect x="3391.6" y="786" width="4.8" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="3394.57" y="800.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773463)_[s] (417 us, 0.31%)</title><rect x="3391.6" y="762" width="12.6" height="23.0" fill="rgb(223.674903747919,138.981124992293,197.570656871185)" rx="2" ry="2" />
+<text  x="3394.57" y="776.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 3 - Child] Decoded data: '\''$decoded_data'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (107 us, 0.08%)</title><rect x="3640.2" y="786" width="3.2" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3643.15" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 1] Writing to main FIFO.&quot; 1&gt;&amp;2' (120 us, 0.09%)</title><rect x="3335.8" y="786" width="3.6" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3338.79" y="800.5" ></text>
+</g>
+<g >
+<title>'wait (?)' (204 us, 0.15%)</title><rect x="3017.0" y="762" width="6.2" height="23.0" fill="rgb(32,58,243)" rx="2" ry="2" />
+<text  x="3019.99" y="776.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Message from BG 1&quot; &gt; &quot;$FIFO_PATH&quot;' (93 us, 0.07%)</title><rect x="3339.4" y="786" width="2.8" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="3342.42" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Test complete.&quot;' (93 us, 0.07%)</title><rect x="3179.9" y="762" width="2.8" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="3182.90" y="776.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (86 us, 0.06%)</title><rect x="3825.6" y="810" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3828.57" y="824.5" ></text>
+</g>
+<g >
+<title>'set -o monitor' (124 us, 0.09%)</title><rect x="10.0" y="762" width="3.8" height="23.0" fill="rgb(23,38,248)" rx="2" ry="2" />
+<text  x="13.03" y="776.5" ></text>
+</g>
+<g >
+<title>'read -r line' (140 us, 0.10%)</title><rect x="3296.1" y="786" width="4.2" height="23.0" fill="rgb(23,38,248)" rx="2" ry="2" />
+<text  x="3299.06" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$decoded_data&quot; 1&gt;&amp;3' (102 us, 0.08%)</title><rect x="3643.4" y="786" width="3.1" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="3646.39" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Read from coprocess: '\''$line'\''&quot;' (89 us, 0.07%)</title><rect x="1120.8" y="762" width="2.7" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="1123.79" y="776.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot;' (86 us, 0.06%)</title><rect x="3303.4" y="786" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3306.41" y="800.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (229 us, 0.17%)</title><rect x="4073.7" y="882" width="6.9" height="23.0" fill="rgb(34,65,242)" rx="2" ry="2" />
+<text  x="4076.70" y="896.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (180 us, 0.13%)</title><rect x="3983.3" y="858" width="5.4" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="3986.28" y="872.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (8,787 us, 6.51%)</title><rect x="3820.5" y="762" width="265.5" height="23.0" fill="rgb(225.444205798994,147.524384723613,201.262192361807)" rx="2" ry="2" />
+<text  x="3823.52" y="776.5" >SUBSHELL (773466)_[s]</text>
+</g>
+<g >
+<title>'read -r encoded_data' (314 us, 0.23%)</title><rect x="3606.7" y="786" width="9.5" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="3609.68" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Read from coprocess: '\''$line'\''&quot;' (87 us, 0.06%)</title><rect x="2919.7" y="762" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2922.68" y="776.5" ></text>
+</g>
+<g >
+<title>'return' (89 us, 0.07%)</title><rect x="4083.3" y="882" width="2.7" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="4086.31" y="896.5" ></text>
+</g>
+<g >
+<title>'mktemp -d' (3,752 us, 2.78%)</title><rect x="3182.7" y="786" width="113.4" height="23.0" fill="rgb(114,202,148)" rx="2" ry="2" />
+<text  x="3185.71" y="800.5" >'mktemp -d'</text>
+</g>
+<g >
+<title>'read -r line' (136 us, 0.10%)</title><rect x="3323.7" y="786" width="4.1" height="23.0" fill="rgb(23,38,248)" rx="2" ry="2" />
+<text  x="3326.68" y="800.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line' (42,464 us, 31.48%)</title><rect x="1123.5" y="762" width="1282.9" height="23.0" fill="rgb(254,1,0)" rx="2" ry="2" />
+<text  x="1126.48" y="776.5" >'read -r -u 4 line'</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Cleaning up.&quot;' (137 us, 0.10%)</title><rect x="3023.2" y="762" width="4.1" height="23.0" fill="rgb(23,38,248)" rx="2" ry="2" />
+<text  x="3026.15" y="776.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (83 us, 0.06%)</title><rect x="3887.1" y="834" width="2.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3890.14" y="848.5" ></text>
+</g>
+<g >
+<title>'wait' (143 us, 0.11%)</title><rect x="2933.8" y="762" width="4.3" height="23.0" fill="rgb(23,38,248)" rx="2" ry="2" />
+<text  x="2936.76" y="776.5" ></text>
+</g>
+<g >
+<title>'recursive_function 1' (79 us, 0.06%)</title><rect x="3820.5" y="810" width="2.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3823.52" y="824.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (1,558 us, 1.15%)</title><rect x="3831.0" y="810" width="47.1" height="23.0" fill="rgb(48,98,231)" rx="2" ry="2" />
+<text  x="3834.01" y="824.5" >'slee..</text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (12,767 us, 9.46%)</title><rect x="2406.4" y="762" width="385.7" height="23.0" fill="rgb(161,186,71)" rx="2" ry="2" />
+<text  x="2409.43" y="776.5" >'TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'</text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (175 us, 0.13%)</title><rect x="3978.0" y="858" width="5.3" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="3980.99" y="872.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$encoded_data&quot; | base64 -d' (5,462 us, 4.05%)</title><rect x="3655.5" y="810" width="165.0" height="23.0" fill="rgb(131,207,121)" rx="2" ry="2" />
+<text  x="3658.50" y="824.5" >'echo "$encoded_data" | b..</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (3,575 us, 2.65%)</title><rect x="3978.0" y="834" width="108.0" height="23.0" fill="rgb(199.903905528754,143.694758643948,224.947584833866)" rx="2" ry="2" />
+<text  x="3980.99" y="848.5" >FUNCTION (recurs..</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (94 us, 0.07%)</title><rect x="3828.2" y="810" width="2.8" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="3831.17" y="824.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 2] Read from FIFO: '\''$line'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (158 us, 0.12%)</title><rect x="3396.4" y="786" width="4.7" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="3399.37" y="800.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (1,947 us, 1.44%)</title><rect x="3118.5" y="762" width="58.9" height="23.0" fill="rgb(61,129,218)" rx="2" ry="2" />
+<text  x="3121.53" y="776.5" >'TRAP (..</text>
+</g>
+<g >
+<title>SUBSHELL (773464)_[s] (6,703 us, 4.97%)</title><rect x="3404.2" y="762" width="202.5" height="23.0" fill="rgb(225.886471366568,145.686939659378,201.167437621201)" rx="2" ry="2" />
+<text  x="3407.16" y="776.5" >SUBSHELL (773464)_[s]</text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (200 us, 0.15%)</title><rect x="2925.0" y="762" width="6.1" height="23.0" fill="rgb(32,58,243)" rx="2" ry="2" />
+<text  x="2928.02" y="776.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (85 us, 0.06%)</title><rect x="2792.1" y="762" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2795.15" y="776.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773462)_[s] (2,111 us, 1.56%)</title><rect x="3327.8" y="762" width="63.8" height="23.0" fill="rgb(224.767108893968,141.484050375465,199.097673049224)" rx="2" ry="2" />
+<text  x="3330.79" y="776.5" >SUBSHELL..</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Starting the main logic.&quot;' (94 us, 0.07%)</title><rect x="819.5" y="762" width="2.9" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="822.51" y="776.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (2,829 us, 2.10%)</title><rect x="3892.5" y="834" width="85.5" height="23.0" fill="rgb(95,185,177)" rx="2" ry="2" />
+<text  x="3895.52" y="848.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (2,008 us, 1.49%)</title><rect x="1057.5" y="762" width="60.7" height="23.0" fill="rgb(74,153,204)" rx="2" ry="2" />
+<text  x="1060.53" y="776.5" >'TRAP (S..</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (110 us, 0.08%)</title><rect x="3994.4" y="858" width="3.3" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3997.40" y="872.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (2,303 us, 1.71%)</title><rect x="3997.7" y="858" width="69.6" height="23.0" fill="rgb(79,162,198)" rx="2" ry="2" />
+<text  x="4000.72" y="872.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (619 us, 0.46%)</title><rect x="4067.3" y="858" width="18.7" height="23.0" fill="rgb(198.204414345769,139.670188314368,224.284020003324)" rx="2" ry="2" />
+<text  x="4070.30" y="872.5" >F..</text>
+</g>
+<g >
+<title>'read -r -u 4 line' (90 us, 0.07%)</title><rect x="2922.3" y="762" width="2.7" height="23.0" fill="rgb(11,13,253)" rx="2" ry="2" />
+<text  x="2925.30" y="776.5" ></text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot;' (2,775 us, 2.06%)</title><rect x="3034.7" y="762" width="83.8" height="23.0" fill="rgb(90,179,184)" rx="2" ry="2" />
+<text  x="3037.70" y="776.5" >'rm -rf "$TM..</text>
+</g>
+<g >
+<title>'decoded_data=$(echo &quot;$encoded_data&quot; | base64 -d)' (794 us, 0.59%)</title><rect x="3616.2" y="786" width="24.0" height="23.0" fill="rgb(41,82,236)" rx="2" ry="2" />
+<text  x="3619.17" y="800.5" >'d..</text>
+</g>
+<g >
+<title>SUBSHELL (773456)_[s] (3,752 us, 2.78%)</title><rect x="3182.7" y="762" width="113.4" height="23.0" fill="rgb(232.858974138628,143.129553542542,206.639338250161)" rx="2" ry="2" />
+<text  x="3185.71" y="776.5" >SUBSHELL (773456)..</text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot; 1&gt;&amp;2' (103 us, 0.08%)</title><rect x="3300.3" y="786" width="3.1" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3303.29" y="800.5" ></text>
+</g>
+<g >
+<title>'exec 4&lt; &quot;$OUTPUT_PIPE&quot; (&amp;)' (1,103 us, 0.82%)</title><rect x="831.4" y="762" width="33.3" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="834.42" y="776.5" >'ex..</text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (196 us, 0.15%)</title><rect x="3646.5" y="786" width="5.9" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="3649.47" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 4] Starting recursive function.&quot; 1&gt;&amp;2' (103 us, 0.08%)</title><rect x="3652.4" y="786" width="3.1" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3655.39" y="800.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (188 us, 0.14%)</title><rect x="3988.7" y="858" width="5.7" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="3991.72" y="872.5" ></text>
+</g>
+<g >
+<title>'sleep 0.3' (1,936 us, 1.44%)</title><rect x="3413.3" y="786" width="58.5" height="23.0" fill="rgb(58,120,222)" rx="2" ry="2" />
+<text  x="3416.29" y="800.5" >'sleep ..</text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (84 us, 0.06%)</title><rect x="2854.4" y="762" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="2857.45" y="776.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (1,980 us, 1.47%)</title><rect x="2857.0" y="762" width="59.8" height="23.0" fill="rgb(70,147,208)" rx="2" ry="2" />
+<text  x="2859.99" y="776.5" >'TRAP (S..</text>
+</g>
+<g >
+<title>'echo &quot;$line&quot;' (104 us, 0.08%)</title><rect x="3320.5" y="786" width="3.2" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3323.54" y="800.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 3] Running complex command.&quot; 1&gt;&amp;2' (102 us, 0.08%)</title><rect x="3410.2" y="786" width="3.1" height="23.0" fill="rgb(16,22,251)" rx="2" ry="2" />
+<text  x="3413.21" y="800.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (177 us, 0.13%)</title><rect x="864.7" y="762" width="5.4" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="867.74" y="776.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line' (6,204 us, 4.60%)</title><rect x="870.1" y="762" width="187.4" height="23.0" fill="rgb(142,204,103)" rx="2" ry="2" />
+<text  x="873.09" y="776.5" >'read -r -u 4 line'</text>
+</g></g>
+</svg>
