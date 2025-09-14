@@ -3,7 +3,7 @@ CURRENT VERSION: timep v1.6
 timep v1.6: The changes in this release are largely geared towards various bug fixes and ensuring timep works correctly in more situations. this includes:
 * line numbers for subshells inside of functions are now correct
 * timep now works if the code being profiled uses `set -e` or `set -u`
-* timep now enforces `set -T` like it dopes `set -m` - if it is disabled timep automatically re-enables it
+* timep now enforces `set -T` like it does `set -m` - if it is disabled timep automatically re-enables it
 * there is now a mechanism (which can be disabled via an environment variable) which will cause orphaned processes to automatically exit after the main timep profiling run finishes
 * trap handler events are dealt with more robustly
 
