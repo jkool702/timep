@@ -1510,12 +1510,9 @@ _timep_PROCESS_LOG() {
     logDepth="${logDepth//[^.]/}"
     logDepth="${#logDepth}"
 
-#    (( logDepth <= 2 )) && set -xv
 
     # load current log (sorted by NEXEC) into array
-    #mapfile -t logA < <(sed -zE 's/\n(TRAP [^\n]+)\n/'$'\034\035''\1\n/g' <"${logCur}" | sort -V -k11,11 | sed -E 's/'$'\034\035''(TRAP .*)$/\n\1/')
     mapfile -t logA < <(sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g' <"${logCur}" | sort -V -k11,11)
-    #unset A
 
     log_dupe_flag=false
     kk1=0
@@ -1536,31 +1533,6 @@ _timep_PROCESS_LOG() {
    # loop through lines in reverse order
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
 
-        # deal with commands run by traps / signal handlers
-#        if [[ "${logA[$kk]}" == 'TRAP ('*'):'* ]]; then
-#            (( kk1 = kk + 1 ))
-#            cmd0="${cmdA[$kk1]}"
-#            cmdA[$kk1]="${logA[$kk]@Q}"
-#            ((kk1++))
-#            while { (( linenoA[$kk1] < 0 )) || [[ "${cmdA[$kk1]}" == "${cmd0}" ]]; } && (( kk1 < ${nlogA} )); do
-#                unset "cmdA[$kk1]"
-#                unset "nPipeA[$kk1]"
-#                unset "startWTimeA[$kk1]"
-#                unset "endWTimeA[$kk1]"
-#                unset "startCTimeA[$kk1]"
-#                unset "endCTimeA[$kk1]"
-#                unset "funcA[$kk1]"
-#                unset "pidA[$kk1]"
-#                unset "nexecA[$kk1]"
-#                unset "linenoA[$kk1]"
-#                unset "logA[$kk1]"
-#                ((kk1++))
-#            done
-#            nPipeA[$kk]=-1
-#            unset "logA[$kk]"
-#            continue
-#        fi
-
         # read log fields into variables
         IFS=$'\t' read -r nPipe startWTime startCTime endWTime endCTime func pid nexec lineno _ cmd <<<"${logA[$kk]}"
         nPipeA[$kk]="${nPipe}"
@@ -1574,7 +1546,6 @@ _timep_PROCESS_LOG() {
         linenoA[$kk]="${lineno}"
 
         # unquote the cmd string
-        #cmd="${cmd%*([[:space:]])"'"*}${cmd##*"'"}'"
         if [[ "${cmd}" == 'TRAP ('*'): '* ]]; then
             cmd="${cmd@Q}"
             isTrapA[$kk]=true
@@ -1587,17 +1558,6 @@ _timep_PROCESS_LOG() {
         read -r -d '' cmd < <(eval "printf '%s\0' ${cmd}")
         cmd="${cmd//$'\n'/\$"'"\\n"'"}"
         cmd="${cmd//$'\t'/\$"'"\\t"'"}"
-
-        #cmd="${cmd//\(\&\)/\\\(\\\&\\\)}"
-        #cmd="${cmd//\(\^\)/\\\(\\\^\\\)}"
-#        if [[ "${cmd%%*([ \t])}" == *\(\^\) ]]; then
-#            skipNextSimpleTrapFlag=true
-#            cmd="${cmd%%*([ \t])\(\^\)*([ \t])}"
-#        elif  ${skipNextSimpleTrapFlag} && [[ "${cmd%%*([ \t])}" == *'(&)' ]]; then
-#            skipNextSimpleTrapFlag=false
-#            cmd="${cmd%%*([ \t])\(\&\)*([ \t]}"
-
-#        fi
 
         cmdA[$kk]="${cmd}"
 
@@ -1863,12 +1823,9 @@ printf '%s;' "${fgA[@]}")"
                 cmd0+=$'\n'"${cmd00@Q}"
            done
         else
-            timep_crc32 '' 'cmd0' <<<"${cmdA[$kk]}"
-            timep_fnv1a '' 'cmd00' <<<"${cmdA[$kk]}"
-            cmd0+=".${cmd00}"
-        fi
+            timep_hash - 'cmd0' <<<"${cmdA[$kk]}"
 
-       #(( ${#cmd0} > 65536 )) && cmd0="$(sha512sum <<<"${cmd0}")"
+        fi
 
         # generate mapping for all unique "lineno.depth + command + func" groups into the lineno.depth.cmd from the first instanced in that group
         keyCur="${linenoA[$kk]}.${cmd0@Q}.${funcA[$kk]@Q}"
