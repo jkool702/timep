@@ -1,11 +1,14 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: 1.5
+**CURRENT TIMEP VERSION**: 1.6
 
-**CHANGES IN MOST RECENT UPDATE**: 2 major changes are present in this version:
-1. fixes an issue where it was possible (albiet unlikely) that two sub-trees could be combined in the "combined" profile that shouldnt be. This fix involves computing hashs of all the command strings. To do this without sacraficing performance two new loadable builtins were added - timep_crc32 and timep_fnv1a. To ensure that the (now longer) loadable base64 strings didnt cause the environment size to exceed ARG_MAX, the way that the base64-embedded strings are stored and extracted was re-workedso that the base64 strings are never in a function.
-2. a github actions workflow was setup to automaticaly compile the timep.so binary from the C source code for several architectures (which is now feasible without any risk of exceeding ARG_MAX). As a result, timep now supports several more architectures. In total, timep supports: x86_64, aarch64, armv7, ppc64le, risc-v and s390. Each of these architectures are all now supported with a self-extracting base64-embedded timep.so file to enable the timep loadables.
+**CHANGES IN MOST RECENT UPDATE**: The changes in this release are largely geared towards various bug fixes and ensuring timep works correctly in more situations. this includes:
+* line numbers for subshells inside of functions are now correct
+* timep now works if the code being profiled uses `set -e` or `set -u`
+* timep now enforces `set -T` like it does `set -m` - if it is disabled timep automatically re-enables it
+* there is now a mechanism (which can be disabled via an environment variable) which will cause orphaned processes to automatically exit after the main timep profiling run finishes
+* trap handler events are dealt with more robustly
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
@@ -25,7 +28,7 @@ In other words, source `timep.bash` and then simply add `timep` before the funct
 
 ***
 
-OUTPUTS: `timep` generates 2 time profilesand (if `-F` or `--flame` is passed) several flamegraph svg images plus 2 stack traces (flamegraph inputs), . These outputs are always saved to disk in the "profiles" directory in the timep tmpdir (by default: /dev/shm/.timep/timep-XXXXXXXX). Upon finishing, `timep` will create a symlink in your PWD at `./timep.profiles` that links to the "profiles" dir that contains all the `timep` outputs.
+OUTPUTS: `timep` generates 2 time profiles and (if `-F` or `--flame` is passed) several flamegraph svg images plus 2 stack traces (flamegraph inputs), . These outputs are always saved to disk in the "profiles" directory in the timep tmpdir (by default: /dev/shm/.timep/timep-XXXXXXXX). Upon finishing, `timep` will create a symlink in your PWD at `./timep.profiles` that links to the "profiles" dir that contains all the `timep` outputs.
 
 DETAILS ON OUTPUTS:
 
@@ -84,59 +87,59 @@ timep testfunc
 ```
 gives
 ```
-LINE.DEPTH.CMD NUMBER   COMBINED WALL-CLOCK TIME                COMBINED CPU TIME                       COMMAND                             
-<line>.<depth>.<cmd>:   ( time | total % | cur depth % )        ( time | total % | cur depth % )        (count) <command>
-_____________________   ________________________________        ________________________________        ____________________________________
+LINE.DEPTH.CMD NUMBER   COMBINED WALL-CLOCK TIME          COMBINED CPU TIME                     COMMAND
+<line>.<depth>.<cmd>:   ( time | total % | cur depth % )  ( time | total % | cur depth % )      (count) <command>
+_____________________   __________________________________________________________________      ____________________________________
 
-9.0.0:                  ( 0.026651s |100.00% )            ( 0.032214s |100.00% )                (1x)    << (FUNCTION): main.testfunc "${@}" >>
-├─ 1.1.0:               ( 0.000062s |  0.23% )            ( 0.000076s |  0.23% )                (1x)    testfunc "${@}"
+1.0.0:                  ( 0.029128s |100.00% )            ( 0.034961s |100.00% )                (1x)    << (FUNCTION): main.testfunc "${@}" >>
+├─ 1.1.0:               ( 0.000069s |  0.23% )            ( 0.000082s |  0.23% )                (1x)    testfunc "${@}"
 │
-│  8.1.0:               ( 0.000074s |  0.27% )            ( 0.000089s |  0.27% )                (1x)    echo 0
+│  12.1.0:              ( 0.000074s |  0.25% )            ( 0.000088s |  0.25% )                (1x)    echo 0
 │
-│  9.1.0:               ( 0.000571s |  2.14% )            ( 0.000430s |  1.33% )                (1x)    echo 1
+│  13.1.0:              ( 0.000718s |  2.46% )            ( 0.000592s |  1.69% )                (1x)    echo 1
 │
-│  10.1.0:              ( 0.000077s |  0.28% )            ( 0.000092s |  0.28% )                (1x)    << (SUBSHELL) >>
-│  └─ 10.2.0:           ( 0.000077s |  0.28% |100.00% )   ( 0.000092s |  0.28% |100.00% )       (1x)     └─echo 2
+│  14.1.0:              ( 0.000115s |  0.39% )            ( 0.000135s |  0.38% )                (1x)    << (SUBSHELL) >>
+│  └─ 14.2.0:           ( 0.000115s |  0.39% |100.00% )   ( 0.000135s |  0.38% |100.00% )       (1x)     └─echo 2
 │
-│  11.1.0:              ( 0.000582s |  2.18% )            ( 0.000595s |  1.84% )                (1x)    echo 3 (&)
+│  15.1.0:              ( 0.000571s |  1.96% )            ( 0.000586s |  1.67% )                (1x)    echo 3 (&)
 │
-│  12.1.0:              ( 0.000091s |  0.34% )            ( 0.000112s |  0.34% )                (1x)    << (BACKGROUND FORK) >>
-│  └─ 12.2.0:           ( 0.000091s |  0.34% |100.00% )   ( 0.000112s |  0.34% |100.00% )       (1x)     └─echo 4
+│  16.1.0:              ( 0.000080s |  0.27% )            ( 0.000094s |  0.26% )                (1x)    << (BACKGROUND FORK) >>
+│  └─ 16.2.0:           ( 0.000080s |  0.27% |100.00% )   ( 0.000094s |  0.26% |100.00% )       (1x)     └─echo 4
 │
-│  13.1.0:              ( 0.004605s | 17.27% )            ( 0.010900s | 33.83% )                (1x)    echo 5 | cat | tee
+│  17.1.0:              ( 0.005607s | 19.24% )            ( 0.012484s | 35.70% )                (1x)    echo 5 | cat | tee
 │
-│  15.1.0:              ( 0.000063s |  0.23% )            ( 0.000077s |  0.23% )                (1x)    ((kk=6))
+│  19.1.0:              ( 0.000068s |  0.23% )            ( 0.000082s |  0.23% )                (1x)    ((kk=6))
 │
-│  15.1.0:              ( 0.000248s |  0.93% |  0.23% )   ( 0.000302s |  0.93% |  0.23% )       (4x)    ((kk++ ))
+│  19.1.0:              ( 0.000259s |  0.88% |  0.22% )   ( 0.000324s |  0.92% |  0.23% )       (4x)    ((kk++ ))
 │
-│  15.1.1:              ( 0.000313s |  1.17% |  0.23% )   ( 0.000380s |  1.17% |  0.23% )       (5x)    ((kk<10))
+│  19.1.1:              ( 0.000345s |  1.18% |  0.23% )   ( 0.000405s |  1.15% |  0.23% )       (5x)    ((kk<10))
 │
-│  16.1.0:              ( 0.000312s |  1.17% |  0.29% )   ( 0.000350s |  1.08% |  0.27% )       (4x)    echo $kk
+│  20.1.0:              ( 0.000304s |  1.04% |  0.26% )   ( 0.000357s |  1.02% |  0.25% )       (4x)    echo $kk
 │
-│  17.1.0:              ( 0.004861s | 18.23% |  4.55% )   ( 0.004706s | 14.60% |  3.65% )       (4x)    << (FUNCTION): main.testfunc.h $kk >>
-│  ├─ 1.2.0:            ( 0.000242s |  0.90% |  4.97% )   ( 0.000297s |  0.92% |  6.31% )       (4x)     ├─h $kk
-│  │  8.2.0:            ( 0.000290s |  1.08% |  5.96% )   ( 0.000346s |  1.07% |  7.35% )       (4x)     │ echo "h: $*"
-│  │  9.2.0:            ( 0.000519s |  1.94% | 10.67% )   ( 0.000630s |  1.95% | 13.38% )       (4x)     │ << (FUNCTION): .f "$@" >>
-│  │  ├─ 1.3.0:         ( 0.000231s |  0.86% | 44.50% )   ( 0.000286s |  0.88% | 45.39% )       (4x)     │  ├─f "$@"
-│  │  └─ 8.3.0:         ( 0.000288s |  1.08% | 55.49% )   ( 0.000344s |  1.06% | 54.60% )       (4x)     │  └─echo "f: $*"
-│  │  10.2.0:           ( 0.003810s | 14.29% | 78.37% )   ( 0.003433s | 10.65% | 72.94% )       (4x)     │ << (FUNCTION): .g "$@" >>
-│  │  ├─ 1.3.0:         ( 0.003390s | 12.71% | 88.97% )   ( 0.002951s |  9.16% | 85.95% )       (4x)     │  ├─g "$@"
-│  │  │  408.3.0:       ( 0.000420s |  1.57% | 11.02% )   ( 0.000482s |  1.49% | 14.04% )       (4x)     │  │ << (SUBSHELL) >>
-│  └─ └─ └─ 408.4.0:    ( 0.000420s |  1.57% |100.00% )   ( 0.000482s |  1.49% |100.00% )       (4x)     └─ └─ └─echo "g: $*"
+│  21.1.0:              ( 0.005835s | 20.03% |  5.00% )   ( 0.005675s | 16.23% |  4.05% )       (4x)    << (FUNCTION): main.testfunc.h $kk >>
+│  ├─ 1.2.0:            ( 0.000289s |  0.99% |  4.95% )   ( 0.000353s |  1.00% |  6.22% )       (4x)     ├─h $kk
+│  │  12.2.0:           ( 0.000312s |  1.07% |  5.34% )   ( 0.000367s |  1.04% |  6.46% )       (4x)     │ echo "h: $*"
+│  │  13.2.0:           ( 0.000554s |  1.90% |  9.49% )   ( 0.000662s |  1.89% | 11.66% )       (4x)     │ << (FUNCTION): main.testfunc.h.f "$@" >>
+│  │  ├─ 1.3.0:         ( 0.000257s |  0.88% | 46.38% )   ( 0.000310s |  0.88% | 46.82% )       (4x)     │  ├─f "$@"
+│  │  └─ 12.3.0:        ( 0.000297s |  1.01% | 53.61% )   ( 0.000352s |  1.00% | 53.17% )       (4x)     │  └─echo "f: $*"
+│  │  14.2.0:           ( 0.004680s | 16.06% | 80.20% )   ( 0.004293s | 12.27% | 75.64% )       (4x)     │ << (FUNCTION): main.testfunc.h.g "$@" >>
+│  │  ├─ 1.3.0:         ( 0.003982s | 13.67% | 85.08% )   ( 0.003481s |  9.95% | 81.08% )       (4x)     │  ├─g "$@"
+│  │  │  586.3.0:       ( 0.000698s |  2.39% | 14.91% )   ( 0.000812s |  2.32% | 18.91% )       (4x)     │  │ << (SUBSHELL) >>
+│  └─ └─ └─ 586.4.0:    ( 0.000698s |  2.39% |100.00% )   ( 0.000812s |  2.32% |100.00% )       (4x)     └─ └─ └─echo "g: $*"
 │
-│  18.1.0:              ( 0.000729s |  2.73% |  0.22% )   ( 0.000892s |  2.76% |  0.23% )       (12x)   for jj in {1..3}
+│  22.1.0:              ( 0.000806s |  2.76% |  0.23% )   ( 0.000959s |  2.74% |  0.22% )       (12x)   for jj in {1..3}
 │
-│  19.1.0:              ( 0.001644s |  6.16% |  0.51% )   ( 0.001973s |  6.12% |  0.51% )       (12x)   << (FUNCTION): main.testfunc.f $kk $jj >>
-│  ├─ 1.2.0:            ( 0.000723s |  2.71% | 43.97% )   ( 0.000883s |  2.74% | 44.75% )       (12x)    ├─f $kk $jj
-│  └─ 8.2.0:            ( 0.000921s |  3.45% | 56.02% )   ( 0.001090s |  3.38% | 55.24% )       (12x)    └─echo "f: $*"
+│  23.1.0:              ( 0.001742s |  5.98% |  0.49% )   ( 0.002060s |  5.89% |  0.49% )       (12x)   << (FUNCTION): main.testfunc.f $kk $jj >>
+│  ├─ 1.2.0:            ( 0.000734s |  2.51% | 42.13% )   ( 0.000890s |  2.54% | 43.20% )       (12x)    ├─f $kk $jj
+│  └─ 12.2.0:           ( 0.001008s |  3.46% | 57.86% )   ( 0.001170s |  3.34% | 56.79% )       (12x)    └─echo "f: $*"
 │
-│  20.1.0:              ( 0.012419s | 46.59% |  3.88% )   ( 0.011240s | 34.89% |  2.90% )       (12x)   << (FUNCTION): main.testfunc.g $kk $jj >>
-│  ├─ 1.2.0:            ( 0.010556s | 39.60% | 84.99% )   ( 0.009078s | 28.18% | 80.76% )       (12x)    ├─g $kk $jj
-│  │  408.2.0:          ( 0.001863s |  6.99% | 15.00% )   ( 0.002162s |  6.71% | 19.23% )       (12x)    │ << (SUBSHELL) >>
-└─ └─ └─ 408.3.0:       ( 0.001863s |  6.99% |100.00% )   ( 0.002162s |  6.71% |100.00% )       (12x)    └─ └─echo "g: $*"
+│  24.1.0:              ( 0.012535s | 43.03% |  3.58% )   ( 0.011038s | 31.57% |  2.63% )       (12x)   << (FUNCTION): main.testfunc.g $kk $jj >>
+│  ├─ 1.2.0:            ( 0.010710s | 36.76% | 85.44% )   ( 0.009037s | 25.84% | 81.87% )       (12x)    ├─g $kk $jj
+│  │  586.2.0:          ( 0.001825s |  6.26% | 14.55% )   ( 0.002001s |  5.72% | 18.12% )       (12x)    │ << (SUBSHELL) >>
+└─ └─ └─ 586.3.0:       ( 0.001825s |  6.26% |100.00% )   ( 0.002001s |  5.72% |100.00% )       (12x)    └─ └─echo "g: $*"
 
-TOTAL RUN TIME: 0.026651s
-TOTAL CPU TIME: 0.032214s
+TOTAL RUN TIME: 0.029128s
+TOTAL CPU TIME: 0.034961s
 ```
 ***
 
@@ -181,9 +184,26 @@ After the profiled code has finished running, `timep` goes through the logs and 
 
 ***
 
+**LOADABLE BUILTINS**
+
+`timep` uses loadable builtins for 2 main operations:
+1. getting CPU time (via clock_gettime and getrusage). This is dramatically more acurate than the info in /proc
+2. computing checksums. The checksums timep uses are typically quite small, and having builtin functions to do this avoids the fork cost, making them dramatically faster.
+
+These loadable builtins are encoded directly in the `timep.bash` file as custom compressed base64 sequence. These base64 sequences have both sha256 and md5 checksums builtin that are verified on extraction. the following arches are included in `timep.bash`:
+* x86_64
+* aarch64
+* armv7
+* s390x
+* ppc64le
+* risc-v
+
+The C source for the loadable functions is available at [LIB/LOADABLES/SRC/timep.c](https://github.com/jkool702/timep/blob/main/LIB/LOADABLES/SRC/timep.c). A [github actions workflow](https://github.com/jkool702/timep/blob/main/.github/workflows/build-multiplatform.yml) automatically builds this source into the timep.so that provides the loadable builtins, base64 encodes them, and directly incorporates them into timep.bash. If you look at the "blame" for `timep.bash` you will see that the base64 encodings came from a commit added by the github-actions bot. This provides a verifiable chain that proves that the embedded timep.so file was, in fact, compiled from the source C code linked above.
+
+***
+
 **KNOWN ISSUES**
 
 Due to some of the quirks related to how bash internally works and limitations regarding when bash fires (or doesnt fire) a DEBUG trap, there are a handful of situations where the profile generated by `timep` is slightly off:
 * in some deeply nested subshell + background fork sequences, some commands that should be grouped together are split between multiple groups and/or inner nested subshell commands are included in the commands from an outer nested subshell.
-* incorrect line numbers on functions that immediately spawn a subshell (e.g., `func() ( ... )`)
 

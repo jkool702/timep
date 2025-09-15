@@ -62,6 +62,7 @@ static int timep_builtin(WORD_LIST * list);
 static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
+static int timep_hash_main(int argc, char **argv);
 
 /* ----------------------------- */
 /* --------  getCPUtime -------- */
@@ -172,11 +173,11 @@ struct builtin getCPUtime_struct = {
     "getCPUtime [<VAR> [<VAR_SELF>]]",
     0
 };
-
 /* ----------------------------- */
-/* ------- timep_crc32 ----------*/
+/* ------- timep_crc32 / fnv1a / timep_hash ----------*/
 /* ----------------------------- */
 
+/* --- timep_crc32 doc --- */
 static char *timep_crc32_doc[] = {
     "",
     "USAGE: timep_crc32 <FILE|-> [<VAR>]",
@@ -186,214 +187,12 @@ static char *timep_crc32_doc[] = {
     "If <VAR> is provided the checksum (8 hex digits) is stored in that variable,",
     "    otherwise it is printed to stdout.",
     "",
-    "If both <FILE> and <VAR> are passed as empty (timep_crc32 '' ''),"
+    "If both <FILE> and <VAR> are passed as empty (timep_crc32 '' ''),",
     "    initialize tables but do not compute a crc32 hash.",
     NULL
 };
 
-
-/* ---------------- Software fallback ---------------- */
-#define CRC32_POLY 0xEDB88320UL
-static uint32_t crc32_table[256];
-static int crc32_table_initialized = 0;
-
-static void crc32_init_table(void) {
-    if (crc32_table_initialized) return;
-    for (int n = 0; n < 256; n++) {
-        uint32_t c = n;
-        for (int k = 0; k < 8; k++)
-            c = (c & 1) ? (CRC32_POLY ^ (c >> 1)) : (c >> 1);
-        crc32_table[n] = c;
-    }
-    crc32_table_initialized = 1;
-}
-
-static uint32_t crc32_sw(const void *data, size_t len) {
-    const unsigned char *p = data;
-    uint32_t crc = 0xFFFFFFFFU;
-    crc32_init_table();
-    while (len--) {
-        crc = crc32_table[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
-    }
-    return crc ^ 0xFFFFFFFFU;
-}
-
-/* ---------------- x86 SSE4.2 accelerated ---------------- */
-#if defined(__x86_64__) || defined(__i386__)
-static uint32_t crc32_hw_x86(const void *data, size_t len) {
-    const uint8_t *p = data;
-    uint32_t crc = 0xFFFFFFFFU;
-    while (len >= sizeof(uint64_t)) {
-        crc = (uint32_t)_mm_crc32_u64(crc, *(const uint64_t*)p);
-        p += 8; len -= 8;
-    }
-    while (len >= sizeof(uint32_t)) {
-        crc = _mm_crc32_u32(crc, *(const uint32_t*)p);
-        p += 4; len -= 4;
-    }
-    while (len--) {
-        crc = _mm_crc32_u8(crc, *p++);
-    }
-    return crc ^ 0xFFFFFFFFU;
-}
-#endif
-
-/* ---------------- ARMv8 CRC32 accelerated ---------------- */
-#if defined(__aarch64__)
-static uint32_t crc32_hw_arm(const void *data, size_t len) {
-    const uint8_t *p = data;
-    uint32_t crc = 0xFFFFFFFFU;
-    while (len >= sizeof(uint32_t)) {
-        crc = __crc32w(crc, *(const uint32_t*)p);
-        p += 4; len -= 4;
-    }
-    while (len--) {
-        crc = __crc32b(crc, *p++);
-    }
-    return crc ^ 0xFFFFFFFFU;
-}
-#endif
-
-/* ---------------- Runtime dispatch ---------------- */
-typedef uint32_t (*crc32_func_t)(const void*, size_t);
-static crc32_func_t crc32_impl = crc32_sw;
-
-static void detect_crc32_impl(void) {
-#if defined(__x86_64__) || defined(__i386__)
-    unsigned int eax, ebx, ecx, edx;
-    if (__get_cpuid(1, &eax, &ebx, &ecx, &edx)) {
-        if (ecx & bit_SSE4_2) {
-            crc32_impl = crc32_hw_x86;
-            return;
-        }
-    }
-#elif defined(__aarch64__)
-    unsigned long hwcap = getauxval(AT_HWCAP);
-#ifndef HWCAP_CRC32
-#define HWCAP_CRC32 (1 << 7)
-#endif
-    if (hwcap & HWCAP_CRC32) {
-        crc32_impl = crc32_hw_arm;
-        return;
-    }
-#endif
-    crc32_impl = crc32_sw;
-}
-
-static uint32_t crc32_dispatch(const void *data, size_t len) {
-    static int checked = 0;
-    if (!checked) {
-        detect_crc32_impl();
-        checked = 1;
-    }
-    return crc32_impl(data, len);
-}
-
-/* ---------------- Builtin entrypoint ---------------- */
-static int
-timep_crc32_main(int argc, char **argv)
-{
-    if (argc > 3) {
-        builtin_error("timep_crc32: too many arguments");
-        return EXECUTION_FAILURE;
-    }
-
-    /* If invoked as: timep_crc32 '' '' -> init and exit */
-    if (argc == 3 && argv[1][0] == '\0' && argv[2][0] == '\0') {
-        crc32_init_table();
-        return EXECUTION_SUCCESS;
-    }
-
-    /* Input source */
-    const char *filename = NULL;
-    if (argc >= 2 && argv[1][0] != '\0')
-        filename = argv[1];
-    else
-        filename = "-"; /* default: stdin */
-
-    const char *varname = NULL;
-    if (argc == 3 && argv[2][0] != '\0')
-        varname = argv[2];
-
-    FILE *fp = NULL;
-    int using_stdin = 0;
-
-    if (strcmp(filename, "-") == 0) {
-        struct pollfd pfd = { .fd = STDIN_FILENO, .events = POLLIN };
-        int polres = poll(&pfd, 1, 0);
-        if (polres > 0 && (pfd.revents & POLLIN)) {
-            fp = stdin;
-            using_stdin = 1;
-        } else {
-            struct stat st;
-            if (stat("-", &st) == 0) {
-                fp = fopen("-", "rb");
-                if (!fp) {
-                    builtin_error("timep_crc32: failed to open './-': %s", strerror(errno));
-                    return EXECUTION_FAILURE;
-                }
-            } else {
-                fp = stdin;
-                using_stdin = 1;
-            }
-        }
-    } else {
-        fp = fopen(filename, "rb");
-        if (!fp) {
-            builtin_error("timep_crc32: failed to open '%s': %s", filename, strerror(errno));
-            return EXECUTION_FAILURE;
-        }
-    }
-
-    /* Read and compute */
-    const size_t BUF_SZ = 65536;
-    unsigned char *buf = (unsigned char *) xmalloc(BUF_SZ);
-    if (!buf) {
-        if (!using_stdin) fclose(fp);
-        builtin_error("timep_crc32: out of memory");
-        return EXECUTION_FAILURE;
-    }
-
-    uint32_t crc = 0;
-    size_t nread;
-    while ((nread = fread(buf, 1, BUF_SZ, fp)) > 0) {
-        crc = crc32_dispatch(buf, nread);
-    }
-    if (ferror(fp)) {
-        xfree(buf);
-        if (!using_stdin) fclose(fp);
-        builtin_error("timep_crc32: read error: %s", strerror(errno));
-        return EXECUTION_FAILURE;
-    }
-
-    xfree(buf);
-    if (!using_stdin) fclose(fp);
-
-    char outbuf[32];
-    snprintf(outbuf, sizeof(outbuf), "%08x", (unsigned int)crc);
-
-    if (varname) {
-        bind_variable((char *)varname, outbuf, 0);
-    } else {
-        printf("%s\n", outbuf);
-    }
-
-    return EXECUTION_SUCCESS;
-}
-
-struct builtin timep_crc32_struct = {
-    "timep_crc32",
-    timep_builtin, /* dispatch */
-    BUILTIN_ENABLED,
-    timep_crc32_doc,
-    "timep_crc32 <file|-> [<VAR>]",
-    0
-};
-
-/* ----------------------------- */
-/* ------- timep_fnv1a --------- */
-/* ----------------------------- */
-
+/* --- timep_fnv1a doc --- */
 static char *timep_fnv1a_doc[] = {
     "",
     "USAGE: timep_fnv1a <file|-> [<VAR>]",
@@ -404,49 +203,197 @@ static char *timep_fnv1a_doc[] = {
     NULL
 };
 
-/* FNV-1a 64-bit constants */
-#define FNV1A64_OFFSET 14695981039346656037ULL
-#define FNV1A64_PRIME  1099511628211ULL
+/* --- timep_hash doc (crc32-fnv1a combined) --- */
+static char *timep_hash_doc[] = {
+    "",
+    "USAGE: timep_hash <file|-> [<VAR>]",
+    "",
+    "Compute CRC32 and FNV-1a (64) of <file> and output as: <crc32>-<fnv1a>",
+    "Use '-' or empty to read from stdin.",
+    "If <VAR> is provided the combined string is stored in that variable,",
+    "otherwise it is printed to stdout.",
+    "If both <FILE> and <VAR> are passed as empty (timep_hash '' ''),",
+    "    initialize tables but do not compute hashes.",
+    NULL
+};
 
-static uint64_t
-fnv1a64_update(uint64_t h, const unsigned char *buf, size_t len)
+/* ---------------- CRC32 implementation (HW accel + SW fallback) ---------------- */
+
+/* NB: file includes already contain <cpuid.h>, <nmmintrin.h>, <sys/auxv.h>, <arm_acle.h>, etc. */
+
+/* software table */
+#define TIMEP_CRC32_POLY 0xEDB88320UL
+static uint32_t timep_crc32_table[256];
+static int timep_crc32_table_init_done = 0;
+
+static void timep_crc32_init_table(void)
+{
+    if (timep_crc32_table_init_done) return;
+    for (uint32_t i = 0; i < 256; ++i) {
+        uint32_t c = i;
+        for (int j = 0; j < 8; ++j)
+            c = (c & 1) ? ((c >> 1) ^ TIMEP_CRC32_POLY) : (c >> 1);
+        timep_crc32_table[i] = c;
+    }
+    timep_crc32_table_init_done = 1;
+}
+
+/* All impls conform to this API: update incremental CRC.
+ * Pass previous crc as `crc` (initially 0). Returns updated crc.
+ * The functions themselves handle the internal inversion semantics.
+ */
+typedef uint32_t (*timep_crc32_fn_t)(uint32_t crc, const unsigned char *buf, size_t len);
+
+/* software incremental */
+static uint32_t timep_crc32_sw(uint32_t crc, const unsigned char *buf, size_t len)
+{
+    if (!timep_crc32_table_init_done) timep_crc32_init_table();
+
+    /* invert at entry, process, invert at exit (works incrementally) */
+    crc = ~crc;
+    for (size_t i = 0; i < len; ++i)
+        crc = timep_crc32_table[(crc ^ buf[i]) & 0xFF] ^ (crc >> 8);
+    return ~crc;
+}
+
+#if defined(__x86_64__) || defined(__i386__)
+/* x86 SSE4.2 accelerated incremental version */
+static uint32_t timep_crc32_hw_x86(uint32_t crc, const unsigned char *buf, size_t len)
+{
+    /* invert initial like software path */
+    uint64_t c = ~(uint32_t)crc;
+    size_t i = 0;
+
+    /* process leading bytes until 8-byte aligned or buffer end */
+    for (; i < len && ((uintptr_t)(buf + i) & 7); ++i) {
+        c = (uint32_t)_mm_crc32_u8((uint32_t)c, buf[i]);
+    }
+
+    /* process 8-byte chunks safely using memcpy to avoid UB on unaligned platforms */
+    for (; i + 8 <= len; i += 8) {
+        uint64_t chunk;
+        memcpy(&chunk, buf + i, sizeof(chunk));
+        c = _mm_crc32_u64(c, chunk);
+    }
+
+    /* remaining bytes */
+    for (; i < len; ++i) {
+        c = (uint32_t)_mm_crc32_u8((uint32_t)c, buf[i]);
+    }
+
+    return ~(uint32_t)c;
+}
+#endif
+
+#if defined(__aarch64__)
+/* ARMv8 incremental version (uses __crc32* intrinsics when available) */
+static uint32_t timep_crc32_hw_arm(uint32_t crc, const unsigned char *buf, size_t len)
+{
+    uint32_t c = ~crc;
+    size_t i = 0;
+
+#if defined(__ARM_FEATURE_CRC32)
+    /* 8-byte chunks not always directly supported by builtin; use 4-byte where available */
+    for (; i + 4 <= len; i += 4) {
+        uint32_t w;
+        memcpy(&w, buf + i, 4);
+        c = __crc32w(c, w);
+    }
+    for (; i < len; ++i)
+        c = __crc32b(c, buf[i]);
+#else
+    /* If intrinsics not available, fallback to software for this chunk */
+    for (; i < len; ++i)
+        c = timep_crc32_sw(c, buf + i, 1);
+#endif
+
+    return ~c;
+}
+#endif
+
+/* runtime pick (cached) */
+static timep_crc32_fn_t timep_crc32_impl = NULL;
+
+static timep_crc32_fn_t timep_pick_crc32_impl(void)
+{
+#if defined(__x86_64__) || defined(__i386__)
+    unsigned int eax, ebx, ecx, edx;
+    if (__get_cpuid(1, &eax, &ebx, &ecx, &edx)) {
+        /* SSE4.2 is bit 20 of ECX */
+        if (ecx & (1u << 20)) {
+#ifdef __x86_64__
+            return timep_crc32_hw_x86;
+#else
+            /* in case 32-bit build lacks u64 intrinsic, fall back */
+            return timep_crc32_sw;
+#endif
+        }
+    }
+#endif
+
+#if defined(__aarch64__)
+    unsigned long hwcaps = 0;
+#if defined(AT_HWCAP)
+    hwcaps = getauxval(AT_HWCAP);
+#endif
+#ifndef HWCAP_CRC32
+#define HWCAP_CRC32 (1 << 7)
+#endif
+    if (hwcaps & HWCAP_CRC32) {
+        return timep_crc32_hw_arm;
+    }
+#endif
+
+    return timep_crc32_sw;
+}
+
+static inline uint32_t timep_crc32_dispatch(uint32_t crc, const unsigned char *buf, size_t len)
+{
+    if (!timep_crc32_impl)
+        timep_crc32_impl = timep_pick_crc32_impl();
+    return timep_crc32_impl(crc, buf, len);
+}
+
+/* helper to expose init (used by '' '' special-case) */
+static void timep_crc32_init(void)
+{
+    timep_crc32_init_table();
+    if (!timep_crc32_impl) timep_crc32_impl = timep_pick_crc32_impl();
+}
+
+/* ---------------- FNV-1a 64-bit implementation ---------------- */
+
+#define TIMEP_FNV1A64_OFFSET 14695981039346656037ULL
+#define TIMEP_FNV1A64_PRIME  1099511628211ULL
+
+static inline uint64_t timep_fnv1a64_update(uint64_t h, const unsigned char *buf, size_t len)
 {
     uint64_t hash = h;
     for (size_t i = 0; i < len; ++i) {
         hash ^= (uint64_t)buf[i];
-        hash *= FNV1A64_PRIME;
+        hash *= TIMEP_FNV1A64_PRIME;
     }
     return hash;
 }
 
-static int
-timep_fnv1a_main(int argc, char **argv)
+/* ---------------- Common streaming helper ----------------
+   Read from filename (or stdin if "-") and in a single pass compute both
+   crc32 (incremental) and fnv1a64. Returns 0 on success.
+   If filename == "-" uses the same poll/./- heuristic as other builtins.
+   If out_crc or out_fnv are NULL, that output is skipped.
+*/
+static int timep_compute_crc32_and_fnv1a(const char *filename, uint32_t *out_crc, uint64_t *out_fnv, int *used_stdin)
 {
-    if (argc > 3) {
-        builtin_error("timep_fnv1a: too many arguments");
-        return EXECUTION_FAILURE;
-    }
-
-    const char *filename = NULL;
-    if (argc >= 2 && argv[1][0] != '\0')
-        filename = argv[1];
-    else
-        filename = "-";
-
-    const char *varname = NULL;
-    if (argc == 3 && argv[2][0] != '\0')
-        varname = argv[2];
-
+    const char *fn = filename ? filename : "-";
     FILE *fp = NULL;
     int using_stdin = 0;
 
-    /* Special handling for filename == "-" (same heuristic as checksum builtin) */
-    if (strcmp(filename, "-") == 0) {
-        struct pollfd pfd;
-        pfd.fd = STDIN_FILENO;
-        pfd.events = POLLIN;
-        int polres = poll(&pfd, 1, 0); /* non-blocking check */
+    if (strcmp(fn, "-") == 0) {
+        /* init early if needed */
+        timep_crc32_init();
 
+        struct pollfd pfd = { .fd = STDIN_FILENO, .events = POLLIN };
+        int polres = poll(&pfd, 1, 0);
         if (polres > 0 && (pfd.revents & POLLIN)) {
             fp = stdin;
             using_stdin = 1;
@@ -455,7 +402,7 @@ timep_fnv1a_main(int argc, char **argv)
             if (stat("-", &st) == 0) {
                 fp = fopen("-", "rb");
                 if (!fp) {
-                    builtin_error("timep_fnv1a: failed to open './-': %s", strerror(errno));
+                    builtin_error("timep: failed to open literal file './-'");
                     return EXECUTION_FAILURE;
                 }
                 using_stdin = 0;
@@ -465,58 +412,174 @@ timep_fnv1a_main(int argc, char **argv)
             }
         }
     } else {
-        fp = fopen(filename, "rb");
+        fp = fopen(fn, "rb");
         if (!fp) {
-            builtin_error("timep_fnv1a: failed to open '%s': %s", filename, strerror(errno));
+            builtin_error("timep: failed to open '%s': %s", fn, strerror(errno));
             return EXECUTION_FAILURE;
         }
     }
 
-    const size_t BUF_SZ = 65536;
+    const size_t BUF_SZ = 64 * 1024;
     unsigned char *buf = (unsigned char *) xmalloc(BUF_SZ);
     if (!buf) {
         if (!using_stdin) fclose(fp);
-        builtin_error("timep_fnv1a: out of memory");
+        builtin_error("timep: out of memory");
         return EXECUTION_FAILURE;
     }
 
-    uint64_t hash = FNV1A64_OFFSET;
+    uint32_t crc = 0;          /* initial crc state for incremental API */
+    uint64_t fnv = TIMEP_FNV1A64_OFFSET;
+
     size_t nread;
     while ((nread = fread(buf, 1, BUF_SZ, fp)) > 0) {
-        hash = fnv1a64_update(hash, buf, nread);
+        crc = timep_crc32_dispatch(crc, buf, nread);
+        fnv = timep_fnv1a64_update(fnv, buf, nread);
     }
+
     if (ferror(fp)) {
         xfree(buf);
         if (!using_stdin) fclose(fp);
-        builtin_error("timep_fnv1a: read error: %s", strerror(errno));
+        builtin_error("timep: read error: %s", strerror(errno));
         return EXECUTION_FAILURE;
     }
 
     xfree(buf);
     if (!using_stdin) fclose(fp);
 
-    /* Format 16 hex digits, lowercase */
-    char outbuf[32];
-    /* cast to unsigned long long to be safe across platforms */
-    snprintf(outbuf, sizeof(outbuf), "%016llx", (unsigned long long)hash);
+    if (out_crc) *out_crc = crc;
+    if (out_fnv) *out_fnv = fnv;
+    if (used_stdin) *used_stdin = using_stdin;
+    return EXECUTION_SUCCESS;
+}
 
-    if (varname) {
-        bind_variable((char *)varname, outbuf, 0);
-    } else {
-        printf("%s\n", outbuf);
+/* ---------------- timep_crc32 builtin ---------------- */
+
+static int timep_crc32_main(int argc, char **argv)
+{
+    if (argc > 3) {
+        builtin_error("timep_crc32: too many arguments");
+        return EXECUTION_FAILURE;
     }
+
+    /* init-only special case */
+    if (argc == 3 && argv[1][0] == '\0' && argv[2][0] == '\0') {
+        timep_crc32_init();
+        return EXECUTION_SUCCESS;
+    }
+
+    const char *filename = (argc >= 2 && argv[1][0] != '\0') ? argv[1] : "-";
+    const char *varname = (argc == 3 && argv[2][0] != '\0') ? argv[2] : NULL;
+
+    uint32_t crc = 0;
+    if (timep_compute_crc32_and_fnv1a(filename, &crc, NULL, NULL) != 0)
+        return EXECUTION_FAILURE;
+
+    char outbuf[32];
+    snprintf(outbuf, sizeof(outbuf), "%08x", (unsigned int)crc);
+
+    if (varname)
+        bind_variable((char *)varname, outbuf, 0);
+    else
+        printf("%s\n", outbuf);
+
+    return EXECUTION_SUCCESS;
+}
+
+struct builtin timep_crc32_struct = {
+    "timep_crc32",
+    timep_builtin,
+    BUILTIN_ENABLED,
+    timep_crc32_doc,
+    "timep_crc32 <file|-> [<VAR>]",
+    0
+};
+
+/* ---------------- timep_fnv1a builtin ---------------- */
+
+static int timep_fnv1a_main(int argc, char **argv)
+{
+    if (argc > 3) {
+        builtin_error("timep_fnv1a: too many arguments");
+        return EXECUTION_FAILURE;
+    }
+
+    /* init-only special case */
+    if (argc == 3 && argv[1][0] == '\0' && argv[2][0] == '\0') {
+        /* ensure FNV state is OK and pre-init crc tables (cheap) */
+        timep_crc32_init();
+        return EXECUTION_SUCCESS;
+    }
+
+    const char *filename = (argc >= 2 && argv[1][0] != '\0') ? argv[1] : "-";
+    const char *varname = (argc == 3 && argv[2][0] != '\0') ? argv[2] : NULL;
+
+    uint64_t fnv = TIMEP_FNV1A64_OFFSET;
+    if (timep_compute_crc32_and_fnv1a(filename, NULL, &fnv, NULL) != 0)
+        return EXECUTION_FAILURE;
+
+    char outbuf[48];
+    snprintf(outbuf, sizeof(outbuf), "%016llx", (unsigned long long)fnv);
+
+    if (varname)
+        bind_variable((char *)varname, outbuf, 0);
+    else
+        printf("%s\n", outbuf);
 
     return EXECUTION_SUCCESS;
 }
 
 struct builtin timep_fnv1a_struct = {
     "timep_fnv1a",
-    timep_builtin, /* dispatch via timep_builtin */
+    timep_builtin,
     BUILTIN_ENABLED,
     timep_fnv1a_doc,
     "timep_fnv1a <file|-> [<VAR>]",
     0
 };
+
+/* ---------------- timep_hash builtin (crc32-fnv1a combined) ---------------- */
+
+static int timep_hash_main(int argc, char **argv)
+{
+    if (argc > 3) {
+        builtin_error("timep_hash: too many arguments");
+        return EXECUTION_FAILURE;
+    }
+
+    /* init-only special case */
+    if (argc == 3 && argv[1][0] == '\0' && argv[2][0] == '\0') {
+        timep_crc32_init();
+        return EXECUTION_SUCCESS;
+    }
+
+    const char *filename = (argc >= 2 && argv[1][0] != '\0') ? argv[1] : "-";
+    const char *varname = (argc == 3 && argv[2][0] != '\0') ? argv[2] : NULL;
+
+    uint32_t crc = 0;
+    uint64_t fnv = TIMEP_FNV1A64_OFFSET;
+    if (timep_compute_crc32_and_fnv1a(filename, &crc, &fnv, NULL) != 0)
+        return EXECUTION_FAILURE;
+
+    char outbuf[80];
+    snprintf(outbuf, sizeof(outbuf), "%08x-%016llx", (unsigned int)crc, (unsigned long long)fnv);
+
+    if (varname)
+        bind_variable((char *)varname, outbuf, 0);
+    else
+        printf("%s\n", outbuf);
+
+    return EXECUTION_SUCCESS;
+}
+
+struct builtin timep_hash_struct = {
+    "timep_hash",
+    timep_builtin,
+    BUILTIN_ENABLED,
+    timep_hash_doc,
+    "timep_hash <file|-> [<VAR>]",
+    0
+};
+
 
 /* --------------------------------------------*/
 /* Register all builtins (under timep_builtin) */
@@ -536,6 +599,8 @@ static int timep_builtin(WORD_LIST * list) {
         ret = timep_fnv1a_main(argc, argv);
     } else if (strcmp(sub, "timep_crc32") == 0) {
         ret = timep_crc32_main(argc, argv);
+    } else if (strcmp(sub, "timep_hash") == 0) {
+        ret = timep_hash_main(argc, argv);
     } else {
         builtin_error("timep: unknown command '%s'", sub);
         ret = EXECUTION_FAILURE;
@@ -549,7 +614,8 @@ int setup_builtin_timep(void) {
     add_builtin(&getCPUtime_struct, 1);
     add_builtin(&timep_fnv1a_struct, 1);
     add_builtin(&timep_crc32_struct, 1);
+    add_builtin(&timep_hash_struct, 1);
 
-    return 0;
+    return EXECUTION_SUCCESS;
 }
 

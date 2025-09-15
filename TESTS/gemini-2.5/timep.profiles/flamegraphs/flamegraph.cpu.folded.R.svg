@@ -1,0 +1,748 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="252" onload="init(evt)" viewBox="0 0 4096 252" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+
+                unzoombtn.classList.remove("hide");
+
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (1 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="252.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/gemini-2.5.test.2.bash</text>
+<text id="details" x="10.00" y="237" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="237" > </text>
+<g id="frames">
+<g >
+<title>SUBSHELL (773465)_[s] (1,317 us, 0.98%)</title><rect x="3606.7" y="78" width="39.8" height="23.0" fill="rgb(224.412034985428,140.150848341513,198.44112129381)" rx="2" ry="2" />
+<text  x="3609.68" y="92.5" >SUBS..</text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (211 us, 0.16%)</title><rect x="3878.1" y="150" width="6.4" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3881.08" y="164.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 1] Writing to main FIFO.&quot; 1&gt;&amp;2' (120 us, 0.09%)</title><rect x="3335.8" y="102" width="3.6" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3338.79" y="116.5" ></text>
+</g>
+<g >
+<title>'set -o monitor' (124 us, 0.09%)</title><rect x="10.0" y="78" width="3.8" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="13.03" y="92.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot; 1&gt;&amp;2' (224 us, 0.17%)</title><rect x="3315.3" y="102" width="6.7" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="3318.28" y="116.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (3,575 us, 2.65%)</title><rect x="3978.0" y="150" width="108.0" height="23.0" fill="rgb(199.903905528754,143.694758643948,224.947584833866)" rx="2" ry="2" />
+<text  x="3980.99" y="164.5" >FUNCTION (recurs..</text>
+</g>
+<g >
+<title>'echo &quot;[BG 3 - Child] Decoded data: '\''$decoded_data'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (107 us, 0.08%)</title><rect x="3640.2" y="102" width="3.2" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3643.15" y="116.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 3] Running complex command.&quot; 1&gt;&amp;2' (102 us, 0.08%)</title><rect x="3410.2" y="102" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3413.21" y="116.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773463)_[s] (417 us, 0.31%)</title><rect x="3391.6" y="78" width="12.6" height="23.0" fill="rgb(223.094809372881,138.981124992293,196.990562496147)" rx="2" ry="2" />
+<text  x="3394.57" y="92.5" ></text>
+</g>
+<g >
+<title>'exec 4&lt; &quot;$OUTPUT_PIPE&quot; (&amp;)' (1,103 us, 0.82%)</title><rect x="1546.5" y="78" width="33.3" height="23.0" fill="rgb(42,85,236)" rx="2" ry="2" />
+<text  x="1549.49" y="92.5" >'ex..</text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (265 us, 0.20%)</title><rect x="3327.8" y="102" width="8.0" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="3330.79" y="116.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Waiting for background jobs to finish...&quot;' (89 us, 0.07%)</title><rect x="3068.8" y="78" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3071.81" y="92.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line' (48,758 us, 36.14%)</title><rect x="1579.8" y="78" width="1473.1" height="23.0" fill="rgb(254,1,0)" rx="2" ry="2" />
+<text  x="1582.81" y="92.5" >'read -r -u 4 line'</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Test complete.&quot;' (93 us, 0.07%)</title><rect x="3179.9" y="78" width="2.8" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3182.90" y="92.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (1,558 us, 1.15%)</title><rect x="3831.0" y="126" width="47.1" height="23.0" fill="rgb(45,91,233)" rx="2" ry="2" />
+<text  x="3834.01" y="140.5" >'slee..</text>
+</g>
+<g >
+<title>'echo &quot;$line&quot; 1&gt;&amp;3' (100 us, 0.07%)</title><rect x="3401.1" y="102" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3404.14" y="116.5" ></text>
+</g>
+<g >
+<title>'read -r line &lt; &quot;$FIFO_PATH&quot;' (159 us, 0.12%)</title><rect x="3391.6" y="102" width="4.8" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3394.57" y="116.5" ></text>
+</g>
+<g >
+<title>'wait' (143 us, 0.11%)</title><rect x="3071.5" y="78" width="4.3" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3074.49" y="92.5" ></text>
+</g>
+<g >
+<title>'read -r line' (636 us, 0.47%)</title><rect x="3296.1" y="102" width="19.2" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3299.06" y="116.5" >'..</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Read from coprocess: '\''$line'\''&quot;' (176 us, 0.13%)</title><rect x="3063.5" y="78" width="5.3" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3066.49" y="92.5" ></text>
+</g>
+<g >
+<title>'true' (112 us, 0.08%)</title><rect x="3090.1" y="78" width="3.4" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3093.14" y="92.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (2,303 us, 1.71%)</title><rect x="3997.7" y="174" width="69.6" height="23.0" fill="rgb(60,126,219)" rx="2" ry="2" />
+<text  x="4000.72" y="188.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (6,882 us, 5.10%)</title><rect x="3878.1" y="126" width="207.9" height="23.0" fill="rgb(200.581570470317,145.063778727913,225.317220256537)" rx="2" ry="2" />
+<text  x="3881.08" y="140.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>'local depth=$1' (180 us, 0.13%)</title><rect x="3983.3" y="174" width="5.4" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3986.28" y="188.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Data from BG 3&quot; | base64' (4,465 us, 3.31%)</title><rect x="3471.8" y="102" width="134.9" height="23.0" fill="rgb(102,193,166)" rx="2" ry="2" />
+<text  x="3474.78" y="116.5" >'echo "Data from BG ..</text>
+</g>
+<g >
+<title>'local depth=$1' (229 us, 0.17%)</title><rect x="4073.7" y="198" width="6.9" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="4076.70" y="212.5" ></text>
+</g>
+<g >
+<title>'recursive_function 1' (79 us, 0.06%)</title><rect x="3820.5" y="126" width="2.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3823.52" y="140.5" ></text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot; (?)' (84 us, 0.06%)</title><rect x="3177.4" y="78" width="2.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3180.36" y="92.5" ></text>
+</g>
+<g >
+<title>'TRAP (SIGCHLD): echo &quot;[TRAP] A child process has exited.&quot;' (23,865 us, 17.69%)</title><rect x="825.5" y="78" width="721.0" height="23.0" fill="rgb(183,150,40)" rx="2" ry="2" />
+<text  x="828.47" y="92.5" >'TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'</text>
+</g>
+<g >
+<title>'sleep 0.2' (1,633 us, 1.21%)</title><rect x="3342.2" y="102" width="49.4" height="23.0" fill="rgb(50,104,229)" rx="2" ry="2" />
+<text  x="3345.23" y="116.5" >'sleep..</text>
+</g>
+<g >
+<title>'echo &quot;$decoded_data&quot; 1&gt;&amp;3' (102 us, 0.08%)</title><rect x="3643.4" y="102" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3646.39" y="116.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (299 us, 0.22%)</title><rect x="3646.5" y="78" width="9.0" height="23.0" fill="rgb(223.574831613846,138.610487458689,197.387191292051)" rx="2" ry="2" />
+<text  x="3649.47" y="92.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (83 us, 0.06%)</title><rect x="3887.1" y="150" width="2.5" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3890.14" y="164.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (94 us, 0.07%)</title><rect x="3828.2" y="126" width="2.8" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3831.17" y="140.5" ></text>
+</g>
+<g >
+<title>'OUTPUT_PIPE=&quot;$TMPDIR/output.pipe&quot;' (165 us, 0.12%)</title><rect x="33.7" y="78" width="5.0" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="36.72" y="92.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (89 us, 0.07%)</title><rect x="3884.5" y="150" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3887.45" y="164.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (8,787 us, 6.51%)</title><rect x="3820.5" y="102" width="265.5" height="23.0" fill="rgb(201.262192361807,147.524384723613,225.444205798994)" rx="2" ry="2" />
+<text  x="3823.52" y="116.5" >FUNCTION (recursive_function)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (773434)_[s] (134,911 us, 100.00%)</title><rect x="10.0" y="54" width="4076.0" height="23.0" fill="rgb(225.842299389747,148.971997780898,201.985998890449)" rx="2" ry="2" />
+<text  x="13.00" y="68.5" >SUBSHELL (773434)_[s]</text>
+</g>
+<g >
+<title>'rm -rf &quot;$TMPDIR&quot;' (2,775 us, 2.06%)</title><rect x="3093.5" y="78" width="83.9" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3096.52" y="92.5" >'rm -rf "$TM..</text>
+</g>
+<g >
+<title>SUBSHELL (773456)_[s] (3,752 us, 2.78%)</title><rect x="3182.7" y="78" width="113.4" height="23.0" fill="rgb(230.528339837431,141.381577816644,204.308703948964)" rx="2" ry="2" />
+<text  x="3185.71" y="92.5" >SUBSHELL (773456)..</text>
+</g>
+<g >
+<title>SUBSHELL (773462)_[s] (2,111 us, 1.56%)</title><rect x="3327.8" y="78" width="63.8" height="23.0" fill="rgb(224.767108893968,140.913618467804,199.097673049224)" rx="2" ry="2" />
+<text  x="3330.79" y="92.5" >SUBSHELL..</text>
+</g>
+<g >
+<title>'echo &quot;[BG 2] Read from FIFO: '\''$line'\''. Writing to coprocess.&quot; 1&gt;&amp;2' (158 us, 0.12%)</title><rect x="3396.4" y="102" width="4.7" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3399.37" y="116.5" ></text>
+</g>
+<g >
+<title>'read -r -u 4 line (?)' (350 us, 0.26%)</title><rect x="3052.9" y="78" width="10.6" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="3055.91" y="92.5" ></text>
+</g>
+<g >
+<title>'decoded_data=$(echo &quot;$encoded_data&quot; | base64 -d)' (794 us, 0.59%)</title><rect x="3616.2" y="102" width="24.0" height="23.0" fill="rgb(39,78,238)" rx="2" ry="2" />
+<text  x="3619.17" y="116.5" >'d..</text>
+</g>
+<g >
+<title>'return' (89 us, 0.07%)</title><rect x="4083.3" y="198" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4086.31" y="212.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (175 us, 0.13%)</title><rect x="3978.0" y="174" width="5.3" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3980.99" y="188.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (188 us, 0.14%)</title><rect x="3988.7" y="174" width="5.7" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="3991.72" y="188.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Coprocess PID: $CPID_PID&quot;' (103 us, 0.08%)</title><rect x="822.4" y="78" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="825.35" y="92.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Starting the main logic.&quot;' (94 us, 0.07%)</title><rect x="819.5" y="78" width="2.9" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="822.51" y="92.5" ></text>
+</g>
+<g >
+<title>'wait (?)' (204 us, 0.15%)</title><rect x="3075.8" y="78" width="6.2" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3078.81" y="92.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (89 us, 0.07%)</title><rect x="4080.6" y="198" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="4083.62" y="212.5" ></text>
+</g>
+<g >
+<title>'recursive_function $((depth + 1))' (212 us, 0.16%)</title><rect x="4067.3" y="198" width="6.4" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="4070.30" y="212.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (200 us, 0.15%)</title><rect x="3404.2" y="102" width="6.0" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3407.16" y="116.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773464)_[s] (6,703 us, 4.97%)</title><rect x="3404.2" y="78" width="202.5" height="23.0" fill="rgb(225.33715950556,145.13762779837,200.618125760193)" rx="2" ry="2" />
+<text  x="3407.16" y="92.5" >SUBSHELL (773464)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (recursive_function)_[f] (619 us, 0.46%)</title><rect x="4067.3" y="174" width="18.7" height="23.0" fill="rgb(198.204414345769,139.090641521977,224.284020003324)" rx="2" ry="2" />
+<text  x="4070.30" y="188.5" >F..</text>
+</g>
+<g >
+<title>'read -r encoded_data' (314 us, 0.23%)</title><rect x="3606.7" y="102" width="9.5" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="3609.68" y="116.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773465)_[s] (5,462 us, 4.05%)</title><rect x="3655.5" y="78" width="165.0" height="23.0" fill="rgb(232.858974138628,142.546894967243,206.639338250161)" rx="2" ry="2" />
+<text  x="3658.50" y="92.5" >SUBSHELL (773465)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (773466)_[s] (8,787 us, 6.51%)</title><rect x="3820.5" y="78" width="265.5" height="23.0" fill="rgb(225.444205798994,147.524384723613,201.262192361807)" rx="2" ry="2" />
+<text  x="3823.52" y="92.5" >SUBSHELL (773466)_[s]</text>
+</g>
+<g >
+<title>'sleep 0.1' (2,829 us, 2.10%)</title><rect x="3892.5" y="150" width="85.5" height="23.0" fill="rgb(72,149,207)" rx="2" ry="2" />
+<text  x="3895.52" y="164.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'sleep 0.3' (1,936 us, 1.44%)</title><rect x="3413.3" y="102" width="58.5" height="23.0" fill="rgb(55,116,224)" rx="2" ry="2" />
+<text  x="3416.29" y="116.5" >'sleep ..</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (95 us, 0.07%)</title><rect x="3889.6" y="150" width="2.9" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3892.65" y="164.5" ></text>
+</g>
+<g >
+<title>'mkfifo &quot;$INPUT_PIPE&quot;' (3,543 us, 2.63%)</title><rect x="38.7" y="78" width="107.0" height="23.0" fill="rgb(86,174,188)" rx="2" ry="2" />
+<text  x="41.70" y="92.5" >'mkfifo "$INPUT_..</text>
+</g>
+<g >
+<title>'TMPDIR=$(mktemp -d)' (496 us, 0.37%)</title><rect x="13.8" y="78" width="15.0" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="16.78" y="92.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Message from BG 1&quot; &gt; &quot;$FIFO_PATH&quot;' (93 us, 0.07%)</title><rect x="3339.4" y="102" width="2.8" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3342.42" y="116.5" ></text>
+</g>
+<g >
+<title>'[ $depth -gt 3 ]' (86 us, 0.06%)</title><rect x="3825.6" y="126" width="2.6" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3828.57" y="140.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$encoded_data&quot; | base64 -d' (5,462 us, 4.05%)</title><rect x="3655.5" y="126" width="165.0" height="23.0" fill="rgb(112,201,152)" rx="2" ry="2" />
+<text  x="3658.50" y="140.5" >'echo "$encoded_data" | b..</text>
+</g>
+<g >
+<title>'INPUT_PIPE=&quot;$TMPDIR/input.pipe&quot;' (164 us, 0.12%)</title><rect x="28.8" y="78" width="4.9" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="31.76" y="92.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;[TRAP] A child process has exited.&quot;'\'' SIGCHLD (&amp;)' (19,369 us, 14.36%)</title><rect x="234.3" y="78" width="585.2" height="23.0" fill="rgb(145,202,97)" rx="2" ry="2" />
+<text  x="237.33" y="92.5" >'trap '\''echo "[TRAP] A child process has exited."'\'' SIGCHLD (&amp;)'</text>
+</g>
+<g >
+<title>'echo &quot;[MAIN] Cleaning up.&quot;' (137 us, 0.10%)</title><rect x="3082.0" y="78" width="4.1" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3084.98" y="92.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (773478)_[s] (5,462 us, 4.05%)</title><rect x="3655.5" y="102" width="165.0" height="23.0" fill="rgb(232.858974138628,142.546894967243,206.639338250161)" rx="2" ry="2" />
+<text  x="3658.50" y="116.5" >SUBSHELL (773478)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (773459)_[s] (1,050 us, 0.78%)</title><rect x="3296.1" y="78" width="31.7" height="23.0" fill="rgb(224.166935374589,139.230568670628,197.987918239807)" rx="2" ry="2" />
+<text  x="3299.06" y="92.5" >SUB..</text>
+</g>
+<g >
+<title>'echo &quot;[RECURSIVE] Depth: $depth&quot; 1&gt;&amp;2' (110 us, 0.08%)</title><rect x="3994.4" y="174" width="3.3" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3997.40" y="188.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$line&quot;' (190 us, 0.14%)</title><rect x="3322.0" y="102" width="5.8" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3325.05" y="116.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (196 us, 0.15%)</title><rect x="3646.5" y="102" width="5.9" height="23.0" fill="rgb(26,46,246)" rx="2" ry="2" />
+<text  x="3649.47" y="116.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[BG 4] Starting recursive function.&quot; 1&gt;&amp;2' (103 us, 0.08%)</title><rect x="3652.4" y="102" width="3.1" height="23.0" fill="rgb(12,15,252)" rx="2" ry="2" />
+<text  x="3655.39" y="116.5" ></text>
+</g>
+<g >
+<title>'mkfifo &quot;$OUTPUT_PIPE&quot;' (2,932 us, 2.17%)</title><rect x="145.7" y="78" width="88.6" height="23.0" fill="rgb(78,161,199)" rx="2" ry="2" />
+<text  x="148.74" y="92.5" >'mkfifo "$OUT..</text>
+</g>
+<g >
+<title>'local depth=$1' (88 us, 0.07%)</title><rect x="3822.9" y="126" width="2.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="3825.91" y="140.5" ></text>
+</g>
+<g >
+<title>'kill &quot;$CPID_PID&quot; 2&gt; /dev/null' (133 us, 0.10%)</title><rect x="3086.1" y="78" width="4.0" height="23.0" fill="rgb(18,26,250)" rx="2" ry="2" />
+<text  x="3089.12" y="92.5" ></text>
+</g>
+<g >
+<title>'mktemp -d' (3,752 us, 2.78%)</title><rect x="3182.7" y="102" width="113.4" height="23.0" fill="rgb(92,182,180)" rx="2" ry="2" />
+<text  x="3185.71" y="116.5" >'mktemp -d'</text>
+</g>
+<g >
+<title>all (134,911 us, 100%)</title><rect x="10.0" y="30" width="4076.0" height="23.0" fill="rgb(123,206,133)" rx="2" ry="2" />
+<text  x="13.00" y="44.5" ></text>
+</g>
+</g>
+</svg>

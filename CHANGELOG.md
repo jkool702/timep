@@ -1,4 +1,11 @@
-CURRENT VERSION: timep v1.5
+CURRENT VERSION: timep v1.6
+
+timep v1.6: The changes in this release are largely geared towards various bug fixes and ensuring timep works correctly in more situations. this includes:
+* line numbers for subshells inside of functions are now correct
+* timep now works if the code being profiled uses `set -e` or `set -u`
+* timep now enforces `set -T` like it does `set -m` - if it is disabled timep automatically re-enables it
+* there is now a mechanism (which can be disabled via an environment variable) which will cause orphaned processes to automatically exit after the main timep profiling run finishes
+* trap handler events are dealt with more robustly
 
 timep v1.5: 2 major changes are present in this version:
 * fixes an issue where it was possible (albiet unlikely) that two sub-trees could be combined in the "combined" profile that shouldnt be. This fix involves computing hashs of all the command strings. To do this without sacraficing performance two new loadable builtins were added - timep_crc32 and timep_fnv1a. To ensure that the (now longer) loadable base64 strings didnt cause the environment size to exceed ARG_MAX, the way that the base64-embedded strings are stored and extracted was re-workedso that the base64 strings are never in a function.
