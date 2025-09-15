@@ -190,7 +190,7 @@ After the profiled code has finished running, `timep` goes through the logs and 
 1. getting CPU time (via clock_gettime and getrusage). This is dramatically more acurate than the info in /proc
 2. computing checksums. The checksums timep uses are typically quite small, and having builtin functions to do this avoids the fork cost, making them dramatically faster.
 
-These loadable builtins are encoded directly in the `timep.bash` file as custom compressed base64 sequence. These base64 sequences have both sha256 and md5 checksums builtin that are verified on extraction. the followimng arches are included in `timep.bash`:
+These loadable builtins are encoded directly in the `timep.bash` file as custom compressed base64 sequence. These base64 sequences have both sha256 and md5 checksums builtin that are verified on extraction. the following arches are included in `timep.bash`:
 * x86_64
 * aarch64
 * armv7
@@ -198,7 +198,7 @@ These loadable builtins are encoded directly in the `timep.bash` file as custom 
 * ppc64le
 * risc-v
 
-The C source for the loadable functions is available at [LIB/LOADABLES/SRC/timep.c](https://github.com/jkool702/timep/blob/main/LIB/LOADABLES/SRC/timep.c). A [github actions workflow](https://github.com/jkool702/timep/blob/main/.github/workflows/build-multiplatform.yml) automatically builds this source into the timep.so that provides the loadablre builtins, base64 encodes them, and directly incorporates them into timep.bash. If you look at the "blame" for `timep.bash` you will see that the base64 encodings came from a commit added by the github-actions bot. This provides a verifiable chain that proves that the timep.so file was, in fact, compiled from the source C code linked above.
+The C source for the loadable functions is available at [LIB/LOADABLES/SRC/timep.c](https://github.com/jkool702/timep/blob/main/LIB/LOADABLES/SRC/timep.c). A [github actions workflow](https://github.com/jkool702/timep/blob/main/.github/workflows/build-multiplatform.yml) automatically builds this source into the timep.so that provides the loadable builtins, base64 encodes them, and directly incorporates them into timep.bash. If you look at the "blame" for `timep.bash` you will see that the base64 encodings came from a commit added by the github-actions bot. This provides a verifiable chain that proves that the embedded timep.so file was, in fact, compiled from the source C code linked above.
 
 ***
 
