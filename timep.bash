@@ -2320,7 +2320,7 @@ _timep_COMBINE_FLAMEGRAPH() {
     while read -r nn; do
         nn0="${nn##*$'\t'}"
         timep_LOG_NESTING[${#nn0}]+="${timep_LOG_NAME[${nn%%$'\t'*}]}"$'\n'
-    done < <(for kk in "${!timep_LOG_NAME[@]"; do read -r nn1 <"${timep_TMPDIR}/.log/.hash/${timep_LOG_NAME[$kk]##*\/}"; printf '%s\t%s\n' "${kk}" "${nn1//[^\.]/}"; done)
+    done < <(for kk in "${!timep_LOG_NAME[@]}"; do read -r nn1 <"${timep_TMPDIR}/.log/.hash/${timep_LOG_NAME[$kk]##*\/}"; printf '%s\t%s\n' "${kk}" "${nn1//[^\.]/}"; done)
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
 
     # sort logs in nesting order
