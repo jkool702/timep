@@ -111,10 +111,10 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
+    local IFS IFS0 nn nn0 nn1 jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE timep_CTIME_DONE logOut logOutL logOutLL
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_LOG_DELETE_CUR timep_setupFuncFlags
-    local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND
+    local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND 
 
     SECONDS=0
 
@@ -1527,7 +1527,7 @@ _timep_PROCESS_LOG() {
     cTimeTotal=0
 
     # get current log nesting depth
-    logDepth="${hashMapAA[${logCur##*\/}]#log.}"
+    read -r logDepth <"${timep_TMPDIR}/.log/.hash/${logCur##*\/}"
     logDepth="${logDepth//[^.]/}"
     logDepth="${#logDepth}"
 
@@ -1616,8 +1616,7 @@ _timep_PROCESS_LOG() {
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecHashA[$kk]}"
-         [[ -f "${timep_TMPDIR}/.log/.hash/log.${nexecHashA[$kk]}" ]] && \rm -f "${timep_TMPDIR}/.log/.hash/log.${nexecHashA[$kk]}"
-
+*
             # read in the endtime + runtime from the log
             # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
                 if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
@@ -1654,13 +1653,14 @@ _timep_PROCESS_LOG() {
         # to get the closest timestamp that is greater than the starttime for this command and use that as the endtime
         [[ "${endWTimeA[$kk]}" == '+' ]] && {
             endWTime=0
-            log_tmp="${hashMapAA[${logCur##*\/}]}"
+            read -r log_tmp <"${timep_TMPDIR}/.log/.hash/${logCur##*\/}"
             log_tmp="${log_tmp%.*}"
             until [[ -z ${log_tmp//[^.]/} ]]; do
                 timep_hash - 'log_tmp_hash' <<<"${log_tmp}"
                     [[ -s "${logCur%\/*}/log.${log_tmp_hash}" ]] && {
                     while read -r _ endWTime _ ; do
-                        (( endWTime > startWTimeA[$kk] )) && break 2
+                        [[ ${endWTime//[+-]/} ]] || continue
+                        (( 10#0${endWTime} > 10#0${startWTimeA[$kk]} )) && break 2
                     done <"${logCur%\/*}/log.${log_tmp_hash}"
                 }
                 log_tmp="${log_tmp%.*}"
@@ -1671,6 +1671,8 @@ _timep_PROCESS_LOG() {
             (( endWTime > startWTimeA[$kk] )) || endWTime="${timep_WTIME_DONE}"
 
             endWTimeA[$kk]="${endWTime}"
+
+            # get missing cpu time by assuming cpu time and wall time are identical (or, when apppriopiate, ther final ending CTIME)
             (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
             (( timep_CTIME_DONE > startCTimeA[$kk] )) && (( timep_CTIME_DONE < endCTimeA[$kk] )) && endCTimeA[$kk]="${timep_CTIME_DONE}"
         }
@@ -1800,15 +1802,21 @@ printf '%s;' "${fgA[@]}")"
         if ${isMergeIndicatorA[$kk]}; then
             # cmd0 forms the command part of the merge key
             # remove pid from subshell / bg fork merege indicator to alliow subshells to be merged
-            cmd0="${cmdA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
-            cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
-            cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
-            cmd0="${cmd0@Q}"
+            if [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] > 1 )); then
+                cmd00="${cmdA[$kk]//<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
+                cmd00="${cmd00//<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
+                cmd00="${cmd00//<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
+            else
+                cmd00="${cmdA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
+                cmd00="${cmd00/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
+                cmd00="${cmd00/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
+            fi
+            
+            timep_hash - 'cmd0' <<<"${cmd00}"
 
             # merge up log into kk index vars
             mergeA[$kk]="${mergeA[$kk]//+($'\n')/$'\n'}"
             mergeA[$kk]="${mergeA[$kk]#$'\n'}"
-            #mergeA[$kk]="${mergeA[$kk]%$'\n'}"
             mapfile -t mergeA0 <<<"${mergeA[$kk]}"
             mergeCurA=()
             for kk1 in "${!mergeA0[@]}"; do
@@ -1848,7 +1856,7 @@ printf '%s;' "${fgA[@]}")"
                 [[ -z ${cmd} ]] && [[ ${cind//[0-9]/} ]] && cmd="${cind}"
 
                 # quote and add to merge key
-                timep_crc32 '' 'cmd00' <<<"${cmd}"
+                timep_crc32 - 'cmd00' <<<"${cmd}"
                 cmd0+=$'\n'"${cmd00@Q}"
            done
         else
@@ -1987,7 +1995,12 @@ printf '%s;' "${fgA[@]}")"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
 
-    ${timep_deleteFlag} && [[ ${timep_WORKER_PID} ]] && (( timep_WORKER_PID > 0 )) && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+    if  [[ ${timep_WORKER_PID} ]] && (( timep_WORKER_PID > 0 )); then
+        ${timep_deleteFlag} && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+        printf '%s\n' "${mergeA[@]/#${timep_TMPDIR}\/.log\/log./${timep_TMPDIR}\/.log\/.hash/\log.}" >>"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+    else
+        [[ ${mergeA[@]/#${timep_TMPDIR}\/.log\/log./${timep_TMPDIR}\/.log\/.hash/\log.} ]] && \rm "${mergeA[@]/#${timep_TMPDIR}\/.log\/log./${timep_TMPDIR}\/.log\/.hash/\log.}"
+    fi
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
@@ -2298,19 +2311,18 @@ _timep_COMBINE_FLAMEGRAPH() {
     # get log names
     mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}"/.log -maxdepth 1 -name 'log.*' | grep -vE '\.((init_[csr])|(out.*))$' | sort -V)
 
-    # generate array to map hash-->nexec
-    local -Agx hashMapAA
-    for nn in "${timep_LOG_NAME[@]}"; do
-        IFS= read -r nexec <"${nn//\/.log\//\/.log\/.hash\/}"
-        hashMapAA[${nn##*\/log.}]="${nexec}"
-    done
+#    # generate array to map hash-->nexec
+#    for nn in "${timep_LOG_NAME[@]}"; do
+#        IFS= read -r nexec <"${timep_TMPDIR}/.log/.hash/${nn##*\/}"
+#        hashMapAA[${nn##*\/log.}]="${nexec}"
+#    done
 
     # get nesting lvl for each log
     timep_LOG_NESTING=()
     while read -r nn; do
         nn0="${nn##*$'\t'}"
         timep_LOG_NESTING[${#nn0}]+="${timep_LOG_NAME[${nn%%$'\t'*}]}"$'\n'
-    done < <(for kk in "${!timep_LOG_NAME[@]}"; do nn1="${hashMapAA[${timep_LOG_NAME[$kk]##*\/log\.}]}"; printf '%s\t%s\n' "${kk}" "${nn1//[^\.]/}"; done)
+    done < <(for kk in "${!timep_LOG_NAME[@]"; do read -r nn1 <"${timep_TMPDIR}/.log/.hash/${timep_LOG_NAME[$kk]##*\/}"; printf '%s\t%s\n' "${kk}" "${nn1//[^\.]/}"; done)
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
 
     # sort logs in nesting order
