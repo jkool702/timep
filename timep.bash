@@ -1613,7 +1613,7 @@ _timep_PROCESS_LOG() {
 
             # record which log to merge up and where
             mergeA[$kk]="${timep_TMPDIR}/.log/log.${nexecHashA[$kk]}"
-*
+
             # read in the endtime + runtime from the log
             # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
                 if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
