@@ -899,8 +899,7 @@ timep_SKIP_DEBUG_FLAG=false
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
-timep_SKIP_DEBUG_FLAG=false
-:'"'"' "${trapType}"
+timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
                     fi
                 ;;
             esac
@@ -1505,7 +1504,7 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag
+    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag fgStartTime
     local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
@@ -1729,6 +1728,7 @@ _timep_PROCESS_LOG() {
         fi
 
        ${timep_flameGraphFlag} && ${normalCmdFlagA[$kk]} && ! ${inPipeFlag} && {
+           [[ "${startWTimeA[$kk]}" == [0-9]* ]] && [[ -z ${startWTimeA[$kk]//[^0-9]/} ]] && fgStartTime="${startWTimeA[$kk]}"
             [[ -z ${fg0} ]] && {
                 # get base stack (showing all the parents) for this log
                 fg0="$(IFS0="${IFS@Q}"
@@ -1773,7 +1773,7 @@ printf '%s;' "${fgA[@]}")"
         #  write out flamegraph stack trace line for standard commands
         cmd0="${cmdA[$kk]//\;/\,}"
         cmd0="${cmd0::256}"
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmd0@Q}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${startWTimeA[0]}"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmd0@Q}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${fgStartTime}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
