@@ -143,7 +143,7 @@ timep() {
     else
         timep_flameGraphFlag=false
     fi
-    
+
     if [[ ${timep_ALLOW_ORPHANS_FLAG} ]] && { [[ "${timep_ALLOW_ORPHANS_FLAG}" == '1' ]] || [[ "${timep_ALLOW_ORPHANS_FLAG}" == 'true' ]] || [[ "${timep_ALLOW_ORPHANS_FLAG%[Ee][Ss]}" == [Yy] ]]; }; then
         timep_ALLOW_ORPHANS_FLAG=true
     else
@@ -509,7 +509,7 @@ if [[ -s "${timep_TMPDIR}/.log/.disableSignalRelay" ]]; then
 else
     builtin trap '"''"' SIG%s
     timep_pidA=()
-    jobs -p | { 
+    jobs -p | {
         mapfile -t timep_pidA
         (( ${#timep_PIDA[@]} > 0 )) && kill -SIG%s "${timep_pidA[@]}" 2>/dev/null
     }
@@ -525,7 +525,7 @@ fi'
 
     timep_DEBUG_TRAP_STR_1='timep_TRAP_OPTS=${-//[^eu]/}; ${timep_TRAP_OPTS:+set +}${timep_TRAP_OPTS}
 '
-    ${timep_ALLOW_ORPHANS_FLAG} && timep_DEBUG_TRAP_STR_1+='if [[ -f "${timep_TMPDIR}/.profiling.done" ]] || ! [[ -d "${timep_TMPDIR}/.log" ]]; then 
+    ${timep_ALLOW_ORPHANS_FLAG} && timep_DEBUG_TRAP_STR_1+='if [[ -f "${timep_TMPDIR}/.profiling.done" ]] || ! [[ -d "${timep_TMPDIR}/.log" ]]; then
     kill -TERM "$BASHPID"
     exit 0
 fi
@@ -1012,7 +1012,7 @@ timep_SKIP_DEBUG_FLAG=false
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
         (( timep_LINENO[${timep_FNEST_CUR}] = LINENO + 5 ))
-        
+
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 
         '"$(${timep_timeFlag} && echo 'time {')"'
@@ -1170,7 +1170,7 @@ timep_SKIP_DEBUG_FLAG=false
     # --> compute runtimes for each command (except subshells / bg forks / functions)
     # --> merge up logs + runtimes for any subshells / bg forks / functions
     # --> combine duplicate/repeated commands from loops (in second "combined" log)
-    
+
     # get final end times
     read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
     read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
@@ -1507,7 +1507,7 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag 
+    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag
     local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
@@ -1620,8 +1620,8 @@ _timep_PROCESS_LOG() {
 
             # read in the endtime + runtime from the log
             # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
-                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]#* }"; then
-                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]#* }"
+                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
+                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
                     [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
                     [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
                 fi
@@ -1636,8 +1636,8 @@ _timep_PROCESS_LOG() {
 
         # see if we need to merge up the endtime/runtime from the child log
         [[ "${endWTimeA[$kk]}" == '-' ]] && {
-            if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]#* }"; then
-                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]#* }"
+            if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
+                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
                 [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
             fi
             (( startCTimeA[$kk] > 0 )) && [[ ${cTimeA[$kk]} ]] && (( cTimeA[$kk] > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
@@ -1772,7 +1772,7 @@ printf '%s;' "${fgA[@]}")"
 
         #  write out flamegraph stack trace line for standard commands
         cmd0="${cmdA[$kk]//\;/\,}"
-        cmd0="${cmd0::256}" 
+        cmd0="${cmd0::256}"
         ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmd0@Q}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
 
         # add nesting depth to lineno
@@ -1804,7 +1804,7 @@ printf '%s;' "${fgA[@]}")"
             cmd0="${cmd0/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
             cmd0="${cmd0/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
             cmd0="${cmd0@Q}"
-        
+
             # merge up log into kk index vars
             mergeA[$kk]="${mergeA[$kk]//+($'\n')/$'\n'}"
             mergeA[$kk]="${mergeA[$kk]#$'\n'}"
@@ -3371,7 +3371,7 @@ mkdir --mode=1777 -p "/dev/shm/.timep"
 mkdir --mode=1777 -p "/dev/shm/.timep/lib"
 mkdir --mode=700 -p "/dev/shm/.timep/lib/${USER}-${EUID}"
 
-[[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash" ]] && chmod +w "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash" 
+[[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash" ]] && chmod +w "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
 [[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash" ]] && chmod +w  "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
 
 cat<<'EEEOOOFFF' >"/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
