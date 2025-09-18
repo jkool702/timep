@@ -111,7 +111,7 @@ timep() {
 
     local IFS IFS0 nn nn0 nn1 jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE timep_CTIME_DONE logOut logOutL logOutLL
-    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_LOG_DELETE_CUR timep_setupFuncFlags
+    local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_LOG_DELETE_CUR timep_setupFuncFlags flameGraphLogA
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND 
 
     SECONDS=0
@@ -1685,7 +1685,7 @@ _timep_PROCESS_LOG() {
             (( isPipeA[$kk] = isPipeA[$kk1] + 1 ))
             [[ ${endWTimeA[$kk1]} ]] && endWTimeA[$kk]="${endWTimeA[$kk1]}"
             [[ ${endCTimeA[$kk1]} ]] && endCTimeA[$kk]="${endCTimeA[$kk1]}"
-            ${isMergeIndicatorA[$kk1]} && { isMergeIndicatorA[$kk]=true; mergeA[$kk]+=$'\n'"${mergeA[$kk1]}"; }
+            ${isMergeIndicatorA[$kk1]} && { isMergeIndicatorA[$kk]=true; mergeA[$kk]+="${mergeA[$kk]:+$'\n'}${mergeA[$kk1]}"; }
             cmdA[$kk]+=" | ${cmdA[$kk1]// \(\&\)/}"
             (( nPipeA[$kk] == 1 )) && inPipeFlag=false
         elif (( nPipeA[$kk] > 1 )); then
@@ -1773,7 +1773,7 @@ printf '%s;' "${fgA[@]}")"
         #  write out flamegraph stack trace line for standard commands
         cmd0="${cmdA[$kk]//\;/\,}"
         cmd0="${cmd0::256}"
-        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmd0@Q}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${1}"
+        ${normalCmdFlagA[$kk]} && printf '%s%s\t%s\t%s\n' "${fg0}" "${cmd0@Q}" "${wTimeA[$kk]}" "${cTimeA[$kk]}" >>"${logCur%\/*}/out.flamegraph.full.${logDepth}.${startWTimeA[0]}"
 
         # add nesting depth to lineno
         if (( kk > 0 )) && [[ "${linenoA[$kk]:-0}" == "${linenoA[$kk1]%%.*}" ]]; then
@@ -2317,10 +2317,12 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     # get nesting lvl for each log
     timep_LOG_NESTING=()
-    while read -r nn; do
-        nn0="${nn##*$'\t'}"
-        timep_LOG_NESTING[${#nn0}]+="${timep_LOG_NAME[${nn%%$'\t'*}]}"$'\n'
-    done < <(for kk in "${!timep_LOG_NAME[@]}"; do read -r nn1 <"${timep_TMPDIR}/.log/.hash/${timep_LOG_NAME[$kk]##*\/}"; printf '%s\t%s\n' "${kk}" "${nn1//[^\.]/}"; done)
+    for kk in "${!timep_LOG_NAME[@]}"; do 
+        read -r nn1 <"${timep_TMPDIR}/.log/.hash/${timep_LOG_NAME[$kk]##*\/}";
+        nn0="${nn1//[^\.]/}";
+        timep_LOG_NESTING[${#nn0}]+="${timep_LOG_NAME[${kk}]}"$'\n'
+    done
+
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
 
     # sort logs in nesting order
@@ -2626,9 +2628,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         # reverse flamegraph input so it starts at the parent and ends at the depest child
         printf '\nREORDERING FLAMEGRAPH INPUTS (+%s)\n' "${SECONDS}"  >&2
         #echo "$(grep -n '' <"${timep_TMPDIR}/.log/out.flamegraph.full" | sed -E 's/^([0-9]+)\:/\1 /' | sort -nr -k1,1 | sed -E 's/^[0-9]+ //')" >"${timep_TMPDIR}/.log/out.flamegraph.full"
-        #mapfile -t flameGraphLogA < <(sort -V "${timep_TMPDIR}"/.log/out.flamegraph.full.*)
-        #cat "${flameGraphLogA[@]}" >"${timep_TMPDIR}/.log/out.flamegraph.full"
-        cat "${timep_TMPDIR}"/.log/out.flamegraph.full.* >"${timep_TMPDIR}/.log/out.flamegraph.full"
+        mapfile -t flameGraphLogA < <(echo "${timep_TMPDIR}"/.log/out.flamegraph.full.* | sort -V)
+        cat "${flameGraphLogA[@]}" >"${timep_TMPDIR}/.log/out.flamegraph.full"
+        #cat "${timep_TMPDIR}"/.log/out.flamegraph.full.* >"${timep_TMPDIR}/.log/out.flamegraph.full"
 
         read -r -u "${fd_sleep}" -t 0.01 _ || :
 
