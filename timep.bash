@@ -581,7 +581,7 @@ fi
         else
             timep_IS_SUBSHELL_FLAG=true
             printf '"'"'%s\n'"'"' "${timep_ENDTIME}" >>"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_A[-1]}"
-            printf '"'"'%s\n'"'"' "${timep_ENDTIME}" >>"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}"
+            printf '"'"'%s\n'"'"' "${timep_ENDTIME}" >>"${timep_TMPDIR}/.log1/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_A[-1]}"
             ((BASHPID < timep_BASHPID_PREV)) && ((timep_NPIDWRAP++))
             builtin trap '"'${timep_EXIT_TRAP_STR//"'"/"'"'"'"'"'"'"'"}'"' EXIT
             '
@@ -716,7 +716,7 @@ fi
                 timep_CMD_TYPE="SIMPLE FORK *"
             }
             ${timep_IS_BG_FLAG} && [[ -z ${timep_IS_BG_INDICATOR} ]] && timep_IS_BG_INDICATOR='"'"'(&)'"'"'
-            [[ -s "${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}" ]] && {
+            [[ -s "${timep_TMPDIR}/.log1/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_A[-1]}" ]] && {
                 {
                     while read -r -u ${timep_FD_ENDTIME} timep_END_TIME0 timep_END_CTIME0; do
                         (( 10#0${timep_END_TIME0//[^0-9]/} < 10#0${timep_END_TIME//[^0-9]/} )) && {
@@ -726,7 +726,7 @@ fi
                     done
                     timep_ENDTIME="${timep_END_TIME}"$'"'"'\t'"'"'"${timep_END_CTIME}"
 
-                } {timep_FD_ENDTIME}<"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_0}.${timep_NEXEC_A[-1]}"
+                } {timep_FD_ENDTIME}<"${timep_TMPDIR}/.log1/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_A[-1]}"
                 exec {timep_FD_ENDTIME}>&-
             }
             ${timep_NO_PRINT_FLAG} || printf '"'"'%s\t%s\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s\t%s\t::\t%s %s\n'"'"' "${timep_NPIPE[${timep_FNEST_CUR}]}" "${timep_STARTTIME[${timep_FNEST_CUR}]}" "${timep_ENDTIME}" "${timep_FNEST_CUR}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_A[-1]}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]@Q}" "${timep_IS_BG_INDICATOR}" >>"${timep_TMPDIR}/.log1/log.${timep_NEXEC_HASH_CUR}"
@@ -1144,24 +1144,48 @@ timep_SKIP_DEBUG_FLAG=false
     }
 
     # fold in any remaining subshell init logs
-    for nn in "${timep_TMPDIR}"/.log*/log.*.init_c; do
+    for nn in "${timep_TMPDIR}"/.log/log.*.init_c; do
         [[ -s "$nn" ]] && ! [[ -s "${nn%.init_c}" ]] && ! [[ -s "${nn%.init_c}".init_s ]] && mv "$nn" "${nn%.init_c}"
     done
-    for nn in "${timep_TMPDIR}"/.log*/log.*.init_r; do
+    for nn in "${timep_TMPDIR}"/.log/log.*.init_r; do
         [[ -s "$nn" ]] && ! [[ -s "${nn%.init_r}.init_s" ]] && {
             read -r <"$nn"
             echo "${REPLY}" >>"${nn%.*.init_r}"
         }
         \rm -f "${nn}"
     done
-    for nn in "${timep_TMPDIR}"/.log*/log.*.init_s; do
+    for nn in "${timep_TMPDIR}"/.log/log.*.init_s; do
         [[ -s "$nn" ]] && {
-            read -r <"$nn"
+            IFS= read -r <"$nn"
             echo "${REPLY}" >>"${nn%.*.init_s}"
         }
         \rm -f "${nn}"
     done
 
+
+    for nn in "${timep_TMPDIR}"/.log1/log.*.init_c; do
+        [[ -s "$nn" ]] && ! [[ -s "${nn%.init_c}" ]] && ! [[ -s "${nn%.init_c}".init_s ]] && mv "$nn" "${nn%.init_c}"
+    done
+    for nn in "${timep_TMPDIR}"/.log1/log.*.init_r; do
+        [[ -s "$nn" ]] && ! [[ -s "${nn%.init_r}.init_s" ]] && {
+            nn0="${nn##*\/}"
+            IFS= read -r nn1 <"${timep_TMPDIR}/.log1/.hash/${nn0%.init_r}"
+            timep_hash - 'nn2' <<<"${nn1%.*}"
+            IFS= read -r <"${nn}"
+            echo "${REPLY}" >>"${timep_TMPDIR}/.log1/log.${nn2}"
+        }
+        \rm -f "${nn}"
+    done
+    for nn in "${timep_TMPDIR}"/.log1/log.*.init_s; do
+        [[ -s "$nn" ]] && {
+            nn0="${nn##*\/}"
+            IFS= read -r nn1 <"${timep_TMPDIR}/.log1/.hash/${nn0%.init_s}"
+            timep_hash - 'nn2' <<<"${nn1%.*}"
+            IFS= read -r <"${nn}"
+            echo "${REPLY}" >>"${timep_TMPDIR}/.log1/log.${nn2}"
+        }
+        \rm -f "${nn}"
+    done
     # indicate the profiling run is finished (will trigger orphans to exit)
     ${timep_ALLOW_ORPHANS_FLAG} || : >"${timep_TMPDIR}/.profiling.done"
 
