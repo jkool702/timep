@@ -199,3 +199,4 @@ HDOC
 }
 
 main "$@"
+wait
