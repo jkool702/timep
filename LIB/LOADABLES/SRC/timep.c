@@ -93,7 +93,7 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags);
  * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
  */
-static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags) 
+static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
 {
     if (!varname)
         return NULL;
@@ -115,23 +115,35 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
         memcpy(index, lbrack + 1, index_len);
         index[index_len] = '\0';
 
-        /* Find existing variable */
+        /* Find or create the variable */
         SHELL_VAR *var = find_variable(name);
-
         if (!var) {
-            /* Auto-create as indexed array if it doesn’t exist */
-            var = make_new_array_variable(name);
+            var = make_new_array_variable(name);  /* defaults to indexed */
         }
 
-        /* Bind the array element; Bash will handle all index validation */
-        SHELL_VAR *ret = bind_array_variable((char *)name, (arrayind_t)index, (char *)value, 0);
+        SHELL_VAR *ret = NULL;
+
+        if (assoc_p(var)) {
+            /* Associative array: keep index as string */
+            ret = bind_assoc_variable(name, index, value, flags);
+        } else {
+            /* Indexed array: convert index string -> arrayind_t */
+            char *endptr = NULL;
+            arrayind_t ind = (arrayind_t) strtol(index, &endptr, 10);
+
+            if (endptr == index || *endptr != '\0') {
+                builtin_error("bad array subscript: %s", index);
+            } else {
+                ret = bind_array_variable(name, ind, value, flags);
+            }
+        }
 
         xfree(name);
         xfree(index);
         return ret;
     } else {
         /* Plain scalar variable */
-        return bind_variable((char *)varname, (char *)value, 0);
+        return bind_variable(varname, value, flags);
     }
 }
 
