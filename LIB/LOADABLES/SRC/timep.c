@@ -106,8 +106,8 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
         size_t name_len  = (size_t)(lbrack - varname);
         size_t index_len = (size_t)(rbrack - lbrack - 1);
 
-        char *name  = (char *)xmalloc(name_len + 1);
-        char *index = (char *)xmalloc(index_len + 1);
+        char *name  = (char *) xmalloc(name_len + 1);
+        char *index = (char *) xmalloc(index_len + 1);
 
         memcpy(name, varname, name_len);
         name[name_len] = '\0';
@@ -118,23 +118,30 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
         /* Find or create the variable */
         SHELL_VAR *var = find_variable(name);
         if (!var) {
-            var = make_new_array_variable(name);  /* defaults to indexed */
+            /* default to creating an indexed array */
+            var = make_new_array_variable(name);
         }
 
         SHELL_VAR *ret = NULL;
 
         if (assoc_p(var)) {
-            /* Associative array: keep index as string */
-            ret = bind_assoc_variable(name, index, value, flags);
+            /* associative array: use assoc_insert (SHELL_VAR *, key, value) */
+            /* assoc_insert is the helper that inserts key->value into assoc array */
+            assoc_insert(var, index, value);
+            /* find_variable still points to var; return it */
+            ret = var;
         } else {
-            /* Indexed array: convert index string -> arrayind_t */
+            /* indexed array: parse numeric index */
             char *endptr = NULL;
+            errno = 0;
             arrayind_t ind = (arrayind_t) strtol(index, &endptr, 10);
 
-            if (endptr == index || *endptr != '\0') {
+            if (endptr == index || *endptr != '\0' || errno == ERANGE) {
                 builtin_error("bad array subscript: %s", index);
+                ret = NULL;
             } else {
-                ret = bind_array_variable(name, ind, value, flags);
+                /* bind_array_variable takes (SHELL_VAR *, arrayind_t, char *, int) */
+                ret = bind_array_variable(var, ind, value, flags);
             }
         }
 
