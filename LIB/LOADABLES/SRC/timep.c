@@ -65,7 +65,7 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-static SHELL_VAR *bind_var_or_array (const char *varname, const char *value)
+static SHELL_VAR *bind_var_or_array(const char *varname, const char *value);
 
 /* 
  * bind_var_or_array:
@@ -93,8 +93,7 @@ static SHELL_VAR *bind_var_or_array (const char *varname, const char *value)
  * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
  */
-static SHELL_VAR *bind_var_or_array (const char *varname, const char *value)
-{
+static SHELL_VAR *bind_var_or_array(const char *varname, const char *value) {
     if (!varname)
         return NULL;
 
@@ -116,7 +115,7 @@ static SHELL_VAR *bind_var_or_array (const char *varname, const char *value)
         index[index_len] = '\0';
 
         /* Find existing variable */
-        SHELL_VAR *var = find_variable(name);
+        char *var = find_variable(name);
 
         if (!var) {
             /* Auto-create as indexed array if it doesn’t exist */
@@ -124,10 +123,11 @@ static SHELL_VAR *bind_var_or_array (const char *varname, const char *value)
         }
 
         /* Bind the array element; Bash will handle all index validation */
-        SHELL_VAR *ret = bind_array_variable(var, index, value, 0);
+        ret = bind_array_variable(name, index, value, 0);
 
         xfree(name);
         xfree(index);
+        xfree(var);
         return ret;
     } else {
         /* Plain scalar variable */
