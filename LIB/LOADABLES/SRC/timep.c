@@ -65,7 +65,7 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-static SHELL_VAR *bind_var_or_array (char *varname, char *value, int flags)
+static int bind_var_or_array(char *varname, char *value, int flags);
 
 /* 
  * bind_var_or_array:
@@ -93,7 +93,8 @@ static SHELL_VAR *bind_var_or_array (char *varname, char *value, int flags)
  * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
  */
-static SHELL_VAR *bind_var_or_array (char *varname, char *value, int flags) {
+static int bind_var_or_array(char *varname, char *value, int flags) 
+{
     if (!varname)
         return NULL;
 
