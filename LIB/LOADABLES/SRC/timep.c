@@ -52,6 +52,8 @@
 #include "common.h"
 #include "xmalloc.h"
 #include "variables.h"
+#include "array.h"
+#include "bashansi.h"
 
 // Helpers for builtins
 extern int add_builtin(struct builtin *bp, int keep);
@@ -63,6 +65,75 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
+static SHELL_VAR *bind_var_or_array (const char *varname, const char *value)
+
+/* 
+ * bind_var_or_array:
+ *
+ * Assign a value to a Bash variable, handling both scalars and arrays.
+ *
+ * Behavior:
+ * 1. Scalar variable (e.g., "foo"):
+ *      - Calls bind_variable(varname, value, 0)
+ *      - Creates the variable if it does not exist
+ *
+ * 2. Indexed array (e.g., "arr[3]"):
+ *      - Splits into base name and index
+ *      - If the array does not exist, auto-creates an indexed array
+ *      - Calls bind_array_variable() for the assignment
+ *      - Bash will throw "bad array subscript" if the index is invalid (non-numeric)
+ *
+ * 3. Associative array (e.g., "A[foo]") that was declared with `declare -A A`:
+ *      - find_variable() returns a valid SHELL_VAR* even if the array is empty
+ *      - bind_array_variable() inserts the element into the empty associative array
+ *      - No prior assignment is needed; works on a "defined but empty" associative array
+ *
+ * Notes:
+ * - Does not automatically create associative arrays; the user must declare with `declare -A` first
+ * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
+ * - All index checking (numeric, invalid subscript) is deferred to Bash itself
+ */
+static SHELL_VAR *bind_var_or_array (const char *varname, const char *value)
+{
+    if (!varname)
+        return NULL;
+
+    const char *lbrack = strrchr(varname, '[');
+    const char *rbrack = lbrack ? strrchr(varname, ']') : NULL;
+
+    if (lbrack && rbrack && rbrack > lbrack) {
+        /* Array-style variable: split name and index */
+        size_t name_len  = (size_t)(lbrack - varname);
+        size_t index_len = (size_t)(rbrack - lbrack - 1);
+
+        char *name  = (char *)xmalloc(name_len + 1);
+        char *index = (char *)xmalloc(index_len + 1);
+
+        memcpy(name, varname, name_len);
+        name[name_len] = '\0';
+
+        memcpy(index, lbrack + 1, index_len);
+        index[index_len] = '\0';
+
+        /* Find existing variable */
+        SHELL_VAR *var = find_variable(name);
+
+        if (!var) {
+            /* Auto-create as indexed array if it doesn’t exist */
+            var = make_new_array_variable(name);
+        }
+
+        /* Bind the array element; Bash will handle all index validation */
+        SHELL_VAR *ret = bind_array_variable(var, index, value, 0);
+
+        xfree(name);
+        xfree(index);
+        return ret;
+    } else {
+        /* Plain scalar variable */
+        return bind_variable(varname, value, 0);
+    }
+}
 
 /* ----------------------------- */
 /* --------  getCPUtime -------- */
@@ -150,12 +221,12 @@ static int getCPUtime_main(int argc, char **argv) {
     if (var_combined) {
         char buf_combined[64];
         snprintf(buf_combined, sizeof(buf_combined), "%lld", (long long)micros_combined);
-        bind_variable(var_combined, buf_combined, 0);
+        bind_var_or_array(var_combined, buf_combined, 0);
 
         if (var_self) {
             char buf_self[64];
             snprintf(buf_self, sizeof(buf_self), "%lld", (long long)micros_self);
-            bind_variable(var_self, buf_self, 0);
+            bind_var_or_array(var_self, buf_self, 0);
         }
     } else {
         // No variables provided: print combined time to stdout
@@ -478,7 +549,7 @@ static int timep_crc32_main(int argc, char **argv)
     snprintf(outbuf, sizeof(outbuf), "%08x", (unsigned int)crc);
 
     if (varname)
-        bind_variable((char *)varname, outbuf, 0);
+        bind_var_or_array((char *)varname, outbuf, 0);
     else
         printf("%s\n", outbuf);
 
@@ -521,7 +592,7 @@ static int timep_fnv1a_main(int argc, char **argv)
     snprintf(outbuf, sizeof(outbuf), "%016llx", (unsigned long long)fnv);
 
     if (varname)
-        bind_variable((char *)varname, outbuf, 0);
+        bind_var_or_array((char *)varname, outbuf, 0);
     else
         printf("%s\n", outbuf);
 
@@ -564,7 +635,7 @@ static int timep_hash_main(int argc, char **argv)
     snprintf(outbuf, sizeof(outbuf), "%08x-%016llx", (unsigned int)crc, (unsigned long long)fnv);
 
     if (varname)
-        bind_variable((char *)varname, outbuf, 0);
+        bind_var_or_array((char *)varname, outbuf, 0);
     else
         printf("%s\n", outbuf);
 
