@@ -65,7 +65,7 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-static int bind_var_or_array(const char *varname, const char *value, int flags);
+static SHELL_VAR *bind_var_or_array (char *varname, char *value, int flags)
 
 /* 
  * bind_var_or_array:
@@ -93,7 +93,7 @@ static int bind_var_or_array(const char *varname, const char *value, int flags);
  * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
  */
-static int bind_var_or_array(const char *varname, const char *value, int flags) {
+static SHELL_VAR *bind_var_or_array (char *varname, char *value, int flags) {
     if (!varname)
         return NULL;
 
@@ -109,13 +109,13 @@ static int bind_var_or_array(const char *varname, const char *value, int flags) 
         char *index = (char *)xmalloc(index_len + 1);
 
         memcpy(name, varname, name_len);
-        name[name_len] = NULL;
+        name[name_len] = '\0';
 
         memcpy(index, lbrack + 1, index_len);
-        index[index_len] = NULL;
+        index[index_len] = '\0';
 
         /* Find existing variable */
-        char *var = (char *)find_variable(name);
+        SHELL_VAR *var = find_variable(name);
 
         if (!var) {
             /* Auto-create as indexed array if it doesn’t exist */
@@ -123,18 +123,15 @@ static int bind_var_or_array(const char *varname, const char *value, int flags) 
         }
 
         /* Bind the array element; Bash will handle all index validation */
-        ret = bind_array_variable(var, index, value, 0);
+        SHELL_VAR *ret = bind_array_variable((char *)name, (arrayind_t)index, (char *)value, 0);
 
         xfree(name);
         xfree(index);
-        xfree(var);
+        return ret;
     } else {
         /* Plain scalar variable */
-        ret = bind_variable(varname, value, 0);
+        return bind_variable((char *)varname, (char *)value, 0);
     }
-    xfree(lbrack);
-    xfree(rbrack);
-    return ret;
 }
 
 /* ----------------------------- */
@@ -691,4 +688,3 @@ int setup_builtin_timep(void) {
 
     return EXECUTION_SUCCESS;
 }
-
