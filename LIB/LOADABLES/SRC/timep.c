@@ -65,7 +65,7 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-static SHELL_VAR *bind_var_or_array(const char *varname, const char *value);
+static int bind_var_or_array(const char *varname, const char *value);
 
 /* 
  * bind_var_or_array:
@@ -93,7 +93,7 @@ static SHELL_VAR *bind_var_or_array(const char *varname, const char *value);
  * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
  */
-static SHELL_VAR *bind_var_or_array(const char *varname, const char *value) {
+static int bind_var_or_array(const char *varname, const char *value) {
     if (!varname)
         return NULL;
 
@@ -109,13 +109,13 @@ static SHELL_VAR *bind_var_or_array(const char *varname, const char *value) {
         char *index = (char *)xmalloc(index_len + 1);
 
         memcpy(name, varname, name_len);
-        name[name_len] = '\0';
+        name[name_len] = NULL;
 
         memcpy(index, lbrack + 1, index_len);
-        index[index_len] = '\0';
+        index[index_len] = NULL;
 
         /* Find existing variable */
-        char *var = find_variable(name);
+        char *var = (char *)find_variable(name);
 
         if (!var) {
             /* Auto-create as indexed array if it doesn’t exist */
@@ -123,16 +123,18 @@ static SHELL_VAR *bind_var_or_array(const char *varname, const char *value) {
         }
 
         /* Bind the array element; Bash will handle all index validation */
-        ret = bind_array_variable(name, index, value, 0);
+        ret = bind_array_variable(var, index, value, 0);
 
         xfree(name);
         xfree(index);
         xfree(var);
-        return ret;
     } else {
         /* Plain scalar variable */
-        return bind_variable(varname, value, 0);
+        ret = bind_variable(varname, value, 0);
     }
+    xfree(lbrack);
+    xfree(rbrack);
+    return ret;
 }
 
 /* ----------------------------- */
