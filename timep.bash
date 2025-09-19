@@ -2656,19 +2656,19 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
-    (( spacerN < 22 )) && spacerN=22
+    spacerN=16
 
     # add another percentage showing "percent of total runtime" to final outputs
     printf '\n\nGENERATING FINAL PROFILE OUTPUTS (+%s)\n' "${SECONDS}"  >&2
 
-    (( spacerN0 = spacerN > 22 ? spacerN - 22 : 0 ))
+    (( spacerN0 = spacerN > 16 ? spacerN - 16 : 0 ))
     (( spacerNN = spacerN - 1 ))
 
     logPathCur="${timep_TMPDIR}/profiles/out.profile"
 
         # split lines into start, time, percent, endr
-        logHeader="$(printf -v headerTXT 'LINE.DEPTH.CMD_NUMBER%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____     COMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
-            printf '%s\n<line>.<depth>.<cmd>:%'"${spacerN0}"'.s\t( time | total %% | cur depth %% )  ( time | total %% | cur depth %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
+        logHeader="$(printf -v headerTXT 'LINE_DEPTH_CMD_%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____     COMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
+            printf '%s\nline.depth.cmd:%'"${spacerN0}"'.s\t( time | total %% | cur depth %% )  ( time | total %% | cur depth %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
 
         logFooter="$(grep --text -E '^TOTAL' <"${logPathCur}")"
 
@@ -2723,7 +2723,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     [[ "${a0}" == [├└]─* ]] && a00="${a00#[├└]─}"
                 }
 
-                (( spacerN0 = spacerN -${#a0} ))
+                a000="${a0##*([^0-9\.\-])}"
+
+                (( spacerN0 = spacerN -${#a000} ))
 
                 [[ "${timep_runType}" == 'f' ]] && {
                     [[ ${a00} ]] || printf '│\n'$'\034'
@@ -2775,7 +2777,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         done
 
         # remove the (^) indicator and the corresponding (&)
-        sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" >"${logPathCur}"
+        sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' >"${logPathCur}"
 
         logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
 
