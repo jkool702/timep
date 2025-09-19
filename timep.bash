@@ -109,7 +109,7 @@ timep() {
 
     shopt -s extglob
 
-    local IFS IFS0 nn nn0 nn1 jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmd1 timep_runCmdPath timep_runFuncSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
+    local IFS IFS0 nn nn0 nn1 jj kk kk0 kk1 kkd a a0 b u logPathCur nCPU nWorker nWorkerMax REPLY timep_coprocSrc timep_DEBUG_FLAG timep_DEBUG_IDS_FLAG timep_DEBUG_TRAP_STR_0 timep_DEBUG_TRAP_STR_1 timep_deleteFlag timep_EXIT_TRAP_STR timep_fd_done timep_fd_lock timep_fd_logID  timep_flameGraphPath timep_LOG_NUM timep_noOutFlag timep_outType timep_PPID timep_PTY_FD_TEST timep_PTY_FLAG timep_PTY_PATH timep_RETURN_TRAP_STR timep_runCmd timep_runCmdPath timep_runSetupSrc timep_runMainSrc timep_wtimeALL timep_wTimeCur timep_runType timep_timeFlag timep_TITLE timep_TTY_NR timep_TTY_NR_TEST timep_CLOCK_GETTIME_FLAG timep_TITLE timep_funcName timep_wtimeALL timep_ctimeALL spacerN spacerN0 headerTXT a00 p1w p1c logPathCur jj0 a0 t n wTime cTime wTimeP cTimeP logCurTmp clktck svgCombineInd titlePad subtitlePad logHeader logCurTmp lineOrig tw pw tc pc cnt nd cind cmd wTime0 cTime0 d6 depthCur timep_flameGraphFlag trapAddCur timep_SIGNAL_RELAY_TRAP_STR
     local -gx timep_TMPDIR timep_FD0 timep_FD1 timep_FD2 fd_sleep timep_CPU_TIME_MULT timep_LOG_NESTING_CUR timep_LOG_NESTING_MAX timep_WTIME_CORRECTION timep_CTIME_CORRECTION timep_WTIME_DONE timep_CTIME_DONE logOut logOutL logOutLL
     local -a pAll_PID timep_outTypeA kkNeed kkNeed0 timep_LOG_DELETE_CUR timep_setupFuncFlags flameGraphLogA
     local -agx timep_LOG_NAME timep_LOG_NESTING timep_LOG_NESTING_IND 
@@ -913,40 +913,40 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
                 timep_runCmd="$(<"${timep_runCmdPath}")"
                 timep_runCmd="${timep_runCmd//builtin trap /trap }"
                 if [[ "${timep_runCmd}" == '#!'* ]]; then
-                    timep_runCmd1="${timep_runCmd%%$'\n'*}"
+                    timep_runMainSrc="${timep_runCmd%%$'\n'*}"$'\n'
                     timep_runCmd="${timep_runCmd#*$'\n'}"
                 else
-                    timep_runCmd1='#!'"${BASH}"
+                    timep_runMainSrc='#!'"${BASH}"$'\n'
                 fi
                 # start of wrapper code
-                timep_runFuncSrc="${timep_runCmd1}"$'\n'
+                timep_runSetupSrc='#!'"${BASH}"$'\n'
             ;;
             c)
                 printf -v timep_runCmd '%s\n' "${@}"
-                timep_runCmd1='#!'"${BASH}"
+                timep_runCmd="${timep_runCmd//builtin trap /trap }"
 
                 # start of wrapper code
-                timep_runFuncSrc="${timep_runCmd1}"$'\n'
+                timep_runSetupSrc='#!'"${BASH}"$'\n'
+                timep_runMainSrc='#!'"${BASH}"$'\n'
             ;;
             f)
                 timep_funcName="${1}"
                 export -f "${timep_funcName}"
                 shift 1
                 _timep_getFuncSrc -r "${timep_funcName}" >>"${timep_TMPDIR}/functions.bash"
-                timep_runCmd1='#!'"${BASH}"
 
                 printf -v timep_runCmd '%s "${@}"\n' "${timep_funcName}"
                 [[ -t 0 ]] || timep_runCmd+=" <&0"
 
                 # start of wrapper code
-                timep_runFuncSrc="${timep_runCmd1}"$'\n''timep_runFunc() '
+                timep_runSetupSrc='#!'"${BASH}"
+                timep_runMainSrc='#!'"${BASH}"$'\n''timep_runFunc() '
             ;;
         esac
 
     ${timep_CLOCK_GETTIME_FLAG} && { export -f _timep_SETUP; printf '\nexport -f _timep_SETUP\n\n' >> "${timep_TMPDIR}/functions.bash"; }
     chmod +x "${timep_TMPDIR}/functions.bash"
-    timep_runFuncSrc+='(
-
+    timep_runSetupSrc+='
         builtin trap - DEBUG EXIT RETURN
 
         declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
@@ -1001,10 +1001,12 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
 '
         for nn in INT TERM QUIT HUP; do
             printf -v trapAddCur '%s' "${timep_SIGNAL_RELAY_TRAP_STR//\%s/${nn}}"
-            timep_runFuncSrc+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
+            timep_runSetupSrc+=$'\n'"builtin trap '${trapAddCur//"'"/"'"'"'"'"'"'"'"}' SIG${nn}"$'\n'
         done
 
-        timep_runFuncSrc+='
+        timep_runSetupSrc+='
+        export BASH_ENV="'"${timep_TMPDIR}"'/setup.bash"
+        
         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
@@ -1012,6 +1014,9 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
 
         builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 
+        '
+        
+        timep_runMainSrc+='(
         '"$(${timep_timeFlag} && echo 'time {')"'
             {
                 '"${timep_runCmd}"'
@@ -1028,13 +1033,15 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
     )'
 
     [[ "${timep_runType}" == 'f' ]] && {
-        timep_runFuncSrc+=$'\n\n''timep_runFunc "${@}"'
-        [[ -t 0 ]] && timep_runFuncSrc+=' <&0'
-        timep_runFuncSrc+=$'\n\n'
+        timep_runMainSrc+=$'\n\n''timep_runFunc "${@}"'
+        [[ -t 0 ]] && timep_runMainSrc+=' <&0'
+        timep_runMainSrc+=$'\n\n'
     }
 
     # save script/function (with added debug trap) in new script file and make it executable
-    echo "${timep_runFuncSrc}" >"${timep_TMPDIR}/main.bash"
+    echo "${timep_runSetupSrc}" >"${timep_TMPDIR}/setup.bash"
+    echo "${timep_runMainSrc}" >"${timep_TMPDIR}/main.bash"
+    chmod +x "${timep_TMPDIR}/setup.bash"
     chmod +x "${timep_TMPDIR}/main.bash"
 
     [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
@@ -1101,19 +1108,19 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         fi
         if [[ -t 0 ]]; then
             {
-                "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                BASH_ENV="${timep_TMPDIR}/setup.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         else
             {
-                "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                BASH_ENV="${timep_TMPDIR}/setup.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 0<"${timep_PTY_PATH}" 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         fi
     else
         printf '\n\nWARNING: job control could not be enabled due to lack of controlling TTY/PTY. subshells and background forks may not be properly distinguished!\n\n' >&${timep_FD2}
         if [[ -t 0 ]]; then
-           "${timep_TMPDIR}/main.bash" "${@}"
+           BASH_ENV="${timep_TMPDIR}/setup.bash" "${timep_TMPDIR}/main.bash" "${@}"
         else
-           "${timep_TMPDIR}/main.bash" "${@}" <&0
+           BASH_ENV="${timep_TMPDIR}/setup.bash" "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
 
