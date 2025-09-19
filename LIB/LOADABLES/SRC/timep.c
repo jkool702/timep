@@ -102,7 +102,6 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
     const char *rbrack = lbrack ? strrchr(varname, ']') : NULL;
 
     if (lbrack && rbrack && rbrack > lbrack) {
-        /* Array-style variable: split name and index */
         size_t name_len  = (size_t)(lbrack - varname);
         size_t index_len = (size_t)(rbrack - lbrack - 1);
 
@@ -115,23 +114,21 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
         memcpy(index, lbrack + 1, index_len);
         index[index_len] = '\0';
 
-        /* Find or create the variable */
+        /* Find the variable (may exist as scalar/array/assoc) */
         SHELL_VAR *var = find_variable(name);
         if (!var) {
-            /* default to creating an indexed array */
+            /* Auto-create indexed array if missing (user must declare -A for associative) */
             var = make_new_array_variable(name);
         }
 
         SHELL_VAR *ret = NULL;
 
         if (assoc_p(var)) {
-            /* associative array: use assoc_insert (SHELL_VAR *, key, value) */
-            /* assoc_insert is the helper that inserts key->value into assoc array */
-            assoc_insert(var, index, value);
-            /* find_variable still points to var; return it */
-            ret = var;
+            /* Associative array: use bind_assoc_variable(var, key, value, NULL, flags) */
+            /* bind_assoc_variable returns a SHELL_VAR* on success */
+            ret = bind_assoc_variable(var, index, value, (char *)NULL, flags);
         } else {
-            /* indexed array: parse numeric index */
+            /* Indexed array: parse numeric index and call bind_array_variable(name, ind, value, flags) */
             char *endptr = NULL;
             errno = 0;
             arrayind_t ind = (arrayind_t) strtol(index, &endptr, 10);
@@ -140,8 +137,8 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
                 builtin_error("bad array subscript: %s", index);
                 ret = NULL;
             } else {
-                /* bind_array_variable takes (SHELL_VAR *, arrayind_t, char *, int) */
-                ret = bind_array_variable(var, ind, value, flags);
+                /* Note: bind_array_variable here takes name (char *), not SHELL_VAR * */
+                ret = bind_array_variable(name, ind, value, flags);
             }
         }
 
@@ -153,7 +150,6 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
         return bind_variable(varname, value, flags);
     }
 }
-
 /* ----------------------------- */
 /* --------  getCPUtime -------- */
 /* ----------------------------- */
