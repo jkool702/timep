@@ -70,7 +70,7 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags);
+static int bind_var_or_array(char *varname, char *value, int flags);
 
 /* 
  * bind_var_or_array:
@@ -98,63 +98,53 @@ static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags);
  * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
  */
-static SHELL_VAR *bind_var_or_array(char *varname, char *value, int flags)
+int bind_var_or_array(const char *varname, const char *value, int flags)
 {
-    if (!varname)
-        return NULL;
-
-    const char *lbrack = strrchr(varname, '[');
-    const char *rbrack = lbrack ? strrchr(varname, ']') : NULL;
+    char *lbrack = strchr(varname, '[');
+    char *rbrack = lbrack ? strrchr(varname, ']') : NULL;
 
     if (lbrack && rbrack && rbrack > lbrack) {
-        size_t name_len  = (size_t)(lbrack - varname);
-        size_t index_len = (size_t)(rbrack - lbrack - 1);
+        /* Array or assoc case */
+        size_t base_len = (size_t)(lbrack - varname);
+        char *base = (char *)xmalloc(base_len + 1);
+        memcpy(base, varname, base_len);
+        base[base_len] = '\0';
 
-        char *name  = (char *) xmalloc(name_len + 1);
-        char *index = (char *) xmalloc(index_len + 1);
+        /* Extract index text */
+        size_t ind_len = (size_t)(rbrack - (lbrack + 1));
+        char *ind = (char *)xmalloc(ind_len + 1);
+        memcpy(ind, lbrack + 1, ind_len);
+        ind[ind_len] = '\0';
 
-        memcpy(name, varname, name_len);
-        name[name_len] = '\0';
+        SHELL_VAR *v = find_variable(base);
 
-        memcpy(index, lbrack + 1, index_len);
-        index[index_len] = '\0';
-
-        /* Find the variable (may exist as scalar/array/assoc) */
-        SHELL_VAR *var = find_variable(name);
-        if (!var) {
-            /* Auto-create indexed array if missing (user must declare -A for associative) */
-            var = make_new_array_variable(name);
-        }
-
-        SHELL_VAR *ret = NULL;
-
-        if (assoc_p(var)) {
-            /* Associative array: use bind_assoc_variable(var, key, value, NULL, flags) */
-            /* bind_assoc_variable returns a SHELL_VAR* on success */
-            ret = bind_assoc_variable(var, index, value, (char *)NULL, flags);
+        if (v && assoc_p(v)) {
+            /* Associative array */
+            assoc_insert(v->value->assoc,
+                         savestring(ind),
+                         savestring(value));
         } else {
-            /* Indexed array: parse numeric index and call bind_array_variable(name, ind, value, flags) */
-            char *endptr = NULL;
-            errno = 0;
-            arrayind_t ind = (arrayind_t) strtol(index, &endptr, 10);
-
-            if (endptr == index || *endptr != '\0' || errno == ERANGE) {
-                builtin_error("bad array subscript: %s", index);
-                ret = NULL;
-            } else {
-                /* Note: bind_array_variable here takes name (char *), not SHELL_VAR * */
-                ret = bind_array_variable(name, ind, value, flags);
+            /* Indexed array */
+            arrayind_t ai = array_expand_index(ind);
+            if (ai < 0) {
+                builtin_error("invalid array index: %s", ind);
+                xfree(base);
+                xfree(ind);
+                return EXECUTION_FAILURE;
             }
+            bind_array_variable(base, ai, savestring(value), flags);
         }
 
-        xfree(name);
-        xfree(index);
-        return ret;
+        xfree(base);
+        xfree(ind);
+        return EXECUTION_SUCCESS;
     } else {
-        /* Plain scalar variable */
-        return bind_variable(varname, value, flags);
+        /* Scalar variable */
+        bind_variable((char *)varname, savestring(value), flags);
+        return EXECUTION_SUCCESS;
     }
 }
+
 /* ----------------------------- */
 /* --------  getCPUtime -------- */
 /* ----------------------------- */
