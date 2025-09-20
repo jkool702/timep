@@ -53,12 +53,8 @@
 #include "xmalloc.h"
 #include "variables.h"
 #include "array.h"
-#include "bashansi.h"
-#include "config.h"
-#include "bashintl.h"
 #include "arrayfunc.h"
 #include "assoc.h"
-
 
 // Helpers for builtins
 extern int add_builtin(struct builtin *bp, int keep);
@@ -70,7 +66,7 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-SHELL_VAR *bind_var_or_array(char *name, char *ind, char *value, int flags) {
+SHELL_VAR *bind_var_or_array(char *name, char *ind, char *value, int flags);
 
 /* 
  * bind_var_or_array:
@@ -99,28 +95,69 @@ SHELL_VAR *bind_var_or_array(char *name, char *ind, char *value, int flags) {
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
 */
 
-SHELL_VAR *bind_var_or_array(char *name, char *ind, char *value, int flags) {
-    SHELL_VAR *v = find_variable(name);
-    SHELL_VAR *ret = 0;
-
-    if (v && assoc_p(v)) {
-        /* Associative array */
-        assoc_insert(assoc_cell(v), ind, value);
-        ret = v;
-    }
-    else if (v && array_p(v)) {
-        /* Indexed array */
-        arrayind_t ai = array_expand_index(v, ind, 0, 1);
-        ret = bind_array_variable(name, ai, value, flags);
-    }
-    else {
-        /* Scalar fallback */
-        ret = bind_variable(name, value, flags);
+SHELL_VAR *bind_var_or_array (char *name, char *value, int flags)
+{
+    char *lb = strchr(name, '[');
+    if (lb == NULL || name[strlen(name) - 1] != ']')
+    {
+        /* No brackets → normal variable */
+        return bind_variable(name, value, flags);
     }
 
+    /* Split into array name + index */
+    size_t base_len = lb - name;
+    char *array_name = (char *)xmalloc(base_len + 1);
+    memcpy(array_name, name, base_len);
+    array_name[base_len] = '\0';
+
+    /* Extract index inside [...] */
+    size_t idx_len = strlen(lb + 1) - 1;  // drop trailing ]
+    char *index = (char *)xmalloc(idx_len + 1);
+    memcpy(index, lb + 1, idx_len);
+    index[idx_len] = '\0';
+
+    SHELL_VAR *var = find_variable(array_name);
+
+    if (var == 0)
+    {
+        /* Doesn’t exist yet → make an indexed array */
+        var = make_new_array_variable(array_name);
+        if (var == 0)
+        {
+            xfree(array_name);
+            xfree(index);
+            return (SHELL_VAR *)NULL;
+        }
+    }
+    else if (assoc_p(var))
+    {
+        /* Wrong type: associative array present but we got numeric index */
+        xfree(array_name);
+        xfree(index);
+        return (SHELL_VAR *)NULL;
+    }
+
+    /* Try to interpret index as a number */
+    char *endp = NULL;
+    long n = strtol(index, &endp, 10);
+
+    SHELL_VAR *ret = NULL;
+    if (endp && *endp == '\0')
+    {
+        /* Pure numeric index → indexed array */
+        ret = bind_array_variable(array_name, n, value, flags);
+    }
+    else
+    {
+        /* Non-numeric index → fail for now (keeps things simple) */
+        builtin_error("invalid array index: %s", index);
+        ret = (SHELL_VAR *)NULL;
+    }
+
+    xfree(array_name);
+    xfree(index);
     return ret;
 }
-
 /* ----------------------------- */
 /* --------  getCPUtime -------- */
 /* ----------------------------- */
