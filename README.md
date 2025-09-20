@@ -9,6 +9,7 @@
 * timep now enforces `set -T` like it does `set -m` - if it is disabled timep automatically re-enables it
 * there is now a mechanism (which can be disabled via an environment variable) which will cause orphaned processes to automatically exit after the main timep profiling run finishes
 * trap handler events are dealt with more robustly
+
 timep v1.6.1: loadables have been recompiled so that they can bind output to array variables or standard variables.
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
