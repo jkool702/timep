@@ -161,7 +161,7 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
          * Note: bind_assoc_variable expects the SHELL_VAR*, and will take ownership
          * of the key/value strings (which are savestringed above).
          */
-        ret = bind_assoc_variable(var, idx_s, val_s, (char *)NULL, flags);
+        ret = bind_assoc_variable(var, base_s, idx_s, val_s, flags);
         /* Do NOT xfree idx_s or val_s or base_s */
         return ret;
     }
