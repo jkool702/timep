@@ -147,6 +147,10 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
     {
         /* Associative array → bind by string key */
         ret = bind_assoc_variable(var, index, value, (char *)NULL, flags);
+           
+        /* bind_assoc_variable consumes index, so don't free it. */
+        xfree(array_name);
+        return ret;
     }
     else if (array_p(var))
     {
