@@ -68,8 +68,7 @@ jobs:
                 -shared -o LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so timep.c && \
               enable -f LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so getCPUtime timep_crc32 timep_fnv1a timep_hash; \
               getCPUtime | grep -q -E '^[0-9]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) getCPUtime test failed::The test for the getCPUtime loadable for the ${{ matrix.arch }} timep.so failed! Please investigate.\"; \
-
-                timep_crc32 <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 test failed::The test for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 timep_crc32 <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 test failed::The test for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
                  unset val a0 a A AA; \
                  declare -A AA; \
                  val=\"${RANDOM}\"; \
@@ -80,7 +79,7 @@ jobs:
                  [[ \"${a0}\" == \"${a}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 - the 'bind to standard variable' test failed::One of the bind-to-variable tests for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
                  [[ \"${a0}\" == \"${A[1]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 - the 'bind to indexed array' test failed::One of the bind-to-variable tests for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
                  [[ \"${a0}\" == \"${AA[foo]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 - the 'bind to associative array' test failed::One of the bind-to-variable tests for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\";               
-                timep_fnv1a <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a test failed::The test for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 timep_fnv1a <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a test failed::The test for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
                  unset val a0 a A AA; \
                  declare -A AA; \
                  val=\"${RANDOM}\"; \
@@ -91,7 +90,7 @@ jobs:
                  [[ \"${a0}\" == \"${a}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a - the 'bind to standard variable' test failed::One of the bind-to-variable tests for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
                  [[ \"${a0}\" == \"${A[1]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a - the 'bind to indexed array' test failed::One of the bind-to-variable tests for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
                  [[ \"${a0}\" == \"${AA[foo]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a - the 'bind to associative array' test failed::One of the bind-to-variable tests for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\";               
-                timep_hash <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_hash test failed::The test for the timep_hash loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 timep_hash <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+\-[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_hash test failed::The test for the timep_hash loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
                  unset val a0 a A AA; \
                  declare -A AA; \
                  val=\"${RANDOM}\"; \
