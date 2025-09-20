@@ -37,10 +37,6 @@ jobs:
             platform: linux/riscv64
             docker_image: fedorariscv/base:latest
             gcc_flags: ""
-#          - arch: i686
-#            platform: linux/i686
-#            docker_image: nickcis/fedora-32:latest
-#            gcc_flags: ""
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -66,11 +62,42 @@ jobs:
               gcc -Wall -fPIC -flto -O3 ${{ matrix.gcc_flags }} -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND \
                 -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include \
                 -shared -o LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so timep.c && \
-              enable -f LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so getCPUtime timep_crc32 timep_fnv1a; \
+              enable -f LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so getCPUtime timep_crc32 timep_fnv1a timep_hash; \
               getCPUtime | grep -q -E '^[0-9]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) getCPUtime test failed::The test for the getCPUtime loadable for the ${{ matrix.arch }} timep.so failed! Please investigate.\"; \
-              timep_crc32 <<<\"\$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 test failed::The test for the timep_crc32 loadable for the ${{ matrix.arch }} timep.so failed! Please investigate.\"; \
-              timep_fnv1a <<<\"\$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a test failed::The test for the timep_fnv1a loadable for the ${{ matrix.arch }} timep.so failed! Please investigate.\"
-            "
+                 timep_crc32 <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 test failed::The test for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 unset val a0 a A AA; \
+                 declare -A AA; \
+                 val=\"${RANDOM}\"; \
+                 a0=\"$(timep_crc32 <<<\"${val}\")\"; \
+                 timep_crc32 - a <<<\"${val}\"; \
+                 timep_crc32 - 'A[1]' <<<\"${val}\"; \
+                 timep_crc32 - 'AA[foo]' <<<\"${val}\"; \
+                 [[ \"${a0}\" == \"${a}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 - the 'bind to standard variable' test failed::One of the bind-to-variable tests for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 [[ \"${a0}\" == \"${A[1]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 - the 'bind to indexed array' test failed::One of the bind-to-variable tests for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 [[ \"${a0}\" == \"${AA[foo]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 - the 'bind to associative array' test failed::One of the bind-to-variable tests for the timep_crc32 loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\";               
+                 timep_fnv1a <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a test failed::The test for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 unset val a0 a A AA; \
+                 declare -A AA; \
+                 val=\"${RANDOM}\"; \
+                 a0=\"$(timep_fnv1a <<<\"${val}\")\"; \
+                 timep_fnv1a - a <<<\"${val}\"; \
+                 timep_fnv1a - 'A[1]' <<<\"${val}\"; \
+                 timep_fnv1a - 'AA[foo]' <<<\"${val}\"; \
+                 [[ \"${a0}\" == \"${a}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a - the 'bind to standard variable' test failed::One of the bind-to-variable tests for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 [[ \"${a0}\" == \"${A[1]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a - the 'bind to indexed array' test failed::One of the bind-to-variable tests for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 [[ \"${a0}\" == \"${AA[foo]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a - the 'bind to associative array' test failed::One of the bind-to-variable tests for the timep_fnv1a loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\";               
+                 timep_hash <<<\"$RANDOM\" | grep -q -E '^[0-9a-fA-F]+\-[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_hash test failed::The test for the timep_hash loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 unset val a0 a A AA; \
+                 declare -A AA; \
+                 val=\"${RANDOM}\"; \
+                 a0=\"$(timep_hash <<<\"${val}\")\"; \
+                 timep_hash - a <<<\"${val}\"; \
+                 timep_hash - 'A[1]' <<<\"${val}\"; \
+                 timep_hash - 'AA[foo]' <<<\"${val}\"; \
+                 [[ \"${a0}\" == \"${a}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_hash - the 'bind to standard variable' test failed::One of the bind-to-variable tests for the timep_hash loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 [[ \"${a0}\" == \"${A[1]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_hash - the 'bind to indexed array' test failed::One of the bind-to-variable tests for the timep_hash loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                 [[ \"${a0}\" == \"${AA[foo]}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_hash - the 'bind to associative array' test failed::One of the bind-to-variable tests for the timep_hash loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; 
+              "
             
       - name: Upload timep.so artifact
         uses: actions/upload-artifact@v4
