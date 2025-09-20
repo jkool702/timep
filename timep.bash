@@ -939,7 +939,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
                 [[ -t 0 ]] || timep_runCmd+=" <&0"
 
                 # start of wrapper code
-                timep_runSetupSrc='#!'"${BASH}"
+                timep_runSetupSrc='#!'"${BASH}"$'\n'
                 timep_runMainSrc='#!'"${BASH}"$'\n''timep_runFunc() '
             ;;
         esac
@@ -1041,8 +1041,11 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
     # save script/function (with added debug trap) in new script file and make it executable
     echo "${timep_runSetupSrc}" >"${timep_TMPDIR}/setup.bash"
     echo "${timep_runMainSrc}" >"${timep_TMPDIR}/main.bash"
+    echo "trap 'source ${timep_TMPDIR@Q}/setup.bash' DEBUG" >"${timep_TMPDIR}/env.bash"
+
     chmod +x "${timep_TMPDIR}/setup.bash"
     chmod +x "${timep_TMPDIR}/main.bash"
+    chmod +x "${timep_TMPDIR}/env.bash"
 
     [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
 
@@ -1108,19 +1111,19 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         fi
         if [[ -t 0 ]]; then
             {
-                BASH_ENV="${timep_TMPDIR}/setup.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                BASH_ENV="${timep_TMPDIR}/env.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         else
             {
-                BASH_ENV="${timep_TMPDIR}/setup.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                BASH_ENV="${timep_TMPDIR}/env.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 0<"${timep_PTY_PATH}" 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         fi
     else
         printf '\n\nWARNING: job control could not be enabled due to lack of controlling TTY/PTY. subshells and background forks may not be properly distinguished!\n\n' >&${timep_FD2}
         if [[ -t 0 ]]; then
-           BASH_ENV="${timep_TMPDIR}/setup.bash" "${timep_TMPDIR}/main.bash" "${@}"
+           BASH_ENV="${timep_TMPDIR}/env.bash" "${timep_TMPDIR}/main.bash" "${@}"
         else
-           BASH_ENV="${timep_TMPDIR}/setup.bash" "${timep_TMPDIR}/main.bash" "${@}" <&0
+           BASH_ENV="${timep_TMPDIR}/env.bash" "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
 
