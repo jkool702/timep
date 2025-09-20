@@ -146,7 +146,7 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
     if (assoc_p(var))
     {
         /* Associative array → bind by string key */
-        ret = bind_assoc_variable(array_name, index, value, flags);
+        ret = bind_assoc_variable(array_name, index, value, (char *)NULL, flags);
     }
     else if (array_p(var))
     {
