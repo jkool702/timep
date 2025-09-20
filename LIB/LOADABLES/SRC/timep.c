@@ -41,8 +41,15 @@
 #include <arm_acle.h>
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+/* Prefer Bash's own config.h if available */
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#elif __has_include("config.h")
+   /* Fallback: try local copy in same dir as this source file */
+#  include "config.h"
+#else
+   /* No config.h available — define minimal defaults if needed */
+#  warning "No config.h found. Some features may be disabled."
 #endif
 
 // Bash internal headers
@@ -52,6 +59,10 @@
 #include "common.h"
 #include "xmalloc.h"
 #include "variables.h"
+#include "array.h"
+#include "arrayfunc.h"
+#include "assoc.h"
+#include "bashtypes.h"
 
 // Helpers for builtins
 extern int add_builtin(struct builtin *bp, int keep);
@@ -63,6 +74,91 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
+
+/* 
+ * bind_var_or_array:
+ *
+ * Assign a value to a Bash variable, handling both scalars and arrays.
+ *
+ * Behavior:
+ * 1. Scalar variable (e.g., "foo"):
+ *      - Calls bind_variable(varname, value, 0)
+ *      - Creates the variable if it does not exist
+ *
+ * 2. Indexed array (e.g., "arr[3]"):
+ *      - Splits into base name and index
+ *      - If the array does not exist, auto-creates an indexed array
+ *      - Calls bind_array_variable() for the assignment
+ *      - Bash will throw "bad array subscript" if the index is invalid (non-numeric)
+ *
+ * 3. Associative array (e.g., "A[foo]") that was declared with `declare -A A`:
+ *      - find_variable() returns a valid SHELL_VAR* even if the array is empty
+ *      - bind_assoc_variable() inserts the element into the empty associative array
+ *      - must have previously declared array as associative with "declare -A"
+ */
+SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
+    if (!name)
+        return NULL;
+
+    char *lb = strchr(name, '[');
+    if (!lb || name[strlen(name) - 1] != ']') {
+        /* Simple scalar -> bind_variable. */
+        char *val_s = savestring(value);
+        return bind_variable(name, val_s, flags);
+    }
+
+    /* Split base and index; temporary xmalloc buffers */
+    size_t base_len = (size_t)(lb - name);
+    char *base_tmp = (char *) xmalloc(base_len + 1);
+    memcpy(base_tmp, name, base_len);
+    base_tmp[base_len] = '\0';
+
+    size_t idx_len = strlen(lb + 1) - 1; /* drop trailing ']' */
+    char *idx_tmp = (char *) xmalloc(idx_len + 1);
+    memcpy(idx_tmp, lb + 1, idx_len);
+    idx_tmp[idx_len] = '\0';
+
+    /* Bash-owned savestring copies */
+    char *base_s = savestring(base_tmp);
+    char *idx_s  = savestring(idx_tmp);
+    char *val_s  = savestring(value);
+
+    xfree(base_tmp);
+    xfree(idx_tmp);
+
+    /* Look up variable */
+    SHELL_VAR *var = find_variable(base_s);
+    if (!var) {
+        /* Variable doesn't exist → create indexed array by default */
+        var = make_new_array_variable(base_s);
+        if (!var) {
+            builtin_error("failed to create array: %s", base_s);
+            return NULL;
+        }
+    }
+
+    /* Associative array binding */
+    if (assoc_p(var)) {
+        /* Bash expects: bind_assoc_variable(SHELL_VAR *entry, const char *name, char *key, const char *value, int flags) */
+        return bind_assoc_variable(var, base_s, idx_s, val_s, flags);
+    }
+
+    /* Indexed array binding */
+    if (array_p(var)) {
+        char *endp = NULL;
+        errno = 0;
+        long n = strtol(idx_s, &endp, 10);
+        if (endp == idx_s || *endp != '\0' || errno == ERANGE) {
+            builtin_error("invalid numeric index for indexed array: %s", idx_s);
+            return NULL;
+        }
+        return bind_array_variable(base_s, (arrayind_t)n, val_s, flags);
+    }
+
+    /* Variable exists but is neither indexed nor associative */
+    builtin_error("%s: not an array", base_s);
+    return NULL;
+}
 
 /* ----------------------------- */
 /* --------  getCPUtime -------- */
@@ -150,12 +246,12 @@ static int getCPUtime_main(int argc, char **argv) {
     if (var_combined) {
         char buf_combined[64];
         snprintf(buf_combined, sizeof(buf_combined), "%lld", (long long)micros_combined);
-        bind_variable(var_combined, buf_combined, 0);
+        bind_var_or_array(var_combined, buf_combined, 0);
 
         if (var_self) {
             char buf_self[64];
             snprintf(buf_self, sizeof(buf_self), "%lld", (long long)micros_self);
-            bind_variable(var_self, buf_self, 0);
+            bind_var_or_array(var_self, buf_self, 0);
         }
     } else {
         // No variables provided: print combined time to stdout
@@ -478,7 +574,7 @@ static int timep_crc32_main(int argc, char **argv)
     snprintf(outbuf, sizeof(outbuf), "%08x", (unsigned int)crc);
 
     if (varname)
-        bind_variable((char *)varname, outbuf, 0);
+        bind_var_or_array((char *)varname, outbuf, 0);
     else
         printf("%s\n", outbuf);
 
@@ -521,7 +617,7 @@ static int timep_fnv1a_main(int argc, char **argv)
     snprintf(outbuf, sizeof(outbuf), "%016llx", (unsigned long long)fnv);
 
     if (varname)
-        bind_variable((char *)varname, outbuf, 0);
+        bind_var_or_array((char *)varname, outbuf, 0);
     else
         printf("%s\n", outbuf);
 
@@ -564,7 +660,7 @@ static int timep_hash_main(int argc, char **argv)
     snprintf(outbuf, sizeof(outbuf), "%08x-%016llx", (unsigned int)crc, (unsigned long long)fnv);
 
     if (varname)
-        bind_variable((char *)varname, outbuf, 0);
+        bind_var_or_array((char *)varname, outbuf, 0);
     else
         printf("%s\n", outbuf);
 
@@ -618,4 +714,3 @@ int setup_builtin_timep(void) {
 
     return EXECUTION_SUCCESS;
 }
-
