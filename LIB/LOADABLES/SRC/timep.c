@@ -41,8 +41,15 @@
 #include <arm_acle.h>
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+/* Prefer Bash's own config.h if available */
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#elif __has_include("config.h")
+   /* Fallback: try local copy in same dir as this source file */
+#  include "config.h"
+#else
+   /* No config.h available — define minimal defaults if needed */
+#  warning "No config.h found. Some features may be disabled."
 #endif
 
 // Bash internal headers
@@ -55,6 +62,7 @@
 #include "array.h"
 #include "arrayfunc.h"
 #include "assoc.h"
+#include "bashtypes.h"
 
 // Helpers for builtins
 extern int add_builtin(struct builtin *bp, int keep);
@@ -94,12 +102,7 @@ static int timep_hash_main(int argc, char **argv);
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
 */
 
-#include "config.h"
-#include "shell.h"
-#include "variables.h"
-#include "arrayfunc.h"
-#include "assoc.h"
-#include "xmalloc.h"
+
 
 /* 
    Drop-in replacement for bind_variable:
@@ -108,79 +111,88 @@ static int timep_hash_main(int argc, char **argv);
    - If NAME is "foo[bar]" → bind foo[bar], handling assoc or indexed.
 */
 SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
+    if (!name)
+        return NULL;
+
     char *lb = strchr(name, '[');
-    if (lb == NULL || name[strlen(name) - 1] != ']')
-    {
-        /* No brackets → normal variable */
-        return bind_variable(name, value, flags);
+    if (!lb || name[strlen(name) - 1] != ']') {
+        /* simple scalar -> bind_variable.
+         * bind_variable will take ownership of the value pointer we pass,
+         * so pass a savestring here and do not xfree it after.
+         */
+        char *val_s = savestring(value);
+        return bind_variable(name, val_s, flags);
     }
 
-    /* Split into array name + index */
-    size_t base_len = lb - name;
-    char *array_name = (char *)xmalloc(base_len + 1);
-    memcpy(array_name, name, base_len);
-    array_name[base_len] = '\0';
+    /* split base and index; use xmalloc for temporary buffers */
+    size_t base_len = (size_t)(lb - name);
+    char *base_tmp = (char *) xmalloc(base_len + 1);
+    memcpy(base_tmp, name, base_len);
+    base_tmp[base_len] = '\0';
 
-    /* Extract index inside [...] */
-    size_t idx_len = strlen(lb + 1) - 1;  // drop trailing ]
-    char *index = (char *)xmalloc(idx_len + 1);
-    memcpy(index, lb + 1, idx_len);
-    index[idx_len] = '\0';
+    size_t idx_len = strlen(lb + 1) - 1; /* drop trailing ']' */
+    char *idx_tmp = (char *) xmalloc(idx_len + 1);
+    memcpy(idx_tmp, lb + 1, idx_len);
+    idx_tmp[idx_len] = '\0';
 
-    SHELL_VAR *var = find_variable(array_name);
+    /* For handing to Bash we create savestring copies (Bash-owned) */
+    char *base_s = savestring(base_tmp);   /* Bash-owned name */
+    char *idx_s  = savestring(idx_tmp);    /* Bash-owned index/key */
+    char *val_s  = savestring(value);      /* Bash-owned value */
 
-    if (var == 0)
-    {
-        /* Doesn’t exist yet → make indexed array by default */
-        var = make_new_array_variable(array_name);
-        if (var == 0)
-        {
-            xfree(array_name);
-            xfree(index);
-            return (SHELL_VAR *)NULL;
+    /* We can free our temporary xmalloc buffers now; do NOT free base_s/idx_s/val_s */
+    xfree(base_tmp);
+    xfree(idx_tmp);
+
+    SHELL_VAR *var = find_variable(base_s);
+    if (!var) {
+        /* default: create indexed array */
+        var = make_new_array_variable(base_s);
+        if (!var) {
+            /* creation failed; don't free base_s/idx_s/val_s (Bash owns them) */
+            return NULL;
         }
     }
 
     SHELL_VAR *ret = NULL;
-
-    if (assoc_p(var))
-    {
-        /* Associative array → bind by string key */
-        ret = bind_assoc_variable(var, index, value, (char *)NULL, flags);
-           
-        /* bind_assoc_variable consumes index, so don't free it. */
-        xfree(array_name);
+    if (assoc_p(var)) {
+        /*
+         * Associative array: call bind_assoc_variable(SHELL_VAR*, key, value, NULL, flags)
+         * Note: bind_assoc_variable expects the SHELL_VAR*, and will take ownership
+         * of the key/value strings (which are savestringed above).
+         */
+        ret = bind_assoc_variable(var, idx_s, val_s, (char *)NULL, flags);
+        /* Do NOT xfree idx_s or val_s or base_s */
         return ret;
     }
-    else if (array_p(var))
-    {
-        /* Indexed array → try numeric parse */
+
+    if (array_p(var)) {
+        /*
+         * Indexed array. We must parse numeric index.
+         * array_expand_index() variant exists, but here we parse numeric index
+         * and call bind_array_variable(name, ind, value, flags) which on your
+         * system takes name (char *), not SHELL_VAR*. We pass base_s and val_s.
+         */
         char *endp = NULL;
-        long n = strtol(index, &endp, 10);
+        errno = 0;
+        long n = strtol(idx_s, &endp, 10);
+        if (endp == idx_s || *endp != '\0' || errno == ERANGE) {
+            builtin_error("invalid numeric index for indexed array: %s", idx_s);
+            /* idx_s and val_s are Bash-owned; do not free */
+            return NULL;
+        }
 
-        if (endp && *endp == '\0')
-        {
-            ret = bind_array_variable(array_name, n, value, flags);
-        }
-        else
-        {
-            builtin_error("invalid numeric index for indexed array: %s", index);
-            ret = (SHELL_VAR *)NULL;
-        }
-    }
-    else
-    {
-        /* Wrong type (scalar or function already exists) */
-        builtin_error("%s: not an array", array_name);
-        ret = (SHELL_VAR *)NULL;
+        /* bind_array_variable will take ownership of val_s (we passed savestring) */
+        ret = bind_array_variable(base_s, (arrayind_t) n, val_s, flags);
+        /* Do NOT free base_s/val_s */
+        return ret;
     }
 
-    xfree(array_name);
-    xfree(index);
-    return ret;
+    /* If we get here, var exists but is neither assoc nor array */
+    builtin_error("%s: not an array", base_s);
+    return NULL;
 }
-
-/* ----------------------------- */
+/* --0--------------------------- */
 /* --------  getCPUtime -------- */
 /* ----------------------------- */
 
