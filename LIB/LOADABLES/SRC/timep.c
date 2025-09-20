@@ -70,7 +70,8 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-static int bind_var_or_array(const char *varname, const char *value, int flags);
+SHELL_VAR *bind_var_or_array(char *name, char *ind, char *value, int flags) {
+
 /* 
  * bind_var_or_array:
  *
@@ -96,52 +97,28 @@ static int bind_var_or_array(const char *varname, const char *value, int flags);
  * - Does not automatically create associative arrays; the user must declare with `declare -A` first
  * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
- */
-int bind_var_or_array(const char *varname, const char *value, int flags)
-{
-    char *lbrack = strchr(varname, '[');
-    char *rbrack = lbrack ? strrchr(varname, ']') : NULL;
+*/
 
-    if (lbrack && rbrack && rbrack > lbrack) {
-        /* Array or assoc case */
-        size_t base_len = (size_t)(lbrack - varname);
-        char *base = (char *)xmalloc(base_len + 1);
-        memcpy(base, varname, base_len);
-        base[base_len] = '\0';
+SHELL_VAR *bind_var_or_array(char *name, char *ind, char *value, int flags) {
+    SHELL_VAR *v = find_variable(name);
+    SHELL_VAR *ret = 0;
 
-        /* Extract index text */
-        size_t ind_len = (size_t)(rbrack - (lbrack + 1));
-        char *ind = (char *)xmalloc(ind_len + 1);
-        memcpy(ind, lbrack + 1, ind_len);
-        ind[ind_len] = '\0';
-
-        SHELL_VAR *v = find_variable(base);
-
-        if (v && assoc_p(v)) {
-            /* Associative array */
-            assoc_insert(v->value->assoc,
-                         savestring(ind),
-                         savestring(value));
-        } else {
-            /* Indexed array */
-            arrayind_t ai = array_expand_index(ind);
-            if (ai < 0) {
-                builtin_error("invalid array index: %s", ind);
-                xfree(base);
-                xfree(ind);
-                return EXECUTION_FAILURE;
-            }
-            bind_array_variable(base, ai, savestring(value), flags);
-        }
-
-        xfree(base);
-        xfree(ind);
-        return EXECUTION_SUCCESS;
-    } else {
-        /* Scalar variable */
-        bind_variable((char *)varname, savestring(value), flags);
-        return EXECUTION_SUCCESS;
+    if (v && assoc_p(v)) {
+        /* Associative array */
+        assoc_insert(assoc_cell(v), ind, value);
+        ret = v;
     }
+    else if (v && array_p(v)) {
+        /* Indexed array */
+        arrayind_t ai = array_expand_index(v, ind, 0, 1);
+        ret = bind_array_variable(name, ai, value, flags);
+    }
+    else {
+        /* Scalar fallback */
+        ret = bind_variable(name, value, flags);
+    }
+
+    return ret;
 }
 
 /* ----------------------------- */
