@@ -93,38 +93,21 @@ static int timep_hash_main(int argc, char **argv);
  *
  * 3. Associative array (e.g., "A[foo]") that was declared with `declare -A A`:
  *      - find_variable() returns a valid SHELL_VAR* even if the array is empty
- *      - bind_array_variable() inserts the element into the empty associative array
- *      - No prior assignment is needed; works on a "defined but empty" associative array
- *
- * Notes:
- * - Does not automatically create associative arrays; the user must declare with `declare -A` first
- * - Uses xmalloc/xfree for memory management to stay compatible with Bash internals
- * - All index checking (numeric, invalid subscript) is deferred to Bash itself
-*/
-
-
-
-/* 
-   Drop-in replacement for bind_variable:
-   - NAME can be a simple variable or array element (indexed or assoc).
-   - If NAME is "foo" → behave like bind_variable.
-   - If NAME is "foo[bar]" → bind foo[bar], handling assoc or indexed.
-*/
+ *      - bind_assoc_variable() inserts the element into the empty associative array
+ *      - must have previously declared array as associative with "declare -A"
+ */
 SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
     if (!name)
         return NULL;
 
     char *lb = strchr(name, '[');
     if (!lb || name[strlen(name) - 1] != ']') {
-        /* simple scalar -> bind_variable.
-         * bind_variable will take ownership of the value pointer we pass,
-         * so pass a savestring here and do not xfree it after.
-         */
+        /* Simple scalar -> bind_variable. */
         char *val_s = savestring(value);
         return bind_variable(name, val_s, flags);
     }
 
-    /* split base and index; use xmalloc for temporary buffers */
+    /* Split base and index; temporary xmalloc buffers */
     size_t base_len = (size_t)(lb - name);
     char *base_tmp = (char *) xmalloc(base_len + 1);
     memcpy(base_tmp, name, base_len);
@@ -135,64 +118,49 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
     memcpy(idx_tmp, lb + 1, idx_len);
     idx_tmp[idx_len] = '\0';
 
-    /* For handing to Bash we create savestring copies (Bash-owned) */
-    char *base_s = savestring(base_tmp);   /* Bash-owned name */
-    char *idx_s  = savestring(idx_tmp);    /* Bash-owned index/key */
-    char *val_s  = savestring(value);      /* Bash-owned value */
+    /* Bash-owned savestring copies */
+    char *base_s = savestring(base_tmp);
+    char *idx_s  = savestring(idx_tmp);
+    char *val_s  = savestring(value);
 
-    /* We can free our temporary xmalloc buffers now; do NOT free base_s/idx_s/val_s */
     xfree(base_tmp);
     xfree(idx_tmp);
 
+    /* Look up variable */
     SHELL_VAR *var = find_variable(base_s);
     if (!var) {
-        /* default: create indexed array */
+        /* Variable doesn't exist → create indexed array by default */
         var = make_new_array_variable(base_s);
         if (!var) {
-            /* creation failed; don't free base_s/idx_s/val_s (Bash owns them) */
-            return NULL;
+            builtin_error("failed to create array: %s", base_s);
+            return EXECUTION_FAILURE;
         }
     }
 
-    SHELL_VAR *ret = NULL;
+    /* Associative array binding */
     if (assoc_p(var)) {
-        /*
-         * Associative array: call bind_assoc_variable(SHELL_VAR*, key, value, NULL, flags)
-         * Note: bind_assoc_variable expects the SHELL_VAR*, and will take ownership
-         * of the key/value strings (which are savestringed above).
-         */
-        ret = bind_assoc_variable(var, base_s, idx_s, val_s, flags);
-        /* Do NOT xfree idx_s or val_s or base_s */
-        return ret;
+        /* Bash expects: bind_assoc_variable(SHELL_VAR *entry, const char *name, char *key, const char *value, int flags) */
+        return bind_assoc_variable(var, base_s, idx_s, val_s, flags);
     }
 
+    /* Indexed array binding */
     if (array_p(var)) {
-        /*
-         * Indexed array. We must parse numeric index.
-         * array_expand_index() variant exists, but here we parse numeric index
-         * and call bind_array_variable(name, ind, value, flags) which on your
-         * system takes name (char *), not SHELL_VAR*. We pass base_s and val_s.
-         */
         char *endp = NULL;
         errno = 0;
         long n = strtol(idx_s, &endp, 10);
         if (endp == idx_s || *endp != '\0' || errno == ERANGE) {
             builtin_error("invalid numeric index for indexed array: %s", idx_s);
-            /* idx_s and val_s are Bash-owned; do not free */
-            return NULL;
+            return EXECUTION_FAILURE;
         }
-
-        /* bind_array_variable will take ownership of val_s (we passed savestring) */
-        ret = bind_array_variable(base_s, (arrayind_t) n, val_s, flags);
-        /* Do NOT free base_s/val_s */
-        return ret;
+        return bind_array_variable(base_s, (arrayind_t)n, val_s, flags);
     }
 
-    /* If we get here, var exists but is neither assoc nor array */
+    /* Variable exists but is neither indexed nor associative */
     builtin_error("%s: not an array", base_s);
-    return NULL;
+    return EXECUTION_FAILURE;
 }
-/* --0--------------------------- */
+
+/* ----------------------------- */
 /* --------  getCPUtime -------- */
 /* ----------------------------- */
 
