@@ -133,7 +133,7 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
         var = make_new_array_variable(base_s);
         if (!var) {
             builtin_error("failed to create array: %s", base_s);
-            return EXECUTION_FAILURE;
+            return NULL;
         }
     }
 
@@ -150,14 +150,14 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
         long n = strtol(idx_s, &endp, 10);
         if (endp == idx_s || *endp != '\0' || errno == ERANGE) {
             builtin_error("invalid numeric index for indexed array: %s", idx_s);
-            return EXECUTION_FAILURE;
+            return NULL;
         }
         return bind_array_variable(base_s, (arrayind_t)n, val_s, flags);
     }
 
     /* Variable exists but is neither indexed nor associative */
     builtin_error("%s: not an array", base_s);
-    return EXECUTION_FAILURE;
+    return NULL;
 }
 
 /* ----------------------------- */
