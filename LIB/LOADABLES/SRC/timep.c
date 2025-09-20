@@ -70,8 +70,7 @@ static int getCPUtime_main(int argc, char **argv);
 static int timep_crc32_main(int argc, char **argv);
 static int timep_fnv1a_main(int argc, char **argv);
 static int timep_hash_main(int argc, char **argv);
-static int bind_var_or_array(char *varname, char *value, int flags);
-
+static int bind_var_or_array(const char *varname, const char *value, int flags);
 /* 
  * bind_var_or_array:
  *
