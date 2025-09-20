@@ -66,11 +66,22 @@ jobs:
               gcc -Wall -fPIC -flto -O3 ${{ matrix.gcc_flags }} -v -DSHELL -DLOADABLE_BUILTIN -DHAVE_CONFIG_H -DSELECT_COMMAND \
                 -I/usr/include -I/usr/include/bash -I/usr/include/bash/builtins -I/usr/include/bash/include \
                 -shared -o LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so timep.c && \
-              enable -f LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so getCPUtime timep_crc32 timep_fnv1a; \
+              enable -f LIB/LOADABLES/BIN/${{ matrix.arch }}/timep.so getCPUtime timep_crc32 timep_fnv1a timep_hash; \
               getCPUtime | grep -q -E '^[0-9]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) getCPUtime test failed::The test for the getCPUtime loadable for the ${{ matrix.arch }} timep.so failed! Please investigate.\"; \
-              timep_crc32 <<<\"\$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_crc32 test failed::The test for the timep_crc32 loadable for the ${{ matrix.arch }} timep.so failed! Please investigate.\"; \
-              timep_fnv1a <<<\"\$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) timep_fnv1a test failed::The test for the timep_fnv1a loadable for the ${{ matrix.arch }} timep.so failed! Please investigate.\"
-            "
+              for cksumAlg in timep_crc32 timep_fnv1a timep_hash; do \
+                ${cksumAlg} <<<\"\$RANDOM\" | grep -q -E '^[0-9a-fA-F]+$' || echo \"::warning title=timep.so (${{ matrix.arch }}) ${cksumAlg} test failed::The test for the \${cksumAlg} loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                unset val a0 a A AA \
+                declare -A AA \
+                val=\"\${RANDOM}\"
+                a0=\"\$(\${cksumAlg} <<<\"\${val}\")\" \
+                \${cksumAlg} - a <<<\"\${val}\" \
+                \${cksumAlg} - A[1] <<<\"\${val}\" \
+                \${cksumAlg} - AA[foo] <<<\"\${val}\" \
+                for nn in \"\${a}\" \"\${A[1]}\" \"\${AA[foo]}\"; do \
+                  [[ \"\${a0}\" == \"\${nn}\" ]] || echo \"::warning title=timep.so (${{ matrix.arch }}) ${cksumAlg} bind-to-variable test failed::One of the bind-to-variable tests for the \${cksumAlg} loadable for arch=${{ matrix.arch }} timep.so failed! Please investigate.\"; \
+                done \
+              done 
+              "
             
       - name: Upload timep.so artifact
         uses: actions/upload-artifact@v4
