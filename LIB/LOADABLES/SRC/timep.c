@@ -54,6 +54,11 @@
 #include "variables.h"
 #include "array.h"
 #include "bashansi.h"
+#include "config.h"
+#include "bashintl.h"
+#include "arrayfunc.h"
+#include "assoc.h"
+
 
 // Helpers for builtins
 extern int add_builtin(struct builtin *bp, int keep);
