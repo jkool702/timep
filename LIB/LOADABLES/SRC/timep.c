@@ -94,6 +94,19 @@ static int timep_hash_main(int argc, char **argv);
  * - All index checking (numeric, invalid subscript) is deferred to Bash itself
 */
 
+#include "config.h"
+#include "shell.h"
+#include "variables.h"
+#include "arrayfunc.h"
+#include "assoc.h"
+#include "xmalloc.h"
+
+/* 
+   Drop-in replacement for bind_variable:
+   - NAME can be a simple variable or array element (indexed or assoc).
+   - If NAME is "foo" → behave like bind_variable.
+   - If NAME is "foo[bar]" → bind foo[bar], handling assoc or indexed.
+*/
 SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
     char *lb = strchr(name, '[');
     if (lb == NULL || name[strlen(name) - 1] != ']')
@@ -118,7 +131,7 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
 
     if (var == 0)
     {
-        /* Doesn’t exist yet → make an indexed array */
+        /* Doesn’t exist yet → make indexed array by default */
         var = make_new_array_variable(array_name);
         if (var == 0)
         {
@@ -127,28 +140,34 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
             return (SHELL_VAR *)NULL;
         }
     }
-    else if (assoc_p(var))
-    {
-        /* Wrong type: associative array present but we got numeric index */
-        xfree(array_name);
-        xfree(index);
-        return (SHELL_VAR *)NULL;
-    }
-
-    /* Try to interpret index as a number */
-    char *endp = NULL;
-    long n = strtol(index, &endp, 10);
 
     SHELL_VAR *ret = NULL;
-    if (endp && *endp == '\0')
+
+    if (assoc_p(var))
     {
-        /* Pure numeric index → indexed array */
-        ret = bind_array_variable(array_name, n, value, flags);
+        /* Associative array → bind by string key */
+        ret = bind_assoc_variable(array_name, index, value, flags);
+    }
+    else if (array_p(var))
+    {
+        /* Indexed array → try numeric parse */
+        char *endp = NULL;
+        long n = strtol(index, &endp, 10);
+
+        if (endp && *endp == '\0')
+        {
+            ret = bind_array_variable(array_name, n, value, flags);
+        }
+        else
+        {
+            builtin_error("invalid numeric index for indexed array: %s", index);
+            ret = (SHELL_VAR *)NULL;
+        }
     }
     else
     {
-        /* Non-numeric index → fail for now (keeps things simple) */
-        builtin_error("invalid array index: %s", index);
+        /* Wrong type (scalar or function already exists) */
+        builtin_error("%s: not an array", array_name);
         ret = (SHELL_VAR *)NULL;
     }
 
@@ -156,6 +175,7 @@ SHELL_VAR *bind_var_or_array(char *name, char *value, int flags) {
     xfree(index);
     return ret;
 }
+
 /* ----------------------------- */
 /* --------  getCPUtime -------- */
 /* ----------------------------- */
