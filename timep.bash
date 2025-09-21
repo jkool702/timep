@@ -1014,13 +1014,15 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
 
         '
         
-        timep_runMainSrc+='(
-        '"$(${timep_timeFlag} && echo 'time {')"'
+        ${timep_timeFlag} && timep_runMainSrc='time {'
+        timep_runMainSrc+='
             {
                 '"${timep_runCmd}"'
             } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
-        '"$(${timep_timeFlag} && echo '} 1>&${timep_FD2}')"'
+        '
+        ${timep_timeFlag} && timep_runMainSrc+='} 1>&${timep_FD2}'
 
+        timep_runMainSrc+='
         builtin trap - DEBUG EXIT RETURN;
 
         echo "${EPOCHREALTIME//[^0-9]/}" > "${timep_TMPDIR}/.log/.final.end.wtime"
@@ -1028,7 +1030,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
 
         exec {timep_LOCK_FD}>&-
-    )'
+        '
 
     [[ "${timep_runType}" == 'f' ]] && {
         timep_runMainSrc+=$'\n\n''timep_runFunc "${@}"'
