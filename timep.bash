@@ -1043,11 +1043,12 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
     echo "${timep_runMainSrc}" >"${timep_TMPDIR}/main.bash"
     cat <<EOF >"${timep_TMPDIR}/env.bash"
 builtin trap - DEBUG EXIT RETURN
-set -mT
+set -mTxv
 . "${timep_TMPDIR}/functions.bash"
 . "${timep_TMPDIR}/vars.bash"
 export BASH_ENV="${timep_TMPDIR}/env.bash"
 . "${timep_TMPDIR}/setup.bash"
+set +xv
 EOF
 
 
