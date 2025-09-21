@@ -969,7 +969,8 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
 
         mapfile -t timep_AVAILABLE_BUILTINS < <(enable -p | grep -E '"'"'((getCPUtime)|timep_((crc32)|(fnv1a)|(hash)))'"'"')
         (( ${#timep_AVAILABLE_BUILTINS[@]} >=  4 )) || enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
-  
+        unset "timep_AVAILABLE_BUILTINS"
+
         timep_BASHPID_PREV="$BASHPID"
         timep_BG_PID_PREV="$!"
         timep_BG_PID_PREV_0='"''"'
@@ -1036,6 +1037,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
     }
 
     # save script/function (with added debug trap) in new script file and make it executable
+    [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
     echo "${timep_runSetupSrc}" >"${timep_TMPDIR}/setup.bash"
     echo "${timep_runVarsSrc}" >"${timep_TMPDIR}/vars.bash"
     echo "${timep_runMainSrc}" >"${timep_TMPDIR}/main.bash"
@@ -1046,10 +1048,8 @@ set -mT
 . "${timep_TMPDIR}/vars.bash"
 export BASH_ENV="${timep_TMPDIR}/env.bash"
 . "${timep_TMPDIR}/setup.bash"
-trap '. "${timep_TMPDIR}/env.bash"' DEBUG
 EOF
 
-    [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
 
     printf '\ntimep_TMPDIR = %s\n\n' "${timep_TMPDIR}" >&2
 
