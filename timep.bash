@@ -846,7 +846,7 @@ fi
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
-                        trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
+                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
             trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -860,7 +860,7 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
                     else
-                        trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
+                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
             trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -878,7 +878,7 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_SIGNAL_RELAY_TRAP_STR//\%s/"${trapType#SIG}"}" "${trapType}"
                     else
-                        trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
+                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
                         trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -894,7 +894,7 @@ timep_SKIP_DEBUG_FLAG=false
                     elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
-                        trapStrQ="'"'"'TRAP ("${trapType}"): "${trapStr//"'"'"'"/}"'"'"'"
+                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
             trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -940,21 +940,17 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
             ;;
         esac
 
-    ${timep_CLOCK_GETTIME_FLAG} && { export -f _timep_SETUP; printf '\nexport -f _timep_SETUP\n\n' >> "${timep_TMPDIR}/functions.bash"; }
-    chmod +x "${timep_TMPDIR}/functions.bash"
     timep_runVarsSrc='
         declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
         declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS
+        declare -gx timep_TMPDIR="'"${timep_TMPDIR}"'"
 '
 
 
     timep_runSetupSrc='
         : & 2>/dev/null
 
-        declare -gx timep_TMPDIR="'"${timep_TMPDIR}"'"
-        . "${timep_TMPDIR}/functions.bash"
-        export -f trap
-        '"$(${timep_CLOCK_GETTIME_FLAG} && printf '\n_timep_SETUP\n')"'
+        _timep_SETUP
 
         echo "$!" >"${timep_TMPDIR}/.log/.last_bg_pid"
         exec {timep_LOCK_FD}<><(:)
@@ -1049,6 +1045,9 @@ set -mT
 . "${timep_TMPDIR}/functions.bash"
 . "${timep_TMPDIR}/vars.bash"
 export BASH_ENV="${timep_TMPDIR}/env.bash"
+export -f timep
+export -f _timep_SETUP
+export -f trap
 . "${timep_TMPDIR}/setup.bash"
 EOF
 
@@ -1057,6 +1056,9 @@ EOF
 
     export -p -f timep &>/dev/null && export -n -f timep
     export -f timep
+    export -p -f _timep_SETUP &>/dev/null && export -n -f _timep_SETUP
+    export -f _timep_SETUP
+
     [[ $BASH ]] || export BASH="$(type -p bash)"
 
     # attempt to figure out the controling terminal from this shell or one of its parents/grandparents/...
