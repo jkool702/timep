@@ -1043,12 +1043,11 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
     echo "${timep_runMainSrc}" >"${timep_TMPDIR}/main.bash"
     cat <<EOF >"${timep_TMPDIR}/env.bash"
 builtin trap - DEBUG EXIT RETURN
-set -mTxv
+set -mT
 . "${timep_TMPDIR}/functions.bash"
 . "${timep_TMPDIR}/vars.bash"
 export BASH_ENV="${timep_TMPDIR}/env.bash"
 . "${timep_TMPDIR}/setup.bash"
-set +xv
 EOF
 
 
@@ -3047,9 +3046,9 @@ _timep_SETUP() {
         # The compiled .so file that this binary blob re-creates is avaiilable in the repo at LIB/LOADABLES/BIN/$ARCH/timep.so. timep_flamegraph is available at LIB/timep_flamegraph.so.
         # Note: these base64 blobs have been compressed. The information needed to decompress them is built into the start of the blob, as are the sha256 and md5 checksums for the original .so file
 
-        { ! ${forceFlag} && ${gotLoadableFlag}; } || "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
+        { ! ${forceFlag} && ${gotLoadableFlag}; } || BASH_ENV= "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
 
-        { ! ${forceFlag} && ${gotFlamegraphFlag}; } || "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
+        { ! ${forceFlag} && ${gotFlamegraphFlag}; } || BASH_ENV= "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
         chmod +x "${outDir}"/timep{.so,_flamegraph.pl}
 
         enable -f "${outDir}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
@@ -3399,7 +3398,7 @@ mkdir --mode=1777 -p "/dev/shm/.timep/lib"
 mkdir --mode=700 -p "/dev/shm/.timep/lib/${USER}-${EUID}"
 
 [[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash" ]] && chmod +w "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
-[[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash" ]] && chmod +w  "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
+[[ -f "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash" ]] && chmod +w "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
 
 cat<<'EEEOOOFFF' >"/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
 #!/usr/bin/env bash
