@@ -1060,7 +1060,7 @@ enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 
 timep_hash - timep_NEXEC_HASH_PARENT <<<"\${timep_NEXEC_0}"
 timep_NEXEC_0+=".\${timep_NEXEC_CUR}::CHILD.{0-\${BASHPID}}"
 timep_hash - timep_NEXEC_HASH_CUR <<<"\${timep_NEXEC_0}"
-echo "(CHILD): \${timep_NEXEC_HASH_CUR} {\${timep_NEXEC_0}}" >>"\${timep_TMPDIR}/.log/log.\${timep_NEXEC_HASH_PARENT}"
+echo "<< (CHILD): \${timep_NEXEC_HASH_CUR} {\${timep_NEXEC_0}} >>" >>"\${timep_TMPDIR}/.log/log.\${timep_NEXEC_HASH_PARENT}"
 unset "timep_NEXEC_HASH_PARENT"
 timep_TMPDIR_PARENT="\${timep_TMPDIR}"
 timep_TMPDIR="\${timep_TMPDIR}/.child/\${timep_NEXEC_HASH_CUR}"
@@ -1582,7 +1582,7 @@ _timep_PROCESS_LOG() {
 
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g' <"${logCur}" | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\: [^\n]* >>)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g;' <"${logCur}" | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
