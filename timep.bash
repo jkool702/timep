@@ -237,7 +237,6 @@ timep() {
          return 1
     }
 
-    mkdir -p "${timep_TMPDIR}"/.log/.{endtimes,runtimes}
     mkdir -p "${timep_TMPDIR}"/.log/.{endtimes,runtimes,hash}
     mkdir -p "${timep_TMPDIR}/profiles"
 
@@ -949,7 +948,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
                 [[ -t 0 ]] || timep_runCmd+=" <&0"
 
                 # start of wrapper code
-                timep_runMainSrc='#!'"${BASH}"$'\n''timep_runFunc() '
+                timep_runMainSrc='#!'"${BASH}"$'\n''timep_runFunc() {'
             ;;
         esac
 
@@ -1045,7 +1044,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         '
 
     [[ "${timep_runType}" == 'f' ]] && {
-        timep_runMainSrc+=$'\n\n''timep_runFunc "${@}"'
+        timep_runMainSrc+=$'\n\n''}'$'\n\n''timep_runFunc "${@}"'
         [[ -t 0 ]] && timep_runMainSrc+=' <&0'
         timep_runMainSrc+=$'\n\n'
     }
@@ -1059,8 +1058,9 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
     cat <<EOF >"${timep_TMPDIR}/env.bash"
 builtin trap - DEBUG EXIT RETURN
 set -mT
-. "${timep_TMPDIR}/functions.bash"
-enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
+. "\${timep_TMPDIR}/functions.bash"
+[[ -x "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" ]] || _timep_SETUP
+enable -f "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
 timep_hash - timep_NEXEC_HASH_PARENT <<<"\${timep_NEXEC_0}"
 timep_NEXEC_0+=".\${timep_NEXEC_CUR}::CHILD.{0-\${BASHPID}}"
 timep_hash - timep_NEXEC_HASH_CUR <<<"\${timep_NEXEC_0}"
@@ -1076,17 +1076,13 @@ export BASH_ENV="\${timep_TMPDIR}/env.bash"
 . "\${timep_TMPDIR}/setup.bash"
 EOF
 
-cat<<EOF >"${timep_TMPDIR}/env1.bash"
-. "${timep_TMPDIR}/functions.bash"
-enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
-. "\${timep_TMPDIR}/vars.bash"
-export BASH_ENV="\${timep_TMPDIR}/env.bash"
-. "\${timep_TMPDIR}/setup.bash"
-EOF
-
 cat<<EOF >"${timep_TMPDIR}/env0.bash"
 set -mT
-trap '$([[ "${timep_runType}" == f ]] && printf '%s' '[[ "${FUNCNAME[0]}" == "'"${timep_runFunc}"'" ]] &&') { trap - DEBUG; . "${timep_TMPDIR}/env1.bash"; }' DEBUG
+echo "USER=\$USER EUID=\$EUID GROUPS=\$GROUPS"  >/mnt/ramdisk/log.info
+[[ -x "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" ]] || _timep_SETUP
+enable -f "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
+export BASH_ENV="\${timep_TMPDIR}/env.bash"
+trap '$([[ "${timep_runType}" == f ]] && printf '%s' '[[ "${FUNCNAME[0]}" == "timep_runFunc" ]] &&') { trap - DEBUG; echo "USER=\$USER EUID=\$EUID GROUPS=\$GROUPS"  >/mnt/ramdisk/log.info; . "\${timep_TMPDIR}/functions.bash"; . "\${timep_TMPDIR}/vars.bash"; . "\${timep_TMPDIR}/setup.bash"; }' DEBUG
 EOF
 
 
@@ -1096,6 +1092,8 @@ EOF
     export -f timep
     export -p -f _timep_SETUP &>/dev/null && export -n -f _timep_SETUP
     export -f _timep_SETUP
+    export timep_TMPDIR="${timep_TMPDIR}"
+    export timep_fd_lock="${timep_fd_lock}"
 
     [[ $BASH ]] || export BASH="$(type -p bash)"
 
