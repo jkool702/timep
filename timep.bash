@@ -2657,8 +2657,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
     if [[ -f "${timep_LOG_NESTING[0]%$'\n'}" ]]; then
         timep_LOG_MAIN="${timep_LOG_NESTING[0]%$'\n'}"
-    elif [[ -f "${timep_LOG_NESTING[1]%$'\n'}"
-        timep_LOG_MAIN="${timep_LOG_NESTING[0]%$'\n'}"
+    elif [[ -f "${timep_LOG_NESTING[1]%$'\n'}" ]]; then
+        timep_LOG_MAIN="${timep_LOG_NESTING[1]%$'\n'}"
     fi
 
     # add in any logs that didnt get merged all thge way up to the top lvl. this way at least they arent entirely missing...
