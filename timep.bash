@@ -2055,13 +2055,14 @@ printf '%s;' "${fgA[@]}")"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
 
-    if  [[ ${timep_WORKER_PID} ]] && (( timep_WORKER_PID > 0 )); then
-        ${timep_deleteFlag} && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
-        printf '%s\n' "${mergeA[@]/#${timep_TMPDIR}\/.log\/log./${timep_TMPDIR}\/.log\/.hash/\log.}" >>"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
-    else
-        [[ ${mergeA[@]/#${timep_TMPDIR}\/.log\/log./${timep_TMPDIR}\/.log\/.hash/\log.} ]] && \rm "${mergeA[@]/#${timep_TMPDIR}\/.log\/log./${timep_TMPDIR}\/.log\/.hash/\log.}"
-    fi
-
+    ${timep_deleteFlag} && [[ ${timep_WORKER_PID} ]] && (( timep_WORKER_PID > 0 )) && { 
+        if [[ "${timep_runType}" == 'f' ]]; then
+            (( logDepth > 1 )) && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+        else
+            (( logDepth > 0 )) && printf '%s\n' "${logCur}" "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+        fi
+    }
+    
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
 }
