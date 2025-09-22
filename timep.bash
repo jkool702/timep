@@ -1222,7 +1222,8 @@ EOF
         \mv "${timep_TMPDIR}"/.child/**/.log/.hash/log.* "${timep_TMPDIR}/.log"/.hash
         \mv "${timep_TMPDIR}"/.child/**/.log/.runtimes/* "${timep_TMPDIR}/.log/.runtimes"
         \mv "${timep_TMPDIR}"/.child/**/.log/.endtimes/* "${timep_TMPDIR}/.log/.endtimes"
-
+    fi
+    
     # define helper functions for getting runtime from timestamp differences and for summing runtimes
 
 #    export LOCALE=C
