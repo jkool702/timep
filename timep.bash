@@ -909,7 +909,11 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
                 ;;
             esac
         done
-    }'; } >"${timep_TMPDIR}/functions.bash"
+    }
+    export -f timep 
+    export -f _timep_SETUP 
+    export -f trap
+    '; } >"${timep_TMPDIR}/functions.bash"
 
         # setup a string with the command to run
         case "${timep_runType}" in
@@ -946,9 +950,11 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         esac
 
     timep_runVarsSrc='
-        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_0 timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_CUR timep_NEXEC_HASH_CUR
+        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
         declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS
-        declare -gx timep_TMPDIR="'"${timep_TMPDIR}"'"
+        declare -gx timep_TMPDIR="${timep_TMPDIR}"
+        declare -gx timep_NEXEC_0="${timep_NEXEC_0}"
+        declare -gx timep_NEXEC_CUR="${timep_NEXEC_CUR}"
 '
 
 
@@ -980,7 +986,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         timep_NEXEC_N=0
         timep_NEXEC_CUR=0
         timep_NPIDWRAP=0
-        timep_NEXEC_0+="{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
+        : "${timep_NEXEC_0:="{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"}"
         timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
         echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
         timep_NEXEC_HASH_A=("${timep_NEXEC_HASH_CUR}")
@@ -1045,16 +1051,30 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
     echo "${timep_runSetupSrc}" >"${timep_TMPDIR}/setup.bash"
     echo "${timep_runVarsSrc}" >"${timep_TMPDIR}/vars.bash"
     echo "${timep_runMainSrc}" >"${timep_TMPDIR}/main.bash"
+    
     cat <<EOF >"${timep_TMPDIR}/env.bash"
 builtin trap - DEBUG EXIT RETURN
 set -mT
 . "${timep_TMPDIR}/functions.bash"
-. "${timep_TMPDIR}/vars.bash"
-export BASH_ENV="${timep_TMPDIR}/env.bash"
-export -f timep
-export -f _timep_SETUP
-export -f trap
-. "${timep_TMPDIR}/setup.bash"
+enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
+timep_hash - timep_NEXEC_HASH_PARENT <<<"\${timep_NEXEC_0}"
+timep_NEXEC_0+=".\${timep_NEXEC_CUR}::CHILD.{0-\${BASHPID}}"
+timep_hash - timep_NEXEC_HASH_CUR <<<"\${timep_NEXEC_0}"
+echo "(CHILD): \${timep_NEXEC_HASH_CUR} {\${timep_NEXEC_0}}" >>"\${timep_TMPDIR}/.log/log.\${timep_NEXEC_HASH_PARENT}"
+unset "timep_NEXEC_HASH_PARENT"
+timep_TMPDIR_PARENT="\${timep_TMPDIR}"
+timep_TMPDIR="\${timep_TMPDIR}/.child/\${timep_NEXEC_HASH_CUR}"
+mkdir -p "\${timep_TMPDIR}"/.log/.{runtimes,endtimes,hash}
+cp "\${timep_TMPDIR_PARENT}"/*.bash "\${timep_TMPDIR}"
+echo "\${timep_NEXEC_0}" > "\${timep_TMPDIR}/.log/.hash/\${timep_NEXEC_HASH_CUR}"
+. "\${timep_TMPDIR}/vars.bash"
+export BASH_ENV="\${timep_TMPDIR}/env.bash"
+. "\${timep_TMPDIR}/setup.bash"
+EOF
+
+    cat<<EOF >"${timep_TMPDIR}/env0.bash"
+set -mT
+trap '. "${timep_TMPDIR}/env.bash"' DEBUG
 EOF
 
 
@@ -1123,19 +1143,19 @@ EOF
         fi
         if [[ -t 0 ]]; then
             {
-                BASH_ENV="${timep_TMPDIR}/env.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                BASH_ENV="${timep_TMPDIR}/env0.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         else
             {
-                BASH_ENV="${timep_TMPDIR}/env.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                BASH_ENV="${timep_TMPDIR}/env0.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 0<"${timep_PTY_PATH}" 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         fi
     else
         printf '\n\nWARNING: job control could not be enabled due to lack of controlling TTY/PTY. subshells and background forks may not be properly distinguished!\n\n' >&${timep_FD2}
         if [[ -t 0 ]]; then
-           BASH_ENV="${timep_TMPDIR}/env.bash" "${timep_TMPDIR}/main.bash" "${@}"
+           BASH_ENV="${timep_TMPDIR}/env0.bash" "${timep_TMPDIR}/main.bash" "${@}"
         else
-           BASH_ENV="${timep_TMPDIR}/env.bash" "${timep_TMPDIR}/main.bash" "${@}" <&0
+           BASH_ENV="${timep_TMPDIR}/env0.bash" "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
 
