@@ -1214,6 +1214,15 @@ EOF
     read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
     read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
 
+    # move logs from scripts called by the profiled code into main log dir
+    if [[ -d "${timep_TMPDIR}/.child" ]]; then
+        shopt globstar | grep -qF 'on' && restoreGlobstarFlag=false || restoreGlobstarFlag=true
+        shopt -s globstar
+        \mv "${timep_TMPDIR}"/.child/**/.log/log.* "${timep_TMPDIR}/.log"
+        \mv "${timep_TMPDIR}"/.child/**/.log/.hash/log.* "${timep_TMPDIR}/.log"/.hash
+        \mv "${timep_TMPDIR}"/.child/**/.log/.runtimes/* "${timep_TMPDIR}/.log/.runtimes"
+        \mv "${timep_TMPDIR}"/.child/**/.log/.endtimes/* "${timep_TMPDIR}/.log/.endtimes"
+
     # define helper functions for getting runtime from timestamp differences and for summing runtimes
 
 #    export LOCALE=C
