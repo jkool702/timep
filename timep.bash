@@ -851,10 +851,11 @@ fi
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
-                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
-            trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
+                        trapStrQ="TRAP (${trapType}): ${trapStr}"
+                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"  
+                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
-echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
+echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
 timep_SKIP_DEBUG_FLAG=false
 '"'"'"${timep_EXIT_TRAP_STR}" EXIT
@@ -865,10 +866,11 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
                     else
-                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
-            trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
+                        trapStrQ="TRAP (${trapType}): ${trapStr}"
+                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"  
+                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
-echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
+echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
 timep_SKIP_DEBUG_FLAG=false
 '"'"'"${timep_RETURN_TRAP_STR}" RETURN
@@ -883,10 +885,11 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_SIGNAL_RELAY_TRAP_STR//\%s/"${trapType#SIG}"}" "${trapType}"
                     else
-                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
-                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
+                        trapStrQ="TRAP (${trapType}): ${trapStr}"
+                                    trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"  
+                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
-echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
+echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
 timep_SKIP_DEBUG_FLAG=false
 '"'"'"${timep_SIGNAL_RELAY_TRAP_STR//\%s/"${trapType#SIG}"}" "${trapType}"
@@ -899,10 +902,11 @@ timep_SKIP_DEBUG_FLAG=false
                     elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
-                        trapStrQ="'"'"'TRAP (${trapType}): ${trapStr//"'"'"'"/}'"'"'"
-            trapStrQ="${trapStrQ//$'"'"'\n'"'"'/\\\$'"'"'\\n'"'"'}"
+                        trapStrQ="TRAP (${trapType}): ${trapStr}"
+                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"  
+                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
-echo '"'"'"${trapStrQ//\;/\\\;}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
+echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
 timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
                     fi
@@ -1072,9 +1076,17 @@ export BASH_ENV="\${timep_TMPDIR}/env.bash"
 . "\${timep_TMPDIR}/setup.bash"
 EOF
 
-    cat<<EOF >"${timep_TMPDIR}/env0.bash"
+cat<<EOF >"${timep_TMPDIR}/env1.bash"
+. "${timep_TMPDIR}/functions.bash"
+enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
+. "\${timep_TMPDIR}/vars.bash"
+export BASH_ENV="\${timep_TMPDIR}/env.bash"
+. "\${timep_TMPDIR}/setup.bash"
+EOF
+
+cat<<EOF >"${timep_TMPDIR}/env0.bash"
 set -mT
-trap '. "${timep_TMPDIR}/env.bash"' DEBUG
+trap '$([[ "${timep_runType}" == f ]] && printf '%s' '[[ "${FUNCNAME[0]}" == "'"${timep_runFunc}"'" ]] &&') { trap - DEBUG; . "${timep_TMPDIR}/env1.bash"; }' DEBUG
 EOF
 
 
@@ -1582,7 +1594,7 @@ _timep_PROCESS_LOG() {
 
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\: [^\n]* >>)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g;' <"${logCur}" | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' <"${logCur}" | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
