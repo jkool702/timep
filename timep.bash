@@ -2655,18 +2655,22 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     read -r -u "${fd_sleep}" -t 0.01 _ || :
     #trap 'echo "ERROR @ ($LINENO): $BASH_COMMAND" >&2; _timep_DEBUG_PRINTVARS >&2' ERR
 
-    timep_LOG_NESTING[0]="${timep_LOG_NESTING[0]%$'\n'}"
+    if [[ -f "${timep_LOG_NESTING[0]%$'\n'}" ]]; then
+        timep_LOG_MAIN="${timep_LOG_NESTING[0]%$'\n'}"
+    elif [[ -f "${timep_LOG_NESTING[1]%$'\n'}"
+        timep_LOG_MAIN="${timep_LOG_NESTING[0]%$'\n'}"
+    fi
 
     # add in any logs that didnt get merged all thge way up to the top lvl. this way at least they arent entirely missing...
-    [[ -f "${timep_TMPDIR}/.log/.hash/${timep_LOG_NESTING[0]##*\/}" ]] && \rm "${timep_TMPDIR}/.log/.hash/${timep_LOG_NESTING[0]##*\/}"
+    [[ -f "${timep_TMPDIR}/.log/.hash/${timep_LOG_MAIN##*\/}" ]] && \rm "${timep_TMPDIR}/.log/.hash/${timep_LOG_MAIN##*\/}"
     for nn in "${timep_TMPDIR}"/.log/.hash/*; do
         printf '\n\n%s\n' "$(<"${nn}")" >>"${timep_TMPDIR}/.log/.hash/${timep_LOG_NAME[$kk]##*\/}"
     done
 
     printf '\n\nFINALIZING OUTPUTS\n' >&2
     printf '\nGETTING TOTAL TIMES (+%s)\n' "${SECONDS}" >&2
-    printf '\n\n' >>"${timep_LOG_NESTING[0]}.out"
-    printf '\n\n' >>"${timep_LOG_NESTING[0]}.out.combined"
+    printf '\n\n' >>"${timep_LOG_MAIN}.out"
+    printf '\n\n' >>"${timep_LOG_MAIN}.out.combined"
 
     for nn in "${timep_TMPDIR}"/.log/.runtimes/log.*; do
         read -r timep_wTimeCur timep_cTimeCur <"${nn}"
@@ -2710,11 +2714,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     }
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
-    sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_NESTING[0]}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
-    sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g; s/(\n([0-9]+\t){5})\t/\1/g' <"${timep_LOG_NESTING[0]}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile";
+    sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_MAIN}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
+    sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g; s/(\n([0-9]+\t){5})\t/\1/g' <"${timep_LOG_MAIN}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile";
 
     # get total runtime
-    read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_NESTING[0]##*/}"
+    read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_MAIN##*/}"
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
