@@ -453,7 +453,13 @@ _timep_getFuncSrc() {
 
     timep_RETURN_TRAP_STR='timep_SKIP_DEBUG_FLAG=true
 timep_TRAP_OPTS=${-//[^eu]/}; ${timep_TRAP_OPTS:+set +}${timep_TRAP_OPTS}
-[[ -z ${#FUNCNAME[@]} ]] || (( ${#FUNCNAME[@]} < 1 )) || {
+[[ -z ${#FUNCNAME[@]} ]] || (( ${#FUNCNAME[@]} < '
+    if [[ "${timep_runType}" == 'f' ]]; then
+        timep_RETURN_TRAP_STR+='2'
+    else
+        timep_RETURN_TRAP_STR+='1'
+    fi
+    timep_RETURN_TRAP_STR+=' )) || {
     unset "timep_FNEST[-1]" "timep_NEXEC_A[-1]" "timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]" "timep_NPIPE[${timep_FNEST_CUR}]" "timep_STARTTIME[${timep_FNEST_CUR}]" "timep_LINENO[${timep_FNEST_CUR}]" "timep_LINENO_OFFSET[${timep_FNEST_CUR}]" "timep_NEXEC_HASH_A[-1]"
     timep_FUNCNAME_STR="${timep_FUNCNAME_STR%.*}"
     timep_FNEST_CUR="${timep_FNEST[-1]}"
