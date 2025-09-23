@@ -1614,9 +1614,10 @@ _timep_PROCESS_LOG() {
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {
+                read -r -d '' cmd0 < <(eval "printf '%s\0' ${cmd0}")
                 cmd0="${cmd0#@([[:print:]])}"
                 cmd0="${cmd0%@([[:print:]])*([[:space:]])}"
-                [[ "${cmd0//"'"/}" == '(('*\=*'))' ]] && {
+                [[ "${cmd0//[\\"'"]/}" == '(('*\=*'))' ]] && {
                     nPipe=1
                     nPipeA[$kk]=1
                     nPipeNextIgnoreFlag=true
