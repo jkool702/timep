@@ -1659,15 +1659,23 @@ _timep_PROCESS_LOG() {
         # see if we need to merge up the endtime/runtime from the child log
         [[ "${endWTimeA[$kk]}" == '-' ]] && {
             if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
-                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
-                [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && endWTimeA[$kk]="${endWTime}"
+                IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
+                (( 10#0${wTime//[^0-9]} > 0 )) && {
+                  (( endWTime = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
+                  [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && { [[ -z ${endWTimeA[$kk]} ]] || [[ "${endWTimeA[$kk]}" == '-' ]]; } && (( endWTime > startWTimeA[$kk] )) && endWTimeA[$kk]="${endWTime}"
+                }
+                (( 10#0${cTime//[^0-9]} > 0 )) && {
+                  (( endCTime = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
+                  [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } && (( endCTime > startCTimeA[$kk] )) && endCTimeA[$kk]="${endCTime}"
+                }
             fi
-            (( startCTimeA[$kk] > 0 )) && [[ ${cTimeA[$kk]} ]] && (( cTimeA[$kk] > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
+            { [[ -z ${endWTimeA[$kk]} ]] || [[ "${endWTimeA[$kk]}" == '-' ]]; } && (( startWTimeA[$kk] > 0 )) && [[ ${wTimeA[$kk]} ]] && (( wTimeA[$kk] > 0 )) && (( endWTimeA[$kk] = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
+            { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } && (( startCTimeA[$kk] > 0 )) && [[ ${cTimeA[$kk]} ]] && (( cTimeA[$kk] > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
 
             # if we still dont have a valid end cpu time then assume it took as much cpu time as it took wall-clock time
-            ${timep_CLOCK_GETTIME_FLAG} && if [[ "${endCTimeA[$kk]}" == '-' ]] || (( cTimeA[$kk]<= 1 )); then
+            ${timep_CLOCK_GETTIME_FLAG} && if { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } &&  [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]]; then
                 cTimeA[$kk]="${wTimeA[$kk]}"
-                (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
+                (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
             fi
         }
 
@@ -1725,10 +1733,19 @@ _timep_PROCESS_LOG() {
             inPipeFlagA[$kk]=false
         fi
 
-        # compute runtime from start/end timestamps (unless we are either in the middle of a pipeline OR it is a subshell / bg fork)
-        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( wTimeA[$kk] = 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
+        # compute run wall-clock time from start/end timestamps
+        [[ -z ${wTimeA[$kk]//[^0-9]/} ]] && [[ ${endWTimeA[$kk]//[^0-9]/} ]] && [[ ${startWTimeA[$kk]//[^0-9]/} ]]  && {
+            if [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} + ( timep_WTIME_CORRECTION << 1 ) )); then
+                # normal case - use end - start - correction
+                (( wTimeA[$kk] = 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} - timep_WTIME_CORRECTION ))
+            elif [[ ${startWTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endWTimeA[$kk]//[^0-9]/} >= 10#0${startWTimeA[$kk]//[^0-9]/} )); then
+                # case where end - start is less than double the correction. Compromise and use (end - start)/2
+                 (( wTimeA[$kk] = 1 + ( 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ) >> 1 ))
+            fi
+        }
 
-        [[ -z ${cTimeA[$kk]//[^0-9]/} ]] && [[ ${endCTimeA[$kk]//[^0-9]/} ]] && {
+        # compute run cpu time from start/end timestamps
+        [[ -z ${cTimeA[$kk]//[^0-9]/} ]] && [[ ${endCTimeA[$kk]//[^0-9]/} ]] && [[ ${startCTimeA[$kk]//[^0-9]/} ]]  && {
             if [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} + ( timep_CTIME_CORRECTION << 1 ) )); then
                 # normal case - use end - start - correction
                 (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
