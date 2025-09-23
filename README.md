@@ -1,16 +1,13 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: 1.6.1
+**CURRENT TIMEP VERSION**: 1.7
 
-**CHANGES IN MOST RECENT UPDATE**: The changes in this release are largely geared towards various bug fixes and ensuring timep works correctly in more situations. this includes:
-* line numbers for subshells inside of functions are now correct
-* timep now works if the code being profiled uses `set -e` or `set -u`
-* timep now enforces `set -T` like it does `set -m` - if it is disabled timep automatically re-enables it
-* there is now a mechanism (which can be disabled via an environment variable) which will cause orphaned processes to automatically exit after the main timep profiling run finishes
-* trap handler events are dealt with more robustly
-
-timep v1.6.1: loadables have been recompiled so that they can bind output to array variables or standard variables.
+**CHANGES IN MOST RECENT UPDATE**: This version contains 4 major changes/improvements, in addition to various minor changes and bugfixes:
+1. The log files that timep creates as it profiles are now named using the hash of their "nexec" value (a unique identifier that describes their position in the call stack) instead of the raw nexec value. This change allows for timep to handle arbitrarily deep nesting without exceeding filesystem limits on maximum file name length.
+2. timep now sets up its instrumented traps using BASH_ENV. this allows the instrumentation to automatically bootstrap itself into any scripts / new bash processes run by the profiled code. In other words, if the code being profiled calls a script, that script now gets automatically profiled too.
+3. The way that times were calculated from recorded tim,estamps and merged up has been reworked, making it more robust and making the timing information shown by timep's profile more accurate.
+4. The main output profile's structure has been channged. It no longer includes a 2nd copy of the execution tree diagram at the start. This change allows the profile to stay aligned in deeply nested sequences, making it much easier to read as well as easier to parse by machine.
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
@@ -59,8 +56,9 @@ The big difference between these is that:
 
 ```
 testfunc() { 
+trap 'echo RETURN' RETURN;
 f() { echo "f: $*"; }
-g() ( echo "g: $*"; )
+g() ( trap 'echo EXIT' EXIT;  echo "g: $*"; )
 h() { 
 	echo "h: $*"; 
 	f "$@"; 
@@ -89,59 +87,72 @@ timep testfunc
 ```
 gives
 ```
-LINE.DEPTH.CMD NUMBER   COMBINED WALL-CLOCK TIME          COMBINED CPU TIME                     COMMAND
-<line>.<depth>.<cmd>:   ( time | total % | cur depth % )  ( time | total % | cur depth % )      (count) <command>
-_____________________   __________________________________________________________________      ____________________________________
+LINE DEPTH CMD  COMBINED WALL-CLOCK TIME          COMBINED CPU TIME                     COMMAND
+line.depth.cmd: ( time | total % | cur depth % )  ( time | total % | cur depth % )      (count) <command>
+_______________ __________________________________________________________________      ____________________________________
 
-1.0.0:                  ( 0.029128s |100.00% )            ( 0.034961s |100.00% )                (1x)    << (FUNCTION): main.testfunc "${@}" >>
-├─ 1.1.0:               ( 0.000069s |  0.23% )            ( 0.000082s |  0.23% )                (1x)    testfunc "${@}"
-│
-│  12.1.0:              ( 0.000074s |  0.25% )            ( 0.000088s |  0.25% )                (1x)    echo 0
-│
-│  13.1.0:              ( 0.000718s |  2.46% )            ( 0.000592s |  1.69% )                (1x)    echo 1
-│
-│  14.1.0:              ( 0.000115s |  0.39% )            ( 0.000135s |  0.38% )                (1x)    << (SUBSHELL) >>
-│  └─ 14.2.0:           ( 0.000115s |  0.39% |100.00% )   ( 0.000135s |  0.38% |100.00% )       (1x)     └─echo 2
-│
-│  15.1.0:              ( 0.000571s |  1.96% )            ( 0.000586s |  1.67% )                (1x)    echo 3 (&)
-│
-│  16.1.0:              ( 0.000080s |  0.27% )            ( 0.000094s |  0.26% )                (1x)    << (BACKGROUND FORK) >>
-│  └─ 16.2.0:           ( 0.000080s |  0.27% |100.00% )   ( 0.000094s |  0.26% |100.00% )       (1x)     └─echo 4
-│
-│  17.1.0:              ( 0.005607s | 19.24% )            ( 0.012484s | 35.70% )                (1x)    echo 5 | cat | tee
-│
-│  19.1.0:              ( 0.000068s |  0.23% )            ( 0.000082s |  0.23% )                (1x)    ((kk=6))
-│
-│  19.1.0:              ( 0.000259s |  0.88% |  0.22% )   ( 0.000324s |  0.92% |  0.23% )       (4x)    ((kk++ ))
-│
-│  19.1.1:              ( 0.000345s |  1.18% |  0.23% )   ( 0.000405s |  1.15% |  0.23% )       (5x)    ((kk<10))
-│
-│  20.1.0:              ( 0.000304s |  1.04% |  0.26% )   ( 0.000357s |  1.02% |  0.25% )       (4x)    echo $kk
-│
-│  21.1.0:              ( 0.005835s | 20.03% |  5.00% )   ( 0.005675s | 16.23% |  4.05% )       (4x)    << (FUNCTION): main.testfunc.h $kk >>
-│  ├─ 1.2.0:            ( 0.000289s |  0.99% |  4.95% )   ( 0.000353s |  1.00% |  6.22% )       (4x)     ├─h $kk
-│  │  12.2.0:           ( 0.000312s |  1.07% |  5.34% )   ( 0.000367s |  1.04% |  6.46% )       (4x)     │ echo "h: $*"
-│  │  13.2.0:           ( 0.000554s |  1.90% |  9.49% )   ( 0.000662s |  1.89% | 11.66% )       (4x)     │ << (FUNCTION): main.testfunc.h.f "$@" >>
-│  │  ├─ 1.3.0:         ( 0.000257s |  0.88% | 46.38% )   ( 0.000310s |  0.88% | 46.82% )       (4x)     │  ├─f "$@"
-│  │  └─ 12.3.0:        ( 0.000297s |  1.01% | 53.61% )   ( 0.000352s |  1.00% | 53.17% )       (4x)     │  └─echo "f: $*"
-│  │  14.2.0:           ( 0.004680s | 16.06% | 80.20% )   ( 0.004293s | 12.27% | 75.64% )       (4x)     │ << (FUNCTION): main.testfunc.h.g "$@" >>
-│  │  ├─ 1.3.0:         ( 0.003982s | 13.67% | 85.08% )   ( 0.003481s |  9.95% | 81.08% )       (4x)     │  ├─g "$@"
-│  │  │  586.3.0:       ( 0.000698s |  2.39% | 14.91% )   ( 0.000812s |  2.32% | 18.91% )       (4x)     │  │ << (SUBSHELL) >>
-│  └─ └─ └─ 586.4.0:    ( 0.000698s |  2.39% |100.00% )   ( 0.000812s |  2.32% |100.00% )       (4x)     └─ └─ └─echo "g: $*"
-│
-│  22.1.0:              ( 0.000806s |  2.76% |  0.23% )   ( 0.000959s |  2.74% |  0.22% )       (12x)   for jj in {1..3}
-│
-│  23.1.0:              ( 0.001742s |  5.98% |  0.49% )   ( 0.002060s |  5.89% |  0.49% )       (12x)   << (FUNCTION): main.testfunc.f $kk $jj >>
-│  ├─ 1.2.0:            ( 0.000734s |  2.51% | 42.13% )   ( 0.000890s |  2.54% | 43.20% )       (12x)    ├─f $kk $jj
-│  └─ 12.2.0:           ( 0.001008s |  3.46% | 57.86% )   ( 0.001170s |  3.34% | 56.79% )       (12x)    └─echo "f: $*"
-│
-│  24.1.0:              ( 0.012535s | 43.03% |  3.58% )   ( 0.011038s | 31.57% |  2.63% )       (12x)   << (FUNCTION): main.testfunc.g $kk $jj >>
-│  ├─ 1.2.0:            ( 0.010710s | 36.76% | 85.44% )   ( 0.009037s | 25.84% | 81.87% )       (12x)    ├─g $kk $jj
-│  │  586.2.0:          ( 0.001825s |  6.26% | 14.55% )   ( 0.002001s |  5.72% | 18.12% )       (12x)    │ << (SUBSHELL) >>
-└─ └─ └─ 586.3.0:       ( 0.001825s |  6.26% |100.00% )   ( 0.002001s |  5.72% |100.00% )       (12x)    └─ └─echo "g: $*"
+1.1.0:          ( 0.552473s |100.00% )            ( 0.555453s |100.00% )                (1x)    << (FUNCTION): main.timep_runFunc.testfunc "${@}" >>
+1.2.0:          ( 0.000060s |  0.01% |  0.01% )   ( 0.000074s |  0.01% |  0.01% )       (1x)    testfunc "${@}"
 
-TOTAL RUN TIME: 0.029128s
-TOTAL CPU TIME: 0.034961s
+2.2.0:          ( 0.022306s |  4.03% |  4.03% )   ( 0.022245s |  4.00% |  4.00% )       (1x)    trap 'echo RETURN' RETURN
+
+5.2.0:          ( 0.001836s |  0.33% |  0.33% )   ( 0.001844s |  0.33% |  0.33% )       (1x)    TRAP (RETURN): echo RETURN
+
+11.2.0:         ( 0.000065s |  0.01% |  0.01% )   ( 0.000078s |  0.01% |  0.01% )       (1x)    echo 0
+
+12.2.0:         ( 0.000620s |  0.11% |  0.11% )   ( 0.000485s |  0.08% |  0.08% )       (1x)    echo 1
+
+13.2.0:         ( 0.000075s |  0.01% |  0.01% )   ( 0.000089s |  0.01% |  0.01% )       (1x)    << (SUBSHELL) >>
+13.3.0:         ( 0.000075s |  0.01% |100.00% )   ( 0.000089s |  0.01% |100.00% )       (1x)     └─echo 2
+
+14.2.0:         ( 0.000559s |  0.10% |  0.10% )   ( 0.000590s |  0.10% |  0.10% )       (1x)    echo 3 (&)
+
+15.2.0:         ( 0.000288s |  0.05% |  0.05% )   ( 0.000338s |  0.06% |  0.06% )       (1x)    << (BACKGROUND FORK) >>
+15.3.0:         ( 0.000288s |  0.05% |100.00% )   ( 0.000338s |  0.06% |100.00% )       (1x)     └─echo 4
+
+16.2.0:         ( 0.005284s |  0.95% |  0.95% )   ( 0.010144s |  1.82% |  1.82% )       (1x)    echo 5 | cat | tee
+
+18.2.0:         ( 0.000068s |  0.01% |  0.01% )   ( 0.000083s |  0.01% |  0.01% )       (1x)    ((kk=6))
+
+18.2.0:         ( 0.000242s |  0.04% |  0.01% )   ( 0.000299s |  0.05% |  0.01% )       (4x)    ((kk++ ))
+
+18.2.1:         ( 0.000328s |  0.05% |  0.01% )   ( 0.000398s |  0.07% |  0.01% )       (5x)    ((kk<10))
+
+19.2.0:         ( 0.000293s |  0.05% |  0.01% )   ( 0.000348s |  0.06% |  0.01% )       (4x)    echo $kk
+
+20.2.0:         ( 0.134707s | 24.38% |  6.09% )   ( 0.134322s | 24.18% |  6.04% )       (4x)    << (FUNCTION): main.timep_runFunc.testfunc.h $kk >>
+1.3.0:          ( 0.000275s |  0.04% |  0.20% )   ( 0.000336s |  0.06% |  0.25% )       (4x)     ├─h $kk
+2.3.0:          ( 0.000300s |  0.05% |  0.22% )   ( 0.000358s |  0.06% |  0.26% )       (4x)     │ echo "h: $*"
+3.3.0:          ( 0.007689s |  1.39% |  5.70% )   ( 0.007818s |  1.40% |  5.82% )       (4x)     │ << (FUNCTION): main.timep_runFunc.testfunc.h.f "$@" >>
+1.4.0:          ( 0.000239s |  0.04% |  3.10% )   ( 0.000290s |  0.05% |  3.70% )       (4x)     │  ├─f "$@"
+2.4.0:          ( 0.000317s |  0.05% |  4.12% )   ( 0.000362s |  0.06% |  4.63% )       (4x)     │  │ echo "f: $*"
+2.4.1:          ( 0.007133s |  1.29% | 92.76% )   ( 0.007166s |  1.29% | 91.66% )       (4x)     │  └─TRAP (RETURN): echo RETURN
+4.3.0:          ( 0.119137s | 21.56% | 88.44% )   ( 0.118469s | 21.32% | 88.19% )       (4x)     │ << (FUNCTION): main.timep_runFunc.testfunc.h.g "$@" >>
+1.4.0:          ( 0.003478s |  0.62% |  2.91% )   ( 0.003014s |  0.54% |  2.54% )       (4x)     │  ├─g "$@"
+2.4.0:          ( 0.103596s | 18.75% | 86.95% )   ( 0.103356s | 18.60% | 87.24% )       (4x)     │  │ << (SUBSHELL) >>
+2.5.0:          ( 0.095524s | 17.29% | 92.20% )   ( 0.095191s | 17.13% | 92.10% )       (4x)     │  │  ├─trap 'echo EXIT' EXIT
+2.5.1:          ( 0.000363s |  0.06% |  0.35% )   ( 0.000426s |  0.07% |  0.41% )       (4x)     │  │  │ echo "g: $*"
+-432.5.0:       ( 0.007709s |  1.39% |  7.44% )   ( 0.007739s |  1.39% |  7.48% )       (4x)     │  │  └─TRAP (EXIT): echo EXIT
+2.4.1:          ( 0.012063s |  2.18% | 10.12% )   ( 0.012099s |  2.17% | 10.21% )       (4x)     │  └─TRAP (RETURN): echo RETURN
+1.3.0:          ( 0.007306s |  1.32% |  5.42% )   ( 0.007341s |  1.32% |  5.46% )       (4x)     └─TRAP (RETURN): echo RETURN
+
+21.2.0:         ( 0.000754s |  0.13% |  0.01% )   ( 0.000936s |  0.16% |  0.01% )       (12x)   for jj in {1..3}
+
+22.2.0:         ( 0.023059s |  4.17% |  0.34% )   ( 0.023479s |  4.22% |  0.35% )       (12x)   << (FUNCTION): main.timep_runFunc.testfunc.f $kk $jj >>
+1.3.0:          ( 0.000805s |  0.14% |  3.49% )   ( 0.000976s |  0.17% |  4.15% )       (12x)    ├─f $kk $jj
+2.3.0:          ( 0.000931s |  0.16% |  4.03% )   ( 0.001087s |  0.19% |  4.62% )       (12x)    │ echo "f: $*"
+2.3.1:          ( 0.021323s |  3.85% | 92.47% )   ( 0.021416s |  3.85% | 91.21% )       (12x)    └─TRAP (RETURN): echo RETURN
+
+23.2.0:         ( 0.361929s | 65.51% |  5.45% )   ( 0.359701s | 64.75% |  5.39% )       (12x)   << (FUNCTION): main.timep_runFunc.testfunc.g $kk $jj >>
+1.3.0:          ( 0.012205s |  2.20% |  3.37% )   ( 0.010577s |  1.90% |  2.94% )       (12x)    ├─g $kk $jj
+2.3.0:          ( 0.310136s | 56.13% | 85.68% )   ( 0.309450s | 55.71% | 86.02% )       (12x)    │ << (SUBSHELL) >>
+2.4.0:          ( 0.288323s | 52.18% | 92.96% )   ( 0.287389s | 51.73% | 92.87% )       (12x)    │  ├─trap 'echo EXIT' EXIT
+2.4.1:          ( 0.000940s |  0.17% |  0.30% )   ( 0.001102s |  0.19% |  0.35% )       (12x)    │  │ echo "g: $*"
+-432.4.0:       ( 0.020873s |  3.77% |  6.73% )   ( 0.020959s |  3.77% |  6.77% )       (12x)    │  └─TRAP (EXIT): echo EXIT
+2.3.1:          ( 0.039588s |  7.16% | 10.93% )   ( 0.039674s |  7.14% | 11.02% )       (12x)    └─TRAP (RETURN): echo RETURN
+
+TOTAL RUN TIME: 0.552473s
+TOTAL CPU TIME: 0.555453s
 ```
 ***
 

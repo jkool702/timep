@@ -1,0 +1,2100 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="920" onload="init(evt)" viewBox="0 0 4096 920" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+
+                unzoombtn.classList.remove("hide");
+
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="920.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/grok-4/grok.test.bash</text>
+<text id="details" x="10.00" y="905" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="905" > </text>
+<g id="frames">
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (100 us, 0.02%)</title><rect x="2292.0" y="603" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="2295.00" y="617.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (446 us, 0.11%)</title><rect x="2134.8" y="675" width="4.3" height="23.0" fill="rgb(50,104,229)" rx="2" ry="2" />
+<text  x="2137.82" y="689.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965965)_[s] (861 us, 0.20%)</title><rect x="4071.3" y="99" width="8.3" height="23.0" fill="rgb(227.013319608254,140.137999225542,200.775806740992)" rx="2" ry="2" />
+<text  x="4074.33" y="113.5" ></text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (781 us, 0.18%)</title><rect x="3889.6" y="99" width="7.5" height="23.0" fill="rgb(71,148,208)" rx="2" ry="2" />
+<text  x="3892.62" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965898)_[s] (1,158 us, 0.27%)</title><rect x="3427.5" y="267" width="11.1" height="23.0" fill="rgb(228.172834610074,140.69294746901,201.928868467755)" rx="2" ry="2" />
+<text  x="3430.49" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (source)_[f] (1,077 us, 0.25%)</title><rect x="1668.1" y="771" width="10.3" height="23.0" fill="rgb(200.216005889544,139.603927299252,226.442386048805)" rx="2" ry="2" />
+<text  x="1671.07" y="785.5" ></text>
+</g>
+<g >
+<title>'wait %1' (12,252 us, 2.89%)</title><rect x="3501.1" y="243" width="117.9" height="23.0" fill="rgb(130,207,122)" rx="2" ry="2" />
+<text  x="3504.09" y="257.5" >'wait %1'</text>
+</g>
+<g >
+<title>'((i++))' (216 us, 0.05%)</title><rect x="1319.4" y="771" width="2.1" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="1322.39" y="785.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (1,754 us, 0.41%)</title><rect x="2724.4" y="459" width="16.9" height="23.0" fill="rgb(86,174,188)" rx="2" ry="2" />
+<text  x="2727.38" y="473.5" ></text>
+</g>
+<g >
+<title>'case $RANDOM in ' (81 us, 0.02%)</title><rect x="1679.3" y="747" width="0.8" height="23.0" fill="rgb(9,9,253)" rx="2" ry="2" />
+<text  x="1682.30" y="761.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965905)_[s] (43,568 us, 10.29%)</title><rect x="3666.6" y="195" width="419.4" height="23.0" fill="rgb(225.600457286684,148.09257195158,201.54628597579)" rx="2" ry="2" />
+<text  x="3669.60" y="209.5" >SUBSHELL (965905)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Input to coproc&quot; 1&gt;&amp;3' (85 us, 0.02%)</title><rect x="762.2" y="795" width="0.8" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="765.22" y="809.5" ></text>
+</g>
+<g >
+<title>'chmod +x /tmp/dynamic.sh' (2,230 us, 0.53%)</title><rect x="1225.2" y="771" width="21.4" height="23.0" fill="rgb(89,177,185)" rx="2" ry="2" />
+<text  x="1228.17" y="785.5" >'..</text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (76 us, 0.02%)</title><rect x="3401.8" y="267" width="0.8" height="23.0" fill="rgb(5,4,254)" rx="2" ry="2" />
+<text  x="3404.82" y="281.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (484 us, 0.11%)</title><rect x="3870.1" y="99" width="4.6" height="23.0" fill="rgb(56,118,223)" rx="2" ry="2" />
+<text  x="3873.09" y="113.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (123 us, 0.03%)</title><rect x="1638.4" y="747" width="1.2" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="1641.37" y="761.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (125 us, 0.03%)</title><rect x="2937.3" y="387" width="1.2" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="2940.29" y="401.5" ></text>
+</g>
+<g >
+<title>'read num' (549 us, 0.13%)</title><rect x="3123.9" y="363" width="5.3" height="23.0" fill="rgb(61,128,218)" rx="2" ry="2" />
+<text  x="3126.87" y="377.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (80 us, 0.02%)</title><rect x="3825.3" y="123" width="0.8" height="23.0" fill="rgb(7,7,254)" rx="2" ry="2" />
+<text  x="3828.32" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965866)_[s] (852 us, 0.20%)</title><rect x="2685.3" y="531" width="8.2" height="23.0" fill="rgb(225.277589834921,139.607113476751,199.05193380691)" rx="2" ry="2" />
+<text  x="2688.34" y="545.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;&quot;${COPROC[1]}&quot;' (92 us, 0.02%)</title><rect x="761.3" y="795" width="0.9" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="764.34" y="809.5" ></text>
+</g>
+<g >
+<title>'kill -USR1 $$' (88 us, 0.02%)</title><rect x="2917.9" y="411" width="0.8" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<text  x="2920.90" y="425.5" ></text>
+</g>
+<g >
+<title>'TRAP (USR1): echo &quot;USR1 trap&quot;\, ( ( echo &quot;Nested in USR1&quot; &amp; ) )' (8,676 us, 2.05%)</title><rect x="764.1" y="795" width="83.5" height="23.0" fill="rgb(106,197,160)" rx="2" ry="2" />
+<text  x="767.13" y="809.5" >'TRAP (USR1)..</text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (6,378 us, 1.51%)</title><rect x="1606.7" y="795" width="61.4" height="23.0" fill="rgb(199.881895912704,144.763791825409,224.685042751987)" rx="2" ry="2" />
+<text  x="1609.67" y="809.5" >FUNCTION..</text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (80 us, 0.02%)</title><rect x="1625.2" y="771" width="0.8" height="23.0" fill="rgb(7,7,254)" rx="2" ry="2" />
+<text  x="1628.20" y="785.5" ></text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (159 us, 0.04%)</title><rect x="2332.1" y="603" width="1.5" height="23.0" fill="rgb(25,43,247)" rx="2" ry="2" />
+<text  x="2335.06" y="617.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (118 us, 0.03%)</title><rect x="1607.5" y="771" width="1.2" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="1610.54" y="785.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (107 us, 0.03%)</title><rect x="3142.4" y="339" width="1.0" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="3145.37" y="353.5" ></text>
+</g>
+<g >
+<title>'wait' (28,336 us, 6.69%)</title><rect x="1333.9" y="771" width="272.8" height="23.0" fill="rgb(254,0,0)" rx="2" ry="2" />
+<text  x="1336.90" y="785.5" >'wait'</text>
+</g>
+<g >
+<title>'wait %1' (16,525 us, 3.90%)</title><rect x="2964.8" y="387" width="159.1" height="23.0" fill="rgb(174,166,51)" rx="2" ry="2" />
+<text  x="2967.80" y="401.5" >'wait %1'</text>
+</g>
+<g >
+<title>'((i=0))' (101 us, 0.02%)</title><rect x="3472.0" y="243" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3475.03" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965811)_[s] (1,288 us, 0.30%)</title><rect x="1626.0" y="771" width="12.4" height="23.0" fill="rgb(228.172834610074,140.69294746901,201.928868467755)" rx="2" ry="2" />
+<text  x="1628.97" y="785.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (84 us, 0.02%)</title><rect x="2110.4" y="699" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="2113.41" y="713.5" ></text>
+</g>
+<g >
+<title>'((i++))' (371 us, 0.09%)</title><rect x="2326.9" y="603" width="3.6" height="23.0" fill="rgb(42,83,236)" rx="2" ry="2" />
+<text  x="2329.94" y="617.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (13,585 us, 3.21%)</title><rect x="1826.0" y="795" width="130.8" height="23.0" fill="rgb(200.82816282914,146.656325658281,225.205489556027)" rx="2" ry="2" />
+<text  x="1828.98" y="809.5" >FUNCTION (recursive_..</text>
+</g>
+<g >
+<title>'read num' (588 us, 0.14%)</title><rect x="3389.1" y="291" width="5.7" height="23.0" fill="rgb(65,137,214)" rx="2" ry="2" />
+<text  x="3392.15" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (165 us, 0.04%)</title><rect x="3494.2" y="243" width="1.6" height="23.0" fill="rgb(27,47,246)" rx="2" ry="2" />
+<text  x="3497.17" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (560 us, 0.13%)</title><rect x="3394.8" y="291" width="5.4" height="23.0" fill="rgb(63,131,217)" rx="2" ry="2" />
+<text  x="3397.81" y="305.5" ></text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (80 us, 0.02%)</title><rect x="2095.6" y="699" width="0.8" height="23.0" fill="rgb(7,7,254)" rx="2" ry="2" />
+<text  x="2098.62" y="713.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (253 us, 0.06%)</title><rect x="2269.1" y="651" width="2.4" height="23.0" fill="rgb(34,64,242)" rx="2" ry="2" />
+<text  x="2272.06" y="665.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965884)_[s] (99,114 us, 23.41%)</title><rect x="3131.9" y="387" width="954.1" height="23.0" fill="rgb(226.615120053447,148.42280925728,202.514750287505)" rx="2" ry="2" />
+<text  x="3134.89" y="401.5" >SUBSHELL (965884)_[s]</text>
+</g>
+<g >
+<title>'continue' (223 us, 0.05%)</title><rect x="1834.6" y="747" width="2.1" height="23.0" fill="rgb(30,55,244)" rx="2" ry="2" />
+<text  x="1837.57" y="761.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (404 us, 0.10%)</title><rect x="3155.1" y="315" width="3.9" height="23.0" fill="rgb(47,96,231)" rx="2" ry="2" />
+<text  x="3158.13" y="329.5" ></text>
+</g>
+<g >
+<title>'read num' (583 us, 0.14%)</title><rect x="4071.3" y="75" width="5.6" height="23.0" fill="rgb(64,134,215)" rx="2" ry="2" />
+<text  x="4074.33" y="89.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (47,967 us, 11.33%)</title><rect x="3624.3" y="219" width="461.7" height="23.0" fill="rgb(202.070949304363,148.0726248573,226.129608711471)" rx="2" ry="2" />
+<text  x="3627.25" y="233.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'true' (78 us, 0.02%)</title><rect x="865.8" y="795" width="0.8" height="23.0" fill="rgb(5,4,254)" rx="2" ry="2" />
+<text  x="868.81" y="809.5" ></text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (512 us, 0.12%)</title><rect x="2761.2" y="459" width="5.0" height="23.0" fill="rgb(58,121,222)" rx="2" ry="2" />
+<text  x="2764.24" y="473.5" ></text>
+</g>
+<g >
+<title>'declare -a global_array=(1 2 3 4 5)' (85 us, 0.02%)</title><rect x="10.0" y="819" width="0.8" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="13.00" y="833.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Nested in sourced&quot; (&amp;)' (504 us, 0.12%)</title><rect x="1956.8" y="747" width="4.8" height="23.0" fill="rgb(57,120,222)" rx="2" ry="2" />
+<text  x="1959.75" y="761.5" ></text>
+</g>
+<g >
+<title>'((i++))' (435 us, 0.10%)</title><rect x="3187.2" y="315" width="4.1" height="23.0" fill="rgb(49,101,230)" rx="2" ry="2" />
+<text  x="3190.16" y="329.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (85 us, 0.02%)</title><rect x="3426.7" y="267" width="0.8" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="3429.67" y="281.5" ></text>
+</g>
+<g >
+<title>'kill -TERM $$' (407 us, 0.10%)</title><rect x="1299.9" y="771" width="3.9" height="23.0" fill="rgb(48,98,231)" rx="2" ry="2" />
+<text  x="1302.91" y="785.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 2'\''' (478 us, 0.11%)</title><rect x="2105.8" y="699" width="4.6" height="23.0" fill="rgb(55,116,224)" rx="2" ry="2" />
+<text  x="2108.81" y="713.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Sourced dynamic script&quot;' (513 us, 0.12%)</title><rect x="1668.1" y="747" width="4.9" height="23.0" fill="rgb(59,123,221)" rx="2" ry="2" />
+<text  x="1671.07" y="761.5" ></text>
+</g>
+<g >
+<title>'(( i % 2 == 0 ))' (220 us, 0.05%)</title><rect x="1321.5" y="771" width="2.1" height="23.0" fill="rgb(30,55,244)" rx="2" ry="2" />
+<text  x="1324.47" y="785.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965889)_[s] (442 us, 0.10%)</title><rect x="3150.9" y="339" width="4.2" height="23.0" fill="rgb(225.840037619645,139.526548973796,199.596071477326)" rx="2" ry="2" />
+<text  x="3153.87" y="353.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (161 us, 0.04%)</title><rect x="2148.4" y="675" width="1.6" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="2151.41" y="689.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Sourced loop: $val&quot;' (249 us, 0.06%)</title><rect x="1676.0" y="747" width="2.4" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="1679.04" y="761.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965875)_[s] (641 us, 0.15%)</title><rect x="2891.5" y="459" width="6.2" height="23.0" fill="rgb(224.690678850564,139.008559447349,198.46145862509)" rx="2" ry="2" />
+<text  x="2894.54" y="473.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (909 us, 0.21%)</title><rect x="1303.8" y="795" width="8.8" height="23.0" fill="rgb(197.492910660869,139.985821321738,223.371100863478)" rx="2" ry="2" />
+<text  x="1306.82" y="809.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965851)_[s] (361 us, 0.09%)</title><rect x="1295.6" y="795" width="3.4" height="23.0" fill="rgb(224.673639124431,138.943349726189,198.429672982112)" rx="2" ry="2" />
+<text  x="1298.56" y="809.5" ></text>
+</g>
+<g >
+<title>all (423,420 us, 100%)</title><rect x="10.0" y="867" width="4076.0" height="23.0" fill="rgb(56,118,223)" rx="2" ry="2" />
+<text  x="13.00" y="881.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965823)_[s] (539 us, 0.13%)</title><rect x="1961.6" y="747" width="5.2" height="23.0" fill="rgb(224.109981851678,139.016724311018,197.88260795216)" rx="2" ry="2" />
+<text  x="1964.60" y="761.5" ></text>
+</g>
+<g >
+<title>'sleep 2' (2,257 us, 0.53%)</title><rect x="1176.7" y="771" width="21.8" height="23.0" fill="rgb(90,180,183)" rx="2" ry="2" />
+<text  x="1179.73" y="785.5" >'..</text>
+</g>
+<g >
+<title>'kill -USR1 $$' (89 us, 0.02%)</title><rect x="3642.5" y="195" width="0.8" height="23.0" fill="rgb(15,21,251)" rx="2" ry="2" />
+<text  x="3645.48" y="209.5" ></text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (166 us, 0.04%)</title><rect x="3193.0" y="315" width="1.6" height="23.0" fill="rgb(27,48,246)" rx="2" ry="2" />
+<text  x="3195.96" y="329.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Deep nest level 3&quot;' (107 us, 0.03%)</title><rect x="1966.8" y="723" width="1.0" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1969.79" y="737.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965805)_[s] (13,383 us, 3.16%)</title><rect x="1966.8" y="747" width="128.8" height="23.0" fill="rgb(225.62420046911,146.200742478184,201.144367526701)" rx="2" ry="2" />
+<text  x="1969.79" y="761.5" >SUBSHELL (965805)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (965876)_[s] (119,329 us, 28.18%)</title><rect x="2937.3" y="411" width="1148.7" height="23.0" fill="rgb(226.25340341285,148.531123751295,202.297906256891)" rx="2" ry="2" />
+<text  x="2940.29" y="425.5" >SUBSHELL (965876)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (965825)_[s] (202,778 us, 47.89%)</title><rect x="2134.0" y="699" width="1952.0" height="23.0" fill="rgb(225.791900055569,148.788727474795,201.894363737398)" rx="2" ry="2" />
+<text  x="2136.98" y="713.5" >SUBSHELL (965825)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (main)_[f] (345,957 us, 81.71%)</title><rect x="755.7" y="819" width="3330.3" height="23.0" fill="rgb(201.94345012536,148.88690025072,225.818897568948)" rx="2" ry="2" />
+<text  x="758.69" y="833.5" >FUNCTION (main)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (965961)_[s] (663 us, 0.16%)</title><rect x="4079.6" y="99" width="6.4" height="23.0" fill="rgb(224.121743903252,139.060887485794,197.904356651295)" rx="2" ry="2" />
+<text  x="4082.62" y="113.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (71,242 us, 16.83%)</title><rect x="3400.2" y="291" width="685.8" height="23.0" fill="rgb(201.727433327278,148.454866654556,225.700088330003)" rx="2" ry="2" />
+<text  x="3403.20" y="305.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'read num' (275 us, 0.06%)</title><rect x="3619.0" y="219" width="2.7" height="23.0" fill="rgb(36,68,240)" rx="2" ry="2" />
+<text  x="3622.03" y="233.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 8'\''' (1,535 us, 0.36%)</title><rect x="3411.9" y="267" width="14.8" height="23.0" fill="rgb(79,162,198)" rx="2" ry="2" />
+<text  x="3414.89" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (82 us, 0.02%)</title><rect x="2483.2" y="555" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="2486.24" y="569.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (358 us, 0.08%)</title><rect x="3866.6" y="99" width="3.5" height="23.0" fill="rgb(39,77,238)" rx="2" ry="2" />
+<text  x="3869.64" y="113.5" ></text>
+</g>
+<g >
+<title>'wait %1' (19,458 us, 4.60%)</title><rect x="3201.8" y="315" width="187.3" height="23.0" fill="rgb(210,82,12)" rx="2" ry="2" />
+<text  x="3204.84" y="329.5" >'wait %1'</text>
+</g>
+<g >
+<title>'wait %1' (15,356 us, 3.63%)</title><rect x="2537.5" y="531" width="147.8" height="23.0" fill="rgb(166,180,63)" rx="2" ry="2" />
+<text  x="2540.52" y="545.5" >'wait %1'</text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (640 us, 0.15%)</title><rect x="2335.1" y="603" width="6.2" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2338.15" y="617.5" ></text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (263 us, 0.06%)</title><rect x="4079.6" y="51" width="2.5" height="23.0" fill="rgb(34,65,241)" rx="2" ry="2" />
+<text  x="4082.62" y="65.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (87 us, 0.02%)</title><rect x="2134.0" y="675" width="0.8" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<text  x="2136.98" y="689.5" ></text>
+</g>
+<g >
+<title>'for val in &quot;${local_arr[@]}&quot;' (217 us, 0.05%)</title><rect x="1673.9" y="747" width="2.1" height="23.0" fill="rgb(30,55,244)" rx="2" ry="2" />
+<text  x="1676.95" y="761.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965934)_[s] (459 us, 0.11%)</title><rect x="3845.5" y="123" width="4.5" height="23.0" fill="rgb(225.840037619645,139.526548973796,199.596071477326)" rx="2" ry="2" />
+<text  x="3848.53" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc echo: $line&quot;' (90 us, 0.02%)</title><rect x="1299.0" y="771" width="0.9" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="1302.04" y="785.5" ></text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (82 us, 0.02%)</title><rect x="2474.3" y="555" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="2477.33" y="569.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965829)_[s] (422 us, 0.10%)</title><rect x="2111.2" y="699" width="4.1" height="23.0" fill="rgb(225.256838372038,139.526548973796,199.012872229719)" rx="2" ry="2" />
+<text  x="2114.22" y="713.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (163 us, 0.04%)</title><rect x="2759.7" y="459" width="1.5" height="23.0" fill="rgb(27,47,246)" rx="2" ry="2" />
+<text  x="2762.67" y="473.5" ></text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (84 us, 0.02%)</title><rect x="3411.1" y="267" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="3414.09" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965839)_[s] (2,485 us, 0.59%)</title><rect x="2292.0" y="627" width="23.9" height="23.0" fill="rgb(224.382897274532,141.603323239008,198.868645003309)" rx="2" ry="2" />
+<text  x="2295.00" y="641.5" >SU..</text>
+</g>
+<g >
+<title>SUBSHELL (965851)_[s] (2,266 us, 0.54%)</title><rect x="1246.6" y="795" width="21.8" height="23.0" fill="rgb(229.922432352895,141.276146716617,203.678466210576)" rx="2" ry="2" />
+<text  x="1249.63" y="809.5" >S..</text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (169 us, 0.04%)</title><rect x="2952.9" y="387" width="1.7" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="2955.93" y="401.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (466 us, 0.11%)</title><rect x="3643.3" y="171" width="4.5" height="23.0" fill="rgb(53,111,226)" rx="2" ry="2" />
+<text  x="3646.34" y="185.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;INT trap&quot;, kill -USR1 $$ &amp; '\'' INT' (20,703 us, 4.89%)</title><rect x="210.8" y="819" width="199.3" height="23.0" fill="rgb(229,31,2)" rx="2" ry="2" />
+<text  x="213.82" y="833.5" >'trap '\''echo "INT trap", kill..</text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (82 us, 0.02%)</title><rect x="2484.0" y="555" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="2487.03" y="569.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965834)_[s] (188,493 us, 44.52%)</title><rect x="2271.5" y="675" width="1814.5" height="23.0" fill="rgb(225.790581953862,148.783934377678,201.891967188839)" rx="2" ry="2" />
+<text  x="2274.50" y="689.5" >SUBSHELL (965834)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (89 us, 0.02%)</title><rect x="3634.5" y="195" width="0.9" height="23.0" fill="rgb(15,21,251)" rx="2" ry="2" />
+<text  x="3637.52" y="209.5" ></text>
+</g>
+<g >
+<title>FUNCTION (dynamic_script)_[f] (5,005 us, 1.18%)</title><rect x="1198.5" y="795" width="48.1" height="23.0" fill="rgb(199.815263369561,144.630526739122,224.648394853258)" rx="2" ry="2" />
+<text  x="1201.45" y="809.5" >FUNCTI..</text>
+</g>
+<g >
+<title>SUBSHELL (965861)_[s] (448 us, 0.11%)</title><rect x="2490.6" y="555" width="4.3" height="23.0" fill="rgb(225.840037619645,139.526548973796,199.596071477326)" rx="2" ry="2" />
+<text  x="2493.57" y="569.5" ></text>
+</g>
+<g >
+<title>'((i++))' (405 us, 0.10%)</title><rect x="2949.0" y="387" width="3.9" height="23.0" fill="rgb(48,98,231)" rx="2" ry="2" />
+<text  x="2952.03" y="401.5" ></text>
+</g>
+<g >
+<title>'((i++))' (366 us, 0.09%)</title><rect x="2144.9" y="675" width="3.5" height="23.0" fill="rgb(42,83,236)" rx="2" ry="2" />
+<text  x="2147.89" y="689.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965807)_[s] (3,085 us, 0.73%)</title><rect x="1638.4" y="771" width="29.7" height="23.0" fill="rgb(224.390052403807,141.629823717804,198.881762740313)" rx="2" ry="2" />
+<text  x="1641.37" y="785.5" >SUB..</text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (586 us, 0.14%)</title><rect x="3402.6" y="267" width="5.6" height="23.0" fill="rgb(65,136,214)" rx="2" ry="2" />
+<text  x="3405.56" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (134 us, 0.03%)</title><rect x="2703.2" y="483" width="1.3" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="2706.17" y="497.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (161 us, 0.04%)</title><rect x="847.6" y="795" width="1.6" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="850.65" y="809.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (77 us, 0.02%)</title><rect x="3135.3" y="339" width="0.7" height="23.0" fill="rgb(5,4,254)" rx="2" ry="2" />
+<text  x="3138.29" y="353.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;TERM trap&quot;, ( eval &quot;echo eval in trap&quot; )'\'' TERM' (18,054 us, 4.26%)</title><rect x="410.1" y="819" width="173.8" height="23.0" fill="rgb(192,130,29)" rx="2" ry="2" />
+<text  x="413.11" y="833.5" >'trap '\''echo "TERM trap",..</text>
+</g>
+<g >
+<title>SUBSHELL (965895)_[s] (1,148 us, 0.27%)</title><rect x="3389.1" y="315" width="11.1" height="23.0" fill="rgb(227.02212668861,140.174144951171,200.792870459182)" rx="2" ry="2" />
+<text  x="3392.15" y="329.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (82 us, 0.02%)</title><rect x="2715.8" y="483" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="2718.76" y="497.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (27,254 us, 6.44%)</title><rect x="3823.6" y="147" width="262.4" height="23.0" fill="rgb(201.341520572526,147.683041145051,225.487836314889)" rx="2" ry="2" />
+<text  x="3826.64" y="161.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (91 us, 0.02%)</title><rect x="3635.4" y="195" width="0.9" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="3638.38" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (169 us, 0.04%)</title><rect x="3888.0" y="99" width="1.6" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="3891.00" y="113.5" ></text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (172 us, 0.04%)</title><rect x="2954.6" y="387" width="1.6" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="2957.55" y="401.5" ></text>
+</g>
+<g >
+<title>'bg %1' (136 us, 0.03%)</title><rect x="1331.8" y="771" width="1.3" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="1334.82" y="785.5" ></text>
+</g>
+<g >
+<title>'read num' (263 us, 0.06%)</title><rect x="2266.5" y="651" width="2.6" height="23.0" fill="rgb(34,65,241)" rx="2" ry="2" />
+<text  x="2269.53" y="665.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965806)_[s] (13,585 us, 3.21%)</title><rect x="1826.0" y="771" width="130.8" height="23.0" fill="rgb(225.205489556027,146.656325658281,200.82816282914)" rx="2" ry="2" />
+<text  x="1828.98" y="785.5" >SUBSHELL (965806)_[s]</text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (719 us, 0.17%)</title><rect x="2716.6" y="459" width="6.9" height="23.0" fill="rgb(69,145,209)" rx="2" ry="2" />
+<text  x="2719.55" y="473.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965803)_[s] (13,383 us, 3.16%)</title><rect x="1966.8" y="795" width="128.8" height="23.0" fill="rgb(225.62420046911,146.200742478184,201.144367526701)" rx="2" ry="2" />
+<text  x="1969.79" y="809.5" >SUBSHELL (965803)_[s]</text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (117 us, 0.03%)</title><rect x="2693.5" y="483" width="1.2" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="2696.54" y="497.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Nest level 2&quot;' (90 us, 0.02%)</title><rect x="1678.4" y="747" width="0.9" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="1681.43" y="761.5" ></text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (154 us, 0.04%)</title><rect x="1841.7" y="747" width="1.5" height="23.0" fill="rgb(24,39,248)" rx="2" ry="2" />
+<text  x="1844.74" y="761.5" ></text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (88 us, 0.02%)</title><rect x="3400.2" y="267" width="0.8" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<text  x="3403.20" y="281.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (140 us, 0.03%)</title><rect x="3633.2" y="195" width="1.3" height="23.0" fill="rgb(24,39,248)" rx="2" ry="2" />
+<text  x="3636.18" y="209.5" ></text>
+</g>
+<g >
+<title>'wait %1' (13,081 us, 3.09%)</title><rect x="2341.3" y="603" width="125.9" height="23.0" fill="rgb(151,197,88)" rx="2" ry="2" />
+<text  x="2344.31" y="617.5" >'wait %1'</text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (159 us, 0.04%)</title><rect x="2529.5" y="531" width="1.5" height="23.0" fill="rgb(25,43,247)" rx="2" ry="2" />
+<text  x="2532.47" y="545.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (87 us, 0.02%)</title><rect x="1826.0" y="747" width="0.8" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<text  x="1828.98" y="761.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (384 us, 0.09%)</title><rect x="2746.9" y="459" width="3.7" height="23.0" fill="rgb(44,89,234)" rx="2" ry="2" />
+<text  x="2749.92" y="473.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (110 us, 0.03%)</title><rect x="2898.8" y="411" width="1.0" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="2901.78" y="425.5" ></text>
+</g>
+<g >
+<title>'read num' (263 us, 0.06%)</title><rect x="1961.6" y="723" width="2.5" height="23.0" fill="rgb(34,65,241)" rx="2" ry="2" />
+<text  x="1964.60" y="737.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (539 us, 0.13%)</title><rect x="1961.6" y="795" width="5.2" height="23.0" fill="rgb(197.88260795216,139.016724311018,224.109981851678)" rx="2" ry="2" />
+<text  x="1964.60" y="809.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 9'\''' (565 us, 0.13%)</title><rect x="3636.3" y="195" width="5.4" height="23.0" fill="rgb(64,133,216)" rx="2" ry="2" />
+<text  x="3639.26" y="209.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (75 us, 0.02%)</title><rect x="2475.9" y="555" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2478.88" y="569.5" ></text>
+</g>
+<g >
+<title>'((i++))' (363 us, 0.09%)</title><rect x="1836.7" y="747" width="3.5" height="23.0" fill="rgb(40,80,237)" rx="2" ry="2" />
+<text  x="1839.72" y="761.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965902)_[s] (47,967 us, 11.33%)</title><rect x="3624.3" y="243" width="461.7" height="23.0" fill="rgb(226.129608711471,148.0726248573,202.070949304363)" rx="2" ry="2" />
+<text  x="3627.25" y="257.5" >SUBSHELL (965902)_[s]</text>
+</g>
+<g >
+<title>'fg %1' (80 us, 0.02%)</title><rect x="1333.1" y="771" width="0.8" height="23.0" fill="rgb(7,7,254)" rx="2" ry="2" />
+<text  x="1336.13" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (158 us, 0.04%)</title><rect x="1840.2" y="747" width="1.5" height="23.0" fill="rgb(24,41,247)" rx="2" ry="2" />
+<text  x="1843.21" y="761.5" ></text>
+</g>
+<g >
+<title>'((i++))' (387 us, 0.09%)</title><rect x="3678.1" y="171" width="3.8" height="23.0" fill="rgb(44,90,234)" rx="2" ry="2" />
+<text  x="3681.13" y="185.5" ></text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (82 us, 0.02%)</title><rect x="2105.0" y="699" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="2108.02" y="713.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (2,385 us, 0.56%)</title><rect x="2293.0" y="603" width="22.9" height="23.0" fill="rgb(93,183,179)" rx="2" ry="2" />
+<text  x="2295.96" y="617.5" >'..</text>
+</g>
+<g >
+<title>SUBSHELL (965804)_[s] (13,383 us, 3.16%)</title><rect x="1966.8" y="771" width="128.8" height="23.0" fill="rgb(225.62420046911,146.200742478184,201.144367526701)" rx="2" ry="2" />
+<text  x="1969.79" y="785.5" >SUBSHELL (965804)_[s]</text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (83 us, 0.02%)</title><rect x="2271.5" y="627" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="2274.50" y="641.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965858)_[s] (1,658 us, 0.39%)</title><rect x="2494.9" y="555" width="15.9" height="23.0" fill="rgb(223.558024868042,140.665544974698,197.832772487349)" rx="2" ry="2" />
+<text  x="2497.89" y="569.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (97 us, 0.02%)</title><rect x="2481.3" y="555" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="2484.27" y="569.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965887)_[s] (94,604 us, 22.34%)</title><rect x="3175.3" y="339" width="910.7" height="23.0" fill="rgb(225.724744795988,148.544526530867,201.772263265433)" rx="2" ry="2" />
+<text  x="3178.31" y="353.5" >SUBSHELL (965887)_[s]</text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (170 us, 0.04%)</title><rect x="3886.4" y="99" width="1.6" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="3889.36" y="113.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (89 us, 0.02%)</title><rect x="3837.6" y="123" width="0.8" height="23.0" fill="rgb(15,21,251)" rx="2" ry="2" />
+<text  x="3840.57" y="137.5" ></text>
+</g>
+<g >
+<title>'jobs -p' (393 us, 0.09%)</title><rect x="1128.7" y="771" width="3.8" height="23.0" fill="rgb(45,93,233)" rx="2" ry="2" />
+<text  x="1131.75" y="785.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (78 us, 0.02%)</title><rect x="2272.3" y="627" width="0.7" height="23.0" fill="rgb(5,4,254)" rx="2" ry="2" />
+<text  x="2275.29" y="641.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965826)_[s] (1,943 us, 0.46%)</title><rect x="2115.3" y="699" width="18.7" height="23.0" fill="rgb(224.051665387698,140.376538472957,198.261386544114)" rx="2" ry="2" />
+<text  x="2118.28" y="713.5" >S..</text>
+</g>
+<g >
+<title>'read line' (337 us, 0.08%)</title><rect x="1292.3" y="771" width="3.3" height="23.0" fill="rgb(39,76,238)" rx="2" ry="2" />
+<text  x="1295.32" y="785.5" ></text>
+</g>
+<g >
+<title>'sleep 2' (1,162 us, 0.27%)</title><rect x="2084.4" y="699" width="11.2" height="23.0" fill="rgb(75,156,202)" rx="2" ry="2" />
+<text  x="2087.44" y="713.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (268 us, 0.06%)</title><rect x="3647.8" y="171" width="2.6" height="23.0" fill="rgb(36,68,240)" rx="2" ry="2" />
+<text  x="3650.83" y="185.5" ></text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (83 us, 0.02%)</title><rect x="2911.3" y="411" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="2914.28" y="425.5" ></text>
+</g>
+<g >
+<title>'continue' (317 us, 0.07%)</title><rect x="3483.6" y="243" width="3.0" height="23.0" fill="rgb(38,74,239)" rx="2" ry="2" />
+<text  x="3486.57" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (3,105 us, 0.73%)</title><rect x="3442.1" y="243" width="29.9" height="23.0" fill="rgb(98,189,172)" rx="2" ry="2" />
+<text  x="3445.14" y="257.5" >'sl..</text>
+</g>
+<g >
+<title>SUBSHELL (965857)_[s] (163,629 us, 38.64%)</title><rect x="2510.8" y="555" width="1575.2" height="23.0" fill="rgb(225.778536576334,148.740133004851,201.870066502426)" rx="2" ry="2" />
+<text  x="2513.85" y="569.5" >SUBSHELL (965857)_[s]</text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (109 us, 0.03%)</title><rect x="3409.2" y="267" width="1.0" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="3412.19" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965821)_[s] (206,763 us, 48.83%)</title><rect x="2095.6" y="747" width="1990.4" height="23.0" fill="rgb(225.796824461146,148.806634404166,201.903317202083)" rx="2" ry="2" />
+<text  x="2098.62" y="761.5" >SUBSHELL (965821)_[s]</text>
+</g>
+<g >
+<title>'((i=0))' (127 us, 0.03%)</title><rect x="2741.3" y="459" width="1.2" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="2744.26" y="473.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965841)_[s] (426 us, 0.10%)</title><rect x="2287.9" y="627" width="4.1" height="23.0" fill="rgb(225.256838372038,139.526548973796,199.012872229719)" rx="2" ry="2" />
+<text  x="2290.90" y="641.5" ></text>
+</g>
+<g >
+<title>'rm -f /tmp/dynamic.sh' (1,713 us, 0.40%)</title><rect x="1271.9" y="771" width="16.5" height="23.0" fill="rgb(85,172,190)" rx="2" ry="2" />
+<text  x="1274.93" y="785.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (2,266 us, 0.54%)</title><rect x="1246.6" y="771" width="21.8" height="23.0" fill="rgb(91,181,181)" rx="2" ry="2" />
+<text  x="1249.63" y="785.5" >'..</text>
+</g>
+<g >
+<title>SUBSHELL (965854)_[s] (393 us, 0.09%)</title><rect x="1128.7" y="795" width="3.8" height="23.0" fill="rgb(225.256838372038,138.943349726189,199.012872229719)" rx="2" ry="2" />
+<text  x="1131.75" y="809.5" ></text>
+</g>
+<g >
+<title>'$'\''cat &lt;&lt;\'\''EOF\'\'' &gt; /tmp/dynamic.sh\n#!/bin/bash\necho &quot;Sourced dynamic script&quot;\n( ( echo &quot;Nested in sourced&quot; &amp; ) )\ndeclare -a local_arr=(a b c)\nfor val in &quot;${local_arr[@]}&quot;, do\n    echo &quot;Sourced loop: $val&quot;\ndone\nEOF\n' (2,701 us, 0.64%)</title><rect x="1199.2" y="771" width="26.0" height="23.0" fill="rgb(95,185,177)" rx="2" ry="2" />
+<text  x="1202.17" y="785.5" >'$..</text>
+</g>
+<g >
+<title>'select opt in a b quit' (101 us, 0.02%)</title><rect x="1681.1" y="747" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1684.09" y="761.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (206,763 us, 48.83%)</title><rect x="2095.6" y="795" width="1990.4" height="23.0" fill="rgb(201.903317202083,148.806634404166,225.796824461146)" rx="2" ry="2" />
+<text  x="2098.62" y="809.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (481 us, 0.11%)</title><rect x="2273.8" y="627" width="4.6" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="2276.76" y="641.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 3'\''' (468 us, 0.11%)</title><rect x="2281.8" y="627" width="4.5" height="23.0" fill="rgb(53,111,226)" rx="2" ry="2" />
+<text  x="2284.84" y="641.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (106 us, 0.03%)</title><rect x="2695.8" y="483" width="1.0" height="23.0" fill="rgb(20,32,249)" rx="2" ry="2" />
+<text  x="2698.76" y="497.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (363 us, 0.09%)</title><rect x="1831.1" y="747" width="3.5" height="23.0" fill="rgb(40,80,237)" rx="2" ry="2" />
+<text  x="1834.08" y="761.5" ></text>
+</g>
+<g >
+<title>'main &quot;$@&quot;' (69 us, 0.02%)</title><rect x="755.7" y="795" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="758.69" y="809.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965888)_[s] (2,096 us, 0.50%)</title><rect x="3155.1" y="339" width="20.2" height="23.0" fill="rgb(225.371808478093,139.972903503186,199.229286546999)" rx="2" ry="2" />
+<text  x="3158.13" y="353.5" >S..</text>
+</g>
+<g >
+<title>'kill -STOP $pid' (84 us, 0.02%)</title><rect x="1331.0" y="771" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="1334.01" y="785.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (94 us, 0.02%)</title><rect x="2704.5" y="483" width="0.9" height="23.0" fill="rgb(17,25,250)" rx="2" ry="2" />
+<text  x="2707.46" y="497.5" ></text>
+</g>
+<g >
+<title>'wait %1' (18,095 us, 4.27%)</title><rect x="3897.1" y="99" width="174.2" height="23.0" fill="rgb(200,108,20)" rx="2" ry="2" />
+<text  x="3900.14" y="113.5" >'wait %1'</text>
+</g>
+<g >
+<title>'local depth=$1' (81 us, 0.02%)</title><rect x="3401.0" y="267" width="0.8" height="23.0" fill="rgb(9,9,253)" rx="2" ry="2" />
+<text  x="3404.04" y="281.5" ></text>
+</g>
+<g >
+<title>'(( i &lt; 3 ))' (292 us, 0.07%)</title><rect x="1316.6" y="771" width="2.8" height="23.0" fill="rgb(37,73,239)" rx="2" ry="2" />
+<text  x="1319.58" y="785.5" ></text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (106 us, 0.03%)</title><rect x="3624.3" y="195" width="1.0" height="23.0" fill="rgb(20,32,249)" rx="2" ry="2" />
+<text  x="3627.25" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (160 us, 0.04%)</title><rect x="2531.0" y="531" width="1.5" height="23.0" fill="rgb(25,43,247)" rx="2" ry="2" />
+<text  x="2534.00" y="545.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (278 us, 0.07%)</title><rect x="4076.9" y="75" width="2.7" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="4079.94" y="89.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (982 us, 0.23%)</title><rect x="3826.1" y="123" width="9.4" height="23.0" fill="rgb(72,150,206)" rx="2" ry="2" />
+<text  x="3829.09" y="137.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (85 us, 0.02%)</title><rect x="3824.5" y="123" width="0.8" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="3827.50" y="137.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (459 us, 0.11%)</title><rect x="3845.5" y="99" width="4.5" height="23.0" fill="rgb(52,109,227)" rx="2" ry="2" />
+<text  x="3848.53" y="113.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (123,441 us, 29.15%)</title><rect x="2897.7" y="435" width="1188.3" height="23.0" fill="rgb(202.328040847544,148.592001712209,226.269840462297)" rx="2" ry="2" />
+<text  x="2900.71" y="449.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (82 us, 0.02%)</title><rect x="3641.7" y="195" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="3644.69" y="209.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COPROC[0]}&quot; cop_response' (113 us, 0.03%)</title><rect x="763.0" y="795" width="1.1" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="766.04" y="809.5" ></text>
+</g>
+<g >
+<title>'sleep 10 (&amp;)' (396 us, 0.09%)</title><rect x="1326.5" y="771" width="3.8" height="23.0" fill="rgb(46,94,232)" rx="2" ry="2" />
+<text  x="1329.46" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (166 us, 0.04%)</title><rect x="2756.5" y="459" width="1.6" height="23.0" fill="rgb(27,48,246)" rx="2" ry="2" />
+<text  x="2759.51" y="473.5" ></text>
+</g>
+<g >
+<title>'continue' (227 us, 0.05%)</title><rect x="2324.8" y="603" width="2.1" height="23.0" fill="rgb(31,57,243)" rx="2" ry="2" />
+<text  x="2327.76" y="617.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (166 us, 0.04%)</title><rect x="3490.9" y="243" width="1.6" height="23.0" fill="rgb(27,48,246)" rx="2" ry="2" />
+<text  x="3493.93" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965908)_[s] (466 us, 0.11%)</title><rect x="3643.3" y="195" width="4.5" height="23.0" fill="rgb(225.840037619645,139.526548973796,199.596071477326)" rx="2" ry="2" />
+<text  x="3646.34" y="209.5" ></text>
+</g>
+<g >
+<title>'continue' (232 us, 0.05%)</title><rect x="2750.6" y="459" width="2.3" height="23.0" fill="rgb(32,59,243)" rx="2" ry="2" />
+<text  x="2753.62" y="473.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (472 us, 0.11%)</title><rect x="2097.8" y="699" width="4.6" height="23.0" fill="rgb(54,113,225)" rx="2" ry="2" />
+<text  x="2100.84" y="713.5" ></text>
+</g>
+<g >
+<title>'continue' (235 us, 0.06%)</title><rect x="3675.9" y="171" width="2.2" height="23.0" fill="rgb(32,60,243)" rx="2" ry="2" />
+<text  x="3678.87" y="185.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (375 us, 0.09%)</title><rect x="2321.1" y="603" width="3.7" height="23.0" fill="rgb(42,84,235)" rx="2" ry="2" />
+<text  x="2324.15" y="617.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (448 us, 0.11%)</title><rect x="2490.6" y="531" width="4.3" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="2493.57" y="545.5" ></text>
+</g>
+<g >
+<title>'wait' (232 us, 0.05%)</title><rect x="753.5" y="819" width="2.2" height="23.0" fill="rgb(32,59,243)" rx="2" ry="2" />
+<text  x="756.45" y="833.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (94 us, 0.02%)</title><rect x="1608.7" y="771" width="0.9" height="23.0" fill="rgb(17,25,250)" rx="2" ry="2" />
+<text  x="1611.67" y="785.5" ></text>
+</g>
+<g >
+<title>'declare -A global_assoc=([key1]=&quot;value1&quot; [key2]=&quot;value2&quot;)' (96 us, 0.02%)</title><rect x="10.8" y="819" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="13.82" y="833.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (169 us, 0.04%)</title><rect x="2956.2" y="387" width="1.6" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="2959.21" y="401.5" ></text>
+</g>
+<g >
+<title>'kill -USR1 $$' (405 us, 0.10%)</title><rect x="1288.4" y="771" width="3.9" height="23.0" fill="rgb(48,98,231)" rx="2" ry="2" />
+<text  x="1291.42" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (126 us, 0.03%)</title><rect x="2115.3" y="675" width="1.2" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="2118.28" y="689.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965855)_[s] (738 us, 0.17%)</title><rect x="2467.2" y="603" width="7.1" height="23.0" fill="rgb(224.694886365306,139.024661282614,198.46930725836)" rx="2" ry="2" />
+<text  x="2470.23" y="617.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (157 us, 0.04%)</title><rect x="1843.2" y="747" width="1.5" height="23.0" fill="rgb(24,41,247)" rx="2" ry="2" />
+<text  x="1846.22" y="761.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965852)_[s] (405 us, 0.10%)</title><rect x="1288.4" y="795" width="3.9" height="23.0" fill="rgb(225.256838372038,139.526548973796,199.012872229719)" rx="2" ry="2" />
+<text  x="1291.42" y="809.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (518 us, 0.12%)</title><rect x="3176.2" y="315" width="5.0" height="23.0" fill="rgb(60,125,220)" rx="2" ry="2" />
+<text  x="3179.23" y="329.5" ></text>
+</g>
+<g >
+<title>FUNCTION (dynamic_script)_[f] (1,713 us, 0.40%)</title><rect x="1271.9" y="795" width="16.5" height="23.0" fill="rgb(203.095266962969,141.276146716617,229.339233105288)" rx="2" ry="2" />
+<text  x="1274.93" y="809.5" ></text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (723 us, 0.17%)</title><rect x="2957.8" y="387" width="7.0" height="23.0" fill="rgb(70,146,209)" rx="2" ry="2" />
+<text  x="2960.84" y="401.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (206,763 us, 48.83%)</title><rect x="2095.6" y="723" width="1990.4" height="23.0" fill="rgb(201.903317202083,148.806634404166,225.796824461146)" rx="2" ry="2" />
+<text  x="2098.62" y="737.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (965838)_[s] (183,878 us, 43.43%)</title><rect x="2315.9" y="627" width="1770.1" height="23.0" fill="rgb(225.785492638226,148.765427775367,201.882713887683)" rx="2" ry="2" />
+<text  x="2318.92" y="641.5" >SUBSHELL (965838)_[s]</text>
+</g>
+<g >
+<title>'local depth=$1' (84 us, 0.02%)</title><rect x="3625.3" y="195" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="3628.27" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg 1&quot;' (361 us, 0.09%)</title><rect x="1295.6" y="771" width="3.4" height="23.0" fill="rgb(40,79,237)" rx="2" ry="2" />
+<text  x="1298.56" y="785.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (82 us, 0.02%)</title><rect x="2917.1" y="411" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="2920.11" y="425.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (1,682 us, 0.40%)</title><rect x="3650.4" y="171" width="16.2" height="23.0" fill="rgb(83,169,193)" rx="2" ry="2" />
+<text  x="3653.41" y="185.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (389 us, 0.09%)</title><rect x="3672.1" y="171" width="3.8" height="23.0" fill="rgb(44,90,234)" rx="2" ry="2" />
+<text  x="3675.12" y="185.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965852)_[s] (362 us, 0.09%)</title><rect x="1268.4" y="795" width="3.5" height="23.0" fill="rgb(224.673639124431,138.943349726189,198.429672982112)" rx="2" ry="2" />
+<text  x="1271.45" y="809.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 6'\''' (522 us, 0.12%)</title><rect x="2912.1" y="411" width="5.0" height="23.0" fill="rgb(60,126,219)" rx="2" ry="2" />
+<text  x="2915.08" y="425.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (90 us, 0.02%)</title><rect x="1606.7" y="771" width="0.8" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="1609.67" y="785.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (144,650 us, 34.16%)</title><rect x="2693.5" y="507" width="1392.5" height="23.0" fill="rgb(202.346537592829,148.629368874403,226.279929596089)" rx="2" ry="2" />
+<text  x="2696.54" y="521.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'wait %1' (13,024 us, 3.08%)</title><rect x="2766.2" y="459" width="125.3" height="23.0" fill="rgb(144,202,99)" rx="2" ry="2" />
+<text  x="2769.17" y="473.5" >'wait %1'</text>
+</g>
+<g >
+<title>'[[ $opt == quit ]]' (71 us, 0.02%)</title><rect x="1682.1" y="747" width="0.6" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1685.06" y="761.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (72 us, 0.02%)</title><rect x="1305.2" y="771" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1308.23" y="785.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (1,692 us, 0.40%)</title><rect x="3159.0" y="315" width="16.3" height="23.0" fill="rgb(84,171,191)" rx="2" ry="2" />
+<text  x="3162.02" y="329.5" ></text>
+</g>
+<g >
+<title>'continue' (244 us, 0.06%)</title><rect x="3878.6" y="99" width="2.3" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="3881.55" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965904)_[s] (542 us, 0.13%)</title><rect x="3619.0" y="243" width="5.3" height="23.0" fill="rgb(224.10818240371,139.009967893175,197.879280671011)" rx="2" ry="2" />
+<text  x="3622.03" y="257.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 4'\''' (513 us, 0.12%)</title><rect x="2484.8" y="555" width="5.0" height="23.0" fill="rgb(59,123,221)" rx="2" ry="2" />
+<text  x="2487.82" y="569.5" ></text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (605 us, 0.14%)</title><rect x="1844.7" y="747" width="5.9" height="23.0" fill="rgb(66,138,213)" rx="2" ry="2" />
+<text  x="1847.73" y="761.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (96 us, 0.02%)</title><rect x="3175.3" y="315" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="3178.31" y="329.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 1'\''' (1,541 us, 0.36%)</title><rect x="1610.4" y="771" width="14.8" height="23.0" fill="rgb(80,164,197)" rx="2" ry="2" />
+<text  x="1613.37" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Outer eval&quot; (&amp;)' (510 us, 0.12%)</title><rect x="850.8" y="795" width="4.9" height="23.0" fill="rgb(57,120,222)" rx="2" ry="2" />
+<text  x="853.77" y="809.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965770)_[s] (423,420 us, 100.00%)</title><rect x="10.0" y="843" width="4076.0" height="23.0" fill="rgb(225.818743665735,148.886340602673,201.943170301336)" rx="2" ry="2" />
+<text  x="13.00" y="857.5" >SUBSHELL (965770)_[s]</text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (74 us, 0.02%)</title><rect x="2273.0" y="627" width="0.8" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2276.05" y="641.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (454 us, 0.11%)</title><rect x="2316.8" y="603" width="4.3" height="23.0" fill="rgb(52,108,227)" rx="2" ry="2" />
+<text  x="2319.78" y="617.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (551 us, 0.13%)</title><rect x="3626.9" y="195" width="5.3" height="23.0" fill="rgb(62,129,218)" rx="2" ry="2" />
+<text  x="3629.89" y="209.5" ></text>
+</g>
+<g >
+<title>'read num' (328 us, 0.08%)</title><rect x="2891.5" y="435" width="3.2" height="23.0" fill="rgb(38,74,239)" rx="2" ry="2" />
+<text  x="2894.54" y="449.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (625 us, 0.15%)</title><rect x="3473.0" y="243" width="6.0" height="23.0" fill="rgb(66,139,213)" rx="2" ry="2" />
+<text  x="3476.00" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (188,493 us, 44.52%)</title><rect x="2271.5" y="651" width="1814.5" height="23.0" fill="rgb(201.891967188839,148.783934377678,225.790581953862)" rx="2" ry="2" />
+<text  x="2274.50" y="665.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (313 us, 0.07%)</title><rect x="2894.7" y="435" width="3.0" height="23.0" fill="rgb(37,73,239)" rx="2" ry="2" />
+<text  x="2897.70" y="449.5" ></text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (81 us, 0.02%)</title><rect x="2706.2" y="483" width="0.7" height="23.0" fill="rgb(9,9,253)" rx="2" ry="2" />
+<text  x="2709.16" y="497.5" ></text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (83 us, 0.02%)</title><rect x="3144.2" y="339" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="3147.21" y="353.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (203 us, 0.05%)</title><rect x="2899.8" y="411" width="2.0" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="2902.84" y="425.5" ></text>
+</g>
+<g >
+<title>'kill -USR1 $$' (83 us, 0.02%)</title><rect x="2287.1" y="627" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="2290.10" y="641.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965842)_[s] (337 us, 0.08%)</title><rect x="1292.3" y="795" width="3.3" height="23.0" fill="rgb(224.673639124431,138.943349726189,198.429672982112)" rx="2" ry="2" />
+<text  x="1295.32" y="809.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965806)_[s] (206,763 us, 48.83%)</title><rect x="2095.6" y="771" width="1990.4" height="23.0" fill="rgb(225.796824461146,148.806634404166,201.903317202083)" rx="2" ry="2" />
+<text  x="2098.62" y="785.5" >SUBSHELL (965806)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (691 us, 0.16%)</title><rect x="1305.9" y="771" width="6.7" height="23.0" fill="rgb(69,144,210)" rx="2" ry="2" />
+<text  x="1308.92" y="785.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965867)_[s] (139,693 us, 32.99%)</title><rect x="2741.3" y="483" width="1344.7" height="23.0" fill="rgb(226.268736179612,148.587911776342,202.326016329289)" rx="2" ry="2" />
+<text  x="2744.26" y="497.5" >SUBSHELL (965867)_[s]</text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (111 us, 0.03%)</title><rect x="2897.7" y="411" width="1.1" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="2900.71" y="425.5" ></text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (517 us, 0.12%)</title><rect x="2532.5" y="531" width="5.0" height="23.0" fill="rgb(59,124,220)" rx="2" ry="2" />
+<text  x="2535.54" y="545.5" ></text>
+</g>
+<g >
+<title>'wait %1' (11,168 us, 2.64%)</title><rect x="2159.0" y="675" width="107.5" height="23.0" fill="rgb(124,206,132)" rx="2" ry="2" />
+<text  x="2162.02" y="689.5" >'wait %1'</text>
+</g>
+<g >
+<title>SUBSHELL (965803)_[s] (15,327 us, 3.62%)</title><rect x="1678.4" y="795" width="147.6" height="23.0" fill="rgb(225.249896037534,146.817803772852,200.908901886426)" rx="2" ry="2" />
+<text  x="1681.43" y="809.5" >SUBSHELL (965803)_[s]</text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (372 us, 0.09%)</title><rect x="2139.1" y="675" width="3.6" height="23.0" fill="rgb(42,84,235)" rx="2" ry="2" />
+<text  x="2142.11" y="689.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965870)_[s] (719 us, 0.17%)</title><rect x="2716.6" y="483" width="6.9" height="23.0" fill="rgb(227.589635362467,140.109748221403,201.345669220148)" rx="2" ry="2" />
+<text  x="2719.55" y="497.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (264 us, 0.06%)</title><rect x="3821.1" y="147" width="2.5" height="23.0" fill="rgb(34,65,241)" rx="2" ry="2" />
+<text  x="3824.10" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (103 us, 0.02%)</title><rect x="3408.2" y="267" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3411.20" y="281.5" ></text>
+</g>
+<g >
+<title>'tee /tmp/log.txt &lt; &lt;(seq 1 5 | grep 3) &gt; /dev/null' (681 us, 0.16%)</title><rect x="1967.8" y="723" width="6.6" height="23.0" fill="rgb(69,144,210)" rx="2" ry="2" />
+<text  x="1970.82" y="737.5" ></text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (156 us, 0.04%)</title><rect x="2150.0" y="675" width="1.5" height="23.0" fill="rgb(24,41,247)" rx="2" ry="2" />
+<text  x="2152.96" y="689.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (98 us, 0.02%)</title><rect x="3141.4" y="339" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3144.43" y="353.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 5'\''' (916 us, 0.22%)</title><rect x="2706.9" y="483" width="8.9" height="23.0" fill="rgb(72,150,207)" rx="2" ry="2" />
+<text  x="2709.94" y="497.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (89 us, 0.02%)</title><rect x="2510.8" y="531" width="0.9" height="23.0" fill="rgb(15,21,251)" rx="2" ry="2" />
+<text  x="2513.85" y="545.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965877)_[s] (1,473 us, 0.35%)</title><rect x="2923.1" y="411" width="14.2" height="23.0" fill="rgb(223.475470296683,140.365346533391,197.682673266696)" rx="2" ry="2" />
+<text  x="2926.11" y="425.5" ></text>
+</g>
+<g >
+<title>FUNCTION (dynamic_script)_[f] (1,077 us, 0.25%)</title><rect x="1668.1" y="795" width="10.3" height="23.0" fill="rgb(200.216005889544,139.603927299252,226.442386048805)" rx="2" ry="2" />
+<text  x="1671.07" y="809.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965804)_[s] (15,327 us, 3.62%)</title><rect x="1678.4" y="771" width="147.6" height="23.0" fill="rgb(225.249896037534,146.817803772852,200.908901886426)" rx="2" ry="2" />
+<text  x="1681.43" y="785.5" >SUBSHELL (965804)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (99,114 us, 23.41%)</title><rect x="3131.9" y="363" width="954.1" height="23.0" fill="rgb(202.514750287505,148.42280925728,226.615120053447)" rx="2" ry="2" />
+<text  x="3134.89" y="377.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (965850)_[s] (167,422 us, 39.54%)</title><rect x="2474.3" y="603" width="1611.7" height="23.0" fill="rgb(225.784822145136,148.762989618676,201.881494809338)" rx="2" ry="2" />
+<text  x="2477.33" y="617.5" >SUBSHELL (965850)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (663 us, 0.16%)</title><rect x="4079.6" y="75" width="6.4" height="23.0" fill="rgb(197.904356651295,139.060887485794,224.121743903252)" rx="2" ry="2" />
+<text  x="4082.62" y="89.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Nest level 1&quot; (&amp;)' (337 us, 0.08%)</title><rect x="1312.6" y="771" width="3.2" height="23.0" fill="rgb(39,76,238)" rx="2" ry="2" />
+<text  x="1315.57" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (83 us, 0.02%)</title><rect x="2910.5" y="411" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="2913.48" y="425.5" ></text>
+</g>
+<g >
+<title>'wait $(jobs -p)' (1,053 us, 0.25%)</title><rect x="855.7" y="795" width="10.1" height="23.0" fill="rgb(74,154,204)" rx="2" ry="2" />
+<text  x="858.68" y="809.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (469 us, 0.11%)</title><rect x="2938.5" y="387" width="4.5" height="23.0" fill="rgb(54,112,225)" rx="2" ry="2" />
+<text  x="2941.50" y="401.5" ></text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (86 us, 0.02%)</title><rect x="3838.4" y="123" width="0.9" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<text  x="3841.43" y="137.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (426 us, 0.10%)</title><rect x="2517.3" y="531" width="4.1" height="23.0" fill="rgb(49,100,230)" rx="2" ry="2" />
+<text  x="2520.33" y="545.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (454 us, 0.11%)</title><rect x="2918.7" y="387" width="4.4" height="23.0" fill="rgb(52,108,227)" rx="2" ry="2" />
+<text  x="2921.74" y="401.5" ></text>
+</g>
+<g >
+<title>'((i++))' (382 us, 0.09%)</title><rect x="2524.2" y="531" width="3.7" height="23.0" fill="rgb(43,86,235)" rx="2" ry="2" />
+<text  x="2527.20" y="545.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;USR1 trap&quot;, ( ( echo &quot;Nested in USR1&quot; &amp; ) )'\'' USR1' (17,613 us, 4.16%)</title><rect x="583.9" y="819" width="169.6" height="23.0" fill="rgb(183,149,40)" rx="2" ry="2" />
+<text  x="586.91" y="833.5" >'trap '\''echo "USR1 trap"..</text>
+</g>
+<g >
+<title>'echo &quot;Deeper eval bg&quot; (&amp;)' (478 us, 0.11%)</title><rect x="1172.1" y="771" width="4.6" height="23.0" fill="rgb(55,116,224)" rx="2" ry="2" />
+<text  x="1175.12" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (95 us, 0.02%)</title><rect x="2494.9" y="531" width="0.9" height="23.0" fill="rgb(17,25,250)" rx="2" ry="2" />
+<text  x="2497.89" y="545.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (96 us, 0.02%)</title><rect x="2102.4" y="699" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="2105.38" y="713.5" ></text>
+</g>
+<g >
+<title>'continue' (228 us, 0.05%)</title><rect x="2142.7" y="675" width="2.2" height="23.0" fill="rgb(31,57,243)" rx="2" ry="2" />
+<text  x="2145.69" y="689.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (104 us, 0.02%)</title><rect x="3835.5" y="123" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3838.54" y="137.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (442 us, 0.10%)</title><rect x="3150.9" y="315" width="4.2" height="23.0" fill="rgb(50,103,229)" rx="2" ry="2" />
+<text  x="3153.87" y="329.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Inner eval subshell&quot;' (4,113 us, 0.97%)</title><rect x="1132.5" y="771" width="39.6" height="23.0" fill="rgb(100,192,168)" rx="2" ry="2" />
+<text  x="1135.53" y="785.5" >'ech..</text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (96 us, 0.02%)</title><rect x="2278.4" y="627" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="2281.39" y="641.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (443 us, 0.10%)</title><rect x="1826.8" y="747" width="4.3" height="23.0" fill="rgb(50,103,229)" rx="2" ry="2" />
+<text  x="1829.81" y="761.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (82 us, 0.02%)</title><rect x="2104.2" y="699" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="2107.23" y="713.5" ></text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (162 us, 0.04%)</title><rect x="2758.1" y="459" width="1.6" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="2761.11" y="473.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965906)_[s] (1,950 us, 0.46%)</title><rect x="3647.8" y="195" width="18.8" height="23.0" fill="rgb(224.292606325613,139.702427524472,198.2202909417)" rx="2" ry="2" />
+<text  x="3650.83" y="209.5" >S..</text>
+</g>
+<g >
+<title>SUBSHELL (965927)_[s] (1,734 us, 0.41%)</title><rect x="3850.0" y="123" width="16.6" height="23.0" fill="rgb(224.088124545933,140.511572392344,198.32822833421)" rx="2" ry="2" />
+<text  x="3852.95" y="137.5" ></text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (81 us, 0.02%)</title><rect x="2281.1" y="627" width="0.7" height="23.0" fill="rgb(9,9,253)" rx="2" ry="2" />
+<text  x="2284.06" y="641.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (267 us, 0.06%)</title><rect x="3621.7" y="219" width="2.6" height="23.0" fill="rgb(35,67,241)" rx="2" ry="2" />
+<text  x="3624.68" y="233.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (102 us, 0.02%)</title><rect x="3632.2" y="195" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="3635.19" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (276 us, 0.07%)</title><rect x="1964.1" y="723" width="2.7" height="23.0" fill="rgb(36,68,240)" rx="2" ry="2" />
+<text  x="1967.14" y="737.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (88 us, 0.02%)</title><rect x="3410.2" y="267" width="0.9" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<text  x="3413.24" y="281.5" ></text>
+</g>
+<g >
+<title>'wait %1' (11,032 us, 2.61%)</title><rect x="1850.6" y="747" width="106.2" height="23.0" fill="rgb(117,204,143)" rx="2" ry="2" />
+<text  x="1853.55" y="761.5" >'wait %1'</text>
+</g>
+<g >
+<title>SUBSHELL (965847)_[s] (478 us, 0.11%)</title><rect x="1172.1" y="795" width="4.6" height="23.0" fill="rgb(225.840037619645,139.526548973796,199.596071477326)" rx="2" ry="2" />
+<text  x="1175.12" y="809.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (85 us, 0.02%)</title><rect x="2489.8" y="555" width="0.8" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="2492.75" y="569.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965818)_[s] (1,162 us, 0.27%)</title><rect x="2084.4" y="723" width="11.2" height="23.0" fill="rgb(228.172834610074,140.69294746901,201.928868467755)" rx="2" ry="2" />
+<text  x="2087.44" y="737.5" ></text>
+</g>
+<g >
+<title>'wait' (14,786 us, 3.49%)</title><rect x="1683.6" y="747" width="142.4" height="23.0" fill="rgb(158,190,76)" rx="2" ry="2" />
+<text  x="1686.64" y="761.5" >'wait'</text>
+</g>
+<g >
+<title>'continue' (287 us, 0.07%)</title><rect x="2521.4" y="531" width="2.8" height="23.0" fill="rgb(37,71,239)" rx="2" ry="2" />
+<text  x="2524.43" y="545.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965864)_[s] (144,650 us, 34.16%)</title><rect x="2693.5" y="531" width="1392.5" height="23.0" fill="rgb(226.279929596089,148.629368874403,202.346537592829)" rx="2" ry="2" />
+<text  x="2696.54" y="545.5" >SUBSHELL (965864)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (393 us, 0.09%)</title><rect x="2470.5" y="579" width="3.8" height="23.0" fill="rgb(45,93,233)" rx="2" ry="2" />
+<text  x="2473.55" y="593.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (84 us, 0.02%)</title><rect x="3626.1" y="195" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="3629.08" y="209.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (94 us, 0.02%)</title><rect x="3666.6" y="171" width="0.9" height="23.0" fill="rgb(17,25,250)" rx="2" ry="2" />
+<text  x="3669.60" y="185.5" ></text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (168 us, 0.04%)</title><rect x="3683.5" y="171" width="1.6" height="23.0" fill="rgb(28,50,245)" rx="2" ry="2" />
+<text  x="3686.48" y="185.5" ></text>
+</g>
+<g >
+<title>'((i=0))' (89 us, 0.02%)</title><rect x="2315.9" y="603" width="0.9" height="23.0" fill="rgb(15,21,251)" rx="2" ry="2" />
+<text  x="2318.92" y="617.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965896)_[s] (63,780 us, 15.06%)</title><rect x="3472.0" y="267" width="614.0" height="23.0" fill="rgb(226.195224416605,148.315645987426,202.191244763776)" rx="2" ry="2" />
+<text  x="3475.03" y="281.5" >SUBSHELL (965896)_[s]</text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (627 us, 0.15%)</title><rect x="2153.0" y="675" width="6.0" height="23.0" fill="rgb(67,140,212)" rx="2" ry="2" />
+<text  x="2155.99" y="689.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (161 us, 0.04%)</title><rect x="2333.6" y="603" width="1.5" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="2336.60" y="617.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965851)_[s] (407 us, 0.10%)</title><rect x="1299.9" y="795" width="3.9" height="23.0" fill="rgb(225.256838372038,139.526548973796,199.012872229719)" rx="2" ry="2" />
+<text  x="1302.91" y="809.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Starting torture test...&quot; (&amp;)' (518 us, 0.12%)</title><rect x="756.4" y="795" width="4.9" height="23.0" fill="rgb(60,125,220)" rx="2" ry="2" />
+<text  x="759.35" y="809.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (664 us, 0.16%)</title><rect x="2696.8" y="483" width="6.4" height="23.0" fill="rgb(68,142,211)" rx="2" ry="2" />
+<text  x="2699.78" y="497.5" ></text>
+</g>
+<g >
+<title>'break' (144 us, 0.03%)</title><rect x="1325.1" y="771" width="1.4" height="23.0" fill="rgb(24,39,248)" rx="2" ry="2" />
+<text  x="1328.08" y="785.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (1,377 us, 0.33%)</title><rect x="2924.0" y="387" width="13.3" height="23.0" fill="rgb(78,160,199)" rx="2" ry="2" />
+<text  x="2927.04" y="401.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (168 us, 0.04%)</title><rect x="3191.3" y="315" width="1.7" height="23.0" fill="rgb(28,50,245)" rx="2" ry="2" />
+<text  x="3194.34" y="329.5" ></text>
+</g>
+<g >
+<title>'((i++))' (394 us, 0.09%)</title><rect x="3880.9" y="99" width="3.8" height="23.0" fill="rgb(45,93,233)" rx="2" ry="2" />
+<text  x="3883.90" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965879)_[s] (454 us, 0.11%)</title><rect x="2918.7" y="411" width="4.4" height="23.0" fill="rgb(225.840037619645,139.526548973796,199.596071477326)" rx="2" ry="2" />
+<text  x="2921.74" y="425.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (480 us, 0.11%)</title><rect x="3667.5" y="171" width="4.6" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3670.50" y="185.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (453 us, 0.11%)</title><rect x="2689.2" y="507" width="4.3" height="23.0" fill="rgb(51,106,228)" rx="2" ry="2" />
+<text  x="2692.18" y="521.5" ></text>
+</g>
+<g >
+<title>'pid=$!' (76 us, 0.02%)</title><rect x="1330.3" y="771" width="0.7" height="23.0" fill="rgb(5,4,254)" rx="2" ry="2" />
+<text  x="1333.28" y="785.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965842)_[s] (90 us, 0.02%)</title><rect x="1299.0" y="795" width="0.9" height="23.0" fill="rgb(222.92404138161,138.360150478582,196.680075239291)" rx="2" ry="2" />
+<text  x="1302.04" y="809.5" ></text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (725 us, 0.17%)</title><rect x="3686.7" y="171" width="7.0" height="23.0" fill="rgb(70,147,208)" rx="2" ry="2" />
+<text  x="3689.71" y="185.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (1,158 us, 0.27%)</title><rect x="3427.5" y="243" width="11.1" height="23.0" fill="rgb(74,154,203)" rx="2" ry="2" />
+<text  x="3430.49" y="257.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (73 us, 0.02%)</title><rect x="2097.1" y="699" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2100.13" y="713.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (97 us, 0.02%)</title><rect x="2279.3" y="627" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="2282.31" y="641.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (1,288 us, 0.30%)</title><rect x="1626.0" y="747" width="12.4" height="23.0" fill="rgb(77,159,200)" rx="2" ry="2" />
+<text  x="1628.97" y="761.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (426 us, 0.10%)</title><rect x="2287.9" y="603" width="4.1" height="23.0" fill="rgb(49,100,230)" rx="2" ry="2" />
+<text  x="2290.90" y="617.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (161 us, 0.04%)</title><rect x="2330.5" y="603" width="1.6" height="23.0" fill="rgb(26,45,246)" rx="2" ry="2" />
+<text  x="2333.51" y="617.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (395 us, 0.09%)</title><rect x="3874.7" y="99" width="3.9" height="23.0" fill="rgb(46,94,232)" rx="2" ry="2" />
+<text  x="3877.75" y="113.5" ></text>
+</g>
+<g >
+<title>'((i++))' (380 us, 0.09%)</title><rect x="2752.9" y="459" width="3.6" height="23.0" fill="rgb(43,86,235)" rx="2" ry="2" />
+<text  x="2755.85" y="473.5" ></text>
+</g>
+<g >
+<title>'cat &lt;&lt;&lt; &quot;Here string in nest&quot;' (1,050 us, 0.25%)</title><rect x="1974.4" y="723" width="10.1" height="23.0" fill="rgb(73,152,205)" rx="2" ry="2" />
+<text  x="1977.38" y="737.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (384 us, 0.09%)</title><rect x="3181.2" y="315" width="3.7" height="23.0" fill="rgb(44,89,234)" rx="2" ry="2" />
+<text  x="3184.22" y="329.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Selected $opt&quot;' (93 us, 0.02%)</title><rect x="1682.7" y="747" width="0.9" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="1685.75" y="761.5" ></text>
+</g>
+<g >
+<title>'read num' (399 us, 0.09%)</title><rect x="2685.3" y="507" width="3.9" height="23.0" fill="rgb(47,95,232)" rx="2" ry="2" />
+<text  x="2688.34" y="521.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (2,962 us, 0.70%)</title><rect x="1639.6" y="747" width="28.5" height="23.0" fill="rgb(96,187,175)" rx="2" ry="2" />
+<text  x="1642.55" y="761.5" >'s..</text>
+</g>
+<g >
+<title>SUBSHELL (965809)_[s] (9,182 us, 2.17%)</title><rect x="1996.0" y="723" width="88.4" height="23.0" fill="rgb(232.838428590931,142.442545211831,206.594462448611)" rx="2" ry="2" />
+<text  x="1999.05" y="737.5" >SUBSHELL (96..</text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (224 us, 0.05%)</title><rect x="3194.6" y="315" width="2.1" height="23.0" fill="rgb(31,57,243)" rx="2" ry="2" />
+<text  x="3197.56" y="329.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;EXIT trap triggered&quot;, ( ( sleep 1 &amp; ) &amp; wait )'\'' EXIT' (20,680 us, 4.88%)</title><rect x="11.7" y="819" width="199.1" height="23.0" fill="rgb(219,56,6)" rx="2" ry="2" />
+<text  x="14.74" y="833.5" >'trap '\''echo "EXIT trap trigg..</text>
+</g>
+<g >
+<title>'eval &quot;echo '\''Eval depth $depth'\'', ( sleep 0.5 &amp; )&quot;' (82 us, 0.02%)</title><rect x="1609.6" y="771" width="0.8" height="23.0" fill="rgb(10,12,253)" rx="2" ry="2" />
+<text  x="1612.58" y="785.5" ></text>
+</g>
+<g >
+<title>FUNCTION (recursive_func)_[f] (167,422 us, 39.54%)</title><rect x="2474.3" y="579" width="1611.7" height="23.0" fill="rgb(201.881494809338,148.762989618676,225.784822145136)" rx="2" ry="2" />
+<text  x="2477.33" y="593.5" >FUNCTION (recursive_func)_[f]</text>
+</g>
+<g >
+<title>'local expanded=&quot;${global_array[i]:-default}&quot;' (171 us, 0.04%)</title><rect x="3492.5" y="243" width="1.7" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="3495.52" y="257.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 7'\''' (524 us, 0.12%)</title><rect x="3145.0" y="339" width="5.1" height="23.0" fill="rgb(61,127,219)" rx="2" ry="2" />
+<text  x="3148.01" y="353.5" ></text>
+</g>
+<g >
+<title>FUNCTION (dynamic_script)_[f] (504 us, 0.12%)</title><rect x="1956.8" y="795" width="4.8" height="23.0" fill="rgb(200.179270724933,139.526548973796,226.423236867253)" rx="2" ry="2" />
+<text  x="1959.75" y="809.5" ></text>
+</g>
+<g >
+<title>'((i&lt;5))' (585 us, 0.14%)</title><rect x="2511.7" y="531" width="5.6" height="23.0" fill="rgb(64,135,215)" rx="2" ry="2" />
+<text  x="2514.70" y="545.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (96 us, 0.02%)</title><rect x="2103.3" y="699" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="2106.30" y="713.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965837)_[s] (516 us, 0.12%)</title><rect x="2266.5" y="675" width="5.0" height="23.0" fill="rgb(224.10798078822,139.00921088407,197.878907872557)" rx="2" ry="2" />
+<text  x="2269.53" y="689.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (473 us, 0.11%)</title><rect x="3479.0" y="243" width="4.6" height="23.0" fill="rgb(54,113,225)" rx="2" ry="2" />
+<text  x="3482.02" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (85 us, 0.02%)</title><rect x="3134.5" y="339" width="0.8" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="3137.47" y="353.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965886)_[s] (833 us, 0.20%)</title><rect x="3123.9" y="387" width="8.0" height="23.0" fill="rgb(226.430956295202,140.140783472546,200.194079423448)" rx="2" ry="2" />
+<text  x="3126.87" y="401.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (169 us, 0.04%)</title><rect x="3681.9" y="171" width="1.6" height="23.0" fill="rgb(29,52,245)" rx="2" ry="2" />
+<text  x="3684.86" y="185.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965852)_[s] (2,257 us, 0.53%)</title><rect x="1176.7" y="795" width="21.8" height="23.0" fill="rgb(229.922432352895,141.276146716617,203.678466210576)" rx="2" ry="2" />
+<text  x="1179.73" y="809.5" >S..</text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (166 us, 0.04%)</title><rect x="2527.9" y="531" width="1.6" height="23.0" fill="rgb(27,48,246)" rx="2" ry="2" />
+<text  x="2530.87" y="545.5" ></text>
+</g>
+<g >
+<title>'wait %1' (12,955 us, 3.06%)</title><rect x="3693.7" y="171" width="124.7" height="23.0" fill="rgb(137,205,110)" rx="2" ry="2" />
+<text  x="3696.69" y="185.5" >'wait %1'</text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (84 us, 0.02%)</title><rect x="3143.4" y="339" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="3146.40" y="353.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (167 us, 0.04%)</title><rect x="3685.1" y="171" width="1.6" height="23.0" fill="rgb(27,48,246)" rx="2" ry="2" />
+<text  x="3688.10" y="185.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965926)_[s] (22,787 us, 5.38%)</title><rect x="3866.6" y="123" width="219.4" height="23.0" fill="rgb(226.25814772641,145.007142260686,201.385390951188)" rx="2" ry="2" />
+<text  x="3869.64" y="137.5" >SUBSHELL (965926)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (965803)_[s] (30,551 us, 7.22%)</title><rect x="1312.6" y="795" width="294.1" height="23.0" fill="rgb(226.512251422894,145.979577560689,201.859392077321)" rx="2" ry="2" />
+<text  x="1315.57" y="809.5" >SUBSHELL (965803)_[s]</text>
+</g>
+<g >
+<title>'i=0' (79 us, 0.02%)</title><rect x="1315.8" y="771" width="0.8" height="23.0" fill="rgb(7,7,254)" rx="2" ry="2" />
+<text  x="1318.82" y="785.5" ></text>
+</g>
+<g >
+<title>'echo '\''Eval depth 10'\''' (561 us, 0.13%)</title><rect x="3839.3" y="123" width="5.4" height="23.0" fill="rgb(64,133,216)" rx="2" ry="2" />
+<text  x="3842.26" y="137.5" ></text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (532 us, 0.13%)</title><rect x="3196.7" y="315" width="5.1" height="23.0" fill="rgb(61,128,218)" rx="2" ry="2" />
+<text  x="3199.72" y="329.5" ></text>
+</g>
+<g >
+<title>'read num' (281 us, 0.07%)</title><rect x="3818.4" y="147" width="2.7" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3821.40" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965920)_[s] (27,254 us, 6.44%)</title><rect x="3823.6" y="171" width="262.4" height="23.0" fill="rgb(225.487836314889,147.683041145051,201.341520572526)" rx="2" ry="2" />
+<text  x="3826.64" y="185.5" >SUBSHELL (965920)_[s]</text>
+</g>
+<g >
+<title>'((i&lt;5))' (461 us, 0.11%)</title><rect x="2742.5" y="459" width="4.4" height="23.0" fill="rgb(53,110,226)" rx="2" ry="2" />
+<text  x="2745.49" y="473.5" ></text>
+</g>
+<g >
+<title>'(( (i % 2 == 0) ))' (383 us, 0.09%)</title><rect x="2943.0" y="387" width="3.7" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="2946.01" y="401.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (364 us, 0.09%)</title><rect x="3438.6" y="243" width="3.5" height="23.0" fill="rgb(41,82,236)" rx="2" ry="2" />
+<text  x="3441.64" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (75 us, 0.02%)</title><rect x="1304.5" y="771" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1307.51" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Expanded: $expanded&quot;' (158 us, 0.04%)</title><rect x="2151.5" y="675" width="1.5" height="23.0" fill="rgb(24,41,247)" rx="2" ry="2" />
+<text  x="2154.46" y="689.5" ></text>
+</g>
+<g >
+<title>'return' (84 us, 0.02%)</title><rect x="4085.2" y="51" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="4088.19" y="65.5" ></text>
+</g>
+<g >
+<title>'echo &quot;${COP[0]}&quot; &gt;&amp;&quot;${COP[1]}&quot;' (134 us, 0.03%)</title><rect x="2908.3" y="411" width="1.2" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="2911.25" y="425.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (98 us, 0.02%)</title><rect x="2909.5" y="411" width="1.0" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="2912.54" y="425.5" ></text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (107 us, 0.03%)</title><rect x="2482.2" y="555" width="1.0" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="2485.21" y="569.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965868)_[s] (1,848 us, 0.44%)</title><rect x="2723.5" y="483" width="17.8" height="23.0" fill="rgb(223.640130077734,140.964109373579,197.98205468679)" rx="2" ry="2" />
+<text  x="2726.47" y="497.5" >S..</text>
+</g>
+<g >
+<title>'local depth=$1' (77 us, 0.02%)</title><rect x="2096.4" y="699" width="0.7" height="23.0" fill="rgb(5,4,254)" rx="2" ry="2" />
+<text  x="2099.39" y="713.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (85 us, 0.02%)</title><rect x="3150.1" y="339" width="0.8" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="3153.06" y="353.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Loop i=$i at depth $depth&quot;' (173 us, 0.04%)</title><rect x="3884.7" y="99" width="1.7" height="23.0" fill="rgb(30,54,244)" rx="2" ry="2" />
+<text  x="3887.69" y="113.5" ></text>
+</g>
+<g >
+<title>'sleep 0.5 (&amp;)' (422 us, 0.10%)</title><rect x="2111.2" y="675" width="4.1" height="23.0" fill="rgb(48,99,230)" rx="2" ry="2" />
+<text  x="2114.22" y="689.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (78 us, 0.02%)</title><rect x="2286.3" y="627" width="0.8" height="23.0" fill="rgb(5,4,254)" rx="2" ry="2" />
+<text  x="2289.35" y="641.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (485 us, 0.11%)</title><rect x="2476.6" y="555" width="4.7" height="23.0" fill="rgb(57,119,222)" rx="2" ry="2" />
+<text  x="2479.60" y="569.5" ></text>
+</g>
+<g >
+<title>'(( depth &gt; 10 ))' (80 us, 0.02%)</title><rect x="4084.4" y="51" width="0.8" height="23.0" fill="rgb(7,7,254)" rx="2" ry="2" />
+<text  x="4087.42" y="65.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (561 us, 0.13%)</title><rect x="3136.0" y="339" width="5.4" height="23.0" fill="rgb(64,133,216)" rx="2" ry="2" />
+<text  x="3139.03" y="353.5" ></text>
+</g>
+<g >
+<title>'$'\''eval \'\''\n    echo &quot;Outer eval&quot;\n    (\n        echo &quot;Inner eval subshell&quot;\n        ( echo &quot;Deeper eval bg&quot; &amp; )\n    )\n    \'\''' (163 us, 0.04%)</title><rect x="849.2" y="795" width="1.6" height="23.0" fill="rgb(27,47,246)" rx="2" ry="2" />
+<text  x="852.20" y="809.5" ></text>
+</g>
+<g >
+<title>'(( depth % 3 == 0 ))' (91 us, 0.02%)</title><rect x="3844.7" y="123" width="0.8" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="3847.66" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965893)_[s] (71,242 us, 16.83%)</title><rect x="3400.2" y="315" width="685.8" height="23.0" fill="rgb(225.700088330003,148.454866654556,201.727433327278)" rx="2" ry="2" />
+<text  x="3403.20" y="329.5" >SUBSHELL (965893)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (96 us, 0.02%)</title><rect x="2923.1" y="387" width="0.9" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="2926.11" y="401.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965846)_[s] (4,113 us, 0.97%)</title><rect x="1132.5" y="795" width="39.6" height="23.0" fill="rgb(231.088830848109,141.859345964224,204.84486470579)" rx="2" ry="2" />
+<text  x="1135.53" y="809.5" >SUBS..</text>
+</g>
+<g >
+<title>'echo &quot;Until break&quot;' (155 us, 0.04%)</title><rect x="1323.6" y="771" width="1.5" height="23.0" fill="rgb(24,39,248)" rx="2" ry="2" />
+<text  x="1326.59" y="785.5" ></text>
+</g>
+<g >
+<title>'continue' (233 us, 0.06%)</title><rect x="3184.9" y="315" width="2.3" height="23.0" fill="rgb(32,60,243)" rx="2" ry="2" />
+<text  x="3187.91" y="329.5" ></text>
+</g>
+<g >
+<title>'((i++))' (447 us, 0.11%)</title><rect x="3486.6" y="243" width="4.3" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3489.62" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Recursion depth: $depth&quot; (&amp;)' (671 us, 0.16%)</title><rect x="2901.8" y="411" width="6.5" height="23.0" fill="rgb(68,143,211)" rx="2" ry="2" />
+<text  x="2904.79" y="425.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (106 us, 0.03%)</title><rect x="3850.0" y="99" width="1.0" height="23.0" fill="rgb(20,32,249)" rx="2" ry="2" />
+<text  x="3852.95" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965897)_[s] (3,469 us, 0.82%)</title><rect x="3438.6" y="267" width="33.4" height="23.0" fill="rgb(224.963795834319,140.053757135181,198.970926844787)" rx="2" ry="2" />
+<text  x="3441.64" y="281.5" >SUB..</text>
+</g>
+<g >
+<title>SUBSHELL (965873)_[s] (123,441 us, 29.15%)</title><rect x="2897.7" y="459" width="1188.3" height="23.0" fill="rgb(226.269840462297,148.592001712209,202.328040847544)" rx="2" ry="2" />
+<text  x="2900.71" y="473.5" >SUBSHELL (965873)_[s]</text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (268 us, 0.06%)</title><rect x="3131.9" y="339" width="2.6" height="23.0" fill="rgb(36,68,240)" rx="2" ry="2" />
+<text  x="3134.89" y="353.5" ></text>
+</g>
+<g >
+<title>'seq 1 5 | grep 3' (9,182 us, 2.17%)</title><rect x="1996.0" y="699" width="88.4" height="23.0" fill="rgb(111,201,152)" rx="2" ry="2" />
+<text  x="1999.05" y="713.5" >'seq 1 5 | g..</text>
+</g>
+<g >
+<title>'global_assoc[&quot;key$depth&quot;]=&quot;$depth&quot; (&amp;)' (554 us, 0.13%)</title><rect x="3495.8" y="243" width="5.3" height="23.0" fill="rgb(62,130,217)" rx="2" ry="2" />
+<text  x="3498.76" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Case other&quot;' (105 us, 0.02%)</title><rect x="1680.1" y="747" width="1.0" height="23.0" fill="rgb(20,32,249)" rx="2" ry="2" />
+<text  x="1683.08" y="761.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg pipe: $num&quot;' (284 us, 0.07%)</title><rect x="3129.2" y="363" width="2.7" height="23.0" fill="rgb(37,71,239)" rx="2" ry="2" />
+<text  x="3132.16" y="377.5" ></text>
+</g>
+<g >
+<title>FUNCTION (source)_[f] (504 us, 0.12%)</title><rect x="1956.8" y="771" width="4.8" height="23.0" fill="rgb(200.179270724933,139.526548973796,226.423236867253)" rx="2" ry="2" />
+<text  x="1959.75" y="785.5" ></text>
+</g>
+<g >
+<title>'trap - EXIT INT TERM USR1' (27,147 us, 6.41%)</title><rect x="866.6" y="795" width="261.3" height="23.0" fill="rgb(241,8,0)" rx="2" ry="2" />
+<text  x="869.56" y="809.5" >'trap - EXIT INT TERM USR1'</text>
+</g>
+<g >
+<title>'read -u &quot;${COP[0]}&quot; cop_out' (107 us, 0.03%)</title><rect x="3836.5" y="123" width="1.1" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="3839.54" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Torture test completed successfully.&quot;' (89 us, 0.02%)</title><rect x="1127.9" y="795" width="0.8" height="23.0" fill="rgb(15,21,251)" rx="2" ry="2" />
+<text  x="1130.89" y="809.5" ></text>
+</g>
+<g >
+<title>'read num' (345 us, 0.08%)</title><rect x="2467.2" y="579" width="3.3" height="23.0" fill="rgb(39,77,238)" rx="2" ry="2" />
+<text  x="2470.23" y="593.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965923)_[s] (545 us, 0.13%)</title><rect x="3818.4" y="171" width="5.2" height="23.0" fill="rgb(224.107476277782,139.007316590162,197.877975004201)" rx="2" ry="2" />
+<text  x="3821.40" y="185.5" ></text>
+</g>
+<g >
+<title>'$'\''cat &lt;&lt;HDOC\nHere doc in nest\nHDOC\n (&amp;)' (1,201 us, 0.28%)</title><rect x="1984.5" y="723" width="11.5" height="23.0" fill="rgb(76,157,201)" rx="2" ry="2" />
+<text  x="1987.49" y="737.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (79 us, 0.02%)</title><rect x="2475.1" y="555" width="0.8" height="23.0" fill="rgb(7,7,254)" rx="2" ry="2" />
+<text  x="2478.12" y="569.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (1,628 us, 0.38%)</title><rect x="3851.0" y="99" width="15.6" height="23.0" fill="rgb(82,167,194)" rx="2" ry="2" />
+<text  x="3853.97" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (965806)_[s] (539 us, 0.13%)</title><rect x="1961.6" y="771" width="5.2" height="23.0" fill="rgb(224.109981851678,139.016724311018,197.88260795216)" rx="2" ry="2" />
+<text  x="1964.60" y="785.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Bg 2&quot;' (362 us, 0.09%)</title><rect x="1268.4" y="771" width="3.5" height="23.0" fill="rgb(40,79,237)" rx="2" ry="2" />
+<text  x="1271.45" y="785.5" ></text>
+</g>
+<g >
+<title>'declare -a local_arr=(a b c)' (98 us, 0.02%)</title><rect x="1673.0" y="747" width="0.9" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1676.00" y="761.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (113 us, 0.03%)</title><rect x="2694.7" y="483" width="1.1" height="23.0" fill="rgb(22,36,248)" rx="2" ry="2" />
+<text  x="2697.67" y="497.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc at depth $depth&quot;' (94 us, 0.02%)</title><rect x="2723.5" y="459" width="0.9" height="23.0" fill="rgb(17,25,250)" rx="2" ry="2" />
+<text  x="2726.47" y="473.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (236 us, 0.06%)</title><rect x="4082.1" y="51" width="2.3" height="23.0" fill="rgb(32,60,243)" rx="2" ry="2" />
+<text  x="4085.15" y="65.5" ></text>
+</g>
+<g >
+<title>'dynamic_script' (74 us, 0.02%)</title><rect x="1198.5" y="771" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1201.45" y="785.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (1,563 us, 0.37%)</title><rect x="2495.8" y="531" width="15.0" height="23.0" fill="rgb(81,165,195)" rx="2" ry="2" />
+<text  x="2498.80" y="545.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (85 us, 0.02%)</title><rect x="2280.2" y="627" width="0.9" height="23.0" fill="rgb(13,17,252)" rx="2" ry="2" />
+<text  x="2283.25" y="641.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Coproc out: $cop_out&quot;' (83 us, 0.02%)</title><rect x="2705.4" y="483" width="0.8" height="23.0" fill="rgb(12,14,252)" rx="2" ry="2" />
+<text  x="2708.37" y="497.5" ></text>
+</g>
+<g >
+<title>'recursive_func $((depth + 1))' (89 us, 0.02%)</title><rect x="3823.6" y="123" width="0.9" height="23.0" fill="rgb(15,21,251)" rx="2" ry="2" />
+<text  x="3826.64" y="137.5" ></text>
+</g>
+<g >
+<title>'recursive_func 1' (71 us, 0.02%)</title><rect x="1303.8" y="771" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1306.82" y="785.5" ></text>
+</g>
+<g >
+<title>'continue' (242 us, 0.06%)</title><rect x="2946.7" y="387" width="2.3" height="23.0" fill="rgb(33,62,242)" rx="2" ry="2" />
+<text  x="2949.70" y="401.5" ></text>
+</g>
+<g >
+<title>'sleep 1' (1,817 us, 0.43%)</title><rect x="2116.5" y="675" width="17.5" height="23.0" fill="rgb(87,176,187)" rx="2" ry="2" />
+<text  x="2119.49" y="689.5" ></text>
+</g>
+</g>
+</svg>
