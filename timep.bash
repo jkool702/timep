@@ -566,7 +566,13 @@ fi
         timep_ENDTIME="${timep_END_TIME}"$'"'"'\t'"'"'"${timep_END_CTIME}"
         timep_IS_BG_FLAG=false
         timep_IS_SUBSHELL_FLAG=false
-        timep_IS_FUNC_FLAG=false
+        timep_IS_BG_FUNC_FLAG=false
+        if ((timep_FNEST_CUR >= ${timep_FUNCNAME_N})) || {
+            timep_IS_FUNC_FLAG=true
+             timep_FNEST+=("${timep_FUNCNAME_N}")
+        else
+            timep_IS_FUNC_FLAG=false
+        fi
         if ${timep_SIMPLEFORK_NEXT_FLAG}; then
             timep_SIMPLEFORK_NEXT_FLAG=false
             timep_SIMPLEFORK_CUR_FLAG=true
@@ -575,13 +581,10 @@ fi
         fi
         if ((timep_BASH_SUBSHELL_PREV == BASH_SUBSHELL)); then
             if ((timep_BG_PID_PREV == $!)); then
-                ((timep_FNEST_CUR >= ${timep_FUNCNAME_N})) || {
-                    timep_IS_FUNC_FLAG=true
-                    timep_NO_PRINT_FLAG=true
-                    timep_FNEST+=("${timep_FUNCNAME_N}")
-                }
+               ${timep_IS_FUNC_FLAG} && timep_NO_PRINT_FLAG=true
             else
                 timep_IS_BG_FLAG=true
+                declare -F "${timep_BASH_COMMAND_PREV%% *}" 2>//dev/null && timep_NO_PRINT_FLAG=true
             fi
         else
             timep_IS_SUBSHELL_FLAG=true
@@ -600,7 +603,12 @@ fi
         if ${timep_IS_SUBSHELL_FLAG}; then
             if ${timep_IS_BG_FLAG}; then
                 ((timep_CHILD_PGID == BASHPID)) && ((timep_CHILD_TPID == timep_PARENT_PGID)) && ((timep_CHILD_TPID == timep_PARENT_TPID)) && timep_SIMPLEFORK_NEXT_FLAG=true
-                timep_CMD_TYPE="BACKGROUND FORK"
+                if ${timep_IS_FUNC_FLAG}; then
+                    timep_CMD_TYPE="BACKGROUND FUNCTION"
+                    timep_IS_BG_FUNC_FLAG=true
+                else
+                    timep_CMD_TYPE="BACKGROUND FORK"
+                fi
             else
                 timep_CMD_TYPE="SUBSHELL"
             fi
@@ -654,7 +662,12 @@ fi
             echo "${timep_NEXEC_0}.${timep_NEXEC_CUR}{${timep_NPIDWRAP}-${BASHPID}}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
             printf '"'"'1\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "${timep_BASH_COMMAND_PREV_0@Q}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_r"
             printf '"'"'1\t%s\t+\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}.0\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_END_CTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}.${BASHPID}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO_0}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_CUR@Q} ${timep_IS_BG_INDICATOR}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_c"
-            timep_SUBSHELL_INIT_FLAG=true
+            if ${timep_IS_BG_FUNC_FLAG}; then
+                timep_SUBSHELL_INIT_FLAG=true
+            else
+                timep_SUBSHELL_INIT_NEXT_FLAG=true
+                timep_SUBSHELL_INIT_FLAG=false
+            fi
             timep_CMD_TYPE_PREV_0="${timep_CMD_TYPE}"
             timep_BASHPID_PREV_0="${timep_BASHPID_PREV}"
             timep_BASHPID_PREV="${BASHPID}"
@@ -665,7 +678,8 @@ fi
             timep_PARENT_TPID0="$timep_PARENT_TPID"
             timep_PARENT_PGID="$timep_CHILD_PGID"
             timep_PARENT_TPID="$timep_CHILD_TPID"
-        elif ${timep_SUBSHELL_INIT_FLAG}; then
+        fi
+        if ${timep_SUBSHELL_INIT_FLAG}; then
             timep_SUBSHELL_INIT_FLAG=false
             timep_BASHPID_PREV="${timep_BASHPID_PREV_0}"
             timep_BASH_SUBSHELL_PREV="${timep_BASH_SUBSHELL_PREV_0}"
@@ -709,8 +723,11 @@ fi
             timep_NEXEC_HASH_A[-1]="${timep_NEXEC_HASH_CUR}"
             unset "timep_KK" "timep_BASHPID_ADD" "timep_BASH_COMMAND_PREV_0" "timep_NPIDWRAP_PREV_0" "timep_BASH_COMMAND_PREV_0" "timep_CMD_TYPE_PREV_0" "timep_BASHPID_PREV_0" "timep_ENDTIME_PREV_0" "timep_BASH_SUBSHELL_PREV_0"
             ((timep_NEXEC_N++))
+        elif ${timep_SUBSHELL_INIT_NEXT_FLAG}; then
+            timep_SUBSHELL_INIT_FLAG=true
+            timep_SUBSHELL_INIT_NEXT_FLAG=false
         fi
-        if ! ${timep_SUBSHELL_INIT_FLAG} && [[ ${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]} ]]; then
+        if ! ${timep_SUBSHELL_INIT_FLAG} && ! ${timep_IS_BG_FUNC_FLAG} && [[ ${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]} ]]; then
             ${timep_SIMPLEFORK_CUR_FLAG} && ((BASHPID < $!)) && {
                 timep_IS_BG_FLAG=true
                 timep_CMD_TYPE="SIMPLE FORK *"
@@ -735,6 +752,7 @@ fi
             ((timep_NEXEC_N++))
         fi
         ${timep_IS_FUNC_FLAG} && {
+            ${timep_IS_BG_FUNC_FLAG} && printf '"'"'1\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.0\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_FNEST_CUR}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_LINENO_0}" "<< (FUNCTION): ${timep_BASH_COMMAND_CUR} >>" >> "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
             timep_FUNCNAME_STR+=".${FUNCNAME[0]}"
             timep_NEXEC_0+=".${timep_NEXEC_A[-1]}"
             timep_NEXEC_A+=(0)
@@ -910,7 +928,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         esac
 
     timep_runVarsSrc='
-        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
+        declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_BG_FUNC_FLAG timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
         declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS
         declare -gx timep_TMPDIR="${timep_TMPDIR}"
         declare -gx timep_NEXEC_0="${timep_NEXEC_0}"
