@@ -584,7 +584,7 @@ fi
                ${timep_IS_FUNC_FLAG} && timep_NO_PRINT_FLAG=true
             else
                 timep_IS_BG_FLAG=true
-                declare -F "${timep_BASH_COMMAND_PREV%% *}" 2>//dev/null && timep_NO_PRINT_FLAG=true
+                declare -F "${timep_BASH_COMMAND_PREV%% *}" &>//dev/null && timep_NO_PRINT_FLAG=true
             fi
         else
             timep_IS_SUBSHELL_FLAG=true
