@@ -567,11 +567,11 @@ fi
         timep_IS_BG_FLAG=false
         timep_IS_SUBSHELL_FLAG=false
         timep_IS_BG_FUNC_FLAG=false
-        if ((timep_FNEST_CUR >= ${timep_FUNCNAME_N})) || {
-            timep_IS_FUNC_FLAG=true
-             timep_FNEST+=("${timep_FUNCNAME_N}")
-        else
+        if (( timep_FNEST_CUR >= ${timep_FUNCNAME_N} )); then
             timep_IS_FUNC_FLAG=false
+        else
+            timep_IS_FUNC_FLAG=true
+            timep_FNEST+=("${timep_FUNCNAME_N}")
         fi
         if ${timep_SIMPLEFORK_NEXT_FLAG}; then
             timep_SIMPLEFORK_NEXT_FLAG=false
@@ -584,7 +584,7 @@ fi
                ${timep_IS_FUNC_FLAG} && timep_NO_PRINT_FLAG=true
             else
                 timep_IS_BG_FLAG=true
-                declare -F "${timep_BASH_COMMAND_PREV%% *}" &>//dev/null && timep_NO_PRINT_FLAG=true
+                declare -F "${timep_LAST_CMD_WORD}" &>/dev/null && timep_NO_PRINT_FLAG=true
             fi
         else
             timep_IS_SUBSHELL_FLAG=true
@@ -603,12 +603,8 @@ fi
         if ${timep_IS_SUBSHELL_FLAG}; then
             if ${timep_IS_BG_FLAG}; then
                 ((timep_CHILD_PGID == BASHPID)) && ((timep_CHILD_TPID == timep_PARENT_PGID)) && ((timep_CHILD_TPID == timep_PARENT_TPID)) && timep_SIMPLEFORK_NEXT_FLAG=true
-                if ${timep_IS_FUNC_FLAG}; then
-                    timep_CMD_TYPE="BACKGROUND FUNCTION"
-                    timep_IS_BG_FUNC_FLAG=true
-                else
-                    timep_CMD_TYPE="BACKGROUND FORK"
-                fi
+                ${timep_IS_FUNC_FLAG} && timep_IS_BG_FUNC_FLAG=true
+                timep_CMD_TYPE="BACKGROUND FORK"
             else
                 timep_CMD_TYPE="SUBSHELL"
             fi
@@ -772,6 +768,7 @@ fi
         else
             timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]="${timep_BASH_COMMAND_CUR}"
         fi
+        timep_LAST_CMD_WORD="${BASH_COMMAND%% *}"
         timep_LINENO[${timep_FNEST_CUR}]="${timep_LINENO_0}"
         timep_BG_PID_PREV="$!"
         timep_BASHPID_PREV="$BASHPID"
@@ -929,7 +926,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
 
     timep_runVarsSrc='
         declare timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_BG_FUNC_FLAG timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
-        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS
+        declare -a timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS timep_LAST_CMD_WORD
         declare -gx timep_TMPDIR="${timep_TMPDIR}"
         declare -gx timep_NEXEC_0="${timep_NEXEC_0}"
         declare -gx timep_NEXEC_CUR="${timep_NEXEC_CUR}"
@@ -2968,7 +2965,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 _timep_SETUP() {
     local -a filePathA
 
-    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 doneFlag extglobState supportedArchFlag b64
+    local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 doneFlag extglobState
 
     if shopt extglob | grep -qE 'off$'; then
         extglobState='-u'
@@ -3101,9 +3098,9 @@ _timep_SETUP() {
         # The compiled .so file that this binary blob re-creates is avaiilable in the repo at LIB/LOADABLES/BIN/$ARCH/timep.so. timep_flamegraph is available at LIB/timep_flamegraph.so.
         # Note: these base64 blobs have been compressed. The information needed to decompress them is built into the start of the blob, as are the sha256 and md5 checksums for the original .so file
 
-        { ! ${forceFlag} && ${gotLoadableFlag}; } || BASH_ENV= "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
+        { ! ${forceFlag} && ${gotLoadableFlag}; } || BASH_ENV='' "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep.so.bash"
 
-        { ! ${forceFlag} && ${gotFlamegraphFlag}; } || BASH_ENV= "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
+        { ! ${forceFlag} && ${gotFlamegraphFlag}; } || BASH_ENV='' "/dev/shm/.timep/lib/${USER}-${EUID}/.restore-builtin__timep_flamegraph.pl.bash"
         chmod +x "${outDir}"/timep{.so,_flamegraph.pl}
 
         enable -f "${outDir}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash

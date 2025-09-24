@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # --- Stage 1: The Forking Frenzy ---
 fork_frenzy() {
