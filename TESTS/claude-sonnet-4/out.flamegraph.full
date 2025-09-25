@@ -1,58 +1,58 @@
-SUBSHELL (77600)_[s];'set -e'	62:0	76:0
-SUBSHELL (77600)_[s];'echo "=== Test 1: Dynamic Function Hell ==="'	83:0	92:0
-SUBSHELL (77600)_[s];'for i in {1..3} (&)'	364:0	382:1
-SUBSHELL (77600)_[s];'for i in {1..3} (&)'	347:0	367:1
-SUBSHELL (77600)_[s];'for i in {1..3} (&)'	369:0	391:2
-SUBSHELL (77600)_[s];'wait'	25243:21	72399:116
-SUBSHELL (77600)_[s];'echo "=== Test 2: Nested Subshell Matrix ==="'	109:0	131:0
-SUBSHELL (77600)_[s];'$'\''result=$({ echo "Level 1" 1>&2\n( echo "Level 2" | tee >(cat 1>&2) | { read input\n( echo "Level 3: $input" | { while read line, do\n    ( echo "Level 4: $line" | tr \'\''a-z\'\'' \'\''A-Z\'\'' ) &\ndone\nwait, } ) 2>&1 | sed \'\''s/^/[L3] /\'\'' & { echo "Parallel branch'	656:1	363:1
-SUBSHELL (77600)_[s];'echo "Final result: $result"'	145:0	168:0
-SUBSHELL (77600)_[s];'echo "=== Test 3: Signal Madness ==="'	72:0	87:0
-SUBSHELL (77600)_[s];'cleanup_called=0 | trap '\''echo "Parent cleanup", cleanup_called=$((cleanup_called + 1))'\'' EXIT'	22755:13	760:3
-SUBSHELL (77600)_[s];SUBSHELL (77626)_[s];'$'\''eval "func_$i() { \n            echo \\"Dynamic func $i running in PID \\$\\$\\"\n            if (( $i > 1 )), then\n                { func_$((i-1)) | while read line, do echo \\"[$i] \\$line\\", done, } &\n                wait \\$!\n            fi\n    '	116:0	132:0
-SUBSHELL (77600)_[s];SUBSHELL (77625)_[s];'$'\''eval "func_$i() { \n            echo \\"Dynamic func $i running in PID \\$\\$\\"\n            if (( $i > 1 )), then\n                { func_$((i-1)) | while read line, do echo \\"[$i] \\$line\\", done, } &\n                wait \\$!\n            fi\n    '	160:0	175:0
-SUBSHELL (77600)_[s];SUBSHELL (77634)_[s];'echo "Level 1" 1>&2 | grep -v "^$" | head -10'	32373:26	65022:93
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];''	1:0	1:0
-SUBSHELL (77600)_[s];SUBSHELL (77627)_[s];'$'\''eval "func_$i() { \n            echo \\"Dynamic func $i running in PID \\$\\$\\"\n            if (( $i > 1 )), then\n                { func_$((i-1)) | while read line, do echo \\"[$i] \\$line\\", done, } &\n                wait \\$!\n            fi\n    '	118:0	128:0
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];'TRAP (EXIT): echo "Child cleanup" > /tmp/child_cleanup_$$\, kill -TERM $$'	184601:82	48401:58
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'IFS= read -r line'	61901:35	312:1
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'echo "[SIGNAL] $line"'	86:0	101:0
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'IFS= read -r line'	148799:52	372:1
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'echo "[SIGNAL] $line"'	125:0	146:0
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'IFS= read -r line'	681:1	161:0
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'echo "[SIGNAL] $line"'	115:0	135:0
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'IFS= read -r line'	127:0	147:0
-SUBSHELL (77600)_[s];SUBSHELL (77658)_[s];'echo "[SIGNAL] $line"'	114:0	134:0
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77641)_[s];'cat 1>&2'	2346:1	2346:3
-SUBSHELL (77600)_[s];SUBSHELL (77625)_[s];FUNCTION (func_1)_[f];'func_$i'	89:0	107:0
-SUBSHELL (77600)_[s];SUBSHELL (77625)_[s];FUNCTION (func_1)_[f];'echo "Dynamic func 1 running in PID $$"'	102:0	120:0
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77649)_[s];'echo "Level 4: $line" | tr '\''a-z'\'' '\''A-Z'\'''	3819:3	4623:6
-SUBSHELL (77600)_[s];SUBSHELL (77625)_[s];FUNCTION (func_1)_[f];'(( 1 > 1 ))'	69:0	82:0
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77646)_[s];'read line (&)'	537:0	557:2
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77646)_[s];'read line'	1:0	351:1
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77646)_[s];'wait'	3612:2	7518:10
-SUBSHELL (77600)_[s];SUBSHELL (77626)_[s];FUNCTION (func_2)_[f];'func_$i'	64:0	78:0
-SUBSHELL (77600)_[s];SUBSHELL (77626)_[s];FUNCTION (func_2)_[f];'echo "Dynamic func 2 running in PID $$"'	73:0	86:0
-SUBSHELL (77600)_[s];SUBSHELL (77626)_[s];FUNCTION (func_2)_[f];'(( 2 > 1 )) (&)'	345:0	366:1
-SUBSHELL (77600)_[s];SUBSHELL (77627)_[s];FUNCTION (func_3)_[f];'func_$i'	71:0	81:0
-SUBSHELL (77600)_[s];SUBSHELL (77627)_[s];FUNCTION (func_3)_[f];'echo "Dynamic func 3 running in PID $$"'	74:0	88:0
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77640)_[s];'read input (&)'	580:0	604:2
-SUBSHELL (77600)_[s];SUBSHELL (77626)_[s];FUNCTION (func_2)_[f];'wait $!'	8506:5	11313:13
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77640)_[s];'sed '\''s/^/[L3] /'\'' (&)'	1:0	554:2
-SUBSHELL (77600)_[s];SUBSHELL (77627)_[s];FUNCTION (func_3)_[f];'(( 3 > 1 )) (&)'	351:0	367:1
-SUBSHELL (77600)_[s];SUBSHELL (77627)_[s];FUNCTION (func_3)_[f];'wait $!'	10306:7	13055:17
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77640)_[s];'wait'	17835:9	44451:43
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];''	1:0	1:0
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];'TRAP (EXIT): echo "Grandchild cleanup" >> /tmp/child_cleanup_$$'	184617:112	48417:73
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77640)_[s];SUBSHELL (77653)_[s];'read x'	130:0	150:0
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77640)_[s];SUBSHELL (77653)_[s];'echo "Processed: $x" | tee >(echo "Side effect: $x" 1>&2)'	2495:1	286:0
-SUBSHELL (77600)_[s];SUBSHELL (77627)_[s];FUNCTION (func_3)_[f];SUBSHELL (77633)_[s];'read line'	1:0	1:0
-SUBSHELL (77600)_[s];SUBSHELL (77626)_[s];FUNCTION (func_2)_[f];SUBSHELL (77631)_[s];'read line'	1:0	1:0
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];SUBSHELL (77661)_[s];'trap '\''echo "Background job cleanup" >> /tmp/child_cleanup_$$'\'' EXIT'	23934:17	23849:29
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];SUBSHELL (77661)_[s];'sleep 0.1 (&)'	361:0	388:1
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];SUBSHELL (77661)_[s];'bg_pid=$! (&)'	461:0	472:2
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];SUBSHELL (77661)_[s];'wait $bg_pid 2> /dev/null'	101438:52	15234:22
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];SUBSHELL (77661)_[s];'TRAP (EXIT): echo "Background job cleanup" >> /tmp/child_cleanup_$$'	5279:4	5265:7
-SUBSHELL (77600)_[s];SUBSHELL (77635)_[s];SUBSHELL (77640)_[s];SUBSHELL (77653)_[s];SUBSHELL (77656)_[s];'echo "Side effect: $x" 1>&2'	85:0	100:0
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];SUBSHELL (77661)_[s];SUBSHELL (77664)_[s];'sleep 0.05'	53053:35	3103:4
-SUBSHELL (77600)_[s];SUBSHELL (77657)_[s];SUBSHELL (77659)_[s];SUBSHELL (77661)_[s];SUBSHELL (77664)_[s];'kill -HUP $$ 2> /dev/null'	107:0	122:0
+SUBSHELL (274045)_[s];'set -e'	64:0	78:0
+SUBSHELL (274045)_[s];'echo "=== Test 1: Dynamic Function Hell ==="'	84:0	98:0
+SUBSHELL (274045)_[s];'for i in {1..3} (&)'	359:0	384:2
+SUBSHELL (274045)_[s];'for i in {1..3} (&)'	338:0	362:1
+SUBSHELL (274045)_[s];'for i in {1..3} (&)'	364:0	384:2
+SUBSHELL (274045)_[s];'wait'	21860:12	65287:116
+SUBSHELL (274045)_[s];'echo "=== Test 2: Nested Subshell Matrix ==="'	112:0	126:0
+SUBSHELL (274045)_[s];'$'\''result=$({ echo "Level 1" 1>&2\n( echo "Level 2" | tee >(cat 1>&2) | { read input\n( echo "Level 3: $input" | { while read line, do\n    ( echo "Level 4: $line" | tr \'\''a-z\'\'' \'\''A-Z\'\'' ) &\ndone\nwait, } ) 2>&1 | sed \'\''s/^/[L3] /\'\'' & { echo "Parallel branch'	648:1	366:1
+SUBSHELL (274045)_[s];'echo "Final result: $result"'	95:0	110:0
+SUBSHELL (274045)_[s];'echo "=== Test 3: Signal Madness ==="'	172:0	200:0
+SUBSHELL (274045)_[s];'cleanup_called=0 | trap '\''echo "Parent cleanup", cleanup_called=$((cleanup_called + 1))'\'' EXIT'	22594:16	590:3
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];''	1:0	1:0
+SUBSHELL (274045)_[s];SUBSHELL (274070)_[s];'$'\''eval "func_$i() { \n            echo \\"Dynamic func $i running in PID \\$\\$\\"\n            if (( $i > 1 )), then\n                { func_$((i-1)) | while read line, do echo \\"[$i] \\$line\\", done, } &\n                wait \\$!\n            fi\n    '	124:0	135:0
+SUBSHELL (274045)_[s];SUBSHELL (274071)_[s];'$'\''eval "func_$i() { \n            echo \\"Dynamic func $i running in PID \\$\\$\\"\n            if (( $i > 1 )), then\n                { func_$((i-1)) | while read line, do echo \\"[$i] \\$line\\", done, } &\n                wait \\$!\n            fi\n    '	144:0	162:0
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];'TRAP (EXIT): echo "Child cleanup" > /tmp/child_cleanup_$$\, kill -TERM $$'	183669:81	46308:58
+SUBSHELL (274045)_[s];SUBSHELL (274079)_[s];'echo "Level 1" 1>&2 | grep -v "^$" | head -10'	27723:24	55769:93
+SUBSHELL (274045)_[s];SUBSHELL (274072)_[s];'$'\''eval "func_$i() { \n            echo \\"Dynamic func $i running in PID \\$\\$\\"\n            if (( $i > 1 )), then\n                { func_$((i-1)) | while read line, do echo \\"[$i] \\$line\\", done, } &\n                wait \\$!\n            fi\n    '	163:0	179:0
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'IFS= read -r line'	58364:33	419:2
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'echo "[SIGNAL] $line"'	242:0	282:0
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'IFS= read -r line'	144355:50	478:2
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'echo "[SIGNAL] $line"'	310:0	349:1
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'IFS= read -r line'	87:0	100:0
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'echo "[SIGNAL] $line"'	71:0	85:0
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'IFS= read -r line'	83:0	97:0
+SUBSHELL (274045)_[s];SUBSHELL (274103)_[s];'echo "[SIGNAL] $line"'	69:0	82:0
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274092)_[s];'echo "Level 4: $line" | tr '\''a-z'\'' '\''A-Z'\'''	2550:2	2931:5
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274086)_[s];'cat 1>&2'	3658:2	3658:6
+SUBSHELL (274045)_[s];SUBSHELL (274070)_[s];FUNCTION (func_1)_[f];'func_$i'	66:0	80:0
+SUBSHELL (274045)_[s];SUBSHELL (274070)_[s];FUNCTION (func_1)_[f];'echo "Dynamic func 1 running in PID $$"'	83:0	94:0
+SUBSHELL (274045)_[s];SUBSHELL (274070)_[s];FUNCTION (func_1)_[f];'(( 1 > 1 ))'	70:0	83:0
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274091)_[s];'read line (&)'	632:1	659:3
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274091)_[s];'read line'	1:0	368:1
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274091)_[s];'wait'	1591:1	6084:10
+SUBSHELL (274045)_[s];SUBSHELL (274071)_[s];FUNCTION (func_2)_[f];'func_$i'	65:0	79:0
+SUBSHELL (274045)_[s];SUBSHELL (274071)_[s];FUNCTION (func_2)_[f];'echo "Dynamic func 2 running in PID $$"'	75:0	89:0
+SUBSHELL (274045)_[s];SUBSHELL (274071)_[s];FUNCTION (func_2)_[f];'(( 2 > 1 )) (&)'	342:0	363:1
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274085)_[s];'read input (&)'	377:0	396:2
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274085)_[s];'sed '\''s/^/[L3] /'\'' (&)'	1:0	306:1
+SUBSHELL (274045)_[s];SUBSHELL (274071)_[s];FUNCTION (func_2)_[f];'wait $!'	7281:6	9351:16
+SUBSHELL (274045)_[s];SUBSHELL (274072)_[s];FUNCTION (func_3)_[f];'func_$i'	66:0	80:0
+SUBSHELL (274045)_[s];SUBSHELL (274072)_[s];FUNCTION (func_3)_[f];'echo "Dynamic func 3 running in PID $$"'	75:0	89:0
+SUBSHELL (274045)_[s];SUBSHELL (274072)_[s];FUNCTION (func_3)_[f];'(( 3 > 1 )) (&)'	353:0	368:1
+SUBSHELL (274045)_[s];SUBSHELL (274072)_[s];FUNCTION (func_3)_[f];'wait $!'	6380:4	8228:13
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274085)_[s];'wait'	16640:8	38520:42
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];''	1:0	1:0
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];'TRAP (EXIT): echo "Grandchild cleanup" >> /tmp/child_cleanup_$$'	183685:112	46324:74
+SUBSHELL (274045)_[s];SUBSHELL (274071)_[s];FUNCTION (func_2)_[f];SUBSHELL (274076)_[s];'read line'	1:0	1:0
+SUBSHELL (274045)_[s];SUBSHELL (274072)_[s];FUNCTION (func_3)_[f];SUBSHELL (274078)_[s];'read line'	1:0	1:0
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274085)_[s];SUBSHELL (274098)_[s];'read x'	96:0	110:0
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274085)_[s];SUBSHELL (274098)_[s];'echo "Processed: $x" | tee >(echo "Side effect: $x" 1>&2)'	2053:1	291:1
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];SUBSHELL (274106)_[s];'trap '\''echo "Background job cleanup" >> /tmp/child_cleanup_$$'\'' EXIT'	24382:20	24303:29
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];SUBSHELL (274106)_[s];'sleep 0.1 (&)'	413:0	446:2
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];SUBSHELL (274106)_[s];'bg_pid=$! (&)'	501:0	530:2
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];SUBSHELL (274106)_[s];'wait $bg_pid 2> /dev/null'	100927:50	13514:20
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];SUBSHELL (274106)_[s];'TRAP (EXIT): echo "Background job cleanup" >> /tmp/child_cleanup_$$'	5466:3	5457:8
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];SUBSHELL (274106)_[s];SUBSHELL (274109)_[s];'sleep 0.05'	51915:33	1978:4
+SUBSHELL (274045)_[s];SUBSHELL (274102)_[s];SUBSHELL (274104)_[s];SUBSHELL (274106)_[s];SUBSHELL (274109)_[s];'kill -HUP $$ 2> /dev/null'	97:0	112:0
+SUBSHELL (274045)_[s];SUBSHELL (274080)_[s];SUBSHELL (274085)_[s];SUBSHELL (274098)_[s];SUBSHELL (274101)_[s];'echo "Side effect: $x" 1>&2'	86:0	101:0
