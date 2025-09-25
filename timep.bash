@@ -1002,7 +1002,23 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
 
         ${timep_timeFlag} && timep_runMainSrc='time {'
         timep_runMainSrc+='
+            set -mT
+            . "${timep_TMPDIR}/functions.bash";
+            . "${timep_TMPDIR}/vars.bash";
             {
+                . "${timep_TMPDIR}/functions.bash";
+                . "${timep_TMPDIR}/vars.bash";
+                echo "USER=$USER EUID=$EUID GROUPS=$GROUPS"  >>"${timep_TMPDIR}/run.log.txt";
+                [[ -x "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" ]] || _timep_SETUP
+                enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
+                timep_NPIDWRAP=0
+                timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
+                timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
+                echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+                echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
+                timep_NEXEC_HASH_A=("${timep_NEXEC_HASH_CUR}")
+                export BASH_ENV="${timep_TMPDIR}/env.bash"
+                . "${timep_TMPDIR}/setup.bash"
                 '"${timep_runCmd}"'
             } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
         '
@@ -1053,26 +1069,7 @@ export BASH_ENV="\${timep_TMPDIR}/env.bash"
 . "\${timep_TMPDIR}/setup.bash"
 EOF
 
-cat<<EOF >"${timep_TMPDIR}/env0.bash"
-set -mT
-echo "USER=\$USER EUID=\$EUID GROUPS=\$GROUPS"  >/mnt/ramdisk/log.info
-[[ -x "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" ]] || _timep_SETUP
-enable -f "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
-timep_NPIDWRAP=0
-timep_NEXEC_0="{\${timep_NPIDWRAP}-\${BASHPID}}"
-timep_hash - 'timep_NEXEC_HASH_CUR' <<<"\${timep_NEXEC_0}"
-echo "\${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.\${timep_NEXEC_HASH_CUR}"
-echo "\${timep_NEXEC_HASH_CUR} --> \${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
-timep_NEXEC_HASH_A=("\${timep_NEXEC_HASH_CUR}")
-export BASH_ENV="\${timep_TMPDIR}/env.bash"
-builtin trap '$([[ "${timep_runType}" == f ]] && printf '%s' '[[ "${FUNCNAME[0]}" == "timep_runFunc" ]] && '){ 
-trap - DEBUG;
-echo "USER=\$USER EUID=\$EUID GROUPS=\$GROUPS"  >>"${timep_TMPDIR}/run.log.txt";
-. "${timep_TMPDIR}/functions.bash";
-. "${timep_TMPDIR}/vars.bash";
-. "${timep_TMPDIR}/setup.bash"
-}' DEBUG
-EOF
+
 
 
     printf '\ntimep_TMPDIR = %s\n\n' "${timep_TMPDIR}" >&2
@@ -1136,19 +1133,19 @@ EOF
         fi
         if [[ -t 0 ]]; then
             {
-                BASH_ENV="${timep_TMPDIR}/env0.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         else
             {
-                BASH_ENV="${timep_TMPDIR}/env0.bash" "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+               "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 0<"${timep_PTY_PATH}" 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         fi
     else
         printf '\n\nWARNING: job control could not be enabled due to lack of controlling TTY/PTY. subshells and background forks may not be properly distinguished!\n\n' >&${timep_FD2}
         if [[ -t 0 ]]; then
-           BASH_ENV="${timep_TMPDIR}/env0.bash" "${timep_TMPDIR}/main.bash" "${@}"
+           "${timep_TMPDIR}/main.bash" "${@}"
         else
-           BASH_ENV="${timep_TMPDIR}/env0.bash" "${timep_TMPDIR}/main.bash" "${@}" <&0
+           "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
 
