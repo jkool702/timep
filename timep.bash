@@ -455,7 +455,7 @@ _timep_getFuncSrc() {
 timep_TRAP_OPTS=${-//[^eu]/}; ${timep_TRAP_OPTS:+set +}${timep_TRAP_OPTS}
 [[ -z ${#FUNCNAME[@]} ]] || (( ${#FUNCNAME[@]} < '
     if [[ "${timep_runType}" == 'f' ]]; then
-        timep_RETURN_TRAP_STR+='2'
+        timep_RETURN_TRAP_STR+='1'
     else
         timep_RETURN_TRAP_STR+='1'
     fi
@@ -599,6 +599,7 @@ fi
         timep_DEBUG_TRAP_STR_1+='
             IFS='"'"' '"'"' read -r _ _ _ _ timep_CHILD_PGID _ _ timep_CHILD_TPID _ </proc/${BASHPID}/stat
             ((timep_CHILD_PGID == timep_PARENT_TPID)) || ((timep_CHILD_PGID == timep_CHILD_TPID)) || { ((timep_CHILD_PGID == timep_PARENT_PGID)) && ((timep_CHILD_TPID == timep_PARENT_TPID)); } || timep_IS_BG_FLAG=true
+            ${timep_IS_FUNC_FLAG} && timep_IS_BG_FLAG=true
         fi
         if ${timep_IS_SUBSHELL_FLAG}; then
             if ${timep_IS_BG_FLAG}; then
@@ -743,7 +744,6 @@ echo "IN WRITE NORMAL COMMAND BRANCH" >>"${timep_TMPDIR}/run.log.txt"
                         }
                     done
                     timep_ENDTIME="${timep_END_TIME}"$'"'"'\t'"'"'"${timep_END_CTIME}"
-
                 } {timep_FD_ENDTIME}<"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_CUR}"
                 exec {timep_FD_ENDTIME}>&-
             }
@@ -927,7 +927,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
                 [[ -t 0 ]] || timep_runCmd+=" <&0"
 
                 # start of wrapper code
-                timep_runMainSrc='#!'"${BASH}"$'\n''timep_runFunc() {'
+                timep_runMainSrc='#!'"${BASH}"$'\n'
             ;;
         esac
 
@@ -935,8 +935,8 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         declare -g timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_BG_FUNC_FLAG timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BG_PID_PREV_0 timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
         declare -ga timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS timep_LAST_CMD_WORD
         declare -gx timep_TMPDIR timep_NEXEC_0 timep_NEXEC_CUR timep_LOCK_FD
+        : "${timep_FNEST[0]:='"''"'}" "${timep_NEXEC_A[0]:='"''"'}" "${timep_NEXEC_HASH_A[0]:='"''"'}"
 '
-
 
     timep_runSetupSrc='
         : & 2>/dev/null
@@ -995,51 +995,48 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
 
         (( timep_LINENO[${timep_FNEST_CUR}] = LINENO + 5 ))
-
-        builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
-
         '
 
-        ${timep_timeFlag} && timep_runMainSrc='time {'
-        timep_runMainSrc+='
-            set -mT
-            . "${timep_TMPDIR}/functions.bash";
-            . "${timep_TMPDIR}/vars.bash";
-            [[ -x "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" ]] || _timep_SETUP
-            enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
-                {
-                . "${timep_TMPDIR}/functions.bash";
-                . "${timep_TMPDIR}/vars.bash";
-                [[ -x "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" ]] || _timep_SETUP
-                enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
-                timep_NPIDWRAP=0
-                timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
-                timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
-                echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
-                echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
-                timep_NEXEC_HASH_A=("${timep_NEXEC_HASH_CUR}")
-                export BASH_ENV="${timep_TMPDIR}/env.bash"
-                . "${timep_TMPDIR}/setup.bash"
-                '"${timep_runCmd}"'
-                builtin trap - DEBUG EXIT RETURN;
-            } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
-        '
-        ${timep_timeFlag} && timep_runMainSrc+='} 1>&${timep_FD2}'
 
-        timep_runMainSrc+='
+    timep_runMainSrc='set -mT
+. "${timep_TMPDIR}/vars.bash"
+: "${timep_FNEST[0]:='"''"'}" "${timep_NEXEC_A[0]:='"''"'}" "${timep_NEXEC_HASH_A[0]:='"''"'}"
+[[ -x "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" ]] || _timep_SETUP
+enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
+timep_NPIDWRAP=0
+timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
+timep_NEXEC_A[0]=0
+timep_FNEST[0]='"'"'main'"'"'
+timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
+echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
+timep_NEXEC_HASH_A=("${timep_NEXEC_HASH_CUR}")
+. "${timep_TMPDIR}/functions.bash";
+export BASH_ENV="${timep_TMPDIR}/env.bash"
+. "${timep_TMPDIR}/setup.bash"
+builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
+'
 
-        echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.wtime"
-        '"${timep_END_CTIME_STR}"'
-        echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
+    ${timep_timeFlag} && timep_runMainSrc+='time {
+'
+        timep_runMainSrc+='{
+    '"${timep_runCmd}"'
+} 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
+'
+    ${timep_timeFlag} && timep_runMainSrc+='} 1>&${timep_FD2}'
+    
+    timep_runMainSrc+='builtin trap - DEBUG EXIT RETURN SIGTERM SIGQUIT SIGHUP SIGINT;
+    exec {timep_LOCK_FD}>&-
+    echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.wtime"
+    '"${timep_END_CTIME_STR}"'
+    echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
+'
 
-        exec {timep_LOCK_FD}>&-
-        '
-
-    [[ "${timep_runType}" == 'f' ]] && {
-        timep_runMainSrc+=$'\n\n''}'$'\n\n''timep_runFunc "${@}"'
-        [[ -t 0 ]] && timep_runMainSrc+=' <&0'
-        timep_runMainSrc+=$'\n\n'
-    }
+#    [[ "${timep_runType}" == 'f' ]] && {
+#        timep_runMainSrc+=$'\n\n''}'$'\n\n''timep_runFunc "${@}"'
+#        [[ -t 0 ]] && timep_runMainSrc+=' <&0'
+#        timep_runMainSrc+=$'\n\n'
+#    }
 
     # save script/function (with added debug trap) in new script file and make it executable
     [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
@@ -1052,6 +1049,7 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
     cat <<EOF >"${timep_TMPDIR}/env.bash"
 builtin trap - DEBUG EXIT RETURN
 set -mT
+. "\${timep_TMPDIR}/vars.bash"
 . "\${timep_TMPDIR}/functions.bash"
 [[ -x "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" ]] || _timep_SETUP
 enable -f "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
@@ -1065,7 +1063,6 @@ timep_TMPDIR="\${timep_TMPDIR}/.child/\${timep_NEXEC_HASH_CUR}"
 mkdir -p "\${timep_TMPDIR}"/.log/.{runtimes,endtimes,hash}
 cp "\${timep_TMPDIR_PARENT}"/*.bash "\${timep_TMPDIR}"
 echo "\${timep_NEXEC_0}" > "\${timep_TMPDIR}/.log/.hash/\${timep_NEXEC_HASH_CUR}"
-. "\${timep_TMPDIR}/vars.bash"
 export BASH_ENV="\${timep_TMPDIR}/env.bash"
 . "\${timep_TMPDIR}/setup.bash"
 EOF
@@ -1601,11 +1598,11 @@ _timep_PROCESS_LOG() {
         endWTimeA[$kk]="${endWTime}"
         startCTimeA[$kk]="${startCTime}"
         endCTimeA[$kk]="${endCTime}"
-        if  [[ "${timep_runType}" == 'f' ]]; then
-            funcA[$kk]="${func/main.timep_runFunc/main}"
-        else
+#        if  [[ "${timep_runType}" == 'f' ]]; then
+#            funcA[$kk]="${func/main.timep_runFunc/main}"
+#        else
             funcA[$kk]="${func}"
-        fi
+#        fi
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
