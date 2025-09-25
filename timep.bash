@@ -1005,10 +1005,11 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
             set -mT
             . "${timep_TMPDIR}/functions.bash";
             . "${timep_TMPDIR}/vars.bash";
-            {
+            [[ -x "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" ]] || _timep_SETUP
+            enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
+                {
                 . "${timep_TMPDIR}/functions.bash";
                 . "${timep_TMPDIR}/vars.bash";
-                echo "USER=$USER EUID=$EUID GROUPS=$GROUPS"  >>"${timep_TMPDIR}/run.log.txt";
                 [[ -x "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" ]] || _timep_SETUP
                 enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
                 timep_NPIDWRAP=0
@@ -1020,12 +1021,12 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
                 export BASH_ENV="${timep_TMPDIR}/env.bash"
                 . "${timep_TMPDIR}/setup.bash"
                 '"${timep_runCmd}"'
+                builtin trap - DEBUG EXIT RETURN;
             } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
         '
         ${timep_timeFlag} && timep_runMainSrc+='} 1>&${timep_FD2}'
 
         timep_runMainSrc+='
-        builtin trap - DEBUG EXIT RETURN;
 
         echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.wtime"
         '"${timep_END_CTIME_STR}"'
@@ -1600,7 +1601,11 @@ _timep_PROCESS_LOG() {
         endWTimeA[$kk]="${endWTime}"
         startCTimeA[$kk]="${startCTime}"
         endCTimeA[$kk]="${endCTime}"
-        funcA[$kk]="${func}"
+        if  [[ "${timep_runType}" == 'f' ]]; then
+            funcA[$kk]="${func/main.timep_runFunc/main}"
+        else
+            funcA[$kk]="${func}"
+        fi
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
         linenoA[$kk]="${lineno}"
