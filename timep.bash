@@ -754,7 +754,7 @@ echo "IN WRITE NORMAL COMMAND BRANCH" >>"${timep_TMPDIR}/run.log.txt"
         fi
         ${timep_IS_FUNC_FLAG} && {
 echo "IN IS_FUNC_FLAG BRANCH" >>"${timep_TMPDIR}/run.log.txt"
-            ${timep_IS_BG_FUNC_FLAG} && printf '"'"'1\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.0\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_FNEST_CUR}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_LINENO_0}" "<< (FUNCTION): ${timep_BASH_COMMAND_CUR} >>" >> "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
+            ${timep_IS_BG_FUNC_FLAG} && printf '"'"'1\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.0\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_FNEST_CUR}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_LINENO_0}" "<< (FUNCTION): ${timep_BASH_COMMAND_CUR} >>" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
             timep_FUNCNAME_STR+=".${FUNCNAME[0]}"
             timep_NEXEC_0+=".${timep_NEXEC_A[-1]}"
             timep_NEXEC_A+=(0)
