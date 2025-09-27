@@ -9,8 +9,8 @@ for nn in TESTS/OTHER/timep.tests.bash  TESTS/claude-opus-4.1/bash_profiler_dest
     printf '\n------------------------------------------------------\n\nTEST: %s\n\n' "$nn"
 
     diff -d -y -w --left-column --width=200\
-    <(curl "${u1}${nn%\/*}/out.profile" | sed -E 's/^([^\(]*\(){3}//') \
-    <(curl "${u2}${nn%\/*}/out.profile" | sed -E 's/^([^\(]*\(){3}//') 
-  } | tee ./compare/"${nn//\//_}"
+    <(curl "${u1}${nn%\/*}/out.profile" | sed -E 's/^([^\(]*\(){3}/ --> \(/') \
+    <(curl "${u2}${nn%\/*}/out.profile" | sed -E 's/^([^\(]*\(){3}/ --> \(/') 
+  } | sed -E s/'^ \-\-> '// | tee ./compare/"${nn//\//_}"
 
 done
