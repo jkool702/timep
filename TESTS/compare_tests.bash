@@ -11,6 +11,6 @@ for nn in TESTS/OTHER/timep.tests.bash  TESTS/claude-opus-4.1/bash_profiler_dest
     diff -d -y -w --left-column --width=200\
     <(curl "${u1}${nn%\/*}/out.profile" | sed -E 's/^([^\(]*\(){3}//') \
     <(curl "${u2}${nn%\/*}/out.profile" | sed -E 's/^([^\(]*\(){3}//') 
-  } > ./compare/"${nn//\//_}"
+  } | tee ./compare/"${nn//\//_}"
 
 done
