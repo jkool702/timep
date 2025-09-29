@@ -639,7 +639,7 @@ fi
             timep_SKIP_RETURN_TRAP_FLAG_A+=(false)
         fi
 echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE -- CMD IS ${BASH_COMMAND}" >>"${timep_TMPDIR}/run.log.txt"
-        if ${timep_SUBSHELL_INIT_FLAG}; then
+        if ${timep_SUBSHELL_INIT_FLAG} && ! [[ -f "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_done" ]]; then
 echo "IN SUBSHELL_INIT BRANCH (REGENERATE FINAL PID CHAIN)" >>"${timep_TMPDIR}/run.log.txt"
             timep_NPIDWRAP="${timep_NPIDWRAP_PREV_0}"
             timep_ENDTIME_PREV="${timep_ENDTIME_PREV_0}"
@@ -668,6 +668,7 @@ echo "IN SUBSHELL_INIT BRANCH (REGENERATE FINAL PID CHAIN)" >>"${timep_TMPDIR}/r
                 fi
             done
             timep_BASHPID_PREV="${timep_BASHPID_PREV_0}"
+            : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_done"
             while ((timep_KK < ${#timep_BASHPID_ADD[@]})); do
                 ((timep_BASHPID_ADD[${timep_KK}] < timep_BASHPID_PREV)) && ((timep_NPIDWRAP++))
                 timep_BASHPID_PREV="${timep_BASHPID_ADD[${timep_KK}]}"
@@ -1212,7 +1213,16 @@ EOF
     for nn in "${timep_TMPDIR}"/.log/log.*.init_c; do
         [[ -s "${nn}" ]] && ! [[ -s "${nn%.init_c}" ]] && ! [[ -s "${nn%.init_c}".init_s ]] && \mv "${nn}" "${nn%.init_c}" || \rm -f "${nn}"
     done
-
+    for nn in "${timep_TMPDIR}"/.log/log.*.init_r; do
+        [[ -s "$nn" ]] && ! [[ -s "${nn%.init_r}.init_s" ]] && {
+            nn0="${nn##*\/}"
+            IFS= read -r nn1 <"${timep_TMPDIR}/.log/.hash/${nn0%.init_r}"
+            timep_hash - 'nn2' <<<"${nn1%.*}"
+            IFS= read -r <"${nn}"
+            echo "${REPLY}" >>"${timep_TMPDIR}/.log/log.${nn2}"
+        }
+        \rm -f "${nn}"
+    done
     for nn in "${timep_TMPDIR}"/.log/log.*.init_s; do
         [[ -s "${nn}" ]] && {
             nn0="${nn##*\/}"
