@@ -641,8 +641,7 @@ fi
 echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE -- CMD IS ${BASH_COMMAND}" >>"${timep_TMPDIR}/run.log.txt"
         if ${timep_SUBSHELL_INIT_FLAG} && ! [[ -f "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_done" ]]; then
 echo "IN SUBSHELL_INIT BRANCH (REGENERATE FINAL PID CHAIN)" >>"${timep_TMPDIR}/run.log.txt"
-            timep_NPIDWRAP="${timep_NPIDWRAP_PREV_0}"
-            timep_ENDTIME_PREV="${timep_ENDTIME_PREV_0}"
+            timep_NPIDWRAP="${timep_NPIDWRAP_PREV_0:-${timep_NPIDWRAP:-0}}"
             timep_BASH_SUBSHELL_PREV="${timep_BASH_SUBSHELL_PREV_0}" 
             timep_NEXEC_0="${timep_NEXEC_PREV_0}"    
             timep_NEXEC_N="${timep_NEXEC_N_0}"    
@@ -696,7 +695,7 @@ echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}.${timep_NEXEC_CUR}{${timep_NP
         fi
         if ${timep_IS_SUBSHELL_FLAG}; then
 echo "IN IS_SUBSHELL BRANCH (GENERATE INITIAL PID CHAIN)" >>"${timep_TMPDIR}/run.log.txt"
-            timep_NPIDWRAP_PREV_0="${timep_NPIDWRAP}"
+            timep_NPIDWRAP_PREV_0="${timep_NPIDWRAP:-0}"
             timep_CMD_TYPE_PREV_0="${timep_CMD_TYPE}"
             timep_BASHPID_PREV_0="${timep_BASHPID_PREV}"
             timep_ENDTIME_PREV_0="${timep_ENDTIME}"
