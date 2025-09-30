@@ -650,14 +650,14 @@ echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE 
             timep_NEXEC_HASH_CUR="${timep_NEXEC_HASH_CUR_0}"
             timep_BASHPID_STR="${timep_BASHPID_STR_0}"
             timep_BG_PID_COUNTER="${timep_BG_PID_COUNTER_0}"
-            timep_BASHPID_PREV_0="${timep_BASHPID_PREV}"
+            timep_BASHPID_PREV="${timep_BASHPID_PREV_0}"
         elif ${timep_IS_SUBSHELL_FLAG} && ${timep_IS_BG_FLAG}; then
             read -r -u "${timep_LOCK_FD}" _
             read -r timep_BG_PID_COUNTER <"${timep_TMPDIR}/.log/.bg_pid.count"
             ((timep_BG_PID_COUNTER++))
             printf '"'"'%s\n'"'"' "${timep_BG_PID_COUNTER}" >"${timep_TMPDIR}/.log/.bg_pid.count"
             printf '"'"'\n'"'"' >&${timep_LOCK_FD}
-            timep_BG_PID_COUNTER="-${timep_BG_PID_COUNTER}""
+            timep_BG_PID_COUNTER="_${timep_BG_PID_COUNTER}""
             timep_NPIDWRAP_PREV_0="${timep_NPIDWRAP:-0}"
             timep_BASH_SUBSHELL_PREV_0="${timep_BASH_SUBSHELL_PREV}"
             timep_NEXEC_PREV_0="${timep_NEXEC_0}"
@@ -678,10 +678,29 @@ echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE 
             timep_BASHPID_ADD_CUR="${BASHPID}"
             timep_KK="${timep_BASH_SUBSHELL_DIFF}"
             timep_BASHPID_ADD[$timep_KK]="${timep_BASHPID_ADD_CUR}"
+            ${timep_EXIT_PID_REGEN_FLAG} && {
+                timep_NEXEC_EXIT_0="${timep_NEXEC_0%\}.*}}"
+                timep_NEXEC_EXIT_FUNC_A=()
+                timep_NEXEC_EXIT_SUBSHELL_A=()
+                timep_NEXEC_EXIT_FUNC_A[${timep_KK}]="${timep_NEXEC_0##*\}.}"
+                timep_NEXEC_EXIT_SUBSHELL_A[${timep_KK}]="${timep_NEXEC_EXIT_0%%*.}"
+                timep_NEXEC_EXIT_1="${timep_NEXEC_EXIT_0%-*}-${BASHPID}_${timep_NEXEC_EXIT_0##*_}}"
+                timep_NEXEC_EXIT_1_SUBSHELL_A[${timep_KK}]=${BASHPID}_${timep_NEXEC_EXIT_0##*_}
+            }
+            [[ -f "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_EXIT}.exit" ]] || {
             while ((timep_KK > 0)); do
                 ((timep_KK--))
                 IFS='"'"' '"'"' read -r _ _ _ timep_BASHPID_ADD_CUR _ </proc/${timep_BASHPID_ADD_CUR}/stat
-                if (( timep_BASHPID_ADD_CUR == timep_BASHPID_PREV )) || (( timep_BASHPID_ADD_CUR <= 1 )); then
+                if ${timep_EXIT_PID_REGEN_FLAG}; then
+                    [[ -f "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_EXIT_0}.exit" ]] && break
+                    : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_EXIT_0}.exit"
+                    timep_NEXEC_EXIT_FUNC_A[${timep_KK}]="${timep_NEXEC_EXIT_0}"
+                    timep_NEXEC_EXIT_0="${timep_NEXEC_EXIT_0%\}.*}}"
+                    timep_NEXEC_EXIT_FUNC_A[${timep_KK}]="${timep_NEXEC_EXIT_FUNC_A[${timep_KK}]#*\}.}"
+                    timep_NEXEC_EXIT_SUBSHELL_A[${timep_KK}]="${timep_NEXEC_EXIT_0%%*.}"
+                    timep_NEXEC_EXIT_1="${timep_NEXEC_EXIT_0%-*}-${timep_BASHPID_ADD_CUR}_${timep_NEXEC_EXIT_0##*_}}"
+                    timep_NEXEC_EXIT_1_SUBSHELL_A[${timep_KK}]=${timep_BASHPID_ADD_CUR}_${timep_NEXEC_EXIT_0##*_}
+                elif (( timep_BASHPID_ADD_CUR == timep_BASHPID_PREV )) || (( timep_BASHPID_ADD_CUR <= 1 )); then
                     timep_BASHPID_ADD[${timep_KK}]=0
                     while (( timep_kk > 0 )); do
                         ((timep_kk--))
@@ -717,6 +736,7 @@ echo "${timep_NEXEC_HASH_CUR_TMP} --> ${timep_NEXEC_0}.${timep_NEXEC_CUR}{${time
                 printf '"'"'1\t%s\t+\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}.0\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_END_CTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}.${BASHPID}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_NPIDWRAP}" "${BASHPID}" "${timep_LINENO_0}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_CUR@Q} ${timep_IS_BG_INDICATOR}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR_TMP}.init_c"
                 ${timep_IS_SUBSHELL_FLAG} && timep_TMP_INIT_A+=("log.${timep_NEXEC_HASH_CUR_TMP}.init_c")
                 unset "timep_NEXEC_HASH_CUR_TMP"
+                }
             fi
         elif [[ ${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]} ]]; then
 echo "IN WRITE NORMAL COMMAND BRANCH" >>"${timep_TMPDIR}/run.log.txt"
