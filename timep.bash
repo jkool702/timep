@@ -2487,7 +2487,7 @@ _timep_COMBINE_FLAMEGRAPH() {
     case "${linenoShift}" in
         \-[0-9]*)
             linenoShift="$(sed -E s/'^\-([0-9]+)\..*$/\1/' <<<"${linenoShift}")";
-            ((linenoShift++))
+            ((linenoShift--))
         ;;
         *)
             linenoShift=0
