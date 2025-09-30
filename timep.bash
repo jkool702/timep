@@ -669,6 +669,7 @@ echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE 
                 timep_BASH_SUBSHELL_DIFF"${timep_NEXEC_0##*\{+([0-9])-+([0-9])_+(0-9)\}}"
                 timep_BASH_SUBSHELL_DIFF="${timep_BASH_SUBSHELL_DIFF//[^\.]/}"
                 timep_BASH_SUBSHELL_DIFF=${#timep_BASH_SUBSHELL_DIFF}"
+                timep_NEXEC_HASH_EXIT=timep_NEXEC_HASH_CUR
             else
                 ((timep_BASH_SUBSHELL_DIFF = BASH_SUBSHELL - timep_BASH_SUBSHELL_PREV - 1))
             fi
@@ -678,16 +679,18 @@ echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE 
                 ((timep_KK--))
                 IFS='"'"' '"'"' read -r _ _ _ timep_BASHPID_ADD_CUR _ </proc/${timep_BASHPID_ADD_CUR}/stat
                 if ${timep_EXIT_PID_REGEN_FLAG}; then
-                    { [[ -f "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_EXIT_0}.exit" ]] || (( timep_BASHPID_ADD_CUR == timep_BASHPID_PREV )) || (( timep_BASHPID_ADD_CUR <= 1 )) || (( timep_KK == 0 )); } && {
+                    { [[ -f "${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_EXIT}.exit" ]] || (( timep_BASHPID_ADD_CUR == timep_BASHPID_PREV )) || (( timep_BASHPID_ADD_CUR <= 1 )) || (( timep_KK == 0 )); } && {
                         ((timep_KK++))
-                        timep_NPIDWRAP="${timep_NEXEC_HASH_EXIT_0##*\{}"
+                        timep_NPIDWRAP="${timep_NEXEC_HASH_EXIT##*\{}"
                         timep_NPIDWRAP=${timep_EXIT_NPIDWRAP%\-*}
                         break
                     }
-                    : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_EXIT_0}.exit"
+                    : >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_EXIT}.exit"
                     timep_NEXEC_EXIT_FUNC_A[${timep_KK}]="${timep_NEXEC_EXIT_0##*\}.}"
                     timep_NEXEC_EXIT_0="${timep_NEXEC_EXIT_0%\}.*}}"
                     timep_NEXEC_EXIT_SUBSHELL_A[${timep_KK}]="${timep_NEXEC_EXIT_0%%*.}"
+                    timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_EXIT_0}"
+                    [[ -s "${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}" ]] || echo "${timep_NEXEC_EXIT_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
                 elif (( timep_BASHPID_ADD_CUR == timep_BASHPID_PREV )) || (( timep_BASHPID_ADD_CUR <= 1 )); then
                     timep_BASHPID_ADD[${timep_KK}]=0
                     while (( timep_kk > 0 )); do
