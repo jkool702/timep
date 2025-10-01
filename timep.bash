@@ -449,11 +449,11 @@ _timep_getFuncSrc() {
     # this allows timep to run without adding any new (and potentially conflicting) variables to the code being run / time profiled.
 
     export -p timep_EXIT_TRAP_STR &>/dev/null && export -n timep_EXIT_TRAP_STR
-    timep_EXIT_TRAP_STR='timep_SKIP_DEBUG_FLAG=true 
+    timep_EXIT_TRAP_STR='timep_SKIP_DEBUG_FLAG=true
 timep_SUBSHELL_INIT_FLAG=true
 timep_EXIT_PID_WALK_FLAG=true
 timep_NO_PRINT_FLAG=true
-timep_SKIP_DEBUG_FLAG=true 
+timep_SKIP_DEBUG_FLAG=true
 :
 '
 
@@ -693,7 +693,7 @@ echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE 
                     timep_NEXEC_EXIT_SUBSHELL_A[${timep_KK}]="${timep_NEXEC_EXIT_0%%*.}"
                     timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_EXIT_0}"
                     [[ -s "${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}" ]] || echo "${timep_NEXEC_EXIT_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
-                    timep_NEXEC_HASH_EXIT_A[${timep_KK}]="${timep_NEXEC_HASH_CUR}"                  
+                    timep_NEXEC_HASH_EXIT_A[${timep_KK}]="${timep_NEXEC_HASH_CUR}"
                 elif (( timep_BASHPID_ADD_CUR == timep_BASHPID_PREV )) || (( timep_BASHPID_ADD_CUR <= 1 )); then
                     timep_BASHPID_ADD[${timep_KK}]=0
                     while (( timep_kk > 0 )); do
@@ -718,22 +718,22 @@ echo "NEW DEBUG TRAP ($BASHPID_$BASH_SUBSHELL): COMMAND TYPE IS $timep_CMD_TYPE 
                     timep_NEXEC_EXIT_0+=".${timep_NEXEC_EXIT_SUBSHELL_A[$timep_KK]}"
                     [[ ${timep_NEXEC_EXIT_FUNC_A[$timep_KK]} ]] && {
                         timep_NEXEC_EXIT_0+=".${timep_NEXEC_EXIT_FUNC_A[$timep_KK]}"
-                        timep_NEXEC_EXIT_1+=".${timep_NEXEC_EXIT_FUNC_A[$timep_KK]}"                   
+                        timep_NEXEC_EXIT_1+=".${timep_NEXEC_EXIT_FUNC_A[$timep_KK]}"
                     }
                     timep_NEXEC_EXIT_0+=".${timep_NEXEC_EXIT_SUBSHELL_A[$timep_KK]}"
                     timep_NEXEC_EXIT_1+=".${timep_NEXEC_EXIT_SUBSHELL_A[$timep_KK]%%\{*}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
                 else
-                    timep_BASH_COMMAND_PREV_0="<< (${timep_CMD_TYPE_PREV_0}): ${timep_BASHPID_PREV} >>"
+                    timep_BASH_COMMAND_PREV_0="<< (${timep_CMD_TYPE}): ${timep_BASHPID_PREV} >>"
                     timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}.${timep_NEXEC_CUR}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
                     echo "${timep_NEXEC_0}.${timep_NEXEC_CUR}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
 echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}.${timep_NEXEC_CUR}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}" >>"${timep_TMPDIR}/run.log.txt"
                     printf '"'"'1\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}\t%s\t::\t%s\n'"'"' "${timep_ENDTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_NPIDWRAP}" "${timep_BASHPID_PREV}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "${timep_BASH_COMMAND_PREV_0@Q}" >"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}.init_s"
                     timep_BASHPID_STR+=".${timep_BASHPID_PREV}"
                     timep_NEXEC_0+=".${timep_NEXEC_CUR}{${timep_NPIDWRAP}-${timep_BASHPID_PREV}}"
+                    timep_NEXEC_CUR=0
+                    ((timep_BASH_SUBSHELL_PREV++))
                     timep_NEXEC_A+=(0)
                 fi
-                timep_NEXEC_CUR=0
-                ((timep_BASH_SUBSHELL_PREV++))
                 ((timep_KK++))
             done
             if ${timep_EXIT_PID_REGEN_FLAG}; then
@@ -1004,19 +1004,6 @@ timep_SUBSHELL_INIT_FLAG=false
 timep_LINENO_INIT_FLAG=true
 timep_EXIT_PID_REGEN_FLAG=false
 
-timep_NPIDWRAP_PREV_0="${timep_NPIDWRAP:-0}"
-timep_CMD_TYPE_PREV_0="${timep_CMD_TYPE}"
-timep_BASHPID_PREV_0="${timep_BASHPID_PREV}"
-timep_ENDTIME_PREV_0="${timep_ENDTIME}"
-timep_BASH_SUBSHELL_PREV_0="${timep_BASH_SUBSHELL_PREV}"
-timep_NEXEC_PREV_0="${timep_NEXEC_0}"
-timep_NEXEC_CUR_0="${timep_NEXEC_CUR}"
-timep_NEXEC_N_0="${timep_NEXEC_N}"
-timep_NEXEC_A_0=("${timep_NEXEC_A}")
-timep_NEXEC_HASH_CUR_0="${timep_NEXEC_HASH_CUR}"
-timep_BASHPID_STR_0="${timep_BASHPID_STR}"
-timep_BG_PID_COUNTER_0="${timep_BG_PID_COUNTER}"
-
 timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
 timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
 timep_STARTTIME[${timep_FNEST_CUR}]="${EPOCHREALTIME}"
@@ -1113,9 +1100,6 @@ export BASH_ENV="\${timep_TMPDIR}/env.bash"
 . "\${timep_TMPDIR}/setup.bash"
 trap - SIGTERM SIGQUIT SIGHUP SIGINT EXIT RETURN DEBUG
 EOF
-
-
-
 
     printf '\ntimep_TMPDIR = %s\n\n' "${timep_TMPDIR}" >&2
 
@@ -1239,7 +1223,7 @@ EOF
     [[ -s "${timep_TMPDIR}/.log/.corrections" ]] & {
         sort -Vr <"${timep_TMPDIR}/.log/.corrections" | IFS=$'\t' while read -r depth nexec0 hash0 nexec1; do
             mapfile -t logMoveA < <(printf '%s\n' "${timep_TMPDIR}/.log/log.${hash0}"; grep -rF "${nexec0}." "${timep_TMPDIR}/.log/.hash" | sed -E s/'\:.*$'//)
-            for nn in "${logMoveA[@]}"'; do
+            for nn in "${logMoveA[@]}"; do
                 timep_hash - 'hash1' <<<"${nn##*\/log.}"
                 \mv "${nn}" "${nn%\/log.*}/log.${hash1}"
                 echo "${nexec1}" >"${timep_TMPDIR}/.log/.hash/${hash1}"
@@ -2498,7 +2482,7 @@ _timep_COMBINE_FLAMEGRAPH() {
         *)
             linenoShift=0
         ;;
-    esac 
+    esac
 
     # NOTE: $timep_TMPDIR/.worker/<workerPID> contasins info on current workers state
     # if the file exists and is empty --> worker is running but not post-processing a log
