@@ -453,7 +453,7 @@ _timep_getFuncSrc() {
 timep_SUBSHELL_INIT_FLAG=true
 timep_EXIT_PID_WALK_FLAG=true
 timep_NO_PRINT_FLAG=true
-timep_SKIP_DEBUG_FLAG=true
+timep_SKIP_DEBUG_FLAG=false
 :
 '
 
