@@ -1574,7 +1574,7 @@ _timep_PROCESS_LOG() {
 
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' <"${logCur}" | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/\n(TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: TRAP/\nTRAP/' | sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
@@ -1617,6 +1617,7 @@ _timep_PROCESS_LOG() {
 
         # unquote the cmd string
         if [[ "${cmd}" == 'TRAP ('*'): '* ]]; then
+            cmd="${cmd@Q}"
             cmd="${cmd@Q}"
             isTrapA[$kk]=true
         else
