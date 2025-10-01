@@ -1221,7 +1221,7 @@ EOF
 
     # apply .corrections file - rename logs and build nexec mapping array
     [[ -s "${timep_TMPDIR}/.log/.corrections" ]] & {
-        sort -Vr <"${timep_TMPDIR}/.log/.corrections" | IFS=$'\t' while read -r depth nexec0 hash0 nexec1; do
+        sort -Vr <"${timep_TMPDIR}/.log/.corrections" | while IFS=$'\t' read -r depth nexec0 hash0 nexec1; do
             mapfile -t logMoveA < <(printf '%s\n' "${timep_TMPDIR}/.log/log.${hash0}"; grep -rF "${nexec0}." "${timep_TMPDIR}/.log/.hash" | sed -E s/'\:.*$'//)
             for nn in "${logMoveA[@]}"; do
                 timep_hash - 'hash1' <<<"${nn##*\/log.}"
