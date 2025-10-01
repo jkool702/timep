@@ -1139,11 +1139,11 @@ EOF
         fi
         if [[ -t 0 ]]; then
             {
-                "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                "${BASH}" -m $(shopt extglob &>/dev/null && printf '%s ' '-O' 'extglob') -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         else
             {
-               "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+               "${BASH}" -m $(shopt extglob &>/dev/null && printf '%s ' '-O' 'extglob') -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 0<"${timep_PTY_PATH}" 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         fi
     else
