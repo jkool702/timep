@@ -827,8 +827,9 @@ echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.t
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
-                        trapStrQ="TRAP (${trapType}): ${trapStr}"
+                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
                         trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
+                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
                         trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -842,8 +843,9 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
                     else
-                        trapStrQ="TRAP (${trapType}): ${trapStr}"
+                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
                         trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
+                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
                         trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -861,8 +863,9 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_SIGNAL_RELAY_TRAP_STR//\%s/"${trapType#SIG}"}" "${trapType}"
                     else
-                        trapStrQ="TRAP (${trapType}): ${trapStr}"
-                                    trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
+                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
+                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
+                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
                         trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -878,8 +881,9 @@ timep_SKIP_DEBUG_FLAG=false
                     elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
-                        trapStrQ="TRAP (${trapType}): ${trapStr}"
+                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
                         trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
+                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
                         trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
@@ -1574,7 +1578,7 @@ _timep_PROCESS_LOG() {
 
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/\n(TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: TRAP/\nTRAP/' | sed -zE 's/(^|\n)(TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
@@ -1616,7 +1620,7 @@ _timep_PROCESS_LOG() {
         nexecHashA[$kk]="${nexecHash}"
 
         # unquote the cmd string
-        if [[ "${cmd}" == 'TRAP ('*'): '* ]]; then
+        if [[ "${cmd}" == '@TRAP ('*'): '* ]]; then
             cmd="${cmd@Q}"
             cmd="${cmd@Q}"
             isTrapA[$kk]=true
@@ -1645,7 +1649,7 @@ _timep_PROCESS_LOG() {
             nPipeNextIgnoreFlag=false
             inPipeFlag=false
             inPipeFlagA[$kk]=false
-        elif (( nPipeA[$kk] > 1 )) && (( kk > 0 )) && ! ${isTrapA[$kk]} && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
+        elif (( 10#0${nPipeA[$kk]//[^0-9]/} > 1 )) && (( kk > 0 )) && ! ${isTrapA[$kk]} && [[ "${cmdA[$kk]//"'"/}" == '(('*[\<\>\=]*'))' ]]; then
             (( kk1 = kk - 1 ))
             IFS=$'\t' read -r nPipe0 _ _ _ _ _ _ _ _ _ cmd0 <<<"${logA[$kk1]}"
             (( nPipe0 > 1 )) && {
@@ -1727,7 +1731,7 @@ _timep_PROCESS_LOG() {
                     [[ -s "${logCur%\/*}/log.${log_tmp_hash}" ]] && {
                     while read -r _ endWTime _ ; do
                         [[ ${endWTime//[+-]/} ]] || continue
-                        (( 10#0${endWTime} > 10#0${startWTimeA[$kk]} )) && break 2
+                        (( 10#0${endWTime//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && break 2
                     done <"${logCur%\/*}/log.${log_tmp_hash}"
                 }
                 log_tmp="${log_tmp%.*}"
@@ -1757,7 +1761,7 @@ _timep_PROCESS_LOG() {
             ${isMergeIndicatorA[$kk1]} && { isMergeIndicatorA[$kk]=true; mergeA[$kk]+="${mergeA[$kk]:+$'\n'}${mergeA[$kk1]}"; }
             cmdA[$kk]+=" | ${cmdA[$kk1]// \(\&\)/}"
             (( nPipeA[$kk] == 1 )) && inPipeFlag=false
-        elif (( nPipeA[$kk] > 1 )); then
+        elif (( 10#0${nPipeA[$kk]//[^0-9]/} > 1 )); then
             # this is the last element of a pipeline. set flag to indicate this
             inPipeFlag=true
             isPipeA[$kk]=1
