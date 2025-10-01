@@ -642,7 +642,6 @@ fi
         if ${timep_IS_SUBSHELL_FLAG} && ${timep_IS_BG_FLAG} && ${timep_IS_FUNC_FLAG}; then
             timep_IS_BG_FUNC_FLAG=true
             timep_SKIP_RETURN_TRAP_FLAG_A+=(true)
-            timep_SUBSHELL_INIT_FLAG=true
         elif ${timep_IS_FUNC_FLAG}; then
             timep_SKIP_RETURN_TRAP_FLAG_A+=(false)
         fi
