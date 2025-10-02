@@ -1,15 +1,7 @@
 #!/usr/bin/env bash
 
-# The "Impossible" Profiler Stress Test
-# Designed to break naive profilers with:
-# - Deep nesting (functions, subshells, background jobs)
-# - Trap interference and manipulation
-# - Signal handling during execution
-# - Complex pipelines and process substitutions
-# - Coprocs and command substitution chaos
-# - Rapid job creation/destruction
-# - Variable scope manipulation
-# - Self-modifying code
+# The "Safe but Impossible" Profiler Stress Test
+# Designed to test profilers without crashing the system
 
 set -mT  # Job control and functrace required
 
@@ -17,26 +9,34 @@ set -mT  # Job control and functrace required
 declare -a global_pids=()
 declare -g trap_counter=0
 declare -g signal_received=0
+declare -g max_depth=4  # Limit recursion depth
 
 # Self-modifying function that will change during execution
 chaos_func() {
     local level=$1
     echo "CHAOS Level $level: PID=$BASHPID, SUBSHELL=$BASH_SUBSHELL"
     
-    if (( level > 0 )); then
-        # Recursively call in different contexts
-        (chaos_func $((level-1))) &
-        chaos_func $((level-1))
-        wait -n
+    # Only recurse if we haven't reached max depth
+    if (( level > 0 && level < max_depth )); then
+        # Recursively call in different contexts but limit parallelism
+        if (( level % 2 == 0 )); then
+            (chaos_func $((level-1))) &
+            chaos_func $((level-1))
+            wait -n
+        else
+            chaos_func $((level-1))
+            (chaos_func $((level-1))) &
+            wait -n
+        fi
     fi
     
     # Modify itself after first run
-    if (( level == 5 )); then
+    if (( level == max_depth )); then
         eval 'chaos_func() { echo "REDEFINED CHAOS: $BASHPID"; }'
     fi
 }
 
-# Trap manipulator that plays with trap states
+# Trap manipulator that plays with trap states (safely)
 trap_manipulator() {
     local trap_type=$1
     
@@ -49,17 +49,19 @@ trap_manipulator() {
     trap - DEBUG
     trap 'trap_counter=$((trap_counter+1))' DEBUG
     
-    # Call in different contexts
-    (trap_manipulator "SUBSHELL-$trap_type") &
-    wait
+    # Call in different contexts but limit depth
+    if [[ "$trap_type" != "SUBSHELL-SUBSHELL" ]]; then
+        (trap_manipulator "SUBSHELL-$trap_type") &
+        wait
+    fi
 }
 
-# Signal handler that creates more chaos
+# Signal handler that creates more chaos (safely)
 signal_chaos() {
     signal_received=1
     echo "SIGNAL CHAOS: Received USR1 at $BASHPID"
     
-    # Create more background jobs on signal
+    # Create a limited number of background jobs on signal
     (sleep 0.1; echo "SIGNAL SPAWN 1") &
     (sleep 0.1; echo "SIGNAL SPAWN 2") &
     
@@ -67,7 +69,7 @@ signal_chaos() {
     trap 'echo "SIGNAL DEBUG TRAP"' DEBUG
 }
 
-# Pipeline and process substitution nightmare
+# Pipeline and process substitution nightmare (controlled)
 pipeline_chaos() {
     local depth=$1
     
@@ -86,8 +88,10 @@ pipeline_chaos() {
         sed 's/PIPELINE/PIPESUB/' |
         while read -r line; do
             echo "PROCESSED: $line"
-            # Create subshell within pipeline
-            (echo "SUBSHELL IN PIPELINE: $BASHPID") &
+            # Create subshell within pipeline but limit further nesting
+            if (( depth > 1 )); then
+                (echo "SUBSHELL IN PIPELINE: $BASHPID") &
+            fi
         done
     } | {
         cat <(echo "PROCESS SUB 1") <(echo "PROCESS SUB 2") |
@@ -95,13 +99,13 @@ pipeline_chaos() {
     }
 }
 
-# Coproc chaos
+# Coproc chaos (limited)
 coproc_chaos() {
     local i
-    for i in {1..3}; do
+    for i in {1..2}; do  # Reduced from 3 to 2
         # Create coproc that spawns more processes
         coproc CP {
-            for j in {1..3}; do
+            for j in {1..2}; do  # Reduced from 3 to 2
                 echo "COPROC $i-$j: $BASHPID"
                 (echo "COPROC SUBSHELL $i-$j") &
                 sleep 0.01
@@ -133,17 +137,17 @@ variable_chaos() {
     echo "OUTER VAR: $var"
 }
 
-# Rapid job creation/destruction
+# Controlled job creation/destruction
 job_chaos() {
     local i
-    for i in {1..10}; do
-        # Create multiple types of jobs rapidly
+    for i in {1..5}; do  # Reduced from 10 to 5
+        # Create multiple types of jobs
         { echo "JOB $i-1"; } &
         { (echo "JOB $i-2"; echo "JOB $i-2-2") & } &
         (echo "JOB $i-3") &
         
         # Wait for some jobs while creating more
-        if (( i % 3 == 0 )); then
+        if (( i % 2 == 0 )); then  # Changed from 3 to 2
             wait -n
         fi
     done
@@ -183,7 +187,7 @@ main_chaos() {
     # Start all chaos in parallel
     (
         echo "=== DEEP NESTING CHAOS ==="
-        chaos_func 5
+        chaos_func $max_depth
     ) &
     
     (
