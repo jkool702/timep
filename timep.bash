@@ -2546,10 +2546,12 @@ done
 
         (( kkDiff = kk - kkMin + 1 ))
 
+        kkNeedCur=("${kkNeed[@]:${kkMin}}")
+
             # write ID's of logs to process (for current nesting lvl) to work queue pipe
             # writer is a background process to prevent deadlock
             {
-                for kk1 in "${kkNeed[@]:${kkMin}}"; do
+                for kk1 in "${kkNeedCur[@]}"; do
                     printf '%s\n' "${kk1}" >&${timep_fd_logID}
                 done
             } &
@@ -2667,6 +2669,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
             done
 
+        (( timep_LOG_NESTING_CUR == timep_LOG_NESTING_MAX )) || (( timep_LOG_NESTING_CUR == 0 )) || {
+
+            find "${timep_TMPDIR}/.log" -maxdepth 1 -type f -name 'log.*' | grep -v .out | while read -r path1; do hash1="${path1##*\/log.}"; nexec1="$(cat "${timep_TMPDIR}/.log/.hash/log.${hash1}")"; nexec0="${nexec1%.*}"; timep_hash - hash0 <<<"${nexec0}"; grep -F "${nexec1}" "${timep_TMPDIR}/.log/log.${hash0}" | grep -qE '<< \(.*\): .* >>' || printf '%s\t%s\t%s\t%s\n' "log.${hash0}" "log.${hash1}" "${nexec0}" "${nexec1}"; done
+
+        }
+        kkNeedCurLast=("${kkNeedCur[@]}")
+        timep_LOG_NESTING_LAST="${timep_LOG_NESTING_CUR}"
         read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
 
