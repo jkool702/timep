@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-if shopt extglob | grep -qE 'off$'; then
-    timep_extglobState='-u'
-else
+if shopt extglob 2>/dev/null; then
     timep_extglobState='-s'
+else
+    timep_extglobState='-u'
 fi
 shopt -s extglob
 
@@ -1037,7 +1037,8 @@ builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
     '"${timep_runCmd}"'
 } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
 '
-    ${timep_timeFlag} && timep_runMainSrc+='} 1>&${timep_FD2}'
+    ${timep_timeFlag} && timep_runMainSrc+='} 1>&${timep_FD2}
+'
     
     timep_runMainSrc+='builtin trap - DEBUG EXIT RETURN SIGTERM SIGQUIT SIGHUP SIGINT;
     exec {timep_LOCK_FD}>&-
@@ -1155,19 +1156,19 @@ EOF
         fi
         if [[ -t 0 ]]; then
             {
-                "${BASH}" -m $(shopt extglob &>/dev/null && printf '%s ' '-O' 'extglob') -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+                "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         else
             {
-               "${BASH}" -m $(shopt extglob &>/dev/null && printf '%s ' '-O' 'extglob') -o functrace "${timep_TMPDIR}/main.bash" "${@}"
+               "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
             } 0<"${timep_PTY_PATH}" 1>"${timep_PTY_PATH}" 2>"${timep_PTY_PATH}"
         fi
     else
         printf '\n\nWARNING: job control could not be enabled due to lack of controlling TTY/PTY. subshells and background forks may not be properly distinguished!\n\n' >&${timep_FD2}
         if [[ -t 0 ]]; then
-           "${timep_TMPDIR}/main.bash" "${@}"
+          "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}"
         else
-           "${timep_TMPDIR}/main.bash" "${@}" <&0
+           "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
 

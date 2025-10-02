@@ -1,0 +1,972 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="416" onload="init(evt)" viewBox="0 0 4096 416" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+
+                unzoombtn.classList.remove("hide");
+
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="416.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/gemini-2.5/old/gemini-2.5.test.1.bash</text>
+<text id="details" x="10.00" y="401" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="401" > </text>
+<g id="frames">
+<g >
+<title>'read -r data' (302,764 us, 6.82%)</title><rect x="1101.6" y="267" width="277.9" height="23.0" fill="rgb(211,211,210)" rx="2" ry="2" />
+<text  x="1104.62" y="281.5" >'read -r data'</text>
+</g>
+<g >
+<title>SUBSHELL (43353)_[s] (4,279 us, 0.10%)</title><rect x="342.3" y="291" width="3.9" height="23.0" fill="rgb(222.945604290164,138.438561055141,196.71928052757)" rx="2" ry="2" />
+<text  x="345.25" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43391)_[s] (264 us, 0.01%)</title><rect x="1663.8" y="267" width="0.2" height="23.0" fill="rgb(222.938524544282,138.412816524662,196.706408262331)" rx="2" ry="2" />
+<text  x="1666.80" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (deeply_nested_madness)_[f] (180 us, 0.00%)</title><rect x="1100.9" y="291" width="0.2" height="23.0" fill="rgb(196.710154450888,138.420308901776,222.940584947988)" rx="2" ry="2" />
+<text  x="1103.90" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43390)_[s] (502,369 us, 11.31%)</title><rect x="1850.3" y="291" width="461.1" height="23.0" fill="rgb(251.523092986872,192.415673763701,235.877011427798)" rx="2" ry="2" />
+<text  x="1853.31" y="305.5" >SUBSHELL (43390)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Executing at depth $depth&quot;' (176 us, 0.00%)</title><rect x="3992.2" y="75" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3995.21" y="89.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43390)_[s] (264 us, 0.01%)</title><rect x="1663.8" y="291" width="0.2" height="23.0" fill="rgb(222.938524544282,138.412816524662,196.706408262331)" rx="2" ry="2" />
+<text  x="1666.80" y="305.5" ></text>
+</g>
+<g >
+<title>FUNCTION (deeply_nested_madness)_[f] (209,525 us, 4.72%)</title><rect x="3893.7" y="219" width="192.3" height="23.0" fill="rgb(221.633635348811,188.267270697622,236.648499441846)" rx="2" ry="2" />
+<text  x="3896.68" y="233.5" >FUNCTION (deeply_nested_madnes..</text>
+</g>
+<g >
+<title>'for i in $(seq 1 $CHILD_PROCESSES)' (561 us, 0.01%)</title><rect x="2684.2" y="243" width="0.5" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2687.17" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (101,408 us, 2.28%)</title><rect x="3992.4" y="75" width="93.1" height="23.0" fill="rgb(165,204,218)" rx="2" ry="2" />
+<text  x="3995.37" y="89.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>SUBSHELL (43354)_[s] (3,686 us, 0.08%)</title><rect x="3243.6" y="243" width="3.4" height="23.0" fill="rgb(222.945604290164,138.438561055141,196.71928052757)" rx="2" ry="2" />
+<text  x="3246.59" y="257.5" ></text>
+</g>
+<g >
+<title>'deeply_nested_madness $((depth - 1))' (286 us, 0.01%)</title><rect x="4085.5" y="51" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="4088.45" y="65.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43356)_[s] (484 us, 0.01%)</title><rect x="1380.5" y="291" width="0.4" height="23.0" fill="rgb(222.944186734863,138.433406308592,196.716703154296)" rx="2" ry="2" />
+<text  x="1383.47" y="305.5" ></text>
+</g>
+<g >
+<title>'data_generator' (614 us, 0.01%)</title><rect x="2683.6" y="243" width="0.6" height="23.0" fill="rgb(0,2,254)" rx="2" ry="2" />
+<text  x="2686.61" y="257.5" ></text>
+</g>
+<g >
+<title>'deeply_nested_madness $((depth - 1))' (118 us, 0.00%)</title><rect x="3893.7" y="195" width="0.1" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3896.68" y="209.5" ></text>
+</g>
+<g >
+<title>'read -r data' (304,025 us, 6.85%)</title><rect x="819.9" y="267" width="279.1" height="23.0" fill="rgb(211,211,210)" rx="2" ry="2" />
+<text  x="822.91" y="281.5" >'read -r data'</text>
+</g>
+<g >
+<title>'sleep 0.1' (102,578 us, 2.31%)</title><rect x="3896.0" y="147" width="94.2" height="23.0" fill="rgb(132,189,219)" rx="2" ry="2" />
+<text  x="3899.05" y="161.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>FUNCTION (data_generator)_[f] (3,686 us, 0.08%)</title><rect x="3243.6" y="267" width="3.4" height="23.0" fill="rgb(196.71928052757,138.438561055141,222.945604290164)" rx="2" ry="2" />
+<text  x="3246.59" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43383)_[s] (207,093 us, 4.66%)</title><rect x="3895.9" y="171" width="190.1" height="23.0" fill="rgb(236.639841720817,188.235788075698,221.617894037849)" rx="2" ry="2" />
+<text  x="3898.91" y="185.5" >SUBSHELL (43383)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43373)_[s] (202,933 us, 4.57%)</title><rect x="1664.0" y="267" width="186.3" height="23.0" fill="rgb(238.878370803947,178.717169169897,221.183899735109)" rx="2" ry="2" />
+<text  x="1667.04" y="281.5" >SUBSHELL (43373)_[s]</text>
+</g>
+<g >
+<title>'local child_id=$(echo &quot;child-$i-$$&quot;)' (685 us, 0.02%)</title><rect x="1100.3" y="267" width="0.6" height="23.0" fill="rgb(0,2,254)" rx="2" ry="2" />
+<text  x="1103.28" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43390)_[s] (512,942 us, 11.55%)</title><rect x="346.2" y="291" width="470.8" height="23.0" fill="rgb(254.016209206754,168.426410194378,231.880916358726)" rx="2" ry="2" />
+<text  x="349.18" y="305.5" >SUBSHELL (43390)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43374)_[s] (202,441 us, 4.56%)</title><rect x="2312.2" y="267" width="185.8" height="23.0" fill="rgb(238.243366461253,180.737646816915,221.105900342079)" rx="2" ry="2" />
+<text  x="2315.18" y="281.5" >SUBSHELL (43374)_[s]</text>
+</g>
+<g >
+<title>'wait $!' (512,835 us, 11.55%)</title><rect x="346.2" y="267" width="470.7" height="23.0" fill="rgb(235,142,77)" rx="2" ry="2" />
+<text  x="349.18" y="281.5" >'wait $!'</text>
+</g>
+<g >
+<title>SUBSHELL (43356)_[s] (301,501 us, 6.79%)</title><rect x="3247.1" y="291" width="276.7" height="23.0" fill="rgb(236.661811909428,188.315679670647,221.657839835323)" rx="2" ry="2" />
+<text  x="3250.09" y="305.5" >SUBSHELL (43356)_[s]</text>
+</g>
+<g >
+<title>'sleep 0.5' (502,369 us, 11.31%)</title><rect x="1850.3" y="243" width="461.1" height="23.0" fill="rgb(212,211,200)" rx="2" ry="2" />
+<text  x="1853.31" y="257.5" >'sleep 0.5'</text>
+</g>
+<g >
+<title>FUNCTION (deeply_nested_madness)_[f] (596 us, 0.01%)</title><rect x="4085.5" y="75" width="0.5" height="23.0" fill="rgb(196.81555794808,138.631115896161,222.998556871444)" rx="2" ry="2" />
+<text  x="4088.45" y="89.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43363)_[s] (301,204 us, 6.78%)</title><rect x="3524.0" y="243" width="276.5" height="23.0" fill="rgb(244.021956662512,189.817867683665,228.584083219169)" rx="2" ry="2" />
+<text  x="3526.99" y="257.5" >SUBSHELL (43363)_[s]</text>
+</g>
+<g >
+<title>'sleep 0.3' (301,204 us, 6.78%)</title><rect x="3524.0" y="219" width="276.5" height="23.0" fill="rgb(209,211,207)" rx="2" ry="2" />
+<text  x="3526.99" y="233.5" >'sleep 0.3'</text>
+</g>
+<g >
+<title>SUBSHELL (43374)_[s] (490 us, 0.01%)</title><rect x="2311.4" y="267" width="0.5" height="23.0" fill="rgb(222.939273860107,138.415541309481,196.707770654741)" rx="2" ry="2" />
+<text  x="2314.42" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43357)_[s] (301,358 us, 6.79%)</title><rect x="2967.0" y="291" width="276.6" height="23.0" fill="rgb(236.661525578412,188.314638466954,221.657319233477)" rx="2" ry="2" />
+<text  x="2969.98" y="305.5" >SUBSHELL (43357)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Exiting depth $depth with result: $result&quot;' (343 us, 0.01%)</title><rect x="3895.6" y="195" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3898.60" y="209.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43357)_[s] (128 us, 0.00%)</title><rect x="3247.0" y="291" width="0.1" height="23.0" fill="rgb(222.938627066844,138.413189333978,196.706594666989)" rx="2" ry="2" />
+<text  x="3249.98" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;--- Child Process $i Started ---&quot;' (134 us, 0.00%)</title><rect x="1100.2" y="267" width="0.1" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1103.15" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (301,204 us, 6.78%)</title><rect x="3524.0" y="291" width="276.5" height="23.0" fill="rgb(244.021956662512,189.817867683665,228.584083219169)" rx="2" ry="2" />
+<text  x="3526.99" y="305.5" >SUBSHELL (43355)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43368)_[s] (301,358 us, 6.79%)</title><rect x="2967.0" y="267" width="276.6" height="23.0" fill="rgb(236.661525578412,188.314638466954,221.657319233477)" rx="2" ry="2" />
+<text  x="2969.98" y="281.5" >SUBSHELL (43368)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (302,764 us, 6.82%)</title><rect x="1101.6" y="291" width="277.9" height="23.0" fill="rgb(245.943412921638,191.939319602517,230.849101124368)" rx="2" ry="2" />
+<text  x="1104.62" y="305.5" >SUBSHELL (43355)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Starting nested task...&quot;' (490 us, 0.01%)</title><rect x="2311.4" y="243" width="0.5" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2314.42" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (deeply_nested_madness)_[f] (1,698 us, 0.04%)</title><rect x="817.0" y="291" width="1.6" height="23.0" fill="rgb(198.220565990139,141.441131980279,223.771311294577)" rx="2" ry="2" />
+<text  x="820.00" y="305.5" ></text>
+</g>
+<g >
+<title>all (4,440,691 us, 100%)</title><rect x="10.0" y="363" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="377.5" ></text>
+</g>
+<g >
+<title>'sleep 0.2' (201,953 us, 4.55%)</title><rect x="2498.1" y="243" width="185.3" height="23.0" fill="rgb(190,210,211)" rx="2" ry="2" />
+<text  x="2501.08" y="257.5" >'sleep 0.2'</text>
+</g>
+<g >
+<title>'sleep 0.3' (301,190 us, 6.78%)</title><rect x="3247.2" y="219" width="276.4" height="23.0" fill="rgb(208,211,209)" rx="2" ry="2" />
+<text  x="3250.17" y="233.5" >'sleep 0.3'</text>
+</g>
+<g >
+<title>'echo &quot;--- Child Process $i Started ---&quot;' (134 us, 0.00%)</title><rect x="1101.5" y="267" width="0.1" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1104.50" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43379)_[s] (209,525 us, 4.72%)</title><rect x="3893.7" y="267" width="192.3" height="23.0" fill="rgb(236.648499441846,188.267270697622,221.633635348811)" rx="2" ry="2" />
+<text  x="3896.68" y="281.5" >SUBSHELL (43379)_[s]</text>
+</g>
+<g >
+<title>'local child_id=$(echo &quot;child-$i-$$&quot;)' (611 us, 0.01%)</title><rect x="1379.5" y="267" width="0.6" height="23.0" fill="rgb(1,3,254)" rx="2" ry="2" />
+<text  x="1382.52" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (819 us, 0.02%)</title><rect x="1100.2" y="291" width="0.7" height="23.0" fill="rgb(223.432784720408,140.210126256028,197.605063128014)" rx="2" ry="2" />
+<text  x="1103.15" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (186 us, 0.00%)</title><rect x="3893.5" y="291" width="0.2" height="23.0" fill="rgb(222.938835411565,138.413946951145,196.706973475573)" rx="2" ry="2" />
+<text  x="3896.51" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[COPROC] Received: $line&quot;' (695 us, 0.02%)</title><rect x="338.7" y="291" width="0.7" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="341.73" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43356)_[s] (202,441 us, 4.56%)</title><rect x="2312.2" y="291" width="185.8" height="23.0" fill="rgb(238.243366461253,180.737646816915,221.105900342079)" rx="2" ry="2" />
+<text  x="2315.18" y="305.5" >SUBSHELL (43356)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43379)_[s] (101,385 us, 2.28%)</title><rect x="3800.5" y="267" width="93.0" height="23.0" fill="rgb(234.108062569426,176.556687760674,216.369625128372)" rx="2" ry="2" />
+<text  x="3803.45" y="281.5" >SUBSHELL (433..</text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (464 us, 0.01%)</title><rect x="1101.1" y="291" width="0.4" height="23.0" fill="rgb(222.943379448539,138.430470721959,196.715235360979)" rx="2" ry="2" />
+<text  x="1104.07" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43369)_[s] (301,358 us, 6.79%)</title><rect x="2967.0" y="243" width="276.6" height="23.0" fill="rgb(236.661525578412,188.314638466954,221.657319233477)" rx="2" ry="2" />
+<text  x="2969.98" y="257.5" >SUBSHELL (43369)_[s]</text>
+</g>
+<g >
+<title>'deeply_nested_madness 3' (207 us, 0.00%)</title><rect x="817.0" y="267" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="820.00" y="281.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (307,262 us, 6.92%)</title><rect x="2685.0" y="243" width="282.0" height="23.0" fill="rgb(194,202,135)" rx="2" ry="2" />
+<text  x="2687.96" y="257.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Processing data...&quot; (&amp;)' (464 us, 0.01%)</title><rect x="1101.1" y="267" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1104.07" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Processing data...&quot; (&amp;)' (482 us, 0.01%)</title><rect x="819.5" y="267" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="822.47" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43391)_[s] (340 us, 0.01%)</title><rect x="2311.9" y="267" width="0.3" height="23.0" fill="rgb(222.939073126236,138.414811368129,196.707405684065)" rx="2" ry="2" />
+<text  x="2314.87" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43363)_[s] (186 us, 0.00%)</title><rect x="3893.5" y="243" width="0.2" height="23.0" fill="rgb(222.938835411565,138.413946951145,196.706973475573)" rx="2" ry="2" />
+<text  x="3896.51" y="257.5" ></text>
+</g>
+<g >
+<title>'seq 1 $CHILD_PROCESSES' (3,686 us, 0.08%)</title><rect x="3243.6" y="219" width="3.4" height="23.0" fill="rgb(10,11,253)" rx="2" ry="2" />
+<text  x="3246.59" y="233.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43362)_[s] (301,204 us, 6.78%)</title><rect x="3524.0" y="267" width="276.5" height="23.0" fill="rgb(244.021956662512,189.817867683665,228.584083219169)" rx="2" ry="2" />
+<text  x="3526.99" y="281.5" >SUBSHELL (43362)_[s]</text>
+</g>
+<g >
+<title>'trap '\''signal_handler'\'' SIGINT SIGTERM' (29,670 us, 0.67%)</title><rect x="10.1" y="315" width="27.3" height="23.0" fill="rgb(18,27,250)" rx="2" ry="2" />
+<text  x="13.13" y="329.5" >'t..</text>
+</g>
+<g >
+<title>SUBSHELL (43391)_[s] (502,369 us, 11.31%)</title><rect x="1850.3" y="267" width="461.1" height="23.0" fill="rgb(251.523092986872,192.415673763701,235.877011427798)" rx="2" ry="2" />
+<text  x="1853.31" y="281.5" >SUBSHELL (43391)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;child-$i-$$&quot;' (277 us, 0.01%)</title><rect x="1663.3" y="243" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1666.32" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Finalizing...&quot;' (264 us, 0.01%)</title><rect x="1663.8" y="243" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1666.80" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.2' (202,588 us, 4.56%)</title><rect x="1664.0" y="243" width="186.0" height="23.0" fill="rgb(184,210,202)" rx="2" ry="2" />
+<text  x="1667.04" y="257.5" >'sleep 0.2'</text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (1,978 us, 0.04%)</title><rect x="1380.9" y="291" width="1.8" height="23.0" fill="rgb(222.945138998303,138.436869084739,196.71843454237)" rx="2" ry="2" />
+<text  x="1383.91" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43365)_[s] (301,501 us, 6.79%)</title><rect x="3247.1" y="243" width="276.7" height="23.0" fill="rgb(236.661811909428,188.315679670647,221.657839835323)" rx="2" ry="2" />
+<text  x="3250.09" y="257.5" >SUBSHELL (43365)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43388)_[s] (102,180 us, 2.30%)</title><rect x="3992.2" y="99" width="93.8" height="23.0" fill="rgb(236.514873011186,187.781356404312,221.390678202156)" rx="2" ry="2" />
+<text  x="3995.21" y="113.5" >SUBSHELL (433..</text>
+</g>
+<g >
+<title>SUBSHELL (43356)_[s] (305,606 us, 6.88%)</title><rect x="1382.7" y="291" width="280.5" height="23.0" fill="rgb(245.939709096151,191.913530002828,230.839224256402)" rx="2" ry="2" />
+<text  x="1385.73" y="305.5" >SUBSHELL (43356)_[s]</text>
+</g>
+<g >
+<title>'for i in $(seq 1 $CHILD_PROCESSES) (&amp;)' (1,319 us, 0.03%)</title><rect x="38.4" y="291" width="1.2" height="23.0" fill="rgb(10,11,253)" rx="2" ry="2" />
+<text  x="41.41" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43352)_[s] (3,686 us, 0.08%)</title><rect x="3243.6" y="291" width="3.4" height="23.0" fill="rgb(222.945604290164,138.438561055141,196.71928052757)" rx="2" ry="2" />
+<text  x="3246.59" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Nested task finished.&quot;' (204 us, 0.00%)</title><rect x="2497.8" y="243" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2500.81" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (data_generator)_[f] (308,728 us, 6.95%)</title><rect x="2683.6" y="267" width="283.4" height="23.0" fill="rgb(221.524897385983,188.049794771965,236.58869356229)" rx="2" ry="2" />
+<text  x="2686.61" y="281.5" >FUNCTION (data_generator)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (43356)_[s] (134 us, 0.00%)</title><rect x="1101.5" y="291" width="0.1" height="23.0" fill="rgb(222.93834270906,138.412155305673,196.706077652836)" rx="2" ry="2" />
+<text  x="1104.50" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Final Result: $final_result&quot;' (415 us, 0.01%)</title><rect x="341.9" y="291" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="344.87" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43382)_[s] (207,093 us, 4.66%)</title><rect x="3895.9" y="195" width="190.1" height="23.0" fill="rgb(236.639841720817,188.235788075698,221.617894037849)" rx="2" ry="2" />
+<text  x="3898.91" y="209.5" >SUBSHELL (43382)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43390)_[s] (340 us, 0.01%)</title><rect x="2311.9" y="291" width="0.3" height="23.0" fill="rgb(222.939073126236,138.414811368129,196.707405684065)" rx="2" ry="2" />
+<text  x="2314.87" y="305.5" ></text>
+</g>
+<g >
+<title>FUNCTION (deeply_nested_madness)_[f] (101,385 us, 2.28%)</title><rect x="3800.5" y="291" width="93.0" height="23.0" fill="rgb(216.369625128372,176.556687760674,234.108062569426)" rx="2" ry="2" />
+<text  x="3803.45" y="305.5" >FUNCTION (dee..</text>
+</g>
+<g >
+<title>'wait' (289 us, 0.01%)</title><rect x="339.5" y="291" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="342.46" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Data packet $i from $$&quot;' (291 us, 0.01%)</title><rect x="2684.7" y="243" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2687.69" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43375)_[s] (202,221 us, 4.55%)</title><rect x="2498.0" y="267" width="185.6" height="23.0" fill="rgb(236.656370805358,188.295893837665,221.647946918833)" rx="2" ry="2" />
+<text  x="2501.00" y="281.5" >SUBSHELL (43375)_[s]</text>
+</g>
+<g >
+<title>'read -r data (&amp;)' (720 us, 0.02%)</title><rect x="1662.5" y="267" width="0.7" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1665.49" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;This test will run for approximately $GAUNTLET_DURATION seconds.&quot; (&amp;)' (983 us, 0.02%)</title><rect x="37.5" y="291" width="0.9" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="40.51" y="305.5" ></text>
+</g>
+<g >
+<title>'read -r data (&amp;)' (1,978 us, 0.04%)</title><rect x="1380.9" y="267" width="1.8" height="23.0" fill="rgb(10,11,253)" rx="2" ry="2" />
+<text  x="1383.91" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Executing at depth $depth&quot;' (145 us, 0.00%)</title><rect x="3895.9" y="147" width="0.1" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3898.91" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43369)_[s] (128 us, 0.00%)</title><rect x="3247.0" y="243" width="0.1" height="23.0" fill="rgb(222.938627066844,138.413189333978,196.706594666989)" rx="2" ry="2" />
+<text  x="3249.98" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43364)_[s] (301,501 us, 6.79%)</title><rect x="3247.1" y="267" width="276.7" height="23.0" fill="rgb(236.661811909428,188.315679670647,221.657839835323)" rx="2" ry="2" />
+<text  x="3250.09" y="281.5" >SUBSHELL (43364)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Starting nested task...&quot;' (242 us, 0.01%)</title><rect x="1663.6" y="243" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1666.58" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -u &quot;${DATA_FEED[0]}&quot; line' (325,869 us, 7.34%)</title><rect x="39.6" y="291" width="299.1" height="23.0" fill="rgb(193,128,29)" rx="2" ry="2" />
+<text  x="42.62" y="305.5" >'read -r -u "${DATA_FEED[0]}" line'</text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (423 us, 0.01%)</title><rect x="1380.1" y="291" width="0.4" height="23.0" fill="rgb(222.916729709832,138.333562581206,196.666781290603)" rx="2" ry="2" />
+<text  x="1383.08" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43357)_[s] (306,792 us, 6.91%)</title><rect x="818.6" y="291" width="281.6" height="23.0" fill="rgb(236.659480709533,188.30720258012,221.65360129006)" rx="2" ry="2" />
+<text  x="821.56" y="305.5" >SUBSHELL (43357)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43361)_[s] (277 us, 0.01%)</title><rect x="1663.3" y="267" width="0.3" height="23.0" fill="rgb(222.938795541041,138.413801967422,196.706900983711)" rx="2" ry="2" />
+<text  x="1666.32" y="281.5" ></text>
+</g>
+<g >
+<title>'$'\''local result=$( ( echo &quot;Executing at depth $depth&quot;\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))' (1,101 us, 0.02%)</title><rect x="817.5" y="267" width="1.1" height="23.0" fill="rgb(3,10,254)" rx="2" ry="2" />
+<text  x="820.55" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43356)_[s] (490 us, 0.01%)</title><rect x="2311.4" y="291" width="0.5" height="23.0" fill="rgb(222.939273860107,138.415541309481,196.707770654741)" rx="2" ry="2" />
+<text  x="2314.42" y="305.5" ></text>
+</g>
+<g >
+<title>'$'\''final_result=$( ( echo &quot;Finalizing...&quot;\nsleep 0.5\necho &quot;All done.&quot; ) &amp; wait $!, echo &quot;Completed&quot;)' (2,008 us, 0.05%)</title><rect x="339.7" y="291" width="1.9" height="23.0" fill="rgb(11,15,253)" rx="2" ry="2" />
+<text  x="342.72" y="305.5" ></text>
+</g>
+<g >
+<title>'echo &quot;All done.&quot;' (340 us, 0.01%)</title><rect x="2311.9" y="243" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2314.87" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43356)_[s] (611 us, 0.01%)</title><rect x="1379.5" y="291" width="0.6" height="23.0" fill="rgb(222.989026252335,138.596459099399,196.798229549699)" rx="2" ry="2" />
+<text  x="1382.52" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43380)_[s] (101,385 us, 2.28%)</title><rect x="3800.5" y="243" width="93.0" height="23.0" fill="rgb(234.108062569426,176.556687760674,216.369625128372)" rx="2" ry="2" />
+<text  x="3803.45" y="257.5" >SUBSHELL (433..</text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Nested task finished.&quot;' (181 us, 0.00%)</title><rect x="2683.4" y="243" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="2686.44" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43357)_[s] (277 us, 0.01%)</title><rect x="1663.3" y="291" width="0.3" height="23.0" fill="rgb(222.938795541041,138.413801967422,196.706900983711)" rx="2" ry="2" />
+<text  x="1666.32" y="305.5" ></text>
+</g>
+<g >
+<title>'read -r data (&amp;)' (905 us, 0.02%)</title><rect x="1099.3" y="267" width="0.9" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1102.32" y="281.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (101,385 us, 2.28%)</title><rect x="3800.5" y="219" width="93.0" height="23.0" fill="rgb(168,204,219)" rx="2" ry="2" />
+<text  x="3803.45" y="233.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>FUNCTION (main)_[f] (4,410,879 us, 99.33%)</title><rect x="37.4" y="315" width="4048.6" height="23.0" fill="rgb(221.666637994706,188.333275989413,236.666650897089)" rx="2" ry="2" />
+<text  x="40.36" y="329.5" >FUNCTION (main)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (242 us, 0.01%)</title><rect x="1663.6" y="291" width="0.2" height="23.0" fill="rgb(222.939683204083,138.41702983303,196.708514916515)" rx="2" ry="2" />
+<text  x="1666.58" y="305.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (122 us, 0.00%)</title><rect x="3893.8" y="195" width="0.1" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3896.79" y="209.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43380)_[s] (209,525 us, 4.72%)</title><rect x="3893.7" y="243" width="192.3" height="23.0" fill="rgb(236.648499441846,188.267270697622,221.633635348811)" rx="2" ry="2" />
+<text  x="3896.68" y="257.5" >SUBSHELL (43380)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Exiting depth $depth with result: $result&quot;' (180 us, 0.00%)</title><rect x="1100.9" y="267" width="0.2" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1103.90" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Consumed: $data&quot;' (423 us, 0.01%)</title><rect x="1380.1" y="267" width="0.4" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1383.08" y="281.5" ></text>
+</g>
+<g >
+<title>'seq 1 $CHILD_PROCESSES' (4,279 us, 0.10%)</title><rect x="342.3" y="267" width="3.9" height="23.0" fill="rgb(10,11,253)" rx="2" ry="2" />
+<text  x="345.25" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Exiting depth $depth with result: $result&quot;' (346 us, 0.01%)</title><rect x="3991.9" y="123" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3994.89" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43352)_[s] (308,728 us, 6.95%)</title><rect x="2683.6" y="291" width="283.4" height="23.0" fill="rgb(236.58869356229,188.049794771965,221.524897385983)" rx="2" ry="2" />
+<text  x="2686.61" y="305.5" >SUBSHELL (43352)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;--- Child Process $i Started ---&quot;' (110 us, 0.00%)</title><rect x="818.6" y="267" width="0.1" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="821.56" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Consumed: $data&quot;' (386 us, 0.01%)</title><rect x="1099.0" y="267" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1101.97" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43362)_[s] (186 us, 0.00%)</title><rect x="3893.5" y="267" width="0.2" height="23.0" fill="rgb(222.938835411565,138.413946951145,196.706973475573)" rx="2" ry="2" />
+<text  x="3896.51" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;More data from sub-process $i&quot;' (222 us, 0.00%)</title><rect x="3523.6" y="219" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3526.63" y="233.5" ></text>
+</g>
+<g >
+<title>'$'\''local result=$( ( echo &quot;Executing at depth $depth&quot;\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))' (1,520 us, 0.03%)</title><rect x="3990.5" y="123" width="1.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="3993.50" y="137.5" ></text>
+</g>
+<g >
+<title>'local child_id=$(echo &quot;child-$i-$$&quot;)' (884 us, 0.02%)</title><rect x="818.7" y="267" width="0.8" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="821.66" y="281.5" ></text>
+</g>
+<g >
+<title>'read -r data' (304,413 us, 6.86%)</title><rect x="1382.7" y="267" width="279.4" height="23.0" fill="rgb(211,211,210)" rx="2" ry="2" />
+<text  x="1385.73" y="281.5" >'read -r data'</text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Processing data...&quot; (&amp;)' (484 us, 0.01%)</title><rect x="1380.5" y="267" width="0.4" height="23.0" fill="rgb(0,1,254)" rx="2" ry="2" />
+<text  x="1383.47" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Nested task finished.&quot;' (345 us, 0.01%)</title><rect x="1850.0" y="243" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1852.99" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;--- Profiler Gauntlet Finished ---&quot;' (336 us, 0.01%)</title><rect x="341.6" y="291" width="0.3" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="344.56" y="305.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43387)_[s] (102,180 us, 2.30%)</title><rect x="3992.2" y="123" width="93.8" height="23.0" fill="rgb(236.514873011186,187.781356404312,221.390678202156)" rx="2" ry="2" />
+<text  x="3995.21" y="137.5" >SUBSHELL (433..</text>
+</g>
+<g >
+<title>'sleep 0.3' (301,263 us, 6.78%)</title><rect x="2967.1" y="219" width="276.5" height="23.0" fill="rgb(209,211,206)" rx="2" ry="2" />
+<text  x="2970.07" y="233.5" >'sleep 0.3'</text>
+</g>
+<g >
+<title>FUNCTION (deeply_nested_madness)_[f] (104,370 us, 2.35%)</title><rect x="3990.2" y="147" width="95.8" height="23.0" fill="rgb(221.591406204953,188.182812409906,236.625273412724)" rx="2" ry="2" />
+<text  x="3993.20" y="161.5" >FUNCTION (deep..</text>
+</g>
+<g >
+<title>SUBSHELL (43357)_[s] (202,221 us, 4.55%)</title><rect x="2498.0" y="291" width="185.6" height="23.0" fill="rgb(236.656370805358,188.295893837665,221.647946918833)" rx="2" ry="2" />
+<text  x="2501.00" y="305.5" >SUBSHELL (43357)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (43319)_[s] (4,440,691 us, 100.00%)</title><rect x="10.0" y="339" width="4076.0" height="23.0" fill="rgb(236.666651467562,188.33327806386,221.66663903193)" rx="2" ry="2" />
+<text  x="13.00" y="353.5" >SUBSHELL (43319)_[s]</text>
+</g>
+<g >
+<title>'local depth=$1' (238 us, 0.01%)</title><rect x="817.2" y="267" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="820.19" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;[$child_id] Consumed: $data&quot;' (385 us, 0.01%)</title><rect x="1662.1" y="267" width="0.4" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="1665.14" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (deeply_nested_madness)_[f] (209,525 us, 4.72%)</title><rect x="3893.7" y="291" width="192.3" height="23.0" fill="rgb(221.633635348811,188.267270697622,236.648499441846)" rx="2" ry="2" />
+<text  x="3896.68" y="305.5" >FUNCTION (deeply_nested_madnes..</text>
+</g>
+<g >
+<title>SUBSHELL (43373)_[s] (242 us, 0.01%)</title><rect x="1663.6" y="267" width="0.2" height="23.0" fill="rgb(222.939683204083,138.41702983303,196.708514916515)" rx="2" ry="2" />
+<text  x="1666.58" y="281.5" ></text>
+</g>
+<g >
+<title>'$'\''local result=$( ( echo &quot;Executing at depth $depth&quot;\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))' (1,707 us, 0.04%)</title><rect x="3894.0" y="195" width="1.6" height="23.0" fill="rgb(13,20,252)" rx="2" ry="2" />
+<text  x="3897.03" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;More data from sub-process $i&quot;' (128 us, 0.00%)</title><rect x="3247.0" y="219" width="0.1" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3249.98" y="233.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43368)_[s] (128 us, 0.00%)</title><rect x="3247.0" y="267" width="0.1" height="23.0" fill="rgb(222.938627066844,138.413189333978,196.706594666989)" rx="2" ry="2" />
+<text  x="3249.98" y="281.5" ></text>
+</g>
+<g >
+<title>'sleep 0.2' (202,237 us, 4.55%)</title><rect x="2312.2" y="243" width="185.6" height="23.0" fill="rgb(187,210,207)" rx="2" ry="2" />
+<text  x="2315.18" y="257.5" >'sleep 0.2'</text>
+</g>
+<g >
+<title>'echo &quot;More data from sub-process $i&quot;' (186 us, 0.00%)</title><rect x="3893.5" y="219" width="0.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3896.51" y="233.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (43355)_[s] (202,933 us, 4.57%)</title><rect x="1664.0" y="291" width="186.3" height="23.0" fill="rgb(238.878370803947,178.717169169897,221.183899735109)" rx="2" ry="2" />
+<text  x="1667.04" y="305.5" >SUBSHELL (43355)_[s]</text>
+</g>
+</g>
+</svg>
