@@ -1,13 +1,13 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: 1.7
+**CURRENT TIMEP VERSION**: 1.8
 
-**CHANGES IN MOST RECENT UPDATE**: This version contains 4 major changes/improvements, in addition to various minor changes and bugfixes:
-1. The log files that timep creates as it profiles are now named using the hash of their "nexec" value (a unique identifier that describes their position in the call stack) instead of the raw nexec value. This change allows for timep to handle arbitrarily deep nesting without exceeding filesystem limits on maximum file name length.
-2. timep now sets up its instrumented traps using BASH_ENV. this allows the instrumentation to automatically bootstrap itself into any scripts / new bash processes run by the profiled code. In other words, if the code being profiled calls a script, that script now gets automatically profiled too.
-3. The way that times were calculated from recorded tim,estamps and merged up has been reworked, making it more robust and making the timing information shown by timep's profile more accurate.
-4. The main output profile's structure has been channged. It no longer includes a 2nd copy of the execution tree diagram at the start. This change allows the profile to stay aligned in deeply nested sequences, making it much easier to read as well as easier to parse by machine.
+**CHANGES IN MOST RECENT UPDATE**: In this release, the instrumented DEBUG trap has been refactored to improve accuracy and to avoid missing commands:
+* timep now knows how to properly handle backgrounded function calls (e.g., `func &`).
+* timep no longer silently drops commands from the profile in a handful of edge cases.
+* timep, in general, produces more accurate profiles.
+* timep now suvcesssfully profiles every single "explicitly-designed-to-break-profilers" stress test (under the TESTS dir). A few new stress tests were added as well.
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
