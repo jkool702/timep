@@ -2426,9 +2426,12 @@ _timep_COMBINE_FLAMEGRAPH() {
     # get indicies for each nesting lvl
     mapfile -t timep_LOG_NESTING_IND < <(jj0=0; for kk in "${!timep_LOG_NESTING[@]}"; do mapfile -t A <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; printf '%s\n' "${jj0}"; (( jj0 += ${#A[@]} )); done)
 
-    # generate entries in .needs_merge for detecting orphaned logs
-    for nn in "${timep_LOG_NAME[@]:1}"; do
-        : >"${timep_TMPDIR}/.needs_merge/${nn##*\/}"
+    # generate entries in .needs_merge for detecting orphaned logs + generate reserve mapping name-->log_index array
+    declare -A timep_LOG_NAME_R_AA
+    timep_LOG_NAME_R_AA[${timep_LOG_NAME[0]@Q}]=0
+    for kk in "${!timep_LOG_NAME[@]}"; do
+        (( kk == 0 )) || : >"${timep_TMPDIR}/.needs_merge/${nn##*\/}"
+        timep_LOG_NAME_R_AA["${nn@Q}"]="$kk"
     done
 
     # use up to num_cpu / 2 + 1 workers
@@ -2546,7 +2549,7 @@ done
 
         (( kkDiff = kk - kkMin + 1 ))
 
-        kkNeedCur=("${kkNeed[@]:${kkMin}}")
+        "kkNeedCur"=("${kkNeed[@]:${kkMin}}")
 
             # write ID's of logs to process (for current nesting lvl) to work queue pipe
             # writer is a background process to prevent deadlock
@@ -2583,6 +2586,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             nFailedMax=${nFailedMax0}
             nWorkerMax=${nWorkerMax0}
             kkd=''
+            needsCheckFlag=true
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
@@ -2667,15 +2671,55 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         return 3
                     }
                 fi
+
+                # check+fix for orphaned logs]
+                if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && ${needsCheckFlag} && (( kk == kkMin )); then
+                    for kkCheck in "${kkNeedCurLast[@]}"; do
+
+                        # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
+                        path1="${kkNeedCur[$kkCheck]}"
+                        hash1="${path1##*\/log.}"
+                        nexec1="$(cat "${timep_TMPDIR}/.log/.hash/log.${hash1}")"
+                        nexec0="${nexec1%.*}"
+                        timep_hash - hash0 <<<"${nexec0}"
+                        path0="${timep_TMPDIR}/.log/log.${hash0}"
+
+                        # confirm the parent log has a line containing the child logs nexec
+                        grep -F "${nexec1}" "${path0}" | grep -qE '<< \(.*\): .* >>' || {
+
+                            # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
+                            IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | head -n 1)
+                            ((startWTime--))
+                            ((startCTime--))
+                            pidN="${pid%% *}"
+                            pidN="${pidN#S\:}"
+                            ((pidN--))
+                            pid="${pid#* }"
+                            pidNN="${pid##*.}"
+                            pid="${pid%.*}"
+                            pid="S:${pidN} ${pid}"
+                            nexec="${nexec%% *} ${nexec1}"
+
+                            # add indicator line tro parent log
+                            printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
+
+                            # re-process the parent log by re-adding its index into the command queue
+                            ((kk++))
+                            ((jj--))
+                            kkCheckP="${timep_LOG_NAME_R_AA["${path0@Q}"]}"
+                            kkNeed[$kkCheckP]="${kkCheckP}"
+                            \rm -f "${path0}.out" "${path0}.out.combined"
+                            printf '%s%s\n' "${kkd}" "${kkCheckP}" >&${timep_fd_logID}
+                        }
+                    done
+                    needsCheckFlag=false
+                fi
+
             done
 
-        (( timep_LOG_NESTING_CUR == timep_LOG_NESTING_MAX )) || (( timep_LOG_NESTING_CUR == 0 )) || {
-
-            find "${timep_TMPDIR}/.log" -maxdepth 1 -type f -name 'log.*' | grep -v .out | while read -r path1; do hash1="${path1##*\/log.}"; nexec1="$(cat "${timep_TMPDIR}/.log/.hash/log.${hash1}")"; nexec0="${nexec1%.*}"; timep_hash - hash0 <<<"${nexec0}"; grep -F "${nexec1}" "${timep_TMPDIR}/.log/log.${hash0}" | grep -qE '<< \(.*\): .* >>' || printf '%s\t%s\t%s\t%s\n' "log.${hash0}" "log.${hash1}" "${nexec0}" "${nexec1}"; done
-
-        }
         kkNeedCurLast=("${kkNeedCur[@]}")
         timep_LOG_NESTING_LAST="${timep_LOG_NESTING_CUR}"
+        
         read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
 
