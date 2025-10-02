@@ -2674,6 +2674,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 # check+fix for orphaned logs]
                 if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && ${needsCheckFlag} && (( kk == kkMin )); then
+                    kkCheckA=()
                     for kkCheck in "${kkNeedCurLast[@]}"; do
 
                         # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
@@ -2709,10 +2710,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                             kkCheckP="${timep_LOG_NAME_R_AA["${path0@Q}"]}"
                             kkNeed[$kkCheckP]="${kkCheckP}"
                             \rm -f "${path0}.out" "${path0}.out.combined"
-                            printf '%s%s\n' "${kkd}" "${kkCheckP}" >&${timep_fd_logID}
+                            printf -v kkCheckAdd '%s%s' "${kkd}" "${kkCheckP}"
+                            kkCheckA+=("${kkCheckAdd}")
                         }
                     done
                     needsCheckFlag=false
+                    (( ${#kkCheckA[@]} > 0 )) && printf '%s\n' "${kkCheckA[@]}" >&${timep_fd_logID}
                 fi
 
             done
