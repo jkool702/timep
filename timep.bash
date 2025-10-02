@@ -2707,9 +2707,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                             # re-process the parent log by re-adding its index into the command queue
                             kkCheckP="${timep_LOG_NAME_R_AA["${path0@Q}"]}"
                             kkNeed[$kkCheckP]="${kkCheckP}"
-                            \rm -f "${path0}.out" "${path0}.out.combined"
+                            \rm -f "${path0}.out" "${path0}.out.combined" &>/dev/null
                             printf -v kkCheckAdd '%s%s' "${kkd}" "${kkCheckP}"
-                            kkCheckA+=("${kkCheckAdd}")
+                            kkCheckA[${kkCheckP}]="${kkCheckAdd}"
                         }
                     done
                     needsCheckFlag=false
