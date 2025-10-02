@@ -2705,8 +2705,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                             printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
 
                             # re-process the parent log by re-adding its index into the command queue
-                            ((kk++))
-                            ((jj--))
                             kkCheckP="${timep_LOG_NAME_R_AA["${path0@Q}"]}"
                             kkNeed[$kkCheckP]="${kkCheckP}"
                             \rm -f "${path0}.out" "${path0}.out.combined"
@@ -2715,7 +2713,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         }
                     done
                     needsCheckFlag=false
-                    (( ${#kkCheckA[@]} > 0 )) && printf '%s\n' "${kkCheckA[@]}" >&${timep_fd_logID}
+                    (( ${#kkCheckA[@]} > 0 )) && {
+                        (( kk = kk + ${#kkCheckA[@]} ))
+                        (( jj = jj - ${#kkCheckA[@]} ))
+                        printf '%s\n' "${kkCheckA[@]}" >&${timep_fd_logID}
+                    }
                 fi
 
             done
