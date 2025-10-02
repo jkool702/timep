@@ -1,4 +1,10 @@
-CURRENT VERSION: timep v1.7
+CURRENT VERSION: timep v1.8
+
+timep v1.8: In this release, the instrumented DEBUG trap has been refactored to improve accuracy and to avoid missing commands:
+* timep now knows how to properly handle backgrounded function calls (e.g., `func &`)
+* timep no longer silently drops commands from the profile in a handful of edge cases
+* timep, in general, produces more accurate profiles
+* timep now suvcesssfully profiles every single "explicitly-designed-to-break-profilers" stress test (under the TESTS dir). A few new stress tests were added as well
 
 timep v1.7: This version contains 4 major changes/improvements, in addition to various minor changes and bugfixes:
 1. The log files that timep creates as it profiles are now named using the hash of their "nexec" value (a unique identifier that describes their position in the call stack) instead of the raw nexec value. This change allows for timep to handle arbitrarily deep nesting without exceeding filesystem limits on maximum file name length.
