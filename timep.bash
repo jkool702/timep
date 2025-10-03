@@ -1031,20 +1031,24 @@ export BASH_ENV="${timep_TMPDIR}/env.bash"
 builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 '
 
-    ${timep_timeFlag} && timep_runMainSrc+='time {
+    ${timep_timeFlag} && timep_runMainSrc+='
+    time {
 '
-        timep_runMainSrc+='{
+        timep_runMainSrc+='
+{
     '"${timep_runCmd}"'
 } 0<&${timep_FD0} 1>&${timep_FD1} 2>&${timep_FD2}
 '
-    ${timep_timeFlag} && timep_runMainSrc+='} 1>&${timep_FD2}
+    ${timep_timeFlag} && timep_runMainSrc+='
+} 1>&${timep_FD2}
 '
     
-    timep_runMainSrc+='builtin trap - DEBUG EXIT RETURN SIGTERM SIGQUIT SIGHUP SIGINT;
-    exec {timep_LOCK_FD}>&-
-    echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.wtime"
-    '"${timep_END_CTIME_STR}"'
-    echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
+    timep_runMainSrc+='
+builtin trap - DEBUG EXIT RETURN SIGTERM SIGQUIT SIGHUP SIGINT;
+exec {timep_LOCK_FD}>&-
+echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.wtime"
+'"${timep_END_CTIME_STR}"'    
+echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
 '
 
 #    [[ "${timep_runType}" == 'f' ]] && {
