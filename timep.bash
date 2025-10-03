@@ -2486,15 +2486,15 @@ timep_coprocSrc+='    read -r -u "${timep_LOCK_FD}" _
     fi
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
     if "${debugFlag}"; then
-        timep_POSTPROC_DEBUG_FLAG=true '
-        ${timep_deleteFlag} && timep_coprocSrc+='timep_WORKER_PID="${BASHPID}" '
-timep_coprocSrc+='_timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
-    else'$'\n'
-${timep_deleteFlag} && timep_coprocSrc+='        timep_WORKER_PID="${BASHPID}" '
-timep_coprocSrc+='_timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
+        timep_POSTPROC_DEBUG_FLAG=true 
+        timep_WORKER_PID="${BASHPID}" 
+        _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
+    else
+        timep_WORKER_PID="${BASHPID}" 
+        _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     fi
-    ${timep_deleteFlag} && timep_coprocSrc+='        mapfile -t timep_LOG_DELETE_CUR <"${timep_TMPDIR}/.worker/delete/${BASHPID}"
-        (( ${#timep_LOG_DELETE_CUR[@]} > 0 )) && \rm -f "${timep_LOG_DELETE_CUR[@]}"'$'\n'
+    mapfile -t timep_LOG_DELETE_CUR <"${timep_TMPDIR}/.worker/delete/${BASHPID}"
+        (( ${#timep_LOG_DELETE_CUR[@]} > 0 )) && \rm -f "${timep_LOG_DELETE_CUR[@]}"
     if (( $? == 0 )); then
         printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
     else
