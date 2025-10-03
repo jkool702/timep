@@ -2089,6 +2089,8 @@ printf '%s;' "${fgA[@]}")"
 
         printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurTA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurTA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
 
+        printf '%s\n' "${timep_TMPDIR}/.needs_merge/${logCur##*\/}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+
         (( kk == kkLast )) && break
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
@@ -2487,6 +2489,8 @@ timep_coprocSrc+='_timep_PROCESS_LOG "${timep_LOG_NAME[$logID]}" 2>&${timep_FD2}
 ${timep_deleteFlag} && timep_coprocSrc+='        timep_WORKER_PID="${BASHPID}" '
 timep_coprocSrc+='_timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     fi
+    ${timep_deleteFlag} && timep_coprocSrc+='        mapfile -t timep_LOG_DELETE_CUR <"${timep_TMPDIR}/.worker/delete/${BASHPID}"
+        (( ${#timep_LOG_DELETE_CUR[@]} > 0 )) && \rm -f "${timep_LOG_DELETE_CUR[@]}"'$'\n'
     if (( $? == 0 )); then
         printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
     else
