@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if shopt extglob 2>/dev/null; then
+if shopt extglob &>/dev/null; then
     timep_extglobState='-s'
 else
     timep_extglobState='-u'
@@ -2543,7 +2543,7 @@ done
 
         (( kkDiff = kk - kkMin + 1 ))
 
-        "kkNeedCur"=("${kkNeed[@]:${kkMin}}")
+        kkNeedCur=("${kkNeed[@]:${kkMin}}")
 
             # write ID's of logs to process (for current nesting lvl) to work queue pipe
             # writer is a background process to prevent deadlock
@@ -2614,7 +2614,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
                     }
                 done
-            done
+            }
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
@@ -3054,10 +3054,10 @@ _timep_SETUP() {
 
     local ARCH t tt k kk timep_git_branch outDir filePath fileCur downloadFlag localFlag gotFlamegraphFlag gotLoadableFlag b b0 doneFlag extglobState
 
-    if shopt extglob | grep -qE 'off$'; then
-        extglobState='-u'
-    else
+    if shopt extglob &>/dev/null; then
         extglobState='-s'
+    else
+        extglobState='-u'
     fi
     shopt -s extglob
 
@@ -3205,10 +3205,10 @@ _timep_base64_to_file() {
     local -x LC_ALL=C
 
     # parse options
-    if shopt extglob | grep -qE 'off$'; then
-        extglobState='-u'
-    else
+    if shopt extglob &>/dev/null; then
         extglobState='-s'
+    else
+        extglobState='-u'
     fi
     shopt -s extglob
 
@@ -3316,10 +3316,10 @@ _timep_file_to_base64() {
     local -a charmap compressI compressV outA nnSumA
     local -x LC_ALL=C
 
-    if shopt extglob | grep -qE 'off$'; then
-        extglobState='-u'
-    else
+    if shopt extglob &>/dev/null; then
         extglobState='-s'
+    else
+        extglobState='-u'
     fi
     shopt -s extglob
     # parse inputs
