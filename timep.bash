@@ -681,7 +681,7 @@ echo "IN IS_SUBSHELL BRANCH" >>"${timep_TMPDIR}/run.log.txt"
             timep_PARENT_PGID="$timep_CHILD_PGID"
             timep_PARENT_TPID="$timep_CHILD_TPID"
         fi
-        if ${timep_SUBSHELL_INIT_FLAG}; then
+        if ${timep_SUBSHELL_INIT_FLAG} || ${timep_BG_FUNC_LAST_FLAG}; then
 echo "IN SUBSHELL_INIT BRANCH" >>"${timep_TMPDIR}/run.log.txt"
             timep_SUBSHELL_INIT_FLAG=false
             timep_BASHPID_PREV="${timep_BASHPID_PREV_0}"
@@ -690,6 +690,7 @@ echo "IN SUBSHELL_INIT BRANCH" >>"${timep_TMPDIR}/run.log.txt"
             ((timep_BASH_SUBSHELL_DIFF--))
             timep_BASHPID_ADD=()
             timep_BASHPID_ADD_CUR="${BASHPID}"
+            ${timep_BG_FUNC_LAST_FLAG} && timep_NEXEC_END="${timep_NEXEC_0##*\}}"
             if [[ -f "${timep_TMPDIR}/.pid_used/${timep_BASHPID_ADD_CUR}" ]]; then
                 timep_BASHPID_ADD[${timep_BASH_SUBSHELL_DIFF}]="${timep_BASHPID_ADD_CUR}${timep_BG_PID_COUNTER}"
             else
@@ -733,6 +734,15 @@ echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.t
             timep_BASH_SUBSHELL_PREV="${BASH_SUBSHELL}"
             timep_NEXEC_HASH_A[-1]="${timep_NEXEC_HASH_CUR}"
             unset "timep_KK" "timep_BASHPID_ADD" "timep_BASH_COMMAND_PREV_0" "timep_NPIDWRAP_PREV_0" "timep_BASH_COMMAND_PREV_0" "timep_CMD_TYPE_PREV_0" "timep_BASHPID_PREV_0" "timep_ENDTIME_PREV_0" "timep_BASH_SUBSHELL_PREV_0"
+            [[ ${timep_NEXEC_END} ]] && {
+                timep_NEXEC_0+=".${timep_NEXEC_END}"
+                timep_NEXEC_A+=(0)
+                timep_NEXEC_CUR=0
+                timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
+                echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
+                timep_NEXEC_HASH_A+=("${timep_NEXEC_HASH_CUR}")
+            }
             ((timep_NEXEC_N++))
         elif ${timep_SUBSHELL_INIT_NEXT_FLAG}; then
             timep_SUBSHELL_INIT_FLAG=true
@@ -779,6 +789,11 @@ echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.t
             timep_NO_PRINT_FLAG=false
             timep_IS_FUNC_FLAG_1=true
         }
+        if ${timep_IS_BG_FUNC_FLAG}; then
+            timep_BG_FUNC_LAST_FLAG=true
+        else
+            timep_BG_FUNC_LAST_FLAG=false
+        fi
         if (( timep_LINENO_0 < 0 )) && [[ "${timep_BASH_COMMAND_CUR}" == "${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]% \(\?\)}" ]]; then
             timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]="${timep_BASH_COMMAND_CUR} "'"'"'(?)'"'"'
         else
@@ -945,7 +960,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         esac
 
     timep_runVarsSrc='
-        declare -g timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_BG_FUNC_FLAG timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BASHPID_STR_0 timep_NPIDWRAP timep_BG_PID_COUNTER timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR
+        declare -g timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_BG_FUNC_FLAG timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BASHPID_STR_0 timep_NPIDWRAP timep_BG_PID_COUNTER timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR timep_BG_FUNC_LAST_FLAG timep_NEXEC_END
         declare -ga timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_START_TIME timep_START_UTIME timep_START_STIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS timep_SKIP_RETURN_TRAP_FLAG_A timep_LAST_CMD_WORD
         declare -gx timep_TMPDIR timep_NEXEC_0 timep_NEXEC_CUR timep_LOCK_FD
         : "${timep_FNEST[0]:='"''"'}" "${timep_NEXEC_A[0]:='"''"'}" "${timep_NEXEC_HASH_A[0]:='"''"'}" "${timep_SKIP_RETURN_TRAP_FLAG_A[0]:='"''"'}"
@@ -2426,10 +2441,9 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     # generate entries in .needs_merge for detecting orphaned logs + generate reserve mapping name-->log_index array
     declare -A timep_LOG_NAME_R_AA
-    timep_LOG_NAME_R_AA[${timep_LOG_NAME[0]@Q}]=0
     for kk in "${!timep_LOG_NAME[@]}"; do
-        (( kk == 0 )) || : >"${timep_TMPDIR}/.needs_merge/${nn##*\/}"
-        timep_LOG_NAME_R_AA["${nn@Q}"]="$kk"
+        (( kk == 0 )) || : >"${timep_TMPDIR}/.needs_merge/${timep_LOG_NAME[$kk]##*\/}"
+        timep_LOG_NAME_R_AA["${timep_LOG_NAME[$kk]@Q}"]="$kk"
     done
 
     # use up to num_cpu / 2 + 1 workers
