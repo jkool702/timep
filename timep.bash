@@ -2594,7 +2594,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     path0="${timep_TMPDIR}/.log/log.${hash0}"
 
                     # confirm the parent log has a line containing the child logs nexec
-                    grep -F "${nexec1}" "${path0}" | grep -qE '<< \(.*\): .* >>' || {
+                    grep -F $'\t'"${nexec1}"$'\t' "${path0}" | grep -qE '<< \(.*\): .* >>' || {
 
                         # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
                         IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | head -n 1)
