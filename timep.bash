@@ -2584,7 +2584,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
                     path1="${kkNeedCur[$kkCheck]}"
                     hash1="${path1##*\/log.}"
-                    nexec1="$(cat "${timep_TMPDIR}/.log/.hash/log.${hash1}")"
+                    IFS='' read -r  nexec1 <"${timep_TMPDIR}/.log/.hash/log.${hash1}"
                     nexec0="${nexec1%.*}"
                     timep_hash - hash0 <<<"${nexec0}"
                     path0="${timep_TMPDIR}/.log/log.${hash0}"
