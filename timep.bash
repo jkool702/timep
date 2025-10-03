@@ -2093,14 +2093,6 @@ printf '%s;' "${fgA[@]}")"
 
     done | grep -vE '^[[:space:]]+:[[:space:]]+$' >"${logCur}.out.combined"
 
-    ${timep_deleteFlag} && [[ ${timep_WORKER_PID} ]] && (( timep_WORKER_PID > 0 )) && {
-        if [[ "${timep_runType}" == 'f' ]]; then
-            (( logDepth > 1 )) && printf '%s\n' "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" "${mergeA[@]/#*\//"${timep_TMPDIR}"\/.needs_merge\/}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
-        else
-            (( logDepth > 0 )) && printf '%s\n' "${mergeA[@]/%/.out}" "${mergeA[@]/%/.out.combined}" "${mergeA[@]/#*\//"${timep_TMPDIR}"\/.needs_merge\/}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
-        fi
-    }
-
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && _timep_DEBUG_PRINTVARS
     return 0
 }
@@ -2496,10 +2488,8 @@ ${timep_deleteFlag} && timep_coprocSrc+='        timep_WORKER_PID="${BASHPID}" '
 timep_coprocSrc+='_timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     fi
     if (( $? == 0 )); then
-        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}'$'\n'
-${timep_deleteFlag} && timep_coprocSrc+='        mapfile -t timep_LOG_DELETE_CUR <"${timep_TMPDIR}/.worker/delete/${BASHPID}"
-        (( ${#timep_LOG_DELETE_CUR[@]} > 0 )) && \rm -f "${timep_LOG_DELETE_CUR[@]}"'$'\n'
-timep_coprocSrc+='    else
+        printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
+    else
         printf '"'"'-%s\n'"'"' "${logID}" >&${timep_fd_done}
     fi
     : >"${timep_TMPDIR}/.worker/${BASHPID}"
@@ -2587,6 +2577,40 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             nWorkerMax=${nWorkerMax0}
             kkd=''
             needsCheckFlag=true
+            kkCheckA=()
+
+            (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && {
+                for kkCheck in "${kkNeedCurLast[@]}"; do
+                    # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
+                    path1="${kkNeedCur[$kkCheck]}"
+                    hash1="${path1##*\/log.}"
+                    nexec1="$(cat "${timep_TMPDIR}/.log/.hash/log.${hash1}")"
+                    nexec0="${nexec1%.*}"
+                    timep_hash - hash0 <<<"${nexec0}"
+                    path0="${timep_TMPDIR}/.log/log.${hash0}"
+
+                    # confirm the parent log has a line containing the child logs nexec
+                    grep -F "${nexec1}" "${path0}" | grep -qE '<< \(.*\): .* >>' || {
+
+                        # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
+                        IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | head -n 1)
+                        ((startWTime--))
+                        ((startCTime--))
+                        pidN="${pid%% *}"
+                        pidN="${pidN#S\:}"
+                        ((pidN--))
+                        pid="${pid#* }"
+                        pidNN="${pid##*.}"
+                        pid="${pid%.*}"
+                        pid="S:${pidN} ${pid}"
+                        nexec="${nexec%% *} ${nexec1}"
+
+                        # add indicator line to parent log
+                        printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
+                        printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
+                    }
+                done
+            done
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
@@ -2672,53 +2696,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     }
                 fi
 
-                # check+fix for orphaned logs]
-                if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && ${needsCheckFlag} && (( kk == kkMin )); then
-                    kkCheckA=()
-                    for kkCheck in "${kkNeedCurLast[@]}"; do
-
-                        # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
-                        path1="${kkNeedCur[$kkCheck]}"
-                        hash1="${path1##*\/log.}"
-                        nexec1="$(cat "${timep_TMPDIR}/.log/.hash/log.${hash1}")"
-                        nexec0="${nexec1%.*}"
-                        timep_hash - hash0 <<<"${nexec0}"
-                        path0="${timep_TMPDIR}/.log/log.${hash0}"
-
-                        # confirm the parent log has a line containing the child logs nexec
-                        grep -F "${nexec1}" "${path0}" | grep -qE '<< \(.*\): .* >>' || {
-
-                            # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
-                            IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | head -n 1)
-                            ((startWTime--))
-                            ((startCTime--))
-                            pidN="${pid%% *}"
-                            pidN="${pidN#S\:}"
-                            ((pidN--))
-                            pid="${pid#* }"
-                            pidNN="${pid##*.}"
-                            pid="${pid%.*}"
-                            pid="S:${pidN} ${pid}"
-                            nexec="${nexec%% *} ${nexec1}"
-
-                            # add indicator line tro parent log
-                            printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
-
-                            # re-process the parent log by re-adding its index into the command queue
-                            kkCheckP="${timep_LOG_NAME_R_AA["${path0@Q}"]}"
-                            kkNeed[$kkCheckP]="${kkCheckP}"
-                            \rm -f "${path0}.out" "${path0}.out.combined" &>/dev/null
-                            printf -v kkCheckAdd '%s%s' "${kkd}" "${kkCheckP}"
-                            kkCheckA[${kkCheckP}]="${kkCheckAdd}"
-                        }
+                # check+fix for orphaned logs
+                if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && (( kk == kkMin )) && ${timep_deleteFlag}; then
+                    for kkDel in "${kkCheckALast[@]}"; do
+                        [[ -f "${timep_LOG_NAME[$kkDel]}.out" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out"
+                        [[ -f "${timep_LOG_NAME[$kkDel]}.out.combined" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out.combined"
                     done
-                    needsCheckFlag=false
-                    (( ${#kkCheckA[@]} > 0 )) && {
-                        (( kk = kk + ${#kkCheckA[@]} ))
-                        (( jj = jj - ${#kkCheckA[@]} ))
-                        printf '%s\n' "${kkCheckA[@]}" >&${timep_fd_logID}
-                    }
                 fi
+                kkCheckALast=("${kkCheckA[@]}")
 
             done
 
