@@ -690,8 +690,7 @@ echo "IN SUBSHELL_INIT BRANCH" >>"${timep_TMPDIR}/run.log.txt"
             ((timep_BASH_SUBSHELL_DIFF--))
             timep_BASHPID_ADD=()
             timep_BASHPID_ADD_CUR="${BASHPID}"
-            ${timep_BG_FUNC_LAST_FLAG} && timep_NEXEC_END="${timep_NEXEC_0##*\}}"
-            if [[ -f "${timep_TMPDIR}/.pid_used/${timep_BASHPID_ADD_CUR}" ]]; then
+             if [[ -f "${timep_TMPDIR}/.pid_used/${timep_BASHPID_ADD_CUR}" ]]; then
                 timep_BASHPID_ADD[${timep_BASH_SUBSHELL_DIFF}]="${timep_BASHPID_ADD_CUR}${timep_BG_PID_COUNTER}"
             else
                 timep_BASHPID_ADD[$timep_BASH_SUBSHELL_DIFF]="${timep_BASHPID_ADD_CUR}"
