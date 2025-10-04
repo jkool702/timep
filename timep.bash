@@ -2629,6 +2629,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         # add indicator line to parent log
                         printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
                         printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
+                        echo "${nexec0}" >"${timep_TMPDIR}/.log/.hash/log.${hash0}"
                     }
                 done
             }
