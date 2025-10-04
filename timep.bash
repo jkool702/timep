@@ -2721,12 +2721,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 # check+fix for orphaned logs
                 if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && (( kk == kkMin )) && ${timep_deleteFlag}; then
-                    for kkDel in "${kkCheckALast[@]}"; do
+                    for kkDel in "${kkNeedCurLast[@]}"; do
                         [[ -f "${timep_LOG_NAME[$kkDel]}.out" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out"
                         [[ -f "${timep_LOG_NAME[$kkDel]}.out.combined" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out.combined"
                     done
                 fi
-                kkCheckALast=("${kkCheckA[@]}")
 
             done
 
