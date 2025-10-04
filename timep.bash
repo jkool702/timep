@@ -1006,6 +1006,7 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
         timep_SUBSHELL_INIT_FLAG=false
         timep_SUBSHELL_INIT_NEXT_FLAG=false
         timep_LINENO_INIT_FLAG=true
+        timep_BG_FUNC_LAST_FLAG=false
 
         timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
         timep_NPIPE[${timep_FNEST_CUR}]='"'"'0'"'"'
