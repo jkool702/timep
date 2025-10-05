@@ -2573,6 +2573,43 @@ done
 
         kkNeedCur=("${kkNeed[@]:${kkMin}}")
 
+            (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && {
+                for kkCheck in "${kkNeedCurLast[@]}"; do
+                    # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
+                    path1="${timep_LOG_NAME[$kkCheck]}"
+                    hash1="${path1##*\/log.}"
+                    IFS='' read -r  nexec1 <"${timep_TMPDIR}/.log/.hash/log.${hash1}"
+                    nexec0="${nexec1%.*}"
+                    timep_hash - hash0 <<<"${nexec0}"
+                    path0="${timep_TMPDIR}/.log/log.${hash0}"
+                    #declare -p path1 hash1 nexec1 nexec0 hash0 path0 >&2
+
+                    # confirm the parent log has a line containing the child logs nexec
+                    grep -F ' '"${nexec1}"$'\t' "${path0}" | grep -qE '<< \(.*\): .* >>' || {
+
+                        # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
+                        IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | grep -vE '^@TRAP' | head -n 1)
+                        #declare -p nPipe startWTime startCTime func pid nexec lineno >&2
+                        ((startWTime--))
+                        ((startCTime--))
+                        pidN="${pid%% *}"
+                        pidN="${pidN#S\:}"
+                        ((pidN--))
+                        pid="${pid#* }"
+                        pidNN="${pid##*.}"
+                        pid="${pid%.*}"
+                        pid="S:${pidN} ${pid}"
+                        nexec="${nexec%% *} ${nexec1}"
+
+                        # add indicator line to parent log
+                        printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n\n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
+                        printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s %s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec%% *}" "${nexec1}" "${lineno}" "${pidNN}"  >>"${path0}"
+
+                        echo "${nexec0}" >"${timep_TMPDIR}/.log/.hash/log.${hash0}"
+                    }
+                done
+            }
+
             # write ID's of logs to process (for current nesting lvl) to work queue pipe
             # writer is a background process to prevent deadlock
             {
@@ -2597,7 +2634,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 ((nWorker--))
             done
 
-        printf '\n\nPROCESSING NESTING LVL %s (%s LOGS) -- USING %s WORKERS (MAX: %s) (+%s)\n' "${timep_LOG_NESTING_CUR}" "${kkDiff}" "${nWorker}" "${nWorkerMax}" "${SECONDS}" >&2
+            printf '\n\nPROCESSING NESTING LVL %s (%s LOGS) -- USING %s WORKERS (MAX: %s) (+%s)\n' "${timep_LOG_NESTING_CUR}" "${kkDiff}" "${nWorker}" "${nWorkerMax}" "${SECONDS}" >&2
 
             read -r -u "${fd_sleep}" -t 0.01 _ || :
 
@@ -2609,44 +2646,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             nWorkerMax=${nWorkerMax0}
             kkd=''
             needsCheckFlag=true
-            kkCheckA=()
-
-            (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && {
-                for kkCheck in "${kkNeedCurLast[@]}"; do
-                    # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
-                    path1="${timep_LOG_NAME[$kkCheck]}"
-                    hash1="${path1##*\/log.}"
-                    IFS='' read -r  nexec1 <"${timep_TMPDIR}/.log/.hash/log.${hash1}"
-                    nexec0="${nexec1%.*}"
-                    timep_hash - hash0 <<<"${nexec0}"
-                    path0="${timep_TMPDIR}/.log/log.${hash0}"
-                    #declare -p path1 hash1 nexec1 nexec0 hash0 path0 >&2
-
-                    # confirm the parent log has a line containing the child logs nexec
-                    grep -F ' '"${nexec1}"$'\t' "${path0}" | grep -qE '<< \(.*\): .* >>' || {
-
-                        # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
-                        IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | head -n 1)
-                        #declare -p nPipe startWTime startCTime func pid nexec lineno >&2
-                        ((startWTime--))
-                        ((startCTime--))
-                        pidN="${pid%% *}"
-                        pidN="${pidN#S\:}"
-                        ((pidN--))
-                        pid="${pid#* }"
-                        pidNN="${pid##*.}"
-                        pid="${pid%.*}"
-                        pid="S:${pidN} ${pid}"
-                        nexec="${nexec%% *} ${nexec1}"
-
-                        # add indicator line to parent log
-                        printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n\n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
-                        printf '\n\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
-
-                        echo "${nexec0}" >"${timep_TMPDIR}/.log/.hash/log.${hash0}"
-                    }
-                done
-            }
 
             while (( kk >= kkMin )); do
                 if read -r -t 0.1 -u "${timep_fd_done}" doneInd ; then
@@ -2966,7 +2965,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         done
 
         # remove the (^) indicator and the corresponding (&)
-        sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' >"${logPathCur}"
+
+        sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | grep -vE '^\..*├─0$' >"${logPathCur}"
 
         logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
 
