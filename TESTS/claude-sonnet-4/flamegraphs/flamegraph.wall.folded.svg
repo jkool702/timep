@@ -1,0 +1,852 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="248" onload="init(evt)" viewBox="0 0 4096 248" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+
+                unzoombtn.classList.remove("hide");
+
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="248.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/claude-sonnet-4/claude.test.bash</text>
+<text id="details" x="10.00" y="233" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="233" > </text>
+<g id="frames">
+<g >
+<title>'echo &quot;Processed: $x&quot; | tee &gt;(echo &quot;Side effect: $x&quot; 1&gt;&amp;2)' (2,253 us, 0.26%)</title><rect x="3209.2" y="75" width="10.5" height="23.0" fill="rgb(66,118,240)" rx="2" ry="2" />
+<text  x="3212.18" y="89.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597655)_[s] (54,050 us, 6.20%)</title><rect x="3833.1" y="147" width="252.9" height="23.0" fill="rgb(240.654047259785,167.535965551591,219.829277153021)" rx="2" ry="2" />
+<text  x="3836.09" y="161.5" >SUBSHELL (597655)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;=== Test 2: Nested Subshell Matrix ===&quot;' (120 us, 0.01%)</title><rect x="156.5" y="147" width="0.6" height="23.0" fill="rgb(2,5,254)" rx="2" ry="2" />
+<text  x="159.54" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597637)_[s] (95 us, 0.01%)</title><rect x="3832.6" y="123" width="0.5" height="23.0" fill="rgb(223.034286674125,138.761042451364,196.880521225682)" rx="2" ry="2" />
+<text  x="3835.64" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597659)_[s] (54,050 us, 6.20%)</title><rect x="3833.1" y="99" width="252.9" height="23.0" fill="rgb(240.654047259785,167.535965551591,219.829277153021)" rx="2" ry="2" />
+<text  x="3836.09" y="113.5" >SUBSHELL (597659)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (597598)_[s] (871,081 us, 100.00%)</title><rect x="10.0" y="171" width="4076.0" height="23.0" fill="rgb(236.666499600184,188.332725818851,221.666362909426)" rx="2" ry="2" />
+<text  x="13.00" y="185.5" >SUBSHELL (597598)_[s]</text>
+</g>
+<g >
+<title>'(( 3 &gt; 1 )) (&amp;)' (410 us, 0.05%)</title><rect x="2337.8" y="99" width="1.9" height="23.0" fill="rgb(2,6,254)" rx="2" ry="2" />
+<text  x="2340.77" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597657)_[s] (319 us, 0.04%)</title><rect x="3207.2" y="123" width="1.5" height="23.0" fill="rgb(223.037014108738,138.770960395412,196.885480197706)" rx="2" ry="2" />
+<text  x="3210.23" y="137.5" ></text>
+</g>
+<g >
+<title>'sed '\''s/^/[L3] /'\'' (&amp;)' (596 us, 0.07%)</title><rect x="2407.0" y="99" width="2.8" height="23.0" fill="rgb(14,20,252)" rx="2" ry="2" />
+<text  x="2410.03" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597653)_[s] (95 us, 0.01%)</title><rect x="3832.6" y="75" width="0.5" height="23.0" fill="rgb(223.034286674125,138.761042451364,196.880521225682)" rx="2" ry="2" />
+<text  x="3835.64" y="89.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597637)_[s] (1,037 us, 0.12%)</title><rect x="2405.0" y="123" width="4.8" height="23.0" fill="rgb(223.535106355509,140.582204929123,197.791102464562)" rx="2" ry="2" />
+<text  x="2407.97" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597625)_[s] (112 us, 0.01%)</title><rect x="278.5" y="147" width="0.6" height="23.0" fill="rgb(223.040786063092,138.78467659306,196.89233829653)" rx="2" ry="2" />
+<text  x="281.55" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597624)_[s] (111 us, 0.01%)</title><rect x="404.3" y="147" width="0.5" height="23.0" fill="rgb(223.040549673492,138.783816994518,196.891908497259)" rx="2" ry="2" />
+<text  x="407.29" y="161.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (101,598 us, 11.66%)</title><rect x="1415.4" y="123" width="475.4" height="23.0" fill="rgb(211,211,194)" rx="2" ry="2" />
+<text  x="1418.39" y="137.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'wait $subshell_pid 2&gt; /dev/null' (78,271 us, 8.99%)</title><rect x="1890.8" y="123" width="366.2" height="23.0" fill="rgb(208,211,197)" rx="2" ry="2" />
+<text  x="1893.79" y="137.5" >'wait $subshell_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>'trap '\''echo &quot;Background job cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$'\'' EXIT' (25,128 us, 2.88%)</title><rect x="3219.7" y="75" width="117.6" height="23.0" fill="rgb(93,183,181)" rx="2" ry="2" />
+<text  x="3222.72" y="89.5" >'trap '\''echo "B..</text>
+</g>
+<g >
+<title>SUBSHELL (597659)_[s] (130,987 us, 15.04%)</title><rect x="3219.7" y="99" width="612.9" height="23.0" fill="rgb(232.109671287632,148.723473835435,207.58431909581)" rx="2" ry="2" />
+<text  x="3222.72" y="113.5" >SUBSHELL (597659)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (597660)_[s] (319 us, 0.04%)</title><rect x="3207.2" y="99" width="1.5" height="23.0" fill="rgb(223.037014108738,138.770960395412,196.885480197706)" rx="2" ry="2" />
+<text  x="3210.23" y="113.5" ></text>
+</g>
+<g >
+<title>'wait' (14,615 us, 1.68%)</title><rect x="2472.0" y="99" width="68.4" height="23.0" fill="rgb(184,209,211)" rx="2" ry="2" />
+<text  x="2474.97" y="113.5" >'wait'</text>
+</g>
+<g >
+<title>'read x' (97 us, 0.01%)</title><rect x="3208.7" y="75" width="0.5" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="3211.73" y="89.5" ></text>
+</g>
+<g >
+<title>'(( 1 &gt; 1 ))' (80 us, 0.01%)</title><rect x="2319.8" y="99" width="0.4" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="2322.83" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597624)_[s] (13,282 us, 1.52%)</title><rect x="2409.8" y="147" width="62.2" height="23.0" fill="rgb(235.7616604435,178.816175356259,218.447154842649)" rx="2" ry="2" />
+<text  x="2412.82" y="161.5" >SUBSHELL..</text>
+</g>
+<g >
+<title>'func_$i' (73 us, 0.01%)</title><rect x="2337.1" y="99" width="0.3" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="2340.08" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597633)_[s] (1,037 us, 0.12%)</title><rect x="2405.0" y="147" width="4.8" height="23.0" fill="rgb(223.535106355509,140.582204929123,197.791102464562)" rx="2" ry="2" />
+<text  x="2407.97" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597623)_[s] (80 us, 0.01%)</title><rect x="2319.8" y="147" width="0.4" height="23.0" fill="rgb(223.042556660432,138.791115128842,196.895557564421)" rx="2" ry="2" />
+<text  x="2322.83" y="161.5" ></text>
+</g>
+<g >
+<title>'wait' (132,956 us, 15.26%)</title><rect x="2562.5" y="99" width="622.1" height="23.0" fill="rgb(212,211,211)" rx="2" ry="2" />
+<text  x="2565.47" y="113.5" >'wait'</text>
+</g>
+<g >
+<title>'echo &quot;=== Test 3: Signal Madness ===&quot;' (76 us, 0.01%)</title><rect x="161.6" y="147" width="0.4" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="164.60" y="161.5" ></text>
+</g>
+<g >
+<title>'func_$i' (72 us, 0.01%)</title><rect x="2316.8" y="99" width="0.4" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2319.83" y="113.5" ></text>
+</g>
+<g >
+<title>'sleep 0.05' (53,704 us, 6.17%)</title><rect x="3833.1" y="51" width="251.3" height="23.0" fill="rgb(175,210,156)" rx="2" ry="2" />
+<text  x="3836.09" y="65.5" >'sleep 0.05'</text>
+</g>
+<g >
+<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (112 us, 0.01%)</title><rect x="278.5" y="123" width="0.6" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="281.55" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597624)_[s] (551 us, 0.06%)</title><rect x="2402.4" y="147" width="2.6" height="23.0" fill="rgb(225.827605118418,148.918564066974,201.959282033487)" rx="2" ry="2" />
+<text  x="2405.39" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597647)_[s] (95 us, 0.01%)</title><rect x="3832.6" y="99" width="0.5" height="23.0" fill="rgb(223.034286674125,138.761042451364,196.880521225682)" rx="2" ry="2" />
+<text  x="3835.64" y="113.5" ></text>
+</g>
+<g >
+<title>'read input (&amp;)' (441 us, 0.05%)</title><rect x="2405.0" y="99" width="2.0" height="23.0" fill="rgb(2,6,254)" rx="2" ry="2" />
+<text  x="2407.97" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597633)_[s] (14,615 us, 1.68%)</title><rect x="2472.0" y="147" width="68.4" height="23.0" fill="rgb(237.127473520466,180.087495394293,220.015480082614)" rx="2" ry="2" />
+<text  x="2474.97" y="161.5" >SUBSHELL ..</text>
+</g>
+<g >
+<title>SUBSHELL (597662)_[s] (54,050 us, 6.20%)</title><rect x="3833.1" y="75" width="252.9" height="23.0" fill="rgb(240.654047259785,167.535965551591,219.829277153021)" rx="2" ry="2" />
+<text  x="3836.09" y="89.5" >SUBSHELL (597662)_[s]</text>
+</g>
+<g >
+<title>'bg_pid=$! (&amp;)' (524 us, 0.06%)</title><rect x="3339.6" y="75" width="2.5" height="23.0" fill="rgb(14,20,252)" rx="2" ry="2" />
+<text  x="3342.64" y="89.5" ></text>
+</g>
+<g >
+<title>FUNCTION (func_2)_[f] (551 us, 0.06%)</title><rect x="2402.4" y="123" width="2.6" height="23.0" fill="rgb(201.959282033487,148.918564066974,225.827605118418)" rx="2" ry="2" />
+<text  x="2405.39" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597655)_[s] (319 us, 0.04%)</title><rect x="3207.2" y="147" width="1.5" height="23.0" fill="rgb(223.037014108738,138.770960395412,196.885480197706)" rx="2" ry="2" />
+<text  x="3210.23" y="161.5" ></text>
+</g>
+<g >
+<title>'cat 1&gt;&amp;2' (2,561 us, 0.29%)</title><rect x="2290.6" y="99" width="12.0" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="2293.59" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597655)_[s] (187,118 us, 21.48%)</title><rect x="1415.0" y="147" width="875.6" height="23.0" fill="rgb(236.66503366013,188.327395127744,221.663697563872)" rx="2" ry="2" />
+<text  x="1418.02" y="161.5" >SUBSHELL (597655)_[s]</text>
+</g>
+<g >
+<title>'wait' (29,849 us, 3.43%)</title><rect x="16.9" y="147" width="139.6" height="23.0" fill="rgb(209,211,209)" rx="2" ry="2" />
+<text  x="19.87" y="161.5" >'wait'</text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (101,613 us, 11.67%)</title><rect x="3342.1" y="75" width="475.5" height="23.0" fill="rgb(213,211,201)" rx="2" ry="2" />
+<text  x="3345.09" y="89.5" >'wait $bg_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>'exec 3&lt; &lt;(echo &quot;exec test&quot;) (&amp;)' (529 us, 0.06%)</title><rect x="2540.4" y="99" width="2.4" height="23.0" fill="rgb(14,20,252)" rx="2" ry="2" />
+<text  x="2543.36" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597657)_[s] (142,516 us, 16.36%)</title><rect x="2540.4" y="123" width="666.8" height="23.0" fill="rgb(236.575878077626,188.003193009548,221.501596504774)" rx="2" ry="2" />
+<text  x="2543.36" y="137.5" >SUBSHELL (597657)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (597656)_[s] (215,892 us, 24.78%)</title><rect x="404.8" y="147" width="1010.2" height="23.0" fill="rgb(254.324893794141,195.590653884427,239.135004162318)" rx="2" ry="2" />
+<text  x="407.81" y="161.5" >SUBSHELL (597656)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Dynamic func 3 running in PID $$&quot;' (75 us, 0.01%)</title><rect x="2337.4" y="99" width="0.4" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2340.42" y="113.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Dynamic func 2 running in PID $$&quot;' (77 us, 0.01%)</title><rect x="2402.7" y="99" width="0.4" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2405.71" y="113.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Final result: $result&quot;' (96 us, 0.01%)</title><rect x="161.2" y="147" width="0.4" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="164.15" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597633)_[s] (489 us, 0.06%)</title><rect x="2317.5" y="147" width="2.3" height="23.0" fill="rgb(223.06332240375,138.866626922727,196.933313461363)" rx="2" ry="2" />
+<text  x="2320.54" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597657)_[s] (130,987 us, 15.04%)</title><rect x="3219.7" y="123" width="612.9" height="23.0" fill="rgb(232.109671287632,148.723473835435,207.58431909581)" rx="2" ry="2" />
+<text  x="3222.72" y="137.5" >SUBSHELL (597657)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Level 4: $line&quot; | tr '\''a-z'\'' '\''A-Z'\''' (3,046 us, 0.35%)</title><rect x="2302.6" y="99" width="14.2" height="23.0" fill="rgb(32,59,243)" rx="2" ry="2" />
+<text  x="2305.58" y="113.5" ></text>
+</g>
+<g >
+<title>'kill -HUP $$ 2&gt; /dev/null' (346 us, 0.04%)</title><rect x="4084.4" y="51" width="1.6" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="4087.38" y="65.5" ></text>
+</g>
+<g >
+<title>'read -u3 exec_result' (4,043 us, 0.46%)</title><rect x="2542.8" y="99" width="19.0" height="23.0" fill="rgb(176,207,217)" rx="2" ry="2" />
+<text  x="2545.83" y="113.5" >'..</text>
+</g>
+<g >
+<title>SUBSHELL (597655)_[s] (130,987 us, 15.04%)</title><rect x="3219.7" y="147" width="612.9" height="23.0" fill="rgb(232.109671287632,148.723473835435,207.58431909581)" rx="2" ry="2" />
+<text  x="3222.72" y="161.5" >SUBSHELL (597655)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;[SIGNAL] $line&quot;' (1,013 us, 0.12%)</title><rect x="1410.3" y="123" width="4.7" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<text  x="1413.28" y="137.5" ></text>
+</g>
+<g >
+<title>'cleanup_called=0 | trap '\''echo &quot;Parent cleanup&quot;, cleanup_called=$((cleanup_called + 1))'\'' EXIT' (24,797 us, 2.85%)</title><rect x="162.0" y="147" width="116.0" height="23.0" fill="rgb(178,209,208)" rx="2" ry="2" />
+<text  x="164.96" y="161.5" >'cleanup_called=0..</text>
+</g>
+<g >
+<title>'echo &quot;=== Test 1: Dynamic Function Hell ===&quot;' (131 us, 0.02%)</title><rect x="10.5" y="147" width="0.7" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="13.54" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597633)_[s] (5,607 us, 0.64%)</title><rect x="2290.6" y="147" width="26.2" height="23.0" fill="rgb(224.073492759353,140.457380590195,198.301403392146)" rx="2" ry="2" />
+<text  x="2293.59" y="161.5" >SU..</text>
+</g>
+<g >
+<title>FUNCTION (func_3)_[f] (13,958 us, 1.60%)</title><rect x="2337.1" y="123" width="65.3" height="23.0" fill="rgb(221.288237248349,187.576474496698,236.458530486592)" rx="2" ry="2" />
+<text  x="2340.08" y="137.5" >FUNCTION ..</text>
+</g>
+<g >
+<title>'wait $!' (13,400 us, 1.54%)</title><rect x="2339.7" y="99" width="62.7" height="23.0" fill="rgb(184,209,213)" rx="2" ry="2" />
+<text  x="2342.69" y="113.5" >'wait $!'</text>
+</g>
+<g >
+<title>SUBSHELL (597625)_[s] (13,958 us, 1.60%)</title><rect x="2337.1" y="147" width="65.3" height="23.0" fill="rgb(236.458530486592,187.576474496698,221.288237248349)" rx="2" ry="2" />
+<text  x="2340.08" y="161.5" >SUBSHELL ..</text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (77 us, 0.01%)</title><rect x="2562.1" y="99" width="0.4" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="2565.11" y="113.5" ></text>
+</g>
+<g >
+<title>'@TRAP (EXIT): echo &quot;Child cleanup&quot; &gt; /tmp/child_cleanup_$$\, kill -TERM $$' (2,728 us, 0.31%)</title><rect x="2277.8" y="123" width="12.8" height="23.0" fill="rgb(29,51,245)" rx="2" ry="2" />
+<text  x="2280.83" y="137.5" ></text>
+</g>
+<g >
+<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (111 us, 0.01%)</title><rect x="404.3" y="123" width="0.5" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="407.29" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597633)_[s] (95 us, 0.01%)</title><rect x="3832.6" y="147" width="0.5" height="23.0" fill="rgb(223.034286674125,138.761042451364,196.880521225682)" rx="2" ry="2" />
+<text  x="3835.64" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597633)_[s] (3,606 us, 0.41%)</title><rect x="2320.2" y="147" width="16.9" height="23.0" fill="rgb(227.817636720951,156.155042621639,205.57752131082)" rx="2" ry="2" />
+<text  x="2323.20" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Side effect: $x&quot; 1&gt;&amp;2' (95 us, 0.01%)</title><rect x="3832.6" y="51" width="0.5" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="3835.64" y="65.5" ></text>
+</g>
+<g >
+<title>'echo &quot;exec test&quot;' (319 us, 0.04%)</title><rect x="3207.2" y="75" width="1.5" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
+<text  x="3210.23" y="89.5" ></text>
+</g>
+<g >
+<title>'func_$i' (68 us, 0.01%)</title><rect x="2402.4" y="99" width="0.3" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2405.39" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597657)_[s] (54,050 us, 6.20%)</title><rect x="3833.1" y="123" width="252.9" height="23.0" fill="rgb(240.654047259785,167.535965551591,219.829277153021)" rx="2" ry="2" />
+<text  x="3836.09" y="137.5" >SUBSHELL (597657)_[s]</text>
+</g>
+<g >
+<title>'set -e' (116 us, 0.01%)</title><rect x="10.0" y="147" width="0.5" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="13.00" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597649)_[s] (3,046 us, 0.35%)</title><rect x="2302.6" y="123" width="14.2" height="23.0" fill="rgb(224.201826562082,139.361575204798,198.052434020453)" rx="2" ry="2" />
+<text  x="2305.58" y="137.5" ></text>
+</g>
+<g >
+<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (119 us, 0.01%)</title><rect x="278.0" y="123" width="0.5" height="23.0" fill="rgb(2,5,254)" rx="2" ry="2" />
+<text  x="280.99" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597655)_[s] (142,516 us, 16.36%)</title><rect x="2540.4" y="147" width="666.8" height="23.0" fill="rgb(236.575878077626,188.003193009548,221.501596504774)" rx="2" ry="2" />
+<text  x="2543.36" y="161.5" >SUBSHELL (597655)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (func_2)_[f] (13,282 us, 1.52%)</title><rect x="2409.8" y="123" width="62.2" height="23.0" fill="rgb(218.447154842649,178.816175356259,235.7616604435)" rx="2" ry="2" />
+<text  x="2412.82" y="137.5" >FUNCTION..</text>
+</g>
+<g >
+<title>SUBSHELL (597623)_[s] (119 us, 0.01%)</title><rect x="278.0" y="147" width="0.5" height="23.0" fill="rgb(223.051189521823,138.822507352083,196.911253676041)" rx="2" ry="2" />
+<text  x="280.99" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597637)_[s] (2,350 us, 0.27%)</title><rect x="3208.7" y="123" width="11.0" height="23.0" fill="rgb(231.439485603572,169.325402194808,212.162701097404)" rx="2" ry="2" />
+<text  x="3211.73" y="137.5" ></text>
+</g>
+<g >
+<title>all (871,081 us, 100%)</title><rect x="10.0" y="195" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="209.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597632)_[s] (26,761 us, 3.07%)</title><rect x="279.1" y="147" width="125.2" height="23.0" fill="rgb(231.692654732928,142.542059086376,205.471891307471)" rx="2" ry="2" />
+<text  x="282.07" y="161.5" >SUBSHELL (597632)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (func_1)_[f] (80 us, 0.01%)</title><rect x="2319.8" y="123" width="0.4" height="23.0" fill="rgb(196.895557564421,138.791115128842,223.042556660432)" rx="2" ry="2" />
+<text  x="2322.83" y="137.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1 (&amp;)' (500 us, 0.06%)</title><rect x="3337.3" y="75" width="2.3" height="23.0" fill="rgb(14,20,252)" rx="2" ry="2" />
+<text  x="3340.30" y="89.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597637)_[s] (14,615 us, 1.68%)</title><rect x="2472.0" y="123" width="68.4" height="23.0" fill="rgb(237.127473520466,180.087495394293,220.015480082614)" rx="2" ry="2" />
+<text  x="2474.97" y="137.5" >SUBSHELL ..</text>
+</g>
+<g >
+<title>'for i in {1..3} (&amp;)' (1,222 us, 0.14%)</title><rect x="11.2" y="147" width="5.7" height="23.0" fill="rgb(20,31,250)" rx="2" ry="2" />
+<text  x="14.16" y="161.5" ></text>
+</g>
+<g >
+<title>'(( 2 &gt; 1 )) (&amp;)' (406 us, 0.05%)</title><rect x="2403.1" y="99" width="1.9" height="23.0" fill="rgb(2,5,254)" rx="2" ry="2" />
+<text  x="2406.07" y="113.5" ></text>
+</g>
+<g >
+<title>'[[ -f /tmp/child_cleanup_$$ ]]' (292 us, 0.03%)</title><rect x="2257.0" y="123" width="1.4" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2260.04" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597648)_[s] (3,606 us, 0.41%)</title><rect x="2320.2" y="123" width="16.9" height="23.0" fill="rgb(227.817636720951,156.155042621639,205.57752131082)" rx="2" ry="2" />
+<text  x="2323.20" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597633)_[s] (2,350 us, 0.27%)</title><rect x="3208.7" y="147" width="11.0" height="23.0" fill="rgb(231.439485603572,169.325402194808,212.162701097404)" rx="2" ry="2" />
+<text  x="3211.73" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597648)_[s] (489 us, 0.06%)</title><rect x="2317.5" y="123" width="2.3" height="23.0" fill="rgb(223.06332240375,138.866626922727,196.933313461363)" rx="2" ry="2" />
+<text  x="2320.54" y="137.5" ></text>
+</g>
+<g >
+<title>'IFS= read -r line' (214,879 us, 24.67%)</title><rect x="404.8" y="123" width="1005.5" height="23.0" fill="rgb(212,211,208)" rx="2" ry="2" />
+<text  x="407.81" y="137.5" >'IFS= read -r line'</text>
+</g>
+<g >
+<title>'@TRAP (EXIT): echo &quot;Grandchild cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$' (4,835 us, 0.56%)</title><rect x="3184.6" y="99" width="22.6" height="23.0" fill="rgb(45,91,234)" rx="2" ry="2" />
+<text  x="3187.60" y="113.5" >'..</text>
+</g>
+<g >
+<title>'echo &quot;Dynamic func 1 running in PID $$&quot;' (80 us, 0.01%)</title><rect x="2317.2" y="99" width="0.3" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2320.17" y="113.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Exec result: $exec_result&quot;' (76 us, 0.01%)</title><rect x="2561.8" y="99" width="0.3" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2564.75" y="113.5" ></text>
+</g>
+<g >
+<title>'@TRAP (EXIT): echo &quot;Background job cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$' (3,222 us, 0.37%)</title><rect x="3817.6" y="75" width="15.0" height="23.0" fill="rgb(36,69,241)" rx="2" ry="2" />
+<text  x="3820.57" y="89.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Cleanup messages:&quot;' (286 us, 0.03%)</title><rect x="2258.4" y="123" width="1.3" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2261.41" y="137.5" ></text>
+</g>
+<g >
+<title>'cat /tmp/child_cleanup_$$' (2,723 us, 0.31%)</title><rect x="2259.7" y="123" width="12.8" height="23.0" fill="rgb(29,51,246)" rx="2" ry="2" />
+<text  x="2262.75" y="137.5" ></text>
+</g>
+<g >
+<title>'wait $!' (13,282 us, 1.52%)</title><rect x="2409.8" y="99" width="62.2" height="23.0" fill="rgb(179,208,215)" rx="2" ry="2" />
+<text  x="2412.82" y="113.5" >'wait $!'</text>
+</g>
+<g >
+<title>SUBSHELL (597623)_[s] (152 us, 0.02%)</title><rect x="2316.8" y="147" width="0.7" height="23.0" fill="rgb(223.32897111903,139.832622251018,197.416311125509)" rx="2" ry="2" />
+<text  x="2319.83" y="161.5" ></text>
+</g>
+<g >
+<title>'wait' (3,605 us, 0.41%)</title><rect x="2320.2" y="99" width="16.9" height="23.0" fill="rgb(93,153,230)" rx="2" ry="2" />
+<text  x="2323.21" y="113.5" ></text>
+</g>
+<g >
+<title>FUNCTION (func_1)_[f] (152 us, 0.02%)</title><rect x="2316.8" y="123" width="0.7" height="23.0" fill="rgb(197.416311125509,139.832622251018,223.32897111903)" rx="2" ry="2" />
+<text  x="2319.83" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Level 1&quot; 1&gt;&amp;2 | grep -v &quot;^$&quot; | head -10' (26,761 us, 3.07%)</title><rect x="279.1" y="123" width="125.2" height="23.0" fill="rgb(105,196,163)" rx="2" ry="2" />
+<text  x="282.07" y="137.5" >'echo "Level 1" 1&gt;&amp;..</text>
+</g>
+<g >
+<title>SUBSHELL (597639)_[s] (2,561 us, 0.29%)</title><rect x="2290.6" y="123" width="12.0" height="23.0" fill="rgb(223.652451317438,138.897967842364,197.52949408197)" rx="2" ry="2" />
+<text  x="2293.59" y="137.5" ></text>
+</g>
+<g >
+<title>'rm -f /tmp/child_cleanup_$$' (1,141 us, 0.13%)</title><rect x="2272.5" y="123" width="5.3" height="23.0" fill="rgb(20,31,250)" rx="2" ry="2" />
+<text  x="2275.49" y="137.5" ></text>
+</g>
+<g >
+<title>'subshell_pid=$!' (79 us, 0.01%)</title><rect x="1415.0" y="123" width="0.4" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1418.02" y="137.5" ></text>
+</g>
+<g >
+<title>'$'\''result=$({ echo &quot;Level 1&quot; 1&gt;&amp;2\n( echo &quot;Level 2&quot; | tee &gt;(cat 1&gt;&amp;2) | { read input\n( echo &quot;Level 3: $input&quot; | { while read line, do\n    ( echo &quot;Level 4: $line&quot; | tr \'\''a-z\'\'' \'\''A-Z\'\'' ) &amp;\ndone\nwait, } ) 2&gt;&amp;1 | sed \'\''s/^/[L3] /\'\'' &amp; { echo &quot;Parallel branch' (865 us, 0.10%)</title><rect x="157.1" y="147" width="4.1" height="23.0" fill="rgb(18,29,251)" rx="2" ry="2" />
+<text  x="160.11" y="161.5" ></text>
+</g>
+<g >
+<title>'read line (&amp;)' (489 us, 0.06%)</title><rect x="2317.5" y="99" width="2.3" height="23.0" fill="rgb(14,20,252)" rx="2" ry="2" />
+<text  x="2320.54" y="113.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (597647)_[s] (2,350 us, 0.27%)</title><rect x="3208.7" y="99" width="11.0" height="23.0" fill="rgb(231.439485603572,169.325402194808,212.162701097404)" rx="2" ry="2" />
+<text  x="3211.73" y="113.5" ></text>
+</g>
+</g>
+</svg>
