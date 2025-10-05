@@ -239,6 +239,7 @@ timep() {
 
     mkdir -p "${timep_TMPDIR}"/.log/.{endtimes,runtimes,hash}
     mkdir -p "${timep_TMPDIR}"/{profiles,.needs_merge,.pid_used}
+    mkdir -p "${timep_TMPDIR}/.worker/delete"
     printf '%s\n' '0' >"${timep_TMPDIR}/.log/.count.bg_pid"
 
     # determine if command being profiled is a shell script or not
@@ -626,6 +627,15 @@ fi
         ${timep_LINENO_INIT_FLAG} && {
             timep_LINENO_INIT_FLAG=false
             [[ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 4 ))
+            timep_NPIDWRAP=0
+timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
+timep_NEXEC_A[0]=0
+timep_FNEST[0]='"'"'main'"'"'
+timep_SKIP_RETURN_TRAP_FLAG_A[0]=false
+timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
+echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
+echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
+timep_NEXEC_HASH_A=("${timep_NEXEC_HASH_CUR}")
         }
         if ${timep_IS_FUNC_FLAG}; then
             timep_LINENO_0=1
@@ -2512,7 +2522,7 @@ timep_coprocSrc+='    read -r -u "${timep_LOCK_FD}" _
     if (( $? == 0 )); then
         printf '"'"'%s\n'"'"' "${logID}" >&${timep_fd_done}
     else
-        printf '"'"'-%s\n'"'"' "${logID}" >&${timep_fd_done}
+        printf -- '"'"'-%s\n'"'"' "${logID}" >&${timep_fd_done}
     fi
     : >"${timep_TMPDIR}/.worker/${BASHPID}"
 done
@@ -2604,18 +2614,20 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && {
                 for kkCheck in "${kkNeedCurLast[@]}"; do
                     # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
-                    path1="${kkNeedCur[$kkCheck]}"
+                    path1="${timep_LOG_NAME[$kkCheck]}"
                     hash1="${path1##*\/log.}"
                     IFS='' read -r  nexec1 <"${timep_TMPDIR}/.log/.hash/log.${hash1}"
                     nexec0="${nexec1%.*}"
                     timep_hash - hash0 <<<"${nexec0}"
                     path0="${timep_TMPDIR}/.log/log.${hash0}"
+                    #declare -p path1 hash1 nexec1 nexec0 hash0 path0 >&2
 
                     # confirm the parent log has a line containing the child logs nexec
-                    grep -F $'\t'"${nexec1}"$'\t' "${path0}" | grep -qE '<< \(.*\): .* >>' || {
+                    grep -F ' '"${nexec1}"$'\t' "${path0}" | grep -qE '<< \(.*\): .* >>' || {
 
                         # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
                         IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | head -n 1)
+                        #declare -p nPipe startWTime startCTime func pid nexec lineno >&2
                         ((startWTime--))
                         ((startCTime--))
                         pidN="${pid%% *}"
@@ -2628,8 +2640,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                         nexec="${nexec%% *} ${nexec1}"
 
                         # add indicator line to parent log
-                        printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
-                        printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
+                        printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n\n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
+                        printf '\n\n1\t%s\t%s\t-\t-\t%s\t%s\t%s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec}" "${lineno}" "${pidNN}"  >>"${path0}"
+
                         echo "${nexec0}" >"${timep_TMPDIR}/.log/.hash/log.${hash0}"
                     }
                 done
@@ -2720,7 +2733,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
 
                 # check+fix for orphaned logs
-                if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && (( kk == kkMin )) && ${timep_deleteFlag}; then
+                if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && (( kk == kkMin )) && ${timep_deleteFlag} && (( ${#kkNeedCurLast[@]}} > 0 )); then
                     for kkDel in "${kkNeedCurLast[@]}"; do
                         [[ -f "${timep_LOG_NAME[$kkDel]}.out" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out"
                         [[ -f "${timep_LOG_NAME[$kkDel]}.out.combined" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out.combined"
@@ -2734,6 +2747,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         
         read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
+
+    if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && (( kk == kkMin )) && ${timep_deleteFlag} && (( ${#kkNeedCurLast[@]}} > 0 )); then
+        for kkDel in "${kkNeedCurLast[@]}"; do
+            [[ -f "${timep_LOG_NAME[$kkDel]}.out" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out"
+            [[ -f "${timep_LOG_NAME[$kkDel]}.out.combined" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out.combined"
+        done
+    fi
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
