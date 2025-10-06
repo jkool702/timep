@@ -1796,7 +1796,7 @@ _timep_PROCESS_LOG() {
         }
 
         # merge pipelines commands upward into previous line cmdA
-        if ${inPipeFlag}; then
+        if ${inPipeFlag}  && ! ${isTrapA[$kk]} ; then
             # we are in a pipeline, but not at the last element
             # override nPipeA and endWTimeA based on the values from the next command and append next command to current cmdA (with `|` in between)
             # note that this makes the $kk corresponding to the 1st pipeline element the one we will log
@@ -1808,7 +1808,7 @@ _timep_PROCESS_LOG() {
             ${isMergeIndicatorA[$kk1]} && { isMergeIndicatorA[$kk]=true; mergeA[$kk]+="${mergeA[$kk]:+$'\n'}${mergeA[$kk1]}"; }
             cmdA[$kk]+=" | ${cmdA[$kk1]// \(\&\)/}"
             (( nPipeA[$kk] == 1 )) && inPipeFlag=false
-        elif (( 10#0${nPipeA[$kk]//[^0-9]/} > 1 )); then
+        elif (( 10#0${nPipeA[$kk]//[^0-9]/} > 1 )) && ! ${isTrapA[$kk]} ; then
             # this is the last element of a pipeline. set flag to indicate this
             inPipeFlag=true
             isPipeA[$kk]=1
