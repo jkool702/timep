@@ -630,7 +630,7 @@ fi
             timep_NPIDWRAP=0
 timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
 timep_NEXEC_A[0]=0
-timep_FNEST[0]='"'"'main'"'"'
+timep_FNEST[0]=${timep_FUNCNAME_N}
 timep_SKIP_RETURN_TRAP_FLAG_A[0]=false
 timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
 echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
@@ -776,7 +776,7 @@ echo "IN WRITE NORMAL COMMAND BRANCH" >>"${timep_TMPDIR}/run.log.txt"
                 } {timep_FD_ENDTIME}<"${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_CUR}"
                 exec {timep_FD_ENDTIME}>&-
             }
-            ${timep_NO_PRINT_FLAG} || printf '"'"'%s\t%s\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s\t%s\t::\t%s %s\n'"'"' "${timep_NPIPE[${timep_FNEST_CUR}]}" "${timep_STARTTIME[${timep_FNEST_CUR}]}" "${timep_ENDTIME}" "${timep_FNEST_CUR}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]@Q}" "${timep_IS_BG_INDICATOR}" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
+            ${timep_NO_PRINT_FLAG} || printf '"'"'%s\t%s\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s\t%s\t::\t%s %s\n'"'"' "${timep_NPIPE[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-1}" "${timep_STARTTIME[${timep_FNEST_CUR}]}" "${timep_ENDTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${BASH_SUBSHELL}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]@Q}" "${timep_IS_BG_INDICATOR}" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
             ((timep_NEXEC_A[-1]++))
             ((timep_NEXEC_CUR++))
             ((timep_NEXEC_N++))
@@ -1102,7 +1102,8 @@ enable -f "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" getCPUtime timep_crc3
 timep_hash - timep_NEXEC_HASH_PARENT <<<"\${timep_NEXEC_0}"
 timep_NEXEC_0+=".\${timep_NEXEC_CUR}::CHILD.{0-\${BASHPID}}"
 timep_NEXEC_A[0]=0
-timep_FNEST[0]="\${FUNCNAME[0]:-main}"
+timep_FNEST[0]="\${#FUNCNAME[@]}"
+: "\${timep_FNEST[0]:-0}"
 timep_SKIP_RETURN_TRAP_FLAG_A[0]=false
 timep_hash - timep_NEXEC_HASH_CUR <<<"\${timep_NEXEC_0}"
 echo "<< (CHILD): \${timep_NEXEC_HASH_CUR} {\${timep_NEXEC_0}} >>" >>"\${timep_TMPDIR}/.log/log.\${timep_NEXEC_HASH_PARENT}"
@@ -1590,7 +1591,7 @@ _timep_MERGE_SUM() {
 
 _timep_DEBUG_PRINTVARS() {
 
-declare -p | grep -E '^declare -. ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimeTA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimeTA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimeTA)|(linenoUniqCTimeA)|(linenoUniqCTimeTA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_LOCK_FD)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_wtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_)|(Time)|(.+A))=' | sed -E s/'^declare \-. '//
+declare -p | grep -E '^declare -[^ ]+ ((logCur)|(log_tmp)|(kk)|(kk1)|(nn)|(r)|(wTimeTotal)|(cTimeTotal)|(inPipeFlag)|(lineno1)|(nPipe)|(startWTime)|(endWTime)|(startCTime)|(endCTime)|(wTime)|(cTime)|(wTimeP)|(wTime0)|(cTime0)|(cTimeP)|(func)|(pid)|(nexec)|(lineno)|(cmd)|(t0)|(t1)|(log_tmp)|(linenoUniq)|(merge_init_flag)|(log_dupe_flag)|(spacerN)|(lineU)|(logMergeAll)|(fg0)|(ns)|(nf)|()|(nPipeNextIgnoreFlag)|(IFS0)|(count0)|(nPipe0)|(cmd0)|(d6)|(logA)|(nPipeA)|(startWTimeA)|(endWTimeA)|(wTimeA)|(wTimeTA)|(startCTimeA)|(endCTimeA)|(cTimeA)|(cTimeTA)|(funcA)|(pidA)|(nexecA)|(linenoA)|(cmdA)|(mergeA)|(isPipeA)|(logMergeA)|(linenoUniqA)|(lineUA)|(timeUA)|(sA)|(fA)|(eA)|(fgA)|(normalCmdFlagA)|(linenoUniqLineA)|(linenoUniqCountA)|(linenoUniqWTimeA)|(linenoUniqWTimeTA)|(linenoUniqCTimeA)|(linenoUniqCTimeTA)|(IFS0)|(nn)|(jj)|(kk)|(kk0)|(kk1)|(kkd)|(a)|(a0)|(b)|(u)|(logPathCur)|(nCPU)|(nWorker)|(nWorkerMax)|(REPLY)|(timep_coprocSrc)|(timep_DEBUG_FLAG)|(timep_DEBUG_IDS_FLAG)|(timep_deleteFlag)|(timep_fd_done)|(timep_LOCK_FD)|(timep_fd_logID)|(timep_flameGraphFlag)|(timep_flameGraphPath)|(timep_LOG_NUM)|(timep_noOutFlag)|(timep_outType)|(timep_PPID)|(timep_PTY_FD_TEST)|(timep_PTY_FLAG)|(timep_PTY_PATH)|(timep_wtimeALL)|(timep_wTimeCur)|(timep_WTIME_DONE)|(timep_timeFlag)|(timep_TITLE)|(timep_CLOCK_GETTIME_FLAG)|(timep_WTIME_CORRECTION)|(timep_CTIME_CORRECTION)|(timep_TMPDIR)|(timep_FD0)|(timep_FD1)|(timep_FD2)|(timep_CPU_TIME_MULT)|(pAll_PID)|(timep_outTypeA)|(kkNeed)|(kkNeed0)|(timep_LOG_NAME)|(timep_LOG_NESTING)|(timep_LOG_NESTING_IND)|(LOG_NESTING_CUR)|(timep_LOG_NESTING_MAX)|(BASH_COMMAND)|(FUNCNAME)|(nRetry)|(nWorker)|(timep_)|(Time)|(.+A))=' | sed -E s/'^declare \-[^ ]+ '//
 
 }
 
@@ -2443,6 +2444,49 @@ _timep_COMBINE_FLAMEGRAPH() {
 
     (( timep_LOG_NESTING_MAX = ${#timep_LOG_NESTING[@]} - 1 ))
 
+    printf '\nCHECKING FOR ORPHANED LOGS\n'
+            for (( nest1=timep_LOG_NESTING_MAX; nest1>0; nest1-- )); do
+                (( nest0 = nest1 - 1 ))
+
+                mapfile -t logCurA <<<"${timep_LOG_NESTING[${nest1}]%$'\n'}"
+
+                for path1 in "${logCurA[@]}"; do
+                    [[ ${path1} ]] || continue
+                    # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
+                    hash1="${path1##*\/log.}"
+                    IFS='' read -r  nexec1 <"${timep_TMPDIR}/.log/.hash/log.${hash1}"
+                    nexec0="${nexec1%.*}"
+                    timep_hash - hash0 <<<"${nexec0}"
+                    path0="${timep_TMPDIR}/.log/log.${hash0}"
+                    #declare -p nest1 path1 hash1 nexec1 nexec0 hash0 path0 nest0 >&2
+
+                    # confirm the parent log has a line containing the child logs nexec
+                    grep -F ' '"${nexec1}"$'\t' "${path0}" | grep -qE '<< \(.*\): .* >>' || {
+
+                        # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
+                        IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | grep -vE '^@TRAP' | head -n 1)
+                        #declare -p nPipe startWTime startCTime func pid nexec lineno >&2
+                        ((startWTime--))
+                        ((startCTime--))
+                        pidN="${pid%% *}"
+                        pidN="${pidN#S\:}"
+                        ((pidN--))
+                        pid="${pid#* }"
+                        pidNN="${pid##*.}"
+                        pid="${pid%.*}"
+                        pid="S:${pidN} ${pid}"
+                        nexec="${nexec%% *} ${nexec1}"
+
+                        # add indicator line to parent log
+                        printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n\n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
+                        [[ $'\n'"${timep_LOG_NESTING[${nest0}]}" == *$'\n'"${path0}"$'\n'* ]] || timep_LOG_NESTING[${nest0}]+="${path0}"$'\n'
+                        printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s %s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec%% *}" "${nexec1}" "${lineno}" "${pidNN}"  >>"${path0}"
+                        printf '%s\n' "${nexec0}" >"${timep_TMPDIR}/.log/.hash/log.${hash0}"
+                    }
+                done
+                read -r -u "${fd_sleep}" -t 0.01 _ || :
+            done
+
     # sort logs in nesting order
     mapfile -t timep_LOG_NAME < <(for kk in "${!timep_LOG_NESTING[@]}"; do sort -V <<<"${timep_LOG_NESTING[$kk]%$'\n'}"; done)
 
@@ -2510,12 +2554,9 @@ timep_coprocSrc+='    read -r -u "${timep_LOCK_FD}" _
     fi
     printf '"'"'%s\n'"'"' "${logID}" >"${timep_TMPDIR}/.worker/${BASHPID}"
     if "${debugFlag}"; then
-        timep_POSTPROC_DEBUG_FLAG=true 
-        timep_WORKER_PID="${BASHPID}" 
-        _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
+        timep_POSTPROC_DEBUG_FLAG=true timep_WORKER_PID="${BASHPID}" _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     else
-        timep_WORKER_PID="${BASHPID}" 
-        _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
+        timep_WORKER_PID="${BASHPID}" _timep_PROCESS_LOG "${logID}" 2>&${timep_FD2}
     fi
     mapfile -t timep_LOG_DELETE_CUR <"${timep_TMPDIR}/.worker/delete/${BASHPID}"
         (( ${#timep_LOG_DELETE_CUR[@]} > 0 )) && \rm -f "${timep_LOG_DELETE_CUR[@]}"
@@ -2548,6 +2589,7 @@ done
     nRetryMax0=20
     nFailedMax0=30
     nActive=0
+    kkNeedCurLast=()
 
     # set traps to kill workers on SIGINT / EXIT
     trap 'kill -15 "${pAll_PID[@]}"; sleep 1; kill -9 "${pAll_PID[@]}"' EXIT
@@ -2572,43 +2614,6 @@ done
         (( kkDiff = kk - kkMin + 1 ))
 
         kkNeedCur=("${kkNeed[@]:${kkMin}}")
-
-            (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && {
-                for kkCheck in "${kkNeedCurLast[@]}"; do
-                    # get path/nexec/hash of child log (from last iterations deeper nesting lvl) and parent log ( from current iteration / nesting lvl)
-                    path1="${timep_LOG_NAME[$kkCheck]}"
-                    hash1="${path1##*\/log.}"
-                    IFS='' read -r  nexec1 <"${timep_TMPDIR}/.log/.hash/log.${hash1}"
-                    nexec0="${nexec1%.*}"
-                    timep_hash - hash0 <<<"${nexec0}"
-                    path0="${timep_TMPDIR}/.log/log.${hash0}"
-                    #declare -p path1 hash1 nexec1 nexec0 hash0 path0 >&2
-
-                    # confirm the parent log has a line containing the child logs nexec
-                    grep -F ' '"${nexec1}"$'\t' "${path0}" | grep -qE '<< \(.*\): .* >>' || {
-
-                        # child nexec not fouund in parent log. build a synthetic <<(BACKGROUND FORK): ___ >> line by (slightly) modifying the 1st log line in the child
-                        IFS=$'\t' read -r nPipe startWTime startCTime _ _ func pid nexec lineno _ < <(sort -V -k11,11 <"${path1}" | grep -E '.+' | grep -vE '^@TRAP' | head -n 1)
-                        #declare -p nPipe startWTime startCTime func pid nexec lineno >&2
-                        ((startWTime--))
-                        ((startCTime--))
-                        pidN="${pid%% *}"
-                        pidN="${pidN#S\:}"
-                        ((pidN--))
-                        pid="${pid#* }"
-                        pidNN="${pid##*.}"
-                        pid="${pid%.*}"
-                        pid="S:${pidN} ${pid}"
-                        nexec="${nexec%% *} ${nexec1}"
-
-                        # add indicator line to parent log
-                        printf '\n\nWARNING: ORPHAN LOG DETRECTED -- LOG: log.%s --> log.%s ( NEXEC = %s ) \n\n         TIMEP WILL ATTEMPT TO FIX AUTOMATICALLY\n\n' "${hash1}" "${hash0}" "${nexec1}" >&2
-                        printf '\n1\t%s\t%s\t-\t-\t%s\t%s\t%s %s\t%s\t::\t<< (BACKGROUND FORK): %s >>\n\n' "${startWTime}" "${startCTime}" "${func}" "${pid}" "${nexec%% *}" "${nexec1}" "${lineno}" "${pidNN}"  >>"${path0}"
-
-                        echo "${nexec0}" >"${timep_TMPDIR}/.log/.hash/log.${hash0}"
-                    }
-                done
-            }
 
             # write ID's of logs to process (for current nesting lvl) to work queue pipe
             # writer is a background process to prevent deadlock
@@ -2731,28 +2736,21 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                     }
                 fi
 
-                # check+fix for orphaned logs
-                if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && (( kk == kkMin )) && ${timep_deleteFlag} && (( ${#kkNeedCurLast[@]}} > 0 )); then
+            done
+
+                            # delete logs we are done with
+                if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && ${timep_deleteFlag} && (( ${#kkNeedCurLast[@]} > 0 )); then
                     for kkDel in "${kkNeedCurLast[@]}"; do
                         [[ -f "${timep_LOG_NAME[$kkDel]}.out" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out"
                         [[ -f "${timep_LOG_NAME[$kkDel]}.out.combined" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out.combined"
                     done
                 fi
 
-            done
-
         kkNeedCurLast=("${kkNeedCur[@]}")
         timep_LOG_NESTING_LAST="${timep_LOG_NESTING_CUR}"
         
         read -r -u "${fd_sleep}" -t 0.1 _ || :
     done
-
-    if (( timep_LOG_NESTING_CUR < timep_LOG_NESTING_MAX )) && (( kk == kkMin )) && ${timep_deleteFlag} && (( ${#kkNeedCurLast[@]}} > 0 )); then
-        for kkDel in "${kkNeedCurLast[@]}"; do
-            [[ -f "${timep_LOG_NAME[$kkDel]}.out" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out"
-            [[ -f "${timep_LOG_NAME[$kkDel]}.out.combined" ]] && \rm -f "${timep_LOG_NAME[$kkDel]}.out.combined"
-        done
-    fi
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
 
