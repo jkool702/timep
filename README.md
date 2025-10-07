@@ -1,7 +1,7 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: 1.8
+**CURRENT TIMEP VERSION**: 1.8.1
 
 **CHANGES IN MOST RECENT UPDATE**: In this release, the instrumented DEBUG trap has been refactored to improve accuracy and to avoid missing commands:
 * timep now knows how to properly handle backgrounded function calls (e.g., `func &`).
@@ -9,6 +9,7 @@
 * timep, in general, produces more accurate profiles.
 * timep now suvcesssfully profiles every single "explicitly-designed-to-break-profilers" stress test (under the TESTS dir). A few new stress tests were added as well.
 * any orphaned logs are now automatically merged up (instead of silently dropped).
+* v1.8.1: various bugfix
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
