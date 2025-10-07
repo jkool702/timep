@@ -9,7 +9,7 @@
 * timep, in general, produces more accurate profiles.
 * timep now suvcesssfully profiles every single "explicitly-designed-to-break-profilers" stress test (under the TESTS dir). A few new stress tests were added as well.
 * any orphaned logs are now automatically merged up (instead of silently dropped).
-* v1.8.1: various bugfix
+* v1.8.1: various minor bugfix
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
