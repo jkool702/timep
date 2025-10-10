@@ -1,78 +1,78 @@
-SUBSHELL (43768)_[s];''	1:0	1:0
-SUBSHELL (43768)_[s];'set -o monitor'	83:0	102:0
-SUBSHELL (43768)_[s];'TMPDIR=$(mktemp -d)'	475:0	286:1
-SUBSHELL (43768)_[s];'INPUT_PIPE="$TMPDIR/input.pipe"'	99:0	111:0
-SUBSHELL (43768)_[s];'OUTPUT_PIPE="$TMPDIR/output.pipe"'	129:0	152:1
-SUBSHELL (43768)_[s];'mkfifo "$INPUT_PIPE"'	1408:1	1480:4
-SUBSHELL (43768)_[s];'mkfifo "$OUTPUT_PIPE"'	1806:1	1923:5
-SUBSHELL (43768)_[s];'<< (FUNCTION): '\''trap '\''echo "[TRAP] A child process has exited."'\'' SIGCHLD'\'' (&) >> (&)'	29159:10	28860:26
-SUBSHELL (43768)_[s];'echo "[MAIN] Starting the main logic."'	111:0	130:0
-SUBSHELL (43768)_[s];'echo "[MAIN] Coprocess PID: $CPID_PID"'	104:0	124:0
-SUBSHELL (43768)_[s];'exec 3> "$INPUT_PIPE"'	105:0	126:0
-SUBSHELL (43768)_[s];'exec 4< "$OUTPUT_PIPE" (&)'	762:1	579:2
-SUBSHELL (43768)_[s];'exec 3>&-'	173:0	202:1
-SUBSHELL (43768)_[s];'read -r -u 4 line'	6445:6	10147:14
-SUBSHELL (43768)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	2717:4	2703:7
-SUBSHELL (43768)_[s];'echo "[MAIN] Read from coprocess: '\''$line'\''"'	109:0	130:0
-SUBSHELL (43768)_[s];'read -r -u 4 line'	307262:80	39888:36
-SUBSHELL (43768)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	2499:2	16770:18
-SUBSHELL (43768)_[s];'read -r -u 4 line (?)'	2393:2	2396:6
-SUBSHELL (43768)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	3230:4	3236:10
-SUBSHELL (43768)_[s];'echo "[MAIN] Read from coprocess: '\''$line'\''"'	129:0	150:1
-SUBSHELL (43768)_[s];'read -r -u 4 line'	115:0	135:0
-SUBSHELL (43768)_[s];'exec 4>&-'	97:0	116:0
-SUBSHELL (43768)_[s];'echo "[MAIN] Waiting for background jobs to finish..."'	122:0	136:0
-SUBSHELL (43768)_[s];'wait'	54350:10	386:2
-SUBSHELL (43768)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	2713:3	2715:8
-SUBSHELL (43768)_[s];'echo "[MAIN] Cleaning up."'	114:0	134:0
-SUBSHELL (43768)_[s];'kill "$CPID_PID" 2> /dev/null'	186:0	207:1
-SUBSHELL (43768)_[s];'true'	93:0	112:0
-SUBSHELL (43768)_[s];'rm -rf "$TMPDIR"'	1341:1	1417:3
-SUBSHELL (43768)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	2427:2	2438:7
-SUBSHELL (43768)_[s];'rm -rf "$TMPDIR" (?)'	4589:5	4556:12
-SUBSHELL (43768)_[s];'echo "[MAIN] Test complete."'	170:0	193:1
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];'exec 3>&-'	162:0	194:1
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];'echo "[BG 4] Starting recursive function." 1>&2'	173:0	204:1
-SUBSHELL (43768)_[s];SUBSHELL (43796)_[s];'read -r encoded_data'	309466:80	312:2
-SUBSHELL (43768)_[s];SUBSHELL (43795)_[s];'exec 3>&-'	184:0	220:1
-SUBSHELL (43768)_[s];SUBSHELL (43796)_[s];'decoded_data=$(echo "$encoded_data" | base64 -d)'	528:1	323:2
-SUBSHELL (43768)_[s];SUBSHELL (43795)_[s];'echo "[BG 3] Running complex command." 1>&2'	180:0	212:1
-SUBSHELL (43768)_[s];SUBSHELL (43795)_[s];'sleep 0.3'	301669:38	1585:4
-SUBSHELL (43768)_[s];SUBSHELL (43795)_[s];'echo "Data from BG 3" | base64'	2669:3	3018:10
-SUBSHELL (43768)_[s];SUBSHELL (43796)_[s];'echo "[BG 3 - Child] Decoded data: '\''$decoded_data'\''. Writing to coprocess." 1>&2'	135:0	149:1
-SUBSHELL (43768)_[s];SUBSHELL (43796)_[s];'echo "$decoded_data" 1>&3'	147:0	149:1
-SUBSHELL (43768)_[s];SUBSHELL (43792)_[s];'read -r line'	4634:5	311:2
-SUBSHELL (43768)_[s];SUBSHELL (43792)_[s];'echo "[COPROC] Received: $line" 1>&2'	264:0	296:1
-SUBSHELL (43768)_[s];SUBSHELL (43792)_[s];'echo "$line"'	219:0	251:1
-SUBSHELL (43768)_[s];SUBSHELL (43792)_[s];'read -r line'	309942:80	391:2
-SUBSHELL (43768)_[s];SUBSHELL (43792)_[s];'echo "[COPROC] Received: $line" 1>&2'	207:0	230:1
-SUBSHELL (43768)_[s];SUBSHELL (43792)_[s];'echo "$line"'	112:0	131:0
-SUBSHELL (43768)_[s];SUBSHELL (43792)_[s];'read -r line'	122:0	141:0
-SUBSHELL (43768)_[s];SUBSHELL (43793)_[s];'exec 3>&-'	208:0	240:1
-SUBSHELL (43768)_[s];SUBSHELL (43793)_[s];'echo "[BG 1] Writing to main FIFO." 1>&2'	113:0	132:0
-SUBSHELL (43768)_[s];SUBSHELL (43793)_[s];'echo "Message from BG 1" > "$FIFO_PATH"'	176:0	197:1
-SUBSHELL (43768)_[s];SUBSHELL (43793)_[s];'sleep 0.2'	201744:38	1741:5
-SUBSHELL (43768)_[s];SUBSHELL (43789)_[s];'mktemp -d'	464460:144	464460:156
-SUBSHELL (43768)_[s];SUBSHELL (43794)_[s];'read -r line < "$FIFO_PATH"'	309:0	343:2
-SUBSHELL (43768)_[s];SUBSHELL (43794)_[s];'echo "[BG 2] Read from FIFO: '\''$line'\''. Writing to coprocess." 1>&2'	183:0	215:1
-SUBSHELL (43768)_[s];SUBSHELL (43794)_[s];'echo "$line" 1>&3'	172:0	204:1
-SUBSHELL (43768)_[s];SUBSHELL (43796)_[s];SUBSHELL (43805)_[s];'echo "$encoded_data" | base64 -d'	2619:3	2980:9
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];'recursive_function 1'	487:1	480:2
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];'local depth=$1'	107:0	128:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	97:0	115:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];'echo "[RECURSIVE] Depth: $depth" 1>&2'	110:0	129:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];'sleep 0.1'	101433:38	1479:4
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'recursive_function $((depth + 1))'	85:0	104:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'local depth=$1'	94:0	114:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	93:0	113:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'echo "[RECURSIVE] Depth: $depth" 1>&2'	119:0	139:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'sleep 0.1'	101234:10	1252:3
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'recursive_function $((depth + 1))'	88:0	108:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'local depth=$1'	96:0	116:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	96:0	116:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'echo "[RECURSIVE] Depth: $depth" 1>&2'	119:0	140:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'sleep 0.1'	101314:24	1334:3
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'recursive_function $((depth + 1))'	117:0	138:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'local depth=$1'	116:0	129:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	101:0	122:0
-SUBSHELL (43768)_[s];SUBSHELL (43797)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'return'	107:0	128:0
+SUBSHELL (58964)_[s];''	1:0	1:0
+SUBSHELL (58964)_[s];'set -o monitor'	67:0	80:0
+SUBSHELL (58964)_[s];'TMPDIR=$(mktemp -d)'	401:0	260:1
+SUBSHELL (58964)_[s];'INPUT_PIPE="$TMPDIR/input.pipe"'	64:0	79:0
+SUBSHELL (58964)_[s];'OUTPUT_PIPE="$TMPDIR/output.pipe"'	63:0	76:0
+SUBSHELL (58964)_[s];'mkfifo "$INPUT_PIPE"'	968:1	1035:2
+SUBSHELL (58964)_[s];'mkfifo "$OUTPUT_PIPE"'	869:0	941:2
+SUBSHELL (58964)_[s];'<< (FUNCTION): '\''trap '\''echo "[TRAP] A child process has exited."'\'' SIGCHLD'\'' (&) >> (&)'	21883:8	21825:26
+SUBSHELL (58964)_[s];'echo "[MAIN] Starting the main logic."'	79:0	93:0
+SUBSHELL (58964)_[s];'echo "[MAIN] Coprocess PID: $CPID_PID"'	69:0	82:0
+SUBSHELL (58964)_[s];'exec 3> "$INPUT_PIPE"'	71:0	85:0
+SUBSHELL (58964)_[s];'exec 4< "$OUTPUT_PIPE" (&)'	764:0	785:2
+SUBSHELL (58964)_[s];'exec 3>&-'	70:0	84:0
+SUBSHELL (58964)_[s];'read -r -u 4 line'	4933:5	6516:12
+SUBSHELL (58964)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	1951:1	1958:4
+SUBSHELL (58964)_[s];'echo "[MAIN] Read from coprocess: '\''$line'\''"'	71:0	85:0
+SUBSHELL (58964)_[s];'read -r -u 4 line'	320948:89	50846:39
+SUBSHELL (58964)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	4712:4	20553:20
+SUBSHELL (58964)_[s];'read -r -u 4 line (?)'	1957:2	1965:4
+SUBSHELL (58964)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	1967:2	1975:5
+SUBSHELL (58964)_[s];'echo "[MAIN] Read from coprocess: '\''$line'\''"'	71:0	86:0
+SUBSHELL (58964)_[s];'read -r -u 4 line'	74:0	86:0
+SUBSHELL (58964)_[s];'exec 4>&-'	69:0	83:0
+SUBSHELL (58964)_[s];'echo "[MAIN] Waiting for background jobs to finish..."'	71:0	84:0
+SUBSHELL (58964)_[s];'wait'	31551:8	137:0
+SUBSHELL (58964)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	3536:3	3545:10
+SUBSHELL (58964)_[s];'echo "[MAIN] Cleaning up."'	140:0	164:1
+SUBSHELL (58964)_[s];'kill "$CPID_PID" 2> /dev/null'	127:0	142:1
+SUBSHELL (58964)_[s];'true'	65:0	78:0
+SUBSHELL (58964)_[s];'rm -rf "$TMPDIR"'	2393:2	2457:7
+SUBSHELL (58964)_[s];'@TRAP (SIGCHLD): echo "[TRAP] A child process has exited."'	1947:1	1955:3
+SUBSHELL (58964)_[s];'rm -rf "$TMPDIR" (?)'	1930:1	1938:3
+SUBSHELL (58964)_[s];'echo "[MAIN] Test complete."'	101:0	115:0
+SUBSHELL (58964)_[s];SUBSHELL (58985)_[s];'mktemp -d'	434486:146	434486:156
+SUBSHELL (58964)_[s];SUBSHELL (58990)_[s];'read -r line < "$FIFO_PATH"'	247:0	273:1
+SUBSHELL (58964)_[s];SUBSHELL (58990)_[s];'echo "[BG 2] Read from FIFO: '\''$line'\''. Writing to coprocess." 1>&2'	113:0	127:0
+SUBSHELL (58964)_[s];SUBSHELL (58989)_[s];'exec 3>&-'	201:0	227:1
+SUBSHELL (58964)_[s];SUBSHELL (58990)_[s];'echo "$line" 1>&3'	79:0	92:0
+SUBSHELL (58964)_[s];SUBSHELL (58989)_[s];'echo "[BG 1] Writing to main FIFO." 1>&2'	80:0	93:0
+SUBSHELL (58964)_[s];SUBSHELL (58989)_[s];'echo "Message from BG 1" > "$FIFO_PATH"'	134:0	149:1
+SUBSHELL (58964)_[s];SUBSHELL (58989)_[s];'sleep 0.2'	202628:48	2545:8
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];'exec 3>&-'	189:0	222:1
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];'echo "[BG 4] Starting recursive function." 1>&2'	80:0	93:0
+SUBSHELL (58964)_[s];SUBSHELL (58991)_[s];'exec 3>&-'	140:0	165:1
+SUBSHELL (58964)_[s];SUBSHELL (58991)_[s];'echo "[BG 3] Running complex command." 1>&2'	79:0	93:0
+SUBSHELL (58964)_[s];SUBSHELL (58988)_[s];'read -r line'	2371:2	213:1
+SUBSHELL (58964)_[s];SUBSHELL (58992)_[s];'read -r encoded_data'	312050:48	303:1
+SUBSHELL (58964)_[s];SUBSHELL (58991)_[s];'sleep 0.3'	302521:48	2464:7
+SUBSHELL (58964)_[s];SUBSHELL (58988)_[s];'echo "[COPROC] Received: $line" 1>&2'	78:0	93:0
+SUBSHELL (58964)_[s];SUBSHELL (58992)_[s];'decoded_data=$(echo "$encoded_data" | base64 -d)'	516:0	285:1
+SUBSHELL (58964)_[s];SUBSHELL (58991)_[s];'echo "Data from BG 3" | base64'	6231:5	7217:14
+SUBSHELL (58964)_[s];SUBSHELL (58988)_[s];'echo "$line"'	69:0	81:0
+SUBSHELL (58964)_[s];SUBSHELL (58988)_[s];'read -r line'	319741:48	279:1
+SUBSHELL (58964)_[s];SUBSHELL (58992)_[s];'echo "[BG 3 - Child] Decoded data: '\''$decoded_data'\''. Writing to coprocess." 1>&2'	120:0	139:0
+SUBSHELL (58964)_[s];SUBSHELL (58988)_[s];'echo "[COPROC] Received: $line" 1>&2'	217:0	251:1
+SUBSHELL (58964)_[s];SUBSHELL (58992)_[s];'echo "$decoded_data" 1>&3'	116:0	137:0
+SUBSHELL (58964)_[s];SUBSHELL (58988)_[s];'echo "$line"'	191:0	223:1
+SUBSHELL (58964)_[s];SUBSHELL (58988)_[s];'read -r line'	234:0	262:1
+SUBSHELL (58964)_[s];SUBSHELL (58992)_[s];SUBSHELL (59001)_[s];'echo "$encoded_data" | base64 -d'	2737:3	3676:11
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];'recursive_function 1'	65:0	79:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];'local depth=$1'	68:0	82:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	69:0	83:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];'echo "[RECURSIVE] Depth: $depth" 1>&2'	82:0	93:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];'sleep 0.1'	102542:35	2455:6
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'recursive_function $((depth + 1))'	65:0	79:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'local depth=$1'	68:0	82:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	69:0	83:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'echo "[RECURSIVE] Depth: $depth" 1>&2'	79:0	92:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'sleep 0.1'	102437:21	2378:5
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'recursive_function $((depth + 1))'	66:0	80:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'local depth=$1'	71:0	85:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	69:0	84:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'echo "[RECURSIVE] Depth: $depth" 1>&2'	79:0	93:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'sleep 0.1'	102597:48	2599:9
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'recursive_function $((depth + 1))'	74:0	88:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'local depth=$1'	73:0	87:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'[ $depth -gt 3 ]'	72:0	87:0
+SUBSHELL (58964)_[s];SUBSHELL (58993)_[s];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];FUNCTION (recursive_function)_[f];'return'	71:0	88:0

@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" width="4096" height="228" onload="init(evt)" viewBox="0 0 4096 228" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg version="1.1" width="4096" height="300" onload="init(evt)" viewBox="0 0 4096 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
 <!-- NOTES:  -->
 <defs>
@@ -416,441 +416,501 @@
         }
 ]]>
 </script>
-<rect x="0.0" y="0" width="4096.0" height="228.0" fill="url(#background)"  />
+<rect x="0.0" y="0" width="4096.0" height="300.0" fill="url(#background)"  />
 <text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/claude-sonnet-4/claude.test.bash</text>
-<text id="details" x="10.00" y="213" > </text>
+<text id="details" x="10.00" y="285" > </text>
 <text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
 <text id="search" x="3986.00" y="20" >Search</text>
 <text id="ignorecase" x="4070.00" y="20" >ic</text>
-<text id="matched" x="3986.00" y="213" > </text>
+<text id="matched" x="3986.00" y="285" > </text>
 <g id="frames">
 <g >
-<title>SUBSHELL (597647)_[s] (424 us, 0.33%)</title><rect x="2977.5" y="126" width="13.4" height="23.0" fill="rgb(223.603709912444,140.831672408886,197.915836204443)" rx="2" ry="2" />
-<text  x="2980.53" y="140.5" ></text>
+<title>'[[ -f /tmp/child_cleanup_$$ ]]' (300 us, 0.25%)</title><rect x="1350.6" y="102" width="10.0" height="23.0" fill="rgb(27,46,246)" rx="2" ry="2" />
+<text  x="1353.59" y="116.5" ></text>
 </g>
 <g >
-<title>'sleep 0.05' (3,647 us, 2.83%)</title><rect x="3958.4" y="174" width="115.2" height="23.0" fill="rgb(109,199,157)" rx="2" ry="2" />
-<text  x="3961.41" y="188.5" >'sleep 0.05'</text>
+<title>'echo &quot;Side effect: $x&quot; 1&gt;&amp;2' (103 us, 0.08%)</title><rect x="4082.6" y="246" width="3.4" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="4085.55" y="260.5" ></text>
 </g>
 <g >
-<title>'read line' (338 us, 0.26%)</title><rect x="2643.6" y="126" width="10.7" height="23.0" fill="rgb(24,41,248)" rx="2" ry="2" />
-<text  x="2646.63" y="140.5" ></text>
+<title>'(( 2 &gt; 1 )) (&amp;)' (313 us, 0.26%)</title><rect x="1623.8" y="126" width="10.5" height="23.0" fill="rgb(27,46,246)" rx="2" ry="2" />
+<text  x="1626.84" y="140.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597648)_[s] (716 us, 0.55%)</title><rect x="2643.6" y="102" width="22.6" height="23.0" fill="rgb(223.847399095793,139.619996651085,197.886898342287)" rx="2" ry="2" />
-<text  x="2646.63" y="116.5" >S..</text>
+<title>FUNCTION (func_2)_[f] (498 us, 0.41%)</title><rect x="1617.6" y="102" width="16.7" height="23.0" fill="rgb(198.518406594232,142.036813188465,223.935123626828)" rx="2" ry="2" />
+<text  x="1620.64" y="116.5" ></text>
 </g>
 <g >
-<title>'echo &quot;Dynamic func 2 running in PID $$&quot;' (91 us, 0.07%)</title><rect x="2698.8" y="126" width="2.9" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2701.79" y="140.5" ></text>
+<title>'wait $subshell_pid 2&gt; /dev/null' (939 us, 0.77%)</title><rect x="1319.2" y="102" width="31.4" height="23.0" fill="rgb(59,124,221)" rx="2" ry="2" />
+<text  x="1322.15" y="116.5" >'wa..</text>
 </g>
 <g >
-<title>'exec 3&gt;&amp;-' (89 us, 0.07%)</title><rect x="2797.0" y="126" width="2.9" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2800.05" y="140.5" ></text>
+<title>SUBSHELL (57143)_[s] (326 us, 0.27%)</title><rect x="1650.8" y="78" width="10.9" height="23.0" fill="rgb(224.189287863935,138.733161750698,198.029249257842)" rx="2" ry="2" />
+<text  x="1653.78" y="92.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597655)_[s] (368 us, 0.29%)</title><rect x="2965.9" y="78" width="11.6" height="23.0" fill="rgb(223.619159791766,138.774665895428,197.468459618237)" rx="2" ry="2" />
-<text  x="2968.91" y="92.5" ></text>
+<title>'read -u3 exec_result' (111 us, 0.09%)</title><rect x="2529.2" y="126" width="3.7" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="2532.21" y="140.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597657)_[s] (368 us, 0.29%)</title><rect x="2965.9" y="102" width="11.6" height="23.0" fill="rgb(223.619159791766,138.774665895428,197.468459618237)" rx="2" ry="2" />
-<text  x="2968.91" y="116.5" ></text>
+<title>SUBSHELL (57151)_[s] (449 us, 0.37%)</title><rect x="3584.7" y="78" width="15.1" height="23.0" fill="rgb(224.770622055181,139.314495941945,198.610583449089)" rx="2" ry="2" />
+<text  x="3587.74" y="92.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597656)_[s] (2,521 us, 1.95%)</title><rect x="2017.0" y="78" width="79.6" height="23.0" fill="rgb(227.837187870761,141.147361926382,201.830240087447)" rx="2" ry="2" />
-<text  x="2020.01" y="92.5" >SUBSHELL (5..</text>
+<title>'rm -f /tmp/child_cleanup_$$' (2,161 us, 1.77%)</title><rect x="1448.0" y="102" width="72.4" height="23.0" fill="rgb(81,164,197)" rx="2" ry="2" />
+<text  x="1451.01" y="116.5" >'rm -f /tm..</text>
 </g>
 <g >
-<title>SUBSHELL (597662)_[s] (4,041 us, 3.13%)</title><rect x="3958.4" y="150" width="127.6" height="23.0" fill="rgb(232.350849506417,142.915742429192,206.217214321514)" rx="2" ry="2" />
-<text  x="3961.41" y="164.5" >SUBSHELL (597662)_[s]</text>
+<title>'sleep 0.1 (&amp;)' (420 us, 0.34%)</title><rect x="3557.0" y="150" width="14.1" height="23.0" fill="rgb(39,77,238)" rx="2" ry="2" />
+<text  x="3560.05" y="164.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597623)_[s] (90 us, 0.07%)</title><rect x="2640.8" y="78" width="2.8" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="2643.79" y="92.5" ></text>
+<title>'echo &quot;=== Test 1: Dynamic Function Hell ===&quot;' (109 us, 0.09%)</title><rect x="12.7" y="78" width="3.7" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="15.71" y="92.5" ></text>
 </g>
 <g >
-<title>'trap '\''echo &quot;Background job cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$'\'' EXIT' (25,062 us, 19.41%)</title><rect x="2990.9" y="150" width="791.3" height="23.0" fill="rgb(161,188,73)" rx="2" ry="2" />
-<text  x="2993.91" y="164.5" >'trap '\''echo "Background job cleanup" &gt;&gt; /tmp/child_cleanup_$$'\'' EXIT'</text>
+<title>SUBSHELL (57181)_[s] (3,357 us, 2.76%)</title><rect x="3788.9" y="150" width="112.4" height="23.0" fill="rgb(231.186855012553,142.323167620372,205.050476367794)" rx="2" ry="2" />
+<text  x="3791.88" y="164.5" >SUBSHELL (57181)_..</text>
 </g>
 <g >
-<title>'wait' (254 us, 0.20%)</title><rect x="60.0" y="78" width="8.0" height="23.0" fill="rgb(20,31,250)" rx="2" ry="2" />
-<text  x="62.95" y="92.5" ></text>
+<title>'echo &quot;Level 3: $input&quot;' (375 us, 0.31%)</title><rect x="3910.8" y="174" width="12.6" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3913.81" y="188.5" ></text>
 </g>
 <g >
-<title>'echo &quot;=== Test 2: Nested Subshell Matrix ===&quot;' (132 us, 0.10%)</title><rect x="68.0" y="78" width="4.1" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="70.97" y="92.5" ></text>
+<title>SUBSHELL (57175)_[s] (2,252 us, 1.85%)</title><rect x="147.0" y="78" width="75.4" height="23.0" fill="rgb(228.381552653771,141.582267829113,202.341767206374)" rx="2" ry="2" />
+<text  x="150.03" y="92.5" >SUBSHELL (..</text>
 </g>
 <g >
-<title>'echo &quot;Dynamic func 1 running in PID $$&quot;' (94 us, 0.07%)</title><rect x="2621.9" y="126" width="2.9" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2624.88" y="140.5" ></text>
+<title>'echo &quot;Dynamic func 3 running in PID $$&quot;' (92 us, 0.08%)</title><rect x="1637.0" y="126" width="3.1" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1640.03" y="140.5" ></text>
 </g>
 <g >
-<title>'@TRAP (EXIT): echo &quot;Child cleanup&quot; &gt; /tmp/child_cleanup_$$\, kill -TERM $$' (2,734 us, 2.12%)</title><rect x="2342.3" y="102" width="86.4" height="23.0" fill="rgb(82,167,195)" rx="2" ry="2" />
-<text  x="2345.35" y="116.5" >'@TRAP (EXIT..</text>
+<title>SUBSHELL (57176)_[s] (4,632 us, 3.80%)</title><rect x="3599.8" y="102" width="155.0" height="23.0" fill="rgb(228.194386722378,142.644557112947,202.529437839549)" rx="2" ry="2" />
+<text  x="3602.77" y="116.5" >SUBSHELL (57176)_[s]</text>
 </g>
 <g >
-<title>'echo &quot;=== Test 1: Dynamic Function Hell ===&quot;' (154 us, 0.12%)</title><rect x="14.4" y="78" width="4.8" height="23.0" fill="rgb(20,31,250)" rx="2" ry="2" />
-<text  x="17.36" y="92.5" ></text>
+<title>SUBSHELL (57176)_[s] (3,357 us, 2.76%)</title><rect x="3788.9" y="102" width="112.4" height="23.0" fill="rgb(231.186855012553,142.323167620372,205.050476367794)" rx="2" ry="2" />
+<text  x="3791.88" y="116.5" >SUBSHELL (57176)_..</text>
 </g>
 <g >
-<title>SUBSHELL (597637)_[s] (111 us, 0.09%)</title><rect x="3954.9" y="102" width="3.5" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="3957.90" y="116.5" ></text>
+<title>'echo &quot;Final result: $result&quot;' (102 us, 0.08%)</title><rect x="82.9" y="78" width="3.5" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="85.95" y="92.5" ></text>
 </g>
 <g >
-<title>'echo &quot;Processed: $x&quot; | tee &gt;(echo &quot;Side effect: $x&quot; 1&gt;&amp;2)' (312 us, 0.24%)</title><rect x="2981.1" y="150" width="9.8" height="23.0" fill="rgb(20,31,250)" rx="2" ry="2" />
-<text  x="2984.06" y="164.5" ></text>
+<title>'echo &quot;Exec result: $exec_result&quot;' (299 us, 0.25%)</title><rect x="2532.9" y="126" width="10.0" height="23.0" fill="rgb(27,46,246)" rx="2" ry="2" />
+<text  x="2535.93" y="140.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597633)_[s] (716 us, 0.55%)</title><rect x="2643.6" y="78" width="22.6" height="23.0" fill="rgb(223.847399095793,139.619996651085,197.886898342287)" rx="2" ry="2" />
-<text  x="2646.63" y="92.5" >S..</text>
+<title>FUNCTION (func_2)_[f] (930 us, 0.76%)</title><rect x="2792.2" y="102" width="31.1" height="23.0" fill="rgb(199.773251831582,139.895830133191,225.933290437675)" rx="2" ry="2" />
+<text  x="2795.18" y="116.5" >FUN..</text>
 </g>
 <g >
-<title>SUBSHELL (597633)_[s] (6,033 us, 4.67%)</title><rect x="2428.7" y="78" width="190.5" height="23.0" fill="rgb(228.504648858285,142.106764700519,202.585283610955)" rx="2" ry="2" />
-<text  x="2431.67" y="92.5" >SUBSHELL (597633)_[s]</text>
+<title>SUBSHELL (57173)_[s] (103 us, 0.08%)</title><rect x="4082.6" y="222" width="3.4" height="23.0" fill="rgb(223.026619481442,138.733161750698,196.866580875349)" rx="2" ry="2" />
+<text  x="4085.55" y="236.5" ></text>
 </g>
 <g >
-<title>'cat 1&gt;&amp;2' (2,561 us, 1.98%)</title><rect x="2428.7" y="126" width="80.8" height="23.0" fill="rgb(78,160,201)" rx="2" ry="2" />
-<text  x="2431.67" y="140.5" >'cat 1&gt;&amp;2'</text>
+<title>'read x' (110 us, 0.09%)</title><rect x="4069.0" y="222" width="3.6" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="4071.96" y="236.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597659)_[s] (30,531 us, 23.65%)</title><rect x="2990.9" y="126" width="964.0" height="23.0" fill="rgb(239.910928783157,146.474757017323,213.79522860016)" rx="2" ry="2" />
-<text  x="2993.91" y="140.5" >SUBSHELL (597659)_[s]</text>
+<title>'read input (&amp;)' (449 us, 0.37%)</title><rect x="3584.7" y="150" width="15.1" height="23.0" fill="rgb(42,84,236)" rx="2" ry="2" />
+<text  x="3587.74" y="164.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597637)_[s] (1,080 us, 0.84%)</title><rect x="2715.1" y="102" width="34.1" height="23.0" fill="rgb(225.050229761428,140.384533125464,199.132159362663)" rx="2" ry="2" />
-<text  x="2718.08" y="116.5" >SUB..</text>
+<title>'echo &quot;Dynamic func 1 running in PID $$&quot;' (91 us, 0.07%)</title><rect x="1611.6" y="126" width="3.1" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1614.62" y="140.5" ></text>
 </g>
 <g >
-<title>'echo &quot;Level 1&quot; 1&gt;&amp;2 | grep -v &quot;^$&quot; | head -10' (59,678 us, 46.23%)</title><rect x="128.8" y="102" width="1884.2" height="23.0" fill="rgb(254,5,1)" rx="2" ry="2" />
-<text  x="131.75" y="116.5" >'echo "Level 1" 1&gt;&amp;2 | grep -v "^$" | head -10'</text>
+<title>SUBSHELL (57144)_[s] (331 us, 0.27%)</title><rect x="1661.7" y="78" width="11.1" height="23.0" fill="rgb(224.189287863935,139.314495941945,198.029249257842)" rx="2" ry="2" />
+<text  x="1664.70" y="92.5" ></text>
 </g>
 <g >
-<title>'@TRAP (EXIT): echo &quot;Background job cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$' (3,229 us, 2.50%)</title><rect x="3853.0" y="150" width="101.9" height="23.0" fill="rgb(95,185,178)" rx="2" ry="2" />
-<text  x="3855.95" y="164.5" >'@TRAP (EXIT): ..</text>
+<title>SUBSHELL (57152)_[s] (449 us, 0.37%)</title><rect x="3584.7" y="102" width="15.1" height="23.0" fill="rgb(224.770622055181,139.314495941945,198.610583449089)" rx="2" ry="2" />
+<text  x="3587.74" y="116.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597649)_[s] (3,472 us, 2.69%)</title><rect x="2509.5" y="102" width="109.7" height="23.0" fill="rgb(231.173806508563,142.261425918565,205.023106335034)" rx="2" ry="2" />
-<text  x="2512.53" y="116.5" >SUBSHELL (597649..</text>
+<title>SUBSHELL (57144)_[s] (492 us, 0.40%)</title><rect x="1634.3" y="78" width="16.5" height="23.0" fill="rgb(223.915068439671,141.963885235166,198.481942617583)" rx="2" ry="2" />
+<text  x="1637.31" y="92.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597655)_[s] (4,041 us, 3.13%)</title><rect x="3958.4" y="78" width="127.6" height="23.0" fill="rgb(232.350849506417,142.915742429192,206.217214321514)" rx="2" ry="2" />
-<text  x="3961.41" y="92.5" >SUBSHELL (597655)_[s]</text>
+<title>FUNCTION (func_3)_[f] (492 us, 0.40%)</title><rect x="1634.3" y="102" width="16.5" height="23.0" fill="rgb(198.481942617583,141.963885235166,223.915068439671)" rx="2" ry="2" />
+<text  x="1637.31" y="116.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597598)_[s] (129,093 us, 100.00%)</title><rect x="10.0" y="54" width="4076.0" height="23.0" fill="rgb(225.816842437725,148.879427046274,201.939713523137)" rx="2" ry="2" />
-<text  x="13.00" y="68.5" >SUBSHELL (597598)_[s]</text>
+<title>'wait $!' (326 us, 0.27%)</title><rect x="1650.8" y="126" width="10.9" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1653.78" y="140.5" ></text>
 </g>
 <g >
-<title>'@TRAP (EXIT): echo &quot;Grandchild cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$' (4,836 us, 3.75%)</title><rect x="2813.2" y="126" width="152.6" height="23.0" fill="rgb(117,204,145)" rx="2" ry="2" />
-<text  x="2816.15" y="140.5" >'@TRAP (EXIT): echo "Gr..</text>
+<title>SUBSHELL (57159)_[s] (375 us, 0.31%)</title><rect x="3910.8" y="150" width="12.6" height="23.0" fill="rgb(224.189287863935,139.314495941945,198.029249257842)" rx="2" ry="2" />
+<text  x="3913.81" y="164.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597633)_[s] (424 us, 0.33%)</title><rect x="2977.5" y="78" width="13.4" height="23.0" fill="rgb(223.603709912444,140.831672408886,197.915836204443)" rx="2" ry="2" />
-<text  x="2980.53" y="92.5" ></text>
+<title>'func_$i' (80 us, 0.07%)</title><rect x="1617.6" y="126" width="2.7" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1620.64" y="140.5" ></text>
 </g>
 <g >
-<title>'subshell_pid=$!' (93 us, 0.07%)</title><rect x="2096.6" y="102" width="2.9" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2099.61" y="116.5" ></text>
+<title>SUBSHELL (57174)_[s] (32,475 us, 26.67%)</title><rect x="1672.8" y="78" width="1087.2" height="23.0" fill="rgb(246.294443546536,149.372581697974,220.177774186145)" rx="2" ry="2" />
+<text  x="1675.78" y="92.5" >SUBSHELL (57174)_[s]</text>
 </g>
 <g >
-<title>SUBSHELL (597655)_[s] (10,517 us, 8.15%)</title><rect x="2096.6" y="78" width="332.1" height="23.0" fill="rgb(225.639122573389,148.233172994142,201.616586497071)" rx="2" ry="2" />
-<text  x="2099.61" y="92.5" >SUBSHELL (597655)_[s]</text>
+<title>'$'\''result=$({ echo &quot;Level 1&quot; 1&gt;&amp;2\n( echo &quot;Level 2&quot; | tee &gt;(cat 1&gt;&amp;2) | { read input\n( echo &quot;Level 3: $input&quot; | { while read line, do\n    ( echo &quot;Level 4: $line&quot; | tr \'\''a-z\'\'' \'\''A-Z\'\'' ) &amp;\ndone\nwait, } ) 2&gt;&amp;1 | sed \'\''s/^/[L3] /\'\'' &amp; { echo &quot;Parallel branch' (710 us, 0.58%)</title><rect x="59.2" y="78" width="23.7" height="23.0" fill="rgb(50,102,230)" rx="2" ry="2" />
+<text  x="62.18" y="92.5" >'$..</text>
 </g>
 <g >
-<title>'cleanup_called=0 | trap '\''echo &quot;Parent cleanup&quot;, cleanup_called=$((cleanup_called + 1))'\'' EXIT' (833 us, 0.65%)</title><rect x="94.4" y="78" width="26.3" height="23.0" fill="rgb(51,104,229)" rx="2" ry="2" />
-<text  x="97.37" y="92.5" >'c..</text>
+<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (153 us, 0.13%)</title><rect x="131.0" y="102" width="5.1" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="134.02" y="116.5" ></text>
 </g>
 <g >
-<title>'wait' (421 us, 0.33%)</title><rect x="2799.9" y="126" width="13.3" height="23.0" fill="rgb(36,68,241)" rx="2" ry="2" />
-<text  x="2802.86" y="140.5" ></text>
+<title>SUBSHELL (57161)_[s] (509 us, 0.42%)</title><rect x="4069.0" y="150" width="17.0" height="23.0" fill="rgb(223.702672147347,141.19153508126,198.09576754063)" rx="2" ry="2" />
+<text  x="4071.96" y="164.5" ></text>
 </g>
 <g >
-<title>'func_$i' (82 us, 0.06%)</title><rect x="2696.2" y="126" width="2.6" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2699.20" y="140.5" ></text>
+<title>SUBSHELL (57176)_[s] (32,475 us, 26.67%)</title><rect x="1672.8" y="102" width="1087.2" height="23.0" fill="rgb(246.294443546536,149.372581697974,220.177774186145)" rx="2" ry="2" />
+<text  x="1675.78" y="116.5" >SUBSHELL (57176)_[s]</text>
 </g>
 <g >
-<title>'sed '\''s/^/[L3] /'\'' (&amp;)' (623 us, 0.48%)</title><rect x="2729.5" y="126" width="19.7" height="23.0" fill="rgb(48,97,232)" rx="2" ry="2" />
-<text  x="2732.51" y="140.5" >'..</text>
+<title>'sleep 0.1' (1,205 us, 0.99%)</title><rect x="1278.8" y="102" width="40.4" height="23.0" fill="rgb(73,150,207)" rx="2" ry="2" />
+<text  x="1281.81" y="116.5" >'sle..</text>
 </g>
 <g >
-<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (129 us, 0.10%)</title><rect x="120.7" y="102" width="4.0" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="123.67" y="116.5" ></text>
+<title>'sed '\''s/^/[L3] /'\'' (&amp;)' (567 us, 0.47%)</title><rect x="3754.8" y="150" width="19.0" height="23.0" fill="rgb(47,96,232)" rx="2" ry="2" />
+<text  x="3757.84" y="164.5" >'..</text>
 </g>
 <g >
-<title>SUBSHELL (597657)_[s] (30,531 us, 23.65%)</title><rect x="2990.9" y="102" width="964.0" height="23.0" fill="rgb(239.910928783157,146.474757017323,213.79522860016)" rx="2" ry="2" />
-<text  x="2993.91" y="116.5" >SUBSHELL (597657)_[s]</text>
+<title>'exec 3&lt; &lt;(echo &quot;exec test&quot;) (&amp;)' (425 us, 0.35%)</title><rect x="2515.0" y="126" width="14.2" height="23.0" fill="rgb(39,77,238)" rx="2" ry="2" />
+<text  x="2517.98" y="140.5" ></text>
 </g>
 <g >
-<title>'wait $subshell_pid 2&gt; /dev/null' (1,312 us, 1.02%)</title><rect x="2151.2" y="102" width="41.4" height="23.0" fill="rgb(66,138,214)" rx="2" ry="2" />
-<text  x="2154.20" y="116.5" >'wait..</text>
+<title>'wait $!' (331 us, 0.27%)</title><rect x="1661.7" y="126" width="11.1" height="23.0" fill="rgb(33,62,243)" rx="2" ry="2" />
+<text  x="1664.70" y="140.5" ></text>
 </g>
 <g >
-<title>'sleep 0.1' (1,636 us, 1.27%)</title><rect x="2099.5" y="102" width="51.7" height="23.0" fill="rgb(71,147,209)" rx="2" ry="2" />
-<text  x="2102.54" y="116.5" >'sleep..</text>
+<title>'echo &quot;Processed: $x&quot; | tee &gt;(echo &quot;Side effect: $x&quot; 1&gt;&amp;2)' (296 us, 0.24%)</title><rect x="4072.6" y="222" width="10.0" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="4075.64" y="236.5" ></text>
 </g>
 <g >
-<title>'(( 2 &gt; 1 )) (&amp;)' (425 us, 0.33%)</title><rect x="2701.7" y="126" width="13.4" height="23.0" fill="rgb(36,68,241)" rx="2" ry="2" />
-<text  x="2704.66" y="140.5" ></text>
+<title>'@TRAP (EXIT): echo &quot;Background job cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$' (3,528 us, 2.90%)</title><rect x="3636.7" y="150" width="118.1" height="23.0" fill="rgb(109,199,157)" rx="2" ry="2" />
+<text  x="3639.73" y="164.5" >'@TRAP (EXIT): ech..</text>
 </g>
 <g >
-<title>'cat /tmp/child_cleanup_$$' (2,820 us, 2.18%)</title><rect x="2213.9" y="102" width="89.0" height="23.0" fill="rgb(89,177,187)" rx="2" ry="2" />
-<text  x="2216.87" y="116.5" >'cat /tmp/chi..</text>
+<title>SUBSHELL (57151)_[s] (325 us, 0.27%)</title><rect x="136.1" y="78" width="10.9" height="23.0" fill="rgb(224.189287863935,138.733161750698,198.029249257842)" rx="2" ry="2" />
+<text  x="139.14" y="92.5" ></text>
 </g>
 <g >
-<title>'wait $!' (350 us, 0.27%)</title><rect x="2685.2" y="126" width="11.0" height="23.0" fill="rgb(24,41,248)" rx="2" ry="2" />
-<text  x="2688.15" y="140.5" ></text>
+<title>'cleanup_called=0 | trap '\''echo &quot;Parent cleanup&quot;, cleanup_called=$((cleanup_called + 1))'\'' EXIT' (938 us, 0.77%)</title><rect x="89.3" y="78" width="31.4" height="23.0" fill="rgb(57,119,223)" rx="2" ry="2" />
+<text  x="92.31" y="92.5" >'cl..</text>
 </g>
 <g >
-<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (127 us, 0.10%)</title><rect x="124.7" y="102" width="4.1" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="127.74" y="116.5" ></text>
+<title>SUBSHELL (57142)_[s] (298 us, 0.24%)</title><rect x="1607.7" y="78" width="9.9" height="23.0" fill="rgb(223.32414692163,139.815079715016,197.407539857508)" rx="2" ry="2" />
+<text  x="1610.67" y="92.5" ></text>
 </g>
 <g >
-<title>'read x' (112 us, 0.09%)</title><rect x="2977.5" y="150" width="3.6" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="2980.53" y="164.5" ></text>
+<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (183 us, 0.15%)</title><rect x="124.9" y="102" width="6.1" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="127.90" y="116.5" ></text>
 </g>
 <g >
-<title>FUNCTION (func_2)_[f] (377 us, 0.29%)</title><rect x="2749.2" y="102" width="11.9" height="23.0" fill="rgb(197.468459618237,138.774665895428,223.619159791766)" rx="2" ry="2" />
-<text  x="2752.18" y="116.5" ></text>
+<title>SUBSHELL (57161)_[s] (283 us, 0.23%)</title><rect x="3901.3" y="150" width="9.5" height="23.0" fill="rgb(223.607953672688,138.733161750698,197.447915066596)" rx="2" ry="2" />
+<text  x="3904.34" y="164.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597623)_[s] (180 us, 0.14%)</title><rect x="2619.2" y="78" width="5.6" height="23.0" fill="rgb(223.265107914401,139.600392416004,197.300196208002)" rx="2" ry="2" />
-<text  x="2622.16" y="92.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597657)_[s] (4,041 us, 3.13%)</title><rect x="3958.4" y="102" width="127.6" height="23.0" fill="rgb(232.350849506417,142.915742429192,206.217214321514)" rx="2" ry="2" />
-<text  x="3961.41" y="116.5" >SUBSHELL (597657)_[s]</text>
-</g>
-<g >
-<title>'echo &quot;exec test&quot;' (368 us, 0.29%)</title><rect x="2965.9" y="150" width="11.6" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
-<text  x="2968.91" y="164.5" ></text>
-</g>
-<g >
-<title>FUNCTION (func_3)_[f] (949 us, 0.74%)</title><rect x="2666.2" y="102" width="30.0" height="23.0" fill="rgb(199.547072998899,144.094145997798,224.500890149394)" rx="2" ry="2" />
-<text  x="2669.24" y="116.5" >FUN..</text>
-</g>
-<g >
-<title>'wait $bg_pid 2&gt; /dev/null' (1,161 us, 0.90%)</title><rect x="3816.3" y="150" width="36.7" height="23.0" fill="rgb(56,116,224)" rx="2" ry="2" />
-<text  x="3819.29" y="164.5" >'wai..</text>
-</g>
-<g >
-<title>'exec 3&lt; &lt;(echo &quot;exec test&quot;) (&amp;)' (547 us, 0.42%)</title><rect x="2773.3" y="126" width="17.3" height="23.0" fill="rgb(45,90,234)" rx="2" ry="2" />
-<text  x="2776.34" y="140.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597660)_[s] (368 us, 0.29%)</title><rect x="2965.9" y="126" width="11.6" height="23.0" fill="rgb(223.619159791766,138.774665895428,197.468459618237)" rx="2" ry="2" />
-<text  x="2968.91" y="140.5" ></text>
-</g>
-<g >
-<title>'read input (&amp;)' (457 us, 0.35%)</title><rect x="2715.1" y="126" width="14.4" height="23.0" fill="rgb(39,76,239)" rx="2" ry="2" />
-<text  x="2718.08" y="140.5" ></text>
-</g>
-<g >
-<title>'for i in {1..3} (&amp;)' (1,290 us, 1.00%)</title><rect x="19.2" y="78" width="40.8" height="23.0" fill="rgb(61,127,219)" rx="2" ry="2" />
-<text  x="22.22" y="92.5" >'for..</text>
-</g>
-<g >
-<title>'echo &quot;Cleanup messages:&quot;' (333 us, 0.26%)</title><rect x="2203.4" y="102" width="10.5" height="23.0" fill="rgb(20,31,250)" rx="2" ry="2" />
-<text  x="2206.36" y="116.5" ></text>
-</g>
-<g >
-<title>'echo &quot;[SIGNAL] $line&quot;' (1,160 us, 0.90%)</title><rect x="2060.0" y="102" width="36.6" height="23.0" fill="rgb(53,110,227)" rx="2" ry="2" />
-<text  x="2062.98" y="116.5" >'ech..</text>
-</g>
-<g >
-<title>'echo &quot;Final result: $result&quot;' (110 us, 0.09%)</title><rect x="88.1" y="78" width="3.5" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="91.08" y="92.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597633)_[s] (1,080 us, 0.84%)</title><rect x="2715.1" y="78" width="34.1" height="23.0" fill="rgb(225.050229761428,140.384533125464,199.132159362663)" rx="2" ry="2" />
-<text  x="2718.08" y="92.5" >SUB..</text>
-</g>
-<g >
-<title>SUBSHELL (597624)_[s] (598 us, 0.46%)</title><rect x="2696.2" y="78" width="18.9" height="23.0" fill="rgb(224.120060946175,142.709312531546,198.854656265773)" rx="2" ry="2" />
-<text  x="2699.20" y="92.5" >S..</text>
-</g>
-<g >
-<title>'wait $!' (377 us, 0.29%)</title><rect x="2749.2" y="126" width="11.9" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
-<text  x="2752.18" y="140.5" ></text>
-</g>
-<g >
-<title>'wait' (388 us, 0.30%)</title><rect x="2761.1" y="126" width="12.2" height="23.0" fill="rgb(32,59,243)" rx="2" ry="2" />
-<text  x="2764.09" y="140.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597633)_[s] (111 us, 0.09%)</title><rect x="3954.9" y="78" width="3.5" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="3957.90" y="92.5" ></text>
-</g>
-<g >
-<title>'[[ -f /tmp/child_cleanup_$$ ]]' (340 us, 0.26%)</title><rect x="2192.6" y="102" width="10.8" height="23.0" fill="rgb(24,41,248)" rx="2" ry="2" />
-<text  x="2195.63" y="116.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597655)_[s] (6,097 us, 4.72%)</title><rect x="2773.3" y="78" width="192.5" height="23.0" fill="rgb(226.699430915062,144.572289256809,201.728340545999)" rx="2" ry="2" />
-<text  x="2776.34" y="92.5" >SUBSHELL (597655)_[s]</text>
-</g>
-<g >
-<title>SUBSHELL (597648)_[s] (505 us, 0.39%)</title><rect x="2624.8" y="102" width="16.0" height="23.0" fill="rgb(224.781413132811,139.355792565951,198.630712959283)" rx="2" ry="2" />
-<text  x="2627.84" y="116.5" ></text>
-</g>
-<g >
-<title>'kill -HUP $$ 2&gt; /dev/null' (394 us, 0.31%)</title><rect x="4073.6" y="174" width="12.4" height="23.0" fill="rgb(32,59,243)" rx="2" ry="2" />
-<text  x="4076.56" y="188.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597623)_[s] (129 us, 0.10%)</title><rect x="120.7" y="78" width="4.0" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="123.67" y="92.5" ></text>
-</g>
-<g >
-<title>all (129,093 us, 100%)</title><rect x="10.0" y="30" width="4076.0" height="23.0" fill="rgb(178,160,47)" rx="2" ry="2" />
+<title>all (121,752 us, 100%)</title><rect x="10.0" y="30" width="4076.0" height="23.0" fill="rgb(169,175,59)" rx="2" ry="2" />
 <text  x="13.00" y="44.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597659)_[s] (4,041 us, 3.13%)</title><rect x="3958.4" y="126" width="127.6" height="23.0" fill="rgb(232.350849506417,142.915742429192,206.217214321514)" rx="2" ry="2" />
-<text  x="3961.41" y="140.5" >SUBSHELL (597659)_[s]</text>
+<title>SUBSHELL (57174)_[s] (4,632 us, 3.80%)</title><rect x="3599.8" y="78" width="155.0" height="23.0" fill="rgb(228.194386722378,142.644557112947,202.529437839549)" rx="2" ry="2" />
+<text  x="3602.77" y="92.5" >SUBSHELL (57174)_[s]</text>
 </g>
 <g >
-<title>'(( 1 &gt; 1 ))' (90 us, 0.07%)</title><rect x="2640.8" y="126" width="2.8" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2643.79" y="140.5" ></text>
+<title>SUBSHELL (57142)_[s] (183 us, 0.15%)</title><rect x="124.9" y="78" width="6.1" height="23.0" fill="rgb(223.026619481442,138.733161750698,196.866580875349)" rx="2" ry="2" />
+<text  x="127.90" y="92.5" ></text>
 </g>
 <g >
-<title>'rm -f /tmp/child_cleanup_$$' (1,249 us, 0.97%)</title><rect x="2302.9" y="102" width="39.4" height="23.0" fill="rgb(59,122,222)" rx="2" ry="2" />
-<text  x="2305.91" y="116.5" >'rm ..</text>
+<title>'func_1' (930 us, 0.76%)</title><rect x="2792.2" y="150" width="31.1" height="23.0" fill="rgb(55,113,225)" rx="2" ry="2" />
+<text  x="2795.18" y="164.5" >'fu..</text>
 </g>
 <g >
-<title>'(( 3 &gt; 1 )) (&amp;)' (425 us, 0.33%)</title><rect x="2671.7" y="126" width="13.5" height="23.0" fill="rgb(36,68,241)" rx="2" ry="2" />
-<text  x="2674.73" y="140.5" ></text>
-</g>
-<g >
-<title>'read line (&amp;)' (505 us, 0.39%)</title><rect x="2624.8" y="126" width="16.0" height="23.0" fill="rgb(42,83,236)" rx="2" ry="2" />
-<text  x="2627.84" y="140.5" ></text>
-</g>
-<g >
-<title>'$'\''result=$({ echo &quot;Level 1&quot; 1&gt;&amp;2\n( echo &quot;Level 2&quot; | tee &gt;(cat 1&gt;&amp;2) | { read input\n( echo &quot;Level 3: $input&quot; | { while read line, do\n    ( echo &quot;Level 4: $line&quot; | tr \'\''a-z\'\'' \'\''A-Z\'\'' ) &amp;\ndone\nwait, } ) 2&gt;&amp;1 | sed \'\''s/^/[L3] /\'\'' &amp; { echo &quot;Parallel branch' (505 us, 0.39%)</title><rect x="72.1" y="78" width="16.0" height="23.0" fill="rgb(42,83,236)" rx="2" ry="2" />
-<text  x="75.14" y="92.5" ></text>
-</g>
-<g >
-<title>'bg_pid=$! (&amp;)' (543 us, 0.42%)</title><rect x="3799.1" y="150" width="17.2" height="23.0" fill="rgb(45,90,234)" rx="2" ry="2" />
-<text  x="3802.15" y="164.5" ></text>
-</g>
-<g >
-<title>'echo &quot;=== Test 3: Signal Madness ===&quot;' (89 us, 0.07%)</title><rect x="91.6" y="78" width="2.8" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="94.56" y="92.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597647)_[s] (111 us, 0.09%)</title><rect x="3954.9" y="126" width="3.5" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="3957.90" y="140.5" ></text>
-</g>
-<g >
-<title>'sleep 0.1 (&amp;)' (536 us, 0.42%)</title><rect x="3782.2" y="150" width="16.9" height="23.0" fill="rgb(42,83,236)" rx="2" ry="2" />
-<text  x="3785.23" y="164.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597639)_[s] (2,561 us, 1.98%)</title><rect x="2428.7" y="102" width="80.8" height="23.0" fill="rgb(228.268173155948,141.099172577519,202.11747298242)" rx="2" ry="2" />
-<text  x="2431.67" y="116.5" >SUBSHELL (5..</text>
-</g>
-<g >
-<title>SUBSHELL (597653)_[s] (111 us, 0.09%)</title><rect x="3954.9" y="150" width="3.5" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="3957.90" y="164.5" ></text>
-</g>
-<g >
-<title>'wait' (378 us, 0.29%)</title><rect x="2654.3" y="126" width="11.9" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
-<text  x="2657.30" y="140.5" ></text>
-</g>
-<g >
-<title>FUNCTION (func_1)_[f] (90 us, 0.07%)</title><rect x="2640.8" y="102" width="2.8" height="23.0" fill="rgb(196.887332947714,138.774665895428,223.038033121243)" rx="2" ry="2" />
-<text  x="2643.79" y="116.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597637)_[s] (424 us, 0.33%)</title><rect x="2977.5" y="102" width="13.4" height="23.0" fill="rgb(223.603709912444,140.831672408886,197.915836204443)" rx="2" ry="2" />
-<text  x="2980.53" y="116.5" ></text>
-</g>
-<g >
-<title>'echo &quot;Level 4: $line&quot; | tr '\''a-z'\'' '\''A-Z'\''' (3,472 us, 2.69%)</title><rect x="2509.5" y="126" width="109.7" height="23.0" fill="rgb(101,192,169)" rx="2" ry="2" />
-<text  x="2512.53" y="140.5" >'echo "Level 4: ..</text>
-</g>
-<g >
-<title>SUBSHELL (597624)_[s] (377 us, 0.29%)</title><rect x="2749.2" y="78" width="11.9" height="23.0" fill="rgb(223.619159791766,138.774665895428,197.468459618237)" rx="2" ry="2" />
-<text  x="2752.18" y="92.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597633)_[s] (505 us, 0.39%)</title><rect x="2624.8" y="78" width="16.0" height="23.0" fill="rgb(224.781413132811,139.355792565951,198.630712959283)" rx="2" ry="2" />
-<text  x="2627.84" y="92.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597637)_[s] (388 us, 0.30%)</title><rect x="2761.1" y="102" width="12.2" height="23.0" fill="rgb(224.200286462288,139.355792565951,198.04958628876)" rx="2" ry="2" />
-<text  x="2764.09" y="116.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597632)_[s] (59,678 us, 46.23%)</title><rect x="128.8" y="78" width="1884.2" height="23.0" fill="rgb(255,153.3028326585,228.849299826471)" rx="2" ry="2" />
-<text  x="131.75" y="92.5" >SUBSHELL (597632)_[s]</text>
-</g>
-<g >
-<title>SUBSHELL (597655)_[s] (30,531 us, 23.65%)</title><rect x="2990.9" y="78" width="964.0" height="23.0" fill="rgb(239.910928783157,146.474757017323,213.79522860016)" rx="2" ry="2" />
-<text  x="2993.91" y="92.5" >SUBSHELL (597655)_[s]</text>
-</g>
-<g >
-<title>FUNCTION (func_2)_[f] (598 us, 0.46%)</title><rect x="2696.2" y="102" width="18.9" height="23.0" fill="rgb(198.854656265773,142.709312531546,224.120060946175)" rx="2" ry="2" />
-<text  x="2699.20" y="116.5" >F..</text>
-</g>
-<g >
-<title>SUBSHELL (597657)_[s] (6,097 us, 4.72%)</title><rect x="2773.3" y="102" width="192.5" height="23.0" fill="rgb(226.699430915062,144.572289256809,201.728340545999)" rx="2" ry="2" />
-<text  x="2776.34" y="116.5" >SUBSHELL (597657)_[s]</text>
-</g>
-<g >
-<title>'echo &quot;Exec result: $exec_result&quot;' (91 us, 0.07%)</title><rect x="2794.2" y="126" width="2.8" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2797.18" y="140.5" ></text>
-</g>
-<g >
-<title>'func_$i' (86 us, 0.07%)</title><rect x="2619.2" y="126" width="2.7" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2622.16" y="140.5" ></text>
-</g>
-<g >
-<title>SUBSHELL (597625)_[s] (949 us, 0.74%)</title><rect x="2666.2" y="78" width="30.0" height="23.0" fill="rgb(224.500890149394,144.094145997798,199.547072998899)" rx="2" ry="2" />
-<text  x="2669.24" y="92.5" >SUB..</text>
-</g>
-<g >
-<title>'echo &quot;Side effect: $x&quot; 1&gt;&amp;2' (111 us, 0.09%)</title><rect x="3954.9" y="174" width="3.5" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="3957.90" y="188.5" ></text>
-</g>
-<g >
-<title>'set -e' (138 us, 0.11%)</title><rect x="10.0" y="78" width="4.4" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
+<title>'set -e' (81 us, 0.07%)</title><rect x="10.0" y="78" width="2.7" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
 <text  x="13.00" y="92.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597633)_[s] (388 us, 0.30%)</title><rect x="2761.1" y="78" width="12.2" height="23.0" fill="rgb(224.200286462288,139.355792565951,198.04958628876)" rx="2" ry="2" />
-<text  x="2764.09" y="92.5" ></text>
+<title>'@TRAP (EXIT): echo &quot;Grandchild cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$' (5,886 us, 4.83%)</title><rect x="2559.7" y="126" width="197.1" height="23.0" fill="rgb(121,205,138)" rx="2" ry="2" />
+<text  x="2562.71" y="140.5" >'@TRAP (EXIT): echo "Grandchild..</text>
 </g>
 <g >
-<title>SUBSHELL (597625)_[s] (127 us, 0.10%)</title><rect x="124.7" y="78" width="4.1" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="127.74" y="92.5" ></text>
+<title>SUBSHELL (57143)_[s] (125 us, 0.10%)</title><rect x="120.7" y="78" width="4.2" height="23.0" fill="rgb(223.026619481442,138.733161750698,196.866580875349)" rx="2" ry="2" />
+<text  x="123.71" y="92.5" ></text>
 </g>
 <g >
-<title>'echo &quot;Dynamic func 3 running in PID $$&quot;' (91 us, 0.07%)</title><rect x="2668.9" y="126" width="2.8" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2671.86" y="140.5" ></text>
+<title>'wait $bg_pid 2&gt; /dev/null' (1,104 us, 0.91%)</title><rect x="3599.8" y="150" width="36.9" height="23.0" fill="rgb(68,142,212)" rx="2" ry="2" />
+<text  x="3602.77" y="164.5" >'wai..</text>
 </g>
 <g >
-<title>FUNCTION (func_1)_[f] (180 us, 0.14%)</title><rect x="2619.2" y="102" width="5.6" height="23.0" fill="rgb(197.300196208002,139.600392416004,223.265107914401)" rx="2" ry="2" />
-<text  x="2622.16" y="116.5" ></text>
+<title>SUBSHELL (57143)_[s] (930 us, 0.76%)</title><rect x="2792.2" y="78" width="31.1" height="23.0" fill="rgb(225.933290437675,139.895830133191,199.773251831582)" rx="2" ry="2" />
+<text  x="2795.18" y="92.5" >SUB..</text>
 </g>
 <g >
-<title>'IFS= read -r line' (1,361 us, 1.05%)</title><rect x="2017.0" y="102" width="43.0" height="23.0" fill="rgb(69,142,211)" rx="2" ry="2" />
-<text  x="2020.01" y="116.5" >'IFS=..</text>
+<title>'echo &quot;Cleanup messages:&quot;' (294 us, 0.24%)</title><rect x="1360.6" y="102" width="9.9" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="1363.63" y="116.5" ></text>
 </g>
 <g >
-<title>SUBSHELL (597624)_[s] (126 us, 0.10%)</title><rect x="2013.0" y="78" width="4.0" height="23.0" fill="rgb(223.038033121243,138.774665895428,196.887332947714)" rx="2" ry="2" />
-<text  x="2016.03" y="92.5" ></text>
+<title>SUBSHELL (57159)_[s] (3,515 us, 2.89%)</title><rect x="3951.3" y="150" width="117.7" height="23.0" fill="rgb(226.331340203988,143.698144321366,201.03546391339)" rx="2" ry="2" />
+<text  x="3954.28" y="164.5" >SUBSHELL (57159)_..</text>
 </g>
 <g >
-<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (126 us, 0.10%)</title><rect x="2013.0" y="102" width="4.0" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="2016.03" y="116.5" ></text>
+<title>SUBSHELL (57143)_[s] (498 us, 0.41%)</title><rect x="1617.6" y="78" width="16.7" height="23.0" fill="rgb(223.935123626828,142.036813188465,198.518406594232)" rx="2" ry="2" />
+<text  x="1620.64" y="92.5" ></text>
 </g>
 <g >
-<title>'read -u3 exec_result' (113 us, 0.09%)</title><rect x="2790.6" y="126" width="3.6" height="23.0" fill="rgb(14,19,252)" rx="2" ry="2" />
-<text  x="2793.61" y="140.5" ></text>
+<title>'read line (&amp;)' (473 us, 0.39%)</title><rect x="3951.3" y="198" width="15.8" height="23.0" fill="rgb(47,96,232)" rx="2" ry="2" />
+<text  x="3954.28" y="212.5" ></text>
 </g>
 <g >
-<title>'func_$i' (83 us, 0.06%)</title><rect x="2666.2" y="126" width="2.7" height="23.0" fill="rgb(1,5,254)" rx="2" ry="2" />
-<text  x="2669.24" y="140.5" ></text>
+<title>SUBSHELL (57163)_[s] (3,515 us, 2.89%)</title><rect x="3951.3" y="174" width="117.7" height="23.0" fill="rgb(226.331340203988,143.698144321366,201.03546391339)" rx="2" ry="2" />
+<text  x="3954.28" y="188.5" >SUBSHELL (57163)_..</text>
+</g>
+<g >
+<title>'trap '\''echo &quot;Background job cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$'\'' EXIT' (21,917 us, 18.00%)</title><rect x="2823.3" y="150" width="733.7" height="23.0" fill="rgb(160,188,74)" rx="2" ry="2" />
+<text  x="2826.31" y="164.5" >'trap '\''echo "Background job cleanup" &gt;&gt; /tmp/child_cleanup_$$'\'' EXIT'</text>
+</g>
+<g >
+<title>'wait' (333 us, 0.27%)</title><rect x="3971.3" y="198" width="11.2" height="23.0" fill="rgb(33,62,243)" rx="2" ry="2" />
+<text  x="3974.30" y="212.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57165)_[s] (509 us, 0.42%)</title><rect x="4069.0" y="174" width="17.0" height="23.0" fill="rgb(223.702672147347,141.19153508126,198.09576754063)" rx="2" ry="2" />
+<text  x="4071.96" y="188.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57166)_[s] (2,584 us, 2.12%)</title><rect x="3982.5" y="198" width="86.5" height="23.0" fill="rgb(230.0026297764,141.639832706931,203.842591170307)" rx="2" ry="2" />
+<text  x="3985.45" y="212.5" >SUBSHELL (57..</text>
+</g>
+<g >
+<title>SUBSHELL (57152)_[s] (1,017 us, 0.84%)</title><rect x="3754.8" y="102" width="34.1" height="23.0" fill="rgb(225.49228149708,140.44062228278,199.456059288621)" rx="2" ry="2" />
+<text  x="3757.84" y="116.5" >SUB..</text>
+</g>
+<g >
+<title>SUBSHELL (57178)_[s] (4,632 us, 3.80%)</title><rect x="3599.8" y="126" width="155.0" height="23.0" fill="rgb(228.194386722378,142.644557112947,202.529437839549)" rx="2" ry="2" />
+<text  x="3602.77" y="140.5" >SUBSHELL (57178)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (57156)_[s] (449 us, 0.37%)</title><rect x="3584.7" y="126" width="15.1" height="23.0" fill="rgb(224.770622055181,139.314495941945,198.610583449089)" rx="2" ry="2" />
+<text  x="3587.74" y="140.5" ></text>
+</g>
+<g >
+<title>'for i in {1..3} (&amp;)' (945 us, 0.78%)</title><rect x="16.4" y="78" width="31.6" height="23.0" fill="rgb(62,129,219)" rx="2" ry="2" />
+<text  x="19.36" y="92.5" >'fo..</text>
+</g>
+<g >
+<title>SUBSHELL (57179)_[s] (96 us, 0.08%)</title><rect x="2756.8" y="126" width="3.2" height="23.0" fill="rgb(223.026619481442,138.733161750698,196.866580875349)" rx="2" ry="2" />
+<text  x="2759.76" y="140.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Parallel branch&quot;' (283 us, 0.23%)</title><rect x="3901.3" y="174" width="9.5" height="23.0" fill="rgb(23,37,248)" rx="2" ry="2" />
+<text  x="3904.34" y="188.5" ></text>
+</g>
+<g >
+<title>'func_$i' (81 us, 0.07%)</title><rect x="1634.3" y="126" width="2.7" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1637.31" y="140.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57121)_[s] (121,752 us, 100.00%)</title><rect x="10.0" y="54" width="4076.0" height="23.0" fill="rgb(225.825514466667,148.910961696972,201.955480848486)" rx="2" ry="2" />
+<text  x="13.00" y="68.5" >SUBSHELL (57121)_[s]</text>
+</g>
+<g >
+<title>'read line' (125 us, 0.10%)</title><rect x="3967.1" y="198" width="4.2" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="3970.12" y="212.5" ></text>
+</g>
+<g >
+<title>'&lt;&lt; (FUNCTION): '\''trap '\''echo &quot;Child cleanup&quot; &gt; /tmp/child_cleanup_$$, kill -TERM $$'\'' EXIT HUP'\'' (&amp;) &gt;&gt; (&amp;)' (31,462 us, 25.84%)</title><rect x="222.4" y="102" width="1053.3" height="23.0" fill="rgb(254,4,1)" rx="2" ry="2" />
+<text  x="225.42" y="116.5" >'&lt;&lt; (FUNCTION): '\''trap '\''echo "Child cleanup" &gt; /tmp/child_cleanup_$$, kill -TERM $$'\'' EXIT HUP'\'' (&amp;) &gt;&gt; (&amp;)'</text>
+</g>
+<g >
+<title>'&lt;&lt; (FUNCTION): '\''trap '\''echo &quot;Grandchild cleanup&quot; &gt;&gt; /tmp/child_cleanup_$$'\'' EXIT'\'' (&amp;) &gt;&gt; (&amp;)' (25,157 us, 20.66%)</title><rect x="1672.8" y="126" width="842.2" height="23.0" fill="rgb(203,104,20)" rx="2" ry="2" />
+<text  x="1675.78" y="140.5" >'&lt;&lt; (FUNCTION): '\''trap '\''echo "Grandchild cleanup" &gt;&gt; /tmp/child_cleanup_$$'\'' EXIT'\'' (&amp;) &gt;&gt; (&amp;)'</text>
+</g>
+<g >
+<title>'@TRAP (EXIT): echo &quot;Child cleanup&quot; &gt; /tmp/child_cleanup_$$\, kill -TERM $$' (2,608 us, 2.14%)</title><rect x="1520.4" y="102" width="87.3" height="23.0" fill="rgb(96,186,176)" rx="2" ry="2" />
+<text  x="1523.35" y="116.5" >'@TRAP (EXIT..</text>
+</g>
+<g >
+<title>SUBSHELL (57152)_[s] (5,516 us, 4.53%)</title><rect x="3901.3" y="102" width="184.7" height="23.0" fill="rgb(225.413476048791,145.420281662189,200.758039422783)" rx="2" ry="2" />
+<text  x="3904.34" y="116.5" >SUBSHELL (57152)_[s]</text>
+</g>
+<g >
+<title>'wait' (417 us, 0.34%)</title><rect x="2545.7" y="126" width="14.0" height="23.0" fill="rgb(39,77,238)" rx="2" ry="2" />
+<text  x="2548.75" y="140.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57156)_[s] (1,017 us, 0.84%)</title><rect x="3754.8" y="126" width="34.1" height="23.0" fill="rgb(225.49228149708,140.44062228278,199.456059288621)" rx="2" ry="2" />
+<text  x="3757.84" y="140.5" >SUB..</text>
+</g>
+<g >
+<title>'cat' (834 us, 0.68%)</title><rect x="3923.4" y="198" width="27.9" height="23.0" fill="rgb(52,108,228)" rx="2" ry="2" />
+<text  x="3926.36" y="212.5" >'c..</text>
+</g>
+<g >
+<title>'echo &quot;Dynamic func 2 running in PID $$&quot;' (105 us, 0.09%)</title><rect x="1620.3" y="126" width="3.5" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="1623.32" y="140.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Level 4: $line&quot; | tr '\''a-z'\'' '\''A-Z'\''' (2,584 us, 2.12%)</title><rect x="3982.5" y="222" width="86.5" height="23.0" fill="rgb(90,179,184)" rx="2" ry="2" />
+<text  x="3985.45" y="236.5" >'echo "Level..</text>
+</g>
+<g >
+<title>SUBSHELL (57144)_[s] (153 us, 0.13%)</title><rect x="131.0" y="78" width="5.1" height="23.0" fill="rgb(223.026619481442,138.733161750698,196.866580875349)" rx="2" ry="2" />
+<text  x="134.02" y="92.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57146)_[s] (961 us, 0.79%)</title><rect x="2760.0" y="126" width="32.2" height="23.0" fill="rgb(227.095958820168,140.477164324438,200.935920214075)" rx="2" ry="2" />
+<text  x="2763.01" y="140.5" >SUB..</text>
+</g>
+<g >
+<title>SUBSHELL (57176)_[s] (22,744 us, 18.68%)</title><rect x="2823.3" y="102" width="761.4" height="23.0" fill="rgb(239.888437803139,146.31299496873,213.733810923956)" rx="2" ry="2" />
+<text  x="2826.31" y="116.5" >SUBSHELL (57176)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (57161)_[s] (834 us, 0.68%)</title><rect x="3923.4" y="150" width="27.9" height="23.0" fill="rgb(225.933290437675,139.895830133191,199.773251831582)" rx="2" ry="2" />
+<text  x="3926.36" y="164.5" >SU..</text>
+</g>
+<g >
+<title>FUNCTION (func_2)_[f] (326 us, 0.27%)</title><rect x="1650.8" y="102" width="10.9" height="23.0" fill="rgb(198.029249257842,138.733161750698,224.189287863935)" rx="2" ry="2" />
+<text  x="1653.78" y="116.5" ></text>
+</g>
+<g >
+<title>'sleep 0.05' (2,890 us, 2.37%)</title><rect x="3788.9" y="174" width="96.7" height="23.0" fill="rgb(102,192,168)" rx="2" ry="2" />
+<text  x="3791.88" y="188.5" >'sleep 0.05'</text>
+</g>
+<g >
+<title>'func_2' (961 us, 0.79%)</title><rect x="2760.0" y="150" width="32.2" height="23.0" fill="rgb(64,133,216)" rx="2" ry="2" />
+<text  x="2763.01" y="164.5" >'fu..</text>
+</g>
+<g >
+<title>SUBSHELL (57156)_[s] (5,516 us, 4.53%)</title><rect x="3901.3" y="126" width="184.7" height="23.0" fill="rgb(225.413476048791,145.420281662189,200.758039422783)" rx="2" ry="2" />
+<text  x="3904.34" y="140.5" >SUBSHELL (57156)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Level 1&quot; 1&gt;&amp;2' (325 us, 0.27%)</title><rect x="136.1" y="102" width="10.9" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="139.14" y="116.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57151)_[s] (1,017 us, 0.84%)</title><rect x="3754.8" y="78" width="34.1" height="23.0" fill="rgb(225.49228149708,140.44062228278,199.456059288621)" rx="2" ry="2" />
+<text  x="3757.84" y="92.5" >SUB..</text>
+</g>
+<g >
+<title>SUBSHELL (57178)_[s] (22,744 us, 18.68%)</title><rect x="2823.3" y="126" width="761.4" height="23.0" fill="rgb(239.888437803139,146.31299496873,213.733810923956)" rx="2" ry="2" />
+<text  x="2826.31" y="140.5" >SUBSHELL (57178)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (57165)_[s] (834 us, 0.68%)</title><rect x="3923.4" y="174" width="27.9" height="23.0" fill="rgb(225.933290437675,139.895830133191,199.773251831582)" rx="2" ry="2" />
+<text  x="3926.36" y="188.5" >SU..</text>
+</g>
+<g >
+<title>FUNCTION (func_3)_[f] (961 us, 0.79%)</title><rect x="2760.0" y="102" width="32.2" height="23.0" fill="rgb(200.935920214075,140.477164324438,227.095958820168)" rx="2" ry="2" />
+<text  x="2763.01" y="116.5" >FUN..</text>
+</g>
+<g >
+<title>SUBSHELL (57145)_[s] (930 us, 0.76%)</title><rect x="2792.2" y="126" width="31.1" height="23.0" fill="rgb(225.933290437675,139.895830133191,199.773251831582)" rx="2" ry="2" />
+<text  x="2795.18" y="140.5" >SUB..</text>
+</g>
+<g >
+<title>SUBSHELL (57168)_[s] (509 us, 0.42%)</title><rect x="4069.0" y="198" width="17.0" height="23.0" fill="rgb(223.702672147347,141.19153508126,198.09576754063)" rx="2" ry="2" />
+<text  x="4071.96" y="212.5" ></text>
+</g>
+<g >
+<title>'kill -HUP $$ 2&gt; /dev/null' (467 us, 0.38%)</title><rect x="3885.6" y="174" width="15.7" height="23.0" fill="rgb(45,90,234)" rx="2" ry="2" />
+<text  x="3888.63" y="188.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57151)_[s] (5,516 us, 4.53%)</title><rect x="3901.3" y="78" width="184.7" height="23.0" fill="rgb(225.413476048791,145.420281662189,200.758039422783)" rx="2" ry="2" />
+<text  x="3904.34" y="92.5" >SUBSHELL (57151)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (func_3)_[f] (331 us, 0.27%)</title><rect x="1661.7" y="102" width="11.1" height="23.0" fill="rgb(198.029249257842,139.314495941945,224.189287863935)" rx="2" ry="2" />
+<text  x="1664.70" y="116.5" ></text>
+</g>
+<g >
+<title>'func_$i' (118 us, 0.10%)</title><rect x="1607.7" y="126" width="3.9" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="1610.67" y="140.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57144)_[s] (961 us, 0.79%)</title><rect x="2760.0" y="78" width="32.2" height="23.0" fill="rgb(227.095958820168,140.477164324438,200.935920214075)" rx="2" ry="2" />
+<text  x="2763.01" y="92.5" >SUB..</text>
+</g>
+<g >
+<title>'echo &quot;[SIGNAL] $line&quot;' (981 us, 0.81%)</title><rect x="189.6" y="102" width="32.8" height="23.0" fill="rgb(66,138,214)" rx="2" ry="2" />
+<text  x="192.58" y="116.5" >'ec..</text>
+</g>
+<g >
+<title>'cat /tmp/child_cleanup_$$' (2,316 us, 1.90%)</title><rect x="1370.5" y="102" width="77.5" height="23.0" fill="rgb(85,171,192)" rx="2" ry="2" />
+<text  x="1373.47" y="116.5" >'cat /tmp/c..</text>
+</g>
+<g >
+<title>'$'\''eval &quot;func_$i() { \n            echo \\&quot;Dynamic func $i running in PID \\$\\$\\&quot;\n            if (( $i &gt; 1 )), then\n                { func_$((i-1)) | while read line, do echo \\&quot;[$i] \\$line\\&quot;, done, } &amp;\n                wait \\$!\n            fi\n    ' (125 us, 0.10%)</title><rect x="120.7" y="102" width="4.2" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="123.71" y="116.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57174)_[s] (3,357 us, 2.76%)</title><rect x="3788.9" y="78" width="112.4" height="23.0" fill="rgb(231.186855012553,142.323167620372,205.050476367794)" rx="2" ry="2" />
+<text  x="3791.88" y="92.5" >SUBSHELL (57174)_..</text>
+</g>
+<g >
+<title>SUBSHELL (57174)_[s] (41,378 us, 33.99%)</title><rect x="222.4" y="78" width="1385.3" height="23.0" fill="rgb(255,153.449809395218,228.887093844485)" rx="2" ry="2" />
+<text  x="225.42" y="92.5" >SUBSHELL (57174)_[s]</text>
+</g>
+<g >
+<title>'wait' (450 us, 0.37%)</title><rect x="3773.8" y="150" width="15.1" height="23.0" fill="rgb(42,84,236)" rx="2" ry="2" />
+<text  x="3776.82" y="164.5" ></text>
+</g>
+<g >
+<title>'subshell_pid=$!' (93 us, 0.08%)</title><rect x="1275.7" y="102" width="3.1" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1278.70" y="116.5" ></text>
+</g>
+<g >
+<title>'echo &quot;=== Test 3: Signal Madness ===&quot;' (88 us, 0.07%)</title><rect x="86.4" y="78" width="2.9" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="89.36" y="92.5" ></text>
+</g>
+<g >
+<title>'(( 3 &gt; 1 )) (&amp;)' (319 us, 0.26%)</title><rect x="1640.1" y="126" width="10.7" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1643.11" y="140.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (84 us, 0.07%)</title><rect x="2542.9" y="126" width="2.8" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2545.94" y="140.5" ></text>
+</g>
+<g >
+<title>'(( 1 &gt; 1 ))' (89 us, 0.07%)</title><rect x="1614.7" y="126" width="2.9" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="1617.66" y="140.5" ></text>
+</g>
+<g >
+<title>'echo &quot;=== Test 2: Nested Subshell Matrix ===&quot;' (125 us, 0.10%)</title><rect x="55.0" y="78" width="4.2" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="57.99" y="92.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57174)_[s] (22,744 us, 18.68%)</title><rect x="2823.3" y="78" width="761.4" height="23.0" fill="rgb(239.888437803139,146.31299496873,213.733810923956)" rx="2" ry="2" />
+<text  x="2826.31" y="92.5" >SUBSHELL (57174)_[s]</text>
+</g>
+<g >
+<title>'bg_pid=$! (&amp;)' (407 us, 0.33%)</title><rect x="3571.1" y="150" width="13.6" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3574.11" y="164.5" ></text>
+</g>
+<g >
+<title>FUNCTION (func_1)_[f] (298 us, 0.24%)</title><rect x="1607.7" y="102" width="9.9" height="23.0" fill="rgb(197.407539857508,139.815079715016,223.32414692163)" rx="2" ry="2" />
+<text  x="1610.67" y="116.5" ></text>
+</g>
+<g >
+<title>'echo &quot;exec test&quot;' (96 us, 0.08%)</title><rect x="2756.8" y="150" width="3.2" height="23.0" fill="rgb(1,4,254)" rx="2" ry="2" />
+<text  x="2759.76" y="164.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (57178)_[s] (3,357 us, 2.76%)</title><rect x="3788.9" y="126" width="112.4" height="23.0" fill="rgb(231.186855012553,142.323167620372,205.050476367794)" rx="2" ry="2" />
+<text  x="3791.88" y="140.5" >SUBSHELL (57178)_..</text>
+</g>
+<g >
+<title>'IFS= read -r line' (1,271 us, 1.04%)</title><rect x="147.0" y="102" width="42.6" height="23.0" fill="rgb(75,154,204)" rx="2" ry="2" />
+<text  x="150.03" y="116.5" >'IFS=..</text>
+</g>
+<g >
+<title>'wait' (209 us, 0.17%)</title><rect x="48.0" y="78" width="7.0" height="23.0" fill="rgb(18,28,250)" rx="2" ry="2" />
+<text  x="51.00" y="92.5" ></text>
 </g>
 </g>
 </svg>
