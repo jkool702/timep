@@ -463,7 +463,7 @@ timep_TRAP_OPTS=${-//[^eu]/}; ${timep_TRAP_OPTS:+set +}${timep_TRAP_OPTS}
     timep_NEXEC_CUR="${timep_NEXEC_A[-1]}"
     timep_NEXEC_HASH_CUR="${timep_NEXEC_HASH_A[-1]}"
 }
-${timep_IS_BG_FUNC_FLAG[${timep_FNEST_CUR}] && {
+${timep_IS_BG_FUNC_FLAG[${timep_FNEST_CUR}]} && {
     timep_BASH_COMMAND_PREV_0="<< (FUNCTION): ${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]} (&) >>"
     printf '"'"'1\t%s\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s\t%s\t::\t%s\n'"'"' "${timep_STARTTIME[${timep_FNEST_CUR}]}" "${timep_ENDTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV_0}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_PREV_0@Q}" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 }
