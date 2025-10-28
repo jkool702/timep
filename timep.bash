@@ -465,7 +465,7 @@ timep_TRAP_OPTS=${-//[^eu]/}; ${timep_TRAP_OPTS:+set +}${timep_TRAP_OPTS}
 }
 ${timep_IS_BG_FUNC_FLAG[${timep_FNEST_CUR}]} && {
     timep_BASH_COMMAND_PREV_0="<< (FUNCTION): ${timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]} (&) >>"
-    printf '"'"'1\t%s\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s\t%s\t::\t%s\n'"'"' "${timep_STARTTIME[${timep_FNEST_CUR}]}" "${timep_ENDTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV_0}" "${timep_BASHPID_STR}" "${timep_NEXEC_N}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_PREV_0@Q}" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
+    printf '"'"'1\t%s\t%s\tF:%s %s\tS:%s %s\tN:%s %s.%s\t%s\t::\t%s\n'"'"' "${timep_STARTTIME[${timep_FNEST_CUR}]}" "${timep_ENDTIME}" "${timep_FNEST_CUR:-${timep_FUNCNAME_N}}" "${timep_FUNCNAME_STR}" "${timep_BASH_SUBSHELL_PREV_0}" "${timep_BASHPID_STR}" "${timep_NEXEC_N_0}" "${timep_NEXEC_0}" "${timep_NEXEC_CUR}" "${timep_LINENO[${timep_FNEST_CUR:-${timep_FUNCNAME_N}}]:-${timep_LINENO_0}}" "'"$(${timep_DEBUG_IDS_FLAG} && printf '%s' '{PP0: ${timep_PARENT_PGID0} PT0: ${timep_PARENT_TPID0}   PP: ${timep_PARENT_PGID} PT: ${timep_PARENT_TPID}   CP: ${timep_CHILD_PGID} CT: ${timep_CHILD_TPID}}')"'${timep_BASH_COMMAND_PREV_0@Q}" >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 }
 ${timep_TRAP_OPTS:+set -}${timep_TRAP_OPTS}
 timep_SKIP_DEBUG_FLAG=false
@@ -575,7 +575,6 @@ fi
         else
             timep_IS_FUNC_FLAG=true
             timep_FNEST+=("${timep_FUNCNAME_N}")
-            timep_SKIP_RETURN_TRAP_FLAG_A+=(false)
             timep_IS_BG_FUNC_FLAG[${timep_FUNCNAME_N}]=false
         fi
         if ${timep_SIMPLEFORK_NEXT_FLAG}; then
@@ -630,6 +629,7 @@ fi
             builtin trap - EXIT
             timep_IS_BG_FUNC_FLAG[${timep_FUNCNAME_N}]=true
             timep_BASH_SUBSHELL_PREV_0="${timep_BASH_SUBSHELL_PREV}"
+            timep_NEXEC_N_0="${timep_NEXEC_N}"
         }
         ${timep_IS_BG_FLAG} && ! ${timep_IS_SUBSHELL_FLAG} && declare -F "${timep_LAST_CMD_WORD[${timep_FNEST_CUR}]}" &>/dev/null && ! { [[ "${timep_LAST_CMD_WORD[${timep_FNEST_CUR}]}" == '"'"'trap'"'"' ]] || [[ "${FUNCNAME[0]}" == '"'"'trap'"'"' ]] || ${timep_IS_FUNC_FLAG}; } && {
             timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]=""
@@ -831,16 +831,17 @@ echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.t
         fi
 
         for trapType in "${@}"; do
+            [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]] || {
+                trapStrQ="@TRAP (${trapType}): ${trapStr}"
+                trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
+                trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
+                trapStrQ="${trapStrQ//\;/\\\;}"                
+            }
             case "${trapType}" in
                 EXIT)
-
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_EXIT_TRAP_STR}" EXIT
                     else
-                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
-                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
@@ -853,10 +854,6 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_RETURN_TRAP_STR}" RETURN
                     else
-                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
-                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
@@ -873,10 +870,6 @@ timep_SKIP_DEBUG_FLAG=false
                     if [[ -z "${trapStr}" ]] || [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap "${timep_SIGNAL_RELAY_TRAP_STR//\%s/"${trapType#SIG}"}" "${trapType}"
                     else
-                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
-                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
@@ -891,10 +884,6 @@ timep_SKIP_DEBUG_FLAG=false
                     elif [[ "${trapStr}" == '"'"'-'"'"' ]]; then
                         builtin trap - "${trapType}"
                     else
-                        trapStrQ="@TRAP (${trapType}): ${trapStr}"
-                        trapStrQ="${trapStrQ//$'"'"'\n'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\n'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//$'"'"'\t'"'"'/'"'"'$'"'"'"'"'"'"'"'"'\t'"'"'"'"'"'"}"
-                        trapStrQ="${trapStrQ//\;/\\\;}"
                         builtin trap '"'"'timep_SKIP_DEBUG_FLAG=true
 echo '"'"'"${trapStrQ@Q}"'"'"' >>"${timep_TMPDIR}/.log/log.${timep_NEXEC_HASH_CUR}"
 '"'"'"${trapStr0}"'"'"'
@@ -905,7 +894,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         done
     }
     export -f trap
-    '; } >"${timep_TMPDIR}/functions.bash"
+'; } >"${timep_TMPDIR}/functions.bash"
 
         # setup a string with the command to run
         case "${timep_runType}" in
