@@ -1822,8 +1822,8 @@ read -r -a fA <<<"${funcA[$kk]#* }"
 read -r -a sA <<<"${pidA[$kk]#* }"
 read -r -a eA <<<"${nexecA[$kk]#* }"
 eval "${IFS0:-unset IFS}"
-unset IFS0
-unset "eA[-1]" "IFS0"
+unset "IFS0"
+(( ${#eA[@]} > 0 )) && unset "eA[-1]"
 ns=0
 nf=1
 for nn in "${eA[@]}"; do

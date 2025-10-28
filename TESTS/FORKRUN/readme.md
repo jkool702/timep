@@ -27,8 +27,9 @@ xxhsum -H3 "${@}"
 export -f ff
 
 cd /mnt/ramdisk
-[[ -d /mnt/ramdisk/forkrun ]] || git clone https://github.com/jkool702/forkrun.git --branch=forkrun_testing_nSpawn_5
+[[ -d /mnt/ramdisk/forkrun ]] || git clone https://github.com/jkool702/forkrun.git --branch=forkrun_testing_nSpawn_b64
 . /mnt/ramdisk/forkrun/forkrun.bash
+export -f _forkrun_SETUP
 export -f forkrun
 export -f _forkrun_getVal
 
