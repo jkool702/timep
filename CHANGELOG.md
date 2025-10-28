@@ -2,7 +2,7 @@ CURRENT VERSION: timep v1.9
 
 timep v1.9: In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
 * a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID
-* for async (background forked) function calls
+* async (background forked) function calls now are propertly handled
 
 timep v1.8: In this release, the instrumented DEBUG trap has been refactored to improve accuracy and to avoid missing commands:
 * timep now knows how to properly handle backgrounded function calls (e.g., `func &`)
