@@ -1,190 +1,190 @@
-SUBSHELL (22072)_[s];''	1:0	220705:41
-SUBSHELL (22072)_[s];': | cat 0<&0 | cat | tee'	4846:4	6812:5
-SUBSHELL (22072)_[s];'printf '\''%s\n'\'' {1..10} | << (SUBSHELL): 22098 >> | tee | cat'	5540:4	9918:7
-SUBSHELL (22072)_[s];'echo 0'	74:0	89:0
-SUBSHELL (22072)_[s];'echo 1'	1188:2	1146:2
-SUBSHELL (22072)_[s];'echo 3 (&)'	292:0	328:1
-SUBSHELL (22072)_[s];'echo 4 (&)'	651:1	389:1
-SUBSHELL (22072)_[s];'echo 11'	76:0	91:0
-SUBSHELL (22072)_[s];'echo 12 (&)'	795:1	423:1
-SUBSHELL (22072)_[s];'$'\''cat <<EOF\nfoo\nbar\nbaz\nEOF\n | grep foo | sed '\''s/o/O/g'\'' | wc -l'	4806:3	7633:6
-SUBSHELL (22072)_[s];'echo "today is $(date +%Y-%m-%d)"'	459:0	312:1
-SUBSHELL (22072)_[s];'x=$( ( echo nested, echo subshell ) | grep sub)'	657:1	506:1
-SUBSHELL (22072)_[s];'diff <(ls /) <(ls /tmp) (&)'	436:0	309:0
-SUBSHELL (22072)_[s];'grep pattern <(sed '\''s/^/>>/'\'' > /dev/null) (&)'	423:0	305:0
-SUBSHELL (22072)_[s];'read -r n <&${CO[0]}'	1044:1	112:0
-SUBSHELL (22072)_[s];'printf "got %s\n" "$n"'	93:0	94:0
-SUBSHELL (22072)_[s];'read -r n <&${CO[0]}'	12372:7	125:0
-SUBSHELL (22072)_[s];'printf "got %s\n" "$n"'	83:0	99:0
-SUBSHELL (22072)_[s];'read -r n <&${CO[0]}'	12317:7	129:0
-SUBSHELL (22072)_[s];'printf "got %s\n" "$n"'	79:0	94:0
-SUBSHELL (22072)_[s];'read -r n <&${CO[0]}'	11689:7	16219:9
-SUBSHELL (22072)_[s];'let "x = 5 + 6"'	121:0	138:0
-SUBSHELL (22072)_[s];'arr=(one two three)'	107:0	127:0
-SUBSHELL (22072)_[s];'echo ${arr[@]}'	113:0	134:0
-SUBSHELL (22072)_[s];'((i=0))'	108:0	124:0
-SUBSHELL (22072)_[s];'((i<3))'	103:0	122:0
-SUBSHELL (22072)_[s];'echo "$i"'	79:0	94:0
-SUBSHELL (22072)_[s];'((i++))'	69:0	83:0
-SUBSHELL (22072)_[s];'((i<3))'	68:0	82:0
-SUBSHELL (22072)_[s];'echo "$i"'	83:0	89:0
-SUBSHELL (22072)_[s];'((i++))'	69:0	84:0
-SUBSHELL (22072)_[s];'((i<3))'	71:0	86:0
-SUBSHELL (22072)_[s];'echo "$i"'	72:0	87:0
-SUBSHELL (22072)_[s];'((i++))'	68:0	83:0
-SUBSHELL (22072)_[s];'((i<3))'	74:0	89:0
-SUBSHELL (22072)_[s];'cmd="echo inside-eval"'	70:0	85:0
-SUBSHELL (22072)_[s];'eval "$cmd"'	75:0	90:0
-SUBSHELL (22072)_[s];'echo inside-eval'	78:0	92:0
-SUBSHELL (22072)_[s];'eval "eval \"$cmd\""'	74:0	89:0
-SUBSHELL (22072)_[s];'eval "echo inside-eval"'	76:0	88:0
-SUBSHELL (22072)_[s];'echo inside-eval'	92:0	106:0
-SUBSHELL (22072)_[s];'trap '\''echo got USR1, sleep .01'\'' USR1'	35656:21	35559:25
-SUBSHELL (22072)_[s];'kill -USR1 $BASHPID'	83:0	97:0
-SUBSHELL (22072)_[s];'@TRAP (USR1): echo got USR1\, sleep .01'	16402:8	6381:5
-SUBSHELL (22072)_[s];'echo after-signal'	110:0	129:0
-SUBSHELL (22072)_[s];'cat <(echo hi) <(echo bye) <(echo 1, echo 2, echo 3) (&)'	1180:2	1074:2
-SUBSHELL (22072)_[s];'for i in {1..3} (&)'	402:0	418:1
-SUBSHELL (22072)_[s];'read x'	540:1	108:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	512:1	412:1
-SUBSHELL (22072)_[s];'read x'	90:0	100:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	70:0	85:0
-SUBSHELL (22072)_[s];'echo even "$x"'	74:0	89:0
-SUBSHELL (22072)_[s];'read x'	76:0	91:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	507:1	408:1
-SUBSHELL (22072)_[s];'read x'	84:0	94:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	70:0	84:0
-SUBSHELL (22072)_[s];'echo even "$x"'	75:0	89:0
-SUBSHELL (22072)_[s];'read x'	84:0	98:0
-SUBSHELL (22072)_[s];'for i in {1..3} (&)'	385:0	401:1
-SUBSHELL (22072)_[s];'read x'	524:1	108:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	504:1	403:1
-SUBSHELL (22072)_[s];'read x'	153:0	184:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	138:0	164:0
-SUBSHELL (22072)_[s];'echo even "$x"'	162:0	193:0
-SUBSHELL (22072)_[s];'read x'	96:0	112:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	692:1	570:1
-SUBSHELL (22072)_[s];'read x'	81:0	95:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	70:0	84:0
-SUBSHELL (22072)_[s];'echo even "$x"'	77:0	93:0
-SUBSHELL (22072)_[s];'read x'	84:0	100:0
-SUBSHELL (22072)_[s];'for i in {1..3} (&)'	411:0	432:1
-SUBSHELL (22072)_[s];'read x'	1146:2	110:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	1002:1	932:2
-SUBSHELL (22072)_[s];'read x'	85:0	101:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	69:0	83:0
-SUBSHELL (22072)_[s];'echo even "$x"'	75:0	89:0
-SUBSHELL (22072)_[s];'read x'	77:0	91:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	698:1	574:1
-SUBSHELL (22072)_[s];'read x'	77:0	92:0
-SUBSHELL (22072)_[s];'(( x % 2 == 0 ))'	68:0	83:0
-SUBSHELL (22072)_[s];'echo even "$x"'	74:0	88:0
-SUBSHELL (22072)_[s];'read x'	84:0	99:0
-SUBSHELL (22072)_[s];'sleep 1 (&)'	327:0	353:1
-SUBSHELL (22072)_[s];'wait -n $!'	1001730:21	1493:3
-SUBSHELL (22072)_[s];SUBSHELL (22112)_[s];'echo 8'	82:0	96:0
-SUBSHELL (22072)_[s];SUBSHELL (22167)_[s];'echo odd "$x"'	84:0	98:0
-SUBSHELL (22072)_[s];SUBSHELL (22175)_[s];'echo odd "$x"'	91:0	106:0
-SUBSHELL (22072)_[s];SUBSHELL (22170)_[s];'echo odd "$x"'	97:0	112:0
-SUBSHELL (22072)_[s];SUBSHELL (22147)_[s];'grep sub'	2365:2	4836:4
-SUBSHELL (22072)_[s];SUBSHELL (22166)_[s];'echo odd "$x"'	86:0	99:0
-SUBSHELL (22072)_[s];SUBSHELL (22115)_[s];'echo 9.1a (&)'	679:1	993:2
-SUBSHELL (22072)_[s];SUBSHELL (22182)_[s];'trap '\'''\'' RETURN EXIT'	26719:17	26645:20
-SUBSHELL (22072)_[s];SUBSHELL (22160)_[s];'echo hi'	250:0	289:0
-SUBSHELL (22072)_[s];SUBSHELL (22115)_[s];'echo 9.2a'	218:0	253:0
-SUBSHELL (22072)_[s];SUBSHELL (22182)_[s];'exit'	84:0	93:0
-SUBSHELL (22072)_[s];SUBSHELL (22172)_[s];'seq 1 4'	969:1	1078:2
-SUBSHELL (22072)_[s];SUBSHELL (22172)_[s];':'	118:0	137:0
-SUBSHELL (22072)_[s];SUBSHELL (22118)_[s];'echo 9.999'	544:1	421:1
-SUBSHELL (22072)_[s];SUBSHELL (22162)_[s];'echo 1'	170:0	191:0
-SUBSHELL (22072)_[s];SUBSHELL (22162)_[s];'echo 2'	150:0	177:0
-SUBSHELL (22072)_[s];FUNCTION (gg)_[f];'gg 16'	469:0	354:1
-SUBSHELL (22072)_[s];SUBSHELL (22162)_[s];'echo 3'	86:0	98:0
-SUBSHELL (22072)_[s];SUBSHELL (22117)_[s];'echo 9.1c (&)'	943:1	1334:2
-SUBSHELL (22072)_[s];SUBSHELL (22117)_[s];'echo 9.2c'	307:0	358:1
-SUBSHELL (22072)_[s];SUBSHELL (22118)_[s];'echo 9.5'	158:0	192:0
-SUBSHELL (22072)_[s];SUBSHELL (22125)_[s];'echo 14'	112:0	131:0
-SUBSHELL (22072)_[s];SUBSHELL (22171)_[s];'echo odd "$x"'	119:0	139:0
-SUBSHELL (22072)_[s];SUBSHELL (22109)_[s];'echo 6 (&)'	299:0	325:1
-SUBSHELL (22072)_[s];FUNCTION (ff)_[f];'ff 15'	66:0	80:0
-SUBSHELL (22072)_[s];SUBSHELL (22174)_[s];'echo odd "$x"'	285:0	322:1
-SUBSHELL (22072)_[s];FUNCTION (ff)_[f];'echo "${*}"'	78:0	93:0
-SUBSHELL (22072)_[s];SUBSHELL (22146)_[s];'date +%Y-%m-%d'	1541987:374	1170389:125
-SUBSHELL (22072)_[s];SUBSHELL (22111)_[s];'echo 7'	80:0	94:0
-SUBSHELL (22072)_[s];SUBSHELL (22134)_[s];'echo A2 (&)'	727:1	773:1
-SUBSHELL (22072)_[s];SUBSHELL (22101)_[s];'echo'	120:0	142:0
-SUBSHELL (22072)_[s];SUBSHELL (22151)_[s];'ls /tmp (^)'	1531979:197	1170392:295
-SUBSHELL (22072)_[s];SUBSHELL (22134)_[s];'echo A1'	85:0	99:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];'trap '\''echo bye'\'' RETURN EXIT'	33465:19	33377:22
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];'exit'	81:0	95:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];'@TRAP (EXIT): echo bye'	2929:3	2938:3
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];'trap '\''echo exit'\'' EXIT'	24800:14	24723:16
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];'trap '\''echo return'\'' RETURN'	24945:15	24880:18
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];'exit'	80:0	94:0
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];'@TRAP (EXIT): echo exit'	2990:3	2997:4
-SUBSHELL (22072)_[s];SUBSHELL (22098)_[s];'mapfile -t A 0<&0'	1354:2	114:0
-SUBSHELL (22072)_[s];SUBSHELL (22098)_[s];'printf '\''%s%s\n'\'' "${A[@]}"'	89:0	103:0
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'for i in {1..3}'	73:0	88:0
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'echo "$i"'	72:0	85:0
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'sleep .01'	11356:5	1412:2
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'for i in {1..3}'	77:0	91:0
-SUBSHELL (22072)_[s];SUBSHELL (22132)_[s];'echo a (&)'	743:1	794:1
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'echo "$i"'	76:0	92:0
-SUBSHELL (22072)_[s];SUBSHELL (22150)_[s];'ls / (^)'	1532137:285	1170392:295
-SUBSHELL (22072)_[s];SUBSHELL (22168)_[s];'seq 1 4'	840:1	922:1
-SUBSHELL (22072)_[s];SUBSHELL (22168)_[s];':'	86:0	101:0
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'sleep .01'	11153:5	1202:2
-SUBSHELL (22072)_[s];SUBSHELL (22183)_[s];'trap - EXIT'	22653:10	22594:11
-SUBSHELL (22072)_[s];SUBSHELL (22119)_[s];'echo 10 (&)'	306:0	331:1
-SUBSHELL (22072)_[s];SUBSHELL (22183)_[s];'exit'	78:0	88:0
-SUBSHELL (22072)_[s];SUBSHELL (22161)_[s];'echo bye'	214:0	239:0
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'for i in {1..3}'	84:0	99:0
-SUBSHELL (22072)_[s];SUBSHELL (22108)_[s];'echo 5'	111:0	130:0
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'echo "$i"'	73:0	87:0
-SUBSHELL (22072)_[s];SUBSHELL (22155)_[s];'sleep .01'	11376:6	1427:2
-SUBSHELL (22072)_[s];SUBSHELL (22153)_[s];'sed '\''s/^/>>/'\'' > /dev/null (^)'	1528087:109	1170396:380
-SUBSHELL (22072)_[s];SUBSHELL (22114)_[s];'echo 9.1'	292:0	340:1
-SUBSHELL (22072)_[s];SUBSHELL (22114)_[s];'echo 9.2 (&)'	987:1	1456:3
-SUBSHELL (22072)_[s];SUBSHELL (22164)_[s];'seq 1 4'	855:1	939:2
-SUBSHELL (22072)_[s];SUBSHELL (22164)_[s];':'	82:0	97:0
-SUBSHELL (22072)_[s];SUBSHELL (22102-1)_[s];'echo B'	85:0	100:0
-SUBSHELL (22072)_[s];SUBSHELL (22113)_[s];'echo 9 (&)'	993:1	1068:2
-SUBSHELL (22072)_[s];SUBSHELL (22104)_[s];'echo 2'	243:0	258:0
-SUBSHELL (22072)_[s];SUBSHELL (22124)_[s];'echo 13'	306:0	356:1
-SUBSHELL (22072)_[s];SUBSHELL (22184)_[s];'echo $BASHPID'	228:0	257:0
-SUBSHELL (22072)_[s];SUBSHELL (22177)_[s];'trap '\''echo bye'\'' EXIT'	23717:12	23668:14
-SUBSHELL (22072)_[s];SUBSHELL (22116)_[s];'echo 9.1b'	74:0	88:0
-SUBSHELL (22072)_[s];SUBSHELL (22177)_[s];'exit'	73:0	86:0
-SUBSHELL (22072)_[s];SUBSHELL (22116)_[s];'echo 9.2b (&)'	305:0	330:1
-SUBSHELL (22072)_[s];SUBSHELL (22177)_[s];'@TRAP (EXIT): echo bye'	1906:2	1912:3
-SUBSHELL (22072)_[s];SUBSHELL (13030-2)_[s];SUBSHELL (22135-2)_[s];'echo b'	160:0	186:0
-SUBSHELL (22072)_[s];SUBSHELL (22147)_[s];SUBSHELL (22148)_[s];'echo nested'	77:0	92:0
-SUBSHELL (22072)_[s];SUBSHELL (22147)_[s];SUBSHELL (22148)_[s];'echo subshell'	76:0	90:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (trap)_[f];''	1:0	1:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (trap)_[f];'@TRAP (RETURN): echo bye'	23614:11	23561:12
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (trap)_[f];''	1:0	1:0
-SUBSHELL (22072)_[s];SUBSHELL (22184)_[s];SUBSHELL (22185)_[s];'echo $BASHPID'	88:0	103:0
-SUBSHELL (22072)_[s];SUBSHELL (22134)_[s];SUBSHELL (22136)_[s];'echo A3'	99:0	116:0
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (trap)_[f];'@TRAP (RETURN): echo return'	15410:7	15374:8
-SUBSHELL (22072)_[s];FUNCTION (gg)_[f];SUBSHELL (22131)_[s];'echo "$*"'	79:0	94:0
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (gg)_[f];'gg 1'	1500:2	1428:3
-SUBSHELL (22072)_[s];SUBSHELL (22102)_[s];SUBSHELL (22103)_[s];'echo A (&)'	547:1	575:1
-SUBSHELL (22072)_[s];SUBSHELL (22118)_[s];SUBSHELL (22121)_[s];'echo 9.3 (&)'	373:0	411:1
-SUBSHELL (22072)_[s];SUBSHELL (22118)_[s];SUBSHELL (22121)_[s];'echo 9.4'	112:0	131:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (gg)_[f];'gg 1'	1480:2	1401:2
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (gg)_[f];'@TRAP (RETURN): echo return'	3729:3	3734:4
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (gg)_[f];'@TRAP (RETURN): echo bye'	3132:3	3134:4
-SUBSHELL (22072)_[s];SUBSHELL (22134)_[s];SUBSHELL (22136)_[s];SUBSHELL (22141)_[s];'echo A4'	134:0	139:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (gg)_[f];SUBSHELL (22179)_[s];'echo "$*"'	91:0	106:0
-SUBSHELL (22072)_[s];SUBSHELL (22184)_[s];SUBSHELL (22185)_[s];SUBSHELL (22186)_[s];'echo $BASHPID'	268:0	311:0
-SUBSHELL (22072)_[s];SUBSHELL (22134)_[s];SUBSHELL (22136)_[s];SUBSHELL (22137)_[s];'echo A5 (&)'	348:0	374:1
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (gg)_[f];SUBSHELL (22181)_[s];'echo "$*"'	321:0	349:1
-SUBSHELL (22072)_[s];FUNCTION (gg)_[f];SUBSHELL (22131)_[s];FUNCTION (ff)_[f];'ff "$@"'	65:0	78:0
-SUBSHELL (22072)_[s];FUNCTION (gg)_[f];SUBSHELL (22131)_[s];FUNCTION (ff)_[f];'echo "${*}"'	77:0	91:0
-SUBSHELL (22072)_[s];SUBSHELL (22184)_[s];SUBSHELL (22185)_[s];SUBSHELL (22186)_[s];SUBSHELL (22187)_[s];'echo $BASHPID'	89:0	103:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (gg)_[f];SUBSHELL (22179)_[s];FUNCTION (ff)_[f];'ff "$@"'	72:0	82:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (gg)_[f];SUBSHELL (22179)_[s];FUNCTION (ff)_[f];'echo "${*}"'	77:0	90:0
-SUBSHELL (22072)_[s];SUBSHELL (22178)_[s];FUNCTION (gg)_[f];SUBSHELL (22179)_[s];FUNCTION (ff)_[f];'@TRAP (RETURN): echo bye'	1914:2	1922:3
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (gg)_[f];SUBSHELL (22181)_[s];FUNCTION (ff)_[f];'ff "$@"'	63:0	77:0
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (gg)_[f];SUBSHELL (22181)_[s];FUNCTION (ff)_[f];'echo "${*}"'	90:0	103:0
-SUBSHELL (22072)_[s];SUBSHELL (22180)_[s];FUNCTION (gg)_[f];SUBSHELL (22181)_[s];FUNCTION (ff)_[f];'@TRAP (RETURN): echo return'	1926:2	1933:3
+SUBSHELL (45633)_[s];''	1:0	456315:54
+SUBSHELL (45633)_[s];': | cat 0<&0 | cat | tee'	4575:3	7406:5
+SUBSHELL (45633)_[s];'printf '\''%s\n'\'' {1..10} | << (SUBSHELL): 45659 >> | tee | cat'	5449:4	8900:6
+SUBSHELL (45633)_[s];'echo 0'	77:0	93:0
+SUBSHELL (45633)_[s];'echo 1'	476:0	364:1
+SUBSHELL (45633)_[s];'echo 3 (&)'	314:0	341:0
+SUBSHELL (45633)_[s];'echo 4 (&)'	1309:2	1043:1
+SUBSHELL (45633)_[s];'echo 11'	78:0	93:0
+SUBSHELL (45633)_[s];'echo 12 (&)'	763:1	541:1
+SUBSHELL (45633)_[s];'$'\''cat <<EOF\nfoo\nbar\nbaz\nEOF\n | grep foo | sed '\''s/o/O/g'\'' | wc -l'	4928:3	8466:6
+SUBSHELL (45633)_[s];'echo "today is $(date +%Y-%m-%d)"'	471:0	320:0
+SUBSHELL (45633)_[s];'x=$( ( echo nested, echo subshell ) | grep sub)'	697:1	548:1
+SUBSHELL (45633)_[s];'diff <(ls /) <(ls /tmp) (&)'	487:1	354:1
+SUBSHELL (45633)_[s];'grep pattern <(sed '\''s/^/>>/'\'' > /dev/null) (&)'	483:0	338:0
+SUBSHELL (45633)_[s];'read -r n <&${CO[0]}'	1076:1	121:0
+SUBSHELL (45633)_[s];'printf "got %s\n" "$n"'	88:0	108:0
+SUBSHELL (45633)_[s];'read -r n <&${CO[0]}'	11975:6	219:0
+SUBSHELL (45633)_[s];'printf "got %s\n" "$n"'	164:0	191:0
+SUBSHELL (45633)_[s];'read -r n <&${CO[0]}'	10650:4	222:0
+SUBSHELL (45633)_[s];'printf "got %s\n" "$n"'	100:0	118:0
+SUBSHELL (45633)_[s];'read -r n <&${CO[0]}'	11740:6	16254:8
+SUBSHELL (45633)_[s];'let "x = 5 + 6"'	196:0	224:0
+SUBSHELL (45633)_[s];'arr=(one two three)'	141:0	167:0
+SUBSHELL (45633)_[s];'echo ${arr[@]}'	142:0	168:0
+SUBSHELL (45633)_[s];'((i=0))'	126:0	152:0
+SUBSHELL (45633)_[s];'((i<3))'	129:0	155:0
+SUBSHELL (45633)_[s];'echo "$i"'	137:0	163:0
+SUBSHELL (45633)_[s];'((i++))'	127:0	153:0
+SUBSHELL (45633)_[s];'((i<3))'	130:0	157:0
+SUBSHELL (45633)_[s];'echo "$i"'	120:0	145:0
+SUBSHELL (45633)_[s];'((i++))'	87:0	104:0
+SUBSHELL (45633)_[s];'((i<3))'	74:0	88:0
+SUBSHELL (45633)_[s];'echo "$i"'	84:0	105:0
+SUBSHELL (45633)_[s];'((i++))'	70:0	87:0
+SUBSHELL (45633)_[s];'((i<3))'	75:0	91:0
+SUBSHELL (45633)_[s];'cmd="echo inside-eval"'	68:0	83:0
+SUBSHELL (45633)_[s];'eval "$cmd"'	77:0	93:0
+SUBSHELL (45633)_[s];'echo inside-eval'	82:0	99:0
+SUBSHELL (45633)_[s];'eval "eval \"$cmd\""'	74:0	89:0
+SUBSHELL (45633)_[s];'eval "echo inside-eval"'	70:0	86:0
+SUBSHELL (45633)_[s];'echo inside-eval'	97:0	122:0
+SUBSHELL (45633)_[s];'trap '\''echo got USR1, sleep .01'\'' USR1'	44870:21	44709:23
+SUBSHELL (45633)_[s];'kill -USR1 $BASHPID'	86:0	101:0
+SUBSHELL (45633)_[s];'@TRAP (USR1): echo got USR1\, sleep .01'	17321:8	7325:4
+SUBSHELL (45633)_[s];'echo after-signal'	161:0	190:0
+SUBSHELL (45633)_[s];'cat <(echo hi) <(echo bye) <(echo 1, echo 2, echo 3) (&)'	1129:1	653:1
+SUBSHELL (45633)_[s];'for i in {1..3} (&)'	431:0	450:1
+SUBSHELL (45633)_[s];'read x'	665:1	120:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	568:1	457:1
+SUBSHELL (45633)_[s];'read x'	352:0	388:1
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	74:0	90:0
+SUBSHELL (45633)_[s];'echo even "$x"'	80:0	96:0
+SUBSHELL (45633)_[s];'read x'	82:0	98:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	629:1	479:1
+SUBSHELL (45633)_[s];'read x'	144:0	172:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	74:0	91:0
+SUBSHELL (45633)_[s];'echo even "$x"'	80:0	96:0
+SUBSHELL (45633)_[s];'read x'	90:0	106:0
+SUBSHELL (45633)_[s];'for i in {1..3} (&)'	459:0	478:1
+SUBSHELL (45633)_[s];'read x'	4412:3	133:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	903:1	724:1
+SUBSHELL (45633)_[s];'read x'	87:0	105:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	73:0	88:0
+SUBSHELL (45633)_[s];'echo even "$x"'	79:0	95:0
+SUBSHELL (45633)_[s];'read x'	84:0	96:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	638:1	533:1
+SUBSHELL (45633)_[s];'read x'	84:0	101:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	72:0	89:0
+SUBSHELL (45633)_[s];'echo even "$x"'	85:0	98:0
+SUBSHELL (45633)_[s];'read x'	90:0	107:0
+SUBSHELL (45633)_[s];'for i in {1..3} (&)'	449:0	472:1
+SUBSHELL (45633)_[s];'read x'	1186:1	126:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	548:1	437:1
+SUBSHELL (45633)_[s];'read x'	82:0	99:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	71:0	87:0
+SUBSHELL (45633)_[s];'echo even "$x"'	81:0	98:0
+SUBSHELL (45633)_[s];'read x'	79:0	95:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	575:1	460:1
+SUBSHELL (45633)_[s];'read x'	87:0	100:0
+SUBSHELL (45633)_[s];'(( x % 2 == 0 ))'	71:0	86:0
+SUBSHELL (45633)_[s];'echo even "$x"'	79:0	95:0
+SUBSHELL (45633)_[s];'read x'	88:0	104:0
+SUBSHELL (45633)_[s];'sleep 1 (&)'	369:0	393:1
+SUBSHELL (45633)_[s];'wait -n $!'	1001587:21	1528:2
+SUBSHELL (45633)_[s];SUBSHELL (45669)_[s];'echo 5'	329:0	374:1
+SUBSHELL (45633)_[s];SUBSHELL (45735)_[s];'echo odd "$x"'	110:0	129:0
+SUBSHELL (45633)_[s];SUBSHELL (45677)_[s];'echo 9.1b'	79:0	95:0
+SUBSHELL (45633)_[s];SUBSHELL (45677)_[s];'echo 9.2b (&)'	313:0	345:1
+SUBSHELL (45633)_[s];SUBSHELL (45670)_[s];'echo 6 (&)'	1045:1	1104:2
+SUBSHELL (45633)_[s];SUBSHELL (45729)_[s];'echo odd "$x"'	91:0	108:0
+SUBSHELL (45633)_[s];SUBSHELL (45734)_[s];'echo odd "$x"'	136:0	159:0
+SUBSHELL (45633)_[s];SUBSHELL (45686)_[s];'echo 13'	149:0	171:0
+SUBSHELL (45633)_[s];SUBSHELL (45747)_[s];'trap - EXIT'	21030:9	20974:10
+SUBSHELL (45633)_[s];SUBSHELL (45747)_[s];'exit'	75:0	90:0
+SUBSHELL (45633)_[s];SUBSHELL (45736)_[s];'seq 1 4'	1040:1	1159:2
+SUBSHELL (45633)_[s];SUBSHELL (45721)_[s];'echo hi'	85:0	101:0
+SUBSHELL (45633)_[s];SUBSHELL (45736)_[s];':'	107:0	128:0
+SUBSHELL (45633)_[s];SUBSHELL (45695)_[s];'echo A2 (&)'	562:1	607:1
+SUBSHELL (45633)_[s];SUBSHELL (45708)_[s];'grep sub'	2381:2	5026:4
+SUBSHELL (45633)_[s];SUBSHELL (45695)_[s];'echo A1'	166:0	185:0
+SUBSHELL (45633)_[s];SUBSHELL (45714)_[s];'sed '\''s/^/>>/'\'' > /dev/null (^)'	1568554:108	1226433:217
+SUBSHELL (45633)_[s];SUBSHELL (45659)_[s];'mapfile -t A 0<&0'	1162:1	121:0
+SUBSHELL (45633)_[s];SUBSHELL (45659)_[s];'printf '\''%s%s\n'\'' "${A[@]}"'	90:0	105:0
+SUBSHELL (45633)_[s];SUBSHELL (45663-1)_[s];'echo B'	118:0	140:0
+SUBSHELL (45633)_[s];SUBSHELL (45722)_[s];'echo bye'	106:0	125:0
+SUBSHELL (45633)_[s];SUBSHELL (45662)_[s];'echo'	83:0	99:0
+SUBSHELL (45633)_[s];SUBSHELL (45727)_[s];'echo odd "$x"'	93:0	109:0
+SUBSHELL (45633)_[s];SUBSHELL (45680)_[s];'echo 10 (&)'	345:0	366:1
+SUBSHELL (45633)_[s];SUBSHELL (45712)_[s];'ls /tmp (^)'	1573222:196	1226440:298
+SUBSHELL (45633)_[s];SUBSHELL (45723)_[s];'echo 1'	116:0	130:0
+SUBSHELL (45633)_[s];SUBSHELL (45723)_[s];'echo 2'	99:0	120:0
+SUBSHELL (45633)_[s];SUBSHELL (45723)_[s];'echo 3'	104:0	122:0
+SUBSHELL (45633)_[s];SUBSHELL (45748)_[s];'echo $BASHPID'	103:0	121:0
+SUBSHELL (45633)_[s];SUBSHELL (45673)_[s];'echo 8'	90:0	107:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];'trap '\''echo bye'\'' RETURN EXIT'	35034:18	34946:20
+SUBSHELL (45633)_[s];SUBSHELL (45739)_[s];'echo odd "$x"'	89:0	105:0
+SUBSHELL (45633)_[s];SUBSHELL (45678)_[s];'echo 9.1c (&)'	318:0	342:0
+SUBSHELL (45633)_[s];SUBSHELL (45678)_[s];'echo 9.2c'	80:0	97:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];'exit'	80:0	96:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];'@TRAP (EXIT): echo bye'	2973:2	2982:3
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'for i in {1..3}'	77:0	92:0
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'echo "$i"'	73:0	88:0
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'sleep .01'	11053:4	1100:2
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'for i in {1..3}'	77:0	94:0
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'echo "$i"'	83:0	93:0
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'sleep .01'	11195:5	1243:2
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'for i in {1..3}'	76:0	92:0
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'echo "$i"'	73:0	89:0
+SUBSHELL (45633)_[s];SUBSHELL (45716)_[s];'sleep .01'	11468:6	1540:2
+SUBSHELL (45633)_[s];SUBSHELL (45672)_[s];'echo 7'	131:0	161:0
+SUBSHELL (45633)_[s];SUBSHELL (45725)_[s];'seq 1 4'	955:1	1052:2
+SUBSHELL (45633)_[s];SUBSHELL (45725)_[s];':'	86:0	102:0
+SUBSHELL (45633)_[s];SUBSHELL (45675)_[s];'echo 9.1'	309:0	350:1
+SUBSHELL (45633)_[s];SUBSHELL (45675)_[s];'echo 9.2 (&)'	324:0	350:1
+SUBSHELL (45633)_[s];SUBSHELL (45746)_[s];'trap '\'''\'' RETURN EXIT'	26327:16	26248:18
+SUBSHELL (45633)_[s];SUBSHELL (45665)_[s];'echo 2'	81:0	97:0
+SUBSHELL (45633)_[s];SUBSHELL (45746)_[s];'exit'	76:0	91:0
+SUBSHELL (45633)_[s];FUNCTION (ff)_[f];'ff 15'	72:0	83:0
+SUBSHELL (45633)_[s];FUNCTION (ff)_[f];'echo "${*}"'	87:0	107:0
+SUBSHELL (45633)_[s];SUBSHELL (45676)_[s];'echo 9.1a (&)'	793:1	821:1
+SUBSHELL (45633)_[s];SUBSHELL (45676)_[s];'echo 9.2a'	80:0	96:0
+SUBSHELL (45633)_[s];SUBSHELL (45732)_[s];'seq 1 4'	1375:2	1473:2
+SUBSHELL (45633)_[s];SUBSHELL (45732)_[s];':'	154:0	180:0
+SUBSHELL (45633)_[s];SUBSHELL (45693)_[s];'echo a (&)'	425:0	455:1
+SUBSHELL (45633)_[s];SUBSHELL (45741)_[s];'trap '\''echo bye'\'' EXIT'	26151:15	25985:16
+SUBSHELL (45633)_[s];SUBSHELL (45741)_[s];'exit'	77:0	93:0
+SUBSHELL (45633)_[s];SUBSHELL (45741)_[s];'@TRAP (EXIT): echo bye'	1931:2	1940:3
+SUBSHELL (45633)_[s];SUBSHELL (45687)_[s];'echo 14'	149:0	170:0
+SUBSHELL (45633)_[s];SUBSHELL (45711)_[s];'ls / (^)'	1573363:283	1226417:135
+SUBSHELL (45633)_[s];FUNCTION (gg)_[f];'gg 16'	663:1	454:1
+SUBSHELL (45633)_[s];SUBSHELL (45707)_[s];'date +%Y-%m-%d'	1583560:372	1226451:380
+SUBSHELL (45633)_[s];SUBSHELL (45738)_[s];'echo odd "$x"'	110:0	122:0
+SUBSHELL (45633)_[s];SUBSHELL (45674)_[s];'echo 9 (&)'	844:1	1203:2
+SUBSHELL (45633)_[s];SUBSHELL (45679)_[s];'echo 9.999'	565:1	483:1
+SUBSHELL (45633)_[s];SUBSHELL (45679)_[s];'echo 9.5'	80:0	96:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];'trap '\''echo exit'\'' EXIT'	25201:12	25134:13
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];'trap '\''echo return'\'' RETURN'	25448:13	25386:15
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];'exit'	83:0	98:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];'@TRAP (EXIT): echo exit'	2996:3	2997:3
+SUBSHELL (45633)_[s];SUBSHELL (11551-2)_[s];SUBSHELL (45696-2)_[s];'echo b'	213:0	241:0
+SUBSHELL (45633)_[s];SUBSHELL (45708)_[s];SUBSHELL (45709)_[s];'echo nested'	78:0	94:0
+SUBSHELL (45633)_[s];SUBSHELL (45663)_[s];SUBSHELL (45664)_[s];'echo A (&)'	354:0	359:1
+SUBSHELL (45633)_[s];SUBSHELL (45708)_[s];SUBSHELL (45709)_[s];'echo subshell'	76:0	91:0
+SUBSHELL (45633)_[s];SUBSHELL (11551-4)_[s];SUBSHELL (45697-4)_[s];'echo A3'	89:0	106:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (trap)_[f];''	1:0	1:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (trap)_[f];'@TRAP (RETURN): echo return'	15520:7	15492:7
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (gg)_[f];'gg 1'	1499:2	1423:2
+SUBSHELL (45633)_[s];FUNCTION (gg)_[f];SUBSHELL (45692)_[s];'echo "$*"'	82:0	98:0
+SUBSHELL (45633)_[s];SUBSHELL (45679)_[s];SUBSHELL (45682)_[s];'echo 9.3 (&)'	423:0	469:1
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (trap)_[f];''	1:0	1:0
+SUBSHELL (45633)_[s];SUBSHELL (45679)_[s];SUBSHELL (45682)_[s];'echo 9.4'	81:0	98:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (trap)_[f];'@TRAP (RETURN): echo bye'	23780:11	23724:11
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (gg)_[f];'gg 1'	1480:2	1415:2
+SUBSHELL (45633)_[s];SUBSHELL (45748)_[s];SUBSHELL (45749)_[s];'echo $BASHPID'	195:0	227:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (gg)_[f];'@TRAP (RETURN): echo return'	3345:3	3351:4
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (gg)_[f];'@TRAP (RETURN): echo bye'	3216:3	3222:3
+SUBSHELL (45633)_[s];SUBSHELL (11551-3)_[s];SUBSHELL (45697-3)_[s];SUBSHELL (45702-3)_[s];'echo A4'	91:0	108:0
+SUBSHELL (45633)_[s];SUBSHELL (45748)_[s];SUBSHELL (45749)_[s];SUBSHELL (45750)_[s];'echo $BASHPID'	374:0	423:1
+SUBSHELL (45633)_[s];SUBSHELL (45695)_[s];SUBSHELL (45697)_[s];SUBSHELL (45698)_[s];'echo A5 (&)'	508:1	549:1
+SUBSHELL (45633)_[s];FUNCTION (gg)_[f];SUBSHELL (45692)_[s];FUNCTION (ff)_[f];'ff "$@"'	65:0	80:0
+SUBSHELL (45633)_[s];FUNCTION (gg)_[f];SUBSHELL (45692)_[s];FUNCTION (ff)_[f];'echo "${*}"'	79:0	95:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (gg)_[f];SUBSHELL (45745)_[s];'echo "$*"'	95:0	106:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (gg)_[f];SUBSHELL (45743)_[s];'echo "$*"'	90:0	107:0
+SUBSHELL (45633)_[s];SUBSHELL (45748)_[s];SUBSHELL (45749)_[s];SUBSHELL (45750)_[s];SUBSHELL (45751)_[s];'echo $BASHPID'	114:0	130:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (gg)_[f];SUBSHELL (45743)_[s];FUNCTION (ff)_[f];'ff "$@"'	66:0	81:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (gg)_[f];SUBSHELL (45743)_[s];FUNCTION (ff)_[f];'echo "${*}"'	77:0	93:0
+SUBSHELL (45633)_[s];SUBSHELL (45742)_[s];FUNCTION (gg)_[f];SUBSHELL (45743)_[s];FUNCTION (ff)_[f];'@TRAP (RETURN): echo bye'	1939:2	1958:3
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (gg)_[f];SUBSHELL (45745)_[s];FUNCTION (ff)_[f];'ff "$@"'	68:0	83:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (gg)_[f];SUBSHELL (45745)_[s];FUNCTION (ff)_[f];'echo "${*}"'	78:0	92:0
+SUBSHELL (45633)_[s];SUBSHELL (45744)_[s];FUNCTION (gg)_[f];SUBSHELL (45745)_[s];FUNCTION (ff)_[f];'@TRAP (RETURN): echo return'	1922:2	1932:3

@@ -1552,7 +1552,7 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag fgStartTime
+    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag fgStartTime wt ct
     local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
@@ -1613,7 +1613,6 @@ _timep_PROCESS_LOG() {
 #        fi
         pidA[$kk]="${pid}"
         nexecA[$kk]="${nexec}"
-        linenoA[$kk]="${lineno}"
 
         # get nexec hash
         timep_hash - 'nexecHash' <<<"${nexecA[$kk]#* }"
@@ -1624,9 +1623,19 @@ _timep_PROCESS_LOG() {
             cmd="${cmd@Q}"
             cmd="${cmd@Q}"
             isTrapA[$kk]=true
+
+            if (( kk > 1 )); then
+                IFS=$'\t' read -r _ _ _ _ _ _ _ _ lineno _ <<<"${logA[$((kk-1))]}"
+                lineno="-${lineno}"
+            else
+                lineno="-1"
+            fi
         else
             isTrapA[$kk]=false
         fi
+
+        linenoA[$kk]="${lineno}"
+
         [[ "${cmd%' >>'}" == *"'"' ('[\?\^\&\!]')' ]] && cmd="${cmd%*([[:space:]])"'"*}${cmd##**([[:space:]])"'"}'"
 
         [[ "${cmd}" == '<< ('*'): '*' >>' ]] && cmd="${cmd@Q}"
@@ -1874,6 +1883,12 @@ printf '%s;' "${fgA[@]}")"
         # figure out "percent for current nesting depth" for wall/cpu times
         (( wTimePA[$kk] = wTimeA[$kk] > 0 ? 10000 * wTimeA[$kk] / wTimeTotal : 0 ))
         (( cTimePA[$kk] = cTimeA[$kk] > 0 ? 10000 * cTimeA[$kk] / cTimeTotal : 0 ))
+
+        printf -v wt '%5.3d' "${wTimePA[$kk]//[^0-9]/}"
+        wTimePA[$kk]="${wt:0:3}.${wt:3}"
+
+        printf -v ct '%5.3d' "${cTimePA[$kk]//[^0-9]/}"
+        cTimePA[$kk]="${ct:0:3}.${ct:3}"
 
         # record current nesting depth total time
         wTimeTA[$kk]="${wTimeTotal}"
@@ -2762,8 +2777,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         (( d6 = ${#timep_cTimeCur} - 6 ))
         printf -v timep_cTimeCur '%s.%s' "${timep_cTimeCur:0:${d6}}" "${timep_cTimeCur:${d6}}"
 
-        printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out"
-        printf '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out.combined"
+        printf -v logFooter '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}"
+
+        printf '%s\n' "${logFooter}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out"
+        printf '%s\n' "${logFooter}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out.combined"
     done
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
@@ -2801,6 +2818,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
+    printf -v logFooter '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wtimeALL}" "${timep_ctimeALL}"
     spacerN=16
 
     # add another percentage showing "percent of total runtime" to final outputs
@@ -2814,8 +2832,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         # split lines into start, time, percent, endr
         logHeader="$(printf -v headerTXT 'LINE_DEPTH_CMD_%'"${spacerN0}"'.s\tCOMBINED_WALL-CLOCK_TIME_____     COMBINED_CPU_TIME____________   \tCOMMAND_____________________________' ''
             printf '%s\nline.depth.cmd:%'"${spacerN0}"'.s\t( time | total %% | cur depth %% )  ( time | total %% | cur depth %% )   \t(count) <command>\n%s\n\n' "${headerTXT//_/ }" '' "${headerTXT//[^$'\t']/_}")"
-
-        logFooter="$(sed -E s/'\x00'// <"${logPathCur}" |  grep -E '^TOTAL')"
+        #logFooter="$(sed -E s/'\x00'// <"${logPathCur}" |  grep -E '^TOTAL')"
         logCurTmp="$( {
 
              while IFS='' read -r lineOrig; do
@@ -2906,7 +2923,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         #else
         #    mapfile -t -d '' logOut < <(sed -zE 's/\n\n([0-9]+\.[0-9]+\.[0-9]+:)/'$'\x00''\1/g' <<<"${logCurTmp%%$'\n'TOTAL RUN TIME:*}"  | sort -z -V -k1,1 | sed -zE 's/\n\n/\n\n\x00/g')
         #fi
-        mapfile -t -d '' logOut < <(sed -zE 's/^[ \t\n]*//; s/\n[ \t]*\n(\[0-9]+\.[0-9]+\.[0-9]+:)/\x00\1/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/^/\n\n\x00/g')
+        mapfile -t -d '' logOut < <(sed -zE 's/^[ \t\n]*//; s/\n[ \t]*\n(\[0-9]+\.[0-9]+\.[0-9]+:)/\x00\1/g; s/((^\n?)|(\n\n))\-([^\n]+)/\1\4'$'\035''-/g; s/('$'\035''-)(\n\n)/\1\x00\2/g' <<<"${logCurTmp}"  <./timep.profiles/out.profile| sort -z -V -k1,1 | sed -zE 's/^/\n\n\x00/g; s/\n([^\n]+)'$'\035''\-\n/\n-\1\n/g')
         logOutL=("${logOut[@]%%\.*}")
         logOutLL=("${logOutL[@]:1}")
         for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
@@ -2922,7 +2939,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             else
                 printf '%s' "${logOut[@]#$'\n'}"
             fi
-            printf '\n\n%s\n' "${logFooter}"
+            printf '\n%s\n' "${logFooter}"
         }  | sed -zE 's/\n\n\n+/\n\n/g')"
 
         # removed the incorrect '(&) marks from commands that have 1+ commands indicated with '(^)' in the same grouping
@@ -2965,8 +2982,13 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         printf '%s%s%%%s%s%%%s\n' "${a0}" "${p1w#* }" "${a1}" "${p1c#* }" "${a2}"
 
-    done <"${logPathCur}")"
+    done <"${logPathCur}"
+    printf '\n%s\n' "${logFooter}")"
+    
     echo "${logCurTmp}" >"${logPathCur}"
+
+    # If there are corrections add the .corrections.pid file into the profiles folder
+    [[ -s "${timep_TMPDIR}/.corrections.pid" ]] && \cp "${timep_TMPDIR}/.corrections.pid" "${timep_TMPDIR}/profiles"
 
     # if '--flame' flag given create flamegraphs
     ${timep_flameGraphFlag} && {
