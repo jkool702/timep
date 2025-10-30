@@ -2818,7 +2818,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
-    printf -v logFooter '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wtimeALL}" "${timep_ctimeALL}"
+    printf -v timep_wtimeALL0 '%0.7d' "${timep_wtimeALL}"
+    (( d6 = ${#timep_wtimeALL0} - 6 ))
+    printf -v timep_wtimeALL0 '%s.%s' "${timep_wtimeALL0:0:${d6}}" "${timep_wtimeALL0:${d6}}"
+    printf -v timep_ctimeALL0 '%0.7d'  "${timep_ctimeALL}"
+    (( d6 = ${#timep_ctimeALL0} - 6 ))
+    printf -v timep_ctimeALL0 '%s.%s' "${timep_ctimeALL0:0:${d6}}" "${timep_ctimeALL0:${d6}}"
+
+    printf -v logFooter '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wtimeALL0}" "${timep_ctimeALL0}"
     spacerN=16
 
     # add another percentage showing "percent of total runtime" to final outputs
@@ -2923,7 +2930,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         #else
         #    mapfile -t -d '' logOut < <(sed -zE 's/\n\n([0-9]+\.[0-9]+\.[0-9]+:)/'$'\x00''\1/g' <<<"${logCurTmp%%$'\n'TOTAL RUN TIME:*}"  | sort -z -V -k1,1 | sed -zE 's/\n\n/\n\n\x00/g')
         #fi
-        mapfile -t -d '' logOut < <(sed -zE 's/^[ \t\n]*//; s/\n[ \t]*\n(\[0-9]+\.[0-9]+\.[0-9]+:)/\x00\1/g; s/((^\n?)|(\n\n))\-([^\n]+)/\1\4'$'\035''-/g; s/('$'\035''-)(\n\n)/\1\x00\2/g' <<<"${logCurTmp}"  <./timep.profiles/out.profile| sort -z -V -k1,1 | sed -zE 's/^/\n\n\x00/g; s/\n([^\n]+)'$'\035''\-\n/\n-\1\n/g')
+        mapfile -t -d '' logOut < <(sed -zE 's/^[ \t\n]*//; s/\n[ \t]*\n(\[0-9]+\.[0-9]+\.[0-9]+:)/\x00\1/g; s/((^\n?)|(\n\n))\-([^\n]+)/\1\4'$'\035''-/g; s/('$'\035''-)(\n\n)/\1\x00\2/g' <<<"${logCurTmp}" | sort -z -V -k1,1 | sed -zE 's/^/\n\n\x00/g; s/\n([^\n]+)'$'\035''\-\n/\n-\1\n/g')
+
         logOutL=("${logOut[@]%%\.*}")
         logOutLL=("${logOutL[@]:1}")
         for (( kk=0; kk<${#logOut[@]}-2; kk++ )); do
@@ -2957,11 +2965,14 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         # remove the (^) indicator and the corresponding (&)
         # combine blocks from the same line number
         # for functions - add in space between top lvl commands inside the function
-        if [[ "${timep_runType}" == 'f' ]]; then
-            sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } | { lll=false; while IFS='' read -r l; do ll="${l#*\)*\)*\)    }"; if [[ "$ll" == '<<'* ]] || [[ "$ll" == '│   <<'* ]]; then ${lll} && echo '@@@@@'; lll=true; echo; else lll=false; fi; echo "$l"; done; } | sed -zE s/'\n@@@@@\n'/\n/g 
-        else
-            sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } 
-        fi | sed -zE s/'\n\n([0-9\-])/\x00\1/g' | sort -n -t. -z -k1,1 | { read -r -d '' l; if [[ "${l}" == [0-9\-]* ]]; then l0="${l%%.*}"; else l0=''; fi; echo "$l"; while read -r -d '' l; do if [[ "${l}" == [0-9\-]* ]]; then l1="${l%%.*}"; else l1=''; fi; { [[ $l0 ]] && [[ $l1 ]] && [[ "$l0" == "$l1" ]]; } || echo; echo "$l"; l0="$l1"; done; } >"${logPathCur}"
+        {
+            if [[ "${timep_runType}" == 'f' ]]; then
+                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } | { lll=false; while IFS='' read -r l; do ll="${l#*\)*\)*\)    }"; if [[ "$ll" == '<<'* ]] || [[ "$ll" == '│   <<'* ]]; then ${lll} && echo '@@@@@'; lll=true; echo; else lll=false; fi; echo "$l"; done; } | sed -zE s/'\n@@@@@\n'/\n/g 
+            else
+                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } 
+            fi | sed -zE s/'\n\n([0-9\-])/\x00\1/g' | sort -n -t. -z -k1,1 | { read -r -d '' l; if [[ "${l}" == [0-9\-]* ]]; then l0="${l%%.*}"; else l0=''; fi; echo "$l"; while read -r -d '' l; do if [[ "${l}" == [0-9\-]* ]]; then l1="${l%%.*}"; else l1=''; fi; { [[ $l0 ]] && [[ $l1 ]] && [[ "$l0" == "$l1" ]]; } || echo; echo "$l"; l0="$l1"; done; } 
+            echo "${logFooter}"
+        } | grep -vE '^0: \.: ' | sed -zE 's/^\n*//; s/\n\n\n+/\n\n/g' >"${logPathCur}"
 
         logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
 
