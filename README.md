@@ -4,8 +4,11 @@
 **CURRENT TIMEP VERSION**: 1.9
 
 **CHANGES IN MOST RECENT UPDATE**: In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
-* a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID
+* a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed
 * async (background forked) function calls now are propertly handled
+* much of the core instrumentation has been reworked (particularly rlated to when new subshells spawn), resulting in overall more structurally acurate profiles.
+* trap handlers are now shown correctly in the vast majority of cases
+* new AI-generated profiler stress tests have been added. timep is now producing accurate profiles of all of the stress tests
 
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
