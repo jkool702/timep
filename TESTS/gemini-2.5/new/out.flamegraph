@@ -1,134 +1,134 @@
-SUBSHELL (1545777)_[s];'echo "Starting the profiler stress test..."'	79:0	90:2
-SUBSHELL (1545777)_[s];'wait'	3126732:264	769:25
-SUBSHELL (1545777)_[s];'echo "Profiler stress test complete."'	427:0	480:21
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];'echo "Sending data to coprocess"'	1:0	308:14
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];'recursive_descent 1'	71:0	85:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];'level=$1'	66:0	80:0
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	70:0	84:0
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	73:0	86:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];'sleep 0.1'	101317:66	1226:46
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];'echo "hello" >&${MY_COPROC[1]}'	101:0	118:7
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];'read -r response <&${MY_COPROC[0]}'	164:0	189:11
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];'echo "Main script received from coproc: $response"'	79:0	94:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];'echo "exit" >&${MY_COPROC[1]}'	76:0	90:2
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];'wait $MY_COPROC_PID'	210051:114	431:20
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];'fork_frenzy'	75:0	90:2
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];'for i in {1..15} (&)'	5158:1	5455:89
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	80:0	94:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];'wait'	106909:96	655:23
-SUBSHELL (1545777)_[s];SUBSHELL (1545805)_[s];FUNCTION (fd_ballet)_[f];'fd_ballet'	167:0	196:11
-SUBSHELL (1545777)_[s];SUBSHELL (1545805)_[s];FUNCTION (fd_ballet)_[f];'exec 3< <(echo "some secret data") (&)'	583:0	359:17
-SUBSHELL (1545777)_[s];SUBSHELL (1545805)_[s];FUNCTION (fd_ballet)_[f];'exec 4> >(tr '\''a-z'\'' '\''A-Z'\'') (&)'	725:0	763:24
-SUBSHELL (1545777)_[s];SUBSHELL (1545805)_[s];FUNCTION (fd_ballet)_[f];'cat 0<&3 1>&4'	935:0	1004:29
-SUBSHELL (1545777)_[s];SUBSHELL (1545805)_[s];FUNCTION (fd_ballet)_[f];'exec 3>&-'	83:0	93:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'fifo_fiesta'	73:0	87:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545805)_[s];FUNCTION (fd_ballet)_[f];'exec 4>&-'	82:0	97:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'fifo=$(mktemp -u)'	462:0	325:16
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'mkfifo "$fifo" (&)'	1356:0	1457:57
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'echo "FIFO reader started"'	74:0	88:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'read -r data < "$fifo"'	505425:135	319:15
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'echo "FIFO reader received: $data"'	208:0	242:13
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'echo "FIFO reader finished"'	139:0	158:10
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'rm "$fifo"'	2246:0	2300:65
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];'wait'	75:0	88:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'signal_gauntlet'	71:0	85:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'trap "echo '\''Caught SIGINT, but I will not die!'\''," INT'	42559:5	41856:268
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'trap "echo '\''Caught SIGTERM, cleaning up...'\'', exit 1," TERM'	25158:2	24964:134
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'echo "Signal traps are set. Try sending SIGINT (Ctrl+C) or SIGTERM."'	81:0	95:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'for i in {1..3}'	464:0	533:22
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'echo "Waiting... ($i/3)"'	243:0	287:13
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'sleep 1'	3007748:264	7297:99
-SUBSHELL (1545777)_[s];SUBSHELL (1545800)_[s];FUNCTION (signal_gauntlet)_[f];'trap - INT TERM'	27561:4	27217:172
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];'pipe_maze'	69:0	83:0
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];'tmpfile=$(mktemp)'	525:0	404:19
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];'cat <(head -c 10240 /dev/urandom | base64)'	405:0	443:20
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];'grep -o "[A-Za-z0-9]" | sort | uniq -c | awk '\''{print $1, $2}'\'' | tee >(sha256sum > "$tmpfile") | << (SUBSHELL): 1545849 >> | wc -l'	13094:1	27342:209
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];'wait'	128:0	150:9
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];'echo "SHA256 of the sorted unique characters: $(cat "$tmpfile")"'	522:0	284:13
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];'rm "$tmpfile"'	966:0	1062:30
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545801)_[s];'echo "Process $i started"'	81:0	96:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545801)_[s];'sleep 0.1'	101582:79	1561:60
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545801)_[s];'echo "Process $i finished"'	155:0	179:10
-SUBSHELL (1545777)_[s];SUBSHELL (1545805)_[s];FUNCTION (fd_ballet)_[f];SUBSHELL (1545822)_[s];'echo "some secret data"'	142:0	161:10
-SUBSHELL (1545777)_[s];SUBSHELL (1545799)_[s];FUNCTION (pipe_maze)_[f];SUBSHELL (1545818)_[s];'head -c 10240 /dev/urandom | base64'	2793:0	3905:81
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545847)_[s];'echo "Process $i started"'	79:0	93:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545847)_[s];'sleep 0.1'	101146:40	1163:41
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545813)_[s];'echo "Process $i started"'	214:0	239:12
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545847)_[s];'echo "Process $i finished"'	95:0	109:6
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545813)_[s];'sleep 0.1'	101481:74	1581:62
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545820)_[s];'echo "Process $i started"'	83:0	98:5
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545813)_[s];'echo "Process $i finished"'	271:0	315:15
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545820)_[s];'sleep 0.1'	101060:18	1080:32
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545826)_[s];'echo "Process $i started"'	79:0	93:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545820)_[s];'echo "Process $i finished"'	157:0	175:10
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545826)_[s];'sleep 0.1'	101075:23	1106:33
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545826)_[s];'echo "Process $i finished"'	111:0	133:7
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545804)_[s];'echo "Process $i started"'	78:0	93:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1545837)_[s];'echo "FIFO writer started"'	81:0	96:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545804)_[s];'sleep 0.1'	101116:31	1146:40
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1545837)_[s];'sleep 0.5'	501323:135	1335:54
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545804)_[s];'echo "Process $i finished"'	196:0	228:12
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1545837)_[s];'echo "Data for FIFO" > "$fifo"'	369:0	416:19
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545851)_[s];'echo "Process $i started"'	81:0	95:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545810)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1545837)_[s];'echo "FIFO writer finished"'	325:0	363:17
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545851)_[s];'sleep 0.1'	100985:14	972:26
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545851)_[s];'echo "Process $i finished"'	87:0	101:5
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545806)_[s];'echo "Process $i started"'	76:0	90:2
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545854)_[s];'echo "Process $i started"'	77:0	92:2
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545839)_[s];'echo "Process $i started"'	77:0	91:2
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545806)_[s];'sleep 0.1'	101359:70	1367:55
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545854)_[s];'sleep 0.1'	101183:48	1245:48
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545839)_[s];'sleep 0.1'	101173:44	1125:37
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545854)_[s];'echo "Process $i finished"'	336:0	373:18
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545806)_[s];'echo "Process $i finished"'	322:0	373:18
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545839)_[s];'echo "Process $i finished"'	85:0	100:5
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1545812)_[s];'read -r line'	829:0	359:17
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1545812)_[s];'echo "COPROC received: $line"'	245:0	289:14
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1545812)_[s];'[[ "$line" == "exit" ]]'	133:0	160:10
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1545812)_[s];'sleep 0.2'	201302:105	1309:52
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1545812)_[s];'echo "COPROC responding"'	180:0	211:12
-SUBSHELL (1545777)_[s];SUBSHELL (1545808)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1545812)_[s];'exit 0'	71:0	84:0
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545836)_[s];'echo "Process $i started"'	86:0	101:5
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545831)_[s];'echo "Process $i started"'	78:0	93:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545836)_[s];'sleep 0.1'	101119:35	1128:38
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545831)_[s];'sleep 0.1'	101078:27	1111:35
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545836)_[s];'echo "Process $i finished"'	127:0	146:8
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545831)_[s];'echo "Process $i finished"'	87:0	103:5
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545809)_[s];'echo "Process $i started"'	80:0	94:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545809)_[s];'sleep 0.1'	101191:53	1200:43
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545809)_[s];'echo "Process $i finished"'	116:0	139:7
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545844)_[s];'echo "Process $i started"'	87:0	109:6
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545844)_[s];'sleep 0.1'	100982:10	1004:29
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545844)_[s];'echo "Process $i finished"'	117:0	134:7
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545815)_[s];'echo "Process $i started"'	81:0	95:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545815)_[s];'sleep 0.1'	101261:61	1219:45
-SUBSHELL (1545777)_[s];SUBSHELL (1545798)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1545815)_[s];'echo "Process $i finished"'	128:0	151:9
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	127:0	151:9
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	128:0	152:9
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	130:0	153:9
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	72:0	86:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	101244:57	1265:50
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	76:0	90:2
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	81:0	96:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	99:0	116:6
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	70:0	84:0
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	152:0	180:11
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	102819:92	2806:76
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	79:0	93:3
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	115:0	137:7
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	124:0	143:8
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	121:0	143:8
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	126:0	148:8
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	102659:87	2597:72
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	83:0	96:4
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	90:0	108:6
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	90:0	107:5
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	94:0	112:6
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	100:0	118:7
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	102602:83	2525:69
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	82:0	112:6
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	76:0	90:2
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	69:0	83:0
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	105:0	102:5
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Reached the bottom of the recursion."'	75:0	88:1
-SUBSHELL (1545777)_[s];SUBSHELL (1545802)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'return'	69:0	82:0
+SUBSHELL (1847107)_[s];'echo "Starting the profiler stress test..."'	126:0	149:7
+SUBSHELL (1847107)_[s];'wait'	3117364:264	755:28
+SUBSHELL (1847107)_[s];'echo "Profiler stress test complete."'	427:0	475:23
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];'echo "Sending data to coprocess"'	1:0	391:21
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];'recursive_descent 1'	272:0	332:17
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];'level=$1'	68:0	82:0
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	80:0	96:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];'echo "hello" >&${MY_COPROC[1]}'	144:0	168:11
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	73:0	88:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];'read -r response <&${MY_COPROC[0]}'	157:0	183:12
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];'sleep 0.1'	101016:18	1044:36
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];'echo "Main script received from coproc: $response"'	131:0	154:9
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];'echo "exit" >&${MY_COPROC[1]}'	136:0	159:10
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];'wait $MY_COPROC_PID'	208984:114	826:29
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];'fork_frenzy'	79:0	93:2
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];'for i in {1..15} (&)'	5213:1	5502:100
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	82:0	96:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];'wait'	104565:96	1002:33
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'fifo_fiesta'	70:0	84:0
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'fifo=$(mktemp -u)'	422:0	268:15
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'mkfifo "$fifo" (&)'	1317:0	1345:54
+SUBSHELL (1847107)_[s];SUBSHELL (1847135)_[s];FUNCTION (fd_ballet)_[f];'fd_ballet'	270:0	318:17
+SUBSHELL (1847107)_[s];SUBSHELL (1847135)_[s];FUNCTION (fd_ballet)_[f];'exec 3< <(echo "some secret data") (&)'	350:0	366:19
+SUBSHELL (1847107)_[s];SUBSHELL (1847135)_[s];FUNCTION (fd_ballet)_[f];'exec 4> >(tr '\''a-z'\'' '\''A-Z'\'') (&)'	454:0	487:24
+SUBSHELL (1847107)_[s];SUBSHELL (1847135)_[s];FUNCTION (fd_ballet)_[f];'cat 0<&3 1>&4'	1013:0	1096:41
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'echo "FIFO reader started"'	76:0	90:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847135)_[s];FUNCTION (fd_ballet)_[f];'exec 3>&-'	164:0	190:12
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'read -r data < "$fifo"'	505101:135	221:13
+SUBSHELL (1847107)_[s];SUBSHELL (1847135)_[s];FUNCTION (fd_ballet)_[f];'exec 4>&-'	125:0	148:7
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'echo "FIFO reader received: $data"'	116:0	135:7
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'echo "FIFO reader finished"'	113:0	129:6
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'rm "$fifo"'	2407:1	2344:77
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];'wait'	74:0	88:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'signal_gauntlet'	86:0	102:4
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'trap "echo '\''Caught SIGINT, but I will not die!'\''," INT'	26056:4	25822:224
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'trap "echo '\''Caught SIGTERM, cleaning up...'\'', exit 1," TERM'	24796:2	24513:148
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'echo "Signal traps are set. Try sending SIGINT (Ctrl+C) or SIGTERM."'	79:0	93:2
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'for i in {1..3}'	630:0	736:27
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'echo "Waiting... ($i/3)"'	433:0	506:25
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'sleep 1'	3007220:264	7195:111
+SUBSHELL (1847107)_[s];SUBSHELL (1847131)_[s];FUNCTION (signal_gauntlet)_[f];'trap - INT TERM'	29933:5	29415:268
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];'pipe_maze'	134:0	159:10
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];'tmpfile=$(mktemp)'	898:0	655:26
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];'cat <(head -c 10240 /dev/urandom | base64)'	387:0	433:22
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];'grep -o "[A-Za-z0-9]" | sort | uniq -c | awk '\''{print $1, $2}'\'' | tee >(sha256sum > "$tmpfile") | << (SUBSHELL): 1847183 >> | wc -l'	12989:1	25100:185
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];'wait'	122:0	145:7
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];'echo "SHA256 of the sorted unique characters: $(cat "$tmpfile")"'	414:0	273:15
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];'rm "$tmpfile"'	852:0	926:30
+SUBSHELL (1847107)_[s];SUBSHELL (1847135)_[s];FUNCTION (fd_ballet)_[f];SUBSHELL (1847151)_[s];'echo "some secret data"'	85:0	101:4
+SUBSHELL (1847107)_[s];SUBSHELL (1847129)_[s];FUNCTION (pipe_maze)_[f];SUBSHELL (1847155)_[s];'head -c 10240 /dev/urandom | base64'	2269:0	3082:92
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847177)_[s];'echo "Process $i started"'	84:0	93:2
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847166)_[s];'echo "Process $i started"'	152:0	174:11
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847177)_[s];'sleep 0.1'	101067:26	1076:38
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847166)_[s];'sleep 0.1'	101102:35	1152:46
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847177)_[s];'echo "Process $i finished"'	85:0	100:4
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847153)_[s];'echo "Process $i started"'	77:0	91:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847166)_[s];'echo "Process $i finished"'	178:0	206:13
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847153)_[s];'sleep 0.1'	101012:13	1019:35
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847134)_[s];'echo "Process $i started"'	99:0	117:5
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847153)_[s];'echo "Process $i finished"'	85:0	99:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847138)_[s];'echo "Process $i started"'	107:0	125:6
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847174)_[s];'echo "Process $i started"'	77:0	91:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847134)_[s];'sleep 0.1'	101586:70	1579:62
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847174)_[s];'sleep 0.1'	101224:44	1181:48
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847138)_[s];'sleep 0.1'	101543:61	1633:67
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847134)_[s];'echo "Process $i finished"'	319:0	369:19
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847174)_[s];'echo "Process $i finished"'	84:0	97:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847138)_[s];'echo "Process $i finished"'	100:0	115:5
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847147)_[s];'echo "Process $i started"'	120:0	132:6
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847147)_[s];'sleep 0.1'	101403:57	1362:58
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1847145)_[s];'read -r line'	2393:1	273:15
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847147)_[s];'echo "Process $i finished"'	314:0	365:18
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847140)_[s];'echo "Process $i started"'	111:0	130:6
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1847145)_[s];'echo "COPROC received: $line"'	192:0	223:14
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847172)_[s];'echo "Process $i started"'	82:0	95:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1847145)_[s];'[[ "$line" == "exit" ]]'	131:0	157:10
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847140)_[s];'sleep 0.1'	101654:74	1693:70
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847172)_[s];'sleep 0.1'	100930:9	993:32
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1847145)_[s];'sleep 0.2'	201422:105	1359:56
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847140)_[s];'echo "Process $i finished"'	195:0	226:14
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847172)_[s];'echo "Process $i finished"'	91:0	105:5
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1847145)_[s];'echo "COPROC responding"'	289:0	341:18
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	88:0	105:5
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	97:0	107:5
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	175:0	200:12
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847130)_[s];'echo "Process $i started"'	107:0	126:6
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	171:0	201:13
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847130)_[s];'sleep 0.1'	102437:83	2412:87
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847130)_[s];'echo "Process $i finished"'	264:0	314:16
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	101280:52	1264:50
+SUBSHELL (1847107)_[s];SUBSHELL (1847139)_[s];FUNCTION (coproc_tango)_[f];SUBSHELL (1847145)_[s];'exit 0'	70:0	83:0
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1847160)_[s];'echo "FIFO writer started"'	79:0	93:2
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1847160)_[s];'sleep 0.5'	501328:135	1371:60
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1847160)_[s];'echo "Data for FIFO" > "$fifo"'	343:0	392:22
+SUBSHELL (1847107)_[s];SUBSHELL (1847141)_[s];FUNCTION (fifo_fiesta)_[f];SUBSHELL (1847160)_[s];'echo "FIFO writer finished"'	325:0	375:20
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847132)_[s];'echo "Process $i started"'	130:0	142:7
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847132)_[s];'sleep 0.1'	101566:65	1590:65
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847132)_[s];'echo "Process $i finished"'	355:0	388:21
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847180)_[s];'echo "Process $i started"'	78:0	92:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847180)_[s];'sleep 0.1'	101174:39	1110:43
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847150)_[s];'echo "Process $i started"'	137:0	162:11
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847180)_[s];'echo "Process $i finished"'	89:0	103:4
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847150)_[s];'sleep 0.1'	101236:48	1267:52
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847144)_[s];'echo "Process $i started"'	102:0	124:5
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847150)_[s];'echo "Process $i finished"'	90:0	105:5
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847144)_[s];'sleep 0.1'	101095:31	1132:45
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847144)_[s];'echo "Process $i finished"'	129:0	150:8
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847161)_[s];'echo "Process $i started"'	85:0	94:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847161)_[s];'sleep 0.1'	101066:22	1093:40
+SUBSHELL (1847107)_[s];SUBSHELL (1847128)_[s];FUNCTION (fork_frenzy)_[f];SUBSHELL (1847161)_[s];'echo "Process $i finished"'	183:0	212:13
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	79:0	93:2
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	126:0	150:8
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	127:0	150:8
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	132:0	155:9
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	136:0	161:11
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	102458:87	2382:80
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	79:0	93:2
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	127:0	152:9
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	129:0	153:9
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	132:0	156:9
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	138:0	161:11
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	102469:92	2403:84
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	76:0	91:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	258:0	293:16
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	66:0	79:0
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	70:0	84:0
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Entering recursion level $level"'	72:0	85:0
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'sleep 0.1'	102307:78	2343:73
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Exiting recursion level $level"'	129:0	152:9
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'recursive_descent $(($level + 1))'	78:0	94:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'level=$1'	74:0	89:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'[ "$level" -gt 5 ]'	75:0	89:1
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'echo "Reached the bottom of the recursion."'	82:0	96:3
+SUBSHELL (1847107)_[s];SUBSHELL (1847133)_[s];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];FUNCTION (recursive_descent)_[f];'return'	86:0	101:4
