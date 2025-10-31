@@ -741,7 +741,7 @@ echo "IN WRITE NORMAL COMMAND BRANCH" >>"${timep_TMPDIR}/run.log.txt"
             [[ -s "${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_CUR}" ]] && {
                 {
                     while read -r -u ${timep_FD_ENDTIME} timep_END_TIME0 timep_END_CTIME0; do
-                        (( 10#0${timep_END_TIME0//[^0-9]/} < 10#0${timep_END_TIME//[^0-9]/} )) && {
+                        (( 10#0${timep_END_TIME0//[^0-9]/} < 10#0${timep_END_TIME//[^0-9]/} )) && (( 10#0${timep_END_TIME0//[^0-9]/} > 10#0${timep_START_TIME[${timep_FNEST_CUR}]%$'\t'*} )) && {
                             timep_END_TIME="${timep_END_TIME0}"
                             timep_END_CTIME="${timep_END_CTIME0}"
                         }
@@ -1553,7 +1553,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag fgStartTime wt ct
-    local -a logA nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
+    local -a logA logA_time nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1578,7 +1578,7 @@ _timep_PROCESS_LOG() {
 
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
@@ -1598,6 +1598,8 @@ _timep_PROCESS_LOG() {
 
    # loop through lines in reverse order
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
+
+        [[ -z ${logA[$kk]//[ $'\t']/} ]] && { unset "logA[$kk]"; continue; }
 
         # read log fields into variables
         IFS=$'\t' read -r nPipe startWTime startCTime endWTime endCTime func pid nexec lineno _ cmd <<<"${logA[$kk]}"
@@ -1732,23 +1734,35 @@ _timep_PROCESS_LOG() {
         # figure out the most reasonable endtime for these lines by looking at starttimes for the parent, then grandparent, etc.
         # to get the closest timestamp that is greater than the starttime for this command and use that as the endtime
         [[ "${endWTimeA[$kk]}" == '+' ]] && {
+            (( ${#logA_time[@]} > 0 )) || {
+                logA_time=("${logA[@]#*$'\t'}")
+                logA_time=("${logA_time[@]%%$'\t'*}")
+                logA_time=("${logA_time[@]//[^0-9]/}")
+                logA_time=(${logA_time[@]})
+                mapfile -t logA_time < <(printf '%s\n' "${logA_time[@]}" | sort -g)
+            }
             endWTime=0
-            read -r log_tmp <"${timep_TMPDIR}/.log/.hash/${logCur##*\/}"
-            log_tmp="${log_tmp%.*}"
-            until [[ -z ${log_tmp//[^.]/} ]]; do
-                timep_hash - 'log_tmp_hash' <<<"${log_tmp}"
-                    [[ -s "${logCur%\/*}/log.${log_tmp_hash}" ]] && {
-                    while read -r _ endWTime _ ; do
-                        [[ ${endWTime//[+-]/} ]] || continue
-                        (( 10#0${endWTime//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && break 2
-                    done <"${logCur%\/*}/log.${log_tmp_hash}"
-                }
-                log_tmp="${log_tmp%.*}"
-                [[ -z ${log_tmp//[^.]/} ]] && (( endWTime = 10#0${timep_WTIME_DONE} > 10#0${startWTimeA[$kk]} ? 10#0${timep_WTIME_DONE} : 10#0${startWTimeA[$kk]} + 1 ))
+            for kk1 in "${!logA_time[@]}"; do
+                (( logA_time[$kk1] > startWTimeA[$kk] )) && { endWTime="${logA_time[$kk1]}"; break; }
             done
+            (( endWTime > 0 )) || {
+                read -r log_tmp <"${timep_TMPDIR}/.log/.hash/${logCur##*\/}"
+                log_tmp="${log_tmp%.*}"
+                until [[ -z ${log_tmp//[^.]/} ]]; do
+                    timep_hash - 'log_tmp_hash' <<<"${log_tmp}"
+                        [[ -s "${logCur%\/*}/log.${log_tmp_hash}" ]] && {
+                        while read -r _ endWTime _ ; do
+                            [[ ${endWTime//[+-]/} ]] || continue
+                            (( 10#0${endWTime//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && break 2
+                        done <"${logCur%\/*}/log.${log_tmp_hash}"
+                    }
+                    log_tmp="${log_tmp%.*}"
+                    [[ -z ${log_tmp//[^.]/} ]] && (( endWTime = 10#0${timep_WTIME_DONE} > 10#0${startWTimeA[$kk]} ? 10#0${timep_WTIME_DONE} : 10#0${startWTimeA[$kk]} + 1 ))
+                done
 
-            # if we still dont have a valid end time, use the global timep endtime
-            (( endWTime > startWTimeA[$kk] )) || endWTime="${timep_WTIME_DONE}"
+                # if we still dont have a valid end time, use the global timep endtime
+                (( endWTime > startWTimeA[$kk] )) || endWTime="${timep_WTIME_DONE}"
+            }
 
             endWTimeA[$kk]="${endWTime}"
 
@@ -2843,6 +2857,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         logCurTmp="$( {
 
              while IFS='' read -r lineOrig; do
+                [[ ${lineOrig// /} ]] || continue
                 IFS=$'\t' read -r tw Tw tc Tc cnt nd lno cind cmd <<<"${lineOrig}"
                 nd="${nd//x/}"
                 { [[ $tw ]] && [[ $Tw ]] && [[ $tc ]] && [[ $Tc ]] && [[ $cnt ]]; } || {
@@ -2972,7 +2987,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } 
             fi | sed -zE s/'\n\n([0-9\-])/\x00\1/g' | sort -n -t. -z -k1,1 | { read -r -d '' l; if [[ "${l}" == [0-9\-]* ]]; then l0="${l%%.*}"; else l0=''; fi; echo "$l"; while read -r -d '' l; do if [[ "${l}" == [0-9\-]* ]]; then l1="${l%%.*}"; else l1=''; fi; { [[ $l0 ]] && [[ $l1 ]] && [[ "$l0" == "$l1" ]]; } || echo; echo "$l"; l0="$l1"; done; } 
             echo "${logFooter}"
-        } | grep -vE '^0: \.: ' | sed -zE 's/^\n*//; s/\n\n\n+/\n\n/g' >"${logPathCur}"
+        } | sed -zE 's/^\n*//; s/\n\n\n+/\n\n/g' >"${logPathCur}"
 
         logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
 
