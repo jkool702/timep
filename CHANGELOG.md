@@ -1,4 +1,4 @@
-CURRENT VERSION: timep v1.9.1
+CURRENT VERSION: timep v1.9.2
 
 timep v1.9:  In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
 * a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed
@@ -7,6 +7,7 @@ timep v1.9:  In this release, the  instrumented DEBUG trap has been further refa
 * trap handlers are now shown correctly in the vast majority of cases
 * new AI-generated profiler stress tests have been added. timep is now producing accurate profiles of all of the stress tests
 * v1.9.1: hotfix for an issue where an extra empty line was being added to the profile, skewing CPU times upward
+* v1.9.2: hotfix for single-command substitutions having farr too high a runtime shown
 
 
 timep v1.8: In this release, the instrumented DEBUG trap has been refactored to improve accuracy and to avoid missing commands:

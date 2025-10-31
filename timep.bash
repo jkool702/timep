@@ -2665,13 +2665,12 @@ done
     # initialize variables
     (( kk = timep_LOG_NUM - 1 ))
     jj=0
-    nWorker=nWorkerMax0
+    nWorker=1
     kkNeed=( $(eval "printf '%s ' {0..${kk}}") )
     nRetryMax0=20
     nFailedMax0=30
     nActive=0
     kkNeedCurLast=()
-    pAll_PID=()
 
     export timep_LOG_NESTING_MAX="${timep_LOG_NESTING_MAX}"
 
