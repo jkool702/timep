@@ -1,7 +1,7 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: 1.9
+**CURRENT TIMEP VERSION**: 1.9.1
 
 **CHANGES IN MOST RECENT UPDATE**: In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
 * a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed
@@ -9,6 +9,7 @@
 * much of the core instrumentation has been reworked (particularly rlated to when new subshells spawn), resulting in overall more structurally acurate profiles.
 * trap handlers are now shown correctly in the vast majority of cases
 * new AI-generated profiler stress tests have been added. timep is now producing accurate profiles of all of the stress tests
+* v1.9.1: hotfix for an issue where an extra empty line was being added to the profile, skewing CPU times upward
 
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
@@ -187,7 +188,7 @@ FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can
 4. update metadata variables so the next debug trap can log the command about to be run
 5. record the starttime for the next command
 
-NOTE that DEBUG traps fire just before the command listed in $BASH_COMMAND is run, and the DEBUG trap logs the previous command. the EXIT and RETURN traps will trigger a DEBUG trapo to fire and log the last command in the subshell/function.
+NOTE that DEBUG traps fire just before the command listed in $BASH_COMMAND is run, and the DEBUG trap logs the previous command. the EXIT and RETURN traps will trigger a DEBUG trap to fire and log the last command in the subshell/function.
 
 By using the start/end timestamps at the end/start of the debug trap, the recorded runtimes are representative of the actual runtime - minimal overhead from instrumentation is present.
 

@@ -1578,7 +1578,7 @@ _timep_PROCESS_LOG() {
 
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
@@ -1598,6 +1598,8 @@ _timep_PROCESS_LOG() {
 
    # loop through lines in reverse order
     for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
+
+        [[ -z ${logA[$kk]//[ $'\t']/} ]] && { unset "logA[$kk]"; continue; }
 
         # read log fields into variables
         IFS=$'\t' read -r nPipe startWTime startCTime endWTime endCTime func pid nexec lineno _ cmd <<<"${logA[$kk]}"
@@ -2855,6 +2857,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         logCurTmp="$( {
 
              while IFS='' read -r lineOrig; do
+                [[ ${lineOrig// /} ]] || continue
                 IFS=$'\t' read -r tw Tw tc Tc cnt nd lno cind cmd <<<"${lineOrig}"
                 nd="${nd//x/}"
                 { [[ $tw ]] && [[ $Tw ]] && [[ $tc ]] && [[ $Tc ]] && [[ $cnt ]]; } || {
@@ -2984,7 +2987,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } 
             fi | sed -zE s/'\n\n([0-9\-])/\x00\1/g' | sort -n -t. -z -k1,1 | { read -r -d '' l; if [[ "${l}" == [0-9\-]* ]]; then l0="${l%%.*}"; else l0=''; fi; echo "$l"; while read -r -d '' l; do if [[ "${l}" == [0-9\-]* ]]; then l1="${l%%.*}"; else l1=''; fi; { [[ $l0 ]] && [[ $l1 ]] && [[ "$l0" == "$l1" ]]; } || echo; echo "$l"; l0="$l1"; done; } 
             echo "${logFooter}"
-        } | grep -vE '^0: \.: ' | sed -zE 's/^\n*//; s/\n\n\n+/\n\n/g' >"${logPathCur}"
+        } | sed -zE 's/^\n*//; s/\n\n\n+/\n\n/g' >"${logPathCur}"
 
         logPathCur="${timep_TMPDIR}/profiles/out.profile.full"
 
