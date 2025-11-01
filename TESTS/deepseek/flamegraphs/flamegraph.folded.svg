@@ -1,0 +1,1374 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="692" onload="init(evt)" viewBox="0 0 4096 692" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+                unzoombtn.classList.remove("hide");
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="692" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/deepseek/deepseek_stress_test.bash</text>
+<text id="subtitle" x="2048.00" y="40" >{FOLDED}: WALL-CLOCK</text>
+<text id="subtitle" x="2048.00" y="672" >{FOLDED}: CPU-TIME</text>
+<text id="details" x="10.00" y="377" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="377" > </text>
+<g id="frames">
+<g >
+<title>'trap '\''echo &quot;Clean exit&quot;, exit 0'\'' EXIT INT TERM' (38,170 us, 6.46%)</title><rect x="10.5" y="291" width="263.3" height="23.0" fill="rgb(115,202,150)" rx="2" ry="2" />
+<text  x="13.49" y="305.5" >'trap '\''echo "Clean exit", exit 0'\'' EX..</text>
+</g>
+<g >
+<title>SUBSHELL (18977)_[s] (590,918 us, 100.00%)</title><rect x="10.0" y="315" width="4076.0" height="23.0" fill="rgb(236.666583611187,188.333031313408,221.666515656704)" rx="2" ry="2" />
+<text  x="13.00" y="329.5" >SUBSHELL (18977)_[s]</text>
+</g>
+<g >
+<title>'bg_pid=$!' (72 us, 0.01%)</title><rect x="3031.2" y="195" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3034.24" y="209.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (123 us, 0.02%)</title><rect x="285.2" y="267" width="0.8" height="23.0" fill="rgb(196.988990028786,138.977980057572,223.093944515832)" rx="2" ry="2" />
+<text  x="288.15" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Sub1&quot;' (97 us, 0.02%)</title><rect x="3025.1" y="195" width="0.7" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3028.14" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (78 us, 0.01%)</title><rect x="3913.4" y="99" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3916.41" y="113.5" ></text>
+</g>
+<g >
+<title>'safe_signal_test' (74 us, 0.01%)</title><rect x="2001.6" y="243" width="0.5" height="23.0" fill="rgb(2,8,254)" rx="2" ry="2" />
+<text  x="2004.61" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,465 us, 0.59%)</title><rect x="3887.4" y="123" width="23.9" height="23.0" fill="rgb(42,80,239)" rx="2" ry="2" />
+<text  x="3890.45" y="137.5" >'s..</text>
+</g>
+<g >
+<title>'safe_memory_test' (98 us, 0.02%)</title><rect x="1858.4" y="243" width="0.7" height="23.0" fill="rgb(13,19,252)" rx="2" ry="2" />
+<text  x="1861.37" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (836 us, 0.14%)</title><rect x="1729.2" y="243" width="5.7" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="1732.16" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (71 us, 0.01%)</title><rect x="3026.5" y="195" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3029.47" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (813 us, 0.14%)</title><rect x="2851.6" y="219" width="5.6" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="2854.61" y="233.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (20,439 us, 3.46%)</title><rect x="3917.8" y="99" width="141.0" height="23.0" fill="rgb(200,211,210)" rx="2" ry="2" />
+<text  x="3920.81" y="113.5" >'wait $bg_pid 2&gt; /dev..</text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (401 us, 0.07%)</title><rect x="3570.1" y="147" width="2.8" height="23.0" fill="rgb(14,20,252)" rx="2" ry="2" />
+<text  x="3573.15" y="161.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19018)_[s] (97 us, 0.02%)</title><rect x="3025.1" y="219" width="0.7" height="23.0" fill="rgb(223.104990176085,139.018146094855,197.009073047428)" rx="2" ry="2" />
+<text  x="3028.14" y="233.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19004)_[s] (3,944 us, 0.67%)</title><rect x="4058.8" y="99" width="27.2" height="23.0" fill="rgb(225.137539735382,140.718661679633,199.295026044846)" rx="2" ry="2" />
+<text  x="4061.80" y="113.5" >SU..</text>
+</g>
+<g >
+<title>'local depth=$1' (99 us, 0.02%)</title><rect x="3912.1" y="99" width="0.6" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="3915.06" y="113.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (413 us, 0.07%)</title><rect x="3914.4" y="99" width="2.9" height="23.0" fill="rgb(18,29,251)" rx="2" ry="2" />
+<text  x="3917.43" y="113.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (6,473 us, 1.10%)</title><rect x="1859.1" y="243" width="44.6" height="23.0" fill="rgb(45,91,234)" rx="2" ry="2" />
+<text  x="1862.05" y="257.5" >'for ..</text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (523 us, 0.09%)</title><rect x="280.6" y="267" width="3.6" height="23.0" fill="rgb(202.620516013168,150.241032026337,226.191283807243)" rx="2" ry="2" />
+<text  x="283.62" y="281.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (67 us, 0.01%)</title><rect x="3028.0" y="195" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3030.96" y="209.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (6,735 us, 1.14%)</title><rect x="1955.1" y="243" width="46.5" height="23.0" fill="rgb(50,101,231)" rx="2" ry="2" />
+<text  x="1958.15" y="257.5" >'unse..</text>
+</g>
+<g >
+<title>'wait $child_pid 2&gt; /dev/null' (1,311 us, 0.22%)</title><rect x="2091.4" y="243" width="9.1" height="23.0" fill="rgb(99,158,234)" rx="2" ry="2" />
+<text  x="2094.41" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_signal_test)_[f] (14,403 us, 2.44%)</title><rect x="2001.6" y="267" width="99.4" height="23.0" fill="rgb(221.440443542908,187.880887085815,236.542243948599)" rx="2" ry="2" />
+<text  x="2004.61" y="281.5" >FUNCTION (safe..</text>
+</g>
+<g >
+<title>FUNCTION (safe_coprocess_test)_[f] (19,379 us, 3.28%)</title><rect x="1724.7" y="267" width="133.7" height="23.0" fill="rgb(212.587792946922,170.175585893845,231.673286120807)" rx="2" ry="2" />
+<text  x="1727.70" y="281.5" >FUNCTION (safe_copro..</text>
+</g>
+<g >
+<title>SUBSHELL (19000)_[s] (78,609 us, 13.30%)</title><rect x="3543.8" y="195" width="542.2" height="23.0" fill="rgb(235.126665869608,180.381254868907,218.253080287201)" rx="2" ry="2" />
+<text  x="3546.78" y="209.5" >SUBSHELL (19000)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (385 us, 0.07%)</title><rect x="3023.2" y="267" width="2.6" height="23.0" fill="rgb(199.442352025147,143.884704050294,224.443293613831)" rx="2" ry="2" />
+<text  x="3026.15" y="281.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19017)_[s] (385 us, 0.07%)</title><rect x="3023.2" y="243" width="2.6" height="23.0" fill="rgb(224.443293613831,143.884704050294,199.442352025147)" rx="2" ry="2" />
+<text  x="3026.15" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;All tests completed successfully!&quot;' (75 us, 0.01%)</title><rect x="274.7" y="267" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="277.70" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (70 us, 0.01%)</title><rect x="641.7" y="243" width="0.5" height="23.0" fill="rgb(2,5,254)" rx="2" ry="2" />
+<text  x="644.72" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (1,828 us, 0.31%)</title><rect x="2829.7" y="267" width="12.6" height="23.0" fill="rgb(197.685144522889,139.212413177553,223.737351557939)" rx="2" ry="2" />
+<text  x="2832.67" y="281.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (774 us, 0.13%)</title><rect x="1837.1" y="243" width="5.3" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1840.09" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (646 us, 0.11%)</title><rect x="1724.7" y="243" width="4.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1727.70" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (18998)_[s] (3,434 us, 0.58%)</title><rect x="2806.0" y="243" width="23.7" height="23.0" fill="rgb(224.491131711565,139.87219513798,198.58737561761)" rx="2" ry="2" />
+<text  x="2808.99" y="257.5" >SU..</text>
+</g>
+<g >
+<title>'local job_pid=$!' (123 us, 0.02%)</title><rect x="285.2" y="243" width="0.8" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="288.15" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Job completed&quot;' (378 us, 0.06%)</title><rect x="2803.4" y="219" width="2.6" height="23.0" fill="rgb(13,19,252)" rx="2" ry="2" />
+<text  x="2806.38" y="233.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (84 us, 0.01%)</title><rect x="3569.1" y="147" width="0.6" height="23.0" fill="rgb(3,8,254)" rx="2" ry="2" />
+<text  x="3572.09" y="161.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (70 us, 0.01%)</title><rect x="3913.9" y="99" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3916.95" y="113.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (14,811 us, 2.51%)</title><rect x="1734.9" y="243" width="102.2" height="23.0" fill="rgb(138,196,210)" rx="2" ry="2" />
+<text  x="1737.93" y="257.5" >'read -r -t 1 -..</text>
+</g>
+<g >
+<title>'bg_pid=$!' (66 us, 0.01%)</title><rect x="1024.3" y="243" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1027.28" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (70 us, 0.01%)</title><rect x="641.7" y="267" width="0.5" height="23.0" fill="rgb(196.9102028748,138.820405749601,223.05061158114)" rx="2" ry="2" />
+<text  x="644.72" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (25,320 us, 4.28%)</title><rect x="3911.3" y="123" width="174.7" height="23.0" fill="rgb(221.516944114435,188.03388822887,236.584319262939)" rx="2" ry="2" />
+<text  x="3914.35" y="137.5" >FUNCTION (safe_recursive_te..</text>
+</g>
+<g >
+<title>'set -m (&amp;)' (446 us, 0.08%)</title><rect x="281.2" y="243" width="3.0" height="23.0" fill="rgb(18,28,251)" rx="2" ry="2" />
+<text  x="284.15" y="257.5" ></text>
+</g>
+<g >
+<title>'bg_pid=$!' (77 us, 0.01%)</title><rect x="3917.3" y="99" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3920.28" y="113.5" ></text>
+</g>
+<g >
+<title>'sleep 0.01' (12,363 us, 2.09%)</title><rect x="2005.5" y="243" width="85.3" height="23.0" fill="rgb(93,162,216)" rx="2" ry="2" />
+<text  x="2008.49" y="257.5" >'sleep 0.01'</text>
+</g>
+<g >
+<title>'cat &lt;(echo &quot;Sub1&quot;) &lt;(echo &quot;Sub2&quot;) &lt;(echo &quot;Sub3&quot;)' (1,828 us, 0.31%)</title><rect x="2829.7" y="219" width="12.6" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="2832.67" y="233.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (75 us, 0.01%)</title><rect x="3027.4" y="195" width="0.6" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3030.44" y="209.5" ></text>
+</g>
+<g >
+<title>'exec {SAFE_CP[1]}&gt;&amp;-' (84 us, 0.01%)</title><rect x="1842.4" y="243" width="0.6" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1845.43" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (69 us, 0.01%)</title><rect x="3568.0" y="147" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3571.03" y="161.5" ></text>
+</g>
+<g >
+<title>all (590,918 us, 100%)</title><rect x="10.0" y="339" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="353.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,434 us, 0.58%)</title><rect x="2806.0" y="219" width="23.7" height="23.0" fill="rgb(34,63,244)" rx="2" ry="2" />
+<text  x="2808.99" y="233.5" >'s..</text>
+</g>
+<g >
+<title>'result=$(cat &lt;(echo &quot;Sub1&quot;) &lt;(echo &quot;Sub2&quot;) &lt;(echo &quot;Sub3&quot;))' (492 us, 0.08%)</title><rect x="276.2" y="243" width="3.4" height="23.0" fill="rgb(22,38,250)" rx="2" ry="2" />
+<text  x="279.18" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (417 us, 0.07%)</title><rect x="4083.1" y="75" width="2.9" height="23.0" fill="rgb(201.29261370651,147.58522741302,225.460937538581)" rx="2" ry="2" />
+<text  x="4086.12" y="89.5" ></text>
+</g>
+<g >
+<title>'main &quot;$@&quot;' (61 us, 0.01%)</title><rect x="273.8" y="267" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="276.78" y="281.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (69 us, 0.01%)</title><rect x="3567.6" y="147" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3570.55" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$result&quot;' (152 us, 0.03%)</title><rect x="279.6" y="243" width="1.0" height="23.0" fill="rgb(13,19,252)" rx="2" ry="2" />
+<text  x="282.57" y="257.5" ></text>
+</g>
+<g >
+<title>'wait ${SAFE_CP_PID} 2&gt; /dev/null' (2,228 us, 0.38%)</title><rect x="1843.0" y="243" width="15.4" height="23.0" fill="rgb(116,175,229)" rx="2" ry="2" />
+<text  x="1846.01" y="257.5" ></text>
+</g>
+<g >
+<title>'local child_pid (&amp;)' (420 us, 0.07%)</title><rect x="2002.1" y="243" width="2.9" height="23.0" fill="rgb(18,29,251)" rx="2" ry="2" />
+<text  x="2005.12" y="257.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (94 us, 0.02%)</title><rect x="4085.4" y="51" width="0.6" height="23.0" fill="rgb(3,8,254)" rx="2" ry="2" />
+<text  x="4088.35" y="65.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,527 us, 0.60%)</title><rect x="4058.8" y="75" width="24.3" height="23.0" fill="rgb(44,86,237)" rx="2" ry="2" />
+<text  x="4061.80" y="89.5" >'s..</text>
+</g>
+<g >
+<title>'read -r line' (1,352 us, 0.23%)</title><rect x="2842.3" y="219" width="9.3" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="2845.28" y="233.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (73 us, 0.01%)</title><rect x="4084.2" y="51" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="4087.21" y="65.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19006)_[s] (26,222 us, 4.44%)</title><rect x="2842.3" y="243" width="180.9" height="23.0" fill="rgb(233.48600131066,175.318523372816,215.557669069544)" rx="2" ry="2" />
+<text  x="2845.28" y="257.5" >SUBSHELL (19006)_[s]</text>
+</g>
+<g >
+<title>'safe_job_control' (77 us, 0.01%)</title><rect x="280.6" y="243" width="0.6" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="283.62" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (84 us, 0.01%)</title><rect x="4083.6" y="51" width="0.6" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="4086.63" y="65.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (134 us, 0.02%)</title><rect x="284.2" y="267" width="1.0" height="23.0" fill="rgb(197.747335303491,140.494670606982,223.51103441692)" rx="2" ry="2" />
+<text  x="287.23" y="281.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (101,478 us, 17.17%)</title><rect x="1024.7" y="243" width="700.0" height="23.0" fill="rgb(212,211,211)" rx="2" ry="2" />
+<text  x="1027.73" y="257.5" >'wait $bg_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (64 us, 0.01%)</title><rect x="286.0" y="267" width="0.4" height="23.0" fill="rgb(196.985230652706,138.970461305413,223.091876858989)" rx="2" ry="2" />
+<text  x="289.00" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_coprocess_test)_[f] (26,222 us, 4.44%)</title><rect x="2842.3" y="267" width="180.9" height="23.0" fill="rgb(215.557669069544,175.318523372816,233.48600131066)" rx="2" ry="2" />
+<text  x="2845.28" y="281.5" >FUNCTION (safe_coprocess_tes..</text>
+</g>
+<g >
+<title>'sleep 0.001' (24,057 us, 4.07%)</title><rect x="2857.2" y="219" width="166.0" height="23.0" fill="rgb(98,186,180)" rx="2" ry="2" />
+<text  x="2860.22" y="233.5" >'sleep 0.001'</text>
+</g>
+<g >
+<title>SUBSHELL (19021)_[s] (102,212 us, 17.30%)</title><rect x="2101.0" y="243" width="705.0" height="23.0" fill="rgb(254.649569447935,193.324222836635,238.88019460503)" rx="2" ry="2" />
+<text  x="2103.95" y="257.5" >SUBSHELL (19021)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (102,212 us, 17.30%)</title><rect x="2101.0" y="267" width="705.0" height="23.0" fill="rgb(238.88019460503,193.324222836635,254.649569447935)" rx="2" ry="2" />
+<text  x="2103.95" y="281.5" >FUNCTION (safe_job_control)_[f]</text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (216 us, 0.04%)</title><rect x="1020.2" y="267" width="1.5" height="23.0" fill="rgb(197.005264486357,139.010528972714,223.102895467496)" rx="2" ry="2" />
+<text  x="1023.23" y="281.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (409 us, 0.07%)</title><rect x="3028.4" y="195" width="2.8" height="23.0" fill="rgb(13,20,252)" rx="2" ry="2" />
+<text  x="3031.42" y="209.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (3,434 us, 0.58%)</title><rect x="2806.0" y="267" width="23.7" height="23.0" fill="rgb(198.58737561761,139.87219513798,224.491131711565)" rx="2" ry="2" />
+<text  x="2808.99" y="281.5" >FU..</text>
+</g>
+<g >
+<title>'local max_depth=$2' (97 us, 0.02%)</title><rect x="3912.7" y="99" width="0.7" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3915.74" y="113.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (64 us, 0.01%)</title><rect x="1019.8" y="267" width="0.4" height="23.0" fill="rgb(196.978079064393,138.956158128785,223.087943485416)" rx="2" ry="2" />
+<text  x="1022.79" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (51,507 us, 8.72%)</title><rect x="286.4" y="267" width="355.3" height="23.0" fill="rgb(228.162621954526,184.924623992374,244.935983232947)" rx="2" ry="2" />
+<text  x="289.44" y="281.5" >FUNCTION (safe_job_control)_[f]</text>
+</g>
+<g >
+<title>SUBSHELL (19017)_[s] (1,828 us, 0.31%)</title><rect x="2829.7" y="243" width="12.6" height="23.0" fill="rgb(223.737351557939,139.212413177553,197.685144522889)" rx="2" ry="2" />
+<text  x="2832.67" y="257.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (45,529 us, 7.70%)</title><rect x="3573.4" y="147" width="314.0" height="23.0" fill="rgb(206,211,204)" rx="2" ry="2" />
+<text  x="3576.40" y="161.5" >'wait $bg_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>FUNCTION (safe_memory_test)_[f] (20,765 us, 3.51%)</title><rect x="1858.4" y="267" width="143.2" height="23.0" fill="rgb(221.468410621076,187.936821242152,236.557625841592)" rx="2" ry="2" />
+<text  x="1861.37" y="281.5" >FUNCTION (safe_memory_..</text>
+</g>
+<g >
+<title>'safe_recursive_test 1 5' (69 us, 0.01%)</title><rect x="284.2" y="243" width="0.5" height="23.0" fill="rgb(3,8,254)" rx="2" ry="2" />
+<text  x="287.23" y="257.5" ></text>
+</g>
+<g >
+<title>'set -eu -o pipefail' (71 us, 0.01%)</title><rect x="10.0" y="291" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="13.00" y="305.5" ></text>
+</g>
+<g >
+<title>'sleep 0.05' (51,507 us, 8.72%)</title><rect x="286.4" y="243" width="355.3" height="23.0" fill="rgb(203,211,190)" rx="2" ry="2" />
+<text  x="289.44" y="257.5" >'sleep 0.05'</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (7,459 us, 1.26%)</title><rect x="1903.7" y="243" width="51.4" height="23.0" fill="rgb(56,115,225)" rx="2" ry="2" />
+<text  x="1906.70" y="257.5" >'decla..</text>
+</g>
+<g >
+<title>'bg_pid=$!' (71 us, 0.01%)</title><rect x="3572.9" y="147" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3575.91" y="161.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (101,834 us, 17.23%)</title><rect x="2101.0" y="219" width="702.4" height="23.0" fill="rgb(214,211,197)" rx="2" ry="2" />
+<text  x="2103.95" y="233.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>SUBSHELL (18998)_[s] (153,701 us, 26.01%)</title><rect x="3025.8" y="243" width="1060.2" height="23.0" fill="rgb(236.664402274177,188.325099178825,221.662549589412)" rx="2" ry="2" />
+<text  x="3028.81" y="257.5" >SUBSHELL (18998)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (main)_[f] (552,677 us, 93.53%)</title><rect x="273.8" y="291" width="3812.2" height="23.0" fill="rgb(221.666535805472,188.333071610944,236.66659469301)" rx="2" ry="2" />
+<text  x="276.78" y="305.5" >FUNCTION (main)_[f]</text>
+</g>
+<g >
+<title>'local max_depth=$2' (69 us, 0.01%)</title><rect x="3027.0" y="195" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3029.96" y="209.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (64 us, 0.01%)</title><rect x="1019.8" y="243" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1022.79" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19019)_[s] (185 us, 0.03%)</title><rect x="3023.9" y="219" width="1.2" height="23.0" fill="rgb(223.104386963211,139.015952593493,197.007976296746)" rx="2" ry="2" />
+<text  x="3026.86" y="233.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (73 us, 0.01%)</title><rect x="4083.1" y="51" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="4086.12" y="65.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (75,162 us, 12.72%)</title><rect x="3567.6" y="171" width="518.4" height="23.0" fill="rgb(221.657690750689,188.315381501378,236.661729912879)" rx="2" ry="2" />
+<text  x="3570.55" y="185.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (74,233 us, 12.56%)</title><rect x="3031.7" y="195" width="512.1" height="23.0" fill="rgb(212,211,204)" rx="2" ry="2" />
+<text  x="3034.74" y="209.5" >'wait $bg_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (93 us, 0.02%)</title><rect x="4084.7" y="51" width="0.7" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="4087.71" y="65.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (54,740 us, 9.26%)</title><rect x="642.2" y="267" width="377.6" height="23.0" fill="rgb(232.601327573287,192.215842440275,247.87314968241)" rx="2" ry="2" />
+<text  x="645.21" y="281.5" >FUNCTION (safe_job_control)_[f]</text>
+</g>
+<g >
+<title>'echo &quot;Sub3&quot;' (103 us, 0.02%)</title><rect x="3023.2" y="195" width="0.7" height="23.0" fill="rgb(13,19,252)" rx="2" ry="2" />
+<text  x="3026.15" y="209.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (64 us, 0.01%)</title><rect x="286.0" y="243" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="289.00" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (96 us, 0.02%)</title><rect x="3025.8" y="195" width="0.7" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3028.81" y="209.5" ></text>
+</g>
+<g >
+<title>'kill -TERM $child_pid 2&gt; /dev/null' (93 us, 0.02%)</title><rect x="2090.8" y="243" width="0.6" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="2093.77" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (101,915 us, 17.25%)</title><rect x="1021.7" y="267" width="703.0" height="23.0" fill="rgb(221.564453789191,188.128907578382,236.610449584055)" rx="2" ry="2" />
+<text  x="1024.72" y="281.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'wait $job_pid 2&gt; /dev/null' (54,740 us, 9.26%)</title><rect x="642.2" y="243" width="377.6" height="23.0" fill="rgb(211,211,207)" rx="2" ry="2" />
+<text  x="645.21" y="257.5" >'wait $job_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>'child_pid=$!' (69 us, 0.01%)</title><rect x="2005.0" y="243" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="2008.01" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19002)_[s] (28,785 us, 4.87%)</title><rect x="3887.4" y="147" width="198.6" height="23.0" fill="rgb(230.948918539474,162.958361333756,210.135482660173)" rx="2" ry="2" />
+<text  x="3890.45" y="161.5" >SUBSHELL (19002)_[s]</text>
+</g>
+<g >
+<title>'true' (73 us, 0.01%)</title><rect x="2100.5" y="243" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="2103.45" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (153,701 us, 26.01%)</title><rect x="3025.8" y="267" width="1060.2" height="23.0" fill="rgb(221.662549589412,188.325099178825,236.664402274177)" rx="2" ry="2" />
+<text  x="3028.81" y="281.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'local depth=$1' (65 us, 0.01%)</title><rect x="284.7" y="243" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="287.70" y="257.5" ></text>
+</g>
+<g >
+<title>'set +m' (216 us, 0.04%)</title><rect x="1020.2" y="243" width="1.5" height="23.0" fill="rgb(13,19,252)" rx="2" ry="2" />
+<text  x="1023.23" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_process_subs' (69 us, 0.01%)</title><rect x="275.2" y="243" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="278.22" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Sub2&quot;' (185 us, 0.03%)</title><rect x="3023.9" y="195" width="1.2" height="23.0" fill="rgb(13,19,252)" rx="2" ry="2" />
+<text  x="3026.86" y="209.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Starting Safe Stress Test...&quot;' (73 us, 0.01%)</title><rect x="274.2" y="267" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="277.20" y="281.5" ></text>
+</g>
+<g >
+<title>'local result' (70 us, 0.01%)</title><rect x="275.7" y="243" width="0.5" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="278.69" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (783 us, 0.13%)</title><rect x="275.2" y="267" width="5.4" height="23.0" fill="rgb(206.672594653342,158.345189306685,228.419927059338)" rx="2" ry="2" />
+<text  x="278.22" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (153,701 us, 26.01%)</title><rect x="3025.8" y="219" width="1060.2" height="23.0" fill="rgb(221.662549589412,188.325099178825,236.664402274177)" rx="2" ry="2" />
+<text  x="3028.81" y="233.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (103 us, 0.02%)</title><rect x="3911.3" y="99" width="0.8" height="23.0" fill="rgb(13,19,252)" rx="2" ry="2" />
+<text  x="3914.35" y="113.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (85 us, 0.01%)</title><rect x="3568.5" y="147" width="0.6" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3571.50" y="161.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (371 us, 0.06%)</title><rect x="1021.7" y="243" width="2.6" height="23.0" fill="rgb(13,20,252)" rx="2" ry="2" />
+<text  x="1024.72" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19020)_[s] (103 us, 0.02%)</title><rect x="3023.2" y="219" width="0.7" height="23.0" fill="rgb(223.102052817247,139.007464789989,197.003732394995)" rx="2" ry="2" />
+<text  x="3026.15" y="233.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (69 us, 0.01%)</title><rect x="3569.7" y="147" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3572.67" y="161.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,447 us, 0.58%)</title><rect x="3543.8" y="171" width="23.8" height="23.0" fill="rgb(37,69,242)" rx="2" ry="2" />
+<text  x="3546.78" y="185.5" >'s..</text>
+</g>
+<g >
+<title>'local max_depth=$2' (116 us, 0.10%)</title><rect x="3931.2" y="579" width="4.2" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="3934.16" y="593.5" ></text>
+</g>
+<g >
+<title>'set +m' (251 us, 0.22%)</title><rect x="1537.2" y="435" width="9.1" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1540.21" y="449.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (2,241 us, 1.99%)</title><rect x="2760.7" y="411" width="80.9" height="23.0" fill="rgb(202.89350179457,141.523626130397,228.946750897285)" rx="2" ry="2" />
+<text  x="2763.67" y="425.5" >FUNCTION (s..</text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (83 us, 0.07%)</title><rect x="3781.0" y="531" width="3.0" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="3783.98" y="545.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (13,191 us, 11.69%)</title><rect x="3609.5" y="411" width="476.5" height="23.0" fill="rgb(202.230479470087,148.394908020379,226.216625165502)" rx="2" ry="2" />
+<text  x="3612.46" y="425.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (946 us, 0.84%)</title><rect x="3644.6" y="483" width="34.1" height="23.0" fill="rgb(58,119,223)" rx="2" ry="2" />
+<text  x="3647.57" y="497.5" >'wa..</text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (656 us, 0.58%)</title><rect x="1397.3" y="411" width="23.7" height="23.0" fill="rgb(199.352710459709,143.705420919418,224.39399075284)" rx="2" ry="2" />
+<text  x="1400.25" y="425.5" >FU..</text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (1,294 us, 1.15%)</title><rect x="1655.4" y="435" width="46.7" height="23.0" fill="rgb(72,149,208)" rx="2" ry="2" />
+<text  x="1658.38" y="449.5" >'read..</text>
+</g>
+<g >
+<title>'echo &quot;Starting Safe Stress Test...&quot;' (86 us, 0.08%)</title><rect x="1390.9" y="411" width="3.1" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1393.93" y="425.5" ></text>
+</g>
+<g >
+<title>'safe_signal_test' (84 us, 0.07%)</title><rect x="2641.0" y="435" width="3.0" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="2643.98" y="449.5" ></text>
+</g>
+<g >
+<title>'bg_pid=$!' (86 us, 0.08%)</title><rect x="3799.1" y="531" width="3.1" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="3802.08" y="545.5" ></text>
+</g>
+<g >
+<title>'result=$(cat &lt;(echo &quot;Sub1&quot;) &lt;(echo &quot;Sub2&quot;) &lt;(echo &quot;Sub3&quot;))' (317 us, 0.28%)</title><rect x="1403.4" y="435" width="11.4" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1406.36" y="449.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (86 us, 0.08%)</title><rect x="3613.6" y="483" width="3.2" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="3616.65" y="497.5" ></text>
+</g>
+<g >
+<title>'set -m (&amp;)' (473 us, 0.42%)</title><rect x="1424.2" y="435" width="17.1" height="23.0" fill="rgb(48,96,232)" rx="2" ry="2" />
+<text  x="1427.24" y="449.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (118 us, 0.10%)</title><rect x="3926.9" y="579" width="4.3" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="3929.90" y="593.5" ></text>
+</g>
+<g >
+<title>'wait $job_pid 2&gt; /dev/null' (540 us, 0.48%)</title><rect x="1514.9" y="435" width="19.5" height="23.0" fill="rgb(50,101,231)" rx="2" ry="2" />
+<text  x="1517.88" y="449.5" >'..</text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (98 us, 0.09%)</title><rect x="1511.3" y="435" width="3.6" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="1514.34" y="449.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (106 us, 0.09%)</title><rect x="4082.2" y="627" width="3.8" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="4085.17" y="641.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (147 us, 0.13%)</title><rect x="1447.0" y="411" width="5.3" height="23.0" fill="rgb(198.151164617251,138.981968606636,224.255221680758)" rx="2" ry="2" />
+<text  x="1449.96" y="425.5" ></text>
+</g>
+<g >
+<title>'wait $child_pid 2&gt; /dev/null' (136 us, 0.12%)</title><rect x="2752.6" y="435" width="4.9" height="23.0" fill="rgb(31,56,244)" rx="2" ry="2" />
+<text  x="2755.57" y="449.5" ></text>
+</g>
+<g >
+<title>'bg_pid=$!' (87 us, 0.08%)</title><rect x="3641.4" y="483" width="3.2" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="3644.43" y="497.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (949 us, 0.84%)</title><rect x="3038.2" y="459" width="34.3" height="23.0" fill="rgb(60,123,221)" rx="2" ry="2" />
+<text  x="3041.23" y="473.5" >'ec..</text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (13,191 us, 11.69%)</title><rect x="3609.5" y="459" width="476.5" height="23.0" fill="rgb(202.230479470087,148.394908020379,226.216625165502)" rx="2" ry="2" />
+<text  x="3612.46" y="473.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'echo &quot;All tests completed successfully!&quot;' (89 us, 0.08%)</title><rect x="1394.0" y="411" width="3.3" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="1397.04" y="425.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (492 us, 0.44%)</title><rect x="4068.2" y="603" width="17.8" height="23.0" fill="rgb(199.379993751169,142.636351012463,224.661814773365)" rx="2" ry="2" />
+<text  x="4071.23" y="617.5" >F..</text>
+</g>
+<g >
+<title>'exec {SAFE_CP[1]}&gt;&amp;-' (97 us, 0.09%)</title><rect x="1735.1" y="435" width="3.5" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="1738.11" y="449.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19020)_[s] (120 us, 0.11%)</title><rect x="3593.3" y="459" width="4.4" height="23.0" fill="rgb(223.675131523792,138.981968606636,197.571074460285)" rx="2" ry="2" />
+<text  x="3596.34" y="473.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test 1 5' (78 us, 0.07%)</title><rect x="1441.3" y="435" width="2.8" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1444.33" y="449.5" ></text>
+</g>
+<g >
+<title>'wait ${SAFE_CP_PID} 2&gt; /dev/null' (191 us, 0.17%)</title><rect x="1738.6" y="435" width="6.9" height="23.0" fill="rgb(31,56,244)" rx="2" ry="2" />
+<text  x="1741.61" y="449.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (107 us, 0.09%)</title><rect x="4078.3" y="627" width="3.9" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="4081.31" y="641.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (89 us, 0.08%)</title><rect x="4068.2" y="627" width="3.2" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="4071.23" y="641.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,496 us, 2.21%)</title><rect x="3832.4" y="555" width="90.2" height="23.0" fill="rgb(107,197,161)" rx="2" ry="2" />
+<text  x="3835.43" y="569.5" >'sleep 0.001'</text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (433 us, 0.38%)</title><rect x="3941.7" y="579" width="15.7" height="23.0" fill="rgb(45,91,234)" rx="2" ry="2" />
+<text  x="3944.75" y="593.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (2,464 us, 2.18%)</title><rect x="2841.6" y="411" width="89.0" height="23.0" fill="rgb(204.532156343887,142.462509548437,230.636213407393)" rx="2" ry="2" />
+<text  x="2844.63" y="425.5" >FUNCTION (saf..</text>
+</g>
+<g >
+<title>'sleep 0.05' (1,558 us, 1.38%)</title><rect x="1455.1" y="435" width="56.2" height="23.0" fill="rgb(76,155,204)" rx="2" ry="2" />
+<text  x="1458.06" y="449.5" >'sleep ..</text>
+</g>
+<g >
+<title>FUNCTION (safe_coprocess_test)_[f] (4,621 us, 4.10%)</title><rect x="1578.6" y="411" width="166.9" height="23.0" fill="rgb(202.320401388314,143.409882510729,227.810529748807)" rx="2" ry="2" />
+<text  x="1581.57" y="425.5" >FUNCTION (safe_coprocess_t..</text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (116 us, 0.10%)</title><rect x="3609.5" y="483" width="4.1" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="3612.46" y="497.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (1,138 us, 1.01%)</title><rect x="1578.6" y="435" width="41.1" height="23.0" fill="rgb(65,135,216)" rx="2" ry="2" />
+<text  x="1581.57" y="449.5" >'for..</text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (913 us, 0.81%)</title><rect x="1702.1" y="435" width="33.0" height="23.0" fill="rgb(54,111,227)" rx="2" ry="2" />
+<text  x="1705.13" y="449.5" >'ec..</text>
+</g>
+<g >
+<title>'cat &lt;(echo &quot;Sub1&quot;) &lt;(echo &quot;Sub2&quot;) &lt;(echo &quot;Sub3&quot;)' (1,828 us, 1.62%)</title><rect x="2930.6" y="459" width="66.1" height="23.0" fill="rgb(84,169,194)" rx="2" ry="2" />
+<text  x="2933.64" y="473.5" >'cat &lt;(ec..</text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (418 us, 0.37%)</title><rect x="3784.0" y="531" width="15.1" height="23.0" fill="rgb(39,75,239)" rx="2" ry="2" />
+<text  x="3786.98" y="545.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19018)_[s] (112 us, 0.10%)</title><rect x="3605.4" y="459" width="4.1" height="23.0" fill="rgb(223.675131523792,138.981968606636,197.571074460285)" rx="2" ry="2" />
+<text  x="3608.41" y="473.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (14,417 us, 12.78%)</title><rect x="3072.5" y="459" width="520.8" height="23.0" fill="rgb(187,143,37)" rx="2" ry="2" />
+<text  x="3075.51" y="473.5" >'sleep 0.001'</text>
+</g>
+<g >
+<title>'echo &quot;Sub1&quot;' (112 us, 0.10%)</title><rect x="3605.4" y="483" width="4.1" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="3608.41" y="497.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19021)_[s] (2,241 us, 1.99%)</title><rect x="2760.7" y="435" width="80.9" height="23.0" fill="rgb(228.946750897285,141.523626130397,202.89350179457)" rx="2" ry="2" />
+<text  x="2763.67" y="449.5" >SUBSHELL (1..</text>
+</g>
+<g >
+<title>'echo &quot;$result&quot;' (170 us, 0.15%)</title><rect x="1414.8" y="435" width="6.2" height="23.0" fill="rgb(31,56,244)" rx="2" ry="2" />
+<text  x="1417.81" y="449.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (78 us, 0.07%)</title><rect x="1534.4" y="411" width="2.8" height="23.0" fill="rgb(196.990984303318,138.981968606636,223.095041366825)" rx="2" ry="2" />
+<text  x="1537.39" y="425.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19006)_[s] (16,516 us, 14.64%)</title><rect x="2996.7" y="435" width="596.6" height="23.0" fill="rgb(229.255290834853,147.091325414171,204.606101208648)" rx="2" ry="2" />
+<text  x="2999.68" y="449.5" >SUBSHELL (19006)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (92 us, 0.08%)</title><rect x="3935.4" y="579" width="3.3" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="3938.35" y="593.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (4,523 us, 4.01%)</title><rect x="3922.6" y="555" width="163.4" height="23.0" fill="rgb(201.726914991302,147.377606043035,225.94195363162)" rx="2" ry="2" />
+<text  x="3925.60" y="569.5" >FUNCTION (safe_recursive_..</text>
+</g>
+<g >
+<title>'set -eu -o pipefail' (85 us, 0.08%)</title><rect x="10.0" y="387" width="3.1" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="13.00" y="401.5" ></text>
+</g>
+<g >
+<title>all (112,826 us, 100%)</title><rect x="10.0" y="339" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="353.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (8,803 us, 7.80%)</title><rect x="3768.0" y="507" width="318.0" height="23.0" fill="rgb(201.673962229009,148.347924458017,225.670679225955)" rx="2" ry="2" />
+<text  x="3770.98" y="521.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>FUNCTION (safe_signal_test)_[f] (3,313 us, 2.94%)</title><rect x="2641.0" y="411" width="119.7" height="23.0" fill="rgb(201.214465108182,147.428930216363,225.4179558095)" rx="2" ry="2" />
+<text  x="2643.98" y="425.5" >FUNCTION (safe_sig..</text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (429 us, 0.38%)</title><rect x="3625.9" y="483" width="15.5" height="23.0" fill="rgb(43,86,236)" rx="2" ry="2" />
+<text  x="3628.93" y="497.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19000)_[s] (11,273 us, 9.99%)</title><rect x="3678.7" y="483" width="407.3" height="23.0" fill="rgb(231.846077693901,145.442416405287,206.433236138426)" rx="2" ry="2" />
+<text  x="3681.75" y="497.5" >SUBSHELL (19000)_[s]</text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (77 us, 0.07%)</title><rect x="1452.3" y="411" width="2.8" height="23.0" fill="rgb(196.990984303318,138.981968606636,223.095041366825)" rx="2" ry="2" />
+<text  x="1455.28" y="425.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (156 us, 0.14%)</title><rect x="1441.3" y="411" width="5.7" height="23.0" fill="rgb(197.48541683207,139.97083366414,223.366979257639)" rx="2" ry="2" />
+<text  x="1444.33" y="425.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (1,820 us, 1.61%)</title><rect x="2760.7" y="459" width="65.7" height="23.0" fill="rgb(81,164,198)" rx="2" ry="2" />
+<text  x="2763.67" y="473.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>SUBSHELL (19017)_[s] (1,828 us, 1.62%)</title><rect x="2930.6" y="435" width="66.1" height="23.0" fill="rgb(229.47603309346,141.88241939147,203.371976029953)" rx="2" ry="2" />
+<text  x="2933.64" y="449.5" >SUBSHELL ..</text>
+</g>
+<g >
+<title>'echo &quot;Sub3&quot;' (120 us, 0.11%)</title><rect x="3593.3" y="483" width="4.4" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="3596.34" y="497.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (564 us, 0.50%)</title><rect x="1421.0" y="411" width="20.3" height="23.0" fill="rgb(199.555123874762,142.990149241944,224.757340295325)" rx="2" ry="2" />
+<text  x="1423.95" y="425.5" >F..</text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (84 us, 0.07%)</title><rect x="3768.0" y="531" width="3.0" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="3770.98" y="545.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (98 us, 0.09%)</title><rect x="1511.3" y="411" width="3.6" height="23.0" fill="rgb(197.571074460285,138.981968606636,223.675131523792)" rx="2" ry="2" />
+<text  x="1514.34" y="425.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,470 us, 2.19%)</title><rect x="3678.7" y="507" width="89.3" height="23.0" fill="rgb(101,192,170)" rx="2" ry="2" />
+<text  x="3681.75" y="521.5" >'sleep 0.001'</text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (89 us, 0.08%)</title><rect x="3619.8" y="483" width="3.2" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="3622.79" y="497.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (421 us, 0.37%)</title><rect x="1563.4" y="435" width="15.2" height="23.0" fill="rgb(41,80,238)" rx="2" ry="2" />
+<text  x="1566.36" y="449.5" ></text>
+</g>
+<g >
+<title>'safe_job_control' (91 us, 0.08%)</title><rect x="1421.0" y="435" width="3.2" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="1423.95" y="449.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (78 us, 0.07%)</title><rect x="1444.1" y="435" width="2.9" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1447.15" y="449.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (81 us, 0.07%)</title><rect x="3623.0" y="483" width="2.9" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="3626.00" y="497.5" ></text>
+</g>
+<g >
+<title>'true' (88 us, 0.08%)</title><rect x="2757.5" y="435" width="3.2" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="2760.49" y="449.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;Clean exit&quot;, exit 0'\'' EXIT INT TERM' (38,066 us, 33.74%)</title><rect x="13.1" y="387" width="1375.2" height="23.0" fill="rgb(254,7,2)" rx="2" ry="2" />
+<text  x="16.07" y="401.5" >'trap '\''echo "Clean exit", exit 0'\'' EXIT INT TERM'</text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (540 us, 0.48%)</title><rect x="1514.9" y="411" width="19.5" height="23.0" fill="rgb(199.311344931185,140.142148920569,225.415401994692)" rx="2" ry="2" />
+<text  x="1517.88" y="425.5" >F..</text>
+</g>
+<g >
+<title>'echo &quot;Job completed&quot;' (421 us, 0.37%)</title><rect x="2826.4" y="459" width="15.2" height="23.0" fill="rgb(41,80,238)" rx="2" ry="2" />
+<text  x="2829.42" y="473.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (988 us, 0.88%)</title><rect x="1619.7" y="435" width="35.7" height="23.0" fill="rgb(63,131,218)" rx="2" ry="2" />
+<text  x="1622.69" y="449.5" >'ech..</text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (837 us, 0.74%)</title><rect x="3802.2" y="531" width="30.2" height="23.0" fill="rgb(52,106,229)" rx="2" ry="2" />
+<text  x="3805.19" y="545.5" >'wa..</text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (119 us, 0.11%)</title><rect x="3922.6" y="579" width="4.3" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="3925.60" y="593.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_memory_test)_[f] (24,787 us, 21.97%)</title><rect x="1745.5" y="411" width="895.5" height="23.0" fill="rgb(202.365308160691,148.667289213517,226.29016808765)" rx="2" ry="2" />
+<text  x="1748.51" y="425.5" >FUNCTION (safe_memory_test)_[f]</text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (894 us, 0.79%)</title><rect x="1546.3" y="411" width="32.3" height="23.0" fill="rgb(198.764661886202,140.807833830146,224.587011020089)" rx="2" ry="2" />
+<text  x="1549.28" y="425.5" >FUN..</text>
+</g>
+<g >
+<title>'local job_pid=$!' (147 us, 0.13%)</title><rect x="1447.0" y="435" width="5.3" height="23.0" fill="rgb(31,56,244)" rx="2" ry="2" />
+<text  x="1449.96" y="449.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,464 us, 2.18%)</title><rect x="2841.6" y="459" width="89.0" height="23.0" fill="rgb(95,185,179)" rx="2" ry="2" />
+<text  x="2844.63" y="473.5" >'sleep 0.001'</text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (78 us, 0.07%)</title><rect x="1534.4" y="435" width="2.8" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1537.39" y="449.5" ></text>
+</g>
+<g >
+<title>'local child_pid (&amp;)' (436 us, 0.39%)</title><rect x="2644.0" y="435" width="15.8" height="23.0" fill="rgb(45,91,234)" rx="2" ry="2" />
+<text  x="2647.01" y="449.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19002)_[s] (7,019 us, 6.22%)</title><rect x="3832.4" y="531" width="253.6" height="23.0" fill="rgb(232.715860063457,144.722076724286,207.003390905907)" rx="2" ry="2" />
+<text  x="3835.43" y="545.5" >SUBSHELL (19002)_[s]</text>
+</g>
+<g >
+<title>'unset small_array' (8,072 us, 7.15%)</title><rect x="2349.4" y="435" width="291.6" height="23.0" fill="rgb(144,203,102)" rx="2" ry="2" />
+<text  x="2352.37" y="449.5" >'unset small_array'</text>
+</g>
+<g >
+<title>SUBSHELL (18977)_[s] (112,826 us, 100.00%)</title><rect x="10.0" y="363" width="4076.0" height="23.0" fill="rgb(225.828497112895,148.921807683255,201.960903841627)" rx="2" ry="2" />
+<text  x="13.00" y="377.5" >SUBSHELL (18977)_[s]</text>
+</g>
+<g >
+<title>'local max_depth=$2' (88 us, 0.08%)</title><rect x="4075.1" y="627" width="3.2" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="4078.13" y="641.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (85 us, 0.08%)</title><rect x="3938.7" y="579" width="3.0" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="3941.68" y="593.5" ></text>
+</g>
+<g >
+<title>'main &quot;$@&quot;' (74 us, 0.07%)</title><rect x="1388.3" y="411" width="2.6" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1391.26" y="425.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_coprocess_test)_[f] (16,516 us, 14.64%)</title><rect x="2996.7" y="411" width="596.6" height="23.0" fill="rgb(204.606101208648,147.091325414171,229.255290834853)" rx="2" ry="2" />
+<text  x="2999.68" y="425.5" >FUNCTION (safe_coprocess_test)_[f]</text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (1,828 us, 1.62%)</title><rect x="2930.6" y="411" width="66.1" height="23.0" fill="rgb(203.371976029953,141.88241939147,229.47603309346)" rx="2" ry="2" />
+<text  x="2933.64" y="425.5" >FUNCTION ..</text>
+</g>
+<g >
+<title>'bg_pid=$!' (93 us, 0.08%)</title><rect x="3957.4" y="579" width="3.3" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="3960.39" y="593.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (77 us, 0.07%)</title><rect x="1452.3" y="435" width="2.8" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1455.28" y="449.5" ></text>
+</g>
+<g >
+<title>'read -r line' (1,150 us, 1.02%)</title><rect x="2996.7" y="459" width="41.5" height="23.0" fill="rgb(69,142,212)" rx="2" ry="2" />
+<text  x="2999.68" y="473.5" >'read..</text>
+</g>
+<g >
+<title>FUNCTION (main)_[f] (74,675 us, 66.19%)</title><rect x="1388.3" y="387" width="2697.7" height="23.0" fill="rgb(201.952818736042,148.905637472084,225.824050304823)" rx="2" ry="2" />
+<text  x="1391.26" y="401.5" >FUNCTION (main)_[f]</text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (251 us, 0.22%)</title><rect x="1537.2" y="411" width="9.1" height="23.0" fill="rgb(198.151164617251,139.562058763602,224.255221680758)" rx="2" ry="2" />
+<text  x="1540.21" y="425.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (94 us, 0.08%)</title><rect x="3777.6" y="531" width="3.4" height="23.0" fill="rgb(22,35,249)" rx="2" ry="2" />
+<text  x="3780.59" y="545.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (7,786 us, 6.90%)</title><rect x="1749.6" y="435" width="281.3" height="23.0" fill="rgb(129,207,127)" rx="2" ry="2" />
+<text  x="1752.60" y="449.5" >'for i in {1..100}'</text>
+</g>
+<g >
+<title>'child_pid=$!' (83 us, 0.07%)</title><rect x="2659.8" y="435" width="3.0" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="2662.76" y="449.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19004)_[s] (3,054 us, 2.71%)</title><rect x="3975.7" y="579" width="110.3" height="23.0" fill="rgb(232.992097669112,143.223022372066,206.930108066744)" rx="2" ry="2" />
+<text  x="3978.67" y="593.5" >SUBSHELL (19004)..</text>
+</g>
+<g >
+<title>'safe_memory_test' (113 us, 0.10%)</title><rect x="1745.5" y="435" width="4.1" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="1748.51" y="449.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (102 us, 0.09%)</title><rect x="4071.4" y="627" width="3.7" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="4074.44" y="641.5" ></text>
+</g>
+<g >
+<title>'bg_pid=$!' (80 us, 0.07%)</title><rect x="1560.5" y="435" width="2.9" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1563.47" y="449.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19017)_[s] (446 us, 0.40%)</title><rect x="3593.3" y="435" width="16.2" height="23.0" fill="rgb(224.343770431149,141.458409004255,198.796912457106)" rx="2" ry="2" />
+<text  x="3596.34" y="449.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19019)_[s] (214 us, 0.19%)</title><rect x="3597.7" y="459" width="7.7" height="23.0" fill="rgb(224.255221680758,139.562058763602,198.151164617251)" rx="2" ry="2" />
+<text  x="3600.68" y="473.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (413 us, 0.37%)</title><rect x="3960.7" y="579" width="15.0" height="23.0" fill="rgb(39,75,239)" rx="2" ry="2" />
+<text  x="3963.75" y="593.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (446 us, 0.40%)</title><rect x="3593.3" y="411" width="16.2" height="23.0" fill="rgb(198.796912457106,141.458409004255,224.343770431149)" rx="2" ry="2" />
+<text  x="3596.34" y="425.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (99 us, 0.09%)</title><rect x="3774.0" y="531" width="3.6" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="3777.01" y="545.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (83 us, 0.07%)</title><rect x="3771.0" y="531" width="3.0" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="3774.01" y="545.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (18998)_[s] (2,464 us, 2.18%)</title><rect x="2841.6" y="435" width="89.0" height="23.0" fill="rgb(230.636213407393,142.462509548437,204.532156343887)" rx="2" ry="2" />
+<text  x="2844.63" y="449.5" >SUBSHELL (189..</text>
+</g>
+<g >
+<title>'safe_process_subs' (84 us, 0.07%)</title><rect x="1397.3" y="435" width="3.0" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="1400.25" y="449.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (8,816 us, 7.81%)</title><rect x="2030.9" y="435" width="318.5" height="23.0" fill="rgb(161,188,74)" rx="2" ry="2" />
+<text  x="2033.88" y="449.5" >'declare -a small_array=("a" "b" "c")'</text>
+</g>
+<g >
+<title>'sleep 0.01' (2,378 us, 2.11%)</title><rect x="2662.8" y="435" width="85.9" height="23.0" fill="rgb(90,179,185)" rx="2" ry="2" />
+<text  x="2665.76" y="449.5" >'sleep 0.01'</text>
+</g>
+<g >
+<title>'sleep 0.001' (2,562 us, 2.27%)</title><rect x="3975.7" y="603" width="92.5" height="23.0" fill="rgb(112,200,154)" rx="2" ry="2" />
+<text  x="3978.67" y="617.5" >'sleep 0.001'</text>
+</g>
+<g >
+<title>'local max_depth=$2' (84 us, 0.07%)</title><rect x="3616.8" y="483" width="3.0" height="23.0" fill="rgb(13,18,252)" rx="2" ry="2" />
+<text  x="3619.75" y="497.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (18998)_[s] (13,191 us, 11.69%)</title><rect x="3609.5" y="435" width="476.5" height="23.0" fill="rgb(226.216625165502,148.394908020379,202.230479470087)" rx="2" ry="2" />
+<text  x="3612.46" y="449.5" >SUBSHELL (18998)_[s]</text>
+</g>
+<g >
+<title>'kill -TERM $child_pid 2&gt; /dev/null' (108 us, 0.10%)</title><rect x="2748.7" y="435" width="3.9" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="2751.67" y="449.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (393 us, 0.35%)</title><rect x="1546.3" y="435" width="14.2" height="23.0" fill="rgb(36,69,241)" rx="2" ry="2" />
+<text  x="1549.28" y="449.5" ></text>
+</g>
+<g >
+<title>'local result' (85 us, 0.08%)</title><rect x="1400.3" y="435" width="3.1" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1403.29" y="449.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (1,558 us, 1.38%)</title><rect x="1455.1" y="411" width="56.2" height="23.0" fill="rgb(202.211795716019,141.302329234503,228.315852779526)" rx="2" ry="2" />
+<text  x="1458.06" y="425.5" >FUNCTIO..</text>
+</g>
+<g >
+<title>'echo &quot;Sub2&quot;' (214 us, 0.19%)</title><rect x="3597.7" y="483" width="7.7" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="3600.68" y="497.5" ></text>
+</g></g>
+</svg>

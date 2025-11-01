@@ -1,0 +1,443 @@
+SUBSHELL (18977)_[s];'set -eu -o pipefail'	71:27	85:160
+SUBSHELL (18977)_[s];'trap '\''echo "Clean exit", exit 0'\'' EXIT INT TERM'	38170:291	38066:886
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];'main "$@"'	61:2	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];'echo "Starting Safe Stress Test..."'	73:33	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];'echo "All tests completed successfully!"'	75:38	89:198
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'safe_process_subs'	69:23	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'local result'	70:25	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'result=$(cat <(echo "Sub1") <(echo "Sub2") <(echo "Sub3"))'	492:59	317:284
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'echo "$result"'	152:51	170:277
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'safe_job_control'	77:40	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'set -m (&)'	446:57	473:317
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test 1 5'	69:23	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'local job_pid=$!'	123:50	147:272
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'sleep 0.05'	51507:467	1558:410
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	70:25	98:233
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'wait $job_pid 2> /dev/null'	54740:565	540:321
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'set +m'	216:52	251:282
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	371:52	393:290
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	66:16	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	101478:700	421:303
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	1:0	358:287
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	82:43	96:223
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	485:58	116:250
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	67:18	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	77:40	90:203
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	3608:163	131:264
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	81:42	90:203
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	68:21	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	80:42	95:222
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	1912:80	131:264
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	82:43	97:229
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	68:21	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	79:42	93:217
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	2498:115	126:258
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	77:40	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	68:21	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	78:41	93:217
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	1211:65	128:262
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	77:40	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	73:33	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	78:41	92:213
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	1277:67	127:260
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	77:40	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	69:23	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	77:40	92:213
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	1777:73	127:260
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	78:41	93:217
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	98:48	122:256
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	129:50	152:274
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	143:51	166:275
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	79:42	94:219
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	77:40	92:213
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	774:61	123:257
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	74:36	90:203
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	79:42	93:217
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	1126:63	119:253
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	75:38	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'exec {SAFE_CP[1]}>&-'	84:45	97:229
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'wait ${SAFE_CP_PID} 2> /dev/null'	2228:106	191:278
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'safe_memory_test'	98:48	113:247
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	117:49	140:268
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	82:43	97:229
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	70:25	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	66:16	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	77:40	90:203
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	74:36	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	82:43	106:242
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	77:40	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	70:25	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	67:18	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	77:40	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	71:27	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	66:16	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	123:50	146:270
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	66:16	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	67:18	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	114:49	139:267
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	126:50	149:273
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	70:25	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	75:38	89:198
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	78:41	90:203
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	69:23	99:236
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	69:23	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	77:40	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	70:25	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	82:43	95:222
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	73:33	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	72:31	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	61:2	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	61:2	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	77:40	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	76:38	90:203
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	75:38	89:198
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	69:23	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	70:25	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	79:42	92:213
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	87:45	113:247
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	70:25	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	73:33	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	84:45	98:233
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	68:21	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	61:2	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	60:1	73:10
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	73:33	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	71:27	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	75:38	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	70:25	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	83:44	93:217
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	73:33	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	94:47	104:240
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	70:25	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	71:27	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	67:18	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	88:46	102:239
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	78:41	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	67:18	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	84:45	97:229
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	73:10
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	76:38	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	73:33	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	60:1	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	61:2	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	73:10
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	66:16	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	75:38	99:236
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	84:45	97:229
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	73:33	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	60:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	61:2	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	62:5	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	69:23	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	84:45	97:229
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	69:23	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	71:1
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	69:23	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	79:42	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	69:23	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	70:25	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	61:2	74:15
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	62:5	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	60:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	71:27	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	75:38	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	62:5	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	91:46	105:241
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	60:1	73:10
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	69:23	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	68:21	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	73:33	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	78:71
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	68:21	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	76:38	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	64:11	77:56
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	78:41	92:213
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	73:33	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	72:31	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	63:9	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	67:18	80:94
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	60:1	72:7
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	65:13	79:87
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	58:0	71:1
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	70:25	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	67:18	91:209
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	59:1	71:1
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	69:23	82:117
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	62:5	76:43
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	64:11	73:10
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	88:46	101:237
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	74:36	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	62:5	75:29
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	71:27	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	99:48	112:246
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'safe_signal_test'	74:36	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'local child_pid (&)'	420:56	436:313
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'child_pid=$!'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'sleep 0.01'	12363:186	2378:488
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'kill -TERM $child_pid 2> /dev/null'	93:46	108:244
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'wait $child_pid 2> /dev/null'	1311:70	136:266
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'true'	73:33	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];SUBSHELL (19021)_[s];'sleep 0.1'	101834:884	1820:437
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];SUBSHELL (19021)_[s];'echo "Job completed"'	378:53	421:303
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];'sleep 0.001'	3434:132	2464:508
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (19017)_[s];'cat <(echo "Sub1") <(echo "Sub2") <(echo "Sub3")'	1828:76	1828:451
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	489:58	141:269
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	117:49	128:262
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	3474:150	2500:566
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	112:49	132:265
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	107:49	122:256
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	2479:110	1541:398
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	82:43	96:223
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	75:38	90:203
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	3320:125	2332:470
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	84:45	99:236
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	2030:94	1069:368
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	84:45	98:233
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	2109:102	1146:386
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	83:44	98:233
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	73:33	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	2617:119	1643:423
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	83:44	98:233
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	75:38	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	2016:90	1057:359
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	91:46	101:237
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	72:31	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	2104:98	1144:377
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	83:44	97:229
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	74:36	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	1946:83	985:343
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	81:42	95:222
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'echo "CP: $((line * 2))"'	72:31	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'sleep 0.001'	1962:87	1000:351
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (19006)_[s];'read -r line'	80:42	95:222
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (19017)_[s];SUBSHELL (19020)_[s];'echo "Sub3"'	103:48	120:254
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (19017)_[s];SUBSHELL (19019)_[s];'echo "Sub2"'	185:51	214:280
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (19017)_[s];SUBSHELL (19018)_[s];'echo "Sub1"'	97:47	112:246
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	96:47	116:250
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	71:27	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	69:23	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	75:38	89:198
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	67:18	81:109
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	409:54	429:307
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	72:31	87:182
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	74233:700	946:335
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];'sleep 0.001'	3447:138	2470:527
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	69:23	84:141
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	85:45	99:236
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	84:45	94:219
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	69:23	83:129
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	401:54	418:297
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	71:27	86:174
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	45529:374	837:328
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];'sleep 0.001'	3465:144	2496:547
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	103:48	119:253
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	99:48	118:251
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	97:47	116:250
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	78:41	92:213
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	70:25	85:160
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	413:55	433:310
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	77:40	93:217
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	20439:222	413:293
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19004)_[s];'sleep 0.001'	3527:157	2562:587
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19004)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	73:33	89:198
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19004)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	84:45	102:239
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19004)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	73:33	88:195
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19004)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	93:46	107:243
+SUBSHELL (18977)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (18998)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19000)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19002)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (19004)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	94:47	106:242

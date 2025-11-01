@@ -1,0 +1,2352 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="392" onload="init(evt)" viewBox="0 0 4096 392" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+
+                unzoombtn.classList.remove("hide");
+
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="392.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/deepseek/deepseek_stress_test.bash</text>
+<text id="details" x="10.00" y="377" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="377" > </text>
+<g id="frames">
+<g >
+<title>'bg_pid=$!' (77 us, 0.01%)</title><rect x="3917.3" y="99" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="3920.28" y="113.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (74 us, 0.01%)</title><rect x="1889.4" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1892.39" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (79 us, 0.01%)</title><rect x="1973.3" y="243" width="0.6" height="23.0" fill="rgb(37,69,241)" rx="2" ry="2" />
+<text  x="1976.32" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1968.9" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1971.94" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1959.7" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1962.70" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1930.2" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1933.19" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (75 us, 0.01%)</title><rect x="2963.4" y="219" width="0.6" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="2966.45" y="233.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (73 us, 0.01%)</title><rect x="4084.2" y="51" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="4087.21" y="65.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (77 us, 0.01%)</title><rect x="1863.0" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1865.97" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (216 us, 0.04%)</title><rect x="1020.2" y="267" width="1.5" height="23.0" fill="rgb(198.745106551766,139.59047632785,224.842737532906)" rx="2" ry="2" />
+<text  x="1023.23" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (153,701 us, 26.01%)</title><rect x="3025.8" y="219" width="1060.2" height="23.0" fill="rgb(222.329298597624,188.658473682931,237.331151282389)" rx="2" ry="2" />
+<text  x="3028.81" y="233.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'safe_recursive_test 1 5' (69 us, 0.01%)</title><rect x="284.2" y="243" width="0.5" height="23.0" fill="rgb(26,45,247)" rx="2" ry="2" />
+<text  x="287.23" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (72 us, 0.01%)</title><rect x="1992.5" y="243" width="0.5" height="23.0" fill="rgb(31,55,245)" rx="2" ry="2" />
+<text  x="1995.53" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (69 us, 0.01%)</title><rect x="1878.9" y="243" width="0.4" height="23.0" fill="rgb(25,43,247)" rx="2" ry="2" />
+<text  x="1881.87" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1923.7" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1926.66" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (60 us, 0.01%)</title><rect x="1977.4" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1980.43" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (64 us, 0.01%)</title><rect x="1019.8" y="267" width="0.4" height="23.0" fill="rgb(196.978079064393,138.956158128785,223.087943485416)" rx="2" ry="2" />
+<text  x="1022.79" y="281.5" ></text>
+</g>
+<g >
+<title>'kill -TERM $child_pid 2&gt; /dev/null' (93 us, 0.02%)</title><rect x="2090.8" y="243" width="0.6" height="23.0" fill="rgb(38,72,240)" rx="2" ry="2" />
+<text  x="2093.77" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1920.0" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1923.03" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (75 us, 0.01%)</title><rect x="1902.5" y="243" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1905.50" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (69 us, 0.01%)</title><rect x="1868.2" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1871.20" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19019)_[s] (185 us, 0.03%)</title><rect x="3023.9" y="219" width="1.2" height="23.0" fill="rgb(224.844147674308,139.595872830525,198.747737007844)" rx="2" ry="2" />
+<text  x="3026.86" y="233.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$result&quot;' (152 us, 0.03%)</title><rect x="279.6" y="243" width="1.0" height="23.0" fill="rgb(40,78,239)" rx="2" ry="2" />
+<text  x="282.57" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (65 us, 0.01%)</title><rect x="1919.1" y="243" width="0.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1922.07" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1964.8" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1967.79" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (78 us, 0.01%)</title><rect x="1991.1" y="243" width="0.5" height="23.0" fill="rgb(35,66,242)" rx="2" ry="2" />
+<text  x="1994.05" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (79 us, 0.01%)</title><rect x="1825.7" y="243" width="0.6" height="23.0" fill="rgb(36,67,241)" rx="2" ry="2" />
+<text  x="1828.75" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (98 us, 0.02%)</title><rect x="1823.2" y="243" width="0.7" height="23.0" fill="rgb(38,74,240)" rx="2" ry="2" />
+<text  x="1826.20" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (60 us, 0.01%)</title><rect x="1984.4" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1987.42" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (1,211 us, 0.20%)</title><rect x="1790.1" y="243" width="8.4" height="23.0" fill="rgb(112,172,225)" rx="2" ry="2" />
+<text  x="1793.13" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (67 us, 0.01%)</title><rect x="1890.4" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1893.40" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1951.1" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1954.07" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (69 us, 0.01%)</title><rect x="1977.8" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1980.84" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (81 us, 0.01%)</title><rect x="1755.0" y="243" width="0.6" height="23.0" fill="rgb(36,68,241)" rx="2" ry="2" />
+<text  x="1758.01" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (67 us, 0.01%)</title><rect x="1864.0" y="243" width="0.4" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1866.98" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (68 us, 0.01%)</title><rect x="1964.3" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1967.32" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (73 us, 0.01%)</title><rect x="1936.4" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1939.35" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1870.5" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1873.53" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (76 us, 0.01%)</title><rect x="1950.5" y="243" width="0.6" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1953.54" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1952.4" y="243" width="0.5" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1955.43" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (77 us, 0.01%)</title><rect x="1809.9" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1812.87" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (67 us, 0.01%)</title><rect x="1869.6" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1872.62" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1922.8" y="243" width="0.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1925.79" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (75,162 us, 12.72%)</title><rect x="3567.6" y="171" width="518.4" height="23.0" fill="rgb(221.991113843182,188.315381501378,236.995153005372)" rx="2" ry="2" />
+<text  x="3570.55" y="185.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (74 us, 0.01%)</title><rect x="1832.6" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1835.62" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (71 us, 0.01%)</title><rect x="1928.3" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1931.32" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (69 us, 0.01%)</title><rect x="3568.0" y="147" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="3571.03" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (84 us, 0.01%)</title><rect x="3569.1" y="147" width="0.6" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="3572.09" y="161.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1881.3" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1884.27" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1924.2" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1927.16" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1907.9" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1910.87" y="257.5" ></text>
+</g>
+<g >
+<title>'result=$(cat &lt;(echo &quot;Sub1&quot;) &lt;(echo &quot;Sub2&quot;) &lt;(echo &quot;Sub3&quot;))' (492 us, 0.08%)</title><rect x="276.2" y="243" width="3.4" height="23.0" fill="rgb(47,92,235)" rx="2" ry="2" />
+<text  x="279.18" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (69 us, 0.01%)</title><rect x="1985.3" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1988.35" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,479 us, 0.42%)</title><rect x="2871.9" y="219" width="17.1" height="23.0" fill="rgb(66,134,219)" rx="2" ry="2" />
+<text  x="2874.94" y="233.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1882.2" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1885.23" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1993.5" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1996.46" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (101,915 us, 17.25%)</title><rect x="1021.7" y="267" width="703.0" height="23.0" fill="rgb(222.567520175515,188.46326304049,237.613515970379)" rx="2" ry="2" />
+<text  x="1024.72" y="281.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1924.6" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1927.61" y="257.5" ></text>
+</g>
+<g >
+<title>'set -eu -o pipefail' (71 us, 0.01%)</title><rect x="10.0" y="291" width="0.5" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="13.00" y="305.5" ></text>
+</g>
+<g >
+<title>'read -r line' (83 us, 0.01%)</title><rect x="2943.7" y="219" width="0.6" height="23.0" fill="rgb(37,70,241)" rx="2" ry="2" />
+<text  x="2946.75" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="2000.4" y="243" width="0.5" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="2003.43" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (1,946 us, 0.33%)</title><rect x="2994.6" y="219" width="13.4" height="23.0" fill="rgb(59,117,227)" rx="2" ry="2" />
+<text  x="2997.59" y="233.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1970.3" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1973.26" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19021)_[s] (102,212 us, 17.30%)</title><rect x="2101.0" y="243" width="705.0" height="23.0" fill="rgb(254.649569447935,193.324222836635,238.88019460503)" rx="2" ry="2" />
+<text  x="2103.95" y="257.5" >SUBSHELL (19021)_[s]</text>
+</g>
+<g >
+<title>'for i in {1..100}' (60 us, 0.01%)</title><rect x="1920.5" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1923.47" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (68 us, 0.01%)</title><rect x="1947.9" y="243" width="0.4" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1950.85" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (70 us, 0.01%)</title><rect x="1933.9" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1936.89" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (73 us, 0.01%)</title><rect x="1951.9" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1954.93" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_process_subs' (69 us, 0.01%)</title><rect x="275.2" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="278.22" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1927.4" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1930.39" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1917.7" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1920.70" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1916.8" y="243" width="0.4" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1919.76" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (84 us, 0.01%)</title><rect x="4083.6" y="51" width="0.6" height="23.0" fill="rgb(37,71,241)" rx="2" ry="2" />
+<text  x="4086.63" y="65.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (93 us, 0.02%)</title><rect x="4084.7" y="51" width="0.7" height="23.0" fill="rgb(38,72,240)" rx="2" ry="2" />
+<text  x="4087.71" y="65.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1963.4" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1966.45" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (75 us, 0.01%)</title><rect x="1933.4" y="243" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1936.37" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (77 us, 0.01%)</title><rect x="1798.5" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1801.48" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (60 us, 0.01%)</title><rect x="1952.9" y="243" width="0.4" height="23.0" fill="rgb(6,10,254)" rx="2" ry="2" />
+<text  x="1955.89" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1959.3" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1962.25" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (18998)_[s] (153,701 us, 26.01%)</title><rect x="3025.8" y="243" width="1060.2" height="23.0" fill="rgb(237.331151282389,188.658473682931,222.329298597624)" rx="2" ry="2" />
+<text  x="3028.81" y="257.5" >SUBSHELL (18998)_[s]</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1932.0" y="243" width="0.5" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="1935.01" y="257.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (67 us, 0.01%)</title><rect x="3028.0" y="195" width="0.4" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="3030.96" y="209.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19000)_[s] (78,609 us, 13.30%)</title><rect x="3543.8" y="195" width="542.2" height="23.0" fill="rgb(237.376477280596,181.131192005903,220.502891698188)" rx="2" ry="2" />
+<text  x="3546.78" y="209.5" >SUBSHELL (19000)_[s]</text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1908.8" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1911.78" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (126 us, 0.02%)</title><rect x="1872.3" y="243" width="0.8" height="23.0" fill="rgb(39,76,239)" rx="2" ry="2" />
+<text  x="1875.27" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (67 us, 0.01%)</title><rect x="1944.6" y="243" width="0.5" height="23.0" fill="rgb(23,38,249)" rx="2" ry="2" />
+<text  x="1947.59" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1960.1" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1963.10" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (71 us, 0.01%)</title><rect x="1978.8" y="243" width="0.4" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1981.75" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1978.3" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1981.32" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1921.9" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1924.85" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1900.7" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1903.66" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (75 us, 0.01%)</title><rect x="1841.9" y="243" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1844.91" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (79 us, 0.01%)</title><rect x="1833.6" y="243" width="0.5" height="23.0" fill="rgb(36,67,241)" rx="2" ry="2" />
+<text  x="1836.60" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_signal_test)_[f] (14,403 us, 2.44%)</title><rect x="2001.6" y="267" width="99.4" height="23.0" fill="rgb(222.11163467205,188.216482650386,237.213435077741)" rx="2" ry="2" />
+<text  x="2004.61" y="281.5" >FUNCTION (safe..</text>
+</g>
+<g >
+<title>'for i in {1..100}' (68 us, 0.01%)</title><rect x="1913.5" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1916.55" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (65 us, 0.01%)</title><rect x="1895.0" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1898.03" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_job_control' (77 us, 0.01%)</title><rect x="280.6" y="243" width="0.6" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="283.62" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (74 us, 0.01%)</title><rect x="2928.7" y="219" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="2931.69" y="233.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1900.2" y="243" width="0.5" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1903.20" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1881.8" y="243" width="0.4" height="23.0" fill="rgb(25,41,248)" rx="2" ry="2" />
+<text  x="1884.76" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (main)_[f] (552,677 us, 93.53%)</title><rect x="273.8" y="291" width="3812.2" height="23.0" fill="rgb(221.666535805472,188.333071610944,236.66659469301)" rx="2" ry="2" />
+<text  x="276.78" y="305.5" >FUNCTION (main)_[f]</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (67 us, 0.01%)</title><rect x="1971.1" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1974.10" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1984.0" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1986.99" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (66 us, 0.01%)</title><rect x="1868.7" y="243" width="0.4" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1871.67" y="257.5" ></text>
+</g>
+<g >
+<title>'wait ${SAFE_CP_PID} 2&gt; /dev/null' (2,228 us, 0.38%)</title><rect x="1843.0" y="243" width="15.4" height="23.0" fill="rgb(133,191,216)" rx="2" ry="2" />
+<text  x="1846.01" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1993.0" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1996.02" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1984.8" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1987.84" y="257.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (70 us, 0.01%)</title><rect x="3913.9" y="99" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="3916.95" y="113.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1896.4" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1899.44" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (783 us, 0.13%)</title><rect x="275.2" y="267" width="5.4" height="23.0" fill="rgb(207.155868706809,158.345189306685,228.903201112805)" rx="2" ry="2" />
+<text  x="278.22" y="281.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1923.2" y="243" width="0.5" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1926.23" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1894.6" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1897.57" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1902.1" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1905.06" y="257.5" ></text>
+</g>
+<g >
+<title>'wait $child_pid 2&gt; /dev/null' (1,311 us, 0.22%)</title><rect x="2091.4" y="243" width="9.1" height="23.0" fill="rgb(114,175,224)" rx="2" ry="2" />
+<text  x="2094.41" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (69 us, 0.01%)</title><rect x="3567.6" y="147" width="0.4" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="3570.55" y="161.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1907.4" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1910.40" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1916.3" y="243" width="0.5" height="23.0" fill="rgb(18,28,251)" rx="2" ry="2" />
+<text  x="1919.32" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (73 us, 0.01%)</title><rect x="1987.6" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1990.64" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r line' (84 us, 0.01%)</title><rect x="2913.0" y="219" width="0.6" height="23.0" fill="rgb(37,71,241)" rx="2" ry="2" />
+<text  x="2916.02" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (84 us, 0.01%)</title><rect x="1961.5" y="243" width="0.5" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="1964.45" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1946.1" y="243" width="0.4" height="23.0" fill="rgb(6,10,254)" rx="2" ry="2" />
+<text  x="1949.07" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (74 us, 0.01%)</title><rect x="1999.5" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="2002.50" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (70 us, 0.01%)</title><rect x="1873.1" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1876.14" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (117 us, 0.02%)</title><rect x="2845.7" y="219" width="0.8" height="23.0" fill="rgb(39,76,239)" rx="2" ry="2" />
+<text  x="2848.65" y="233.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (20,439 us, 3.46%)</title><rect x="3917.8" y="99" width="141.0" height="23.0" fill="rgb(202,211,208)" rx="2" ry="2" />
+<text  x="3920.81" y="113.5" >'wait $bg_pid 2&gt; /dev..</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1926.4" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1929.43" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (99 us, 0.02%)</title><rect x="2000.9" y="243" width="0.7" height="23.0" fill="rgb(39,74,240)" rx="2" ry="2" />
+<text  x="2003.92" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1892.7" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1895.72" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1947.0" y="243" width="0.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1949.97" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1867.2" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1870.24" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (61 us, 0.01%)</title><rect x="1976.1" y="243" width="0.4" height="23.0" fill="rgb(8,12,253)" rx="2" ry="2" />
+<text  x="1979.09" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (78 us, 0.01%)</title><rect x="1822.7" y="243" width="0.5" height="23.0" fill="rgb(35,66,242)" rx="2" ry="2" />
+<text  x="1825.66" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (67 us, 0.01%)</title><rect x="1996.7" y="243" width="0.4" height="23.0" fill="rgb(22,36,249)" rx="2" ry="2" />
+<text  x="1999.67" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (75 us, 0.01%)</title><rect x="3027.4" y="195" width="0.6" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="3030.44" y="209.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,474 us, 0.59%)</title><rect x="2846.5" y="219" width="23.9" height="23.0" fill="rgb(78,157,204)" rx="2" ry="2" />
+<text  x="2849.46" y="233.5" >'s..</text>
+</g>
+<g >
+<title>'sleep 0.001' (3,434 us, 0.58%)</title><rect x="2806.0" y="219" width="23.7" height="23.0" fill="rgb(72,147,211)" rx="2" ry="2" />
+<text  x="2808.99" y="233.5" >'s..</text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1897.4" y="243" width="0.5" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1900.41" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (65 us, 0.01%)</title><rect x="1981.5" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1984.51" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (66 us, 0.01%)</title><rect x="1860.9" y="243" width="0.5" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1863.91" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1988.1" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1991.15" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1929.2" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1932.23" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (61 us, 0.01%)</title><rect x="1892.3" y="243" width="0.4" height="23.0" fill="rgb(8,12,253)" rx="2" ry="2" />
+<text  x="1895.30" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (3,608 us, 0.61%)</title><rect x="1730.1" y="243" width="24.9" height="23.0" fill="rgb(184,210,209)" rx="2" ry="2" />
+<text  x="1733.12" y="257.5" >'r..</text>
+</g>
+<g >
+<title>'for i in {1..100}' (117 us, 0.02%)</title><rect x="1859.1" y="243" width="0.8" height="23.0" fill="rgb(39,75,239)" rx="2" ry="2" />
+<text  x="1862.05" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (71 us, 0.01%)</title><rect x="1941.1" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1944.13" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (84 us, 0.01%)</title><rect x="1910.2" y="243" width="0.6" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="1913.18" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (65 us, 0.01%)</title><rect x="1876.5" y="243" width="0.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1879.46" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (94 us, 0.02%)</title><rect x="1937.7" y="243" width="0.7" height="23.0" fill="rgb(38,74,240)" rx="2" ry="2" />
+<text  x="1940.73" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (75 us, 0.01%)</title><rect x="2889.6" y="219" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="2892.60" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (73 us, 0.01%)</title><rect x="1889.9" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1892.90" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1968.0" y="243" width="0.5" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1971.04" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1956.5" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1959.52" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (79 us, 0.01%)</title><rect x="1904.9" y="243" width="0.5" height="23.0" fill="rgb(36,68,241)" rx="2" ry="2" />
+<text  x="1907.86" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;All tests completed successfully!&quot;' (75 us, 0.01%)</title><rect x="274.7" y="267" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="277.70" y="281.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1963.0" y="243" width="0.4" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1965.95" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1972.0" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1974.99" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1957.9" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1960.87" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (70 us, 0.01%)</title><rect x="1975.2" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1978.18" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r line' (83 us, 0.01%)</title><rect x="2993.5" y="219" width="0.6" height="23.0" fill="rgb(37,70,241)" rx="2" ry="2" />
+<text  x="2996.51" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1869.1" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1872.13" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1903.5" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1906.49" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1931.1" y="243" width="0.5" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1934.12" y="257.5" ></text>
+</g>
+<g >
+<title>'local job_pid=$!' (123 us, 0.02%)</title><rect x="285.2" y="243" width="0.8" height="23.0" fill="rgb(39,76,239)" rx="2" ry="2" />
+<text  x="288.15" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1937.3" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1940.31" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1935.9" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1938.91" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1906.4" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1909.38" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (96 us, 0.02%)</title><rect x="3025.8" y="195" width="0.7" height="23.0" fill="rgb(38,73,240)" rx="2" ry="2" />
+<text  x="3028.81" y="209.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1983.5" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1986.49" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1957.0" y="243" width="0.4" height="23.0" fill="rgb(6,10,254)" rx="2" ry="2" />
+<text  x="1959.97" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1875.0" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1878.03" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (1,277 us, 0.22%)</title><rect x="1800.1" y="243" width="8.8" height="23.0" fill="rgb(116,176,224)" rx="2" ry="2" />
+<text  x="1803.05" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1965.6" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1968.64" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (123 us, 0.02%)</title><rect x="1865.9" y="243" width="0.9" height="23.0" fill="rgb(39,76,239)" rx="2" ry="2" />
+<text  x="1868.92" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (72 us, 0.01%)</title><rect x="1890.9" y="243" width="0.5" height="23.0" fill="rgb(31,55,245)" rx="2" ry="2" />
+<text  x="1893.86" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1883.6" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1886.63" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (60 us, 0.01%)</title><rect x="1962.5" y="243" width="0.5" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1965.54" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1911.2" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1914.20" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (75 us, 0.01%)</title><rect x="1875.5" y="243" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1878.47" y="257.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (413 us, 0.07%)</title><rect x="3914.4" y="99" width="2.9" height="23.0" fill="rgb(42,82,237)" rx="2" ry="2" />
+<text  x="3917.43" y="113.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (62 us, 0.01%)</title><rect x="1998.0" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="2001.02" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1953.8" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1956.77" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.01' (12,363 us, 2.09%)</title><rect x="2005.5" y="243" width="85.3" height="23.0" fill="rgb(111,188,195)" rx="2" ry="2" />
+<text  x="2008.49" y="257.5" >'sleep 0.01'</text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (2,498 us, 0.42%)</title><rect x="1771.4" y="243" width="17.2" height="23.0" fill="rgb(166,205,213)" rx="2" ry="2" />
+<text  x="1774.36" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (114 us, 0.02%)</title><rect x="1871.5" y="243" width="0.8" height="23.0" fill="rgb(39,75,239)" rx="2" ry="2" />
+<text  x="1874.49" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (67 us, 0.01%)</title><rect x="1874.6" y="243" width="0.4" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1877.57" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (523 us, 0.09%)</title><rect x="280.6" y="267" width="3.6" height="23.0" fill="rgb(203.668105692905,150.764826866205,227.238873486979)" rx="2" ry="2" />
+<text  x="283.62" y="281.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1911.7" y="243" width="0.5" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1914.70" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1945.6" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1948.63" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1980.2" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1983.19" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (143 us, 0.02%)</title><rect x="1824.8" y="243" width="0.9" height="23.0" fill="rgb(40,77,239)" rx="2" ry="2" />
+<text  x="1827.76" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (25,320 us, 4.28%)</title><rect x="3911.3" y="123" width="174.7" height="23.0" fill="rgb(222.186605232146,188.368718787725,237.25398038065)" rx="2" ry="2" />
+<text  x="3914.35" y="137.5" >FUNCTION (safe_recursive_te..</text>
+</g>
+<g >
+<title>'unset small_array' (67 us, 0.01%)</title><rect x="1994.0" y="243" width="0.4" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1996.96" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (153,701 us, 26.01%)</title><rect x="3025.8" y="267" width="1060.2" height="23.0" fill="rgb(222.329298597624,188.658473682931,237.331151282389)" rx="2" ry="2" />
+<text  x="3028.81" y="281.5" >FUNCTION (safe_recursive_test)_[f]</text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1885.1" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1888.07" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (73 us, 0.01%)</title><rect x="1962.0" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1965.03" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (65 us, 0.01%)</title><rect x="284.7" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="287.70" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (75 us, 0.01%)</title><rect x="1979.2" y="243" width="0.6" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1982.24" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Starting Safe Stress Test...&quot;' (73 us, 0.01%)</title><rect x="274.2" y="267" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="277.20" y="281.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1884.6" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1887.60" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1942.1" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1945.06" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1886.5" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1889.47" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r line' (80 us, 0.01%)</title><rect x="3022.6" y="219" width="0.6" height="23.0" fill="rgb(36,67,241)" rx="2" ry="2" />
+<text  x="3025.60" y="233.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (67 us, 0.01%)</title><rect x="1942.6" y="243" width="0.4" height="23.0" fill="rgb(23,38,249)" rx="2" ry="2" />
+<text  x="1945.55" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1877.9" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1880.92" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (77 us, 0.01%)</title><rect x="1788.6" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1791.59" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1961.0" y="243" width="0.5" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1964.05" y="257.5" ></text>
+</g>
+<g >
+<title>'bg_pid=$!' (72 us, 0.01%)</title><rect x="3031.2" y="195" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="3034.24" y="209.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1904.4" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1907.42" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1926.0" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1929.01" y="257.5" ></text>
+</g>
+<g >
+<title>'local child_pid (&amp;)' (420 us, 0.07%)</title><rect x="2002.1" y="243" width="2.9" height="23.0" fill="rgb(42,83,237)" rx="2" ry="2" />
+<text  x="2005.12" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1989.6" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1992.59" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1930.6" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1933.63" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (1,828 us, 0.31%)</title><rect x="2829.7" y="267" width="12.6" height="23.0" fill="rgb(199.421958325225,140.370289045777,225.474165360276)" rx="2" ry="2" />
+<text  x="2832.67" y="281.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1926.9" y="243" width="0.5" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1929.93" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (72 us, 0.01%)</title><rect x="2978.5" y="219" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="2981.50" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (68 us, 0.01%)</title><rect x="1969.8" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1972.79" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (88 us, 0.01%)</title><rect x="1943.4" y="243" width="0.7" height="23.0" fill="rgb(38,72,240)" rx="2" ry="2" />
+<text  x="1946.44" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19004)_[s] (3,944 us, 0.67%)</title><rect x="4058.8" y="99" width="27.2" height="23.0" fill="rgb(228.583208227453,142.441495925669,202.740694536918)" rx="2" ry="2" />
+<text  x="4061.80" y="113.5" >SU..</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (69 us, 0.01%)</title><rect x="1967.0" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1969.99" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1950.1" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1953.11" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.05' (51,507 us, 8.72%)</title><rect x="286.4" y="243" width="355.3" height="23.0" fill="rgb(203,211,190)" rx="2" ry="2" />
+<text  x="289.44" y="257.5" >'sleep 0.05'</text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="2000.0" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="2003.01" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (73 us, 0.01%)</title><rect x="2944.3" y="219" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="2947.32" y="233.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (94 us, 0.02%)</title><rect x="4085.4" y="51" width="0.6" height="23.0" fill="rgb(38,73,240)" rx="2" ry="2" />
+<text  x="4088.35" y="65.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (1,912 us, 0.32%)</title><rect x="1756.6" y="243" width="13.2" height="23.0" fill="rgb(143,194,219)" rx="2" ry="2" />
+<text  x="1759.59" y="257.5" ></text>
+</g>
+<g >
+<title>'exec {SAFE_CP[1]}&gt;&amp;-' (84 us, 0.01%)</title><rect x="1842.4" y="243" width="0.6" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="1845.43" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_coprocess_test)_[f] (26,222 us, 4.44%)</title><rect x="2842.3" y="267" width="180.9" height="23.0" fill="rgb(222.478699083309,188.281042449263,237.565900539506)" rx="2" ry="2" />
+<text  x="2845.28" y="281.5" >FUNCTION (safe_coprocess_tes..</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (69 us, 0.01%)</title><rect x="1968.5" y="243" width="0.4" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1971.47" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1894.1" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1897.08" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (74 us, 0.01%)</title><rect x="1990.0" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1993.03" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (70 us, 0.01%)</title><rect x="641.7" y="243" width="0.5" height="23.0" fill="rgb(26,46,247)" rx="2" ry="2" />
+<text  x="644.72" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (68 us, 0.01%)</title><rect x="1988.6" y="243" width="0.5" height="23.0" fill="rgb(25,41,248)" rx="2" ry="2" />
+<text  x="1991.60" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (84 us, 0.01%)</title><rect x="1945.1" y="243" width="0.5" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="1948.05" y="257.5" ></text>
+</g>
+<g >
+<title>'true' (73 us, 0.01%)</title><rect x="2100.5" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="2103.45" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1939.3" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1942.27" y="257.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (97 us, 0.02%)</title><rect x="3912.7" y="99" width="0.7" height="23.0" fill="rgb(38,73,240)" rx="2" ry="2" />
+<text  x="3915.74" y="113.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1893.2" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1896.21" y="257.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (64 us, 0.01%)</title><rect x="1019.8" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1022.79" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Sub1&quot;' (97 us, 0.02%)</title><rect x="3025.1" y="195" width="0.7" height="23.0" fill="rgb(38,73,240)" rx="2" ry="2" />
+<text  x="3028.14" y="209.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (87 us, 0.01%)</title><rect x="1906.8" y="243" width="0.6" height="23.0" fill="rgb(37,70,241)" rx="2" ry="2" />
+<text  x="1909.80" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1922.3" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1925.29" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1874.1" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1877.06" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1901.6" y="243" width="0.5" height="23.0" fill="rgb(25,41,248)" rx="2" ry="2" />
+<text  x="1904.60" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (78 us, 0.01%)</title><rect x="1799.5" y="243" width="0.6" height="23.0" fill="rgb(35,66,242)" rx="2" ry="2" />
+<text  x="1802.52" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1913.1" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1916.09" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (62 us, 0.01%)</title><rect x="1977.0" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1980.00" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (76 us, 0.01%)</title><rect x="1989.1" y="243" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1992.07" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (70 us, 0.01%)</title><rect x="1863.5" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1866.50" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1985.8" y="243" width="0.5" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1988.82" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (69 us, 0.01%)</title><rect x="1866.8" y="243" width="0.4" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1869.77" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1867.7" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1870.69" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (69 us, 0.01%)</title><rect x="1973.9" y="243" width="0.4" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1976.86" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1885.5" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1888.50" y="257.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (401 us, 0.07%)</title><rect x="3570.1" y="147" width="2.8" height="23.0" fill="rgb(42,81,238)" rx="2" ry="2" />
+<text  x="3573.15" y="161.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1949.7" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1952.68" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1882.7" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1885.67" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_process_subs)_[f] (385 us, 0.07%)</title><rect x="3023.2" y="267" width="2.6" height="23.0" fill="rgb(200.553504984644,144.440280530043,225.554446573328)" rx="2" ry="2" />
+<text  x="3026.15" y="281.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1886.0" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1889.00" y="257.5" ></text>
+</g>
+<g >
+<title>'(( depth &lt; max_depth ))' (69 us, 0.01%)</title><rect x="3569.7" y="147" width="0.4" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="3572.67" y="161.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (73 us, 0.01%)</title><rect x="1799.0" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1802.01" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (67 us, 0.01%)</title><rect x="1879.3" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1882.34" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,617 us, 0.44%)</title><rect x="2944.8" y="219" width="18.1" height="23.0" fill="rgb(69,140,216)" rx="2" ry="2" />
+<text  x="2947.82" y="233.5" >'..</text>
+</g>
+<g >
+<title>FUNCTION (safe_memory_test)_[f] (20,765 us, 3.51%)</title><rect x="1858.4" y="267" width="143.2" height="23.0" fill="rgb(222.139042408655,188.272137135942,237.22825762917)" rx="2" ry="2" />
+<text  x="1861.37" y="281.5" >FUNCTION (safe_memory_..</text>
+</g>
+<g >
+<title>SUBSHELL (19018)_[s] (97 us, 0.02%)</title><rect x="3025.1" y="219" width="0.7" height="23.0" fill="rgb(224.264808715137,139.598055364381,198.168891586479)" rx="2" ry="2" />
+<text  x="3028.14" y="233.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1870.1" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1873.09" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1948.8" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1951.76" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1925.6" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1928.55" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1876.0" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1878.99" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1994.8" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1997.83" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1883.2" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1886.18" y="257.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (64 us, 0.01%)</title><rect x="286.0" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="289.00" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1914.5" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1917.51" y="257.5" ></text>
+</g>
+<g >
+<title>'wait $job_pid 2&gt; /dev/null' (54,740 us, 9.26%)</title><rect x="642.2" y="243" width="377.6" height="23.0" fill="rgb(211,211,207)" rx="2" ry="2" />
+<text  x="645.21" y="257.5" >'wait $job_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (78 us, 0.01%)</title><rect x="1789.6" y="243" width="0.5" height="23.0" fill="rgb(35,66,242)" rx="2" ry="2" />
+<text  x="1792.59" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1963.9" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1966.88" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1895.5" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1898.48" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (1,126 us, 0.19%)</title><rect x="1834.1" y="243" width="7.8" height="23.0" fill="rgb(111,172,226)" rx="2" ry="2" />
+<text  x="1837.14" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1987.2" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1990.21" y="257.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (85 us, 0.01%)</title><rect x="3568.5" y="147" width="0.6" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="3571.50" y="161.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (77 us, 0.01%)</title><rect x="1896.9" y="243" width="0.5" height="23.0" fill="rgb(35,66,242)" rx="2" ry="2" />
+<text  x="1899.88" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1888.3" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1891.31" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r line' (84 us, 0.01%)</title><rect x="2928.1" y="219" width="0.6" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="2931.11" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (69 us, 0.01%)</title><rect x="1980.6" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1983.60" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (84 us, 0.01%)</title><rect x="1967.5" y="243" width="0.5" height="23.0" fill="rgb(37,71,240)" rx="2" ry="2" />
+<text  x="1970.46" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1935.5" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1938.46" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (61 us, 0.01%)</title><rect x="1965.2" y="243" width="0.4" height="23.0" fill="rgb(8,12,253)" rx="2" ry="2" />
+<text  x="1968.22" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1897.9" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1900.86" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (68 us, 0.01%)</title><rect x="1770.3" y="243" width="0.5" height="23.0" fill="rgb(25,41,248)" rx="2" ry="2" />
+<text  x="1773.35" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,104 us, 0.36%)</title><rect x="2979.0" y="219" width="14.5" height="23.0" fill="rgb(63,127,223)" rx="2" ry="2" />
+<text  x="2982.00" y="233.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (70 us, 0.01%)</title><rect x="641.7" y="267" width="0.5" height="23.0" fill="rgb(197.491100846052,138.820405749601,223.631509552392)" rx="2" ry="2" />
+<text  x="644.72" y="281.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1971.6" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1974.56" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r line' (82 us, 0.01%)</title><rect x="2889.0" y="219" width="0.6" height="23.0" fill="rgb(36,69,241)" rx="2" ry="2" />
+<text  x="2892.03" y="233.5" ></text>
+</g>
+<g >
+<title>'bg_pid=$!' (66 us, 0.01%)</title><rect x="1024.3" y="243" width="0.4" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1027.28" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (69 us, 0.01%)</title><rect x="1997.5" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="2000.54" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (102,212 us, 17.30%)</title><rect x="2101.0" y="267" width="705.0" height="23.0" fill="rgb(238.88019460503,193.324222836635,254.649569447935)" rx="2" ry="2" />
+<text  x="2103.95" y="281.5" >FUNCTION (safe_job_control)_[f]</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1891.4" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1894.36" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1915.9" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1918.87" y="257.5" ></text>
+</g>
+<g >
+<title>'cat &lt;(echo &quot;Sub1&quot;) &lt;(echo &quot;Sub2&quot;) &lt;(echo &quot;Sub3&quot;)' (1,828 us, 0.31%)</title><rect x="2829.7" y="219" width="12.6" height="23.0" fill="rgb(51,103,230)" rx="2" ry="2" />
+<text  x="2832.67" y="233.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (67 us, 0.01%)</title><rect x="1871.0" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1874.02" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1983.1" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1986.06" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1886.9" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1889.90" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1995.3" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1998.34" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1940.2" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1943.21" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (77 us, 0.01%)</title><rect x="1864.4" y="243" width="0.6" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1867.44" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1901.1" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1904.08" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,109 us, 0.36%)</title><rect x="2929.2" y="219" width="14.5" height="23.0" fill="rgb(65,130,221)" rx="2" ry="2" />
+<text  x="2932.20" y="233.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1970.7" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1973.69" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (70 us, 0.01%)</title><rect x="1860.4" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1863.42" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1899.2" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1902.24" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1931.6" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1934.58" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (82 us, 0.01%)</title><rect x="1859.9" y="243" width="0.5" height="23.0" fill="rgb(36,69,241)" rx="2" ry="2" />
+<text  x="1862.86" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (134 us, 0.02%)</title><rect x="284.2" y="267" width="1.0" height="23.0" fill="rgb(198.319861950456,140.494670606982,224.083561063885)" rx="2" ry="2" />
+<text  x="287.23" y="281.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (73 us, 0.01%)</title><rect x="1992.0" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1995.02" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,527 us, 0.60%)</title><rect x="4058.8" y="75" width="24.3" height="23.0" fill="rgb(80,161,202)" rx="2" ry="2" />
+<text  x="4061.80" y="89.5" >'s..</text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1938.4" y="243" width="0.4" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1941.38" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (68 us, 0.01%)</title><rect x="1953.3" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1956.30" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,016 us, 0.34%)</title><rect x="2964.0" y="219" width="13.9" height="23.0" fill="rgb(61,122,225)" rx="2" ry="2" />
+<text  x="2966.96" y="233.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1936.9" y="243" width="0.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1939.86" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (82 us, 0.01%)</title><rect x="1888.8" y="243" width="0.6" height="23.0" fill="rgb(36,69,241)" rx="2" ry="2" />
+<text  x="1891.82" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (1,777 us, 0.30%)</title><rect x="1810.4" y="243" width="12.3" height="23.0" fill="rgb(139,192,220)" rx="2" ry="2" />
+<text  x="1813.40" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (71 us, 0.01%)</title><rect x="1865.0" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1867.98" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1941.6" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1944.62" y="257.5" ></text>
+</g>
+<g >
+<title>'set -m (&amp;)' (446 us, 0.08%)</title><rect x="281.2" y="243" width="3.0" height="23.0" fill="rgb(43,84,237)" rx="2" ry="2" />
+<text  x="284.15" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,320 us, 0.56%)</title><rect x="2890.1" y="219" width="22.9" height="23.0" fill="rgb(70,142,213)" rx="2" ry="2" />
+<text  x="2893.12" y="233.5" >'..</text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1982.6" y="243" width="0.5" height="23.0" fill="rgb(25,41,248)" rx="2" ry="2" />
+<text  x="1985.59" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r line' (91 us, 0.02%)</title><rect x="2977.9" y="219" width="0.6" height="23.0" fill="rgb(38,72,240)" rx="2" ry="2" />
+<text  x="2980.87" y="233.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19002)_[s] (28,785 us, 4.87%)</title><rect x="3887.4" y="147" width="198.6" height="23.0" fill="rgb(233.261522526063,164.34592372571,212.448086646762)" rx="2" ry="2" />
+<text  x="3890.45" y="161.5" >SUBSHELL (19002)_[s]</text>
+</g>
+<g >
+<title>'for i in {1..10}' (67 us, 0.01%)</title><rect x="1826.3" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1829.29" y="257.5" ></text>
+</g>
+<g >
+<title>'local max_depth=$2' (69 us, 0.01%)</title><rect x="3027.0" y="195" width="0.4" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="3029.96" y="209.5" ></text>
+</g>
+<g >
+<title>'bg_pid=$!' (71 us, 0.01%)</title><rect x="3572.9" y="147" width="0.5" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="3575.91" y="161.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (1,962 us, 0.33%)</title><rect x="3009.1" y="219" width="13.5" height="23.0" fill="rgb(60,120,226)" rx="2" ry="2" />
+<text  x="3012.07" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (70 us, 0.01%)</title><rect x="1940.6" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1943.64" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1998.4" y="243" width="0.5" height="23.0" fill="rgb(18,28,251)" rx="2" ry="2" />
+<text  x="2001.45" y="257.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (45,529 us, 7.70%)</title><rect x="3573.4" y="147" width="314.0" height="23.0" fill="rgb(206,211,204)" rx="2" ry="2" />
+<text  x="3576.40" y="161.5" >'wait $bg_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>SUBSHELL (19017)_[s] (1,828 us, 0.31%)</title><rect x="2829.7" y="243" width="12.6" height="23.0" fill="rgb(225.474165360276,140.370289045777,199.421958325225)" rx="2" ry="2" />
+<text  x="2832.67" y="257.5" ></text>
+</g>
+<g >
+<title>'trap '\''echo &quot;Clean exit&quot;, exit 0'\'' EXIT INT TERM' (38,170 us, 6.46%)</title><rect x="10.5" y="291" width="263.3" height="23.0" fill="rgb(116,203,148)" rx="2" ry="2" />
+<text  x="13.49" y="305.5" >'trap '\''echo "Clean exit", exit 0'\'' EX..</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (78 us, 0.01%)</title><rect x="1876.9" y="243" width="0.5" height="23.0" fill="rgb(35,67,242)" rx="2" ry="2" />
+<text  x="1879.91" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (64 us, 0.01%)</title><rect x="286.0" y="267" width="0.4" height="23.0" fill="rgb(196.985230652706,138.970461305413,223.091876858989)" rx="2" ry="2" />
+<text  x="289.00" y="281.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (51,507 us, 8.72%)</title><rect x="286.4" y="267" width="355.3" height="23.0" fill="rgb(228.162621954526,185.297365354117,244.935983232947)" rx="2" ry="2" />
+<text  x="289.44" y="281.5" >FUNCTION (safe_job_control)_[f]</text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1974.3" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1977.34" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19017)_[s] (385 us, 0.07%)</title><rect x="3023.2" y="243" width="2.6" height="23.0" fill="rgb(225.554446573328,144.440280530043,200.553504984644)" rx="2" ry="2" />
+<text  x="3026.15" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_signal_test' (74 us, 0.01%)</title><rect x="2001.6" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="2004.61" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1956.0" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1959.01" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1877.4" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1880.45" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (61 us, 0.01%)</title><rect x="1915.0" y="243" width="0.4" height="23.0" fill="rgb(8,12,253)" rx="2" ry="2" />
+<text  x="1917.96" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1905.4" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1908.41" y="257.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (71 us, 0.01%)</title><rect x="3026.5" y="195" width="0.5" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="3029.47" y="209.5" ></text>
+</g>
+<g >
+<title>'local depth=$1' (99 us, 0.02%)</title><rect x="3912.1" y="99" width="0.6" height="23.0" fill="rgb(38,74,240)" rx="2" ry="2" />
+<text  x="3915.06" y="113.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1997.1" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="2000.14" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1986.7" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1989.74" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (73 us, 0.01%)</title><rect x="4083.1" y="51" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="4086.12" y="65.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1898.8" y="243" width="0.4" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1901.79" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1910.8" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1913.76" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1951.5" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1954.50" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1948.3" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1951.32" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (75 us, 0.01%)</title><rect x="1958.7" y="243" width="0.6" height="23.0" fill="rgb(33,62,243)" rx="2" ry="2" />
+<text  x="1961.74" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (74 us, 0.01%)</title><rect x="2913.6" y="219" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="2916.60" y="233.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1917.2" y="243" width="0.5" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1920.25" y="257.5" ></text>
+</g>
+<g >
+<title>'local result' (70 us, 0.01%)</title><rect x="275.7" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="278.69" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (70 us, 0.01%)</title><rect x="1908.3" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1911.30" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (66 us, 0.01%)</title><rect x="1865.5" y="243" width="0.4" height="23.0" fill="rgb(21,34,249)" rx="2" ry="2" />
+<text  x="1868.47" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (74 us, 0.01%)</title><rect x="2994.1" y="219" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="2997.08" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (77 us, 0.01%)</title><rect x="1884.1" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1887.07" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (774 us, 0.13%)</title><rect x="1827.3" y="243" width="5.3" height="23.0" fill="rgb(87,148,229)" rx="2" ry="2" />
+<text  x="1830.29" y="257.5" ></text>
+</g>
+<g >
+<title>'set +m' (216 us, 0.04%)</title><rect x="1020.2" y="243" width="1.5" height="23.0" fill="rgb(40,78,238)" rx="2" ry="2" />
+<text  x="1023.23" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1921.4" y="243" width="0.5" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1924.39" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (77 us, 0.01%)</title><rect x="1826.8" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1829.75" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (78 us, 0.01%)</title><rect x="1944.1" y="243" width="0.5" height="23.0" fill="rgb(35,66,242)" rx="2" ry="2" />
+<text  x="1947.05" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (73 us, 0.01%)</title><rect x="1909.7" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1912.68" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (69 us, 0.01%)</title><rect x="1809.4" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1812.39" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1957.4" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1960.38" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1958.3" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1961.33" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1912.2" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1915.16" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1976.5" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1979.51" y="257.5" ></text>
+</g>
+<g >
+<title>all (590,918 us, 100%)</title><rect x="10.0" y="339" width="4076.0" height="23.0" fill="rgb(255,0,0)" rx="2" ry="2" />
+<text  x="13.00" y="353.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (82 us, 0.01%)</title><rect x="1769.8" y="243" width="0.5" height="23.0" fill="rgb(36,69,241)" rx="2" ry="2" />
+<text  x="1772.78" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (129 us, 0.02%)</title><rect x="1823.9" y="243" width="0.9" height="23.0" fill="rgb(39,76,239)" rx="2" ry="2" />
+<text  x="1826.87" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,447 us, 0.58%)</title><rect x="3543.8" y="171" width="23.8" height="23.0" fill="rgb(74,150,209)" rx="2" ry="2" />
+<text  x="3546.78" y="185.5" >'s..</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1912.6" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1915.58" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (58 us, 0.01%)</title><rect x="1995.8" y="243" width="0.4" height="23.0" fill="rgb(2,7,254)" rx="2" ry="2" />
+<text  x="1998.79" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (68 us, 0.01%)</title><rect x="1896.0" y="243" width="0.4" height="23.0" fill="rgb(25,42,248)" rx="2" ry="2" />
+<text  x="1898.97" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1919.5" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1922.52" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Sub2&quot;' (185 us, 0.03%)</title><rect x="3023.9" y="195" width="1.2" height="23.0" fill="rgb(40,77,239)" rx="2" ry="2" />
+<text  x="3026.86" y="209.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1938.8" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1941.84" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1986.3" y="243" width="0.4" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1989.25" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (70 us, 0.01%)</title><rect x="1903.9" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1906.93" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (62 us, 0.01%)</title><rect x="1966.1" y="243" width="0.5" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1969.13" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (68 us, 0.01%)</title><rect x="1789.1" y="243" width="0.5" height="23.0" fill="rgb(25,41,248)" rx="2" ry="2" />
+<text  x="1792.12" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19006)_[s] (26,222 us, 4.44%)</title><rect x="2842.3" y="243" width="180.9" height="23.0" fill="rgb(237.565900539506,188.281042449263,222.478699083309)" rx="2" ry="2" />
+<text  x="2845.28" y="257.5" >SUBSHELL (19006)_[s]</text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (77 us, 0.01%)</title><rect x="1729.6" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1732.59" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r line' (81 us, 0.01%)</title><rect x="3008.0" y="219" width="0.6" height="23.0" fill="rgb(36,68,241)" rx="2" ry="2" />
+<text  x="3011.01" y="233.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Depth: $depth&quot;' (78 us, 0.01%)</title><rect x="3913.4" y="99" width="0.5" height="23.0" fill="rgb(35,66,242)" rx="2" ry="2" />
+<text  x="3916.41" y="113.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (54,740 us, 9.26%)</title><rect x="642.2" y="267" width="377.6" height="23.0" fill="rgb(232.940701397935,192.215842440275,248.212523507057)" rx="2" ry="2" />
+<text  x="645.21" y="281.5" >FUNCTION (safe_job_control)_[f]</text>
+</g>
+<g >
+<title>'unset small_array' (74 us, 0.01%)</title><rect x="1861.9" y="243" width="0.5" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1864.89" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (61 us, 0.01%)</title><rect x="1893.7" y="243" width="0.4" height="23.0" fill="rgb(8,12,253)" rx="2" ry="2" />
+<text  x="1896.66" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (77 us, 0.01%)</title><rect x="1861.4" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1864.36" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (64 us, 0.01%)</title><rect x="1909.2" y="243" width="0.5" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1912.24" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (79 us, 0.01%)</title><rect x="1770.8" y="243" width="0.6" height="23.0" fill="rgb(36,67,241)" rx="2" ry="2" />
+<text  x="1773.81" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_recursive_test $((depth + 1)) $max_depth' (103 us, 0.02%)</title><rect x="3911.3" y="99" width="0.8" height="23.0" fill="rgb(38,74,240)" rx="2" ry="2" />
+<text  x="3914.35" y="113.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1920.9" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1923.89" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (70 us, 0.01%)</title><rect x="1887.4" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1890.40" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (69 us, 0.01%)</title><rect x="1880.3" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1883.32" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1918.1" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1921.13" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (69 us, 0.01%)</title><rect x="1880.8" y="243" width="0.5" height="23.0" fill="rgb(26,45,247)" rx="2" ry="2" />
+<text  x="1883.79" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1981.1" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1984.07" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (2,030 us, 0.34%)</title><rect x="2914.1" y="219" width="14.0" height="23.0" fill="rgb(63,125,224)" rx="2" ry="2" />
+<text  x="2917.11" y="233.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (60 us, 0.01%)</title><rect x="1994.4" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1997.42" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1934.9" y="243" width="0.6" height="23.0" fill="rgb(33,61,243)" rx="2" ry="2" />
+<text  x="1937.95" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (107 us, 0.02%)</title><rect x="2871.2" y="219" width="0.7" height="23.0" fill="rgb(39,75,239)" rx="2" ry="2" />
+<text  x="2874.20" y="233.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1918.6" y="243" width="0.5" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1921.62" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1929.7" y="243" width="0.5" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1932.73" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1873.6" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1876.63" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (74 us, 0.01%)</title><rect x="1728.6" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1731.62" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1966.6" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1969.56" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Result: $result&quot;' (77 us, 0.01%)</title><rect x="1808.9" y="243" width="0.5" height="23.0" fill="rgb(35,65,242)" rx="2" ry="2" />
+<text  x="1811.86" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (19020)_[s] (103 us, 0.02%)</title><rect x="3023.2" y="219" width="0.7" height="23.0" fill="rgb(224.261978169347,139.587427466039,198.163657747095)" rx="2" ry="2" />
+<text  x="3026.15" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1878.4" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1881.36" y="257.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (18998)_[s] (3,434 us, 0.58%)</title><rect x="2806.0" y="243" width="23.7" height="23.0" fill="rgb(227.944965857425,141.59911221091,202.041209763471)" rx="2" ry="2" />
+<text  x="2808.99" y="257.5" >SU..</text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1928.8" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1931.81" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (417 us, 0.07%)</title><rect x="4083.1" y="75" width="2.9" height="23.0" fill="rgb(202.36676143238,147.58522741302,226.53508526445)" rx="2" ry="2" />
+<text  x="4086.12" y="89.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1887.9" y="243" width="0.4" height="23.0" fill="rgb(12,18,253)" rx="2" ry="2" />
+<text  x="1890.88" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (82 us, 0.01%)</title><rect x="1862.4" y="243" width="0.6" height="23.0" fill="rgb(36,68,241)" rx="2" ry="2" />
+<text  x="1865.40" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1891.9" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1894.86" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_coprocess_test)_[f] (19,379 us, 3.28%)</title><rect x="1724.7" y="267" width="133.7" height="23.0" fill="rgb(219.84831685489,184.696633709779,235.666574270189)" rx="2" ry="2" />
+<text  x="1727.70" y="281.5" >FUNCTION (safe_copro..</text>
+</g>
+<g >
+<title>FUNCTION (safe_job_control)_[f] (123 us, 0.02%)</title><rect x="285.2" y="267" width="0.8" height="23.0" fill="rgb(198.729320327922,139.558090157284,224.834274814969)" rx="2" ry="2" />
+<text  x="288.15" y="281.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (67 us, 0.01%)</title><rect x="1729.1" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1732.13" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1932.5" y="243" width="0.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1935.50" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1914.0" y="243" width="0.5" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="1917.02" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1972.9" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1975.88" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (70 us, 0.01%)</title><rect x="1996.2" y="243" width="0.5" height="23.0" fill="rgb(27,47,247)" rx="2" ry="2" />
+<text  x="1999.19" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (69 us, 0.01%)</title><rect x="1903.0" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1906.02" y="257.5" ></text>
+</g>
+<g >
+<title>FUNCTION (safe_recursive_test)_[f] (3,434 us, 0.58%)</title><rect x="2806.0" y="267" width="23.7" height="23.0" fill="rgb(202.041209763471,141.59911221091,227.944965857425)" rx="2" ry="2" />
+<text  x="2808.99" y="281.5" >FU..</text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1974.8" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1977.77" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (61 us, 0.01%)</title><rect x="1954.2" y="243" width="0.4" height="23.0" fill="rgb(8,12,253)" rx="2" ry="2" />
+<text  x="1957.23" y="257.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (409 us, 0.07%)</title><rect x="3028.4" y="195" width="2.8" height="23.0" fill="rgb(42,81,238)" rx="2" ry="2" />
+<text  x="3031.42" y="209.5" ></text>
+</g>
+<g >
+<title>'read -r line' (112 us, 0.02%)</title><rect x="2870.4" y="219" width="0.8" height="23.0" fill="rgb(39,75,239)" rx="2" ry="2" />
+<text  x="2873.42" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1946.5" y="243" width="0.5" height="23.0" fill="rgb(30,54,245)" rx="2" ry="2" />
+<text  x="1949.47" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1879.8" y="243" width="0.5" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1882.81" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (59 us, 0.01%)</title><rect x="1969.4" y="243" width="0.4" height="23.0" fill="rgb(7,10,254)" rx="2" ry="2" />
+<text  x="1972.38" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (80 us, 0.01%)</title><rect x="1756.0" y="243" width="0.6" height="23.0" fill="rgb(36,67,241)" rx="2" ry="2" />
+<text  x="1759.04" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1954.6" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1957.65" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (83 us, 0.01%)</title><rect x="1934.4" y="243" width="0.5" height="23.0" fill="rgb(37,70,241)" rx="2" ry="2" />
+<text  x="1937.37" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (63 us, 0.01%)</title><rect x="1955.1" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1958.14" y="257.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (74,233 us, 12.56%)</title><rect x="3031.7" y="195" width="512.1" height="23.0" fill="rgb(212,211,204)" rx="2" ry="2" />
+<text  x="3034.74" y="209.5" >'wait $bg_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>SUBSHELL (18977)_[s] (590,918 us, 100.00%)</title><rect x="10.0" y="315" width="4076.0" height="23.0" fill="rgb(236.99991845462,188.333031313408,221.999850500137)" rx="2" ry="2" />
+<text  x="13.00" y="329.5" >SUBSHELL (18977)_[s]</text>
+</g>
+<g >
+<title>'unset small_array' (62 us, 0.01%)</title><rect x="1979.8" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1982.76" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (62 us, 0.01%)</title><rect x="1975.7" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1978.66" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1898.3" y="243" width="0.5" height="23.0" fill="rgb(28,50,246)" rx="2" ry="2" />
+<text  x="1901.30" y="257.5" ></text>
+</g>
+<g >
+<title>'safe_memory_test' (98 us, 0.02%)</title><rect x="1858.4" y="243" width="0.7" height="23.0" fill="rgb(38,74,240)" rx="2" ry="2" />
+<text  x="1861.37" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (66 us, 0.01%)</title><rect x="1905.9" y="243" width="0.5" height="23.0" fill="rgb(21,35,249)" rx="2" ry="2" />
+<text  x="1908.92" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (67 us, 0.01%)</title><rect x="1833.1" y="243" width="0.5" height="23.0" fill="rgb(23,37,249)" rx="2" ry="2" />
+<text  x="1836.14" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;CP: $((line * 2))&quot;' (72 us, 0.01%)</title><rect x="3008.6" y="219" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="3011.57" y="233.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1915.4" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1918.38" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1947.4" y="243" width="0.5" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1950.42" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (65 us, 0.01%)</title><rect x="1960.6" y="243" width="0.4" height="23.0" fill="rgb(19,30,250)" rx="2" ry="2" />
+<text  x="1963.60" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1991.6" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1994.59" y="257.5" ></text>
+</g>
+<g >
+<title>'wait $bg_pid 2&gt; /dev/null' (101,478 us, 17.17%)</title><rect x="1024.7" y="243" width="700.0" height="23.0" fill="rgb(212,211,211)" rx="2" ry="2" />
+<text  x="1027.73" y="257.5" >'wait $bg_pid 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (69 us, 0.01%)</title><rect x="1972.4" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="1975.40" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (72 us, 0.01%)</title><rect x="1925.1" y="243" width="0.5" height="23.0" fill="rgb(30,55,245)" rx="2" ry="2" />
+<text  x="1928.05" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (63 us, 0.01%)</title><rect x="1955.6" y="243" width="0.4" height="23.0" fill="rgb(16,24,251)" rx="2" ry="2" />
+<text  x="1958.58" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (76 us, 0.01%)</title><rect x="1899.7" y="243" width="0.5" height="23.0" fill="rgb(34,63,243)" rx="2" ry="2" />
+<text  x="1902.68" y="257.5" ></text>
+</g>
+<g >
+<title>'read -r -t 1 -u ${SAFE_CP[0]} result' (485 us, 0.08%)</title><rect x="1725.3" y="243" width="3.3" height="23.0" fill="rgb(68,124,233)" rx="2" ry="2" />
+<text  x="1728.28" y="257.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (101,834 us, 17.23%)</title><rect x="2101.0" y="219" width="702.4" height="23.0" fill="rgb(214,211,197)" rx="2" ry="2" />
+<text  x="2103.95" y="233.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'read -r line' (489 us, 0.08%)</title><rect x="2842.3" y="219" width="3.4" height="23.0" fill="rgb(62,115,234)" rx="2" ry="2" />
+<text  x="2845.28" y="233.5" ></text>
+</g>
+<g >
+<title>'read -r line' (83 us, 0.01%)</title><rect x="2962.9" y="219" width="0.5" height="23.0" fill="rgb(37,70,241)" rx="2" ry="2" />
+<text  x="2965.88" y="233.5" ></text>
+</g>
+<g >
+<title>'main &quot;$@&quot;' (61 us, 0.01%)</title><rect x="273.8" y="267" width="0.4" height="23.0" fill="rgb(8,12,253)" rx="2" ry="2" />
+<text  x="276.78" y="281.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (71 us, 0.01%)</title><rect x="1949.2" y="243" width="0.5" height="23.0" fill="rgb(28,49,246)" rx="2" ry="2" />
+<text  x="1952.19" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (74 us, 0.01%)</title><rect x="1990.5" y="243" width="0.6" height="23.0" fill="rgb(33,60,243)" rx="2" ry="2" />
+<text  x="1993.54" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..10}' (68 us, 0.01%)</title><rect x="1755.6" y="243" width="0.4" height="23.0" fill="rgb(25,41,248)" rx="2" ry="2" />
+<text  x="1758.57" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1932.9" y="243" width="0.5" height="23.0" fill="rgb(12,18,253)" rx="2" ry="2" />
+<text  x="1935.95" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$i&quot; &gt;&amp;${SAFE_CP[1]}' (82 us, 0.01%)</title><rect x="1724.7" y="243" width="0.6" height="23.0" fill="rgb(36,69,241)" rx="2" ry="2" />
+<text  x="1727.71" y="257.5" ></text>
+</g>
+<g >
+<title>'unset small_array' (64 us, 0.01%)</title><rect x="1939.8" y="243" width="0.4" height="23.0" fill="rgb(18,27,251)" rx="2" ry="2" />
+<text  x="1942.77" y="257.5" ></text>
+</g>
+<g >
+<title>'local bg_pid (&amp;)' (371 us, 0.06%)</title><rect x="1021.7" y="243" width="2.6" height="23.0" fill="rgb(41,79,238)" rx="2" ry="2" />
+<text  x="1024.72" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (91 us, 0.02%)</title><rect x="1982.0" y="243" width="0.6" height="23.0" fill="rgb(38,72,240)" rx="2" ry="2" />
+<text  x="1984.96" y="257.5" ></text>
+</g>
+<g >
+<title>'child_pid=$!' (69 us, 0.01%)</title><rect x="2005.0" y="243" width="0.5" height="23.0" fill="rgb(26,44,247)" rx="2" ry="2" />
+<text  x="2008.01" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Job completed&quot;' (378 us, 0.06%)</title><rect x="2803.4" y="219" width="2.6" height="23.0" fill="rgb(41,80,238)" rx="2" ry="2" />
+<text  x="2806.38" y="233.5" ></text>
+</g>
+<g >
+<title>'sleep 0.001' (3,465 us, 0.59%)</title><rect x="3887.4" y="123" width="23.9" height="23.0" fill="rgb(76,154,207)" rx="2" ry="2" />
+<text  x="3890.45" y="137.5" >'s..</text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (88 us, 0.01%)</title><rect x="1998.9" y="243" width="0.6" height="23.0" fill="rgb(38,72,240)" rx="2" ry="2" />
+<text  x="2001.89" y="257.5" ></text>
+</g>
+<g >
+<title>'declare -a small_array=(&quot;a&quot; &quot;b&quot; &quot;c&quot;)' (73 us, 0.01%)</title><rect x="1927.8" y="243" width="0.5" height="23.0" fill="rgb(31,57,244)" rx="2" ry="2" />
+<text  x="1930.81" y="257.5" ></text>
+</g>
+<g >
+<title>'for i in {1..100}' (62 us, 0.01%)</title><rect x="1943.0" y="243" width="0.4" height="23.0" fill="rgb(12,17,253)" rx="2" ry="2" />
+<text  x="1946.02" y="257.5" ></text>
+</g>
+<g >
+<title>'echo &quot;Sub3&quot;' (103 us, 0.02%)</title><rect x="3023.2" y="195" width="0.7" height="23.0" fill="rgb(38,74,240)" rx="2" ry="2" />
+<text  x="3026.15" y="209.5" ></text>
+</g>
+</g>
+</svg>
