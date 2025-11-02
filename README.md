@@ -202,6 +202,12 @@ After the profiled code has finished running, `timep` goes through the logs and 
 
 ***
 
+# FRACTAL BOOTSTRAPPING
+
+`timep`'s underlying methodology is something I like to call "fractal bootstrapping". Rather than attempt to handle all the code's complexity globally, `timep` distributes the complexity. Each process profiles itself using the same instrumentation with a different seed, and the instrumentation bootstraps itself into any new executioin contexts. The beauty of the fractal bootsprapping approach is that it allows the DEBUG trap instrumentation to effectively become a "local state machine", reducing the problem from "the infinite complexity of all possible shell scripts" down to "a finite number of possible state transitions between any 2 sequential DEBUG traps". This allows timep to accurately profile arbitrarily complex bash code.
+
+***
+
 **LOADABLE BUILTINS**
 
 `timep` uses loadable builtins for 2 main operations:

@@ -88,8 +88,9 @@ timep() {
     #    2. To define a custom TMPDIR (other than /dev/shm/.timep.XXXXXX), pass `TIMEP_TMPDIR` as an environment variable. e.g., TIMEP_TMPDIR=/path/to/tmpdir timep [...]
     #    3. timep uses a loadable builtin to get accurate cpu time measureements. This loadable builtin's .so file is included in this timep.bash file as a compressed base64-encoded string. When timep.bash is sourced, this .so file will automatically be extracted and the loadable builtin will be enabled automatically.
     #
-    # KNOWN LIMITATIONS / BUGS: timep handles *almost* every aspect of the bash execution model, but there are a few edge cases where, due to the limitations or trap-based profiling, the output is slightly off.
-    #    1. In some deeply nested chains of combined subshells + background forks with multiple subshells + forks before the 1st command in the sequence, some commands may have an incorrect nesting level. That said, commands should still be grouped together roughtly correctly, and will still have accurate timing info.
+    # KNOWN LIMITATIONS / BUGS: timep handles virtually every aspect of the bash execution model, but there are a few edge cases where, due to the limitations of trap-based profiling, the output is slightly off.
+    #    1. In some deeply nested chains of combined subshells + background forks with multiple subshells + forks before the 1st command in the sequence, some commands may have an incorrect nesting level. That said, commands should still be grouped together roughly correctly, and will still have accurate timing info.
+    #    2. the times for tcommands that set traps is inflated. This is becausetimep overloads the trap command with a function to allow user-set traps to coexist with the traps used by timep, and the time you see is the time it takes the overloaded trap function to run.
     #
     ################################################################################################################################################################
 (
