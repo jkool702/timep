@@ -1,112 +1,112 @@
-SUBSHELL (1850268)_[s];'readonly GAUNTLET_DURATION=${1:-5}'	72:0	86:0
-SUBSHELL (1850268)_[s];'readonly CHILD_PROCESSES=3'	72:0	82:0
-SUBSHELL (1850268)_[s];'trap '\''signal_handler'\'' SIGINT SIGTERM'	31576:5	31481:86
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'main'	69:0	83:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "--- Profiler Gauntlet Started ---"'	76:0	90:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "This test will run for approximately $GAUNTLET_DURATION seconds." (&)'	855:1	761:19
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'for i in $(seq 1 $CHILD_PROCESSES) (&)'	347:0	367:12
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'for i in $(seq 1 $CHILD_PROCESSES) (&)'	363:0	382:14
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'for i in $(seq 1 $CHILD_PROCESSES) (&)'	353:0	366:11
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	5030:2	124:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "[COPROC] Received: $line"'	72:0	86:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	105054:50	242:7
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "[COPROC] Received: $line"'	176:0	205:5
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	105230:58	447:18
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "[COPROC] Received: $line"'	305:0	353:9
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	112501:66	143949:224
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "--- Waiting for child processes ---"'	75:0	88:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'wait'	117:0	132:3
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'$'\''final_result=$( ( echo "Finalizing..."\nsleep 0.5\necho "All done." ) & wait $!, echo "Completed")'	1426:1	328:8
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "--- Profiler Gauntlet Finished ---"'	110:0	127:3
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];'echo "Final Result: $final_result"'	97:0	112:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850325)_[s];'wait $!'	507021:214	396:17
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850325)_[s];'echo "Completed"'	337:0	387:15
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850290)_[s];'seq 1 $CHILD_PROCESSES'	5197:2	5197:56
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness 3'	139:0	163:4
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	135:0	159:4
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	134:0	157:3
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'echo "Entering depth $depth"'	141:0	164:4
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'$'\''local result=$( ( echo "Executing at depth $depth"\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))'	1504:1	984:23
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'echo "--- Child Process $i Started ---"'	308:0	357:10
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'local child_id=$(echo "child-$i-$$")'	511:1	384:14
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'echo "[$child_id] Processing data..." (&)'	378:0	398:17
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'echo "--- Child Process $i Started ---"'	306:0	355:9
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'local child_id=$(echo "child-$i-$$")'	425:0	286:8
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'read -r data'	1564:1	116:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'echo "[$child_id] Consumed: $data"'	76:0	90:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'read -r data'	303189:177	379:13
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'echo "[$child_id] Consumed: $data"'	136:0	159:4
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'echo "[$child_id] Processing data..." (&)'	362:0	383:14
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];'read -r data (&)'	934:1	960:22
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'echo "--- Child Process $i Started ---"'	84:0	98:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'local child_id=$(echo "child-$i-$$")'	888:1	788:21
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'echo "[$child_id] Processing data..." (&)'	376:0	387:15
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'read -r data'	1451:1	116:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'echo "[$child_id] Consumed: $data"'	79:0	90:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'read -r data'	304331:177	239:7
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'echo "[$child_id] Consumed: $data"'	190:0	230:6
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'read -r data'	1214:1	115:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'echo "[$child_id] Consumed: $data"'	77:0	91:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'read -r data'	304304:177	395:16
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];'read -r data (&)'	456:1	332:8
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'echo "Exiting depth $depth with result: $result"'	131:0	146:3
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'echo "[$child_id] Consumed: $data"'	310:0	360:11
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];'read -r data (&)'	610:1	632:18
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];SUBSHELL (1850295)_[s];'echo "child-$i-$$"'	247:0	285:8
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];SUBSHELL (1850311)_[s];'echo "[$child_id] Starting nested task..."'	87:0	102:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];SUBSHELL (1850311)_[s];'sleep 0.2'	202322:95	2186:36
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];SUBSHELL (1850311)_[s];'echo "[$child_id] Nested task finished."'	325:0	375:13
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];SUBSHELL (1850298)_[s];'echo "child-$i-$$"'	116:0	136:3
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850325)_[s];SUBSHELL (1850326)_[s];'echo "Finalizing..."'	93:0	102:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850325)_[s];SUBSHELL (1850326)_[s];'sleep 0.5'	502512:214	2546:41
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850325)_[s];SUBSHELL (1850326)_[s];'echo "All done."'	342:0	392:16
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];SUBSHELL (1850312)_[s];'echo "[$child_id] Starting nested task..."'	444:1	395:16
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];SUBSHELL (1850296)_[s];'echo "child-$i-$$"'	87:0	101:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];SUBSHELL (1850312)_[s];'sleep 0.2'	202221:81	2137:32
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];SUBSHELL (1850312)_[s];'echo "[$child_id] Nested task finished."'	322:0	361:11
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];SUBSHELL (1850310)_[s];'echo "[$child_id] Starting nested task..."'	309:0	359:10
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];SUBSHELL (1850310)_[s];'sleep 0.2'	202626:110	2684:48
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];SUBSHELL (1850310)_[s];'echo "[$child_id] Nested task finished."'	170:0	197:5
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'data_generator'	1061:1	972:23
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'for i in $(seq 1 $CHILD_PROCESSES)'	74:0	87:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'echo "Data packet $i from $$"'	76:0	86:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'sleep 0.1'	101348:12	1260:26
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'for i in $(seq 1 $CHILD_PROCESSES)'	191:0	226:6
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'echo "Data packet $i from $$"'	198:0	231:6
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'sleep 0.1'	102816:50	2877:51
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'for i in $(seq 1 $CHILD_PROCESSES)'	95:0	113:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'echo "Data packet $i from $$"'	90:0	106:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];'sleep 0.1'	102546:27	2594:43
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];SUBSHELL (1850301)_[s];SUBSHELL (1850302)_[s];'echo "Sub-process for child $i"'	112:0	121:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];SUBSHELL (1850301)_[s];SUBSHELL (1850302)_[s];'sleep 0.3'	301507:155	1490:28
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850293)_[s];SUBSHELL (1850301)_[s];SUBSHELL (1850302)_[s];'echo "More data from sub-process $i"'	332:0	375:13
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];SUBSHELL (1850299)_[s];SUBSHELL (1850300)_[s];'echo "Sub-process for child $i"'	81:0	96:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];SUBSHELL (1850299)_[s];SUBSHELL (1850300)_[s];'sleep 0.3'	301558:177	1583:30
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850292)_[s];SUBSHELL (1850299)_[s];SUBSHELL (1850300)_[s];'echo "More data from sub-process $i"'	335:0	377:13
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];'echo "Executing at depth $depth"'	308:0	357:10
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];'sleep 0.1'	101992:20	2160:34
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];SUBSHELL (1850304)_[s];SUBSHELL (1850305)_[s];'echo "Sub-process for child $i"'	106:0	125:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];SUBSHELL (1850304)_[s];SUBSHELL (1850305)_[s];'sleep 0.3'	301366:132	1331:27
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850294)_[s];SUBSHELL (1850304)_[s];SUBSHELL (1850305)_[s];'echo "More data from sub-process $i"'	219:0	248:7
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];SUBSHELL (1850289)_[s];FUNCTION (data_generator)_[f];SUBSHELL (1850291)_[s];'seq 1 $CHILD_PROCESSES'	226:0	226:6
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness $((depth - 1))'	174:0	204:5
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	161:0	189:5
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	163:0	192:5
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Entering depth $depth"'	171:0	194:5
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];'$'\''local result=$( ( echo "Executing at depth $depth"\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))'	2004:2	1017:24
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Exiting depth $depth with result: $result"'	357:0	398:17
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];'echo "Executing at depth $depth"'	325:0	368:12
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];'sleep 0.1'	102623:35	2517:38
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness $((depth - 1))'	132:0	157:3
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	147:0	166:4
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	138:0	164:4
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Entering depth $depth"'	139:0	165:4
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];'$'\''local result=$( ( echo "Executing at depth $depth"\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))'	1750:2	762:20
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Exiting depth $depth with result: $result"'	106:0	121:2
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850322)_[s];SUBSHELL (1850323)_[s];'echo "Executing at depth $depth"'	219:0	255:7
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850322)_[s];SUBSHELL (1850323)_[s];'sleep 0.1'	102652:42	2646:46
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850322)_[s];SUBSHELL (1850323)_[s];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness $((depth - 1))'	74:0	89:0
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850322)_[s];SUBSHELL (1850323)_[s];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	77:0	91:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850322)_[s];SUBSHELL (1850323)_[s];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	76:0	91:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850322)_[s];SUBSHELL (1850323)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Reached the bottom."'	76:0	91:1
-SUBSHELL (1850268)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850316)_[s];SUBSHELL (1850317)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850319)_[s];SUBSHELL (1850320)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (1850322)_[s];SUBSHELL (1850323)_[s];FUNCTION (deeply_nested_madness)_[f];'return'	94:0	114:2
+SUBSHELL (691836)_[s];'readonly GAUNTLET_DURATION=${1:-5}'	70:0	85:0
+SUBSHELL (691836)_[s];'readonly CHILD_PROCESSES=3'	66:0	80:0
+SUBSHELL (691836)_[s];'trap '\''signal_handler'\'' SIGINT SIGTERM'	33178:5	33095:84
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'main'	62:0	76:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "--- Profiler Gauntlet Started ---"'	74:0	89:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "This test will run for approximately $GAUNTLET_DURATION seconds." (&)'	724:1	622:16
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'for i in $(seq 1 $CHILD_PROCESSES) (&)'	349:0	369:9
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'for i in $(seq 1 $CHILD_PROCESSES) (&)'	354:0	374:11
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'for i in $(seq 1 $CHILD_PROCESSES) (&)'	364:0	379:12
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	604:1	119:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "[COPROC] Received: $line"'	85:0	100:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	104994:51	282:6
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "[COPROC] Received: $line"'	205:0	241:5
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	107149:51	202:4
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "[COPROC] Received: $line"'	140:0	166:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'read -r -u "${DATA_FEED[0]}" line'	120438:60	165062:224
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "--- Waiting for child processes ---"'	73:0	88:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'wait'	116:0	130:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'$'\''final_result=$( ( echo "Finalizing..."\nsleep 0.5\necho "All done." ) & wait $!, echo "Completed")'	1970:2	947:19
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "--- Profiler Gauntlet Finished ---"'	307:0	354:8
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];'echo "Final Result: $final_result"'	345:0	390:12
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691893)_[s];'wait $!'	508573:212	534:15
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691893)_[s];'echo "Completed"'	338:0	381:12
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691858)_[s];'seq 1 $CHILD_PROCESSES'	7624:3	7625:56
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness 3'	137:0	162:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	142:0	161:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	134:0	159:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'echo "Entering depth $depth"'	138:0	164:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'$'\''local result=$( ( echo "Executing at depth $depth"\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))'	992:1	398:13
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'echo "--- Child Process $i Started ---"'	314:0	371:10
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'local child_id=$(echo "child-$i-$$")'	1393:1	931:18
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'echo "--- Child Process $i Started ---"'	98:0	116:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'local child_id=$(echo "child-$i-$$")'	414:1	279:5
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'echo "[$child_id] Processing data..." (&)'	392:0	413:15
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'echo "[$child_id] Processing data..." (&)'	400:0	415:15
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'read -r data'	1425:1	118:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'echo "[$child_id] Consumed: $data"'	73:0	88:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'read -r data'	2919:2	174:4
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'read -r data'	303460:174	394:13
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'echo "[$child_id] Consumed: $data"'	122:0	145:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'read -r data'	303065:174	376:12
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'echo "[$child_id] Consumed: $data"'	301:0	353:8
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'echo "[$child_id] Consumed: $data"'	304:0	355:8
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];'read -r data (&)'	1172:1	828:17
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];'read -r data (&)'	1527:1	1547:25
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'echo "--- Child Process $i Started ---"'	334:0	375:11
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'local child_id=$(echo "child-$i-$$")'	421:1	270:5
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'echo "[$child_id] Processing data..." (&)'	383:0	407:14
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'read -r data'	1591:1	114:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'echo "[$child_id] Consumed: $data"'	75:0	90:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'read -r data'	304328:174	373:10
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'echo "[$child_id] Consumed: $data"'	154:0	182:4
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];'read -r data (&)'	1043:1	1066:21
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];'echo "Exiting depth $depth with result: $result"'	341:0	392:13
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];SUBSHELL (691863)_[s];'echo "child-$i-$$"'	87:0	98:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];SUBSHELL (691868)_[s];'echo "child-$i-$$"'	81:0	96:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];SUBSHELL (691867)_[s];'echo "child-$i-$$"'	277:0	312:6
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691893)_[s];SUBSHELL (691894)_[s];'echo "Finalizing..."'	101:0	125:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691893)_[s];SUBSHELL (691894)_[s];'sleep 0.5'	502692:212	2636:37
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];SUBSHELL (691879)_[s];'echo "[$child_id] Starting nested task..."'	308:0	359:9
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691893)_[s];SUBSHELL (691894)_[s];'echo "All done."'	145:0	168:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];SUBSHELL (691879)_[s];'sleep 0.2'	203300:106	3192:50
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];SUBSHELL (691879)_[s];'echo "[$child_id] Nested task finished."'	321:0	372:10
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];SUBSHELL (691880)_[s];'echo "[$child_id] Starting nested task..."'	86:0	101:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];SUBSHELL (691878)_[s];'echo "[$child_id] Starting nested task..."'	310:0	361:9
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];SUBSHELL (691880)_[s];'sleep 0.2'	201649:76	1633:26
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];SUBSHELL (691878)_[s];'sleep 0.2'	202966:91	3001:44
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];SUBSHELL (691878)_[s];'echo "[$child_id] Nested task finished."'	86:0	101:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];SUBSHELL (691880)_[s];'echo "[$child_id] Nested task finished."'	174:0	201:4
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'data_generator'	1128:1	931:18
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'for i in $(seq 1 $CHILD_PROCESSES)'	70:0	85:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'echo "Data packet $i from $$"'	69:0	84:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'sleep 0.1'	102352:28	2262:33
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'for i in $(seq 1 $CHILD_PROCESSES)'	140:0	167:3
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'echo "Data packet $i from $$"'	150:0	171:4
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'sleep 0.1'	102710:44	2698:39
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'for i in $(seq 1 $CHILD_PROCESSES)'	276:0	324:6
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'echo "Data packet $i from $$"'	290:0	338:7
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];'sleep 0.1'	102846:51	2892:42
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];SUBSHELL (691865)_[s];SUBSHELL (691866)_[s];'echo "Sub-process for child $i"'	97:0	115:2
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];'echo "Executing at depth $depth"'	154:0	181:4
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];SUBSHELL (691865)_[s];SUBSHELL (691866)_[s];'sleep 0.3'	301373:151	1358:23
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];SUBSHELL (691873)_[s];SUBSHELL (691874)_[s];'echo "Sub-process for child $i"'	82:0	98:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];'sleep 0.1'	101677:13	1651:28
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];SUBSHELL (691873)_[s];SUBSHELL (691874)_[s];'sleep 0.3'	301757:174	1702:29
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691860)_[s];SUBSHELL (691865)_[s];SUBSHELL (691866)_[s];'echo "More data from sub-process $i"'	299:0	346:7
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691861)_[s];SUBSHELL (691873)_[s];SUBSHELL (691874)_[s];'echo "More data from sub-process $i"'	213:0	247:5
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691857)_[s];FUNCTION (data_generator)_[f];SUBSHELL (691859)_[s];'seq 1 $CHILD_PROCESSES'	3100:2	3101:47
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];SUBSHELL (691870)_[s];SUBSHELL (691871)_[s];'echo "Sub-process for child $i"'	83:0	98:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];SUBSHELL (691870)_[s];SUBSHELL (691871)_[s];'sleep 0.3'	301358:129	1364:24
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];SUBSHELL (691862)_[s];SUBSHELL (691870)_[s];SUBSHELL (691871)_[s];'echo "More data from sub-process $i"'	326:0	376:12
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness $((depth - 1))'	65:0	79:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	68:0	83:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	72:0	84:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Entering depth $depth"'	69:0	82:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];'$'\''local result=$( ( echo "Executing at depth $depth"\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))'	1823:2	960:20
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Exiting depth $depth with result: $result"'	351:0	402:14
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];'echo "Executing at depth $depth"'	81:0	96:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];'sleep 0.1'	102511:36	2513:35
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness $((depth - 1))'	276:0	328:6
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	67:0	83:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	66:0	81:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Entering depth $depth"'	74:0	89:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];'$'\''local result=$( ( echo "Executing at depth $depth"\nsleep 0.1\ndeeply_nested_madness $((depth - 1)) ))'	1660:2	980:21
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Exiting depth $depth with result: $result"'	315:0	341:7
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691890)_[s];SUBSHELL (691891)_[s];'echo "Executing at depth $depth"'	81:0	97:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691890)_[s];SUBSHELL (691891)_[s];'sleep 0.1'	101925:21	1883:31
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691890)_[s];SUBSHELL (691891)_[s];FUNCTION (deeply_nested_madness)_[f];'deeply_nested_madness $((depth - 1))'	275:0	330:7
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691890)_[s];SUBSHELL (691891)_[s];FUNCTION (deeply_nested_madness)_[f];'local depth=$1'	71:0	83:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691890)_[s];SUBSHELL (691891)_[s];FUNCTION (deeply_nested_madness)_[f];'[ $depth -le 0 ]'	66:0	82:0
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691890)_[s];SUBSHELL (691891)_[s];FUNCTION (deeply_nested_madness)_[f];'echo "Reached the bottom."'	81:0	96:1
+SUBSHELL (691836)_[s];FUNCTION (main)_[f];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691884)_[s];SUBSHELL (691885)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691887)_[s];SUBSHELL (691888)_[s];FUNCTION (deeply_nested_madness)_[f];SUBSHELL (691890)_[s];SUBSHELL (691891)_[s];FUNCTION (deeply_nested_madness)_[f];'return'	76:0	91:1
