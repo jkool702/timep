@@ -648,13 +648,13 @@ fi
             timep_LINENO_INIT_FLAG=false
             [[ ${timep_LINENO_OFFSET[${timep_FNEST_CUR}]} ]] || (( timep_LINENO_OFFSET[${timep_FNEST_CUR}] = LINENO + 4 ))
             timep_NPIDWRAP=0
-            timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
-            timep_NEXEC_A=(0)
-            timep_FNEST=("${timep_FUNCNAME_N}")
+            [[ "${timep_NEXEC_0}" == *':CHILD:'* ]] || timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
+            timep_NEXEC_A[${timep_FNEST_CUR}]=0
+            timep_FNEST[${timep_FNEST_CUR}]="${timep_FUNCNAME_N}"
             timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
             echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
             echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
-            timep_NEXEC_HASH_A=("${timep_NEXEC_HASH_CUR}")
+            timep_NEXEC_HASH_A[${timep_FNEST_CUR}]="${timep_NEXEC_HASH_CUR}"
         }
         if ${timep_IS_FUNC_FLAG}; then
             timep_LINENO_0=1
@@ -939,10 +939,11 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         esac
 
     timep_runVarsSrc='
-declare -g timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD timep_FNEST_CUR timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BASHPID_STR_0 timep_NPIDWRAP timep_BG_PID_COUNTER timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR timep_NEXEC_END timep_SKIP_DEBUG_UNTIL_FUNC_FLAG timep_START_TIME timep_START_UTIME timep_START_STIME timep_BG_FUNC_RETURN_TRAP_FLAG
-declare -ga timep_BASH_COMMAND_PREV timep_FNEST timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_STARTTIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS timep_LAST_CMD_WORD timep_IS_BG_FUNC_FLAG timep_BASH_SOURCE_N timep_IS_SOURCE_FLAG
-declare -gx timep_TMPDIR timep_NEXEC_0 timep_NEXEC_CUR timep_LOCK_FD
-: "${timep_FNEST[0]:='"''"'}" "${timep_NEXEC_A[0]:='"''"'}" "${timep_NEXEC_HASH_A[0]:='"''"'}"
+declare -g timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD  timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BASHPID_STR_0 timep_BG_PID_COUNTER timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR timep_NEXEC_END timep_SKIP_DEBUG_UNTIL_FUNC_FLAG timep_START_TIME timep_START_UTIME timep_START_STIME timep_BG_FUNC_RETURN_TRAP_FLAG 
+declare -ga timep_BASH_COMMAND_PREV timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_STARTTIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS timep_LAST_CMD_WORD timep_IS_BG_FUNC_FLAG timep_BASH_SOURCE_N timep_IS_SOURCE_FLAG timep_FNEST
+declare -gx timep_TMPDIR timep_NEXEC_0 timep_NEXEC_CUR timep_LOCK_FD timep_NPIDWRAP timep_FNEST_CUR
+: "${timep_FNEST_CUR:=0}"
+: "${timep_FNEST[$timep_FNEST_CUR]:='"''"'}" "${timep_NEXEC_A[$timep_FNEST_CUR]:='"''"'}" "${timep_NEXEC_HASH_A[$timep_FNEST_CUR]:='"''"'}"
 '
 
     timep_runSetupSrc='
@@ -970,7 +971,6 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
         timep_BG_PID_PREV="$!"
         timep_BG_PID_COUNTER='"''"'
         timep_BASH_SUBSHELL_PREV="$BASH_SUBSHELL"
-        timep_NEXEC_A=(0)
         timep_NEXEC_N=0
         timep_NEXEC_CUR=0
         timep_NPIDWRAP=0
@@ -1008,13 +1008,14 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
 
     timep_runMainSrc='set -mT
 . "${timep_TMPDIR}/vars.bash"
-: "${timep_FNEST[0]:='"''"'}" "${timep_NEXEC_A[0]:='"''"'}" "${timep_NEXEC_HASH_A[0]:='"''"'}"
+: "${timep_FNEST_CUR:=0}"
+: "${timep_FNEST[$timep_FNEST_CUR]:='"''"'}" "${timep_NEXEC_A[$timep_FNEST_CUR]:='"''"'}" "${timep_NEXEC_HASH_A[$timep_FNEST_CUR]:='"''"'}"
 [[ -x "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" ]] || _timep_SETUP
 enable -f "/dev/shm/.timep/lib/${USER}-${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
 timep_NPIDWRAP=0
 timep_NEXEC_0="{${timep_NPIDWRAP}-${BASHPID}}"
-timep_NEXEC_A[0]=0
-timep_FNEST[0]='"'"'main'"'"'
+timep_NEXEC_A[$timep_FNEST_CUR]=0
+timep_FNEST[$timep_FNEST_CUR]='"'"'main'"'"'
 timep_hash - '"'"'timep_NEXEC_HASH_CUR'"'"' <<<"${timep_NEXEC_0}"
 echo "${timep_NEXEC_0}" >"${timep_TMPDIR}/.log/.hash/log.${timep_NEXEC_HASH_CUR}"
 echo "${timep_NEXEC_HASH_CUR} --> ${timep_NEXEC_0}" >>"${timep_TMPDIR}/run.log.txt"
@@ -1069,26 +1070,20 @@ echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
 builtin trap - DEBUG EXIT RETURN
 set -mT
 . "\${timep_TMPDIR}/vars.bash"
-: "\${timep_FNEST[0]:=''}" "\${timep_NEXEC_A[0]:=''}" "\${timep_NEXEC_HASH_A[0]:=''}" "\${timep_BASH_SOURCE_N[0]:=''}"
+: "\${timep_FNEST_CUR:=\${#FUNCNAME[@]}}"
+: "\${timep_FNEST[\$timep_FNEST_CUR]:='"''"'}" "\${timep_NEXEC_A[\$timep_FNEST_CUR]:='"''"'}" "\${timep_NEXEC_HASH_A[\$timep_FNEST_CUR]:='"''"'}"
 [[ -x "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" ]] || _timep_SETUP
 enable -f "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
 timep_hash - timep_NEXEC_HASH_PARENT <<<"\${timep_NEXEC_0}"
-timep_NEXEC_0+=".\${timep_NEXEC_CUR}::CHILD.{0-\${BASHPID}}"
-timep_NEXEC_A[0]=0
-timep_FNEST[0]="\${#FUNCNAME[@]}"
-: "\${timep_FNEST[0]:-0}"
+timep_NEXEC_0+=".\${timep_NEXEC_CUR}:CHILD:{\${timep_NPIDWRAP}-\${BASHPID}}"
+timep_NEXEC_A[\$timep_FNEST_CUR]=0
+timep_NEXEC_CUR=0
 timep_hash - timep_NEXEC_HASH_CUR <<<"\${timep_NEXEC_0}"
 echo "<< (CHILD): \${timep_NEXEC_HASH_CUR} {\${timep_NEXEC_0}} >>" >>"\${timep_TMPDIR}/.log/log.\${timep_NEXEC_HASH_PARENT}"
+echo "\${timep_NEXEC_HASH_CUR} --> \${timep_NEXEC_0}" >>"\${timep_TMPDIR}/run.log.txt"
 unset "timep_NEXEC_HASH_PARENT"
-timep_TMPDIR_PARENT="\${timep_TMPDIR}"
-timep_TMPDIR="\${timep_TMPDIR}/.child/\${timep_NEXEC_HASH_CUR}"
-mkdir -p "\${timep_TMPDIR}"/.log/.{runtimes,endtimes,times,hash}
-mkdir -p "\${timep_TMPDIR}"/{profiles,.needs_merge,.pid_used}
-mkdir -p "\${timep_TMPDIR}/.worker/delete"
-printf '%s\n' '0' >"\${timep_TMPDIR}/.log/.count.bg_pid"
-cp "\${timep_TMPDIR_PARENT}"/*.bash "\${timep_TMPDIR}"
 echo "\${timep_NEXEC_0}" >"\${timep_TMPDIR}/.log/.hash/\${timep_NEXEC_HASH_CUR}"
-timep_NEXEC_HASH_A=("\${timep_NEXEC_HASH_CUR}")
+timep_NEXEC_HASH_A+=("\${timep_NEXEC_HASH_CUR}")
 . "\${timep_TMPDIR}/functions.bash"
 export BASH_ENV="\${timep_TMPDIR}/env.bash"
 . "\${timep_TMPDIR}/setup.bash"
@@ -1220,16 +1215,6 @@ EOF
     # get final end times
     read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
     read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
-
-    # move logs from scripts called by the profiled code into main log dir
-    if [[ -d "${timep_TMPDIR}/.child" ]]; then
-        shopt globstar | grep -qF 'on' && restoreGlobstarFlag=false || restoreGlobstarFlag=true
-        shopt -s globstar
-        \mv "${timep_TMPDIR}"/.child/**/.log/log.* "${timep_TMPDIR}/.log"
-        \mv "${timep_TMPDIR}"/.child/**/.log/.hash/log.* "${timep_TMPDIR}/.log"/.hash
-        \mv "${timep_TMPDIR}"/.child/**/.log/.runtimes/* "${timep_TMPDIR}/.log/.runtimes"
-        \mv "${timep_TMPDIR}"/.child/**/.log/.endtimes/* "${timep_TMPDIR}/.log/.endtimes"
-    fi
 
     # define helper functions for getting runtime from timestamp differences and for summing runtimes
 
@@ -1591,7 +1576,7 @@ _timep_PROCESS_LOG() {
     logDepth="${#logDepth}"
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< \(CHILD\)\: [^\n]* >>)\n([^\n]+)\:\:\t?([^\n]+)\n/\1\3::\t\2\4 >>\n/g;' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
