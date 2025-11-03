@@ -1,136 +1,802 @@
-SUBSHELL (803333)_[s];': | cat 0<&0 | cat | tee'	4526:43	6220:58
-SUBSHELL (803333)_[s];'printf '\''%s\n'\'' {1..10} | << (SUBSHELL): 803359 >> | tee | cat'	5280:49	9040:75
-SUBSHELL (803333)_[s];'echo 0'	88:2	101:3
-SUBSHELL (803333)_[s];'echo 1'	546:11	432:12
-SUBSHELL (803333)_[s];'echo 3 (&)'	271:4	298:6
-SUBSHELL (803333)_[s];'echo 4 (&)'	537:10	303:6
-SUBSHELL (803333)_[s];'echo 11'	74:0	88:0
-SUBSHELL (803333)_[s];'echo 12 (&)'	578:12	323:8
-SUBSHELL (803333)_[s];'$'\''cat <<EOF\nfoo\nbar\nbaz\nEOF\n | grep foo | sed '\''s/o/O/g'\'' | wc -l'	4770:46	7599:68
-SUBSHELL (803333)_[s];'echo "today is $(date +%Y-%m-%d)"'	462:8	321:8
-SUBSHELL (803333)_[s];'x=$( ( echo nested, echo subshell ) | grep sub)'	641:12	502:13
-SUBSHELL (803333)_[s];'diff <(ls /) <(ls /tmp) (&)'	456:8	329:8
-SUBSHELL (803333)_[s];'grep pattern <(sed '\''s/^/>>/'\'' > /dev/null) (&)'	499:9	351:9
-SUBSHELL (803333)_[s];'read -r n <&${CO[0]}'	36678:220	16798:99
-SUBSHELL (803333)_[s];'printf "got %s\n" "$n"'	282:5	329:8
-SUBSHELL (803333)_[s];'let "x = 5 + 6"'	73:0	88:0
-SUBSHELL (803333)_[s];'arr=(one two three)'	76:0	90:0
-SUBSHELL (803333)_[s];'echo ${arr[@]}'	79:1	94:1
-SUBSHELL (803333)_[s];'((i=0))'	70:0	95:2
-SUBSHELL (803333)_[s];'((i<3))'	296:6	352:10
-SUBSHELL (803333)_[s];'echo "$i"'	236:4	269:5
-SUBSHELL (803333)_[s];'((i++))'	221:3	263:5
-SUBSHELL (803333)_[s];'cmd="echo inside-eval"'	67:0	81:0
-SUBSHELL (803333)_[s];'eval "$cmd"'	75:0	89:0
-SUBSHELL (803333)_[s];'echo inside-eval'	171:3	197:4
-SUBSHELL (803333)_[s];'eval "eval \"$cmd\""'	73:0	88:0
-SUBSHELL (803333)_[s];'eval "echo inside-eval"'	71:0	85:0
-SUBSHELL (803333)_[s];'trap '\''echo got USR1, sleep .01'\'' USR1'	38745:270	38649:272
-SUBSHELL (803333)_[s];'kill -USR1 $BASHPID'	84:2	97:2
-SUBSHELL (803333)_[s];'@TRAP (USR1): echo got USR1\, sleep .01'	16468:73	6437:63
-SUBSHELL (803333)_[s];'echo after-signal'	84:2	98:2
-SUBSHELL (803333)_[s];'cat <(echo hi) <(echo bye) <(echo 1, echo 2, echo 3) (&)'	893:13	514:13
-SUBSHELL (803333)_[s];'for i in {1..3} (&)'	1170:15	1232:17
-SUBSHELL (803333)_[s];'read x'	3937:40	1558:21
-SUBSHELL (803333)_[s];'(( x % 2 == 0 ))'	5564:53	5213:53
-SUBSHELL (803333)_[s];'echo even "$x"'	467:9	545:14
-SUBSHELL (803333)_[s];'sleep 1 (&)'	321:7	360:11
-SUBSHELL (803333)_[s];'wait -n $!'	1001423:270	1443:20
-SUBSHELL (803333)_[s];SUBSHELL (803427)_[s];'echo odd "$x"'	83:1	97:2
-SUBSHELL (803333)_[s];SUBSHELL (803365)_[s];'echo 2'	105:2	124:3
-SUBSHELL (803333)_[s];SUBSHELL (803388)_[s];'echo 14'	78:1	92:1
-SUBSHELL (803333)_[s];SUBSHELL (803369)_[s];'echo 5'	80:1	94:1
-SUBSHELL (803333)_[s];SUBSHELL (803435)_[s];'echo odd "$x"'	82:1	96:2
-SUBSHELL (803333)_[s];SUBSHELL (803428)_[s];'echo odd "$x"'	81:1	94:1
-SUBSHELL (803333)_[s];SUBSHELL (803363-1)_[s];'echo B'	82:1	93:1
-SUBSHELL (803333)_[s];SUBSHELL (803408)_[s];'grep sub'	2386:25	4856:49
-SUBSHELL (803333)_[s];FUNCTION (gg)_[f];'gg 16'	568:11	461:12
-SUBSHELL (803333)_[s];SUBSHELL (803376)_[s];'echo 9.1a (&)'	281:5	309:7
-SUBSHELL (803333)_[s];SUBSHELL (803376)_[s];'echo 9.2a'	76:0	91:1
-SUBSHELL (803333)_[s];SUBSHELL (803374)_[s];'echo 9 (&)'	280:4	310:7
-SUBSHELL (803333)_[s];SUBSHELL (803438)_[s];'trap '\''echo bye'\'' EXIT'	28663:175	28546:215
-SUBSHELL (803333)_[s];SUBSHELL (803438)_[s];'exit'	96:2	104:3
-SUBSHELL (803333)_[s];SUBSHELL (803438)_[s];'@TRAP (EXIT): echo bye'	1940:18	1947:23
-SUBSHELL (803333)_[s];SUBSHELL (803423)_[s];'echo 1'	287:5	303:6
-SUBSHELL (803333)_[s];SUBSHELL (803423)_[s];'echo 2'	73:0	87:0
-SUBSHELL (803333)_[s];SUBSHELL (803423)_[s];'echo 3'	87:2	97:2
-SUBSHELL (803333)_[s];SUBSHELL (803407)_[s];'date +%Y-%m-%d'	2939:27	2939:31
-SUBSHELL (803333)_[s];SUBSHELL (803387)_[s];'echo 13'	78:1	91:1
-SUBSHELL (803333)_[s];SUBSHELL (803395)_[s];'echo A2 (&)'	528:10	565:14
-SUBSHELL (803333)_[s];SUBSHELL (803362)_[s];'echo'	76:0	91:1
-SUBSHELL (803333)_[s];SUBSHELL (803443)_[s];'trap '\'''\'' RETURN EXIT'	26454:138	26402:173
-SUBSHELL (803333)_[s];SUBSHELL (803380)_[s];'echo 10 (&)'	454:8	506:13
-SUBSHELL (803333)_[s];SUBSHELL (803432)_[s];'echo odd "$x"'	310:6	357:10
-SUBSHELL (803333)_[s];SUBSHELL (803433)_[s];'seq 1 4'	1130:14	1204:16
-SUBSHELL (803333)_[s];SUBSHELL (803443)_[s];'exit'	73:0	85:0
-SUBSHELL (803333)_[s];SUBSHELL (803433)_[s];':'	82:1	97:2
-SUBSHELL (803333)_[s];SUBSHELL (803395)_[s];'echo A1'	153:3	179:4
-SUBSHELL (803333)_[s];SUBSHELL (803421)_[s];'echo hi'	319:7	369:11
-SUBSHELL (803333)_[s];SUBSHELL (803373)_[s];'echo 8'	77:0	92:1
-SUBSHELL (803333)_[s];SUBSHELL (803431)_[s];'echo odd "$x"'	159:3	184:4
-SUBSHELL (803333)_[s];SUBSHELL (803445)_[s];'echo $BASHPID'	213:3	248:4
-SUBSHELL (803333)_[s];SUBSHELL (803411)_[s];'ls / (^)'	136:3	136:4
-SUBSHELL (803333)_[s];SUBSHELL (803372)_[s];'echo 7'	77:0	91:1
-SUBSHELL (803333)_[s];SUBSHELL (803425)_[s];'seq 1 4'	864:12	943:15
-SUBSHELL (803333)_[s];SUBSHELL (803393)_[s];'echo a (&)'	410:8	435:12
-SUBSHELL (803333)_[s];SUBSHELL (803425)_[s];':'	82:1	96:2
-SUBSHELL (803333)_[s];FUNCTION (ff)_[f];'ff 15'	125:3	141:4
-SUBSHELL (803333)_[s];FUNCTION (ff)_[f];'echo "${*}"'	146:3	168:4
-SUBSHELL (803333)_[s];SUBSHELL (803377)_[s];'echo 9.1b'	77:0	91:1
-SUBSHELL (803333)_[s];SUBSHELL (803377)_[s];'echo 9.2b (&)'	305:6	342:9
-SUBSHELL (803333)_[s];SUBSHELL (803379)_[s];'echo 9.999'	475:9	348:9
-SUBSHELL (803333)_[s];SUBSHELL (803379)_[s];'echo 9.5'	109:2	128:3
-SUBSHELL (803333)_[s];SUBSHELL (803359)_[s];'mapfile -t A 0<&0'	1105:14	110:3
-SUBSHELL (803333)_[s];SUBSHELL (803359)_[s];'printf '\''%s%s\n'\'' "${A[@]}"'	82:1	97:2
-SUBSHELL (803333)_[s];SUBSHELL (803422)_[s];'echo bye'	116:2	135:3
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];'trap '\''echo exit'\'' EXIT'	25229:105	25156:135
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];'trap '\''echo return'\'' RETURN'	27650:156	27586:194
-SUBSHELL (803333)_[s];SUBSHELL (803436)_[s];'echo odd "$x"'	307:6	355:10
-SUBSHELL (803333)_[s];SUBSHELL (803370)_[s];'echo 6 (&)'	283:5	313:7
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];'exit'	77:0	92:1
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];'@TRAP (EXIT): echo exit'	3019:29	3026:33
-SUBSHELL (803333)_[s];SUBSHELL (803414)_[s];'sed '\''s/^/>>/'\'' > /dev/null (^)'	1975:20	1975:24
-SUBSHELL (803333)_[s];SUBSHELL (803375)_[s];'echo 9.1'	81:1	95:2
-SUBSHELL (803333)_[s];SUBSHELL (803375)_[s];'echo 9.2 (&)'	295:6	325:8
-SUBSHELL (803333)_[s];SUBSHELL (803378)_[s];'echo 9.1c (&)'	294:5	316:7
-SUBSHELL (803333)_[s];SUBSHELL (803429)_[s];'seq 1 4'	1981:22	2005:29
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];'trap '\''echo bye'\'' RETURN EXIT'	38227:245	38121:243
-SUBSHELL (803333)_[s];SUBSHELL (803378)_[s];'echo 9.2c'	84:2	94:1
-SUBSHELL (803333)_[s];SUBSHELL (803429)_[s];':'	84:2	99:2
-SUBSHELL (803333)_[s];SUBSHELL (803444)_[s];'trap - EXIT'	23515:89	23463:116
-SUBSHELL (803333)_[s];SUBSHELL (803444)_[s];'exit'	69:0	83:0
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];'exit'	78:1	93:1
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];'@TRAP (EXIT): echo bye'	3053:31	3059:35
-SUBSHELL (803333)_[s];SUBSHELL (803412)_[s];'ls /tmp (^)'	3531:37	3531:43
-SUBSHELL (803333)_[s];SUBSHELL (803416)_[s];'for i in {1..3}'	233:4	277:5
-SUBSHELL (803333)_[s];SUBSHELL (803416)_[s];'echo "$i"'	234:4	280:5
-SUBSHELL (803333)_[s];SUBSHELL (803416)_[s];'sleep .01'	33848:196	3883:46
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];FUNCTION (trap)_[f];'@TRAP (RETURN): echo return'	15723:63	15694:86
-SUBSHELL (803333)_[s];SUBSHELL (803445)_[s];SUBSHELL (803446)_[s];'echo $BASHPID'	87:2	103:3
-SUBSHELL (803333)_[s];SUBSHELL (12207-2)_[s];SUBSHELL (803396-2)_[s];'echo b'	85:2	100:2
-SUBSHELL (803333)_[s];SUBSHELL (803379)_[s];SUBSHELL (803389)_[s];'echo 9.3 (&)'	279:4	309:7
-SUBSHELL (803333)_[s];SUBSHELL (803408)_[s];SUBSHELL (803409)_[s];'echo nested'	77:0	91:1
-SUBSHELL (803333)_[s];SUBSHELL (803379)_[s];SUBSHELL (803389)_[s];'echo 9.4'	76:0	99:2
-SUBSHELL (803333)_[s];SUBSHELL (803408)_[s];SUBSHELL (803409)_[s];'echo subshell'	78:1	87:0
-SUBSHELL (803333)_[s];SUBSHELL (803363)_[s];SUBSHELL (803364)_[s];'echo A (&)'	308:6	332:9
-SUBSHELL (803333)_[s];FUNCTION (gg)_[f];SUBSHELL (803392)_[s];'echo "$*"'	117:2	129:3
-SUBSHELL (803333)_[s];SUBSHELL (12207-4)_[s];SUBSHELL (803397-4)_[s];'echo A3'	222:3	252:5
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];FUNCTION (trap)_[f];'@TRAP (RETURN): echo bye'	25863:121	25793:154
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];FUNCTION (gg)_[f];'gg 1'	1394:17	1308:19
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];FUNCTION (gg)_[f];'gg 1'	1380:16	1294:18
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];FUNCTION (gg)_[f];'@TRAP (RETURN): echo bye'	3368:33	3373:38
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];FUNCTION (gg)_[f];'@TRAP (RETURN): echo return'	3390:35	3398:40
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];FUNCTION (gg)_[f];SUBSHELL (803442)_[s];'echo "$*"'	316:7	365:11
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];FUNCTION (gg)_[f];SUBSHELL (803440)_[s];'echo "$*"'	326:7	375:11
-SUBSHELL (803333)_[s];SUBSHELL (12207-3)_[s];SUBSHELL (803397-3)_[s];SUBSHELL (803402-3)_[s];'echo A4'	81:1	95:2
-SUBSHELL (803333)_[s];FUNCTION (gg)_[f];SUBSHELL (803392)_[s];FUNCTION (ff)_[f];'ff "$@"'	94:2	112:3
-SUBSHELL (803333)_[s];SUBSHELL (803445)_[s];SUBSHELL (803446)_[s];SUBSHELL (803447)_[s];'echo $BASHPID'	90:2	105:3
-SUBSHELL (803333)_[s];FUNCTION (gg)_[f];SUBSHELL (803392)_[s];FUNCTION (ff)_[f];'echo "${*}"'	108:2	126:3
-SUBSHELL (803333)_[s];SUBSHELL (803395)_[s];SUBSHELL (803397)_[s];SUBSHELL (803398)_[s];'echo A5 (&)'	538:10	582:15
-SUBSHELL (803333)_[s];SUBSHELL (803445)_[s];SUBSHELL (803446)_[s];SUBSHELL (803447)_[s];SUBSHELL (803448)_[s];'echo $BASHPID'	121:2	141:4
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];FUNCTION (gg)_[f];SUBSHELL (803442)_[s];FUNCTION (ff)_[f];'ff "$@"'	69:0	82:0
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];FUNCTION (gg)_[f];SUBSHELL (803442)_[s];FUNCTION (ff)_[f];'echo "${*}"'	78:1	92:1
-SUBSHELL (803333)_[s];SUBSHELL (803441)_[s];FUNCTION (gg)_[f];SUBSHELL (803442)_[s];FUNCTION (ff)_[f];'@TRAP (RETURN): echo return'	1981:22	1990:26
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];FUNCTION (gg)_[f];SUBSHELL (803440)_[s];FUNCTION (ff)_[f];'ff "$@"'	72:0	82:0
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];FUNCTION (gg)_[f];SUBSHELL (803440)_[s];FUNCTION (ff)_[f];'echo "${*}"'	80:1	94:1
-SUBSHELL (803333)_[s];SUBSHELL (803439)_[s];FUNCTION (gg)_[f];SUBSHELL (803440)_[s];FUNCTION (ff)_[f];'@TRAP (RETURN): echo bye'	1996:23	2005:29
+SUBSHELL (842621)_[s];'set -o pipefail'	67:0	81:0
+SUBSHELL (842621)_[s];'trap '\''echo "TRAP: ERR at line $LINENO" >&2'\'' ERR'	25954:384	25792:492
+SUBSHELL (842621)_[s];'cleanup_stack=()'	71:0	85:0
+SUBSHELL (842621)_[s];'trap execute_cleanups EXIT'	25381:371	25270:476
+SUBSHELL (842621)_[s];'declare -A signal_counts'	76:0	89:1
+SUBSHELL (842621)_[s];'for sig in HUP INT QUIT TERM USR1 USR2'	385:58	457:67
+SUBSHELL (842621)_[s];'signal_counts[$sig]=0'	386:58	460:68
+SUBSHELL (842621)_[s];'trap '\''signal_counts['\''$sig'\'']=$((signal_counts['\''$sig'\'']+1)), kill -'\''$sig'\'' $$ 2>/dev/null || true'\'' $sig'	152272:892	151595:636
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'main "$@"'	63:0	75:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'echo "Starting the Bash Profiler Destroyer..." 1>&2 (&)'	526:90	544:101
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'local main_pid=$! (&)'	355:51	379:54
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'local timeout_pid=$!'	67:0	82:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'wait $main_pid 2> /dev/null'	5015423:1586	429:62
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'true'	362:54	415:60
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'kill $timeout_pid 2> /dev/null'	503:85	549:102
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];'echo "Bash Profiler Destroyer completed. Check if your profiler survived!" 1>&2'	87:1	100:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842645)_[s];'sleep 5'	5002722:1586	2635:298
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842645)_[s];'kill -TERM $main_pid 2> /dev/null'	360:53	416:60
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local recursive_pid=$!'	67:0	81:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local coproc_pid=$!'	70:0	83:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local procsub_pid=$!'	69:0	83:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local subshell_pid=$!'	70:0	83:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local fd_pid=$!'	72:0	86:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local cmdsub_pid=$!'	71:0	86:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local array_pid=$!'	1:0	381:55
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local job_pid=$!'	1:0	316:24
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local eval_pid=$!'	1:0	300:22
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local pipe_pid=$!'	1:0	405:58
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'true'	2771:141	3253:306
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'local running=0'	1048:117	1192:148
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'for pid in $recursive_pid $coproc_pid $procsub_pid $subshell_pid $fd_pid $cmdsub_pid $array_pid $job_pid $eval_pid $pipe_pid'	9269:237	10928:379
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'kill -0 $pid 2> /dev/null'	11765:302	13420:397
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'((running++))'	2009:132	2366:293
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'[ $((RANDOM % 10)) -eq 0 ]'	2049:135	2395:294
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'[ $running -eq 0 ]'	1131:120	1344:153
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'sleep 0.01'	99347:814	166606:745
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];'kill -USR1 $pid 2> /dev/null'	87:1	101:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];'IFS= read -r line | echo "$line"'	233886:1010	38425:538
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843632)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	317:31	347:47
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843107)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	297:18	324:27
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843632)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	371:56	1525:253
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843095)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	304:24	336:40
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842699)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	995:116	378:54
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843422)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	306:25	332:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843548)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	335:39
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843476)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	307:26	337:41
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843095)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	346:42	1417:161
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842699)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	563:94	2165:291
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843506)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	300:20	331:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843305)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	302:22	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843422)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	340:38	1488:229
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843548)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	351:47	1453:188
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843476)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	341:39	1428:166
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843638)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	344:46
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843305)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	345:42	1451:182
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843506)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	335:36	1478:215
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843428)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	312:29	331:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843638)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	354:50	1472:210
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843428)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	342:41	1456:189
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843692)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	296:18	329:32
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843692)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	349:45	1457:190
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843107)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	329:35	1419:163
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843536)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	362:54	383:55
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843536)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	373:56	1610:270
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843126)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	298:19	329:32
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843132)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	314:30	338:42
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843187)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	297:18	334:37
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843132)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	349:45	1469:207
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843262)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	297:18	324:27
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843187)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	341:39	1442:172
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843287)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	311:28	341:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843126)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	344:41	1473:211
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843262)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	342:41	1468:205
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843317)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	324:34	353:50
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843602)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	301:21	331:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843287)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	351:47	1784:281
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843317)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	374:56	1558:260
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843218)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	299:19	323:27
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843602)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	370:55	1503:243
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843218)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	341:39	1467:202
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843237)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	336:37	359:52
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843237)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	349:45	1566:261
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843722)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	306:25	337:41
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843722)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	355:51	1466:199
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843584)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	325:34	356:51
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843013)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	376:57	429:62
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843686)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	307:26	333:36
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843206)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	526:90	575:105
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843013)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	385:58	1932:285
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843584)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	395:60	1529:254
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843231)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	299:19	323:27
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843686)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	351:47	1489:230
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843206)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	518:88	1629:273
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843274)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	287:17	314:24
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843231)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	334:36	1464:197
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843274)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	352:48	1435:169
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843051)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	301:21	334:37
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843710)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	329:32
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843051)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	348:43	1679:277
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843710)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	355:51	1468:205
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843392)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	298:19	328:31
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843392)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	350:45	1469:207
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843034)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	309:28	332:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843034)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	353:49	1487:224
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843596)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	301:21	325:27
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843596)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	364:54	1483:220
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843366)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	303:23	333:36
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842963)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	304:24	336:40
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843280)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	318:32	345:47
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843366)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	354:50	1508:244
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843249)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	314:30	339:43
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843620)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	301:21	328:31
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842963)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	371:56	1638:274
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843440)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	315:31	341:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843280)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	358:52	1514:251
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843249)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	353:49	1481:220
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843620)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	356:51	1467:202
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843578)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	317:31	347:47
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843440)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	344:41	1439:170
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843674)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	307:26	331:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843578)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	341:39	1488:229
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843674)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	354:50	1510:246
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];'job_control_nightmare'	744:107	744:126
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843512)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	318:32	342:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843512)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	337:37	1488:229
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843200)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	933:114	1003:137
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843200)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	355:51	1579:266
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843354)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	300:20	330:33
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843410)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	313:29	339:43
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843410)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	361:53	1524:252
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843354)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	348:43	1451:182
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843378)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	299:19	329:32
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843243)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	302:22	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843243)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	350:45	1475:212
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843378)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	352:48	1463:196
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843494)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	447:64	499:91
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843542)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	317:31	345:47
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843494)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	534:90	1805:282
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843644)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	305:24	334:37
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843144)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	302:22	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843542)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	362:54	1532:255
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843644)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	347:43	1463:196
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843144)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	337:37	1433:168
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843398)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	300:20	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843398)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	341:39	1447:178
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843330)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	300:20	326:28
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843704)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	303:23	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843330)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	355:51	1497:238
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843704)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	342:41	1444:175
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842788)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	456:66	492:86
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843082)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	313:29	341:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842788)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	1245:123	719:125
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843082)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	333:35	1453:188
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843572)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	309:28	335:39
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843572)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	351:47	1499:239
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843416)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	304:24	329:32
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843416)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	346:42	1501:240
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842986)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	332:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843268)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	293:17	322:26
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843268)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	361:53	1458:192
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842986)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	447:64	1965:286
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843608)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	306:25	331:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843088)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	322:33	348:48
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843181)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	303:23	331:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843088)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	341:39	1540:256
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843608)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	349:45	1451:182
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843181)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	337:37	1449:179
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843650)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	304:24	334:37
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843518)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	318:32	340:43
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843650)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	351:47	1493:236
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843518)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	352:48	1452:186
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843372)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	304:24	336:40
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843372)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	352:48	1493:236
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843385)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	307:26	333:36
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843385)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	353:49	1447:178
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843680)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	302:22	330:33
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843680)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	357:51	1481:220
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843293)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	323:33	351:49
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843138)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	324:34	361:52
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843194)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	305:24	335:39
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843560)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	335:39
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843293)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	352:48	1493:236
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843138)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	375:57	1477:214
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843194)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	339:38	1725:278
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843560)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	357:51	1485:222
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843452)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	315:31	339:43
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843225)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	339:38	359:52
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843175)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	313:29	339:43
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843452)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	358:52	1821:283
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843225)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	328:35	1423:165
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843175)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	348:43	1502:242
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843698)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	301:21	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843698)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	349:45	1467:202
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843626)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	326:35	344:46
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843668)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	342:41	369:53
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843169)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	314:30	342:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843212)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	301:21	331:35
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843626)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	374:56	1611:271
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843668)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	360:53	1567:262
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843169)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	350:45	1480:218
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843212)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	366:55	1606:269
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843404)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	319:32	342:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843404)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	370:55	1584:268
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843150)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	314:30	341:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842879)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	452:65	490:85
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843150)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	350:45	1728:279
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843458)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	305:24	333:36
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842879)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	1827:130	2085:290
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843458)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	344:41	1479:216
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843256)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	319:32	348:48
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843566)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	301:21	328:31
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843566)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	342:41	1452:186
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843256)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	351:47	1480:218
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843311)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	304:24	326:28
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843119)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	336:40
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843590)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	306:25	334:37
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843348)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	317:31	345:47
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843311)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	366:55	1441:171
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843156)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	324:34	352:50
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843590)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	358:52	1484:221
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843348)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	360:53	1491:232
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843482)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	299:19	326:28
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843119)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	342:41	1488:229
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843156)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	365:55	1623:272
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843482)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	349:45	1443:173
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843614)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	299:19	328:31
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843662)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	312:29	336:40
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843614)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	352:48	1432:167
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843662)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	342:41	1465:197
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843101)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	312:29	341:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843530)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	333:36
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843101)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	344:41	1447:178
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843360)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	334:36	364:52
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843530)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	362:54	1460:194
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843342)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	293:17	321:26
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843360)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	387:58	1555:259
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843464)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	337:41
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843342)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	340:38	1410:159
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843464)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	347:43	1490:231
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843488)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	289:17	319:25
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843488)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	359:52	1452:186
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843113)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	325:34	353:50
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843113)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	347:43	1577:265
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843554)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	310:28	339:43
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843554)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	364:54	1511:248
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843716)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	324:34	351:49
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843716)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	363:54	1580:267
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843324)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	311:28	337:41
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843324)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	349:45	1512:249
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843065)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	341:39	352:50
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843500)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	303:23	330:33
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843065)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	390:59	1551:258
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843336)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	321:32	343:46
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843336)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	353:49	1452:186
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843500)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	357:51	1502:242
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843470)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	315:31	343:46
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843470)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	346:42	1488:229
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843299)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	308:27	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843299)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	335:36	1471:209
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843163)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	300:20	327:30
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843163)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	339:38	1486:223
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843524)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	292:17	316:24
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843656)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	296:18	318:25
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843656)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	352:48	1511:248
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843524)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	347:43	1458:192
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843076)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	454:66	500:92
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843434)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	324:34	324:27
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843076)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	345:42	1514:251
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843446)_[s];'tee >(grep -v '\''^$'\'' > /dev/null) >(wc -l > /dev/null) (&)'	306:25	342:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843434)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	356:51	1492:233
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843446)_[s];'sed '\''s/^/FINAL: /'\'' (&)'	384:57	1575:264
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'generate_recursive_hell 0'	280:16	323:27
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'local depth=${1:-0}'	279:16	328:31
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'local max_depth=50'	68:0	82:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'[ $depth -lt $max_depth ]'	73:0	86:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'$'\''eval "nested_func_$depth() {\n            local my_depth=$depth\n            { { { echo \\"Depth: \\$my_depth\\" >&2, } 2>&1 | sed \'\''s/^/  /\'\'' >&2, } & } &\n            wait \\$! 2>/dev/null || true\n            generate_recursive_hell \\$((depth + 1))\n'	110:1	125:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'"nested_func_$depth" (&)'	297:18	320:25
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];'start_coproc_hell'	269:16	307:23
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];'exec 3>&1 4>&2'	72:0	86:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];'mkfifo /tmp/bashtest_fifo1_$$ /tmp/bashtest_fifo2_$$ 2> /dev/null'	1123:119	1223:149
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'local pid=$! (&)'	552:92	577:106
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'wait $pid 2> /dev/null'	4976:186	633:117
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];'true'	152:4	172:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];'coproc1_pid=$! (&)'	646:102	670:121
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];'echo "test message" > /tmp/bashtest_fifo1_$$'	220:14	220:19
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];'cat /tmp/bashtest_fifo2_$$ (&)'	546:91	585:107
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];'exec 3>&- 4>&-'	157:6	182:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'fd_chaos'	294:17	337:41
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'exec 5>&1 6>&2 7< /dev/null'	323:33	367:53
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'exec 1>&2 2>&5'	145:3	168:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'$'\''exec 8> >(while IFS= read -r line, do\n    echo "FD8: $line" 1>&6,\ndone) (&)'	585:98	618:115
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'echo "Testing FD routing" 1>&5 (&)'	482:77	522:98
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'echo "Testing FD routing" 1>&6 (&)'	454:66	499:91
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'echo "Testing FD routing" 1>&8 (&)'	525:89	579:106
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'exec 1>&5 2>&6 5>&- 6>&- 8>&-'	200:13	231:20
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'mkfifo /tmp/bashtest_pipe_$$ 2> /dev/null'	4459:176	1745:280
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];'wait 2> /dev/null'	5622:196	194:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];'command_substitution_hell'	296:18	338:42
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];'local result'	163:7	196:16
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];'$'\''result=$({ echo "Level 1" & echo "$({ echo "Level 2" & echo "$({ echo "Level 3" & echo "$(echo "Level 4" & wait 2> /dev/null\necho "Level 4 done")" & wait 2> /dev/null\necho "Level 3 done", } & wait 2> /dev/null)" & wait 2> /dev/null\necho "Level 2 done"'	675:104	377:53
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'array_madness'	101:1	120:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'local -a array1=(a b c d e)'	109:1	129:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'local -A array2=([key1]="val1" [key2]="val2")'	126:2	142:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'local -n nameref=array1'	99:1	118:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'local varname="array1"'	131:2	156:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'eval "local -a indirect=(\"\${${varname}[@]}\")"'	144:3	167:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'local -a indirect=("${array1[@]}")'	165:7	190:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'for i in "${!nameref[@]}" (&)'	3547:154	3270:308
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'wait 2> /dev/null'	27010:411	1375:155
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'local -A dynamic_array'	3014:146	459:67
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'for key in $(echo "key1 key2 key3" | tr '\'' '\'' '\''\n'\'' | sort -R)'	412:60	490:85
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];'dynamic_array["$(echo "$key" | md5sum | cut -d'\'' '\'' -f1)"]="$(echo "Value for $key" | base64 & wait $!)" (&)'	1373:125	1497:238
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];'echo "Command substitution result: $result" 1>&2'	197:13	227:19
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];'eval_hell'	78:0	92:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];'local code='\''echo "Level 1"'\'''	161:6	188:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];'for i in {2..5}'	582:97	691:123
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];'code="eval '\''echo \"Level $i\" >&2, $code'\''"'	580:97	683:123
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];'eval "$code & wait \$! 2>/dev/null" (&)'	688:104	449:66
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];'wait 2> /dev/null'	31178:455	587:108
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];'subshell_variable_hell'	80:0	89:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];'local parent_var="PARENT"'	70:0	84:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];'export EXPORT_VAR="EXPORTED" (&)'	377:57	394:57
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];'sed '\''s/^/OUTER: /'\'' (&)'	311:28	339:43
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];'wait 2> /dev/null'	61100:764	481:79
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];'process_substitution_hell'	70:0	85:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];'local data="initial" (&)'	388:58	410:59
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];'pipe_chaos'	131:2	156:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];'seq 1 10 (&)'	419:61	458:67
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];'$'\''tee >(while read -r n, do\n    echo "Branch1: $n" 1>&2 &\ndone) >(while read -r n, do\n    echo "Branch2: $n" 1>&2 &\ndone) (&)'	619:100	1468:205
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];'wait 2> /dev/null'	66300:764	500:92
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];'job_control_nightmare'	77:0	92:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];'for i in {1..5} (&)'	2970:144	2918:302
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];'wait 2> /dev/null'	68887:764	508:94
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];'wait 2> /dev/null'	415525:1352	676:122
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843034)_[s];SUBSHELL (12207)_[s];SUBSHELL (843043)_[s];'wc -l > /dev/null'	624:101	624:116
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843065)_[s];SUBSHELL (12207)_[s];SUBSHELL (843070)_[s];'grep -v '\''^$'\'' > /dev/null'	171:9	171:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843311)_[s];SUBSHELL (12207)_[s];SUBSHELL (843314)_[s];'wc -l > /dev/null'	404:60	404:58
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843584)_[s];SUBSHELL (12207)_[s];SUBSHELL (843586)_[s];'grep -v '\''^$'\'' > /dev/null'	444:62	444:64
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843231)_[s];SUBSHELL (12207)_[s];SUBSHELL (843234)_[s];'wc -l > /dev/null'	474:72	474:74
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842963)_[s];SUBSHELL (12207)_[s];SUBSHELL (842971)_[s];'grep -v '\''^$'\'' > /dev/null'	248:15	248:21
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843385)_[s];SUBSHELL (12207)_[s];SUBSHELL (843389)_[s];'wc -l > /dev/null'	494:82	494:87
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843013)_[s];SUBSHELL (12207)_[s];SUBSHELL (843020)_[s];'grep -v '\''^$'\'' > /dev/null'	151:4	151:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843243)_[s];SUBSHELL (12207)_[s];SUBSHELL (843245)_[s];'grep -v '\''^$'\'' > /dev/null'	179:11	179:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'eval '\''echo "Level 5" >&2, eval '\''echo "Level 4" 1>&2'	192:12	200:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'echo "Level 5" 1>&2'	170:9	190:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843082)_[s];SUBSHELL (12207)_[s];SUBSHELL (843084)_[s];'grep -v '\''^$'\'' > /dev/null'	153:5	153:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'eval echo Level 4'	147:3	172:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'echo Level 4'	151:4	176:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'eval '\''echo "Level 3" >&2, eval '\''echo "Level 2" 1>&2'	183:12	215:18
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'echo "Level 3" 1>&2'	168:8	194:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'eval echo Level 2'	139:2	163:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'echo Level 2'	189:12	221:19
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'echo "Level 1"'\'''\'''\'''\'' (&)'	475:73	529:99
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842773)_[s];'wait $! 2> /dev/null'	467:70	499:91
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843614)_[s];SUBSHELL (12207)_[s];SUBSHELL (843616)_[s];'grep -v '\''^$'\'' > /dev/null'	157:6	157:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843500)_[s];SUBSHELL (12207)_[s];SUBSHELL (843502)_[s];'grep -v '\''^$'\'' > /dev/null'	157:6	157:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842721)_[s];'sleep 0.5'	501848:1586	1404:157
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842721)_[s];'jobs -p | xargs -r kill 2> /dev/null'	3114:149	3472:310
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843225)_[s];SUBSHELL (12207)_[s];SUBSHELL (843227)_[s];'grep -v '\''^$'\'' > /dev/null'	154:5	154:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];'sleep 0.1 (&)'	445:63	487:83
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];'local sleep_pid=$! (&)'	2548:137	755:127
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843187)_[s];SUBSHELL (12207)_[s];SUBSHELL (843189)_[s];'grep -v '\''^$'\'' > /dev/null'	153:5	153:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843410)_[s];SUBSHELL (12207)_[s];SUBSHELL (843413)_[s];'wc -l > /dev/null'	469:70	469:72
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843366)_[s];SUBSHELL (12207)_[s];SUBSHELL (843369)_[s];'wc -l > /dev/null'	371:56	371:53
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843608)_[s];SUBSHELL (12207)_[s];SUBSHELL (843611)_[s];'wc -l > /dev/null'	487:79	487:83
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843144)_[s];SUBSHELL (12207)_[s];SUBSHELL (843147)_[s];'wc -l > /dev/null'	486:79	486:82
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843095)_[s];SUBSHELL (12207)_[s];SUBSHELL (843097)_[s];'grep -v '\''^$'\'' > /dev/null'	146:3	146:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843656)_[s];SUBSHELL (12207)_[s];SUBSHELL (843659)_[s];'wc -l > /dev/null'	477:75	477:77
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843156)_[s];SUBSHELL (12207)_[s];SUBSHELL (843158)_[s];'grep -v '\''^$'\'' > /dev/null'	172:10	172:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843336)_[s];SUBSHELL (12207)_[s];SUBSHELL (843338)_[s];'grep -v '\''^$'\'' > /dev/null'	154:5	154:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843138)_[s];SUBSHELL (12207)_[s];SUBSHELL (843141)_[s];'wc -l > /dev/null'	591:99	591:109
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843566)_[s];SUBSHELL (12207)_[s];SUBSHELL (843568)_[s];'grep -v '\''^$'\'' > /dev/null'	146:3	146:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];SUBSHELL (842685)_[s];'IFS= read -r line'	29350:440	480:78
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];SUBSHELL (842685)_[s];'echo "FD8: $line" 1>&6'	208:14	234:20
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843305)_[s];SUBSHELL (12207)_[s];SUBSHELL (843308)_[s];'wc -l > /dev/null'	462:68	462:69
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843299)_[s];SUBSHELL (12207)_[s];SUBSHELL (843301)_[s];'grep -v '\''^$'\'' > /dev/null'	204:13	204:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842790)_[s];'nameref[$i]="${nameref[$i]}_modified" (&)'	497:83	533:99
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842790)_[s];'local elem="${nameref[$i]}"'	220:14	249:21
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842790)_[s];'echo "Processing: $elem" 1>&2 (&)'	552:92	587:108
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843392)_[s];SUBSHELL (12207)_[s];SUBSHELL (843394)_[s];'grep -v '\''^$'\'' > /dev/null'	151:4	151:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843698)_[s];SUBSHELL (12207)_[s];SUBSHELL (843700)_[s];'grep -v '\''^$'\'' > /dev/null'	166:8	166:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843348)_[s];SUBSHELL (12207)_[s];SUBSHELL (843350)_[s];'grep -v '\''^$'\'' > /dev/null'	170:9	170:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843187)_[s];SUBSHELL (12207)_[s];SUBSHELL (843190)_[s];'wc -l > /dev/null'	473:72	473:74
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843237)_[s];SUBSHELL (12207)_[s];SUBSHELL (843240)_[s];'wc -l > /dev/null'	464:69	464:70
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843692)_[s];SUBSHELL (12207)_[s];SUBSHELL (843695)_[s];'wc -l > /dev/null'	521:89	521:98
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843572)_[s];SUBSHELL (12207)_[s];SUBSHELL (843575)_[s];'wc -l > /dev/null'	449:64	449:66
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843262)_[s];SUBSHELL (12207)_[s];SUBSHELL (843265)_[s];'wc -l > /dev/null'	461:67	461:69
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843704)_[s];SUBSHELL (12207)_[s];SUBSHELL (843707)_[s];'wc -l > /dev/null'	499:84	499:91
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843446)_[s];SUBSHELL (12207)_[s];SUBSHELL (843448)_[s];'grep -v '\''^$'\'' > /dev/null'	175:11	175:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843342)_[s];SUBSHELL (12207)_[s];SUBSHELL (843344)_[s];'grep -v '\''^$'\'' > /dev/null'	157:6	157:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843452)_[s];SUBSHELL (12207)_[s];SUBSHELL (843454)_[s];'grep -v '\''^$'\'' > /dev/null'	227:15	227:19
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843464)_[s];SUBSHELL (12207)_[s];SUBSHELL (843467)_[s];'wc -l > /dev/null'	448:64	448:65
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843560)_[s];SUBSHELL (12207)_[s];SUBSHELL (843562)_[s];'grep -v '\''^$'\'' > /dev/null'	166:8	166:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843311)_[s];SUBSHELL (12207)_[s];SUBSHELL (843313)_[s];'grep -v '\''^$'\'' > /dev/null'	253:15	253:21
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843231)_[s];SUBSHELL (12207)_[s];SUBSHELL (843233)_[s];'grep -v '\''^$'\'' > /dev/null'	156:5	156:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843372)_[s];SUBSHELL (12207)_[s];SUBSHELL (843375)_[s];'wc -l > /dev/null'	466:69	466:71
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843378)_[s];SUBSHELL (12207)_[s];SUBSHELL (843381)_[s];'wc -l > /dev/null'	469:70	469:72
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843608)_[s];SUBSHELL (12207)_[s];SUBSHELL (843610)_[s];'grep -v '\''^$'\'' > /dev/null'	163:7	163:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843530)_[s];SUBSHELL (12207)_[s];SUBSHELL (843533)_[s];'wc -l > /dev/null'	515:87	515:96
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843416)_[s];SUBSHELL (12207)_[s];SUBSHELL (843419)_[s];'wc -l > /dev/null'	405:60	405:58
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843536)_[s];SUBSHELL (12207)_[s];SUBSHELL (843538)_[s];'grep -v '\''^$'\'' > /dev/null'	174:10	174:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843650)_[s];SUBSHELL (12207)_[s];SUBSHELL (843653)_[s];'wc -l > /dev/null'	430:61	430:62
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843410)_[s];SUBSHELL (12207)_[s];SUBSHELL (843412)_[s];'grep -v '\''^$'\'' > /dev/null'	156:5	156:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843336)_[s];SUBSHELL (12207)_[s];SUBSHELL (843339)_[s];'wc -l > /dev/null'	508:86	508:94
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843656)_[s];SUBSHELL (12207)_[s];SUBSHELL (843658)_[s];'grep -v '\''^$'\'' > /dev/null'	146:3	146:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843144)_[s];SUBSHELL (12207)_[s];SUBSHELL (843146)_[s];'grep -v '\''^$'\'' > /dev/null'	136:2	136:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843138)_[s];SUBSHELL (12207)_[s];SUBSHELL (843140)_[s];'grep -v '\''^$'\'' > /dev/null'	159:6	159:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843163)_[s];SUBSHELL (12207)_[s];SUBSHELL (843166)_[s];'wc -l > /dev/null'	416:61	416:60
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843440)_[s];SUBSHELL (12207)_[s];SUBSHELL (843443)_[s];'wc -l > /dev/null'	497:83	497:89
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843218)_[s];SUBSHELL (12207)_[s];SUBSHELL (843221)_[s];'grep -v '\''^$'\'' > /dev/null'	64:0	64:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842760)_[s];'nameref[$i]="${nameref[$i]}_modified" (&)'	554:92	583:107
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842760)_[s];'local elem="${nameref[$i]}"'	195:13	635:118
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842760)_[s];'echo "Processing: $elem" 1>&2 (&)'	562:94	604:113
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843548)_[s];SUBSHELL (12207)_[s];SUBSHELL (843550)_[s];'grep -v '\''^$'\'' > /dev/null'	167:8	167:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842657)_[s];'"nested_func_$depth"'	281:16	281:22
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843602)_[s];SUBSHELL (12207)_[s];SUBSHELL (843605)_[s];'wc -l > /dev/null'	520:89	520:97
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843566)_[s];SUBSHELL (12207)_[s];SUBSHELL (843569)_[s];'wc -l > /dev/null'	486:79	486:82
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843668)_[s];SUBSHELL (12207)_[s];SUBSHELL (843670)_[s];'grep -v '\''^$'\'' > /dev/null'	170:9	170:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843674)_[s];SUBSHELL (12207)_[s];SUBSHELL (843677)_[s];'wc -l > /dev/null'	489:80	489:84
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843554)_[s];SUBSHELL (12207)_[s];SUBSHELL (843557)_[s];'wc -l > /dev/null'	460:67	460:68
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843101)_[s];SUBSHELL (12207)_[s];SUBSHELL (843104)_[s];'wc -l > /dev/null'	488:80	488:83
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843274)_[s];SUBSHELL (12207)_[s];SUBSHELL (843277)_[s];'wc -l > /dev/null'	503:85	503:93
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842788)_[s];SUBSHELL (842810)_[s];SUBSHELL (842823)_[s];'wc -l > /dev/null'	84:1	84:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843512)_[s];SUBSHELL (12207)_[s];SUBSHELL (843515)_[s];'wc -l > /dev/null'	34:0	34:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843212)_[s];SUBSHELL (12207)_[s];SUBSHELL (843214)_[s];'grep -v '\''^$'\'' > /dev/null'	351:47	351:49
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843632)_[s];SUBSHELL (12207)_[s];SUBSHELL (843635)_[s];'wc -l > /dev/null'	170:9	170:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843194)_[s];SUBSHELL (12207)_[s];SUBSHELL (843197)_[s];'wc -l > /dev/null'	242:15	242:20
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843181)_[s];SUBSHELL (12207)_[s];SUBSHELL (843184)_[s];'wc -l > /dev/null'	461:67	461:69
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843686)_[s];SUBSHELL (12207)_[s];SUBSHELL (843688)_[s];'grep -v '\''^$'\'' > /dev/null'	211:14	211:18
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843428)_[s];SUBSHELL (12207)_[s];SUBSHELL (843430)_[s];'grep -v '\''^$'\'' > /dev/null'	171:9	171:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843330)_[s];SUBSHELL (12207)_[s];SUBSHELL (843333)_[s];'wc -l > /dev/null'	483:77	483:80
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];'read -r n (&)'	6418:209	6475:357
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843132)_[s];SUBSHELL (12207)_[s];SUBSHELL (843135)_[s];'wc -l > /dev/null'	393:59	393:56
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843107)_[s];SUBSHELL (12207)_[s];SUBSHELL (843110)_[s];'wc -l > /dev/null'	470:71	470:73
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843590)_[s];SUBSHELL (12207)_[s];SUBSHELL (843593)_[s];'wc -l > /dev/null'	326:35	326:28
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843113)_[s];SUBSHELL (12207)_[s];SUBSHELL (843116)_[s];'wc -l > /dev/null'	429:61	429:62
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843317)_[s];SUBSHELL (12207)_[s];SUBSHELL (843320)_[s];'grep -v '\''^$'\'' > /dev/null'	7:0	7:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843458)_[s];SUBSHELL (12207)_[s];SUBSHELL (843461)_[s];'wc -l > /dev/null'	479:75	479:77
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842963)_[s];SUBSHELL (12207)_[s];SUBSHELL (842973)_[s];'wc -l > /dev/null'	381:57	381:55
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];'sleep 0.1 (&)'	433:62	470:73
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];'local sleep_pid=$! (&)'	725:105	752:126
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843620)_[s];SUBSHELL (12207)_[s];SUBSHELL (843623)_[s];'wc -l > /dev/null'	422:61	422:61
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843324)_[s];SUBSHELL (12207)_[s];SUBSHELL (843327)_[s];'wc -l > /dev/null'	399:60	399:57
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843280)_[s];SUBSHELL (12207)_[s];SUBSHELL (843283)_[s];'wc -l > /dev/null'	319:32	319:25
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843434)_[s];SUBSHELL (12207)_[s];SUBSHELL (843437)_[s];'wc -l > /dev/null'	470:71	470:73
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842879)_[s];SUBSHELL (842904)_[s];SUBSHELL (842915)_[s];'wc -l > /dev/null'	1549:126	1549:257
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843578)_[s];SUBSHELL (12207)_[s];SUBSHELL (843581)_[s];'wc -l > /dev/null'	481:76	481:79
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842986)_[s];SUBSHELL (12207)_[s];SUBSHELL (842999)_[s];'wc -l > /dev/null'	391:59	391:56
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843476)_[s];SUBSHELL (12207)_[s];SUBSHELL (843478)_[s];'grep -v '\''^$'\'' > /dev/null'	137:2	137:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843716)_[s];SUBSHELL (12207)_[s];SUBSHELL (843718)_[s];'grep -v '\''^$'\'' > /dev/null'	185:12	185:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843722)_[s];SUBSHELL (12207)_[s];SUBSHELL (843725)_[s];'wc -l > /dev/null'	483:77	483:80
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843674)_[s];SUBSHELL (12207)_[s];SUBSHELL (843676)_[s];'grep -v '\''^$'\'' > /dev/null'	166:8	166:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843212)_[s];SUBSHELL (12207)_[s];SUBSHELL (843215)_[s];'wc -l > /dev/null'	214:14	214:18
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843554)_[s];SUBSHELL (12207)_[s];SUBSHELL (843556)_[s];'grep -v '\''^$'\'' > /dev/null'	172:10	172:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843686)_[s];SUBSHELL (12207)_[s];SUBSHELL (843689)_[s];'wc -l > /dev/null'	435:62	435:62
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843710)_[s];SUBSHELL (12207)_[s];SUBSHELL (843712)_[s];'grep -v '\''^$'\'' > /dev/null'	154:5	154:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842859)_[s];'echo "key1 key2 key3" | tr '\'' '\'' '\''\n'\'' | sort -R'	13206:309	7961:372
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843268)_[s];SUBSHELL (12207)_[s];SUBSHELL (843271)_[s];'wc -l > /dev/null'	315:31	315:24
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843470)_[s];SUBSHELL (12207)_[s];SUBSHELL (843472)_[s];'grep -v '\''^$'\'' > /dev/null'	167:8	167:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843181)_[s];SUBSHELL (12207)_[s];SUBSHELL (843183)_[s];'grep -v '\''^$'\'' > /dev/null'	169:9	169:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843440)_[s];SUBSHELL (12207)_[s];SUBSHELL (843442)_[s];'grep -v '\''^$'\'' > /dev/null'	149:3	149:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842788)_[s];SUBSHELL (12207)_[s];SUBSHELL (842820)_[s];'grep -v '\''^$'\'' > /dev/null'	62:0	62:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843206)_[s];SUBSHELL (12207)_[s];SUBSHELL (843209)_[s];'wc -l > /dev/null'	1571:128	1571:263
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843107)_[s];SUBSHELL (12207)_[s];SUBSHELL (843109)_[s];'grep -v '\''^$'\'' > /dev/null'	151:4	151:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843101)_[s];SUBSHELL (12207)_[s];SUBSHELL (843103)_[s];'grep -v '\''^$'\'' > /dev/null'	164:7	164:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843680)_[s];SUBSHELL (12207)_[s];SUBSHELL (843682)_[s];'grep -v '\''^$'\'' > /dev/null'	198:13	198:16
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843305)_[s];SUBSHELL (12207)_[s];SUBSHELL (843307)_[s];'grep -v '\''^$'\'' > /dev/null'	163:7	163:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843150)_[s];SUBSHELL (12207)_[s];SUBSHELL (843152)_[s];'grep -v '\''^$'\'' > /dev/null'	209:14	209:18
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843404)_[s];SUBSHELL (12207)_[s];SUBSHELL (843406)_[s];'grep -v '\''^$'\'' > /dev/null'	182:11	182:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];'sleep 0.1 (&)'	446:63	495:88
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];'local sleep_pid=$! (&)'	718:104	744:126
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843218)_[s];SUBSHELL (12207)_[s];SUBSHELL (843222)_[s];'wc -l > /dev/null'	336:37	336:40
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843287)_[s];SUBSHELL (12207)_[s];SUBSHELL (843289)_[s];'grep -v '\''^$'\'' > /dev/null'	262:16	262:21
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843470)_[s];SUBSHELL (12207)_[s];SUBSHELL (843473)_[s];'wc -l > /dev/null'	456:66	456:67
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843710)_[s];SUBSHELL (12207)_[s];SUBSHELL (843713)_[s];'wc -l > /dev/null'	495:82	495:88
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843596)_[s];SUBSHELL (12207)_[s];SUBSHELL (843599)_[s];'wc -l > /dev/null'	498:84	498:90
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843542)_[s];SUBSHELL (12207)_[s];SUBSHELL (843544)_[s];'grep -v '\''^$'\'' > /dev/null'	164:7	164:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843200)_[s];SUBSHELL (12207)_[s];SUBSHELL (843202)_[s];'grep -v '\''^$'\'' > /dev/null'	158:6	158:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843662)_[s];SUBSHELL (12207)_[s];SUBSHELL (843664)_[s];'grep -v '\''^$'\'' > /dev/null'	158:6	158:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843126)_[s];SUBSHELL (12207)_[s];SUBSHELL (843128)_[s];'grep -v '\''^$'\'' > /dev/null'	352:48	352:50
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843626)_[s];SUBSHELL (12207)_[s];SUBSHELL (843629)_[s];'wc -l > /dev/null'	502:84	502:93
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843256)_[s];SUBSHELL (12207)_[s];SUBSHELL (843259)_[s];'wc -l > /dev/null'	467:70	467:72
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843488)_[s];SUBSHELL (12207)_[s];SUBSHELL (843491)_[s];'wc -l > /dev/null'	486:79	486:82
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843482)_[s];SUBSHELL (12207)_[s];SUBSHELL (843485)_[s];'wc -l > /dev/null'	482:77	482:79
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843506)_[s];SUBSHELL (12207)_[s];SUBSHELL (843508)_[s];'grep -v '\''^$'\'' > /dev/null'	161:6	161:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];'local dynamic_code=""'	189:12	187:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];'for j in {1..3}'	471:71	520:97
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];'dynamic_code+="{ echo '\''Dynamic $j'\'' >&2 & }, "'	488:80	577:106
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];'eval "$dynamic_code wait 2>/dev/null" (&)'	569:95	608:114
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843524)_[s];SUBSHELL (12207)_[s];SUBSHELL (843527)_[s];'wc -l > /dev/null'	503:85	503:93
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843422)_[s];SUBSHELL (12207)_[s];SUBSHELL (843424)_[s];'grep -v '\''^$'\'' > /dev/null'	168:8	168:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843644)_[s];SUBSHELL (12207)_[s];SUBSHELL (843647)_[s];'wc -l > /dev/null'	488:80	488:83
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842706)_[s];'nameref[$i]="${nameref[$i]}_modified" (&)'	481:76	512:95
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842706)_[s];'local elem="${nameref[$i]}"'	143:2	168:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842706)_[s];'echo "Processing: $elem" 1>&2 (&)'	506:85	544:101
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843518)_[s];SUBSHELL (12207)_[s];SUBSHELL (843520)_[s];'grep -v '\''^$'\'' > /dev/null'	174:10	174:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843119)_[s];SUBSHELL (12207)_[s];SUBSHELL (843121)_[s];'grep -v '\''^$'\'' > /dev/null'	173:10	173:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842986)_[s];SUBSHELL (12207)_[s];SUBSHELL (842996)_[s];'grep -v '\''^$'\'' > /dev/null'	174:10	174:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843051)_[s];SUBSHELL (12207)_[s];SUBSHELL (843056)_[s];'grep -v '\''^$'\'' > /dev/null'	168:8	168:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843360)_[s];SUBSHELL (12207)_[s];SUBSHELL (843362)_[s];'grep -v '\''^$'\'' > /dev/null'	171:9	171:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843536)_[s];SUBSHELL (12207)_[s];SUBSHELL (843539)_[s];'wc -l > /dev/null'	445:63	445:64
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843249)_[s];SUBSHELL (12207)_[s];SUBSHELL (843252)_[s];'wc -l > /dev/null'	475:73	475:75
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842772)_[s];'nameref[$i]="${nameref[$i]}_modified" (&)'	478:75	517:96
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842772)_[s];'local elem="${nameref[$i]}"'	175:11	210:18
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842772)_[s];'echo "Processing: $elem" 1>&2 (&)'	577:96	583:107
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843638)_[s];SUBSHELL (12207)_[s];SUBSHELL (843640)_[s];'grep -v '\''^$'\'' > /dev/null'	160:6	160:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843354)_[s];SUBSHELL (12207)_[s];SUBSHELL (843357)_[s];'wc -l > /dev/null'	354:50	354:51
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843095)_[s];SUBSHELL (12207)_[s];SUBSHELL (843098)_[s];'wc -l > /dev/null'	527:90	527:99
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];'echo "Level 1" (&)'	482:77	521:98
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];'$'\''echo "$({ echo "Level 2" & echo "$({ echo "Level 3" & echo "$(echo "Level 4" & wait 2> /dev/null\necho "Level 4 done")" & wait 2> /dev/null\necho "Level 3 done", } & wait 2> /dev/null)" & wait 2> /dev/null\necho "Level 2 done", } & wait 2> /dev/null)" (&'	744:107	782:130
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843126)_[s];SUBSHELL (12207)_[s];SUBSHELL (843129)_[s];'wc -l > /dev/null'	302:22	302:23
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843156)_[s];SUBSHELL (12207)_[s];SUBSHELL (843159)_[s];'wc -l > /dev/null'	454:66	454:66
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843169)_[s];SUBSHELL (12207)_[s];SUBSHELL (843172)_[s];'wc -l > /dev/null'	477:75	477:77
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843076)_[s];SUBSHELL (12207)_[s];SUBSHELL (843079)_[s];'wc -l > /dev/null'	665:103	665:120
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843494)_[s];SUBSHELL (12207)_[s];SUBSHELL (843496)_[s];'grep -v '\''^$'\'' > /dev/null'	170:9	170:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];'wait 2> /dev/null'	55771:647	341:45
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];'echo "Level 1 done"'	191:12	214:18
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843163)_[s];SUBSHELL (12207)_[s];SUBSHELL (843165)_[s];'grep -v '\''^$'\'' > /dev/null'	200:13	200:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843644)_[s];SUBSHELL (12207)_[s];SUBSHELL (843646)_[s];'grep -v '\''^$'\'' > /dev/null'	156:5	156:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843366)_[s];SUBSHELL (12207)_[s];SUBSHELL (843368)_[s];'grep -v '\''^$'\'' > /dev/null'	269:16	269:22
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843200)_[s];SUBSHELL (12207)_[s];SUBSHELL (843203)_[s];'wc -l > /dev/null'	1118:119	1118:145
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843256)_[s];SUBSHELL (12207)_[s];SUBSHELL (843258)_[s];'grep -v '\''^$'\'' > /dev/null'	176:11	176:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843293)_[s];SUBSHELL (12207)_[s];SUBSHELL (843296)_[s];'wc -l > /dev/null'	463:68	463:70
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843632)_[s];SUBSHELL (12207)_[s];SUBSHELL (843634)_[s];'grep -v '\''^$'\'' > /dev/null'	495:82	495:88
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843398)_[s];SUBSHELL (12207)_[s];SUBSHELL (843400)_[s];'grep -v '\''^$'\'' > /dev/null'	157:6	157:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843512)_[s];SUBSHELL (12207)_[s];SUBSHELL (843514)_[s];'grep -v '\''^$'\'' > /dev/null'	601:100	601:112
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843088)_[s];SUBSHELL (12207)_[s];SUBSHELL (843090)_[s];'grep -v '\''^$'\'' > /dev/null'	224:14	224:19
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843225)_[s];SUBSHELL (12207)_[s];SUBSHELL (843228)_[s];'wc -l > /dev/null'	511:86	511:95
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843524)_[s];SUBSHELL (12207)_[s];SUBSHELL (843526)_[s];'grep -v '\''^$'\'' > /dev/null'	163:7	163:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843088)_[s];SUBSHELL (12207)_[s];SUBSHELL (843091)_[s];'wc -l > /dev/null'	390:59	390:56
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843542)_[s];SUBSHELL (12207)_[s];SUBSHELL (843545)_[s];'wc -l > /dev/null'	476:74	476:76
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843662)_[s];SUBSHELL (12207)_[s];SUBSHELL (843665)_[s];'wc -l > /dev/null'	494:82	494:87
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843082)_[s];SUBSHELL (12207)_[s];SUBSHELL (843085)_[s];'wc -l > /dev/null'	481:76	481:79
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843175)_[s];SUBSHELL (12207)_[s];SUBSHELL (843177)_[s];'grep -v '\''^$'\'' > /dev/null'	159:6	159:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843392)_[s];SUBSHELL (12207)_[s];SUBSHELL (843395)_[s];'wc -l > /dev/null'	490:80	490:85
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843299)_[s];SUBSHELL (12207)_[s];SUBSHELL (843302)_[s];'wc -l > /dev/null'	440:62	440:64
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843698)_[s];SUBSHELL (12207)_[s];SUBSHELL (843701)_[s];'wc -l > /dev/null'	475:73	475:75
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];'sleep 0.1 (&)'	491:81	535:100
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];'local sleep_pid=$! (&)'	756:108	776:129
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843578)_[s];SUBSHELL (12207)_[s];SUBSHELL (843580)_[s];'grep -v '\''^$'\'' > /dev/null'	173:10	173:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];FUNCTION (push_cleanup)_[f];'push_cleanup "rm -f /tmp/bashtest_pipe_$$"'	150:4	177:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843274)_[s];SUBSHELL (12207)_[s];SUBSHELL (843276)_[s];'grep -v '\''^$'\'' > /dev/null'	149:3	149:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];FUNCTION (push_cleanup)_[f];'cleanup_stack+=("$1")'	177:11	205:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];'sleep 0.1 (&)'	514:87	559:104
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];'local sleep_pid=$! (&)'	791:109	812:131
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843572)_[s];SUBSHELL (12207)_[s];SUBSHELL (843574)_[s];'grep -v '\''^$'\'' > /dev/null'	199:13	199:16
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];SUBSHELL (842752)_[s];'IFS= read -r line'	493:81	550:102
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];SUBSHELL (842752)_[s];'echo "COPROC1: $line" | tee /dev/stderr | tr '\''a-z'\'' '\''A-Z'\'''	10115:257	7665:367
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843626)_[s];SUBSHELL (12207)_[s];SUBSHELL (843628)_[s];'grep -v '\''^$'\'' > /dev/null'	185:12	185:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843584)_[s];SUBSHELL (12207)_[s];SUBSHELL (843587)_[s];'wc -l > /dev/null'	24:0	24:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843113)_[s];SUBSHELL (12207)_[s];SUBSHELL (843115)_[s];'grep -v '\''^$'\'' > /dev/null'	184:12	184:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843013)_[s];SUBSHELL (12207)_[s];SUBSHELL (843021)_[s];'wc -l > /dev/null'	1064:118	1064:140
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843500)_[s];SUBSHELL (12207)_[s];SUBSHELL (843503)_[s];'wc -l > /dev/null'	500:84	500:92
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843268)_[s];SUBSHELL (12207)_[s];SUBSHELL (843270)_[s];'grep -v '\''^$'\'' > /dev/null'	328:35	328:31
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843249)_[s];SUBSHELL (12207)_[s];SUBSHELL (843251)_[s];'grep -v '\''^$'\'' > /dev/null'	183:12	183:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843668)_[s];SUBSHELL (12207)_[s];SUBSHELL (843671)_[s];'wc -l > /dev/null'	484:78	484:80
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843518)_[s];SUBSHELL (12207)_[s];SUBSHELL (843521)_[s];'wc -l > /dev/null'	475:73	475:75
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843596)_[s];SUBSHELL (12207)_[s];SUBSHELL (843598)_[s];'grep -v '\''^$'\'' > /dev/null'	154:5	154:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843548)_[s];SUBSHELL (12207)_[s];SUBSHELL (843551)_[s];'wc -l > /dev/null'	493:81	493:86
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];SUBSHELL (842959)_[s];'exec 9<> /tmp/bashtest_pipe_$$'	90:1	105:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];SUBSHELL (842959)_[s];'echo "Named pipe test" 1>&9 (&)'	340:38	365:52
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];SUBSHELL (842959)_[s];'read -t 1 result 0<&9'	140:2	152:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];SUBSHELL (842959)_[s];'echo "Read from pipe: $result" 1>&2'	77:0	92:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843602)_[s];SUBSHELL (12207)_[s];SUBSHELL (843604)_[s];'grep -v '\''^$'\'' > /dev/null'	167:8	167:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842651)_[s];FUNCTION (fd_chaos)_[f];SUBSHELL (842959)_[s];'exec 9>&- 9>&-'	129:2	139:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843385)_[s];SUBSHELL (12207)_[s];SUBSHELL (843388)_[s];'grep -v '\''^$'\'' > /dev/null'	76:0	76:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843614)_[s];SUBSHELL (12207)_[s];SUBSHELL (843617)_[s];'wc -l > /dev/null'	515:87	515:96
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843034)_[s];SUBSHELL (12207)_[s];SUBSHELL (843042)_[s];'grep -v '\''^$'\'' > /dev/null'	149:3	149:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843065)_[s];SUBSHELL (12207)_[s];SUBSHELL (843071)_[s];'wc -l > /dev/null'	454:66	454:66
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842879)_[s];SUBSHELL (12207)_[s];SUBSHELL (842912)_[s];'grep -v '\''^$'\'' > /dev/null'	2044:133	2044:289
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];FUNCTION (push_cleanup)_[f];'push_cleanup "rm -f /tmp/bashtest_fifo*_$$"'	67:0	80:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];FUNCTION (push_cleanup)_[f];'cleanup_stack+=("$1")'	87:1	101:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843324)_[s];SUBSHELL (12207)_[s];SUBSHELL (843326)_[s];'grep -v '\''^$'\'' > /dev/null'	166:8	166:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843280)_[s];SUBSHELL (12207)_[s];SUBSHELL (843282)_[s];'grep -v '\''^$'\'' > /dev/null'	667:103	667:120
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843704)_[s];SUBSHELL (12207)_[s];SUBSHELL (843706)_[s];'grep -v '\''^$'\'' > /dev/null'	158:6	158:6
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843076)_[s];SUBSHELL (12207)_[s];SUBSHELL (843078)_[s];'grep -v '\''^$'\'' > /dev/null'	199:13	199:16
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843446)_[s];SUBSHELL (12207)_[s];SUBSHELL (843449)_[s];'wc -l > /dev/null'	560:94	560:104
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843404)_[s];SUBSHELL (12207)_[s];SUBSHELL (843407)_[s];'wc -l > /dev/null'	270:16	270:22
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843680)_[s];SUBSHELL (12207)_[s];SUBSHELL (843683)_[s];'wc -l > /dev/null'	485:78	485:81
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843051)_[s];SUBSHELL (12207)_[s];SUBSHELL (843057)_[s];'wc -l > /dev/null'	448:64	448:65
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843354)_[s];SUBSHELL (12207)_[s];SUBSHELL (843356)_[s];'grep -v '\''^$'\'' > /dev/null'	301:21	301:23
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843169)_[s];SUBSHELL (12207)_[s];SUBSHELL (843171)_[s];'grep -v '\''^$'\'' > /dev/null'	164:7	164:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843342)_[s];SUBSHELL (12207)_[s];SUBSHELL (843345)_[s];'wc -l > /dev/null'	510:86	510:94
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843119)_[s];SUBSHELL (12207)_[s];SUBSHELL (843122)_[s];'wc -l > /dev/null'	463:68	463:70
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843638)_[s];SUBSHELL (12207)_[s];SUBSHELL (843641)_[s];'wc -l > /dev/null'	492:81	492:86
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843452)_[s];SUBSHELL (12207)_[s];SUBSHELL (843455)_[s];'wc -l > /dev/null'	351:47	351:49
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843560)_[s];SUBSHELL (12207)_[s];SUBSHELL (843563)_[s];'wc -l > /dev/null'	475:73	475:75
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842724)_[s];'nameref[$i]="${nameref[$i]}_modified" (&)'	1592:129	488:83
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842724)_[s];'local elem="${nameref[$i]}"'	168:8	198:16
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842724)_[s];'echo "Processing: $elem" 1>&2 (&)'	945:115	539:100
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843464)_[s];SUBSHELL (12207)_[s];SUBSHELL (843466)_[s];'grep -v '\''^$'\'' > /dev/null'	169:9	169:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843262)_[s];SUBSHELL (12207)_[s];SUBSHELL (843264)_[s];'grep -v '\''^$'\'' > /dev/null'	176:11	176:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843287)_[s];SUBSHELL (12207)_[s];SUBSHELL (843290)_[s];'wc -l > /dev/null'	306:25	306:23
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843293)_[s];SUBSHELL (12207)_[s];SUBSHELL (843295)_[s];'grep -v '\''^$'\'' > /dev/null'	174:10	174:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842699)_[s];SUBSHELL (12207)_[s];SUBSHELL (842727)_[s];'wc -l > /dev/null'	2606:138	2606:296
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843398)_[s];SUBSHELL (12207)_[s];SUBSHELL (843401)_[s];'wc -l > /dev/null'	496:83	496:89
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843482)_[s];SUBSHELL (12207)_[s];SUBSHELL (843484)_[s];'grep -v '\''^$'\'' > /dev/null'	121:2	121:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843434)_[s];SUBSHELL (12207)_[s];SUBSHELL (843436)_[s];'grep -v '\''^$'\'' > /dev/null'	166:8	166:8
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843530)_[s];SUBSHELL (12207)_[s];SUBSHELL (843532)_[s];'grep -v '\''^$'\'' > /dev/null'	150:4	150:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843716)_[s];SUBSHELL (12207)_[s];SUBSHELL (843719)_[s];'wc -l > /dev/null'	465:69	465:71
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842660)_[s];'sleep 0.001'	2047:134	1097:144
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842660)_[s];'kill -USR1 $pid 2> /dev/null'	158:6	181:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843476)_[s];SUBSHELL (12207)_[s];SUBSHELL (843479)_[s];'wc -l > /dev/null'	487:79	487:83
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843150)_[s];SUBSHELL (12207)_[s];SUBSHELL (843153)_[s];'wc -l > /dev/null'	335:36	335:39
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843237)_[s];SUBSHELL (12207)_[s];SUBSHELL (843239)_[s];'grep -v '\''^$'\'' > /dev/null'	162:6	162:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843416)_[s];SUBSHELL (12207)_[s];SUBSHELL (843418)_[s];'grep -v '\''^$'\'' > /dev/null'	106:1	106:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843422)_[s];SUBSHELL (12207)_[s];SUBSHELL (843425)_[s];'wc -l > /dev/null'	496:83	496:89
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843650)_[s];SUBSHELL (12207)_[s];SUBSHELL (843652)_[s];'grep -v '\''^$'\'' > /dev/null'	219:14	219:19
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843494)_[s];SUBSHELL (12207)_[s];SUBSHELL (843497)_[s];'wc -l > /dev/null'	1222:122	1222:148
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843722)_[s];SUBSHELL (12207)_[s];SUBSHELL (843724)_[s];'grep -v '\''^$'\'' > /dev/null'	170:9	170:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843372)_[s];SUBSHELL (12207)_[s];SUBSHELL (843374)_[s];'grep -v '\''^$'\'' > /dev/null'	94:1	94:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843378)_[s];SUBSHELL (12207)_[s];SUBSHELL (843380)_[s];'grep -v '\''^$'\'' > /dev/null'	153:5	153:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843132)_[s];SUBSHELL (12207)_[s];SUBSHELL (843134)_[s];'grep -v '\''^$'\'' > /dev/null'	252:15	252:21
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843194)_[s];SUBSHELL (12207)_[s];SUBSHELL (843196)_[s];'grep -v '\''^$'\'' > /dev/null'	595:99	595:111
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843590)_[s];SUBSHELL (12207)_[s];SUBSHELL (843592)_[s];'grep -v '\''^$'\'' > /dev/null'	330:35	330:33
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843330)_[s];SUBSHELL (12207)_[s];SUBSHELL (843332)_[s];'grep -v '\''^$'\'' > /dev/null'	167:8	167:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843458)_[s];SUBSHELL (12207)_[s];SUBSHELL (843460)_[s];'grep -v '\''^$'\'' > /dev/null'	150:4	150:4
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843243)_[s];SUBSHELL (12207)_[s];SUBSHELL (843246)_[s];'wc -l > /dev/null'	476:74	476:76
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (842699)_[s];SUBSHELL (842720)_[s];SUBSHELL (842722)_[s];'grep -v '\''^$'\'' > /dev/null'	240:15	240:20
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843206)_[s];SUBSHELL (12207)_[s];SUBSHELL (843208)_[s];'grep -v '\''^$'\'' > /dev/null'	147:3	147:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843428)_[s];SUBSHELL (12207)_[s];SUBSHELL (843431)_[s];'wc -l > /dev/null'	480:75	480:78
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];'$'\''diff <(while IFS= read -r line, do\n    echo "$line" | tee >(sed \'\''s/.*/PROC1: &/\'\'' 1>&2) | { cat | while read -r x, do\n        echo "$x" | tee >(wc -l 1>&2) | { awk \'\''{print "AWK:", $0}\'\'' | tee >(grep -v \'\''^$\'\'' 1>&2) & wait $! 2> /dev/null || true, },\'	1567:127	1669:275
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843488)_[s];SUBSHELL (12207)_[s];SUBSHELL (843490)_[s];'grep -v '\''^$'\'' > /dev/null'	169:9	169:10
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843175)_[s];SUBSHELL (12207)_[s];SUBSHELL (843178)_[s];'wc -l > /dev/null'	471:71	471:73
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843317)_[s];SUBSHELL (12207)_[s];SUBSHELL (843321)_[s];'wc -l > /dev/null'	310:28	310:24
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];'true'	144:3	168:9
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843692)_[s];SUBSHELL (12207)_[s];SUBSHELL (843694)_[s];'grep -v '\''^$'\'' > /dev/null'	153:5	153:5
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843360)_[s];SUBSHELL (12207)_[s];SUBSHELL (843363)_[s];'wc -l > /dev/null'	481:76	481:79
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843348)_[s];SUBSHELL (12207)_[s];SUBSHELL (843351)_[s];'wc -l > /dev/null'	460:67	460:68
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843506)_[s];SUBSHELL (12207)_[s];SUBSHELL (843509)_[s];'wc -l > /dev/null'	463:68	463:70
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];'parent_var="SUBSHELL1" (&)'	392:59	415:60
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842644)_[s];SUBSHELL (843620)_[s];SUBSHELL (12207)_[s];SUBSHELL (843622)_[s];'grep -v '\''^$'\'' > /dev/null'	253:15	253:21
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];'$'\''cat <<-EOF\nSubshell values:\nParent: $parent_var\nExport: $EXPORT_VAR\nCommand sub: $(echo "CMD: $parent_var" | sed \'\''s/SUBSHELL/SUB/\'\'')\nArithmetic: $((${#parent_var} * 2))\nEOF\n (&)'	322:33	356:51
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];'wait 2> /dev/null'	9982:252	495:88
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];SUBSHELL (842766)_[s];'true'	337675:1181	405133:1009
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];SUBSHELL (842766)_[s];'read -t 0.1 input 2> /dev/null'	460984:1586	506125:1604
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842648)_[s];FUNCTION (start_coproc_hell)_[f];SUBSHELL (842766)_[s];'continue'	338859:1352	406104:1274
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842968)_[s];SUBSHELL (842970)_[s];'echo "Value for $key" (&)'	793:109	828:132
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842993)_[s];SUBSHELL (843026)_[s];'echo "$key" | md5sum | cut -d'\'' '\'' -f1'	3651:156	5196:322
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842693)_[s];'sleep 0.05'	51122:543	1161:147
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842968)_[s];SUBSHELL (842970)_[s];'base64 (&)'	464:69	820:131
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842693)_[s];'kill -STOP $sleep_pid 2> /dev/null'	104:1	119:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842968)_[s];SUBSHELL (842970)_[s];'wait $!'	151:4	175:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842693)_[s];'sleep 0.01'	11034:274	1067:141
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842693)_[s];'kill -CONT $sleep_pid 2> /dev/null'	117:2	133:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842851)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	5683:202	412:59
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842749)_[s];'sleep 0.05'	51513:647	1476:213
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842749)_[s];'kill -STOP $sleep_pid 2> /dev/null'	113:1	129:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842749)_[s];'sleep 0.01'	10976:263	1032:138
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842749)_[s];'kill -CONT $sleep_pid 2> /dev/null'	98:1	114:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842808)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	3771:163	436:62
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842830)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	6213:205	447:64
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842797)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	3690:161	438:63
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842819)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	6803:212	387:56
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];'IFS= read -r line'	623:100	437:63
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842704)_[s];'kill -0 $sleep_pid 2> /dev/null'	824:110	943:136
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842704)_[s];'jobs -l | grep -q $sleep_pid'	35739:473	13252:388
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842704)_[s];'sleep 0.01'	46583:517	4367:315
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842732)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	3829:165	380:54
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842768)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	7923:224	420:60
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842717)_[s];'kill -0 $sleep_pid 2> /dev/null'	966:115	1088:143
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842717)_[s];'jobs -l | grep -q $sleep_pid'	21098:347	17444:419
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842717)_[s];'sleep 0.01'	57289:705	5801:337
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842757)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	9792:247	382:55
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842691)_[s];'kill -0 $sleep_pid 2> /dev/null'	933:114	1060:140
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842691)_[s];'jobs -l | grep -q $sleep_pid'	17994:326	18530:443
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842691)_[s];'sleep 0.01'	57553:734	6257:353
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842704)_[s];'echo "Job $i completed" 1>&2'	85:1	100:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842841)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	4863:183	4839:319
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842981)_[s];SUBSHELL (842982)_[s];'echo "Value for $key" (&)'	457:66	494:87
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842981)_[s];SUBSHELL (842982)_[s];'base64 (&)'	471:71	826:132
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842981)_[s];SUBSHELL (842982)_[s];'wait $!'	157:6	180:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842968)_[s];SUBSHELL (843004)_[s];'echo "$key" | md5sum | cut -d'\'' '\'' -f1'	4175:167	5653:329
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842671)_[s];SUBSHELL (842691)_[s];'echo "Job $i completed" 1>&2'	135:2	146:3
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842717)_[s];'echo "Job $i completed" 1>&2'	139:2	162:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842981)_[s];SUBSHELL (843010)_[s];'echo "$key" | md5sum | cut -d'\'' '\'' -f1'	4252:171	5993:341
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842993)_[s];SUBSHELL (842997)_[s];'echo "Value for $key" (&)'	451:65	499:91
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842993)_[s];SUBSHELL (842997)_[s];'base64 (&)'	476:74	852:133
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842738)_[s];'kill -0 $sleep_pid 2> /dev/null'	944:115	1079:142
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842656)_[s];FUNCTION (array_madness)_[f];SUBSHELL (842993)_[s];SUBSHELL (842997)_[s];'wait $!'	153:5	178:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842738)_[s];'jobs -l | grep -q $sleep_pid'	20529:336	18064:431
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842738)_[s];'sleep 0.01'	56187:676	5734:333
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];'sort | << (SUBSHELL): 842680 >> | uniq'	26255:397	24697:459
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];'parent_var="SUBSHELL2" (&)'	510:86	544:101
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (12207)_[s];SUBSHELL (842715)_[s];'read -r n'	3209:150	2029:287
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (12207)_[s];SUBSHELL (842715)_[s];'echo "Branch2: $n" 1>&2 (&)'	7647:220	6185:349
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];SUBSHELL (842886)_[s];'echo '\''Dynamic 1'\'' 1>&2 (&)'	521:89	546:101
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];SUBSHELL (842886)_[s];'echo '\''Dynamic 2'\'' 1>&2 (&)'	520:89	573:105
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];SUBSHELL (842886)_[s];'echo '\''Dynamic 3'\'' 1>&2 (&)'	918:113	888:135
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842657)_[s];FUNCTION (nested_func_0)_[f];'"nested_func_$depth"'	74:0	89:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842730)_[s];'sleep 0.05'	51475:621	1448:178
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842668)_[s];FUNCTION (eval_hell)_[f];SUBSHELL (842789)_[s];SUBSHELL (842886)_[s];'wait 2> /dev/null'	472:72	490:85
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842730)_[s];'kill -STOP $sleep_pid 2> /dev/null'	112:1	127:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842657)_[s];FUNCTION (nested_func_0)_[f];'local my_depth=0 (&)'	539:91	571:104
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842730)_[s];'sleep 0.01'	11022:268	1056:139
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842687)_[s];SUBSHELL (842730)_[s];'kill -CONT $sleep_pid 2> /dev/null'	100:1	115:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];'wait 2> /dev/null'	3675:157	517:96
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842783)_[s];'echo "Main: $n" | tee >(sed '\''s/Main/Tee1/'\'' 1>&2 &) >(sed '\''s/Main/Tee2/'\'' 1>&2 &) 1>&2'	9162:232	385:55
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842657)_[s];FUNCTION (nested_func_0)_[f];'wait $! 2> /dev/null'	322:33	338:42
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842741)_[s];'sleep 0.05'	51361:595	1412:160
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842741)_[s];'kill -STOP $sleep_pid 2> /dev/null'	179:11	186:14
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842741)_[s];'sleep 0.01'	11226:291	1245:151
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842741)_[s];'kill -CONT $sleep_pid 2> /dev/null'	166:8	189:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842705)_[s];'sleep 0.05'	51274:569	1297:152
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842705)_[s];'kill -STOP $sleep_pid 2> /dev/null'	189:12	213:18
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842705)_[s];'sleep 0.01'	11145:285	1140:145
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842682)_[s];SUBSHELL (842705)_[s];'kill -CONT $sleep_pid 2> /dev/null'	107:1	122:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842701)_[s];SUBSHELL (842738)_[s];'echo "Job $i completed" 1>&2'	152:4	176:13
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842708)_[s];SUBSHELL (842714)_[s];'read -r n'	21256:358	3750:313
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842708)_[s];SUBSHELL (842714)_[s];'echo "Branch1: $n" 1>&2 (&)'	5565:194	6037:345
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842747)_[s];'kill -0 $sleep_pid 2> /dev/null'	839:111	948:136
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842747)_[s];'jobs -l | grep -q $sleep_pid'	15683:317	17195:408
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842747)_[s];'sleep 0.01'	60343:764	5340:325
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842661)_[s];FUNCTION (job_control_nightmare)_[f];SUBSHELL (842712)_[s];SUBSHELL (842747)_[s];'echo "Job $i completed" 1>&2'	84:1	99:1
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842732)_[s];SUBSHELL (842771)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	666:103	702:124
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842783)_[s];SUBSHELL (842906)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	553:92	592:109
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842797)_[s];SUBSHELL (842834)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	575:96	607:113
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842757)_[s];SUBSHELL (842843)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	1163:122	518:97
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842768)_[s];SUBSHELL (842845)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	637:102	662:119
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842808)_[s];SUBSHELL (842924)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	569:95	604:113
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842783)_[s];SUBSHELL (842910)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	560:94	594:110
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842732)_[s];SUBSHELL (842770)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	733:106	602:112
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];'parent_var="SUBSHELL3" (&)'	553:92	437:63
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842736)_[s];'cat'	2122:136	369:53
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842808)_[s];SUBSHELL (842923)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	588:98	619:116
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842841)_[s];SUBSHELL (842878)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	1344:125	639:118
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842851)_[s];SUBSHELL (842919)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	559:93	593:110
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842739)_[s];'sed '\''s/.*/PROC1: &/'\'' 1>&2'	1154:121	1154:146
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842657)_[s];FUNCTION (nested_func_0)_[f];FUNCTION (generate_recursive_hell)_[f];'generate_recursive_hell $((depth + 1))'	70:0	84:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];'wait 2> /dev/null'	49635:517	321:26
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842678)_[s];'echo "$data"'	147:3	171:11
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842797)_[s];SUBSHELL (842829)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	629:102	672:121
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842830)_[s];SUBSHELL (842922)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	628:101	675:122
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842819)_[s];SUBSHELL (842885)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	555:93	588:108
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];SUBSHELL (842680)_[s];'echo "$data"'	787:108	409:58
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842841)_[s];SUBSHELL (842876)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	578:96	614:114
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842768)_[s];SUBSHELL (842846)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	584:98	614:114
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842757)_[s];SUBSHELL (842840)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	446:63	481:79
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842819)_[s];SUBSHELL (842887)_[s];'sed '\''s/Main/Tee2/'\'' 1>&2 (&)'	561:94	593:110
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842851)_[s];SUBSHELL (842917)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	568:95	601:112
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842662)_[s];SUBSHELL (842665)_[s];'echo "CMD: $parent_var" | sed '\''s/SUBSHELL/SUB/'\'''	2695:140	3071:304
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842677)_[s];FUNCTION (pipe_chaos)_[f];SUBSHELL (842710)_[s];SUBSHELL (842830)_[s];SUBSHELL (842920)_[s];'sed '\''s/Main/Tee1/'\'' 1>&2 (&)'	584:98	623:116
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842657)_[s];FUNCTION (nested_func_0)_[f];SUBSHELL (12207)_[s];SUBSHELL (842666)_[s];'sed '\''s/^/  /'\'' 1>&2'	3093:147	7662:362
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842736)_[s];SUBSHELL (842762)_[s];'read -r x | echo "$x" | tee >(wc -l 1>&2)'	5627:199	403:57
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];SUBSHELL (842680)_[s];SUBSHELL (842692)_[s];'IFS= read -r char'	177:11	203:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];SUBSHELL (842680)_[s];SUBSHELL (842692)_[s];'printf '\''%s\n'\'' "$char" (&)'	892:113	466:71
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];SUBSHELL (842680)_[s];SUBSHELL (842692)_[s];'tee >(tr '\''a-z'\'' '\''A-Z'\'' | tee >(wc -c 1>&2) 1>&2) (&)'	516:88	1024:138
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];SUBSHELL (842680)_[s];SUBSHELL (842692)_[s];'jobs -l 1>&2'	164:7	188:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842674)_[s];'read -r line'	626:101	626:117
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];'echo "Level 2" (&)'	571:96	616:115
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];'$'\''echo "$({ echo "Level 3" & echo "$(echo "Level 4" & wait 2> /dev/null\necho "Level 4 done")" & wait 2> /dev/null\necho "Level 3 done", } & wait 2> /dev/null)" (&)'	516:88	554:103
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];'wait 2> /dev/null'	39905:494	351:49
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];'echo "Level 2 done"'	148:3	174:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];'parent_var="SUBSHELL4"'	151:4	175:12
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];'for i in {1..10} (&)'	8032:228	31151:513
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];'wait 2> /dev/null'	9699:242	670:121
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842646)_[s];FUNCTION (generate_recursive_hell)_[f];SUBSHELL (842657)_[s];FUNCTION (nested_func_0)_[f];SUBSHELL (12207)_[s];SUBSHELL (842666)_[s];SUBSHELL (842667)_[s];'echo "Depth: $my_depth" 1>&2'	97:1	113:2
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842781)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	857:112	891:135
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842817)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	802:110	834:133
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842849)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	733:106	766:128
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842826)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	821:110	861:134
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842875)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	765:108	794:130
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842796)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	855:112	1358:154
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842694)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	730:105	1224:150
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842718)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	737:106	775:128
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842744)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	1894:131	777:129
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842736)_[s];SUBSHELL (842762)_[s];SUBSHELL (842809)_[s];'awk '\''{print "AWK:", $0}'\'' (&)'	589:98	644:118
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842736)_[s];SUBSHELL (842762)_[s];SUBSHELL (842809)_[s];'tee >(grep -v '\''^$'\'' 1>&2) (&)'	599:99	2836:300
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842736)_[s];SUBSHELL (842762)_[s];SUBSHELL (842809)_[s];'wait $! 2> /dev/null'	1276:123	553:103
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842736)_[s];SUBSHELL (842762)_[s];SUBSHELL (842806)_[s];'wc -l 1>&2'	1069:118	1069:142
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842861)_[s];'echo "Iteration $i: $parent_var" 1>&2 (&)'	1130:120	718:124
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842796)_[s];SUBSHELL (842852)_[s];'sleep 0.001'	7264:216	1466:199
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842796)_[s];SUBSHELL (842852)_[s];'echo "Nested $i: $parent_var" 1>&2'	206:13	228:20
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842861)_[s];SUBSHELL (842901)_[s];'sleep 0.001'	3689:159	1406:158
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842781)_[s];SUBSHELL (842839)_[s];'sleep 0.001'	11040:279	1460:194
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842861)_[s];SUBSHELL (842901)_[s];'echo "Nested $i: $parent_var" 1>&2'	175:11	204:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842781)_[s];SUBSHELL (842839)_[s];'echo "Nested $i: $parent_var" 1>&2'	214:14	231:20
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842744)_[s];SUBSHELL (842786)_[s];'sleep 0.001'	4203:169	1418:163
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842718)_[s];SUBSHELL (842764)_[s];'sleep 0.001'	4837:181	1423:165
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842744)_[s];SUBSHELL (842786)_[s];'echo "Nested $i: $parent_var" 1>&2'	305:24	255:21
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842718)_[s];SUBSHELL (842764)_[s];'echo "Nested $i: $parent_var" 1>&2'	258:15	282:22
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];'wait 2> /dev/null'	27351:425	353:50
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842849)_[s];SUBSHELL (842865)_[s];'sleep 0.001'	5000:191	1509:245
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842849)_[s];SUBSHELL (842865)_[s];'echo "Nested $i: $parent_var" 1>&2'	207:13	228:20
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842875)_[s];SUBSHELL (842911)_[s];'sleep 0.001'	2802:143	1418:163
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842694)_[s];SUBSHELL (842713)_[s];'sleep 0.001'	4809:178	1396:156
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842875)_[s];SUBSHELL (842911)_[s];'echo "Nested $i: $parent_var" 1>&2'	166:8	192:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842694)_[s];SUBSHELL (842713)_[s];'echo "Nested $i: $parent_var" 1>&2'	175:11	200:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];SUBSHELL (842680)_[s];SUBSHELL (842692)_[s];SUBSHELL (12207)_[s];SUBSHELL (842745)_[s];'tr '\''a-z'\'' '\''A-Z'\'' | tee >(wc -c 1>&2) 1>&2'	4982:188	413:59
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842826)_[s];SUBSHELL (842899)_[s];'sleep 0.001'	3283:152	1471:209
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842826)_[s];SUBSHELL (842899)_[s];'echo "Nested $i: $parent_var" 1>&2'	178:11	203:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842817)_[s];SUBSHELL (842900)_[s];'sleep 0.001'	4266:174	1444:175
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842650)_[s];FUNCTION (subshell_variable_hell)_[f];SUBSHELL (842655)_[s];SUBSHELL (842659)_[s];SUBSHELL (842663)_[s];SUBSHELL (842673)_[s];SUBSHELL (842817)_[s];SUBSHELL (842900)_[s];'echo "Nested $i: $parent_var" 1>&2'	172:10	192:15
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];SUBSHELL (842791)_[s];'echo "Level 3" (&)'	753:107	761:127
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];SUBSHELL (842791)_[s];'$'\''echo "$(echo "Level 4" & wait 2> /dev/null\necho "Level 4 done")" (&)'	1005:116	547:102
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];SUBSHELL (842791)_[s];'wait 2> /dev/null'	11495:296	304:23
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];SUBSHELL (842791)_[s];'echo "Level 3 done"'	139:2	162:7
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842675)_[s];SUBSHELL (842736)_[s];SUBSHELL (842762)_[s];SUBSHELL (842809)_[s];SUBSHELL (12207)_[s];SUBSHELL (842868)_[s];'grep -v '\''^$'\'' 1>&2'	23:0	23:0
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842649)_[s];FUNCTION (process_substitution_hell)_[f];SUBSHELL (842653)_[s];SUBSHELL (842676)_[s];SUBSHELL (842680)_[s];SUBSHELL (842692)_[s];SUBSHELL (12207)_[s];SUBSHELL (842745)_[s];SUBSHELL (842800)_[s];'wc -c 1>&2'	1302:124	1302:153
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];SUBSHELL (842791)_[s];SUBSHELL (842890)_[s];SUBSHELL (842891)_[s];'echo "Level 4" (&)'	835:111	663:119
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];SUBSHELL (842791)_[s];SUBSHELL (842890)_[s];SUBSHELL (842891)_[s];'wait 2> /dev/null'	185:12	206:17
+SUBSHELL (842621)_[s];FUNCTION (main)_[f];SUBSHELL (842643)_[s];SUBSHELL (842652)_[s];FUNCTION (command_substitution_hell)_[f];SUBSHELL (842686)_[s];SUBSHELL (842711)_[s];SUBSHELL (842719)_[s];SUBSHELL (842726)_[s];SUBSHELL (842778)_[s];SUBSHELL (842782)_[s];SUBSHELL (842791)_[s];SUBSHELL (842890)_[s];SUBSHELL (842891)_[s];'echo "Level 4 done"'	183:12	206:17
