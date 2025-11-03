@@ -1,4 +1,4 @@
-CURRENT VERSION: timep v1.9.3
+CURRENT VERSION: timep v1.9.4
 
 timep v1.9:  In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
 * a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed
@@ -9,6 +9,7 @@ timep v1.9:  In this release, the  instrumented DEBUG trap has been further refa
 * v1.9.1: hotfix for an issue where an extra empty line was being added to the profile, skewing CPU times upward
 * v1.9.2: hotfix for single-command substitutions having farr too high a runtime shown
 * v1.9.3: hotfix for issue where code that was sourced (via `source <...>` or `. <...>`) caused the function nesting level to become out of sync
+* v1.9.4: hotfix for issue where timep did not properly bootstrap itself into called scripts and new bash instances
 
 timep v1.8: In this release, the instrumented DEBUG trap has been refactored to improve accuracy and to avoid missing commands:
 * timep now knows how to properly handle backgrounded function calls (e.g., `func &`)
