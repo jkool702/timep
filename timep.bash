@@ -2643,7 +2643,6 @@ done
     done
 
     pAll_PID=()
-    declare -p >/mnt/ramdisk/vars
     for (( nID=0; nID<nWorkerMax0; nID++)); do
         eval "{
             for kk in ${indA[$nID]}; do
