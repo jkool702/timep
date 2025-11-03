@@ -1074,19 +1074,18 @@ set -mT
 : "\${timep_FNEST[\$timep_FNEST_CUR]:='"''"'}" "\${timep_NEXEC_A[\$timep_FNEST_CUR]:='"''"'}" "\${timep_NEXEC_HASH_A[\$timep_FNEST_CUR]:='"''"'}"
 [[ -x "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" ]] || _timep_SETUP
 enable -f "/dev/shm/.timep/lib/\${USER}-\${EUID}/timep.so" getCPUtime timep_crc32 timep_fnv1a timep_hash
-timep_hash - timep_NEXEC_HASH_PARENT <<<"\${timep_NEXEC_0}"
 timep_NEXEC_0+=".\${timep_NEXEC_CUR}:CHILD:{\${timep_NPIDWRAP}-\${BASHPID}}"
 timep_NEXEC_A[\$timep_FNEST_CUR]=0
 timep_NEXEC_CUR=0
 timep_hash - timep_NEXEC_HASH_CUR <<<"\${timep_NEXEC_0}"
-echo "<< (CHILD): \${timep_NEXEC_HASH_CUR} {\${timep_NEXEC_0}} >>" >>"\${timep_TMPDIR}/.log/log.\${timep_NEXEC_HASH_PARENT}"
-echo "\${timep_NEXEC_HASH_CUR} --> \${timep_NEXEC_0}" >>"\${timep_TMPDIR}/run.log.txt"
-unset "timep_NEXEC_HASH_PARENT"
 echo "\${timep_NEXEC_0}" >"\${timep_TMPDIR}/.log/.hash/\${timep_NEXEC_HASH_CUR}"
 timep_NEXEC_HASH_A+=("\${timep_NEXEC_HASH_CUR}")
 . "\${timep_TMPDIR}/functions.bash"
 export BASH_ENV="\${timep_TMPDIR}/env.bash"
 . "\${timep_TMPDIR}/setup.bash"
+${timep_END_CTIME_STR}
+printf '"'"'1\t%s\t%s\t-\t-\tF:%s %s\tS:%s %s\tN:%s %s.%s{%s-%s}\t%s\t::\t%s\n'"'"' "\${EPOCHREALTIME//./}" "\${timep_END_CTIME}" "\${timep_FNEST_CUR:-\${timep_FUNCNAME_N}}" "\${timep_FUNCNAME_STR}" "\${timep_BASH_SUBSHELL}" "\${timep_BASHPID_STR}" "\${timep_NEXEC_N}" "\${timep_NEXEC_0}" "\${timep_NEXEC_CUR}" "\${timep_NPIDWRAP}" "\${timep_BASHPID}" "\${LINENO}" "<< (CHILD): \${BASHPID} >>" >>"\${timep_TMPDIR}/.log/log.\${timep_NEXEC_HASH_CUR}.init_s"
+echo "\${timep_NEXEC_HASH_CUR} --> \${timep_NEXEC_0}" >>"\${timep_TMPDIR}/run.log.txt"
 builtin trap "\${timep_DEBUG_TRAP_STR_0}\${timep_DEBUG_TRAP_STR_1}" DEBUG
 EOF
 
@@ -1576,7 +1575,7 @@ _timep_PROCESS_LOG() {
     logDepth="${#logDepth}"
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< \(CHILD\)\: [^\n]* >>)\n([^\n]+)\:\:\t?([^\n]+)\n/\1\3::\t\2\4 >>\n/g;' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
 
     log_dupe_flag=false
     kk1=0
@@ -1928,12 +1927,12 @@ printf '%s;' "${fgA[@]}")"
                 cmd00="${cmdA[$kk]//<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
                 cmd00="${cmd00//<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
                 cmd00="${cmd00//<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
-                cmd00="${cmd00//<< \(CHILD\): * >>/<< (CHILD) >>}"
+                cmd00="${cmd00//<< \(CHILD\): *([0-9\-]) >>/<< (CHILD) >>}"
             else
                 cmd00="${cmdA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
                 cmd00="${cmd00/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
                 cmd00="${cmd00/#<< \(FUNCTION\): * >>/<< (FUNCTION) >>}"
-                cmd00="${cmd00/#<< \(CHILD\): * >>/<< (CHILD) >>}"
+                cmd00="${cmd00/#<< \(CHILD\): *([0-9\-]) >>/<< (CHILD) >>}"
             fi
 
             timep_hash - 'cmd0' <<<"${cmd00}"
@@ -2117,6 +2116,7 @@ printf '%s;' "${fgA[@]}")"
 
         cmd="${cmdOutCurA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
+        cmd="${cmd/#<< \(CHILD\): *([0-9\-]) >>/<< (CHILD) >>}"
 
         # write line
 
@@ -2444,7 +2444,7 @@ _timep_GET_TIMES() {
     fi
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
+    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(<< \(CHILD\): [^\n]+ >>\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g; s/(^|\n)(<< CHILD \([^\)]+\)\:) [^\n]* >>\n([^\n]+)\:\:([^\n]+)\n/\n\3::\t\2\4 >>\n/g;' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
 
     logA=("${logA[@]#*$'\t'}")
     tStartA=("${logA[@]%%$'\t'*}")
