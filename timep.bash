@@ -1509,7 +1509,7 @@ shopt -s extglob
 _timep_PROCESS_LOG() {
 
     local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag fgStartTime wt ct startWTime0 endWTimeChild wTimeSelfTotal wTimeSelfChild
-    local -a logA logA_time logA_time_files nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
+    local -a logA logA_time logA_time_files nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA isBackgroundForkFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1664,21 +1664,24 @@ _timep_PROCESS_LOG() {
                 cmd="${cmd%"'"}"
                 cmd="${cmd//"'\\''"/"'"}"
                 cmdA[$kk]='<< (FUNCTION): '"${funcA[$kk]#* }.${cmd}"' >>'
-            elif [[ "${cmdA[$kk]//"'"/}" == '<< (SUBSHELL): '*' >>' ]] && (( kk < nlogA - 1 )); then
+            elif [[ "${cmdA[$kk]//"'"/}" == '<< (SUBSHELL): '*' >>' ]] && (( kk < nlogA - 1 )) && _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecHashA[$kk]}"; then
                 # sanity check - ensure the childs logs last wall-clock end time is before the next commands start time
                 IFS=$'\t' read -r endWTimeChild _ <"${timep_TMPDIR}/.log/.endtimes/log.${nexecHashA[$kk]}"
                 (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > 10#0${endWTimeChild} )) || cmdA[$kk]="${cmdA[$kk]/\(SUBSHELL\)/\(BACKGROUND FORK\)}"
             fi
 
             # for background forks, assume the end time is the start time of the 1st command in the child process minus 1 microsecond
-            [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && [[ "${endWTime}" == '-' ]] && {
+            if [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && [[ "${endWTime}" == '-' ]]; then
+                isBackgroundForkFlagA[$kk]=true
                 if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > startWTime )); then
                      (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
                      endWTimeA[$kk]="${endWTime}"
                 elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
                     IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime > startWTime )) && (( endWTimeA[$kk] = endWTime - 1 ))
                 fi
-            }
+            else
+                isBackgroundForkFlagA[$kk]=false
+            fi
 
             # get child run/cpu time to set as time for the merge command
             _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}" && {
@@ -1707,6 +1710,7 @@ _timep_PROCESS_LOG() {
         else
             normalCmdFlagA[$kk]=true
             isMergeIndicatorA[$kk]=false
+            isBackgroundForkFlagA[$kk]=false
         fi
 
         # see if we still need to merge up the endtime/runtime from the child log
@@ -1827,6 +1831,7 @@ _timep_PROCESS_LOG() {
                 # if we are using getCPUtime and our end time is before the start time, then chances are getCPUtime is reading from a new clock even though there isnt a full subshell. This happens on things like arithmitic evaluations  `(( ... ))`
                 # assume the start clock is 0 here, which makes the time equal to end - 0 - correction --> end - correction
                 (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+                startCTimeA[$kk]=0
             fi
         }
 
@@ -1843,6 +1848,13 @@ _timep_PROCESS_LOG() {
             cTimeA[$kk]=1
             ((cTimeTotal++))
         fi
+
+        # for background forks to get the total time we need the time taken by the child AND the time it takes the parent to fork the command
+        ${isBackgroundForkFlagA[$kk]} && ! ${inPipeFlag} && {
+            (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && (( wTimeTotal = wTimeTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
+            (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
+        }
+
 
         # add current time to self time sum
         if ${isMergeIndicatorA[$kk]} && [[ -f "${timep_TMPDIR}/.log/.selftimes/log.${nexecHashA[$kk]}"  ]]; then
@@ -3167,32 +3179,40 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
             export -f _timep_COMBINE_FLAMEGRAPH
             {
                 # dual-stack flamegraphs
+                printf '\nGENERATING (4x) DUAL-STACK FLAMEGRAPHS\n\n' >&2
                 {
                     svgCombineInd=0
                     _timep_COMBINE_FLAMEGRAPH --type="f" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=1
                     _timep_COMBINE_FLAMEGRAPH --type="F" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=2
                     _timep_COMBINE_FLAMEGRAPH --type="w" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=3
                     _timep_COMBINE_FLAMEGRAPH --type="c" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
                 } &
                 wait
 
                 # quad-stack flamegraphs
+                printf '\nGENERATING (2x) QUAD-STACK FLAMEGRAPHS\n\n' >&2
                 {
                     svgCombineInd=4
                     _timep_COMBINE_FLAMEGRAPH --type="fF" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=5
                    _timep_COMBINE_FLAMEGRAPH --type="wc"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.R.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
                 } &
                 wait
 
