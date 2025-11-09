@@ -46,8 +46,10 @@ if `--flame` is passed as a flag:
  several flamegraph .svg files are genertated from the above two "out.flamegraph" files and savei in the "flamegraphs" subdirectory of the profile dir. there are 4 "base" SVG's that show wall-clock time and cpu time for the full and the folded stack traces. These 4 SVGs are then combined (vertically stacked) in various combinations to produce extremely informaive dual- and quad-stacked flamegraphs. The qaad-stacked `flamegraph.ALL.svg` and `flamegraph.ALL.R.svg` flamegraphs both contain all 4 "base flamegraphs" (they group them in dfferent ways), and are probably the ones you want to use.
 
 **NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE**: 
+* the "SELF RUN TIME" is the "wall-clock time" that it actually took the command to run. i.e., how long you had to wait after starting running the code until it finished.
 * the "TOTAL RUN TIME"  represents the combined sum of the "wall-clock time" from the main process being profiled + all of its bash descendant processes. If it has no descendants (i.e., it never forks a background process that runs asynchronously) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is similiar to the "total CPU time (sys+user)", except that it combines the wall-clock time that each process ran for.
 * The "TOTAL CPU TIME" is equivalent to the combined sys+user time from other timing tools.
+* NOTE: timep's overhead has been removed/corrected for in all 3 of these times. each should be very close to the time you would have gotten if you ran the command without using `timep`.
 
 The big difference between these is that:
 1. TOTAL RUN TIME includes time spent idling and waiting (via `wait`, a blocking read, waiting on I/O, etc), when cpu usage was basically zero but the process was still running, and
