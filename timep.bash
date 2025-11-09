@@ -1099,6 +1099,8 @@ EOF
     export timep_FD1="${timep_FD1}"
     export timep_FD2="${timep_FD2}"
 
+    timep_WTIME_START="${EPOCHREALTIME//[^0-9]/}"
+
     if ${timep_PTY_FLAG}; then
         if type realpath &>/dev/null; then
             timep_PTY_PATH="$(realpath "${timep_PTY_PATH}")"
@@ -1122,6 +1124,10 @@ EOF
            "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
+
+    timep_WTIME_DONE="${EPOCHREALTIME//[^0-9]/}"
+    eval "${timep_END_CTIME_STR}"
+    timep_CIME_DONE="${timep_END_CTIME//[^0-9]/}"
 
     printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s" (+%s)\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" "${SECONDS}" >&2
     unset IFS
@@ -1166,9 +1172,9 @@ EOF
     # --> combine duplicate/repeated commands from loops (in second "combined" log)
 
     # get final end times
-    read -r timep_WTIME_START <"${timep_TMPDIR}/.log/.final.start.wtime"
-    read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
-    read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
+    [[ -f "${timep_TMPDIR}/.log/.final.start.wtime" ]] && read -r timep_WTIME_START <"${timep_TMPDIR}/.log/.final.start.wtime"
+    [[ -f "${timep_TMPDIR}/.log/.final.end.wtime" ]] && read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
+    [[ -f "${timep_TMPDIR}/.log/.final.end.ctime" ]] && read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
    
     # define helper functions for getting runtime from timestamp differences and for summing runtimes
 
@@ -1661,42 +1667,50 @@ _timep_PROCESS_LOG() {
             elif [[ "${cmdA[$kk]//"'"/}" == '<< (SUBSHELL): '*' >>' ]] && (( kk < nlogA - 1 )); then
                 # sanity check - ensure the childs logs last wall-clock end time is before the next commands start time
                 IFS=$'\t' read -r endWTimeChild _ <"${timep_TMPDIR}/.log/.endtimes/log.${nexecHashA[$kk]}"
-                (( startWTimeA[$((kk+1))] >= endWTimeChild )) || cmdA[$kk]="${cmdA[$kk]/\(SUBSHELL\)/\(BACKGROUND FORK\)}"
+                (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > 10#0${endWTimeChild} )) || cmdA[$kk]="${cmdA[$kk]/\(SUBSHELL\)/\(BACKGROUND FORK\)}"
             fi
+
+            # for background forks, assume the end time is the start time of the 1st command in the child process minus 1 microsecond
+            [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && [[ "${endWTime}" == '-' ]] && {
+                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > startWTime )); then
+                     (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
+                     endWTimeA[$kk]="${endWTime}"
+                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
+                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime > startWTime )) && (( endWTimeA[$kk] = endWTime - 1 ))
+                fi
+            }
+
+            # get child run/cpu time to set as time for the merge command
+            _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}" && {
+                IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
+
+                # save wall clock time. if endtime is "-" use it + start time to compute the endtime
+                (( 10#0${wTime//[^0-9]} > 0 )) && {
+                    wTimeA[$kk]="${wTime}"
+                   [[ "${endWTime}" == '-' ]] && {
+                        (( endWTime = 10#0${startWTime//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
+                        # if endtimes are reasonable save them
+                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && { [[ -z ${endWTime} ]] || [[ "${endWTime}" == '-' ]]; } && (( endWTime > startWTime )) && endWTimeA[$kk]="${endWTime}"
+                    }
+                }
+
+                # save cpu time. if endtime is "-"" use it + start time to compute the endtime
+                (( 10#0${cTime//[^0-9]} > 0 )) && {
+                    cTimeA[$kk]="${cTime}"
+                    [[ "${endCTime}" == '-' ]] && {
+                        (( endCTime = 10#0${startCTime//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
+                        [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && { [[ -z ${endCTime} ]] || [[ "${endCTime}" == '-' ]]; } && (( endCTime > startCTime )) && endCTimeA[$kk]="${endCTime}"
+                    }
+                }
+            }
 
         else
             normalCmdFlagA[$kk]=true
             isMergeIndicatorA[$kk]=false
         fi
 
-        # see if we need to merge up the endtime/runtime from the child log
-        [[ "${endWTime}" == '-' ]] && {
-            # for background forks, assume the end time is the start time of the 1st command in the child process minus 1 microsecond
-            [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && {
-                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( ${startWTimeA[$((kk+1))]//[^0-9]/}  > startWTime )); then
-                     (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
-                     endWTimeA[$kk]="${endWTime}"
-                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
-                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime > startWTimeA[$kk] )) && (( endWTimeA[$kk] = endWTime - 1 ))
-                fi
-            }
-
-            _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}" && {
-                IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
-                (( 10#0${wTime//[^0-9]} > 0 )) && {
-                    wTimeA[$kk]="${wTime}"
-                    [[ "${endWTime}" == '-' ]] && {
-                        (( endWTime = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
-                        # if endtimes are reasonable save them
-                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && { [[ -z ${endWTimeA[$kk]} ]] || [[ "${endWTimeA[$kk]}" == '-' ]]; } && (( endWTime > startWTimeA[$kk] )) && endWTimeA[$kk]="${endWTime}"
-                    }
-                }
-                (( 10#0${cTime//[^0-9]} > 0 )) && {
-                    cTimeA[$kk]="${cTime}"
-                    (( endCTime = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
-                    [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } && (( endCTime > startCTimeA[$kk] )) && endCTimeA[$kk]="${endCTime}"
-                }
-            }
+        # see if we still need to merge up the endtime/runtime from the child log
+        [[ "${endWTimeA[$kk]}" == '-' ]] && {
 
             # if we still dont have a endtime but we have a runtime, assume endtime is starttime + runtime
             { [[ -z ${endWTimeA[$kk]} ]] || [[ "${endWTimeA[$kk]}" == '-' ]]; } && (( startWTimeA[$kk] > 0 )) && [[ ${wTimeA[$kk]} ]] && (( wTimeA[$kk] > 0 )) && (( endWTimeA[$kk] = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
@@ -1872,6 +1886,7 @@ printf '%s;' "${fgA[@]}")"
 
     (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
     (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
+    (( wTimeSelfTotal = wTimeSelfTotal >= 1 ? wTimeSelfTotal : 1 ))
 
     # write starttime and runtime and final endtime to .{start,end,run}time file
     printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/}"
