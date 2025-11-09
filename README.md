@@ -1,18 +1,14 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: 1.9.4
+**CURRENT TIMEP VERSION**: timep v1.10
 
-**CHANGES IN MOST RECENT UPDATE**: In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
-* a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed
-* async (background forked) function calls now are propertly handled
-* much of the core instrumentation has been reworked (particularly related to when new subshells spawn), resulting in overall more structurally accurate profiles.
-* trap handlers are now shown correctly in the vast majority of cases
-* new AI-generated profiler stress tests have been added. timep is now producing accurate profiles of all of the stress tests
-* v1.9.1: hotfix for an issue where an extra empty line was being added to the profile, skewing CPU times upward
-* v1.9.2: hotfix for single-command substitutions having farr too high a runtime shown
-* v1.9.3: hotfix for issue where code that was sourced (via `source <...>` or `. <...>`) caused the function nesting level to become out of sync
-* v1.9.4: hotfix for issue where timep did not properly bootstrap itself into called scripts and new bash instances
+timep v1.10: This release is a smaller "quality of life" release that incorporates the foillowing changes:
+1. `/dev/shm` is no longer a hard dependency. The loadable builtin timep.so file and the flamegraph generation perl script now follow he same logic that choosing the timep tmpdir uses(`/dev/shm` is preffered, but if unavailable `$TMPDIR`, `/tmp`, and `$PWD` will be tried with decreasing prefferance)
+2. The way `timep` aggregates the compined time totals (shown atthe botoim of the profiles) has been overhauled. Three times are now shown (all have timep's instrumentation overhead removed):
+* "SELF RUN TIME": the "wall-clock" time that it actually took the command to run
+* "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed together
+* "TOTAL CPU TIME": the "CPU time" from all parallel branches of the code summed together
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
