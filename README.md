@@ -1,18 +1,14 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: 1.9.4
+**CURRENT TIMEP VERSION**: timep v1.10
 
-**CHANGES IN MOST RECENT UPDATE**: In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
-* a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed
-* async (background forked) function calls now are propertly handled
-* much of the core instrumentation has been reworked (particularly related to when new subshells spawn), resulting in overall more structurally accurate profiles.
-* trap handlers are now shown correctly in the vast majority of cases
-* new AI-generated profiler stress tests have been added. timep is now producing accurate profiles of all of the stress tests
-* v1.9.1: hotfix for an issue where an extra empty line was being added to the profile, skewing CPU times upward
-* v1.9.2: hotfix for single-command substitutions having farr too high a runtime shown
-* v1.9.3: hotfix for issue where code that was sourced (via `source <...>` or `. <...>`) caused the function nesting level to become out of sync
-* v1.9.4: hotfix for issue where timep did not properly bootstrap itself into called scripts and new bash instances
+timep v1.10: This release is a smaller "quality of life" release that incorporates the foillowing changes:
+1. `/dev/shm` is no longer a hard dependency. The loadable builtin timep.so file and the flamegraph generation perl script now follow he same logic that choosing the timep tmpdir uses(`/dev/shm` is preffered, but if unavailable `$TMPDIR`, `/tmp`, and `$PWD` will be tried with decreasing prefferance)
+2. The way `timep` aggregates the compined time totals (shown atthe botoim of the profiles) has been overhauled. Three times are now shown (all have timep's instrumentation overhead removed):
+* "SELF RUN TIME": the "wall-clock" time that it actually took the command to run
+* "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed together
+* "TOTAL CPU TIME": the "CPU time" from all parallel branches of the code summed together
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
@@ -50,8 +46,10 @@ if `--flame` is passed as a flag:
  several flamegraph .svg files are genertated from the above two "out.flamegraph" files and savei in the "flamegraphs" subdirectory of the profile dir. there are 4 "base" SVG's that show wall-clock time and cpu time for the full and the folded stack traces. These 4 SVGs are then combined (vertically stacked) in various combinations to produce extremely informaive dual- and quad-stacked flamegraphs. The qaad-stacked `flamegraph.ALL.svg` and `flamegraph.ALL.R.svg` flamegraphs both contain all 4 "base flamegraphs" (they group them in dfferent ways), and are probably the ones you want to use.
 
 **NOTE ON INTERPRETING THE TOTAL RUNTIMES IN THE PROFILE**: 
+* the "SELF RUN TIME" is the "wall-clock time" that it actually took the command to run. i.e., how long you had to wait after starting running the code until it finished.
 * the "TOTAL RUN TIME"  represents the combined sum of the "wall-clock time" from the main process being profiled + all of its bash descendant processes. If it has no descendants (i.e., it never forks a background process that runs asynchronously) then this is just the standard "wall-clock time". For code that runs several processes in parallel it is similiar to the "total CPU time (sys+user)", except that it combines the wall-clock time that each process ran for.
 * The "TOTAL CPU TIME" is equivalent to the combined sys+user time from other timing tools.
+* NOTE: timep's overhead has been removed/corrected for in all 3 of these times. each should be very close to the time you would have gotten if you ran the command without using `timep`.
 
 The big difference between these is that:
 1. TOTAL RUN TIME includes time spent idling and waiting (via `wait`, a blocking read, waiting on I/O, etc), when cpu usage was basically zero but the process was still running, and

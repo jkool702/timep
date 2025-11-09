@@ -190,7 +190,7 @@ timep() {
         timep_TMPDIR="${timep_TMPDIR0}/timep.$(printf '%0.4X' "${RANDOM}" "${RANDOM}")"
     done
 
-    mkdir -p "${timep_TMPDIR}"/.log/.{endtimes,runtimes,times,hash}
+    mkdir -p "${timep_TMPDIR}"/.log/.{starttimes,endtimes,runtimes,selftimes,times,hash}
     mkdir -p "${timep_TMPDIR}"/{profiles,.needs_merge,.pid_used}
     mkdir -p "${timep_TMPDIR}/.worker/delete"
     printf '%s\n' '0' >"${timep_TMPDIR}/.log/.count.bg_pid"
@@ -979,7 +979,8 @@ export BASH_ENV="${timep_TMPDIR}/env.bash"
 [[ "${timep_runType}" == 'f' ]] && timep_runMainSrc+='timep_SKIP_DEBUG_UNTIL_FUNC_FLAG=true
 timep_SKIP_DEBUG_FLAG=true
 '
-timep_runMainSrc+='builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
+timep_runMainSrc+='echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.start.wtime"
+builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 '
 
     ${timep_timeFlag} && timep_runMainSrc+='
@@ -1098,6 +1099,8 @@ EOF
     export timep_FD1="${timep_FD1}"
     export timep_FD2="${timep_FD2}"
 
+    timep_WTIME_START="${EPOCHREALTIME//[^0-9]/}"
+
     if ${timep_PTY_FLAG}; then
         if type realpath &>/dev/null; then
             timep_PTY_PATH="$(realpath "${timep_PTY_PATH}")"
@@ -1121,6 +1124,10 @@ EOF
            "${BASH}" -m -O extglob -o functrace "${timep_TMPDIR}/main.bash" "${@}" <&0
         fi
     fi
+
+    timep_WTIME_DONE="${EPOCHREALTIME//[^0-9]/}"
+    eval "${timep_END_CTIME_STR}"
+    timep_CIME_DONE="${timep_END_CTIME//[^0-9]/}"
 
     printf '\n\nThe %s being time profiled has finished running!\ntimep will now process the logged timing data.\ntimep will save the time profiles it generates in "%s" (+%s)\n\n' "$({ [[ "${timep_runType}" == 's' ]] && echo 'script'; } || { [[ "${timep_runType}" == 'f' ]] &&  echo 'function'; } || echo 'commands')" "${timep_TMPDIR}/profiles" "${SECONDS}" >&2
     unset IFS
@@ -1165,9 +1172,10 @@ EOF
     # --> combine duplicate/repeated commands from loops (in second "combined" log)
 
     # get final end times
-    read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
-    read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
-
+    [[ -f "${timep_TMPDIR}/.log/.final.start.wtime" ]] && read -r timep_WTIME_START <"${timep_TMPDIR}/.log/.final.start.wtime"
+    [[ -f "${timep_TMPDIR}/.log/.final.end.wtime" ]] && read -r timep_WTIME_DONE <"${timep_TMPDIR}/.log/.final.end.wtime"
+    [[ -f "${timep_TMPDIR}/.log/.final.end.ctime" ]] && read -r timep_CTIME_DONE <"${timep_TMPDIR}/.log/.final.end.ctime"
+   
     # define helper functions for getting runtime from timestamp differences and for summing runtimes
 
 #    export LOCALE=C
@@ -1409,8 +1417,8 @@ _timep_FILE_EXISTS() {
 
     [[ -s "${1}" ]] && return 0
 
-    for w in {01..09}; do
-        read -r -u ${fd_sleep} -t "0.${w}" _
+    for w in {1..9}; do
+        read -r -u ${fd_sleep} -t "0.0${w}" _
         [[ -s "${1}" ]] && return 0
     done
 
@@ -1500,8 +1508,8 @@ shopt -s extglob
 
 _timep_PROCESS_LOG() {
 
-    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag fgStartTime wt ct
-    local -a logA logA_time logA_time_files nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
+    local logCur log_tmp kk kk1 kkLast lineno1 nn inPipeFlag nPipe startWTime endWTime startCTime endCTime wTime cTime wTime0 cTime0  func pid nexec lineno cmd t0 t1 log_tmp linenoUniq log_dupe_flag spacerN logMergeAll fg0 ns nf nPipeNextIgnoreFlag IFS IFS0 nPipe0 cmd0 cmd00 d6 wTimeTotal cTimeTotal wTimeP cTimeP nlogA logDepth keyCur mergeInd kkOut jj firstFlag fgStartTime wt ct startWTime0 endWTimeChild wTimeSelfTotal wTimeSelfChild
+    local -a logA logA_time logA_time_files nPipeA wTimeTA cTimeTA funcA pidA nexecA linenoA cmdA mergeA mergeA0 isPipeA isTrapA logMergeA linenoUniqA sA fA eA fgA normalCmdFlagA isBackgroundForkFlagA startWTimeA endWTimeA startCTimeA endCTimeA wTimeA cTimeA wTimePA cTimePA linenoUniqMapA linenoUniqLineA linenoUniqCountA linenoUniqWTimeA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA linenoUniqWTimeTA linenoUniqCTimeA linenoUniqCTimeTA linenoUniqCmdA wTimeOutCurA wTimeOutCurTA cTimeOutCurA cTimeOutCurTA countOutCurA nestDiagramOutCurA linenoOutCurA cmdIndexOutCurA cmdOutCurA isMergeIndicatorA mergeCurA mergeCurA0 cmdIndexA linenoUniqNestDiagramA linenoUniqCmdIndexA linenoUniqLinenoA inPipeFlagA
     local -A linenoUniqMapAA
 
     [[ ${timep_POSTPROC_DEBUG_FLAG} ]] && ${timep_POSTPROC_DEBUG_FLAG} && {
@@ -1521,6 +1529,7 @@ _timep_PROCESS_LOG() {
 
     wTimeTotal=0
     cTimeTotal=0
+    wTimeSelfTotal=0
 
     # get current log nesting depth
     read -r logDepth <"${timep_TMPDIR}/.log/.hash/${logCur##*\/}"
@@ -1528,7 +1537,8 @@ _timep_PROCESS_LOG() {
     logDepth="${#logDepth}"
 
     # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
+#    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
+    mapfile -t logA <"${logCur}" 
 
     log_dupe_flag=false
     kk1=0
@@ -1541,13 +1551,12 @@ _timep_PROCESS_LOG() {
     done
     ${log_dupe_flag} && mapfile -t -d '' logA < <(printf '%s\0' "${logA[@]}" | sed -E s/'\0+'/'\0'/g)
 
-    [[ -f "${logCur}.out" ]] && \rm -f "${logCur}.out"
-    [[ -f "${logCur}.out.combined" ]] && \rm -f "${logCur}.out.combined"
-
     nlogA="${#logA[@]}"
 
+    IFS=$'\t' read -r _ startWTime0 _ <<<"${logA[0]}"
+
    # loop through lines in reverse order
-    for (( kk=${#logA[@]}-1; kk>=0; kk-- )); do
+    for (( kk=nlogA-1; kk>=0; kk-- )); do
 
         [[ -z ${logA[$kk]//[ $'\t']/} ]] && { unset "logA[$kk]"; continue; }
 
@@ -1569,6 +1578,11 @@ _timep_PROCESS_LOG() {
         # get nexec hash
         timep_hash - 'nexecHash' <<<"${nexecA[$kk]#* }"
         nexecHashA[$kk]="${nexecHash}"
+
+        # update earliest start time for this log if needed
+        (( startWTime < startWTime0 )) && { 
+            startWTime0="${startWTime}"
+        }
 
         # unquote the cmd string
         if [[ "${cmd}" == '@TRAP ('*'): '* ]]; then
@@ -1637,39 +1651,72 @@ _timep_PROCESS_LOG() {
 
             # read in the endtime + runtime from the log
             # [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] || {
-                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
-                    IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
-                    [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
-                    [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
-                fi
+            #    if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
+            #        IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
+            #        [[ ${wTime//[^0-9]/} ]] && wTimeA[$kk]="${wTime}"
+            #        [[ ${cTime//[^0-9]/} ]] && cTimeA[$kk]="${cTime}"
+            #    fi
             #  }
-            [[ "${cmdA[$kk]//"'"/}" == '<< (FUNCTION): '*' >>' ]] && {
+            if [[ "${cmdA[$kk]//"'"/}" == '<< (FUNCTION): '*' >>' ]]; then
                 cmd="${cmdA[$kk]#<< \(FUNCTION\): }"
                 cmd="${cmd%' >>'}"
                 cmd="${cmd#"'"}"
                 cmd="${cmd%"'"}"
                 cmd="${cmd//"'\\''"/"'"}"
                 cmdA[$kk]='<< (FUNCTION): '"${funcA[$kk]#* }.${cmd}"' >>'
+            elif [[ "${cmdA[$kk]//"'"/}" == '<< (SUBSHELL): '*' >>' ]] && (( kk < nlogA - 1 )) && _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecHashA[$kk]}"; then
+                # sanity check - ensure the childs logs last wall-clock end time is before the next commands start time
+                IFS=$'\t' read -r endWTimeChild _ <"${timep_TMPDIR}/.log/.endtimes/log.${nexecHashA[$kk]}"
+                (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > 10#0${endWTimeChild} )) || cmdA[$kk]="${cmdA[$kk]/\(SUBSHELL\)/\(BACKGROUND FORK\)}"
+            fi
+
+            # for background forks, assume the end time is the start time of the 1st command in the child process minus 1 microsecond
+            if [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && [[ "${endWTime}" == '-' ]]; then
+                isBackgroundForkFlagA[$kk]=true
+                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > startWTime )); then
+                     (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
+                     endWTimeA[$kk]="${endWTime}"
+                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
+                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime > startWTime )) && (( endWTimeA[$kk] = endWTime - 1 ))
+                fi
+            else
+                isBackgroundForkFlagA[$kk]=false
+            fi
+
+            # get child run/cpu time to set as time for the merge command
+            _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}" && {
+                IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
+
+                # save wall clock time. if endtime is "-" use it + start time to compute the endtime
+                (( 10#0${wTime//[^0-9]} > 0 )) && {
+                    wTimeA[$kk]="${wTime}"
+                   [[ "${endWTime}" == '-' ]] && {
+                        (( endWTime = 10#0${startWTime//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
+                        # if endtimes are reasonable save them
+                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && { [[ -z ${endWTime} ]] || [[ "${endWTime}" == '-' ]]; } && (( endWTime > startWTime )) && endWTimeA[$kk]="${endWTime}"
+                    }
+                }
+
+                # save cpu time. if endtime is "-"" use it + start time to compute the endtime
+                (( 10#0${cTime//[^0-9]} > 0 )) && {
+                    cTimeA[$kk]="${cTime}"
+                    [[ "${endCTime}" == '-' ]] && {
+                        (( endCTime = 10#0${startCTime//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
+                        [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && { [[ -z ${endCTime} ]] || [[ "${endCTime}" == '-' ]]; } && (( endCTime > startCTime )) && endCTimeA[$kk]="${endCTime}"
+                    }
+                }
             }
 
         else
             normalCmdFlagA[$kk]=true
             isMergeIndicatorA[$kk]=false
+            isBackgroundForkFlagA[$kk]=false
         fi
 
-        # see if we need to merge up the endtime/runtime from the child log
+        # see if we still need to merge up the endtime/runtime from the child log
         [[ "${endWTimeA[$kk]}" == '-' ]] && {
-            if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"; then
-                IFS=$'\t' read -r wTime cTime <"${timep_TMPDIR}/.log/.runtimes/log.${nexecHashA[$kk]}"
-                (( 10#0${wTime//[^0-9]} > 0 )) && {
-                  (( endWTime = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
-                  [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && { [[ -z ${endWTimeA[$kk]} ]] || [[ "${endWTimeA[$kk]}" == '-' ]]; } && (( endWTime > startWTimeA[$kk] )) && endWTimeA[$kk]="${endWTime}"
-                }
-                (( 10#0${cTime//[^0-9]} > 0 )) && {
-                  (( endCTime = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
-                  [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } && (( endCTime > startCTimeA[$kk] )) && endCTimeA[$kk]="${endCTime}"
-                }
-            fi
+
+            # if we still dont have a endtime but we have a runtime, assume endtime is starttime + runtime
             { [[ -z ${endWTimeA[$kk]} ]] || [[ "${endWTimeA[$kk]}" == '-' ]]; } && (( startWTimeA[$kk] > 0 )) && [[ ${wTimeA[$kk]} ]] && (( wTimeA[$kk] > 0 )) && (( endWTimeA[$kk] = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
             { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } && (( startCTimeA[$kk] > 0 )) && [[ ${cTimeA[$kk]} ]] && (( cTimeA[$kk] > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
 
@@ -1683,7 +1730,7 @@ _timep_PROCESS_LOG() {
         # single-command command/process substitutions dont get a endtime logged (uses endWTime='+' as indicator), since they wont trigger a EXIT trap
         # figure out the most reasonable endtime for these lines by looking at starttimes for the parent, then grandparent, etc.
         # to get the closest timestamp that is greater than the starttime for this command and use that as the endtime
-        [[ "${endWTimeA[$kk]}" == '+' ]] && {
+        [[ "${endWTime}" == '+' ]] && {
             (( ${#logA_time[@]} > 0 )) || {
                 if [[ -f "${timep_TMPDIR}/.log/.times/${logCur##*\/}" ]]; then
                     logA_time_files=("${timep_TMPDIR}/.log/.times/${logCur##*\/}")
@@ -1731,8 +1778,9 @@ _timep_PROCESS_LOG() {
             endWTimeA[$kk]="${endWTime}"
 
             # get missing cpu time by assuming cpu time and wall time are identical (or, when apppriopiate, ther final ending CTIME)
-            (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
-            (( timep_CTIME_DONE > startCTimeA[$kk] )) && (( timep_CTIME_DONE < endCTimeA[$kk] )) && endCTimeA[$kk]="${timep_CTIME_DONE}"
+            (( endCTime = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
+            (( timep_CTIME_DONE > startCTimeA[$kk] )) && (( timep_CTIME_DONE < endCTimeA[$kk] )) && endCTime="${timep_CTIME_DONE}"
+            endCTimeA[$kk]="${endCTime}"
         }
 
         # merge pipelines commands upward into previous line cmdA
@@ -1783,18 +1831,39 @@ _timep_PROCESS_LOG() {
                 # if we are using getCPUtime and our end time is before the start time, then chances are getCPUtime is reading from a new clock even though there isnt a full subshell. This happens on things like arithmitic evaluations  `(( ... ))`
                 # assume the start clock is 0 here, which makes the time equal to end - 0 - correction --> end - correction
                 (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
+                startCTimeA[$kk]=0
             fi
         }
 
+        # add times to total wall/cpu time sums
         if (( 10#0${wTimeA[$kk]//[^0-9]/} >= 1 )); then
             ${inPipeFlag} || (( wTimeTotal = wTimeTotal + wTimeA[$kk] ))
         else
              wTimeA[$kk]=1
+             ((wTimeTotal++))
         fi
         if (( 10#0${cTimeA[$kk]//[^0-9]/} >= 1 )); then
             ${inPipeFlag} || (( cTimeTotal = cTimeTotal + cTimeA[$kk] ))
         else
             cTimeA[$kk]=1
+            ((cTimeTotal++))
+        fi
+
+        # for background forks to get the total time we need the time taken by the child AND the time it takes the parent to fork the command
+        ${isBackgroundForkFlagA[$kk]} && ! ${inPipeFlag} && {
+            (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && (( wTimeTotal = wTimeTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
+            (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
+        }
+
+
+        # add current time to self time sum
+        if ${isMergeIndicatorA[$kk]} && [[ -f "${timep_TMPDIR}/.log/.selftimes/log.${nexecHashA[$kk]}"  ]]; then
+            # current line is a merge indicator. add child self time.
+            read -r wTimeSelfChild <"${timep_TMPDIR}/.log/.selftimes/log.${nexecHashA[$kk]}" 
+            (( 10#0${wTimeSelfChild} > 0 )) && (( wTimeSelfTotal = wTimeSelfTotal + 10#0${wTimeSelfChild} ))
+        elif (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )); then
+            # current line is a standard command. add "end - start".
+            (( wTimeSelfTotal = wTimeSelfTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
         fi
 
        ${timep_flameGraphFlag} && ${normalCmdFlagA[$kk]} && ! ${inPipeFlag} && {
@@ -1829,10 +1898,13 @@ printf '%s;' "${fgA[@]}")"
 
     (( wTimeTotal = wTimeTotal >= 1 ? wTimeTotal : 1 ))
     (( cTimeTotal = cTimeTotal >= 1 ? cTimeTotal : 1 ))
+    (( wTimeSelfTotal = wTimeSelfTotal >= 1 ? wTimeSelfTotal : 1 ))
 
-    # write runtime and final endtime to .{end,run}time file
-    printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/.log\/}"
-    printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/.log\/}"
+    # write starttime and runtime and final endtime to .{start,end,run}time file
+    printf '%s\t%s\n' "${endWTimeA[-1]}" "${endCTimeA[-1]}" >"${logCur%\/.log\/*}/.log/.endtimes/${logCur##*\/}"
+    printf '%s\t%s\n' "${wTimeTotal}" "${cTimeTotal}" >"${logCur%\/.log\/*}/.log/.runtimes/${logCur##*\/}"
+    printf '%s\n' "${startWTime0}" >"${logCur%\/.log\/*}/.log/.starttimes/${logCur##*\/}"
+    printf '%s\n' "${wTimeSelfTotal}" >"${logCur%\/.log\/*}/.log/.selftimes/${logCur##*\/}"
 
     # add nesting depth to LINENO's and compute runtime as % of total at this depth and get list of unique lineno's + write out flamegraph stack
     kk1=0
@@ -2396,8 +2468,10 @@ _timep_GET_TIMES() {
         return 1
     fi
 
-    # load current log (sorted by NEXEC) into array
-    mapfile -t logA < <(sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11)
+    # pre process currenbt log (integrate traps, sort by NEXEC) and save, then load into logA
+    \mv "${logCur}" "${logCur}.raw"
+    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+    mapfile -t logA <"${logCur}" 
 
     logA=("${logA[@]#*$'\t'}")
     tStartA=("${logA[@]%%$'\t'*}")
@@ -2407,7 +2481,8 @@ _timep_GET_TIMES() {
 
     unset "logA"
 
-    printf '%s\n' "${tStartA[@]}" "${tEndA[@]}" | grep -vE '^[ \t+\-]*$' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
+#    printf '%s\n' "${tStartA[@]}" "${tEndA[@]}" | grep -vE '^[ \t+\-]*$' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
+    printf '%s\n' "${tStartA[@]}" | grep -vE '[^0-9]' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
 
     return 0
 }
@@ -2817,7 +2892,8 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     printf '\n\n' >>"${timep_LOG_MAIN}.out.combined"
 
     for nn in "${timep_TMPDIR}"/.log/.runtimes/log.*; do
-        read -r timep_wTimeCur timep_cTimeCur <"${nn}"
+        IFS=$'\t' read -r timep_wTimeCur timep_cTimeCur <"${nn}"
+        read -r timep_wTimeSelfTotalCur <"${timep_TMPDIR}/.log/.selftimes/${nn##*\/}"
 
         printf -v timep_wTimeCur '%0.7d' "${timep_wTimeCur}"
         (( d6 = ${#timep_wTimeCur} - 6 ))
@@ -2827,7 +2903,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         (( d6 = ${#timep_cTimeCur} - 6 ))
         printf -v timep_cTimeCur '%s.%s' "${timep_cTimeCur:0:${d6}}" "${timep_cTimeCur:${d6}}"
 
-        printf -v logFooter '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wTimeCur}" "${timep_cTimeCur}"
+        printf -v timep_wTimeSelfTotalCur '%0.7d' "${timep_wTimeSelfTotalCur}"
+        (( d6 = ${#timep_wTimeSelfTotalCur} - 6 ))
+        printf -v timep_wTimeSelfTotalCur '%s.%s' "${timep_wTimeSelfTotalCur:0:${d6}}" "${timep_wTimeSelfTotalCur:${d6}}"
+
+        printf -v logFooter '\n\nWALL CLOCK TIME: %ss\nTOTAL RUN TIME:  %ss\nTOTAL CPU TIME:  %ss\n' "${timep_wTimeSelfTotalCur}" "${timep_wTimeCur}" "${timep_cTimeCur}"
 
         printf '%s\n' "${logFooter}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out"
         printf '%s\n' "${logFooter}" >>"${nn//\/.log\/.runtimes\//\/.log\/}.out.combined"
@@ -2860,11 +2940,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     }
 
     # copy out.profiles, removing unneeded extra bit on last line of profile (but before the "TOTAL RUNTIME" line
-    sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+TOTAL RUN TIME)/\n\└─ \1\2/' <"${timep_LOG_MAIN}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
+    sed -zE 's/\n\│  ([^\n]+)\n│(\n\n+WALL CLOCK TIME)/\n\└─ \1\2/' <"${timep_LOG_MAIN}.out" >"${timep_TMPDIR}/profiles/out.profile.full"
     sed -zE 's/\n\n\n+/\n\x00/g; s/\n\n/\n/g; s/(\n([0-9]+\t){5})\t/\1/g' <"${timep_LOG_MAIN}.out.combined"  >"${timep_TMPDIR}/profiles/out.profile";
 
     # get total runtime
-    read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_MAIN##*/}"
+    IFS=$'\t' read -r timep_wtimeALL timep_ctimeALL <"${timep_TMPDIR}/.log/.runtimes/${timep_LOG_MAIN##*/}"
     ((timep_wtimeALL = 10#0${timep_wtimeALL//[^0-9]/}))
     ((timep_ctimeALL = 10#0${timep_ctimeALL//[^0-9]/}))
 
@@ -2875,7 +2955,17 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     (( d6 = ${#timep_ctimeALL0} - 6 ))
     printf -v timep_ctimeALL0 '%s.%s' "${timep_ctimeALL0:0:${d6}}" "${timep_ctimeALL0:${d6}}"
 
-    printf -v logFooter '\n\nTOTAL RUN TIME: %ss\nTOTAL CPU TIME: %ss\n' "${timep_wtimeALL0}" "${timep_ctimeALL0}"
+    read -r timep_wtimeSelfALL <"${timep_TMPDIR}/.log/.selftimes/${timep_LOG_MAIN##*/}"
+    ((timep_wtimeSelfALL = 10#0${timep_wtimeSelfALL//[^0-9]/}))
+
+    (( timep_wtimeSelfALL > timep_WTIME_DONE - timep_WTIME_START )) && (( timep_wtimeSelfALL = timep_WTIME_DONE - timep_WTIME_START ))
+    (( timep_wtimeSelfALL > timep_wtimeALL )) && timep_wtimeSelfALL="${timep_wtimeALL}"
+
+    printf -v timep_wtimeSelfALL0 '%0.7d' "${timep_wtimeSelfALL}"
+    (( d6 = ${#timep_wtimeSelfALL0} - 6 ))
+    printf -v timep_wtimeSelfALL0 '%s.%s' "${timep_wtimeSelfALL0:0:${d6}}" "${timep_wtimeSelfALL0:${d6}}"
+
+    printf -v logFooter '\n\nWALL CLOCK TIME: %ss\nTOTAL RUN TIME:  %ss\nTOTAL CPU TIME:  %ss\n' "${timep_wtimeSelfALL0}" "${timep_wtimeALL0}" "${timep_ctimeALL0}"
     spacerN=16
 
     # add another percentage showing "percent of total runtime" to final outputs
@@ -2973,7 +3063,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 fi
 
             done <"${logPathCur}"
-        } | sed -zE 's/\nTOTAL RUN TIME\: .*$/\n\n/; s/[ \t]*\n/\n/g')"
+        } | sed -zE 's/\nWALL CLOCK TIME\: .*$/\n\n/; s/[ \t]*\n/\n/g')"
 
         # resort the final output by lineno. keep records together by using sort -z and adding NULs between records. for functions temporairly relocate the box drawing characters to the endof the line, then sort, then move them back.
         #if [[ "${timep_runType}" == 'f' ]]; then
@@ -3018,9 +3108,9 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         # for functions - add in space between top lvl commands inside the function
         {
             if [[ "${timep_runType}" == 'f' ]]; then
-                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } | { lll=false; while IFS='' read -r l; do ll="${l#*\)*\)*\)    }"; if [[ "$ll" == '<<'* ]] || [[ "$ll" == '│   <<'* ]]; then ${lll} && echo '@@@@@'; lll=true; echo; else lll=false; fi; echo "$l"; done; } | sed -zE s/'\n@@@@@\n'/\n/g
+                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; { [[ "${line}" == WALL* ]] || [[ "${line}" == TOTAL* ]]; } && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } | { lll=false; while IFS='' read -r l; do ll="${l#*\)*\)*\)    }"; if [[ "$ll" == '<<'* ]] || [[ "$ll" == '│   <<'* ]]; then ${lll} && echo '@@@@@'; lll=true; echo; else lll=false; fi; echo "$l"; done; } | sed -zE s/'\n@@@@@\n'/\n/g
             else
-                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; [[ "${line}" == TOTAL* ]] && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; }
+                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; { [[ "${line}" == WALL* ]] || [[ "${line}" == TOTAL* ]]; } && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; }
             fi | sed -zE s/'\n\n([0-9\-])/\x00\1/g' | sort -n -t. -z -k1,1 | { read -r -d '' l; if [[ "${l}" == [0-9\-]* ]]; then l0="${l%%.*}"; else l0=''; fi; echo "$l"; while read -r -d '' l; do if [[ "${l}" == [0-9\-]* ]]; then l1="${l%%.*}"; else l1=''; fi; { [[ $l0 ]] && [[ $l1 ]] && [[ "$l0" == "$l1" ]]; } || echo; echo "$l"; l0="$l1"; done; }
             echo "${logFooter}"
         } | sed -zE 's/^\n*//; s/\n\n\n+/\n\n/g; s/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g; s/\(\^\)[ \t]*\n/\n/g' >"${logPathCur}"
@@ -3086,16 +3176,49 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
             printf '\nCOMBINING FLAMEGRAPHS INTO VERTICALLY STACKED SVG IMAGES (+%s)\n' "${SECONDS}"  >&2
 
-            svgCombineInd=0
+            export -f _timep_COMBINE_FLAMEGRAPH
+            {
+                # dual-stack flamegraphs
+                printf '\nGENERATING (4x) DUAL-STACK FLAMEGRAPHS\n\n' >&2
+                {
+                    svgCombineInd=0
+                    _timep_COMBINE_FLAMEGRAPH --type="f" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
+                } &
+                {
+                    svgCombineInd=1
+                    _timep_COMBINE_FLAMEGRAPH --type="F" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
+                } &
+                {
+                    svgCombineInd=2
+                    _timep_COMBINE_FLAMEGRAPH --type="w" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
+                } &
+                {
+                    svgCombineInd=3
+                    _timep_COMBINE_FLAMEGRAPH --type="c" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
+                } &
+                wait
 
-            _timep_COMBINE_FLAMEGRAPH --type="f" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg"
-            _timep_COMBINE_FLAMEGRAPH --type="F" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg"
+                # quad-stack flamegraphs
+                printf '\nGENERATING (2x) QUAD-STACK FLAMEGRAPHS\n\n' >&2
+                {
+                    svgCombineInd=4
+                    _timep_COMBINE_FLAMEGRAPH --type="fF" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
+                } &
+                {
+                    svgCombineInd=5
+                   _timep_COMBINE_FLAMEGRAPH --type="wc"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.R.svg" 2>&${fg_fd2}
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
+                } &
+                wait
 
-            _timep_COMBINE_FLAMEGRAPH --type="w" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg"
-            _timep_COMBINE_FLAMEGRAPH --type="c" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg"
+            } {fg_fd2}>&2
 
-            _timep_COMBINE_FLAMEGRAPH --type="fF" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg"
-            _timep_COMBINE_FLAMEGRAPH --type="wc"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.R.svg"
+            exec {fg_fd2}>&-
 
             type -p ln &>/dev/null && {
                 ln "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg" "${timep_TMPDIR}/profiles/flamegraph.ALL.svg"
