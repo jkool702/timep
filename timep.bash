@@ -3183,22 +3183,22 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 {
                     svgCombineInd=0
                     _timep_COMBINE_FLAMEGRAPH --type="f" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" 2>&${fg_fd2}
-                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=1
                     _timep_COMBINE_FLAMEGRAPH --type="F" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" 2>&${fg_fd2}
-                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=2
                     _timep_COMBINE_FLAMEGRAPH --type="w" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.folded.svg"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" 2>&${fg_fd2}
-                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=3
                     _timep_COMBINE_FLAMEGRAPH --type="c" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.full.R.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" 2>&${fg_fd2}
-                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
                 } &
                 wait
 
@@ -3207,12 +3207,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 {
                     svgCombineInd=4
                     _timep_COMBINE_FLAMEGRAPH --type="fF" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.folded.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.full.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.svg" 2>&${fg_fd2}
-                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
                 } &
                 {
                     svgCombineInd=5
                    _timep_COMBINE_FLAMEGRAPH --type="wc"  "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.wall.svg" "${timep_TMPDIR}/profiles/flamegraphs/flamegraph.cpu.svg" >"${timep_TMPDIR}/profiles/flamegraphs/flamegraph.ALL.R.svg" 2>&${fg_fd2}
-                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "$((svgCombineInd+1))" "${SECONDS}"  >&2
+                    printf '\rFLAMEGRAPH #%s COMPLETE! (+%s)\n' "${svgCombineInd}" "${SECONDS}"  >&2
                 } &
                 wait
 
