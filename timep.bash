@@ -1729,7 +1729,7 @@ _timep_PROCESS_LOG() {
         # single-command command/process substitutions dont get a endtime logged (uses endWTime='+' as indicator), since they wont trigger a EXIT trap
         # figure out the most reasonable endtime for these lines by looking at starttimes for the parent, then grandparent, etc.
         # to get the closest timestamp that is greater than the starttime for this command and use that as the endtime
-        [[ "${endWTime}" == '+' ]] && {
+        [[ "${endWTimeA[$kk]}" == '+' ]] && {
             (( ${#logA_time[@]} > 0 )) || {
                 if [[ -f "${timep_TMPDIR}/.log/.times/${logCur##*\/}" ]]; then
                     logA_time_files=("${timep_TMPDIR}/.log/.times/${logCur##*\/}")
@@ -2471,7 +2471,7 @@ _timep_GET_TIMES() {
 
     # pre process currenbt log (integrate traps, sort by NEXEC) and save, then load into logA
     \mv "${logCur}" "${logCur}.raw"
-    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD)|(FUNCTION))\)[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
     mapfile -t logA <"${logCur}" 
 
     logA=("${logA[@]#*$'\t'}")
@@ -2482,8 +2482,8 @@ _timep_GET_TIMES() {
 
     unset "logA"
 
-#    printf '%s\n' "${tStartA[@]}" "${tEndA[@]}" | grep -vE '^[ \t+\-]*$' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
-    printf '%s\n' "${tStartA[@]}" | grep -vE '[^0-9]' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
+#    printf '%s\n' "${tStartA[@]}" | grep -vE '^[ \t+\-]*$' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
+    printf '%s\n' "${tStartA[@]}" "${tEndA[@]}" | grep -vE '[^0-9]' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
 
     return 0
 }
