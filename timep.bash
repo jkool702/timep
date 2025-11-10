@@ -1673,12 +1673,11 @@ _timep_PROCESS_LOG() {
             # for background forks, assume the end time is the start time of the 1st command in the child process minus 1 microsecond
             if [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && [[ "${endWTime}" == '-' ]]; then
                 isBackgroundForkFlagA[$kk]=true
-                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > startWTime )); then
-                     (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
-                     endWTimeA[$kk]="${endWTime}"
-                elif _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
-                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime > startWTime )) && (( endWTimeA[$kk] = endWTime - 1 ))
-                fi
+   
+                _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime = 10#0${endWTime//[^0-9]/} - 1 ))
+                (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} - 1 > 10#0${startWTime//[^0-9]/} )) && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} - 1 < 10#0${endWTime//[^0-9]/} )) && (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
+                                    
+                [[ "${endWTime}" == '-' ]] || endWTimeA[$kk]="${endWTime}"
             else
                 isBackgroundForkFlagA[$kk]=false
             fi
@@ -1693,7 +1692,7 @@ _timep_PROCESS_LOG() {
                    [[ "${endWTime}" == '-' ]] && {
                         (( endWTime = 10#0${startWTime//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
                         # if endtimes are reasonable save them
-                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && { [[ -z ${endWTime} ]] || [[ "${endWTime}" == '-' ]]; } && (( endWTime > startWTime )) && endWTimeA[$kk]="${endWTime}"
+                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && (( endWTime > startWTime )) && endWTimeA[$kk]="${endWTime}"
                     }
                 }
 
@@ -1702,7 +1701,7 @@ _timep_PROCESS_LOG() {
                     cTimeA[$kk]="${cTime}"
                     [[ "${endCTime}" == '-' ]] && {
                         (( endCTime = 10#0${startCTime//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
-                        [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && { [[ -z ${endCTime} ]] || [[ "${endCTime}" == '-' ]]; } && (( endCTime > startCTime )) && endCTimeA[$kk]="${endCTime}"
+                        [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && (( endCTime > startCTime )) && endCTimeA[$kk]="${endCTime}"
                     }
                 }
             }
@@ -1849,21 +1848,23 @@ _timep_PROCESS_LOG() {
             ((cTimeTotal++))
         fi
 
-        # for background forks to get the total time we need the time taken by the child AND the time it takes the parent to fork the command
-        ${isBackgroundForkFlagA[$kk]} && ! ${inPipeFlag} && {
-            (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && (( wTimeTotal = wTimeTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
-            (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
-        }
-
-
         # add current time to self time sum
-        if ${isMergeIndicatorA[$kk]} && [[ -f "${timep_TMPDIR}/.log/.selftimes/log.${nexecHashA[$kk]}"  ]]; then
+        # for background forks to get the total time we need the time taken by the child AND the time it takes the parent to fork the command
+        if ${isBackgroundForkFlagA[$kk]}; then
+            ${inPipeFlag} || {
+                (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && {
+                    (( wTimeTotal = wTimeTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
+                    (( wTimeSelfTotal = wTimeSelfTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
+                }
+                (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
+            }
+        elif ${isMergeIndicatorA[$kk]} && [[ -f "${timep_TMPDIR}/.log/.selftimes/log.${nexecHashA[$kk]}" ]]; then
             # current line is a merge indicator. add child self time.
             read -r wTimeSelfChild <"${timep_TMPDIR}/.log/.selftimes/log.${nexecHashA[$kk]}" 
-            (( 10#0${wTimeSelfChild} > 0 )) && (( wTimeSelfTotal = wTimeSelfTotal + 10#0${wTimeSelfChild} ))
-        elif (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )); then
-            # current line is a standard command. add "end - start".
-            (( wTimeSelfTotal = wTimeSelfTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
+            (( 10#0${wTimeSelfChild//[^0-9]/} > 0 )) && (( wTimeSelfTotal = wTimeSelfTotal + 10#0${wTimeSelfChild//[^0-9]/} ))
+        else
+            # current line is standard command. add standard run time
+            (( wTimeSelfTotal = wTimeSelfTotal + wTimeA[$kk] ))        
         fi
 
        ${timep_flameGraphFlag} && ${normalCmdFlagA[$kk]} && ! ${inPipeFlag} && {
