@@ -1580,9 +1580,7 @@ _timep_PROCESS_LOG() {
         nexecHashA[$kk]="${nexecHash}"
 
         # update earliest start time for this log if needed
-        (( startWTime < startWTime0 )) && { 
-            startWTime0="${startWTime}"
-        }
+        (( startWTime >= startWTime0 )) || [[ ${startWTime0} ]] || startWTime0="${startWTime}"
 
         # unquote the cmd string
         if [[ "${cmd}" == '@TRAP ('*'): '* ]]; then
@@ -1855,13 +1853,11 @@ _timep_PROCESS_LOG() {
         # for background forks to get the total time we need the time taken by the child AND the time it takes the parent to fork the command
         if ${isBackgroundForkFlagA[$kk]}; then
             # current line is a background fork. add time spent in the parent to actually fork the command to both self time and total time
-            ${inPipeFlag} || {
-                (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && {
-                    (( wTimeTotal = wTimeTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
-                    (( wTimeSelfTotal = wTimeSelfTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
-                }
-                (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
+            (( 10#0${endWTimeA[$kk]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )) && {
+                (( wTimeTotal = wTimeTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
+                #(( wTimeSelfTotal = wTimeSelfTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
             }
+            (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
 
         elif ${isMergeIndicatorA[$kk]}; then
             # current line is a merge indicator (but not a background fork). add child self time.
@@ -2502,7 +2498,7 @@ _timep_GET_TIMES() {
     \mv -f "${logCur}" "${logCur}.tmp"
 
     # move @TRAP lines into the cmd of ther next line, then sort by NEXEC
-    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.tmp" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n(([^\n]+\t\:\:\t<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD)|(FUNCTION))\)\: [^\n]* >>[^\n]*\n)*[^\n]+\t\:\:\t)[^\n]+(\n|$)/\1\3\2\4/g; s/(^|\n)\n([^\n]+\t\:\:\t@TRAP)/\1\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n([^\n]+[ \t]+\:\:[ \t'"'"']+<< \([^\n]+\)\: [^\n]* >>[^\n]*)/'$'\034''\1/g; s/((^|\n)@TRAP \([^\)]+\)\: [^'$'\034'']+)('$'\034''[^\n]+)\n/\3\n\1\n/g; s/'$'\034''/\n/g; s/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*\n)([^\n]+[ \t]\:\:)[ \t]/\1\3\t\2/g' <"${logCur}.tmp" | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
 
     \rm "${logCur}.tmp"
 
