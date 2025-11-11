@@ -2480,7 +2480,7 @@ _timep_GET_TIMES() {
 
     # pre process currenbt log (integrate traps, sort by NEXEC) and save, then load into logA
     \mv "${logCur}" "${logCur}.raw"
-    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)((\n[^\n]+\t\:\:\t<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD)|(FUNCTION))\)\: [^\n]* >>[^\n]*)*)\n([^\n]+)\:\:[^\n]+\n/\n\3\n\4::\t\2\n/g; s/(^|\n)\n([^\n]+\t\:\:\t@TRAP)/\1\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n(([^\n]+\t\:\:\t<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD)|(FUNCTION))\)\: [^\n]* >>[^\n]*)*\n[^\n]+)\:\:[^\n]+\n/\n\3\n\4::\t\2\n/g; s/(^|\n)\n([^\n]+\t\:\:\t@TRAP)/\1\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
 
     mapfile -t logA <"${logCur}" 
 
