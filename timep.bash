@@ -2158,7 +2158,7 @@ printf '%s;' "${fgA[@]}")"
         printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${wTimeOutCurA[$kk]}" "${wTimeOutCurTA[$kk]}" "${cTimeOutCurA[$kk]}" "${cTimeOutCurTA[$kk]}" "${countOutCurA[$kk]}" "${nestDiagramOutCurA[$kk]//x/}" "${linenoOutCurA[$kk]}" "${cmdIndexOutCurA[$kk]}" "${cmd}"
 
         printf '%s\n' "${timep_TMPDIR}/.needs_merge/${logCur##*\/}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
-        printf '%s\n' "${timep_TMPDIR}/.log/.times/${logCur##*\/}" >"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
+        printf '%s\n' "${timep_TMPDIR}/.log/.times/${logCur##*\/}" >>"${timep_TMPDIR}/.worker/delete/${timep_WORKER_PID}"
 
         (( kk == kkLast )) && break
 
@@ -2468,7 +2468,7 @@ _timep_GET_TIMES() {
     # produces a list of wall-clock timestamps for a given log and saves it under .log/.times
 
     local -a logA tStartA tEndA
-    local logCur
+    local logCur log_tmp_hash log_tmp_hash0 curTries maxTries
 
     if [[ -z "${1//[0-9]/}" ]] && [[ -f "${timep_LOG_NAME[${1}]}" ]]; then
         logCur="${timep_LOG_NAME[${1}]}"
@@ -2478,9 +2478,33 @@ _timep_GET_TIMES() {
         return 1
     fi
 
-    # pre process currenbt log (integrate traps, sort by NEXEC) and save, then load into logA
-    \mv "${logCur}" "${logCur}.raw"
-    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n(([^\n]+\t\:\:\t<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD)|(FUNCTION))\)\: [^\n]* >>[^\n]*)*\n[^\n]+)\:\:[^\n]+\n/\n\3\n\4::\t\2\n/g; s/(^|\n)\n([^\n]+\t\:\:\t@TRAP)/\1\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+    # pre process current log (integrate + collapse @TRAP indicators, sort by NEXEC) and save, then load into logA
+    # copy original raw log into .raw
+    \cp -f "${logCur}" "${logCur}.raw"
+
+    curTries=0
+    maxTries=16
+
+    # collapse any back-to-back @TRAP indicator lines iunto a single line
+    timep_hash "$logCur" log_tmp_hash0
+    while true; do
+        \mv -f "${logCur}" "${logCur}.tmp"
+        sed -zE 's/(^|\n)(@TRAP \([^\n]+\)[^\n]*)\n(@TRAP \([^\n]+\))/\1\2; \3/g' <"${logCur}.tmp" >"${logCur}"
+        timep_hash "$logCur" log_tmp_hash
+        if [[ "${log_tmp_hash}" == "${log_tmp_hash0}" ]] || (( curTries > maxTries )); then
+            break
+        else
+            log_tmp_hash0="${log_tmp_hash}"
+            ((curTries++))
+        fi
+    done
+
+    \mv -f "${logCur}" "${logCur}.tmp"
+
+    # move @TRAP lines into the cmd of ther next line, then sort by NEXEC
+    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.tmp" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n(([^\n]+\t\:\:\t<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD)|(FUNCTION))\)\: [^\n]* >>[^\n]*\n)*[^\n]+\t\:\:\t)[^\n]+(\n|$)/\1\3\2\4/g; s/(^|\n)\n([^\n]+\t\:\:\t@TRAP)/\1\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+
+    \rm "${logCur}.tmp"
 
     mapfile -t logA <"${logCur}" 
 

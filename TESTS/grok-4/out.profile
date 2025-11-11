@@ -2,1684 +2,3559 @@ LINE DEPTH CMD 	COMBINED WALL-CLOCK TIME          COMBINED CPU TIME             
 line.depth.cmd:	( time | total % | cur depth % )  ( time | total % | cur depth % )   	(count) <command>
 _______________	__________________________________________________________________	____________________________________
 
-10.0.0:         ( 2083.635678s |100.00% )            ( 7915.694776s |100.00% )             	(1x)	<< (FUNCTION): main.forkrun -z ff < /mnt/ramdisk/flist0 > /dev/null >>
-1.1.0:          ( 0.001300s |  0.00% |  0.00% )   ( 0.001090s |  0.00% |  0.00% )    	(1x)	├─  forkrun -z ff < /mnt/ramdisk/flist0 > /dev/null
-24.1.0:         ( 2083.634378s | 99.99% | 99.99% )   ( 7915.693686s | 99.99% | 99.99% )    	(1x)	│   << (SUBSHELL) >>
-24.2.0:         ( 0.042195s |  0.00% |  0.00% )   ( 0.042104s |  0.00% |  0.00% )    	(1x)	│  ├─  trap - EXIT INT TERM HUP USR1
-25.2.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │   shopt -s extglob
-26.2.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │   local +i nLines nLines0 nLinesMax nBytes nProcs nProcsMax
-27.2.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000136s |  0.00% |  0.00% )    	(1x)	│  │   local tmpDir fPath outStr delimiterVal delimiterReadStr delimiterRemoveStr exitTrapStr exitTrapStr_kill nOrder tTimeout coprocSrcCode outCur outCurHex outRead tmpDirRoot returnVal tmpVar t0 tStart0 tStart1 readBytesProg nullDelimiterProg ddQuietStr pLOAD0 trailingNullFlag lseekFlag lseekPosFlag fallocateFlag nLinesAutoFlag nLinesReadLimitFlag nSpawnFlag substituteStringFlag substituteStringIDFlag nOrderFlag readBytesFlag readBytesExactFlag nullDelimiterFlag subshellRunFlag stdinRunFlag pipeReadFlag rmTmpDirFlag exportOrderFlag noFuncFlag unescapeFlag optParseFlag continueFlag doneIndicatorFlag FORCE_allowCarriageReturnsFlag ddAvailableFlag pAddFlag fd_continue fd_nAuto fd_nAuto0 fd_nOrder fd_nOrder0 fd_read fd_read0 fd_write fd_stdout fd_stdin fd_stdin0 fd_stderr pWrite pOrder pAuto pSpawn pWrite_PID pOrder_PID pAuto_PID pSpawn_PID DEBUG_FORKRUN
-28.2.0:         ( 0.000099s |  0.00% |  0.00% )   ( 0.000112s |  0.00% |  0.00% )    	(1x)	│  │   local -i PID0 nLinesCur nLinesNew nLinesRead nLinesReadLimit nRead nWait nOrder0 nBytesRead nSpawn nSpawnLast nSpawnLastCount nCPU writeFileProgType v9 kkMax kkCur kk kkProcs kkProcs0 verboseLevel pLOAD_max pLOAD_target pAd pAdd_sysLoad pAdd_lineRated tStart fd_read_pos fd_read_pos0 fd_read_pos_old fd_write_pos pAdd0 pAdd1 inLines inTime inLines0 inTime0 inLines1 nTime1 inLinesDelta inTimeDelta pAddCount pAddMin pAddSum pAddMax
-29.2.0:         ( 0.000083s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │   local -a A p_PID p_PID0 runCmd outHave outPrint pLOADA pLOADA0 runLines runTime
-30.2.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   local -a -i runLinesA runTimeA runWaitA runAllA spawnTimeA pLOAD1
-31.2.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │   : "${verboseLevel:=0}" "${returnVal:=0}" "${fd_stdin0:=0}" "${nLinesReadLimitFlag:=false}"
-32.2.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   [[ $# == 0 ]]
-32.2.1:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │   optParseFlag=true
-33.2.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(2x)	│  │   ${optParseFlag}
-33.2.1:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000152s |  0.00% |  0.00% )    	(2x)	│  │   (( $# > 0  ))
-33.2.2:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(2x)	│  │   [[ "$1" == [-+]* ]]
-34.2.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │   case "${1}" in
-165.2.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   [[ "${1:0:1}" == '-' ]]
-165.2.1:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │   nullDelimiterFlag=true
-215.2.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   shift 1
-216.2.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │   [[ ${#} == 0 ]]
-218.2.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [ -t "${fd_stdin0}" ]
+9.0.0:          ( 549.229493s | 50.06% )            ( 498.176475s | 49.95% )             	(1x)	<< (FUNCTION): main.forkrun ff < /mnt/ramdisk/flist > /dev/null >>
+1.1.0:          ( 0.000654s |  0.00% |  0.00% )   ( 0.000322s |  0.00% |  0.00% )    	(1x)	├─  forkrun ff < /mnt/ramdisk/flist > /dev/null
+24.1.0:         ( 549.228839s | 50.06% | 99.99% )   ( 498.176153s | 49.95% | 99.99% )    	(1x)	│   << (SUBSHELL) >>
+24.2.0:         ( 0.041673s |  0.00% |  0.00% )   ( 0.041010s |  0.00% |  0.00% )    	(1x)	│  ├─  trap - EXIT INT TERM HUP USR1
+25.2.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   shopt -s extglob
+26.2.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │   local +i nLines nLines0 nLinesMax nBytes nProcs nProcsMax
+27.2.0:         ( 0.000121s |  0.00% |  0.00% )   ( 0.000134s |  0.00% |  0.00% )    	(1x)	│  │   local tmpDir fPath outStr delimiterVal delimiterReadStr delimiterRemoveStr exitTrapStr exitTrapStr_kill nOrder tTimeout coprocSrcCode outCur outCurHex outRead tmpDirRoot returnVal tmpVar t0 tStart0 tStart1 readBytesProg nullDelimiterProg ddQuietStr pLOAD0 trailingNullFlag lseekFlag lseekPosFlag fallocateFlag nLinesAutoFlag nLinesReadLimitFlag nSpawnFlag substituteStringFlag substituteStringIDFlag nOrderFlag readBytesFlag readBytesExactFlag nullDelimiterFlag subshellRunFlag stdinRunFlag pipeReadFlag rmTmpDirFlag exportOrderFlag noFuncFlag unescapeFlag optParseFlag continueFlag doneIndicatorFlag FORCE_allowCarriageReturnsFlag ddAvailableFlag pAddFlag fd_continue fd_nAuto fd_nAuto0 fd_nOrder fd_nOrder0 fd_read fd_read0 fd_write fd_stdout fd_stdin fd_stdin0 fd_stderr pWrite pOrder pAuto pSpawn pWrite_PID pOrder_PID pAuto_PID pSpawn_PID DEBUG_FORKRUN
+28.2.0:         ( 0.000099s |  0.00% |  0.00% )   ( 0.000111s |  0.00% |  0.00% )    	(1x)	│  │   local -i PID0 nLinesCur nLinesNew nLinesRead nLinesReadLimit nRead nWait nOrder0 nBytesRead nSpawn nSpawnLast nSpawnLastCount nCPU writeFileProgType v9 kkMax kkCur kk kkProcs kkProcs0 verboseLevel pLOAD_max pLOAD_target pAd pAdd_sysLoad pAdd_lineRated tStart fd_read_pos fd_read_pos0 fd_read_pos_old fd_write_pos pAdd0 pAdd1 inLines inTime inLines0 inTime0 inLines1 nTime1 inLinesDelta inTimeDelta pAddCount pAddMin pAddSum pAddMax
+29.2.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │   local -a A p_PID p_PID0 runCmd outHave outPrint pLOADA pLOADA0 runLines runTime
+30.2.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   local -a -i runLinesA runTimeA runWaitA runAllA spawnTimeA pLOAD1
+31.2.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   : "${verboseLevel:=0}" "${returnVal:=0}" "${fd_stdin0:=0}" "${nLinesReadLimitFlag:=false}"
+32.2.0:         ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   [[ $# == 0 ]]
+32.2.1:         ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   optParseFlag=true
+33.2.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │   ${optParseFlag}
+33.2.1:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   (( $# > 0  ))
+33.2.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   [[ "$1" == [-+]* ]]
+218.2.0:        ( 0.000079s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   [ -t "${fd_stdin0}" ]
 223.2.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${tmpDirRoot} ]]
-224.2.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${TMPDIR} ]]
-226.2.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │   [[ -d '/dev/shm' ]]
-226.2.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   tmpDirRoot='/dev/shm'
-230.2.0:        ( 0.001221s |  0.00% |  0.00% )   ( 0.001078s |  0.00% |  0.00% )    	(1x)	│  │   tmpDir="$(mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX)"
-231.2.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │   fPath="${tmpDir}"/.stdin
-232.2.0:        ( 0.002786s |  0.00% |  0.00% )   ( 0.002843s |  0.00% |  0.00% )    	(1x)	│  │   mkdir -p "${tmpDir}"/.run
-233.2.0:        ( 0.000093s |  0.00% |  0.00% )   ( 0.000118s |  0.00% |  0.00% )    	(1x)	│  │   : > "${fPath}"
-234.2.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   ${rmTmpDirFlag}
-234.2.1:        ( 0.026429s |  0.00% |  0.00% )   ( 0.000465s |  0.00% |  0.00% )    	(1x)	│  │   trap '\rm -rf "'"${tmpDir}"'" 2>/dev/null' EXIT
-1084.2.0:       ( 2083.553848s | 99.99% | 99.99% )   ( 3957.820626s | 49.99% | 49.99% )    	(1x)	│  │   << (BACKGROUND FORK) >>
-235.3.0:        ( 0.000143s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(1x)	│  │  ├─  [[ -n ${DEBUG_FORKRUN} ]]
-1084.3.0:       ( 0.000933s |  0.00% |  0.00% )   ( 0.001071s |  0.00% |  0.00% )    	(3x)	│  │  │   << (BACKGROUND FORK) >>
-1084.4.0:       ( 0.000933s |  0.00% |100.00% )   ( 0.001071s |  0.00% |100.00% )    	(3x)	│  │  │  └─  :
-1084.3.1:       ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>1
-1084.3.3:       ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>1
-1084.3.5:       ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>1
-238.3.0:        ( 0.000161s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │   LC_ALL=C
-239.3.0:        ( 0.000134s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │   LANG=C
-240.3.0:        ( 0.000134s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │   IFS=
-241.3.0:        ( 0.000206s |  0.00% |  0.00% )   ( 0.028352s |  0.00% |  0.00% )    	(1x)	│  │  │   enable -f forkrun_loadables.so evfd_init evfd_wait evfd_signal evfd_close evfd_copy order_init order_get lseek cpuusage childusage
-242.3.0:        ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   export LC_ALL=C LANG=C IFS=
-243.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │   FORKRUN_TMPDIR="$tmpDir"
-244.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   export FORKRUN_TMPDIR="$tmpDir"
-245.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   PID0="${BASHPID}"
-246.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   shopt -s nullglob
-247.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${noFuncFlag:=false}" "${readBytesFlag:=false}" "${readBytesExactFlag:=false}" "${nullDelimiterFlag:=false}" "${FORCE_allowCarriageReturnsFlag:=false}"
-248.3.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000095s |  0.00% |  0.00% )    	(1x)	│  │  │   enable lseek &> /dev/null
-249.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekFlag:=true}"
-253.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
-254.3.0:        ( 0.003206s |  0.00% |  0.00% )   ( 0.003260s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "$(lseek $fd_read 0)" == 0 ]]
-254.3.1:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekPosFlag:=true}"
-256.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowCarriageReturnsFlag:-false}
-259.3.0:        ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   $'runCmd=("${@//\'\r\'/}")
-261.3.0:        ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
-262.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
-262.3.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   noFuncFlag=false
-263.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   ${noFuncFlag}
-264.3.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │   hash "${runCmd[0]}" &> /dev/null
-265.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
-316.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nLines} ]]
-320.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nLinesAutoFlag:=true}"
-322.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -z ${nLines} ]]
-323.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   nLines=1
-325.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == '-'* ]]
-329.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == *','* ]]
-333.3.0:        ( 0.001780s |  0.00% |  0.00% )   ( 0.002070s |  0.00% |  0.00% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun._forkrun_getVal nProcs "${nProcs%%,*}" >>
-1.4.0:          ( 0.000144s |  0.00% |  8.08% )   ( 0.000168s |  0.00% |  8.11% )    	(2x)	│  │  │  ├─  _forkrun_getVal nProcs "${nProcs%%,*}"
-24.4.0:         ( 0.000144s |  0.00% |  8.08% )   ( 0.000168s |  0.00% |  8.11% )    	(2x)	│  │  │  │   local +i -l nn
-25.4.0:         ( 0.000136s |  0.00% |  7.64% )   ( 0.000160s |  0.00% |  7.72% )    	(2x)	│  │  │  │   local vOut
-26.4.0:         ( 0.000142s |  0.00% |  7.97% )   ( 0.000168s |  0.00% |  8.11% )    	(2x)	│  │  │  │   local -n vOut="$1"
-27.4.0:         ( 0.000136s |  0.00% |  7.64% )   ( 0.000160s |  0.00% |  7.72% )    	(2x)	│  │  │  │   shift 1
-28.4.0:         ( 0.000140s |  0.00% |  7.86% )   ( 0.000164s |  0.00% |  7.92% )    	(2x)	│  │  │  │   local -g vOut
-29.4.0:         ( 0.000136s |  0.00% |  7.64% )   ( 0.000160s |  0.00% |  7.72% )    	(2x)	│  │  │  │   (( ${#pMap[@]} == 20 ))
-29.4.1:         ( 0.000234s |  0.00% | 13.14% )   ( 0.000260s |  0.00% | 12.56% )    	(2x)	│  │  │  │   local -Ag pMap=([k]=1 [m]=2 [g]=3 [t]=4 [p]=5 [e]=6 [z]=7 [y]=8 [r]=9 [q]=10 [ki]=1 [mi]=2 [gi]=3 [ti]=4 [pi]=5 [ei]=6 [zi]=7 [yi]=8 [ri]=9 [qi]=10)
-30.4.0:         ( 0.000136s |  0.00% |  7.64% )   ( 0.000160s |  0.00% |  7.72% )    	(2x)	│  │  │  │   for nn in "${@%%[Bb]*}"
-32.4.0:         ( 0.000140s |  0.00% |  7.86% )   ( 0.000164s |  0.00% |  7.92% )    	(2x)	│  │  │  │   [[ -n ${nn} ]]
-32.4.1:         ( 0.000146s |  0.00% |  8.20% )   ( 0.000168s |  0.00% |  8.11% )    	(2x)	│  │  │  │   continue
-42.4.0:         ( 0.000146s |  0.00% |  8.20% )   ( 0.000170s |  0.00% |  8.21% )    	(2x)	│  │  │  └─  local +n vOut
-335.3.0:        ( 0.008116s |  0.00% |  0.00% )   ( 0.008208s |  0.00% |  0.00% )    	(1x)	│  │  │   $'nCPU="$({ type -a nproc &> /dev/null && nproc; } || { type -a grep &> /dev/null && grep -cE \'^processor.*: \' /proc/cpuinfo; } || { mapfile -t tmpA < /proc/cpuinfo && tmpA=("${tmpA[@]//processor*/\'\034\'}") && tmpA=("${tmpA[@]//!(\'\034\')/}") && tmpA=("${tmpA[@]//\'\034\'/1}") && tmpA="${tmpA[*]}" && tmpA="${tmpA// /}" && echo ${#tmpA}; } || printf \'8\')"
-336.3.0:        ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nCPU < 1 ))
-338.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nProcs} ]]
-340.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-340.3.1:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   nProcs=${nCPU}
-342.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-346.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-347.3.0:        ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
-348.3.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nOrderFlag:=false}" "${rmTmpDirFlag:=true}" "${nLinesMax:=1024}" "${subshellRunFlag:=false}" "${pipeReadFlag:=false}" "${substituteStringFlag:=false}" "${substituteStringIDFlag:=false}" "${exportOrderFlag:=false}" "${unescapeFlag:=false}" "${stdinRunFlag:=false}"
-349.3.0:        ( 0.000082s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   local -i nProcs="${nProcs}" nProcsMax="${nProcsMax}" nLines="${nLines}" nLinesMax="${nLinesMax}"
-350.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
-351.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < 2 * nLines ))
-353.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < nLines ))
+224.2.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${TMPDIR} ]]
+226.2.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   [[ -d '/dev/shm' ]]
+226.2.1:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │   tmpDirRoot='/dev/shm'
+230.2.0:        ( 0.001171s |  0.00% |  0.00% )   ( 0.001039s |  0.00% |  0.00% )    	(1x)	│  │   tmpDir="$(mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX)"
+230.2.1:        ( 0.007245s |  0.00% |  0.00% )   ( 0.007245s |  0.00% |  0.00% )    	(1x)	│  │   << (SUBSHELL) >>
+230.3.0:        ( 0.007245s |  0.00% |100.00% )   ( 0.007245s |  0.00% |100.00% )    	(1x)	│  │  └─  mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX
+231.2.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   fPath="${tmpDir}"/.stdin
+232.2.0:        ( 0.001037s |  0.00% |  0.00% )   ( 0.001110s |  0.00% |  0.00% )    	(1x)	│  │   mkdir -p "${tmpDir}"/.run
+233.2.0:        ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │   : > "${fPath}"
+234.2.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │   ${rmTmpDirFlag}
+234.2.1:        ( 0.026759s |  0.00% |  0.00% )   ( 0.000982s |  0.00% |  0.00% )    	(1x)	│  │   trap '\rm -rf "'"${tmpDir}"'" 2>/dev/null' EXIT
+1084.2.0:       ( 549.141823s | 50.05% | 99.98% )   ( 498.118237s | 49.94% | 99.98% )    	(1x)	│  │   << (SUBSHELL) >>
+235.3.0:        ( 0.000143s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  ├─  [[ -n ${DEBUG_FORKRUN} ]]
+1084.3.0:       ( 0.001735s |  0.00% |  0.00% )   ( 0.002033s |  0.00% |  0.00% )    	(6x)	│  │  │   << (BACKGROUND FORK) >>
+1084.4.0:       ( 0.001735s |  0.00% |100.00% )   ( 0.002033s |  0.00% |100.00% )    	(6x)	│  │  │  └─  :
+238.3.0:        ( 0.000158s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │   LC_ALL=C
+239.3.0:        ( 0.000161s |  0.00% |  0.00% )   ( 0.007229s |  0.00% |  0.00% )    	(1x)	│  │  │   LANG=C
+240.3.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.008974s |  0.00% |  0.00% )    	(1x)	│  │  │   IFS=
+241.3.0:        ( 0.000194s |  0.00% |  0.00% )   ( 0.000205s |  0.00% |  0.00% )    	(1x)	│  │  │   enable -f forkrun_loadables.so evfd_init evfd_wait evfd_signal evfd_close evfd_copy order_init order_get lseek cpuusage childusage
+242.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   export LC_ALL=C LANG=C IFS=
+243.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   FORKRUN_TMPDIR="$tmpDir"
+244.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   export FORKRUN_TMPDIR="$tmpDir"
+245.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   PID0="${BASHPID}"
+246.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   shopt -s nullglob
+247.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${noFuncFlag:=false}" "${readBytesFlag:=false}" "${readBytesExactFlag:=false}" "${nullDelimiterFlag:=false}" "${FORCE_allowCarriageReturnsFlag:=false}"
+248.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   enable lseek &> /dev/null
+249.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekFlag:=true}"
+253.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
+254.3.0:        ( 0.000542s |  0.00% |  0.00% )   ( 0.000319s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "$(lseek $fd_read 0)" == 0 ]]
+254.3.1:        ( 0.000112s |  0.00% |  0.00% )   ( 0.000128s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+254.4.0:        ( 0.000112s |  0.00% |100.00% )   ( 0.000128s |  0.00% |100.00% )    	(1x)	│  │  │  └─  lseek $fd_read 0
+254.3.2:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekPosFlag:=true}"
+256.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowCarriageReturnsFlag:-false}
+259.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   $'runCmd=("${@//\'\r\'/}")
+261.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
+262.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
+262.3.1:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   noFuncFlag=false
+263.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   ${noFuncFlag}
+264.3.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │   hash "${runCmd[0]}" &> /dev/null
+265.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
+316.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nLines} ]]
+320.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nLinesAutoFlag:=true}"
+322.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -z ${nLines} ]]
+323.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   nLines=1
+325.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == '-'* ]]
+329.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == *','* ]]
+333.3.0:        ( 0.000887s |  0.00% |  0.00% )   ( 0.001021s |  0.00% |  0.00% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun._forkrun_getVal nProcs "${nProcs%%,*}" >>
+1.4.0:          ( 0.000069s |  0.00% |  7.77% )   ( 0.000080s |  0.00% |  7.83% )    	(1x)	│  │  │  ├─  _forkrun_getVal nProcs "${nProcs%%,*}"
+24.4.0:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000078s |  0.00% |  7.63% )    	(1x)	│  │  │  │   local +i -l nn
+25.4.0:         ( 0.000089s |  0.00% | 10.03% )   ( 0.000096s |  0.00% |  9.40% )    	(1x)	│  │  │  │   local vOut
+26.4.0:         ( 0.000068s |  0.00% |  7.66% )   ( 0.000080s |  0.00% |  7.83% )    	(1x)	│  │  │  │   local -n vOut="$1"
+27.4.0:         ( 0.000066s |  0.00% |  7.44% )   ( 0.000077s |  0.00% |  7.54% )    	(1x)	│  │  │  │   shift 1
+28.4.0:         ( 0.000069s |  0.00% |  7.77% )   ( 0.000081s |  0.00% |  7.93% )    	(1x)	│  │  │  │   local -g vOut
+29.4.0:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000079s |  0.00% |  7.73% )    	(1x)	│  │  │  │   (( ${#pMap[@]} == 20 ))
+29.4.1:         ( 0.000121s |  0.00% | 13.64% )   ( 0.000133s |  0.00% | 13.02% )    	(1x)	│  │  │  │   local -Ag pMap=([k]=1 [m]=2 [g]=3 [t]=4 [p]=5 [e]=6 [z]=7 [y]=8 [r]=9 [q]=10 [ki]=1 [mi]=2 [gi]=3 [ti]=4 [pi]=5 [ei]=6 [zi]=7 [yi]=8 [ri]=9 [qi]=10)
+30.4.0:         ( 0.000068s |  0.00% |  7.66% )   ( 0.000081s |  0.00% |  7.93% )    	(1x)	│  │  │  │   for nn in "${@%%[Bb]*}"
+32.4.0:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000078s |  0.00% |  7.63% )    	(1x)	│  │  │  │   [[ -n ${nn} ]]
+32.4.1:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000078s |  0.00% |  7.63% )    	(1x)	│  │  │  │   continue
+42.4.0:         ( 0.000069s |  0.00% |  7.77% )   ( 0.000080s |  0.00% |  7.83% )    	(1x)	│  │  │  └─  local +n vOut
+334.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
+335.3.0:        ( 0.000892s |  0.00% |  0.00% )   ( 0.000700s |  0.00% |  0.00% )    	(1x)	│  │  │   $'nCPU="$({ type -a nproc &> /dev/null && nproc; } || { type -a grep &> /dev/null && grep -cE \'^processor.*: \' /proc/cpuinfo; } || { mapfile -t tmpA < /proc/cpuinfo && tmpA=("${tmpA[@]//processor*/\'\034\'}") && tmpA=("${tmpA[@]//!(\'\034\')/}") && tmpA=("${tmpA[@]//\'\034\'/1}") && tmpA="${tmpA[*]}" && tmpA="${tmpA// /}" && echo ${#tmpA}; } || printf \'8\')"
+335.3.1:        ( 0.001986s |  0.00% |  0.00% )   ( 0.002078s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+335.4.0:        ( 0.000186s |  0.00% |  9.36% )   ( 0.000203s |  0.00% |  9.76% )    	(1x)	│  │  │  ├─  type -a nproc &> /dev/null
+335.4.1:        ( 0.001800s |  0.00% | 90.63% )   ( 0.001875s |  0.00% | 90.23% )    	(1x)	│  │  │  └─  nproc
+336.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nCPU < 1 ))
+338.3.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nProcs} ]]
+340.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+340.3.1:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   nProcs=${nCPU}
+342.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+346.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+347.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
+348.3.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nOrderFlag:=false}" "${rmTmpDirFlag:=true}" "${nLinesMax:=1024}" "${subshellRunFlag:=false}" "${pipeReadFlag:=false}" "${substituteStringFlag:=false}" "${substituteStringIDFlag:=false}" "${exportOrderFlag:=false}" "${unescapeFlag:=false}" "${stdinRunFlag:=false}"
+349.3.0:        ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   local -i nProcs="${nProcs}" nProcsMax="${nProcsMax}" nLines="${nLines}" nLinesMax="${nLinesMax}"
+350.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
+351.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < 2 * nLines ))
+353.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < nLines ))
 355.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   doneIndicatorFlag=false
-356.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-360.3.0:        ( 0.000169s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │   type -a fallocate &> /dev/null
-360.3.1:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-360.3.2:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${fallocateFlag:=true}"
-361.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${exportOrderFlag}
-362.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
-363.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-367.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nullDelimiterFlag}
-368.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   delimiterReadStr="-d ''"
-369.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
-369.3.1:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nullDelimiterProg:='lseek'}"
-370.3.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nullDelimiterProg:=bash}"
-371.3.0:        ( 0.000118s |  0.00% |  0.00% )   ( 0.000130s |  0.00% |  0.00% )    	(1x)	│  │  │   type -p dd &> /dev/null
-372.3.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │   ddAvailableFlag=true
-373.3.0:        ( 0.003961s |  0.00% |  0.00% )   ( 0.005036s |  0.00% |  0.00% )    	(1x)	│  │  │   dd --version | grep --color=auto -qF 'coreutils'
-374.3.0:        ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   ddQuietStr='status=none'
-381.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nullDelimiterProg}" == @(dd|bash|lseek) ]]
-382.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowUnsafeNullDelimiterFlag}
-383.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   nullDelimiterProg=''
-401.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${unescapeFlag}
-410.3.0:        ( 0.003560s |  0.00% |  0.00% )   ( 0.003676s |  0.00% |  0.00% )    	(1x)	│  │  │   mapfile -t runCmd < <(printf '%q\n' "${runCmd[@]}") (&)
-410.3.1:        ( 0.000109s |  0.00% |  0.00% )   ( 0.000121s |  0.00% |  0.00% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
-410.4.0:        ( 0.000109s |  0.00% |100.00% )   ( 0.000121s |  0.00% |100.00% )    	(1x)	│  │  │  └─  printf '%q\n' "${runCmd[@]}"
-410.3.2:        ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>1
-411.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringFlag}
-414.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringIDFlag}
-419.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   nLinesCur=${nLines}
-420.3.0:        ( 0.001170s |  0.00% |  0.00% )   ( 0.001261s |  0.00% |  0.00% )    	(1x)	│  │  │   mkdir -p "${tmpDir}"/.{run,wait}
-421.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
-422.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   ${rmTmpDirFlag}
-423.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 0 ))
-450.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   tStart="${EPOCHREALTIME//./}"
-451.3.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │   evfd_init
-455.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr=\': >"\'"${tmpDir}"\'"/.done;\n: >"\'"${tmpDir}"\'"/.quit;\nkill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
-456.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-459.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
-470.3.0:        ( 0.000604s |  0.00% |  0.00% )   ( 0.000618s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${writeFileProgType:=1}" (&)
-473.3.0:        ( 0.136310s |  0.00% |  0.00% )   ( 0.136044s |  0.00% |  0.00% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
-473.4.0:        ( 0.000104s |  0.00% |  0.07% )   ( 0.000116s |  0.00% |  0.08% )    	(1x)	│  │  │  ├─  export LC_ALL=C LANG=C IFS=
-474.4.0:        ( 0.021289s |  0.00% | 15.61% )   ( 0.021216s |  0.00% | 15.59% )    	(1x)	│  │  │  │   trap - EXIT
-475.4.0:        ( 0.023897s |  0.00% | 17.53% )   ( 0.023833s |  0.00% | 17.51% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
-476.4.0:        ( 0.023971s |  0.00% | 17.58% )   ( 0.023918s |  0.00% | 17.58% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
-477.4.0:        ( 0.023809s |  0.00% | 17.46% )   ( 0.023763s |  0.00% | 17.46% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
-478.4.0:        ( 0.023892s |  0.00% | 17.52% )   ( 0.023834s |  0.00% | 17.51% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-479.4.0:        ( 0.000088s |  0.00% |  0.06% )   ( 0.000096s |  0.00% |  0.07% )    	(1x)	│  │  │  │   case ${writeFileProgType} in
-481.4.0:        ( 0.018993s |  0.00% | 13.93% )   ( 0.018964s |  0.00% | 13.93% )    	(1x)	│  │  │  │   evfd_copy ${fd_write} ${fd_stdin}
-490.4.0:        ( 0.000103s |  0.00% |  0.07% )   ( 0.000116s |  0.00% |  0.08% )    	(1x)	│  │  │  │   : > "${tmpDir}"/.done
-491.4.0:        ( 0.000079s |  0.00% |  0.05% )   ( 0.000091s |  0.00% |  0.06% )    	(1x)	│  │  │  │   evfd_signal
-492.4.0:        ( 0.000085s |  0.00% |  0.06% )   ( 0.000097s |  0.00% |  0.07% )    	(1x)	│  │  │  └─  (( ${verboseLevel} > 1 ))
-473.3.1:        ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>1
-495.3.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │   exitTrapStr_kill+="${pWrite_PID} "
-497.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-502.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   outStr='>&'"${fd_stdout}"
-504.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
-505.3.0:        ( 0.000448s |  0.00% |  0.00% )   ( 0.000479s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' ${nLines} > "${tmpDir}"/.nLines (&)
-508.3.0:        ( 3.849246s |  0.18% |  0.18% )   ( 1.867702s |  0.02% |  0.04% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
-508.4.0:        ( 0.000121s |  0.00% |  0.00% )   ( 0.000138s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  export LC_ALL=C LANG=C IFS=
-509.4.0:        ( 0.023749s |  0.00% |  0.61% )   ( 0.023693s |  0.00% |  1.26% )    	(1x)	│  │  │  │   trap '[[ -f "'"${tmpDir}"'"/.run/pAuto ]] && \rm -f "'"${tmpDir}"'"/.run/pAuto' EXIT
-510.4.0:        ( 0.024815s |  0.00% |  0.64% )   ( 0.024744s |  0.00% |  1.32% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
-511.4.0:        ( 0.023748s |  0.00% |  0.61% )   ( 0.023685s |  0.00% |  1.26% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
-512.4.0:        ( 0.023839s |  0.00% |  0.61% )   ( 0.023784s |  0.00% |  1.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
-513.4.0:        ( 0.023881s |  0.00% |  0.62% )   ( 0.023828s |  0.00% |  1.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-514.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${fallocateFlag}
-515.4.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
-516.4.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fd_read_pos_old=0
-518.4.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=0
-519.4.0:        ( 0.091740s |  0.00% |  0.00% )   ( 0.104635s |  0.00% |  0.00% )    	(673x)	│  │  │  │   ${fallocateFlag}
-520.4.0:        ( 2.291090s |  0.10% |  0.08% )   ( 0.123458s |  0.00% |  0.00% )    	(672x)	│  │  │  │   read -u ${fd_nAuto} -t 0.1
-520.4.1:        ( 0.000710s |  0.00% |  0.00% )   ( 0.000804s |  0.00% |  0.01% )    	(4x)	│  │  │  │   continue
-521.4.0:        ( 0.093304s |  0.00% |  0.00% )   ( 0.103564s |  0.00% |  0.00% )    	(668x)	│  │  │  │   case ${REPLY} in
-535.4.0:        ( 0.090627s |  0.00% |  0.00% )   ( 0.102837s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
-536.4.0:        ( 0.000136s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
-539.4.0:        ( 0.000149s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=$(( nLinesRead + ${REPLY} ))
-544.4.0:        ( 0.089494s |  0.00% |  0.00% )   ( 0.102537s |  0.00% |  0.00% )    	(668x)	│  │  │  │   ${lseekPosFlag}
-545.4.0:        ( 0.092754s |  0.00% |  0.00% )   ( 0.105712s |  0.00% |  0.00% )    	(668x)	│  │  │  │   lseek $fd_read 0 SEEK_CUR fd_read_pos
-546.4.0:        ( 0.093058s |  0.00% |  0.00% )   ( 0.106083s |  0.00% |  0.00% )    	(668x)	│  │  │  │   lseek $fd_write 0 SEEK_CUR fd_write_pos
-552.4.0:        ( 0.088942s |  0.00% |  0.00% )   ( 0.102212s |  0.00% |  0.00% )    	(668x)	│  │  │  │   ${nLinesAutoFlag}
-553.4.0:        ( 0.000162s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.01% )    	(1x)	│  │  │  │   nLinesEst=$(( ( ( 1 + ${nLinesRead} ) * ( 1 + ${fd_write_pos} ) ) / ( 1 + ${fd_read_pos} ) ))
-554.4.0:        ( 0.089363s |  0.00% |  0.00% )   ( 0.102536s |  0.00% |  0.00% )    	(668x)	│  │  │  │   ${nSpawnFlag}
-555.4.0:        ( 0.088475s |  0.00% |  0.00% )   ( 0.101595s |  0.00% |  0.00% )    	(668x)	│  │  │  │   ${nLinesAutoFlag}
-556.4.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-557.4.0:        ( 0.000133s |  0.00% |  0.00% )   ( 0.000152s |  0.00% |  0.00% )    	(1x)	│  │  │  │   [[ -d "${tmpDir}"/.wait ]]
-558.4.0:        ( 0.007024s |  0.00% |  0.18% )   ( 0.007264s |  0.00% |  0.38% )    	(1x)	│  │  │  │   mapfile -t nProcsA < <(: | cat "${tmpDir}"/.wait 2> /dev/null) (&)
-558.4.1:        ( 0.002702s |  0.00% |  0.07% )   ( 0.003081s |  0.00% |  0.16% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
-558.5.0:        ( 0.002702s |  0.00% |100.00% )   ( 0.003081s |  0.00% |100.00% )    	(1x)	│  │  │  │  └─  : | cat "${tmpDir}"/.wait 2> /dev/null
-559.4.0:        ( 0.000142s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nProcsA=(${nProcsA//0/})
-560.4.0:        ( 0.000124s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${#nProcsA[@]} > 0 ))
-562.4.0:        ( 0.000130s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=$(( 1 + ( ( nLinesEst - nLinesRead ) / ( 1 + ${nProcs} ) ) ))
-563.4.0:        ( 0.000128s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} > ${nLinesCur} ))
-564.4.0:        ( 0.000117s |  0.00% |  0.00% )   ( 0.000135s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} >= ${nLinesMax} ))
-565.4.0:        ( 0.000123s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=${nLinesMax}
-566.4.0:        ( 0.000122s |  0.00% |  0.00% )   ( 0.000141s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-568.4.0:        ( 0.000153s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │   printf '%s\n' ${nLinesNew} > "${tmpDir}"/.nLines
-569.4.0:        ( 0.000124s |  0.00% |  0.00% )   ( 0.000143s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-570.4.0:        ( 0.000132s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesCur=${nLinesNew}
-573.4.0:        ( 0.088278s |  0.00% |  0.00% )   ( 0.101303s |  0.00% |  0.00% )    	(668x)	│  │  │  │   ${fallocateFlag}
-574.4.0:        ( 0.087049s |  0.00% |  0.00% )   ( 0.100123s |  0.00% |  0.00% )    	(668x)	│  │  │  │   case ${nWait} in
-585.4.0:        ( 0.085954s |  0.00% |  0.00% )   ( 0.098444s |  0.00% |  0.00% )    	(647x)	│  │  │  │   ((nWait--))
-589.4.0:        ( 0.092580s |  0.00% |  0.00% )   ( 0.105885s |  0.00% |  0.00% )    	(668x)	│  │  │  │   [[ -f "${tmpDir}"/.quit ]]
-535.4.1:        ( 0.089246s |  0.00% |  0.00% )   ( 0.102256s |  0.00% |  0.00% )    	(666x)	│  │  │  │   ${nSpawnFlag}
-552.4.1:        ( 0.090004s |  0.00% |  0.00% )   ( 0.103284s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nSpawnFlag}
-576.4.0:        ( 0.002915s |  0.00% |  0.00% )   ( 0.003331s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos=$(( 4096 * ( ${fd_read_pos} / 4096 ) ))
-577.4.0:        ( 0.002922s |  0.00% |  0.00% )   ( 0.003330s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${fd_read_pos} > ${fd_read_pos_old} ))
-578.4.0:        ( 0.052602s |  0.00% |  0.06% )   ( 0.043454s |  0.00% |  0.11% )    	(21x)	│  │  │  │   fallocate -p -o ${fd_read_pos_old} -l $(( ${fd_read_pos} - ${fd_read_pos_old} )) "${fPath}"
-579.4.0:        ( 0.003289s |  0.00% |  0.00% )   ( 0.003722s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-580.4.0:        ( 0.003015s |  0.00% |  0.00% )   ( 0.003442s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos_old=${fd_read_pos}
-582.4.0:        ( 0.003062s |  0.00% |  0.00% )   ( 0.003472s |  0.00% |  0.00% )    	(21x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
-529.4.0:        ( 0.000240s |  0.00% |  0.00% )   ( 0.000267s |  0.00% |  0.01% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-590.4.0:        ( 0.000181s |  0.00% |  0.00% )   ( 0.000206s |  0.00% |  0.01% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-591.4.0:        ( 0.000181s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.01% )    	(1x)	│  │  │  │   fallocateFlag=false
-592.4.0:        ( 0.000176s |  0.00% |  0.00% )   ( 0.000201s |  0.00% |  0.01% )    	(1x)	│  │  │  │   nSpawnFlag=false
-519.4.1:        ( 0.000185s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.01% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-519.4.2:        ( 0.000159s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
--519.4.0:       ( 0.005537s |  0.00% |  0.14% )   ( 0.005631s |  0.00% |  0.30% )    	(1x)	│  │  │  └─  @TRAP (EXIT): [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/pAuto ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/pAuto
-508.3.1:        ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>1
-598.3.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'printf \'"\'"\'0\\n\'"\'"\' >&\'"${fd_nAuto}"\'; \'\'\n\'
-599.3.0:        ( 0.000103s |  0.00% |  0.00% )   ( 0.000115s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' "${pAuto_PID}" > "${tmpDir}"/.run/pAuto
-601.3.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-980.3.0:        ( 0.064669s |  0.00% |  0.00% )   ( 0.063197s |  0.00% |  0.00% )    	(1x)	│  │  │   $'coprocSrcCode="$(echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && echo "{ \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && read -r <\\"${tmpDir}\\"/.nLines && [[ \\${REPLY} == +([0-9]) ]] && nLinesCur=\\${REPLY}"\necho """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""\nif ${readBytesFlag}; then\n    case "${readBytesProg}" in \n        \'dd\')\n            printf \'dd bs=32768 count=%sB of="%s"/.stdin.tmp.{<#>} 2>"%s"/.stdin.tmp-status.{<#>} \' "${nBytes}" "${tmpDir}" "${tmpDir}"\n${pipeReadFlag} && printf \'iflag=fullblock <&%s\\n\' "${fd_stdin}" || printf \'<&%s\\n\' "${fd_read}"\nprintf \'[[ "$(<"%s"/.stdin.tmp-status.{<#>})" == *$\'"\'"\'\\\\n\'"\'"\'"0 bytes"* ]] && A=() || A[0]=1\\n\' "${tmpDir}"\n        ;;\n        \'head\')\n            printf \'head -c %s \' "${nBytes}"\n${pipeReadFlag} && printf \'<&%s \' "${fd_stdin}" || printf \'<&%s \' "${fd_read}"\nprintf \'>"%s"/.stdin.tmp.{<#>}\\n\' "${tmpDir}"\nprintf \'[[ $(<"%s"/.stdin.tmp.{<#>}) ]] 2>/dev/null && A[0]=1 || A=()\\n\' "${tmpDir}"\n        ;;\n        \'bash\')\n            if ${stdinRunFlag}; then\n                [[ -n ${tTimeout} ]] && echo "SECONDS=0"\nprintf \'if read -r -d \'"\'\'"\' -n %s -u %s\' "${nBytes}" "${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=(\'\')\n                trailingNullFlag=true"""\n${readBytesExactFlag} && echo \'nBytesRead=1\'\necho """\n            else\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=()\n                trailingNullFlag=false"""\n${readBytesExactFlag} && echo \'nBytesRead=0\'\necho \'fi\'\nif ${readBytesExactFlag}; then\n                    echo """\n            nBytesRead+=\\${#REPLY}\n            [[ \\${nBytesRead} == 0 ]] || (( \\${nBytesRead} >= ${nBytes} )) || {"""\n[[ -n ${tTimeout} ]] && echo "while (( \\${SECONDS} < ${tTimeout} )); do" || echo "while true; do"\necho "[[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"\nprintf "if read -r -d \'\' -n \\$(( ${nBytes} - \\${nBytesRead} )) -u ${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                    ((nBytesRead++))\n                    nBytesRead+=\\${#REPLY}\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\") || A+=(\'\')\n                    (( \\${nBytesRead} >= ${nBytes} )) && { trailingNullFlag=true; break; }\n                else\n                    trailingNullFlag=false\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\")\n                    { (( \\${nBytesRead} >= ${nBytes} )) || ${doneIndicatorFlag}; } && { trailingNullFlag=false; break; }\n                    break\n                fi\n            done\n        }""";\n                fi\necho """\n        {\n            if \\${trailingNullFlag}; then\n                printf \'%s\\0\' \\"\\${A[@]}\\" \n            else\n                printf \'%s\' \\"\\${A[0]}\\" \n                printf \'\\0%s\' \\"\\${A[@]:1}\\"\n            fi \n        } >\\"${tmpDir}\\"/.stdin.tmp.{<#>}""";\n            else\n                printf \'read -r -N %s -u \' "${nBytes}"\nif ${readBytesExactFlag}; then\n                    printf \'%s \' "${fd_stdin}"\n[[ -n ${tTimeout} ]] && printf \'-t %s \' "${tTimeout} ";\n                else\n                    printf \'%s \' ${fd_read};\n                fi\necho \'-a A\';\n            fi\n        ;;\n    esac;\nelse\n    ${nLinesReadLimitFlag} && printf \'%s\' """read -r nLinesRead <\\"${tmpDir}\\"/.nLinesRead\n    (( ( nLinesReadLimit - nLinesRead ) < nLinesCur )) && nLinesCur=\\$(( nLinesReadLimit - nLinesRead ))\n    (( nLinesCur == 0 )) && A=() || """\necho "{"\n${nOrderFlag} && echo "order_get nOrder"\n${pipeReadFlag} || echo "evfd_wait ${fd_nSpawn}"\nprintf \'%s \' "mapfile"\n${lseekFlag} && printf \'%s \' \'-t\'\nprintf \'%s \' \'-n\' "\\${nLinesCur}" \'-u\'\n${pipeReadFlag} && printf \'%s \' ${fd_stdin} || printf \'%s \' ${fd_read}\n{ ${pipeReadFlag} || ${nullDelimiterFlag}; } && printf \'%s \' \'-t\'\necho """${delimiterReadStr} A\n    }"""\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || { echo "[[ \\${#A[@]} == 0 ]] || \\${doneIndicatorFlag} || {"\nif ${lseekFlag}; then\n        echo """\n                lseek ${fd_read} -1 SEEK_CUR \'\'\n                read -r -u ${fd_read} -N 1"""\nif ${nullDelimiterFlag}; then\n            echo "[[ \\${#REPLY} == 0 ]] || {";\n        else\n            echo "[[ \\"\\${REPLY}\\" == ${delimiterVal} ]] || {";\n        fi;\n    else\n        if ${nullDelimiterFlag}; then\n            echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read}"""\ncase "${nullDelimiterProg}" in \n                \'dd\')\n                    echo """\n                { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } || {"""\n                ;;\n                \'bash\')\n                    echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos0 </proc/self/fdinfo/${fd_read0}\n                nBytes=\\$(( fd_read_pos - fd_read_pos0 - \\${#A[@]} ))"""\nif ${ddAvailableFlag}; then\n                        echo """\n                    {\n                        if (( \\${nBytes}  > 65535 )); then\n                            { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } \n                        else\n                            read -r -u ${fd_read0} -N \\${nBytes} _\n                            read -r -u ${fd_read0} -d \'\'\n                            [[ \\${#REPLY} == 0 ]]\n                        fi\n                    } || {""";\n                    else\n                        echo """\n                    read -r -u ${fd_read0} -N \\${nBytes} _\n                    read -r -u ${fd_read0} -d \'\'\n                    [[ \\${#REPLY} == 0 ]] || {""";\n                    fi\n                ;;\n            esac;\n        else\n            echo "[[ \\"\\${A[-1]: -1}\\" == ${delimiterVal} ]] || {";\n        fi;\n    fi\n(( ${verboseLevel} > 2 )) && echo """\n                echo \\"Partial read at: \\${A[-1]}\\" >&${fd_stderr}"""\necho """\n                until read -r -u ${fd_read} ${delimiterReadStr}; do \n                    A[-1]+=\\"\\${REPLY}\\"; \n                done"""\nprintf \'%s\' "A[-1]+=\\"\\${REPLY}\\""\n${lseekFlag} && printf \'\\n\' || printf \'%s\\n\' "${delimiterVal}"\n(( ${verboseLevel} > 2 )) && echo "echo \\"Partial read fixed to: \\${A[-1]}\\" >&${fd_stderr}"\necho "}"; };\nfi\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || ${readBytesFlag} || echo "}"\n${nLinesReadLimitFlag} && echo """\nnLinesRead+=\\${#A[@]}\necho \\${nLinesRead} >\\"${tmpDir}\\"/.nLinesRead\n(( nLinesRead == nLinesReadLimit )) && {\n    : >\\"${tmpDir}\\"/.quit\n    echo \'0\' >\\"${tmpDir}\\"/.nLines\n}\n"""\necho """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""\nif ${lseekPosFlag}; then\n    echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos""";\nelse\n    echo """\n            IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read};\n            IFS=\\$\'\\\\t\' read -r _ fd_write_pos </proc/self/fdinfo/${fd_write}; \n                """;\nfi\necho """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""\n${nLinesAutoFlag} && echo "printf \'x\\\\n\' >&\\${fd_nAuto0}"\n${nOrderFlag} && echo ": >\\"${tmpDir}\\"/.out/.quit{<#>}"\n${nSpawnFlag} && echo """printf \'q\\\\n\' >&${fd_nSpawn}\n            printf \'q\\\\n\' >&\\${fd_nAuto0}"""\necho """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""\n${nOrderFlag} && echo """else\n            printf \'x%s\\n\' \\"\\${nOrder}\\" >&\\${fd_nOrder0}"""\necho """fi\n        continue\n    }"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && { printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""\n${fallocateFlag} && printf \'%s\' \' || \' || echo; }\n${fallocateFlag} && echo "printf \'\\\\n\' >&\\${fd_nAuto0}"\n${pipeReadFlag} || ${nullDelimiterFlag} || ${readBytesFlag} || ${lseekFlag} || { echo """\n        { [[ \\"\\${A[*]##*${delimiterVal}}\\" ]] || [[ -z \\${A[0]} ]]; } && {"""\n(( ${verboseLevel} > 2 )) && echo "echo \\"FIXING SPLIT READ\\" >&${fd_stderr}"\necho """\n            A[-1]=\\"\\${A[-1]%${delimiterVal}}\\"\n            IFS=\n            mapfile ${delimiterReadStr} A <<<\\"\\${A[*]}\\"\n        }"""; }\n${subshellRunFlag} && echo \'(\' || echo \'{\'\n{ ${exportOrderFlag} || { ${nOrderFlag} && ${substituteStringIDFlag}; }; } && echo \'nOrder0="${nOrder:1}"\'\n${exportOrderFlag} && echo "printf \'\\034%s:\\035\\n\' \\"\\${nOrder0}\\""\nprintf \'%s \' "${runCmd[@]}"\nif ${readBytesFlag} && ! { [[ ${readBytesProg} == \'bash\' ]] && ! ${stdinRunFlag}; }; then\n    if ${stdinRunFlag} || ${noFuncFlag}; then\n        printf \'<"%s"/%s\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    else\n        printf \'"$(<"%s"/%s)"\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    fi;\nelse\n    if ${stdinRunFlag}; then\n        printf \'<<<%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n    else\n        if ${noFuncFlag}; then\n            printf "<<<\\"\\${A[*]%s}\\"" "${delimiterRemoveStr}";\n        else\n            if ! ${substituteStringFlag}; then\n                printf \'%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n            fi;\n        fi;\n    fi;\nfi\n(( ${verboseLevel} > 2 )) && echo """ || {\n        {\n            printf \'\\\\n\\\\n----------------------------------------------\\\\n\\\\n\'\n            echo \'ERROR DURING \\"${runCmd[*]}\\" CALL\'\n            declare -p A nLinesCur nLinesAutoFlag\n            echo \'fd_read:\'\n            cat /proc/self/fdinfo/${fd_read}\n            echo \'fd_write:\'\n            cat /proc/self/fdinfo/${fd_write}\n            echo\n        } >&${fd_stderr}\n    }"""\n${readBytesFlag} && { [[ -n ${readBytesProg//bash/} ]] || ${stdinRunFlag}; } && printf \'\\n\\\\rm -f "\'"${tmpDir}"\'"/.stdin.tmp.{<#>}\\n\'\n${subshellRunFlag} && printf \'\\n%s \' \')\' || printf \'\\n%s \' \'}\'\necho "${outStr}"\n${nOrderFlag} && echo "printf \'%s\\\\n\' \\"\\${nOrder}\\" >&${fd_nOrder0}"\n${nSpawnFlag} && echo "printf \'l%s\\\\nt%s\\\\n\' \\${#A[@]} \\${EPOCHREALTIME//./} >&${fd_nSpawn}"\necho """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})""")"
-981.3.0:        ( 0.000314s |  0.00% |  0.00% )   ( 0.000349s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-986.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'kill $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null;\n        kill -9 \'"${exitTrapStr_kill}"\' 2>/dev/null; \n        kill -9 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
-988.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'trap - INT TERM HUP USR1; \n        return ${returnVal:-0}\'
-989.3.0:        ( 0.024319s |  0.00% |  0.00% )   ( 0.024267s |  0.00% |  0.00% )    	(1x)	│  │  │   trap "${exitTrapStr}" EXIT
-993.3.0:        ( 0.024223s |  0.00% |  0.00% )   ( 0.024178s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -INT $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" INT
-997.3.0:        ( 0.024466s |  0.00% |  0.00% )   ( 0.170541s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -TERM $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" TERM
-1001.3.0:       ( 0.024055s |  0.00% |  0.00% )   ( 0.023999s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -HUP $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" HUP
-1002.3.0:       ( 0.000074s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1003.3.0:       ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
-1007.3.0:       ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1011.3.0:       ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '\n' >&${fd_continue}
-1012.3.0:       ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1013.3.0:       ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ((kkProcs=0 ))
-1013.3.1:       ( 0.003136s |  0.00% |  0.00% )   ( 0.003594s |  0.00% |  0.00% )    	(29x)	│  │  │   ((kkProcs<28 ))
-1015.3.0:       ( 0.003068s |  0.00% |  0.00% )   ( 0.003512s |  0.00% |  0.00% )    	(28x)	│  │  │   [[ -f "${tmpDir}"/.quit ]]
-1016.3.0:       ( 81.102844s |  3.89% |  1.94% )   ( 154.740078s |  1.95% |  1.95% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p0 p0_PID >>
-1.4.0:          ( 0.001294s |  0.00% |  0.00% )   ( 0.001322s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p0 p0_PID (&)
-24.4.0:         ( 81.101322s |  3.89% | 99.99% )   ( 77.369252s |  0.97% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000190s |  0.00% |  0.00% )   ( 0.000216s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000204s |  0.00% |  0.00% )   ( 0.000234s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p0
-30.5.0:         ( 0.047582s |  0.00% |  0.05% )   ( 0.047488s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p0 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p0; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.047616s |  0.00% |  0.05% )   ( 0.047506s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.048364s |  0.00% |  0.05% )   ( 0.048272s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.048092s |  0.00% |  0.05% )   ( 0.048008s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.047930s |  0.00% |  0.05% )   ( 0.047840s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008384s |  0.00% |  0.00% )   ( 0.009472s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000404s |  0.00% |  0.00% )   ( 0.000470s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000410s |  0.00% |  0.00% )   ( 0.000472s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000400s |  0.00% |  0.00% )   ( 0.000462s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.010242s |  0.00% |  0.00% )   ( 0.011410s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p0
-41.5.0:         ( 0.292958s |  0.01% |  0.01% )   ( 0.012444s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008606s |  0.00% |  0.00% )   ( 0.009738s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.008390s |  0.00% |  0.00% )   ( 0.009558s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007644s |  0.00% |  0.00% )   ( 0.008696s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008232s |  0.00% |  0.00% )   ( 0.009324s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.068498s |  0.00% |  0.00% )   ( 0.064890s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.008672s |  0.00% |  0.00% )   ( 0.009826s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009878s |  0.00% |  0.00% )   ( 0.011016s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p0
-54.5.0:         ( 0.007992s |  0.00% |  0.00% )   ( 0.009094s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007764s |  0.00% |  0.00% )   ( 0.008886s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000438s |  0.00% |  0.00% )   ( 0.000498s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000386s |  0.00% |  0.00% )   ( 0.000446s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-79.5.0:         ( 80.375032s |  3.85% |  1.76% )   ( 76.915172s |  0.97% |  1.77% )    	(112x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.016364s |  0.00% |  0.02% )   ( 0.018684s |  0.00% |  0.02% )    	(112x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.686364s |  0.27% |  7.07% )   ( 5.558784s |  0.07% |  7.22% )    	(112x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.218344s |  0.44% | 11.46% )   ( 8.930788s |  0.11% | 11.61% )    	(112x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.646964s |  0.36% |  9.51% )   ( 7.217168s |  0.09% |  9.38% )    	(112x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 9.226744s |  0.44% | 11.47% )   ( 8.758656s |  0.11% | 11.38% )    	(112x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 7.479100s |  0.35% |  9.30% )   ( 6.893104s |  0.08% |  8.96% )    	(112x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 5.007968s |  0.24% |  6.23% )   ( 4.850756s |  0.06% |  6.30% )    	(112x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.340796s |  0.11% |  2.91% )   ( 2.255608s |  0.02% |  2.93% )    	(112x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 5.259740s |  0.25% |  6.54% )   ( 5.072780s |  0.06% |  6.59% )    	(112x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.193788s |  0.10% |  2.72% )   ( 2.004424s |  0.02% |  2.60% )    	(112x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 6.495520s |  0.31% |  8.08% )   ( 6.386456s |  0.08% |  8.30% )    	(112x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 15.100016s |  0.72% | 18.78% )   ( 14.534044s |  0.18% | 18.89% )    	(112x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.425172s |  0.11% |  3.01% )   ( 2.257568s |  0.02% |  2.93% )    	(112x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.278152s |  0.10% |  2.83% )   ( 2.176352s |  0.02% |  2.82% )    	(112x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-76.5.1:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000290s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.010678s |  0.00% |  0.00% )   ( 0.009160s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.007516s |  0.00% |  0.00% )   ( 0.008568s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008224s |  0.00% |  0.00% )   ( 0.009248s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009874s |  0.00% |  0.01% )   ( 0.010012s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p0 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p0\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000228s |  0.00% |  0.00% )   ( 0.000252s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p0_PID})
-1016.3.0:       ( 71.062128s |  3.41% |  1.70% )   ( 135.140984s |  1.70% |  1.70% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p1 p1_PID >>
-1.4.0:          ( 0.001356s |  0.00% |  0.00% )   ( 0.001396s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p1 p1_PID (&)
-24.4.0:         ( 71.060588s |  3.41% | 99.99% )   ( 67.569690s |  0.85% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000500s |  0.00% |  0.00% )   ( 0.000564s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000698s |  0.00% |  0.00% )   ( 0.000630s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p1
-30.5.0:         ( 0.048542s |  0.00% |  0.06% )   ( 0.047328s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p1 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p1; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.048844s |  0.00% |  0.06% )   ( 0.048256s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.049430s |  0.00% |  0.06% )   ( 0.048270s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.049388s |  0.00% |  0.06% )   ( 0.048334s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.049866s |  0.00% |  0.07% )   ( 0.048444s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007724s |  0.00% |  0.00% )   ( 0.008750s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000508s |  0.00% |  0.00% )   ( 0.000572s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000398s |  0.00% |  0.00% )   ( 0.000462s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000406s |  0.00% |  0.00% )   ( 0.000474s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009618s |  0.00% |  0.00% )   ( 0.010692s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p1
-41.5.0:         ( 0.365142s |  0.01% |  0.01% )   ( 0.012164s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008184s |  0.00% |  0.00% )   ( 0.009190s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007648s |  0.00% |  0.00% )   ( 0.008640s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007102s |  0.00% |  0.00% )   ( 0.008022s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.013618s |  0.00% |  0.00% )   ( 0.008616s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.059406s |  0.00% |  0.00% )   ( 0.060192s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.007976s |  0.00% |  0.00% )   ( 0.008950s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009166s |  0.00% |  0.00% )   ( 0.010218s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p1
-54.5.0:         ( 0.007138s |  0.00% |  0.00% )   ( 0.008138s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007094s |  0.00% |  0.00% )   ( 0.008030s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000312s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000280s |  0.00% |  0.00% )   ( 0.000328s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-79.5.0:         ( 70.256564s |  3.37% |  1.90% )   ( 67.121924s |  0.84% |  1.91% )    	(104x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.015432s |  0.00% |  0.02% )   ( 0.017588s |  0.00% |  0.02% )    	(104x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.588948s |  0.22% |  6.53% )   ( 4.430716s |  0.05% |  6.60% )    	(104x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 8.074468s |  0.38% | 11.49% )   ( 7.756204s |  0.09% | 11.55% )    	(104x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.654016s |  0.31% |  9.47% )   ( 6.465292s |  0.08% |  9.63% )    	(104x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.077240s |  0.38% | 11.49% )   ( 7.778336s |  0.09% | 11.58% )    	(104x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.472256s |  0.31% |  9.21% )   ( 6.280204s |  0.07% |  9.35% )    	(104x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.660880s |  0.22% |  6.63% )   ( 4.189792s |  0.05% |  6.24% )    	(104x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.266840s |  0.10% |  3.22% )   ( 2.084552s |  0.02% |  3.10% )    	(104x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.659252s |  0.22% |  6.63% )   ( 4.333032s |  0.05% |  6.45% )    	(104x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.875540s |  0.09% |  2.66% )   ( 1.816460s |  0.02% |  2.70% )    	(104x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.916764s |  0.28% |  8.42% )   ( 5.629784s |  0.07% |  8.38% )    	(104x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 12.681260s |  0.60% | 18.04% )   ( 12.399588s |  0.15% | 18.47% )    	(104x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.211708s |  0.10% |  3.14% )   ( 2.009060s |  0.02% |  2.99% )    	(104x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.101960s |  0.10% |  2.99% )   ( 1.931316s |  0.02% |  2.87% )    	(104x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-76.5.1:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.007302s |  0.00% |  0.00% )   ( 0.008284s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.012904s |  0.00% |  0.00% )   ( 0.007846s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.007592s |  0.00% |  0.00% )   ( 0.008492s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000268s |  0.00% |  0.00% )   ( 0.000302s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000278s |  0.00% |  0.00% )   ( 0.000314s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.016408s |  0.00% |  0.02% )   ( 0.016578s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p1 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p1\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000184s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p1_PID})
-1016.3.0:       ( 77.074036s |  3.69% |  1.84% )   ( 148.074068s |  1.87% |  1.87% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p2 p2_PID >>
-1.4.0:          ( 0.001342s |  0.00% |  0.00% )   ( 0.001382s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p2 p2_PID (&)
-24.4.0:         ( 77.072518s |  3.69% | 99.99% )   ( 74.036242s |  0.93% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000232s |  0.00% |  0.00% )   ( 0.000254s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000226s |  0.00% |  0.00% )   ( 0.000258s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p2
-30.5.0:         ( 0.050526s |  0.00% |  0.06% )   ( 0.050234s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p2 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p2; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.048460s |  0.00% |  0.06% )   ( 0.048222s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.048306s |  0.00% |  0.06% )   ( 0.048042s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.048346s |  0.00% |  0.06% )   ( 0.048096s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.048344s |  0.00% |  0.06% )   ( 0.048074s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008246s |  0.00% |  0.00% )   ( 0.009370s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000486s |  0.00% |  0.00% )   ( 0.000548s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000404s |  0.00% |  0.00% )   ( 0.000466s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000398s |  0.00% |  0.00% )   ( 0.000460s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009830s |  0.00% |  0.00% )   ( 0.010998s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p2
-41.5.0:         ( 0.327768s |  0.01% |  0.01% )   ( 0.012248s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008458s |  0.00% |  0.00% )   ( 0.009538s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.008170s |  0.00% |  0.00% )   ( 0.009190s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007938s |  0.00% |  0.00% )   ( 0.008978s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008428s |  0.00% |  0.00% )   ( 0.009462s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.080414s |  0.00% |  0.00% )   ( 0.066490s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.014570s |  0.00% |  0.00% )   ( 0.009662s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009782s |  0.00% |  0.00% )   ( 0.010906s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p2
-54.5.0:         ( 0.008050s |  0.00% |  0.00% )   ( 0.009172s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.009658s |  0.00% |  0.00% )   ( 0.009344s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000466s |  0.00% |  0.00% )   ( 0.000536s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000428s |  0.00% |  0.00% )   ( 0.000490s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-79.5.0:         ( 76.283084s |  3.66% |  1.76% )   ( 73.574536s |  0.92% |  1.77% )    	(112x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.016540s |  0.00% |  0.02% )   ( 0.018988s |  0.00% |  0.02% )    	(112x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.560600s |  0.26% |  7.28% )   ( 5.250420s |  0.06% |  7.13% )    	(112x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.031768s |  0.43% | 11.83% )   ( 8.754196s |  0.11% | 11.89% )    	(112x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.067896s |  0.33% |  9.26% )   ( 6.842312s |  0.08% |  9.29% )    	(112x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.511664s |  0.40% | 11.15% )   ( 8.281620s |  0.10% | 11.25% )    	(112x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.990836s |  0.33% |  9.16% )   ( 6.713716s |  0.08% |  9.12% )    	(112x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.679756s |  0.22% |  6.13% )   ( 4.654292s |  0.05% |  6.32% )    	(112x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.322856s |  0.11% |  3.04% )   ( 2.250596s |  0.02% |  3.05% )    	(112x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 5.267924s |  0.25% |  6.90% )   ( 4.826140s |  0.06% |  6.55% )    	(112x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.112084s |  0.10% |  2.76% )   ( 1.955536s |  0.02% |  2.65% )    	(112x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 6.373060s |  0.30% |  8.35% )   ( 6.100256s |  0.07% |  8.29% )    	(112x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 13.740924s |  0.65% | 18.01% )   ( 13.526680s |  0.17% | 18.38% )    	(112x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.322984s |  0.11% |  3.04% )   ( 2.222188s |  0.02% |  3.02% )    	(112x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.284192s |  0.10% |  2.99% )   ( 2.177596s |  0.02% |  2.95% )    	(112x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-76.5.1:         ( 0.000308s |  0.00% |  0.00% )   ( 0.000346s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.007858s |  0.00% |  0.00% )   ( 0.008952s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.007370s |  0.00% |  0.00% )   ( 0.008396s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.012850s |  0.00% |  0.00% )   ( 0.009664s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000186s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.012640s |  0.00% |  0.01% )   ( 0.012766s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p2 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p2\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000176s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p2_PID})
-1016.3.0:       ( 71.752482s |  3.44% |  1.72% )   ( 138.639234s |  1.75% |  1.75% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p3 p3_PID >>
-1.4.0:          ( 0.001420s |  0.00% |  0.00% )   ( 0.001460s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p3 p3_PID (&)
-24.4.0:         ( 71.750860s |  3.44% | 99.99% )   ( 69.318778s |  0.87% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000662s |  0.00% |  0.00% )   ( 0.000732s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000182s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p3
-30.5.0:         ( 0.048044s |  0.00% |  0.06% )   ( 0.047954s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p3 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p3; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.048164s |  0.00% |  0.06% )   ( 0.048068s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.047956s |  0.00% |  0.06% )   ( 0.047864s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.048026s |  0.00% |  0.06% )   ( 0.047926s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.047594s |  0.00% |  0.06% )   ( 0.047496s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008518s |  0.00% |  0.00% )   ( 0.009684s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000482s |  0.00% |  0.00% )   ( 0.000532s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000386s |  0.00% |  0.00% )   ( 0.000448s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000388s |  0.00% |  0.00% )   ( 0.000448s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.010662s |  0.00% |  0.00% )   ( 0.011752s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p3
-41.5.0:         ( 0.321168s |  0.01% |  0.01% )   ( 0.012914s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.009214s |  0.00% |  0.00% )   ( 0.010394s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.008812s |  0.00% |  0.00% )   ( 0.010010s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.008202s |  0.00% |  0.00% )   ( 0.009328s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008882s |  0.00% |  0.00% )   ( 0.010052s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.080680s |  0.00% |  0.00% )   ( 0.069668s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.015788s |  0.00% |  0.00% )   ( 0.010626s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.010788s |  0.00% |  0.00% )   ( 0.011984s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p3
-54.5.0:         ( 0.008680s |  0.00% |  0.00% )   ( 0.009846s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.008024s |  0.00% |  0.00% )   ( 0.009146s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000424s |  0.00% |  0.00% )   ( 0.000484s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000400s |  0.00% |  0.00% )   ( 0.000450s |  0.00% |  0.00% )    	(4x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-79.5.0:         ( 70.966604s |  3.40% |  1.70% )   ( 68.851096s |  0.86% |  1.71% )    	(116x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.028828s |  0.00% |  0.04% )   ( 0.018480s |  0.00% |  0.02% )    	(116x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.830840s |  0.23% |  6.80% )   ( 4.683624s |  0.05% |  6.80% )    	(116x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 8.106264s |  0.38% | 11.42% )   ( 7.944796s |  0.10% | 11.53% )    	(116x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.874248s |  0.32% |  9.68% )   ( 6.609508s |  0.08% |  9.59% )    	(116x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.877672s |  0.37% | 11.10% )   ( 7.684524s |  0.09% | 11.16% )    	(116x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.669580s |  0.32% |  9.39% )   ( 6.309296s |  0.07% |  9.16% )    	(116x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.465760s |  0.21% |  6.29% )   ( 4.250016s |  0.05% |  6.17% )    	(116x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.287000s |  0.10% |  3.22% )   ( 2.227404s |  0.02% |  3.23% )    	(116x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.454876s |  0.21% |  6.27% )   ( 4.345340s |  0.05% |  6.31% )    	(116x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.018452s |  0.09% |  2.84% )   ( 1.983348s |  0.02% |  2.88% )    	(116x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.920536s |  0.28% |  8.34% )   ( 5.805148s |  0.07% |  8.43% )    	(116x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 12.760984s |  0.61% | 17.98% )   ( 12.534040s |  0.15% | 18.20% )    	(116x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.368460s |  0.11% |  3.33% )   ( 2.255668s |  0.02% |  3.27% )    	(116x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.303104s |  0.11% |  3.24% )   ( 2.199904s |  0.02% |  3.19% )    	(116x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-76.5.1:         ( 0.000250s |  0.00% |  0.00% )   ( 0.000288s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.008414s |  0.00% |  0.00% )   ( 0.009536s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.014212s |  0.00% |  0.00% )   ( 0.009298s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008952s |  0.00% |  0.00% )   ( 0.010040s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000194s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009816s |  0.00% |  0.01% )   ( 0.009948s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p3 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p3\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000202s |  0.00% |  0.00% )   ( 0.000218s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p3_PID})
-1016.3.0:       ( 70.306324s |  3.37% |  1.68% )   ( 135.388904s |  1.71% |  1.71% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p4 p4_PID >>
-1.4.0:          ( 0.001316s |  0.00% |  0.00% )   ( 0.001350s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p4 p4_PID (&)
-24.4.0:         ( 70.304822s |  3.37% | 99.99% )   ( 67.693670s |  0.85% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000324s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000316s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p4
-30.5.0:         ( 0.052224s |  0.00% |  0.07% )   ( 0.052114s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p4 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p4; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.048096s |  0.00% |  0.06% )   ( 0.048006s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.048180s |  0.00% |  0.06% )   ( 0.048088s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.052166s |  0.00% |  0.07% )   ( 0.052064s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.048306s |  0.00% |  0.06% )   ( 0.048202s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007602s |  0.00% |  0.00% )   ( 0.008584s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009170s |  0.00% |  0.00% )   ( 0.010222s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p4
-41.5.0:         ( 0.327386s |  0.01% |  0.01% )   ( 0.011892s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008132s |  0.00% |  0.00% )   ( 0.009136s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007228s |  0.00% |  0.00% )   ( 0.008190s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.006812s |  0.00% |  0.00% )   ( 0.007742s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.007268s |  0.00% |  0.00% )   ( 0.008234s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.059744s |  0.00% |  0.00% )   ( 0.060582s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.015338s |  0.00% |  0.00% )   ( 0.009198s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.008948s |  0.00% |  0.00% )   ( 0.010016s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p4
-54.5.0:         ( 0.007300s |  0.00% |  0.00% )   ( 0.008310s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007146s |  0.00% |  0.00% )   ( 0.008112s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 69.544292s |  3.33% |  1.97% )   ( 67.242188s |  0.84% |  1.98% )    	(100x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.015708s |  0.00% |  0.02% )   ( 0.017756s |  0.00% |  0.02% )    	(100x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.689556s |  0.22% |  6.74% )   ( 4.455504s |  0.05% |  6.62% )    	(100x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 8.117564s |  0.38% | 11.67% )   ( 7.708592s |  0.09% | 11.46% )    	(100x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.554156s |  0.31% |  9.42% )   ( 6.527028s |  0.08% |  9.70% )    	(100x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.108400s |  0.38% | 11.65% )   ( 7.808340s |  0.09% | 11.61% )    	(100x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.522556s |  0.31% |  9.37% )   ( 6.338148s |  0.08% |  9.42% )    	(100x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.210868s |  0.20% |  6.05% )   ( 4.028404s |  0.05% |  5.99% )    	(100x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.148424s |  0.10% |  3.08% )   ( 2.033820s |  0.02% |  3.02% )    	(100x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.419292s |  0.21% |  6.35% )   ( 4.253760s |  0.05% |  6.32% )    	(100x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.872548s |  0.08% |  2.69% )   ( 1.812796s |  0.02% |  2.69% )    	(100x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.749744s |  0.27% |  8.26% )   ( 5.609604s |  0.07% |  8.34% )    	(100x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 13.000468s |  0.62% | 18.69% )   ( 12.663968s |  0.15% | 18.83% )    	(100x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.081948s |  0.09% |  2.99% )   ( 2.012856s |  0.02% |  2.99% )    	(100x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.053060s |  0.09% |  2.95% )   ( 1.971612s |  0.02% |  2.93% )    	(100x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007404s |  0.00% |  0.00% )   ( 0.008376s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.006952s |  0.00% |  0.00% )   ( 0.007930s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.007804s |  0.00% |  0.00% )   ( 0.008716s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000292s |  0.00% |  0.00% )   ( 0.000330s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000298s |  0.00% |  0.00% )   ( 0.000336s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.015070s |  0.00% |  0.02% )   ( 0.015208s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p4 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p4\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000186s |  0.00% |  0.00% )   ( 0.000214s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p4_PID})
-1016.3.0:       ( 68.796860s |  3.30% |  1.65% )   ( 132.153150s |  1.66% |  1.66% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p5 p5_PID >>
-1.4.0:          ( 0.001428s |  0.00% |  0.00% )   ( 0.001450s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p5 p5_PID (&)
-24.4.0:         ( 68.795240s |  3.30% | 99.99% )   ( 66.075742s |  0.83% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000412s |  0.00% |  0.00% )   ( 0.000454s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000428s |  0.00% |  0.00% )   ( 0.000468s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p5
-30.5.0:         ( 0.052554s |  0.00% |  0.07% )   ( 0.052444s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p5 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p5; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.049982s |  0.00% |  0.07% )   ( 0.049890s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.048238s |  0.00% |  0.07% )   ( 0.048130s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.052586s |  0.00% |  0.07% )   ( 0.052478s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.052382s |  0.00% |  0.07% )   ( 0.052266s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.009206s |  0.00% |  0.00% )   ( 0.010374s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.016756s |  0.00% |  0.00% )   ( 0.011958s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p5
-41.5.0:         ( 0.240400s |  0.01% |  0.01% )   ( 0.012788s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.009090s |  0.00% |  0.00% )   ( 0.010258s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.008400s |  0.00% |  0.00% )   ( 0.009500s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007982s |  0.00% |  0.00% )   ( 0.009068s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008442s |  0.00% |  0.00% )   ( 0.009472s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.074784s |  0.00% |  0.00% )   ( 0.069676s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.022562s |  0.00% |  0.00% )   ( 0.010260s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009914s |  0.00% |  0.00% )   ( 0.011058s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p5
-54.5.0:         ( 0.014148s |  0.00% |  0.00% )   ( 0.009312s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007920s |  0.00% |  0.00% )   ( 0.009018s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 68.060032s |  3.26% |  1.76% )   ( 65.587708s |  0.82% |  1.77% )    	(112x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.016088s |  0.00% |  0.02% )   ( 0.018288s |  0.00% |  0.02% )    	(112x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.544696s |  0.21% |  6.67% )   ( 4.338720s |  0.05% |  6.61% )    	(112x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.612292s |  0.36% | 11.18% )   ( 7.454896s |  0.09% | 11.36% )    	(112x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.364424s |  0.30% |  9.35% )   ( 6.266188s |  0.07% |  9.55% )    	(112x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.590996s |  0.36% | 11.15% )   ( 7.404428s |  0.09% | 11.28% )    	(112x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.194396s |  0.29% |  9.10% )   ( 6.054204s |  0.07% |  9.23% )    	(112x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.226308s |  0.20% |  6.20% )   ( 4.044724s |  0.05% |  6.16% )    	(112x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.402928s |  0.11% |  3.53% )   ( 2.206588s |  0.02% |  3.36% )    	(112x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.318992s |  0.20% |  6.34% )   ( 4.105764s |  0.05% |  6.25% )    	(112x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.126064s |  0.10% |  3.12% )   ( 1.962124s |  0.02% |  2.99% )    	(112x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.873556s |  0.28% |  8.62% )   ( 5.527284s |  0.06% |  8.42% )    	(112x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 12.163376s |  0.58% | 17.87% )   ( 11.826156s |  0.14% | 18.03% )    	(112x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.274920s |  0.10% |  3.34% )   ( 2.221888s |  0.02% |  3.38% )    	(112x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.350996s |  0.11% |  3.45% )   ( 2.156456s |  0.02% |  3.28% )    	(112x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.008742s |  0.00% |  0.00% )   ( 0.009890s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.011652s |  0.00% |  0.00% )   ( 0.009174s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008908s |  0.00% |  0.00% )   ( 0.009994s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000352s |  0.00% |  0.00% )   ( 0.000386s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000340s |  0.00% |  0.00% )   ( 0.000380s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.017992s |  0.00% |  0.02% )   ( 0.018146s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p5 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p5\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000192s |  0.00% |  0.00% )   ( 0.000216s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p5_PID})
-1016.3.0:       ( 82.631960s |  3.96% |  1.98% )   ( 159.834200s |  2.01% |  2.01% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p6 p6_PID >>
-1.4.0:          ( 0.001422s |  0.00% |  0.00% )   ( 0.001454s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p6 p6_PID (&)
-24.4.0:         ( 82.630348s |  3.96% | 99.99% )   ( 79.916266s |  1.00% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000640s |  0.00% |  0.00% )   ( 0.000726s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000676s |  0.00% |  0.00% )   ( 0.000764s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p6
-30.5.0:         ( 0.047874s |  0.00% |  0.05% )   ( 0.047782s |  0.00% |  0.05% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p6 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p6; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.048080s |  0.00% |  0.05% )   ( 0.047986s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.048200s |  0.00% |  0.05% )   ( 0.048102s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.048492s |  0.00% |  0.05% )   ( 0.048378s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.048544s |  0.00% |  0.05% )   ( 0.048430s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000186s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.006236s |  0.00% |  0.00% )   ( 0.007048s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000176s |  0.00% |  0.00% )   ( 0.000200s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.007860s |  0.00% |  0.00% )   ( 0.008738s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p6
-41.5.0:         ( 0.263864s |  0.01% |  0.01% )   ( 0.009518s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.006818s |  0.00% |  0.00% )   ( 0.007692s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.006520s |  0.00% |  0.00% )   ( 0.007354s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.005894s |  0.00% |  0.00% )   ( 0.006754s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.006392s |  0.00% |  0.00% )   ( 0.007216s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.050850s |  0.00% |  0.00% )   ( 0.051562s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.012552s |  0.00% |  0.00% )   ( 0.007384s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.007766s |  0.00% |  0.00% )   ( 0.008690s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p6
-54.5.0:         ( 0.006136s |  0.00% |  0.00% )   ( 0.006958s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.006106s |  0.00% |  0.00% )   ( 0.006930s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 81.970700s |  3.93% |  2.36% )   ( 79.505260s |  1.00% |  2.36% )    	(84x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.024688s |  0.00% |  0.03% )   ( 0.015088s |  0.00% |  0.01% )    	(84x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.834176s |  0.27% |  7.11% )   ( 5.670460s |  0.07% |  7.13% )    	(84x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 10.856504s |  0.52% | 13.24% )   ( 10.742240s |  0.13% | 13.51% )    	(84x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 8.380328s |  0.40% | 10.22% )   ( 8.250496s |  0.10% | 10.37% )    	(84x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 10.975960s |  0.52% | 13.39% )   ( 10.702708s |  0.13% | 13.46% )    	(84x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 8.417364s |  0.40% | 10.26% )   ( 8.164184s |  0.10% | 10.26% )    	(84x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 5.223532s |  0.25% |  6.37% )   ( 5.073188s |  0.06% |  6.38% )    	(84x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.030388s |  0.09% |  2.47% )   ( 1.930104s |  0.02% |  2.42% )    	(84x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.903940s |  0.23% |  5.98% )   ( 4.850060s |  0.06% |  6.10% )    	(84x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.828404s |  0.08% |  2.23% )   ( 1.682152s |  0.02% |  2.11% )    	(84x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.965480s |  0.28% |  7.27% )   ( 5.657652s |  0.07% |  7.11% )    	(84x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 13.733128s |  0.65% | 16.75% )   ( 13.087240s |  0.16% | 16.46% )    	(84x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.918280s |  0.09% |  2.34% )   ( 1.884164s |  0.02% |  2.36% )    	(84x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.878528s |  0.09% |  2.29% )   ( 1.795524s |  0.02% |  2.25% )    	(84x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.006036s |  0.00% |  0.00% )   ( 0.006832s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.005966s |  0.00% |  0.00% )   ( 0.006808s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.006694s |  0.00% |  0.00% )   ( 0.007548s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.010114s |  0.00% |  0.01% )   ( 0.010248s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p6 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p6\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000190s |  0.00% |  0.00% )   ( 0.000214s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p6_PID})
-1016.3.0:       ( 74.435458s |  3.57% |  1.78% )   ( 144.465082s |  1.82% |  1.82% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p7 p7_PID >>
-1.4.0:          ( 0.001474s |  0.00% |  0.00% )   ( 0.001506s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p7 p7_PID (&)
-24.4.0:         ( 74.433794s |  3.57% | 99.99% )   ( 72.231680s |  0.91% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000638s |  0.00% |  0.00% )   ( 0.000722s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000186s |  0.00% |  0.00% )   ( 0.000212s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p7
-30.5.0:         ( 0.047992s |  0.00% |  0.06% )   ( 0.047902s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p7 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p7; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.048306s |  0.00% |  0.06% )   ( 0.048202s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.048216s |  0.00% |  0.06% )   ( 0.048118s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.048220s |  0.00% |  0.06% )   ( 0.048124s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.049506s |  0.00% |  0.06% )   ( 0.049398s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.004426s |  0.00% |  0.00% )   ( 0.004986s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000196s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005110s |  0.00% |  0.00% )   ( 0.005666s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p7
-41.5.0:         ( 0.235508s |  0.01% |  0.02% )   ( 0.006626s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.004884s |  0.00% |  0.00% )   ( 0.005494s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.004306s |  0.00% |  0.00% )   ( 0.004856s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.003822s |  0.00% |  0.00% )   ( 0.004372s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004090s |  0.00% |  0.00% )   ( 0.004634s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.031092s |  0.00% |  0.00% )   ( 0.031540s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.004204s |  0.00% |  0.00% )   ( 0.004720s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.004820s |  0.00% |  0.00% )   ( 0.005354s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p7
-54.5.0:         ( 0.003914s |  0.00% |  0.00% )   ( 0.004434s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003654s |  0.00% |  0.00% )   ( 0.004188s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 73.849900s |  3.54% |  3.54% )   ( 71.875496s |  0.90% |  3.55% )    	(56x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.007624s |  0.00% |  0.01% )   ( 0.008708s |  0.00% |  0.01% )    	(56x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.747184s |  0.22% |  6.42% )   ( 4.592924s |  0.05% |  6.39% )    	(56x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.228320s |  0.44% | 12.49% )   ( 9.114908s |  0.11% | 12.68% )    	(56x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.052260s |  0.33% |  9.54% )   ( 6.914588s |  0.08% |  9.62% )    	(56x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 9.141196s |  0.43% | 12.37% )   ( 9.030292s |  0.11% | 12.56% )    	(56x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 7.146284s |  0.34% |  9.67% )   ( 6.626592s |  0.08% |  9.21% )    	(56x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.366868s |  0.20% |  5.91% )   ( 4.064520s |  0.05% |  5.65% )    	(56x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 1.669136s |  0.08% |  2.26% )   ( 1.457388s |  0.01% |  2.02% )    	(56x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.649104s |  0.22% |  6.29% )   ( 4.526332s |  0.05% |  6.29% )    	(56x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.232404s |  0.05% |  1.66% )   ( 1.215316s |  0.01% |  1.69% )    	(56x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.944600s |  0.28% |  8.04% )   ( 5.829812s |  0.07% |  8.11% )    	(56x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 15.877648s |  0.76% | 21.49% )   ( 15.792332s |  0.19% | 21.97% )    	(56x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.479096s |  0.07% |  2.00% )   ( 1.405364s |  0.01% |  1.95% )    	(56x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.308176s |  0.06% |  1.77% )   ( 1.296420s |  0.01% |  1.80% )    	(56x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004132s |  0.00% |  0.00% )   ( 0.004656s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003584s |  0.00% |  0.00% )   ( 0.004052s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.010334s |  0.00% |  0.00% )   ( 0.004542s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000416s |  0.00% |  0.00% )   ( 0.000468s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000418s |  0.00% |  0.00% )   ( 0.000474s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.011088s |  0.00% |  0.01% )   ( 0.011252s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p7 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p7\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000190s |  0.00% |  0.00% )   ( 0.000216s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p7_PID})
-1016.3.0:       ( 80.964414s |  3.88% |  1.94% )   ( 157.751794s |  1.99% |  1.99% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p8 p8_PID >>
-1.4.0:          ( 0.001404s |  0.00% |  0.00% )   ( 0.001444s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p8 p8_PID (&)
-24.4.0:         ( 80.962814s |  3.88% | 99.99% )   ( 78.875064s |  0.99% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000460s |  0.00% |  0.00% )   ( 0.000494s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000460s |  0.00% |  0.00% )   ( 0.000518s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p8
-30.5.0:         ( 0.052052s |  0.00% |  0.06% )   ( 0.051936s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p8 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p8; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.074294s |  0.00% |  0.09% )   ( 0.074060s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.091956s |  0.00% |  0.11% )   ( 0.091630s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.091898s |  0.00% |  0.11% )   ( 0.091582s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.091800s |  0.00% |  0.11% )   ( 0.091472s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000270s |  0.00% |  0.00% )   ( 0.000308s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007456s |  0.00% |  0.00% )   ( 0.008458s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000302s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000280s |  0.00% |  0.00% )   ( 0.000308s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000258s |  0.00% |  0.00% )   ( 0.000296s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009394s |  0.00% |  0.00% )   ( 0.010440s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p8
-41.5.0:         ( 0.236894s |  0.01% |  0.01% )   ( 0.010930s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008034s |  0.00% |  0.00% )   ( 0.008972s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007494s |  0.00% |  0.00% )   ( 0.008478s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.006862s |  0.00% |  0.00% )   ( 0.007806s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.007398s |  0.00% |  0.00% )   ( 0.008340s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.056284s |  0.00% |  0.00% )   ( 0.057094s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.009226s |  0.00% |  0.00% )   ( 0.008744s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.008456s |  0.00% |  0.00% )   ( 0.009404s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p8
-54.5.0:         ( 0.007130s |  0.00% |  0.00% )   ( 0.008024s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.006988s |  0.00% |  0.00% )   ( 0.007966s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000284s |  0.00% |  0.00% )   ( 0.000314s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000244s |  0.00% |  0.00% )   ( 0.000280s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000292s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 80.152880s |  3.84% |  2.06% )   ( 78.282168s |  0.98% |  2.06% )    	(96x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.014044s |  0.00% |  0.01% )   ( 0.015956s |  0.00% |  0.02% )    	(96x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.793756s |  0.27% |  7.22% )   ( 5.621280s |  0.07% |  7.18% )    	(96x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.445768s |  0.45% | 11.78% )   ( 9.363948s |  0.11% | 11.96% )    	(96x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.586784s |  0.36% |  9.46% )   ( 7.357876s |  0.09% |  9.39% )    	(96x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 9.249792s |  0.44% | 11.54% )   ( 9.154400s |  0.11% | 11.69% )    	(96x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 7.421776s |  0.35% |  9.25% )   ( 7.166668s |  0.09% |  9.15% )    	(96x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 5.126720s |  0.24% |  6.39% )   ( 4.958708s |  0.06% |  6.33% )    	(96x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.224308s |  0.10% |  2.77% )   ( 2.151976s |  0.02% |  2.74% )    	(96x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 5.398388s |  0.25% |  6.73% )   ( 5.193512s |  0.06% |  6.63% )    	(96x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.880804s |  0.09% |  2.34% )   ( 1.854836s |  0.02% |  2.36% )    	(96x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 6.524580s |  0.31% |  8.14% )   ( 6.343456s |  0.08% |  8.10% )    	(96x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 15.092176s |  0.72% | 18.82% )   ( 15.029512s |  0.18% | 19.19% )    	(96x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.182472s |  0.10% |  2.72% )   ( 2.096472s |  0.02% |  2.67% )    	(96x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.211512s |  0.10% |  2.75% )   ( 1.973568s |  0.02% |  2.52% )    	(96x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007086s |  0.00% |  0.00% )   ( 0.008050s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.009016s |  0.00% |  0.00% )   ( 0.007870s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.007506s |  0.00% |  0.00% )   ( 0.008434s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009574s |  0.00% |  0.01% )   ( 0.009698s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p8 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p8\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000196s |  0.00% |  0.00% )   ( 0.000222s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p8_PID})
-1016.3.0:       ( 68.198228s |  3.27% |  1.63% )   ( 131.769196s |  1.66% |  1.66% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p9 p9_PID >>
-1.4.0:          ( 0.001456s |  0.00% |  0.00% )   ( 0.001490s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p9 p9_PID (&)
-24.4.0:         ( 68.196584s |  3.27% | 99.99% )   ( 65.883746s |  0.83% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000506s |  0.00% |  0.00% )   ( 0.000568s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000198s |  0.00% |  0.00% )   ( 0.000224s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p9
-30.5.0:         ( 0.050068s |  0.00% |  0.07% )   ( 0.049952s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p9 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p9; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.048166s |  0.00% |  0.07% )   ( 0.048068s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.049878s |  0.00% |  0.07% )   ( 0.049760s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.052992s |  0.00% |  0.07% )   ( 0.052866s |  0.00% |  0.08% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.049498s |  0.00% |  0.07% )   ( 0.049392s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008878s |  0.00% |  0.00% )   ( 0.010082s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000172s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.010586s |  0.00% |  0.00% )   ( 0.011790s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p9
-41.5.0:         ( 0.489798s |  0.02% |  0.02% )   ( 0.013950s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.009274s |  0.00% |  0.00% )   ( 0.010450s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.009338s |  0.00% |  0.00% )   ( 0.010552s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.008256s |  0.00% |  0.00% )   ( 0.009378s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008878s |  0.00% |  0.00% )   ( 0.009998s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.103352s |  0.00% |  0.00% )   ( 0.073820s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.017362s |  0.00% |  0.00% )   ( 0.010642s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.010460s |  0.00% |  0.00% )   ( 0.011672s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p9
-54.5.0:         ( 0.008194s |  0.00% |  0.00% )   ( 0.009346s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.008226s |  0.00% |  0.00% )   ( 0.009216s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 67.207416s |  3.22% |  1.69% )   ( 65.393188s |  0.82% |  1.71% )    	(116x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.016212s |  0.00% |  0.02% )   ( 0.018376s |  0.00% |  0.02% )    	(116x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.624828s |  0.22% |  6.88% )   ( 4.406352s |  0.05% |  6.73% )    	(116x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.511344s |  0.36% | 11.17% )   ( 7.364336s |  0.09% | 11.26% )    	(116x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.527844s |  0.31% |  9.71% )   ( 6.240824s |  0.07% |  9.54% )    	(116x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.479968s |  0.35% | 11.12% )   ( 7.336148s |  0.09% | 11.21% )    	(116x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.069452s |  0.29% |  9.03% )   ( 6.038120s |  0.07% |  9.23% )    	(116x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.098252s |  0.19% |  6.09% )   ( 4.020092s |  0.05% |  6.14% )    	(116x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.306680s |  0.11% |  3.43% )   ( 2.253784s |  0.02% |  3.44% )    	(116x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.393832s |  0.21% |  6.53% )   ( 4.162296s |  0.05% |  6.36% )    	(116x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.063832s |  0.09% |  3.07% )   ( 1.980948s |  0.02% |  3.02% )    	(116x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.795904s |  0.27% |  8.62% )   ( 5.474224s |  0.06% |  8.37% )    	(116x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 11.721712s |  0.56% | 17.44% )   ( 11.602284s |  0.14% | 17.74% )    	(116x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.291504s |  0.10% |  3.40% )   ( 2.271864s |  0.02% |  3.47% )    	(116x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.306052s |  0.11% |  3.43% )   ( 2.223540s |  0.02% |  3.40% )    	(116x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.008996s |  0.00% |  0.00% )   ( 0.010146s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.008144s |  0.00% |  0.00% )   ( 0.009090s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008584s |  0.00% |  0.00% )   ( 0.009682s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000284s |  0.00% |  0.00% )   ( 0.000322s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000282s |  0.00% |  0.00% )   ( 0.000320s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.017920s |  0.00% |  0.02% )   ( 0.018060s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p9 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p9\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000188s |  0.00% |  0.00% )   ( 0.000214s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p9_PID})
-1016.3.0:       ( 89.105106s |  4.27% |  2.13% )   ( 169.573944s |  2.14% |  2.14% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p10 p10_PID >>
-1.4.0:          ( 0.001688s |  0.00% |  0.00% )   ( 0.001738s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p10 p10_PID (&)
-24.4.0:         ( 89.103062s |  4.27% | 99.99% )   ( 84.785902s |  1.07% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000310s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000322s |  0.00% |  0.00% )   ( 0.000362s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p10
-30.5.0:         ( 0.092034s |  0.00% |  0.10% )   ( 0.091736s |  0.00% |  0.10% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p10 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p10; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.092280s |  0.00% |  0.10% )   ( 0.091954s |  0.00% |  0.10% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.092042s |  0.00% |  0.10% )   ( 0.091722s |  0.00% |  0.10% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.091894s |  0.00% |  0.10% )   ( 0.091580s |  0.00% |  0.10% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.092454s |  0.00% |  0.10% )   ( 0.092126s |  0.00% |  0.10% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000304s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.009066s |  0.00% |  0.00% )   ( 0.010274s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000298s |  0.00% |  0.00% )   ( 0.000334s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000292s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000294s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.010866s |  0.00% |  0.00% )   ( 0.012112s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p10
-41.5.0:         ( 0.281766s |  0.01% |  0.01% )   ( 0.013718s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.009936s |  0.00% |  0.00% )   ( 0.011144s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.009468s |  0.00% |  0.00% )   ( 0.010674s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.008536s |  0.00% |  0.00% )   ( 0.009722s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.009652s |  0.00% |  0.00% )   ( 0.010790s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.082664s |  0.00% |  0.00% )   ( 0.077656s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.015866s |  0.00% |  0.00% )   ( 0.011034s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.010744s |  0.00% |  0.00% )   ( 0.011948s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p10
-54.5.0:         ( 0.008668s |  0.00% |  0.00% )   ( 0.009848s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.008300s |  0.00% |  0.00% )   ( 0.009450s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000272s |  0.00% |  0.00% )   ( 0.000312s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000242s |  0.00% |  0.00% )   ( 0.000278s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000252s |  0.00% |  0.00% )   ( 0.000288s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 88.129104s |  4.22% |  1.70% )   ( 84.085160s |  1.06% |  1.70% )    	(116x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.018212s |  0.00% |  0.02% )   ( 0.020772s |  0.00% |  0.02% )    	(116x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 6.549564s |  0.31% |  7.43% )   ( 6.211024s |  0.07% |  7.38% )    	(116x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 10.156000s |  0.48% | 11.52% )   ( 9.630616s |  0.12% | 11.45% )    	(116x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 8.365180s |  0.40% |  9.49% )   ( 7.826220s |  0.09% |  9.30% )    	(116x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 10.350820s |  0.49% | 11.74% )   ( 9.660276s |  0.12% | 11.48% )    	(116x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 8.039908s |  0.38% |  9.12% )   ( 7.602852s |  0.09% |  9.04% )    	(116x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 5.852876s |  0.28% |  6.64% )   ( 5.636148s |  0.07% |  6.70% )    	(116x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.645652s |  0.12% |  3.00% )   ( 2.556664s |  0.03% |  3.04% )    	(116x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 6.004168s |  0.28% |  6.81% )   ( 5.747620s |  0.07% |  6.83% )    	(116x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.241120s |  0.10% |  2.54% )   ( 2.185184s |  0.02% |  2.59% )    	(116x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 7.206120s |  0.34% |  8.17% )   ( 6.824008s |  0.08% |  8.11% )    	(116x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 15.648364s |  0.75% | 17.75% )   ( 15.428464s |  0.19% | 18.34% )    	(116x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.480328s |  0.11% |  2.81% )   ( 2.427184s |  0.03% |  2.88% )    	(116x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.570792s |  0.12% |  2.91% )   ( 2.328128s |  0.02% |  2.76% )    	(116x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.008766s |  0.00% |  0.00% )   ( 0.009900s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.008232s |  0.00% |  0.00% )   ( 0.009372s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.017966s |  0.00% |  0.00% )   ( 0.010726s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000168s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009976s |  0.00% |  0.01% )   ( 0.010100s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p10 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p10\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000356s |  0.00% |  0.00% )   ( 0.000402s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p10_PID})
-1016.3.0:       ( 71.282056s |  3.42% |  1.71% )   ( 137.916148s |  1.74% |  1.74% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p11 p11_PID >>
-1.4.0:          ( 0.001918s |  0.00% |  0.00% )   ( 0.001956s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p11 p11_PID (&)
-24.4.0:         ( 71.279836s |  3.42% | 99.99% )   ( 68.956926s |  0.87% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000562s |  0.00% |  0.00% )   ( 0.000302s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000212s |  0.00% |  0.00% )   ( 0.000228s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p11
-30.5.0:         ( 0.065564s |  0.00% |  0.09% )   ( 0.065226s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p11 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p11; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.065466s |  0.00% |  0.09% )   ( 0.065224s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.066160s |  0.00% |  0.09% )   ( 0.065934s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.066876s |  0.00% |  0.09% )   ( 0.066658s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.064926s |  0.00% |  0.09% )   ( 0.064706s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000292s |  0.00% |  0.00% )   ( 0.000330s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007770s |  0.00% |  0.00% )   ( 0.008800s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000306s |  0.00% |  0.00% )   ( 0.000344s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000262s |  0.00% |  0.00% )   ( 0.000298s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000274s |  0.00% |  0.00% )   ( 0.000300s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009790s |  0.00% |  0.00% )   ( 0.010880s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p11
-41.5.0:         ( 0.266028s |  0.01% |  0.01% )   ( 0.011980s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008512s |  0.00% |  0.00% )   ( 0.009634s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007984s |  0.00% |  0.00% )   ( 0.009040s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007570s |  0.00% |  0.00% )   ( 0.008604s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008268s |  0.00% |  0.00% )   ( 0.009328s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.068952s |  0.00% |  0.00% )   ( 0.063786s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.008492s |  0.00% |  0.00% )   ( 0.009542s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009646s |  0.00% |  0.00% )   ( 0.010750s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p11
-54.5.0:         ( 0.007580s |  0.00% |  0.00% )   ( 0.008614s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007366s |  0.00% |  0.00% )   ( 0.008364s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 70.496684s |  3.38% |  1.90% )   ( 68.420420s |  0.86% |  1.90% )    	(104x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.015064s |  0.00% |  0.02% )   ( 0.017112s |  0.00% |  0.02% )    	(104x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.975324s |  0.23% |  7.05% )   ( 4.598420s |  0.05% |  6.72% )    	(104x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 8.262164s |  0.39% | 11.71% )   ( 7.999824s |  0.10% | 11.69% )    	(104x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.791084s |  0.32% |  9.63% )   ( 6.689540s |  0.08% |  9.77% )    	(104x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.099696s |  0.38% | 11.48% )   ( 7.945864s |  0.10% | 11.61% )    	(104x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.782716s |  0.32% |  9.62% )   ( 6.366148s |  0.08% |  9.30% )    	(104x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.220892s |  0.20% |  5.98% )   ( 4.144220s |  0.05% |  6.05% )    	(104x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.167000s |  0.10% |  3.07% )   ( 2.083700s |  0.02% |  3.04% )    	(104x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.412448s |  0.21% |  6.25% )   ( 4.341372s |  0.05% |  6.34% )    	(104x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.915804s |  0.09% |  2.71% )   ( 1.839256s |  0.02% |  2.68% )    	(104x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.815720s |  0.27% |  8.24% )   ( 5.608976s |  0.07% |  8.19% )    	(104x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 12.743768s |  0.61% | 18.07% )   ( 12.625364s |  0.15% | 18.45% )    	(104x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.144020s |  0.10% |  3.04% )   ( 2.126756s |  0.02% |  3.10% )    	(104x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.150984s |  0.10% |  3.05% )   ( 2.033868s |  0.02% |  2.97% )    	(104x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007638s |  0.00% |  0.00% )   ( 0.008662s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.007632s |  0.00% |  0.00% )   ( 0.008674s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008420s |  0.00% |  0.00% )   ( 0.009436s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000190s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009828s |  0.00% |  0.01% )   ( 0.009974s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p11 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p11\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000302s |  0.00% |  0.00% )   ( 0.000340s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p11_PID})
-1016.3.0:       ( 68.195388s |  3.27% |  1.63% )   ( 129.128622s |  1.63% |  1.63% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p12 p12_PID >>
-1.4.0:          ( 0.001990s |  0.00% |  0.00% )   ( 0.002032s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p12 p12_PID (&)
-24.4.0:         ( 68.193082s |  3.27% | 99.99% )   ( 64.563122s |  0.81% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000204s |  0.00% |  0.00% )   ( 0.000230s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000200s |  0.00% |  0.00% )   ( 0.000226s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p12
-30.5.0:         ( 0.077956s |  0.00% |  0.11% )   ( 0.077564s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p12 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p12; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.092200s |  0.00% |  0.13% )   ( 0.091858s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.054916s |  0.00% |  0.08% )   ( 0.054742s |  0.00% |  0.08% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.056356s |  0.00% |  0.08% )   ( 0.056148s |  0.00% |  0.08% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.062664s |  0.00% |  0.09% )   ( 0.062462s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008884s |  0.00% |  0.00% )   ( 0.010050s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000176s |  0.00% |  0.00% )   ( 0.000200s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.011124s |  0.00% |  0.00% )   ( 0.012282s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p12
-41.5.0:         ( 0.435432s |  0.02% |  0.02% )   ( 0.013168s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.015756s |  0.00% |  0.00% )   ( 0.010936s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.009300s |  0.00% |  0.00% )   ( 0.010540s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.008658s |  0.00% |  0.00% )   ( 0.009834s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.009108s |  0.00% |  0.00% )   ( 0.010270s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.079972s |  0.00% |  0.00% )   ( 0.072908s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.009308s |  0.00% |  0.00% )   ( 0.010430s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.010270s |  0.00% |  0.00% )   ( 0.011432s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p12
-54.5.0:         ( 0.007936s |  0.00% |  0.00% )   ( 0.009026s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.008516s |  0.00% |  0.00% )   ( 0.009678s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 67.182920s |  3.22% |  1.69% )   ( 63.980120s |  0.80% |  1.70% )    	(116x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.017220s |  0.00% |  0.02% )   ( 0.019600s |  0.00% |  0.03% )    	(116x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.391436s |  0.21% |  6.53% )   ( 4.273004s |  0.05% |  6.67% )    	(116x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.411344s |  0.35% | 11.03% )   ( 7.088404s |  0.08% | 11.07% )    	(116x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.473036s |  0.31% |  9.63% )   ( 6.237932s |  0.07% |  9.74% )    	(116x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.419244s |  0.35% | 11.04% )   ( 7.045332s |  0.08% | 11.01% )    	(116x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.284148s |  0.30% |  9.35% )   ( 5.939932s |  0.07% |  9.28% )    	(116x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.326556s |  0.20% |  6.43% )   ( 3.947796s |  0.04% |  6.17% )    	(116x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.460072s |  0.11% |  3.66% )   ( 2.251464s |  0.02% |  3.51% )    	(116x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.275960s |  0.20% |  6.36% )   ( 4.061392s |  0.05% |  6.34% )    	(116x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.246080s |  0.10% |  3.34% )   ( 2.056132s |  0.02% |  3.21% )    	(116x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.759424s |  0.27% |  8.57% )   ( 5.441580s |  0.06% |  8.50% )    	(116x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 11.331628s |  0.54% | 16.86% )   ( 11.140556s |  0.14% | 17.41% )    	(116x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.454032s |  0.11% |  3.65% )   ( 2.275652s |  0.02% |  3.55% )    	(116x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.332740s |  0.11% |  3.47% )   ( 2.201344s |  0.02% |  3.44% )    	(116x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.008688s |  0.00% |  0.00% )   ( 0.009866s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.008130s |  0.00% |  0.00% )   ( 0.009250s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.015270s |  0.00% |  0.00% )   ( 0.010378s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000316s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000308s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.017660s |  0.00% |  0.02% )   ( 0.017836s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p12 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p12\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000316s |  0.00% |  0.00% )   ( 0.000346s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p12_PID})
-1016.3.0:       ( 69.478874s |  3.33% |  1.66% )   ( 132.669446s |  1.67% |  1.67% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p13 p13_PID >>
-1.4.0:          ( 0.002072s |  0.00% |  0.00% )   ( 0.002116s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p13 p13_PID (&)
-24.4.0:         ( 69.476502s |  3.33% | 99.99% )   ( 66.333496s |  0.83% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000196s |  0.00% |  0.00% )   ( 0.000222s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000204s |  0.00% |  0.00% )   ( 0.000232s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p13
-30.5.0:         ( 0.048320s |  0.00% |  0.06% )   ( 0.048214s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p13 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p13; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.052628s |  0.00% |  0.07% )   ( 0.052514s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.086760s |  0.00% |  0.12% )   ( 0.086480s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.091092s |  0.00% |  0.13% )   ( 0.090808s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.090518s |  0.00% |  0.13% )   ( 0.090220s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000260s |  0.00% |  0.00% )   ( 0.000298s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007614s |  0.00% |  0.00% )   ( 0.008564s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000302s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000258s |  0.00% |  0.00% )   ( 0.000296s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000292s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.008776s |  0.00% |  0.00% )   ( 0.009740s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p13
-41.5.0:         ( 0.448582s |  0.02% |  0.02% )   ( 0.011750s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.007590s |  0.00% |  0.00% )   ( 0.008518s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007322s |  0.00% |  0.00% )   ( 0.008302s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.006686s |  0.00% |  0.00% )   ( 0.007590s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.007062s |  0.00% |  0.00% )   ( 0.007972s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.062820s |  0.00% |  0.00% )   ( 0.055552s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.007134s |  0.00% |  0.00% )   ( 0.008058s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.008148s |  0.00% |  0.00% )   ( 0.009076s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p13
-54.5.0:         ( 0.012842s |  0.00% |  0.00% )   ( 0.007756s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.006728s |  0.00% |  0.00% )   ( 0.007654s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000284s |  0.00% |  0.00% )   ( 0.000312s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000246s |  0.00% |  0.00% )   ( 0.000282s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000292s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 68.467556s |  3.28% |  2.14% )   ( 65.770016s |  0.83% |  2.15% )    	(92x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.013100s |  0.00% |  0.01% )   ( 0.015004s |  0.00% |  0.02% )    	(92x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.381152s |  0.21% |  6.39% )   ( 4.284588s |  0.05% |  6.51% )    	(92x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.973528s |  0.38% | 11.64% )   ( 7.684604s |  0.09% | 11.68% )    	(92x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.547372s |  0.31% |  9.56% )   ( 6.288132s |  0.07% |  9.56% )    	(92x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.888604s |  0.37% | 11.52% )   ( 7.732620s |  0.09% | 11.75% )    	(92x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.253364s |  0.30% |  9.13% )   ( 6.119964s |  0.07% |  9.30% )    	(92x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.130680s |  0.19% |  6.03% )   ( 3.935616s |  0.04% |  5.98% )    	(92x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.229124s |  0.10% |  3.25% )   ( 1.932900s |  0.02% |  2.93% )    	(92x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.440116s |  0.21% |  6.48% )   ( 4.113944s |  0.05% |  6.25% )    	(92x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.738128s |  0.08% |  2.53% )   ( 1.669436s |  0.02% |  2.53% )    	(92x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.776716s |  0.27% |  8.43% )   ( 5.424828s |  0.06% |  8.24% )    	(92x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 13.001672s |  0.62% | 18.98% )   ( 12.786632s |  0.16% | 19.44% )    	(92x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.077956s |  0.09% |  3.03% )   ( 1.934224s |  0.02% |  2.94% )    	(92x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.016044s |  0.09% |  2.94% )   ( 1.847524s |  0.02% |  2.80% )    	(92x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.006984s |  0.00% |  0.00% )   ( 0.007930s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.006414s |  0.00% |  0.00% )   ( 0.007288s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.013404s |  0.00% |  0.00% )   ( 0.008232s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000278s |  0.00% |  0.00% )   ( 0.000316s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000328s |  0.00% |  0.00% )   ( 0.000358s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.018648s |  0.00% |  0.02% )   ( 0.018024s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p13 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p13\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000300s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p13_PID})
-1016.3.0:       ( 82.278906s |  3.94% |  1.97% )   ( 159.354802s |  2.01% |  2.01% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p14 p14_PID >>
-1.4.0:          ( 0.002076s |  0.00% |  0.00% )   ( 0.002112s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p14 p14_PID (&)
-24.4.0:         ( 82.276506s |  3.94% | 99.99% )   ( 79.676168s |  1.00% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000218s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000188s |  0.00% |  0.00% )   ( 0.000212s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p14
-30.5.0:         ( 0.060942s |  0.00% |  0.07% )   ( 0.060592s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p14 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p14; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.057484s |  0.00% |  0.06% )   ( 0.057120s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.054820s |  0.00% |  0.06% )   ( 0.054508s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.059748s |  0.00% |  0.07% )   ( 0.059428s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.056756s |  0.00% |  0.06% )   ( 0.056424s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000306s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008004s |  0.00% |  0.00% )   ( 0.009058s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000306s |  0.00% |  0.00% )   ( 0.000352s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009576s |  0.00% |  0.00% )   ( 0.010672s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p14
-41.5.0:         ( 0.428352s |  0.02% |  0.01% )   ( 0.012964s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008300s |  0.00% |  0.00% )   ( 0.009296s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.008176s |  0.00% |  0.00% )   ( 0.009224s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007432s |  0.00% |  0.00% )   ( 0.008418s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008268s |  0.00% |  0.00% )   ( 0.009314s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.073268s |  0.00% |  0.00% )   ( 0.063714s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.014638s |  0.00% |  0.00% )   ( 0.009686s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009672s |  0.00% |  0.00% )   ( 0.010804s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p14
-54.5.0:         ( 0.013998s |  0.00% |  0.00% )   ( 0.009086s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007528s |  0.00% |  0.00% )   ( 0.008586s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000304s |  0.00% |  0.00% )   ( 0.000342s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000272s |  0.00% |  0.00% )   ( 0.000312s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000270s |  0.00% |  0.00% )   ( 0.000302s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 81.347756s |  3.90% |  1.90% )   ( 79.177968s |  1.00% |  1.91% )    	(104x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.014688s |  0.00% |  0.01% )   ( 0.016732s |  0.00% |  0.02% )    	(104x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.786780s |  0.27% |  7.11% )   ( 5.656284s |  0.07% |  7.14% )    	(104x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.331392s |  0.44% | 11.47% )   ( 9.208936s |  0.11% | 11.63% )    	(104x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.571904s |  0.36% |  9.30% )   ( 7.437904s |  0.09% |  9.39% )    	(104x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 9.318196s |  0.44% | 11.45% )   ( 9.082932s |  0.11% | 11.47% )    	(104x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 7.315708s |  0.35% |  8.99% )   ( 7.179964s |  0.09% |  9.06% )    	(104x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 5.248052s |  0.25% |  6.45% )   ( 5.065456s |  0.06% |  6.39% )    	(104x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.392984s |  0.11% |  2.94% )   ( 2.267584s |  0.02% |  2.86% )    	(104x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 5.540684s |  0.26% |  6.81% )   ( 5.280084s |  0.06% |  6.66% )    	(104x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.176524s |  0.10% |  2.67% )   ( 1.960768s |  0.02% |  2.47% )    	(104x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 6.536992s |  0.31% |  8.03% )   ( 6.370644s |  0.08% |  8.04% )    	(104x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 15.479316s |  0.74% | 19.02% )   ( 15.321848s |  0.19% | 19.35% )    	(104x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.353016s |  0.11% |  2.89% )   ( 2.228960s |  0.02% |  2.81% )    	(104x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.281520s |  0.10% |  2.80% )   ( 2.099872s |  0.02% |  2.65% )    	(104x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007582s |  0.00% |  0.00% )   ( 0.008608s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.007688s |  0.00% |  0.00% )   ( 0.008736s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.014268s |  0.00% |  0.00% )   ( 0.009260s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009854s |  0.00% |  0.01% )   ( 0.009978s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p14 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p14\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000324s |  0.00% |  0.00% )   ( 0.000354s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p14_PID})
-1016.3.0:       ( 67.283326s |  3.22% |  1.61% )   ( 126.184124s |  1.59% |  1.59% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p15 p15_PID >>
-1.4.0:          ( 0.002062s |  0.00% |  0.00% )   ( 0.002106s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p15 p15_PID (&)
-24.4.0:         ( 67.280958s |  3.22% | 99.99% )   ( 63.090836s |  0.79% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000310s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000310s |  0.00% |  0.00% )   ( 0.000350s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p15
-30.5.0:         ( 0.091328s |  0.00% |  0.13% )   ( 0.091034s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p15 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p15; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.091310s |  0.00% |  0.13% )   ( 0.091014s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.091658s |  0.00% |  0.13% )   ( 0.091334s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.090458s |  0.00% |  0.13% )   ( 0.090096s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.084448s |  0.00% |  0.12% )   ( 0.084184s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000276s |  0.00% |  0.00% )   ( 0.000316s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.009084s |  0.00% |  0.00% )   ( 0.010284s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000300s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000292s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000248s |  0.00% |  0.00% )   ( 0.000284s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.011268s |  0.00% |  0.00% )   ( 0.012538s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p15
-41.5.0:         ( 0.171996s |  0.00% |  0.00% )   ( 0.012776s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.009498s |  0.00% |  0.00% )   ( 0.010726s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.009298s |  0.00% |  0.00% )   ( 0.010526s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.008948s |  0.00% |  0.00% )   ( 0.010118s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.009616s |  0.00% |  0.00% )   ( 0.010838s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.086112s |  0.00% |  0.00% )   ( 0.077504s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.010380s |  0.00% |  0.00% )   ( 0.011320s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.010864s |  0.00% |  0.00% )   ( 0.012066s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p15
-54.5.0:         ( 0.011028s |  0.00% |  0.00% )   ( 0.009858s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.008378s |  0.00% |  0.00% )   ( 0.009526s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000278s |  0.00% |  0.00% )   ( 0.000318s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000242s |  0.00% |  0.00% )   ( 0.000278s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000266s |  0.00% |  0.00% )   ( 0.000304s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 66.426416s |  3.18% |  1.70% )   ( 62.392208s |  0.78% |  1.70% )    	(116x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.017304s |  0.00% |  0.02% )   ( 0.019612s |  0.00% |  0.03% )    	(116x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.544156s |  0.21% |  6.84% )   ( 4.163340s |  0.05% |  6.67% )    	(116x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.398760s |  0.35% | 11.13% )   ( 6.903656s |  0.08% | 11.06% )    	(116x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.554184s |  0.31% |  9.86% )   ( 5.986764s |  0.07% |  9.59% )    	(116x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.531044s |  0.36% | 11.33% )   ( 6.934404s |  0.08% | 11.11% )    	(116x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.134748s |  0.29% |  9.23% )   ( 5.815692s |  0.07% |  9.32% )    	(116x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.041644s |  0.19% |  6.08% )   ( 3.858604s |  0.04% |  6.18% )    	(116x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.470888s |  0.11% |  3.71% )   ( 2.264696s |  0.02% |  3.62% )    	(116x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.172244s |  0.20% |  6.28% )   ( 3.931364s |  0.04% |  6.30% )    	(116x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.274668s |  0.10% |  3.42% )   ( 2.019464s |  0.02% |  3.23% )    	(116x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.664248s |  0.27% |  8.52% )   ( 5.267528s |  0.06% |  8.44% )    	(116x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 11.138632s |  0.53% | 16.76% )   ( 10.783844s |  0.13% | 17.28% )    	(116x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.269708s |  0.10% |  3.41% )   ( 2.248700s |  0.02% |  3.60% )    	(116x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.214188s |  0.10% |  3.33% )   ( 2.194540s |  0.02% |  3.51% )    	(116x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.008894s |  0.00% |  0.00% )   ( 0.010076s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.008174s |  0.00% |  0.00% )   ( 0.009280s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008988s |  0.00% |  0.00% )   ( 0.010094s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-55.5.0:         ( 0.000416s |  0.00% |  0.00% )   ( 0.000470s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.000404s |  0.00% |  0.00% )   ( 0.000458s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   ${doneIndicatorFlag}
-65.5.0:         ( 0.000442s |  0.00% |  0.00% )   ( 0.000496s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf 'x\n' >&${fd_nAuto0}
-67.5.0:         ( 0.000480s |  0.00% |  0.00% )   ( 0.000536s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   : > "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit
-68.5.0:         ( 0.000654s |  0.00% |  0.00% )   ( 0.000726s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%.0s\n' "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p* 1>&21
-69.5.0:         ( 0.000322s |  0.00% |  0.00% )   ( 0.000358s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--69.5.0:        ( 0.017602s |  0.00% |  0.02% )   ( 0.017564s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p15 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p15\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000306s |  0.00% |  0.00% )   ( 0.000346s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p15_PID})
-1016.3.0:       ( 70.647716s |  3.39% |  1.69% )   ( 137.235770s |  1.73% |  1.73% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p16 p16_PID >>
-1.4.0:          ( 0.002150s |  0.00% |  0.00% )   ( 0.002192s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p16 p16_PID (&)
-24.4.0:         ( 70.645260s |  3.39% | 99.99% )   ( 68.616616s |  0.86% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000358s |  0.00% |  0.00% )   ( 0.000404s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000356s |  0.00% |  0.00% )   ( 0.000402s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p16
-30.5.0:         ( 0.091052s |  0.00% |  0.12% )   ( 0.090744s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p16 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p16; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.092428s |  0.00% |  0.13% )   ( 0.092086s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.091322s |  0.00% |  0.12% )   ( 0.090998s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.091266s |  0.00% |  0.12% )   ( 0.090948s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.090968s |  0.00% |  0.12% )   ( 0.090674s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000270s |  0.00% |  0.00% )   ( 0.000308s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.006424s |  0.00% |  0.00% )   ( 0.007220s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000300s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000292s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000252s |  0.00% |  0.00% )   ( 0.000290s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.007954s |  0.00% |  0.00% )   ( 0.008774s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p16
-41.5.0:         ( 0.212666s |  0.01% |  0.01% )   ( 0.009480s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.006768s |  0.00% |  0.00% )   ( 0.007674s |  0.00% |  0.00% )    	(42x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.012626s |  0.00% |  0.00% )   ( 0.007448s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.006408s |  0.00% |  0.00% )   ( 0.006802s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.006312s |  0.00% |  0.00% )   ( 0.007108s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.055558s |  0.00% |  0.00% )   ( 0.050178s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.006224s |  0.00% |  0.00% )   ( 0.007028s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.007122s |  0.00% |  0.00% )   ( 0.007888s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p16
-54.5.0:         ( 0.006030s |  0.00% |  0.00% )   ( 0.006868s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.005894s |  0.00% |  0.00% )   ( 0.006706s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000284s |  0.00% |  0.00% )   ( 0.000320s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000272s |  0.00% |  0.00% )   ( 0.000308s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000308s |  0.00% |  0.00% )   ( 0.000370s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 69.808440s |  3.35% |  2.47% )   ( 67.985412s |  0.85% |  2.47% )    	(80x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.011840s |  0.00% |  0.01% )   ( 0.013452s |  0.00% |  0.01% )    	(80x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.446324s |  0.21% |  6.36% )   ( 4.374644s |  0.05% |  6.43% )    	(80x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 8.319372s |  0.39% | 11.91% )   ( 8.189904s |  0.10% | 12.04% )    	(80x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.768580s |  0.32% |  9.69% )   ( 6.554216s |  0.08% |  9.64% )    	(80x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.236836s |  0.39% | 11.79% )   ( 8.121816s |  0.10% | 11.94% )    	(80x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.605828s |  0.31% |  9.46% )   ( 6.307000s |  0.07% |  9.27% )    	(80x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.108464s |  0.19% |  5.88% )   ( 4.042112s |  0.05% |  5.94% )    	(80x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 1.874816s |  0.08% |  2.68% )   ( 1.809572s |  0.02% |  2.66% )    	(80x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.631104s |  0.22% |  6.63% )   ( 4.338876s |  0.05% |  6.38% )    	(80x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.667556s |  0.08% |  2.38% )   ( 1.522964s |  0.01% |  2.24% )    	(80x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.640352s |  0.27% |  8.07% )   ( 5.578044s |  0.07% |  8.20% )    	(80x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 13.895140s |  0.66% | 19.90% )   ( 13.770500s |  0.17% | 20.25% )    	(80x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.795968s |  0.08% |  2.57% )   ( 1.734180s |  0.02% |  2.55% )    	(80x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.806260s |  0.08% |  2.58% )   ( 1.628132s |  0.02% |  2.39% )    	(80x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.006248s |  0.00% |  0.00% )   ( 0.007000s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.005758s |  0.00% |  0.00% )   ( 0.006494s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.006352s |  0.00% |  0.00% )   ( 0.007156s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000320s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000312s |  0.00% |  0.00% )   ( 0.000352s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.018154s |  0.00% |  0.02% )   ( 0.018198s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p16 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p16\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000306s |  0.00% |  0.00% )   ( 0.000346s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p16_PID})
-1016.3.0:       ( 74.054090s |  3.55% |  1.77% )   ( 144.672950s |  1.82% |  1.82% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p17 p17_PID >>
-1.4.0:          ( 0.002008s |  0.00% |  0.00% )   ( 0.002044s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p17 p17_PID (&)
-24.4.0:         ( 74.051778s |  3.55% | 99.99% )   ( 72.335282s |  0.91% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000190s |  0.00% |  0.00% )   ( 0.000216s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000190s |  0.00% |  0.00% )   ( 0.000214s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p17
-30.5.0:         ( 0.069606s |  0.00% |  0.09% )   ( 0.069336s |  0.00% |  0.09% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p17 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p17; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.091032s |  0.00% |  0.12% )   ( 0.090584s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.090348s |  0.00% |  0.12% )   ( 0.089912s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.090236s |  0.00% |  0.12% )   ( 0.089864s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.100094s |  0.00% |  0.13% )   ( 0.099718s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000272s |  0.00% |  0.00% )   ( 0.000314s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.003408s |  0.00% |  0.00% )   ( 0.003862s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000336s |  0.00% |  0.00% )   ( 0.000378s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000294s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000266s |  0.00% |  0.00% )   ( 0.000302s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003758s |  0.00% |  0.00% )   ( 0.004176s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p17
-41.5.0:         ( 0.137358s |  0.00% |  0.01% )   ( 0.004698s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.003424s |  0.00% |  0.00% )   ( 0.003876s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.003024s |  0.00% |  0.00% )   ( 0.003412s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.002564s |  0.00% |  0.00% )   ( 0.002932s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002768s |  0.00% |  0.00% )   ( 0.003154s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.023600s |  0.00% |  0.00% )   ( 0.023930s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.003258s |  0.00% |  0.00% )   ( 0.003676s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.003616s |  0.00% |  0.00% )   ( 0.004058s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p17
-54.5.0:         ( 0.002986s |  0.00% |  0.00% )   ( 0.003370s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007208s |  0.00% |  0.00% )   ( 0.003250s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000308s |  0.00% |  0.00% )   ( 0.000346s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000240s |  0.00% |  0.00% )   ( 0.000280s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000260s |  0.00% |  0.00% )   ( 0.000300s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 73.384444s |  3.52% |  4.95% )   ( 71.800792s |  0.90% |  4.96% )    	(40x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.005452s |  0.00% |  0.00% )   ( 0.006156s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.442980s |  0.21% |  6.05% )   ( 4.350052s |  0.05% |  6.05% )    	(40x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.354652s |  0.44% | 12.74% )   ( 9.115176s |  0.11% | 12.69% )    	(40x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.803884s |  0.32% |  9.27% )   ( 6.755488s |  0.08% |  9.40% )    	(40x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 9.448780s |  0.45% | 12.87% )   ( 9.286864s |  0.11% | 12.93% )    	(40x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.906440s |  0.33% |  9.41% )   ( 6.838168s |  0.08% |  9.52% )    	(40x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.209960s |  0.20% |  5.73% )   ( 4.077708s |  0.05% |  5.67% )    	(40x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 1.347600s |  0.06% |  1.83% )   ( 1.263052s |  0.01% |  1.75% )    	(40x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.868740s |  0.23% |  6.63% )   ( 4.681268s |  0.05% |  6.51% )    	(40x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.053368s |  0.05% |  1.43% )   ( 1.028396s |  0.01% |  1.43% )    	(40x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 6.010672s |  0.28% |  8.19% )   ( 5.825164s |  0.07% |  8.11% )    	(40x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 16.583816s |  0.79% | 22.59% )   ( 16.437492s |  0.20% | 22.89% )    	(40x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.322316s |  0.06% |  1.80% )   ( 1.147832s |  0.01% |  1.59% )    	(40x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.025784s |  0.04% |  1.39% )   ( 0.987976s |  0.01% |  1.37% )    	(40x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003104s |  0.00% |  0.00% )   ( 0.003480s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002558s |  0.00% |  0.00% )   ( 0.002900s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002674s |  0.00% |  0.00% )   ( 0.003038s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000294s |  0.00% |  0.00% )   ( 0.000330s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.017794s |  0.00% |  0.02% )   ( 0.017952s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p17 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p17\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000304s |  0.00% |  0.00% )   ( 0.000342s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p17_PID})
-1016.3.0:       ( 72.723180s |  3.49% |  1.74% )   ( 139.867826s |  1.76% |  1.76% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p18 p18_PID >>
-1.4.0:          ( 0.002050s |  0.00% |  0.00% )   ( 0.002096s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p18 p18_PID (&)
-24.4.0:         ( 72.720824s |  3.49% | 99.99% )   ( 69.932692s |  0.88% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000310s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000302s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p18
-30.5.0:         ( 0.089074s |  0.00% |  0.12% )   ( 0.088788s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p18 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p18; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.090786s |  0.00% |  0.12% )   ( 0.090440s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.084226s |  0.00% |  0.11% )   ( 0.083920s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.089786s |  0.00% |  0.12% )   ( 0.089418s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.087948s |  0.00% |  0.12% )   ( 0.087662s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000274s |  0.00% |  0.00% )   ( 0.000312s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.004660s |  0.00% |  0.00% )   ( 0.005288s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000300s |  0.00% |  0.00% )   ( 0.000336s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000272s |  0.00% |  0.00% )   ( 0.000308s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000276s |  0.00% |  0.00% )   ( 0.000314s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005418s |  0.00% |  0.00% )   ( 0.006006s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p18
-41.5.0:         ( 0.259796s |  0.01% |  0.02% )   ( 0.006796s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.004692s |  0.00% |  0.00% )   ( 0.005322s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.004372s |  0.00% |  0.00% )   ( 0.004900s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.004144s |  0.00% |  0.00% )   ( 0.004722s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004654s |  0.00% |  0.00% )   ( 0.005256s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.040714s |  0.00% |  0.00% )   ( 0.035218s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.004818s |  0.00% |  0.00% )   ( 0.005440s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.005362s |  0.00% |  0.00% )   ( 0.005996s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p18
-54.5.0:         ( 0.004622s |  0.00% |  0.00% )   ( 0.005206s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004326s |  0.00% |  0.00% )   ( 0.004930s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000276s |  0.00% |  0.00% )   ( 0.000314s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000250s |  0.00% |  0.00% )   ( 0.000288s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000268s |  0.00% |  0.00% )   ( 0.000304s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 71.898556s |  3.45% |  3.29% )   ( 69.362244s |  0.87% |  3.30% )    	(60x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.008616s |  0.00% |  0.01% )   ( 0.009832s |  0.00% |  0.01% )    	(60x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.608280s |  0.22% |  6.40% )   ( 4.447988s |  0.05% |  6.41% )    	(60x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.569180s |  0.45% | 13.30% )   ( 8.787548s |  0.11% | 12.66% )    	(60x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.111008s |  0.34% |  9.89% )   ( 6.630312s |  0.08% |  9.55% )    	(60x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.900556s |  0.42% | 12.37% )   ( 8.793628s |  0.11% | 12.67% )    	(60x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.770752s |  0.32% |  9.41% )   ( 6.583380s |  0.08% |  9.49% )    	(60x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.189396s |  0.20% |  5.82% )   ( 4.021572s |  0.05% |  5.79% )    	(60x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 1.611868s |  0.07% |  2.24% )   ( 1.515896s |  0.01% |  2.18% )    	(60x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.625292s |  0.22% |  6.43% )   ( 4.538376s |  0.05% |  6.54% )    	(60x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.280268s |  0.06% |  1.78% )   ( 1.229064s |  0.01% |  1.77% )    	(60x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.611080s |  0.26% |  7.80% )   ( 5.500292s |  0.06% |  7.92% )    	(60x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 14.729620s |  0.70% | 20.48% )   ( 14.610188s |  0.18% | 21.06% )    	(60x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.511796s |  0.07% |  2.10% )   ( 1.403472s |  0.01% |  2.02% )    	(60x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.370844s |  0.06% |  1.90% )   ( 1.290696s |  0.01% |  1.86% )    	(60x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004048s |  0.00% |  0.00% )   ( 0.004608s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.004236s |  0.00% |  0.00% )   ( 0.004788s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004562s |  0.00% |  0.00% )   ( 0.005134s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000274s |  0.00% |  0.00% )   ( 0.000310s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000272s |  0.00% |  0.00% )   ( 0.000308s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.016950s |  0.00% |  0.02% )   ( 0.017112s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p18 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p18\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000306s |  0.00% |  0.00% )   ( 0.000346s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p18_PID})
-1016.3.0:       ( 74.276912s |  3.56% |  1.78% )   ( 141.235912s |  1.78% |  1.78% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p19 p19_PID >>
-1.4.0:          ( 0.002106s |  0.00% |  0.00% )   ( 0.002160s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p19 p19_PID (&)
-24.4.0:         ( 74.274488s |  3.56% | 99.99% )   ( 70.616698s |  0.89% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000314s |  0.00% |  0.00% )   ( 0.000354s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000322s |  0.00% |  0.00% )   ( 0.000364s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p19
-30.5.0:         ( 0.091458s |  0.00% |  0.12% )   ( 0.091072s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p19 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p19; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.091318s |  0.00% |  0.12% )   ( 0.090994s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.091060s |  0.00% |  0.12% )   ( 0.090744s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.088868s |  0.00% |  0.11% )   ( 0.088526s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.095818s |  0.00% |  0.12% )   ( 0.095442s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000458s |  0.00% |  0.00% )   ( 0.000492s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008308s |  0.00% |  0.00% )   ( 0.009418s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000316s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000244s |  0.00% |  0.00% )   ( 0.000282s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000246s |  0.00% |  0.00% )   ( 0.000284s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009894s |  0.00% |  0.00% )   ( 0.011022s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p19
-41.5.0:         ( 0.467384s |  0.02% |  0.02% )   ( 0.013498s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008912s |  0.00% |  0.00% )   ( 0.009966s |  0.00% |  0.00% )    	(56x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.008538s |  0.00% |  0.00% )   ( 0.009610s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.008046s |  0.00% |  0.00% )   ( 0.008772s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.008632s |  0.00% |  0.00% )   ( 0.009712s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.066588s |  0.00% |  0.00% )   ( 0.067456s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.028506s |  0.00% |  0.00% )   ( 0.010146s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009590s |  0.00% |  0.00% )   ( 0.010702s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p19
-54.5.0:         ( 0.008100s |  0.00% |  0.00% )   ( 0.009178s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007690s |  0.00% |  0.00% )   ( 0.008746s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000374s |  0.00% |  0.00% )   ( 0.000428s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000330s |  0.00% |  0.00% )   ( 0.000382s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000370s |  0.00% |  0.00% )   ( 0.000420s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 73.131540s |  3.50% |  1.82% )   ( 69.933860s |  0.88% |  1.83% )    	(108x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.015876s |  0.00% |  0.02% )   ( 0.018024s |  0.00% |  0.02% )    	(108x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.358044s |  0.25% |  7.32% )   ( 4.842516s |  0.06% |  6.92% )    	(108x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.115308s |  0.43% | 12.46% )   ( 8.567220s |  0.10% | 12.25% )    	(108x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.577964s |  0.36% | 10.36% )   ( 7.094516s |  0.08% | 10.14% )    	(108x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.732680s |  0.41% | 11.94% )   ( 8.467008s |  0.10% | 12.10% )    	(108x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.716712s |  0.32% |  9.18% )   ( 6.229480s |  0.07% |  8.90% )    	(108x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.349104s |  0.20% |  5.94% )   ( 4.272500s |  0.05% |  6.10% )    	(108x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.224960s |  0.10% |  3.04% )   ( 2.165564s |  0.02% |  3.09% )    	(108x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.706292s |  0.22% |  6.43% )   ( 4.444896s |  0.05% |  6.35% )    	(108x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.998208s |  0.09% |  2.73% )   ( 1.908312s |  0.02% |  2.72% )    	(108x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.669680s |  0.27% |  7.75% )   ( 5.565460s |  0.07% |  7.95% )    	(108x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 12.249912s |  0.58% | 16.75% )   ( 12.145592s |  0.15% | 17.36% )    	(108x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.264072s |  0.10% |  3.09% )   ( 2.151524s |  0.02% |  3.07% )    	(108x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.152728s |  0.10% |  2.94% )   ( 2.061248s |  0.02% |  2.94% )    	(108x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007896s |  0.00% |  0.00% )   ( 0.008908s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.007626s |  0.00% |  0.00% )   ( 0.008628s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008030s |  0.00% |  0.00% )   ( 0.009012s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000262s |  0.00% |  0.00% )   ( 0.000296s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000276s |  0.00% |  0.00% )   ( 0.000312s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.017174s |  0.00% |  0.02% )   ( 0.017316s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p19 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p19\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000318s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p19_PID})
-1016.3.0:       ( 70.993516s |  3.40% |  1.70% )   ( 136.602290s |  1.72% |  1.72% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p20 p20_PID >>
-1.4.0:          ( 0.001904s |  0.00% |  0.00% )   ( 0.001950s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p20 p20_PID (&)
-24.4.0:         ( 70.991220s |  3.40% | 99.99% )   ( 68.299956s |  0.86% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000318s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000346s |  0.00% |  0.00% )   ( 0.000378s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p20
-30.5.0:         ( 0.091932s |  0.00% |  0.12% )   ( 0.091610s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p20 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p20; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.092596s |  0.00% |  0.13% )   ( 0.092252s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.091938s |  0.00% |  0.12% )   ( 0.091604s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.092486s |  0.00% |  0.13% )   ( 0.092146s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.091726s |  0.00% |  0.12% )   ( 0.091404s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000346s |  0.00% |  0.00% )   ( 0.000388s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.006280s |  0.00% |  0.00% )   ( 0.007074s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000310s |  0.00% |  0.00% )   ( 0.000350s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000262s |  0.00% |  0.00% )   ( 0.000300s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000290s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.007338s |  0.00% |  0.00% )   ( 0.008166s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p20
-41.5.0:         ( 0.059624s |  0.00% |  0.00% )   ( 0.008074s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.006534s |  0.00% |  0.00% )   ( 0.007420s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.006010s |  0.00% |  0.00% )   ( 0.006810s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.005720s |  0.00% |  0.00% )   ( 0.006504s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.005866s |  0.00% |  0.00% )   ( 0.006588s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.058086s |  0.00% |  0.00% )   ( 0.052750s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.012398s |  0.00% |  0.00% )   ( 0.007226s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.006806s |  0.00% |  0.00% )   ( 0.007590s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p20
-54.5.0:         ( 0.005716s |  0.00% |  0.00% )   ( 0.006490s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.005344s |  0.00% |  0.00% )   ( 0.006074s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000340s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000290s |  0.00% |  0.00% )   ( 0.000336s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000340s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 70.307240s |  3.37% |  2.60% )   ( 67.669868s |  0.85% |  2.60% )    	(76x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.011400s |  0.00% |  0.01% )   ( 0.013052s |  0.00% |  0.01% )    	(76x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.743832s |  0.22% |  6.74% )   ( 4.469392s |  0.05% |  6.60% )    	(76x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 8.262244s |  0.39% | 11.75% )   ( 8.129268s |  0.10% | 12.01% )    	(76x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.961440s |  0.33% |  9.90% )   ( 6.519608s |  0.08% |  9.63% )    	(76x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 8.587084s |  0.41% | 12.21% )   ( 8.159240s |  0.10% | 12.05% )    	(76x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.732472s |  0.32% |  9.57% )   ( 6.400716s |  0.08% |  9.45% )    	(76x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.192008s |  0.20% |  5.96% )   ( 3.961736s |  0.05% |  5.85% )    	(76x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 1.881848s |  0.09% |  2.67% )   ( 1.757712s |  0.02% |  2.59% )    	(76x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.449028s |  0.21% |  6.32% )   ( 4.288508s |  0.05% |  6.33% )    	(76x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.602748s |  0.07% |  2.27% )   ( 1.499872s |  0.01% |  2.21% )    	(76x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.600984s |  0.26% |  7.96% )   ( 5.510356s |  0.06% |  8.14% )    	(76x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 13.899956s |  0.66% | 19.77% )   ( 13.739244s |  0.17% | 20.30% )    	(76x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.699652s |  0.08% |  2.41% )   ( 1.645008s |  0.02% |  2.43% )    	(76x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.682544s |  0.08% |  2.39% )   ( 1.576156s |  0.01% |  2.32% )    	(76x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.005774s |  0.00% |  0.00% )   ( 0.006528s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.005070s |  0.00% |  0.00% )   ( 0.005784s |  0.00% |  0.00% )    	(36x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.005684s |  0.00% |  0.00% )   ( 0.006368s |  0.00% |  0.00% )    	(36x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000330s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000292s |  0.00% |  0.00% )   ( 0.000330s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.017746s |  0.00% |  0.02% )   ( 0.017888s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p20 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p20\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000392s |  0.00% |  0.00% )   ( 0.000428s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p20_PID})
-1016.3.0:       ( 66.812126s |  3.20% |  1.60% )   ( 128.406772s |  1.62% |  1.62% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p21 p21_PID >>
-1.4.0:          ( 0.002248s |  0.00% |  0.00% )   ( 0.002288s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p21 p21_PID (&)
-24.4.0:         ( 66.809538s |  3.20% | 99.99% )   ( 64.202056s |  0.81% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000374s |  0.00% |  0.00% )   ( 0.000420s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000328s |  0.00% |  0.00% )   ( 0.000368s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p21
-30.5.0:         ( 0.101622s |  0.00% |  0.15% )   ( 0.100762s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p21 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p21; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.102596s |  0.00% |  0.15% )   ( 0.101480s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.100048s |  0.00% |  0.14% )   ( 0.098968s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.103650s |  0.00% |  0.15% )   ( 0.102904s |  0.00% |  0.16% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.098610s |  0.00% |  0.14% )   ( 0.097856s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000266s |  0.00% |  0.00% )   ( 0.000304s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008842s |  0.00% |  0.00% )   ( 0.010006s |  0.00% |  0.00% )    	(62x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000302s |  0.00% |  0.00% )   ( 0.000344s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000262s |  0.00% |  0.00% )   ( 0.000304s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000290s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.010982s |  0.00% |  0.00% )   ( 0.012194s |  0.00% |  0.00% )    	(62x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p21
-41.5.0:         ( 0.356658s |  0.01% |  0.01% )   ( 0.013692s |  0.00% |  0.00% )    	(62x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.010366s |  0.00% |  0.00% )   ( 0.011684s |  0.00% |  0.00% )    	(62x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.009162s |  0.00% |  0.00% )   ( 0.010392s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.008630s |  0.00% |  0.00% )   ( 0.009810s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.009230s |  0.00% |  0.00% )   ( 0.010442s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.072954s |  0.00% |  0.00% )   ( 0.073980s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.015724s |  0.00% |  0.00% )   ( 0.011154s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.011034s |  0.00% |  0.00% )   ( 0.012294s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p21
-54.5.0:         ( 0.009146s |  0.00% |  0.00% )   ( 0.010366s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.008910s |  0.00% |  0.00% )   ( 0.010154s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000342s |  0.00% |  0.00% )   ( 0.000386s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000276s |  0.00% |  0.00% )   ( 0.000318s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 65.718260s |  3.15% |  1.63% )   ( 63.446620s |  0.80% |  1.64% )    	(120x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.017828s |  0.00% |  0.02% )   ( 0.020276s |  0.00% |  0.03% )    	(120x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.401128s |  0.21% |  6.69% )   ( 4.299516s |  0.05% |  6.77% )    	(120x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.327552s |  0.35% | 11.14% )   ( 7.037780s |  0.08% | 11.09% )    	(120x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.305648s |  0.30% |  9.59% )   ( 6.038992s |  0.07% |  9.51% )    	(120x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.095820s |  0.34% | 10.79% )   ( 6.932020s |  0.08% | 10.92% )    	(120x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.117416s |  0.29% |  9.30% )   ( 5.836636s |  0.07% |  9.19% )    	(120x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 3.994916s |  0.19% |  6.07% )   ( 3.945392s |  0.04% |  6.21% )    	(120x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.442364s |  0.11% |  3.71% )   ( 2.363160s |  0.02% |  3.72% )    	(120x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.361908s |  0.20% |  6.63% )   ( 4.011728s |  0.05% |  6.32% )    	(120x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.104940s |  0.10% |  3.20% )   ( 2.067428s |  0.02% |  3.25% )    	(120x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.628820s |  0.27% |  8.56% )   ( 5.427720s |  0.06% |  8.55% )    	(120x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 11.253448s |  0.54% | 17.12% )   ( 10.895828s |  0.13% | 17.17% )    	(120x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.364276s |  0.11% |  3.59% )   ( 2.321892s |  0.02% |  3.65% )    	(120x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.302196s |  0.11% |  3.50% )   ( 2.248252s |  0.02% |  3.54% )    	(120x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.008732s |  0.00% |  0.00% )   ( 0.009862s |  0.00% |  0.00% )    	(60x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.008584s |  0.00% |  0.00% )   ( 0.009774s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.009488s |  0.00% |  0.00% )   ( 0.010710s |  0.00% |  0.00% )    	(58x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000418s |  0.00% |  0.00% )   ( 0.000478s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000430s |  0.00% |  0.00% )   ( 0.000480s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.022752s |  0.00% |  0.03% )   ( 0.022922s |  0.00% |  0.03% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p21 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p21\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000340s |  0.00% |  0.00% )   ( 0.000372s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p21_PID})
-1016.3.0:       ( 68.422518s |  3.28% |  1.64% )   ( 130.697790s |  1.65% |  1.65% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p22 p22_PID >>
-1.4.0:          ( 0.002096s |  0.00% |  0.00% )   ( 0.002154s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p22 p22_PID (&)
-24.4.0:         ( 68.420102s |  3.28% | 99.99% )   ( 65.347640s |  0.82% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000316s |  0.00% |  0.00% )   ( 0.000358s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000350s |  0.00% |  0.00% )   ( 0.000390s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p22
-30.5.0:         ( 0.094984s |  0.00% |  0.13% )   ( 0.093054s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p22 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p22; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.095232s |  0.00% |  0.13% )   ( 0.094580s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.094118s |  0.00% |  0.13% )   ( 0.093426s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.100752s |  0.00% |  0.14% )   ( 0.100044s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.091292s |  0.00% |  0.13% )   ( 0.090750s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000288s |  0.00% |  0.00% )   ( 0.000314s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.008082s |  0.00% |  0.00% )   ( 0.009130s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000304s |  0.00% |  0.00% )   ( 0.000344s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000252s |  0.00% |  0.00% )   ( 0.000288s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000242s |  0.00% |  0.00% )   ( 0.000280s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009702s |  0.00% |  0.00% )   ( 0.010806s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p22
-41.5.0:         ( 0.212576s |  0.01% |  0.01% )   ( 0.011578s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008386s |  0.00% |  0.00% )   ( 0.009480s |  0.00% |  0.00% )    	(54x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.008242s |  0.00% |  0.00% )   ( 0.009396s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007478s |  0.00% |  0.00% )   ( 0.008484s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.010462s |  0.00% |  0.00% )   ( 0.009288s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.070052s |  0.00% |  0.00% )   ( 0.064918s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.007990s |  0.00% |  0.00% )   ( 0.008980s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009296s |  0.00% |  0.00% )   ( 0.010270s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p22
-54.5.0:         ( 0.007434s |  0.00% |  0.00% )   ( 0.008462s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007488s |  0.00% |  0.00% )   ( 0.008504s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000304s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000240s |  0.00% |  0.00% )   ( 0.000278s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000290s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 67.533552s |  3.24% |  1.89% )   ( 64.659896s |  0.81% |  1.90% )    	(104x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.016080s |  0.00% |  0.02% )   ( 0.018212s |  0.00% |  0.02% )    	(104x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.618740s |  0.22% |  6.83% )   ( 4.332908s |  0.05% |  6.70% )    	(104x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.636488s |  0.36% | 11.30% )   ( 7.434172s |  0.09% | 11.49% )    	(104x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.646528s |  0.31% |  9.84% )   ( 6.211344s |  0.07% |  9.60% )    	(104x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.685888s |  0.36% | 11.38% )   ( 7.318792s |  0.09% | 11.31% )    	(104x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.242508s |  0.29% |  9.24% )   ( 5.980452s |  0.07% |  9.24% )    	(104x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 3.998836s |  0.19% |  5.92% )   ( 3.922720s |  0.04% |  6.06% )    	(104x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.286008s |  0.10% |  3.38% )   ( 2.113128s |  0.02% |  3.26% )    	(104x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.303608s |  0.20% |  6.37% )   ( 4.094008s |  0.05% |  6.33% )    	(104x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.898284s |  0.09% |  2.81% )   ( 1.818816s |  0.02% |  2.81% )    	(104x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.692256s |  0.27% |  8.42% )   ( 5.461988s |  0.06% |  8.44% )    	(104x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 12.198272s |  0.58% | 18.06% )   ( 11.876484s |  0.15% | 18.36% )    	(104x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.236252s |  0.10% |  3.31% )   ( 2.083060s |  0.02% |  3.22% )    	(104x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.073804s |  0.09% |  3.07% )   ( 1.993812s |  0.02% |  3.08% )    	(104x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007968s |  0.00% |  0.00% )   ( 0.008966s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.007418s |  0.00% |  0.00% )   ( 0.008424s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008216s |  0.00% |  0.00% )   ( 0.009242s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000276s |  0.00% |  0.00% )   ( 0.000314s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000286s |  0.00% |  0.00% )   ( 0.000326s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.016310s |  0.00% |  0.02% )   ( 0.016476s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p22 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p22\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000320s |  0.00% |  0.00% )   ( 0.000356s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p22_PID})
-1016.3.0:       ( 78.890798s |  3.78% |  1.89% )   ( 154.145444s |  1.94% |  1.94% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p23 p23_PID >>
-1.4.0:          ( 0.002128s |  0.00% |  0.00% )   ( 0.002174s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p23 p23_PID (&)
-24.4.0:         ( 78.888348s |  3.78% | 99.99% )   ( 77.071454s |  0.97% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000326s |  0.00% |  0.00% )   ( 0.000364s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000370s |  0.00% |  0.00% )   ( 0.000406s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p23
-30.5.0:         ( 0.086486s |  0.00% |  0.10% )   ( 0.086170s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p23 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p23; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.091042s |  0.00% |  0.11% )   ( 0.090696s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.091084s |  0.00% |  0.11% )   ( 0.090754s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.091134s |  0.00% |  0.11% )   ( 0.090806s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.090870s |  0.00% |  0.11% )   ( 0.090550s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000282s |  0.00% |  0.00% )   ( 0.000308s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.005744s |  0.00% |  0.00% )   ( 0.006512s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000320s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000258s |  0.00% |  0.00% )   ( 0.000294s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000264s |  0.00% |  0.00% )   ( 0.000294s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.007174s |  0.00% |  0.00% )   ( 0.007944s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p23
-41.5.0:         ( 0.316744s |  0.01% |  0.02% )   ( 0.009302s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.006534s |  0.00% |  0.00% )   ( 0.007334s |  0.00% |  0.00% )    	(40x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.006626s |  0.00% |  0.00% )   ( 0.007344s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.005784s |  0.00% |  0.00% )   ( 0.006488s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.006106s |  0.00% |  0.00% )   ( 0.006876s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.050856s |  0.00% |  0.00% )   ( 0.045368s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.008606s |  0.00% |  0.00% )   ( 0.006700s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.006424s |  0.00% |  0.00% )   ( 0.007170s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p23
-54.5.0:         ( 0.011888s |  0.00% |  0.00% )   ( 0.006636s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.005542s |  0.00% |  0.00% )   ( 0.006338s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000262s |  0.00% |  0.00% )   ( 0.000300s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000242s |  0.00% |  0.00% )   ( 0.000278s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000252s |  0.00% |  0.00% )   ( 0.000286s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 77.969312s |  3.74% |  2.60% )   ( 76.465344s |  0.96% |  2.61% )    	(76x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.011400s |  0.00% |  0.01% )   ( 0.012832s |  0.00% |  0.01% )    	(76x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.469688s |  0.26% |  7.01% )   ( 5.387024s |  0.06% |  7.04% )    	(76x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 10.492980s |  0.50% | 13.45% )   ( 10.323480s |  0.13% | 13.50% )    	(76x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 8.037300s |  0.38% | 10.30% )   ( 7.906980s |  0.09% | 10.34% )    	(76x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 10.435996s |  0.50% | 13.38% )   ( 10.246196s |  0.12% | 13.39% )    	(76x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 7.896064s |  0.37% | 10.12% )   ( 7.742024s |  0.09% | 10.12% )    	(76x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 5.025884s |  0.24% |  6.44% )   ( 4.889580s |  0.06% |  6.39% )    	(76x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 1.908228s |  0.09% |  2.44% )   ( 1.845100s |  0.02% |  2.41% )    	(76x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 5.158560s |  0.24% |  6.61% )   ( 5.040852s |  0.06% |  6.59% )    	(76x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.628672s |  0.07% |  2.08% )   ( 1.516672s |  0.01% |  1.98% )    	(76x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.504728s |  0.26% |  7.06% )   ( 5.404232s |  0.06% |  7.06% )    	(76x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 13.003432s |  0.62% | 16.67% )   ( 12.840836s |  0.16% | 16.79% )    	(76x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.718636s |  0.08% |  2.20% )   ( 1.711832s |  0.02% |  2.23% )    	(76x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.677744s |  0.08% |  2.15% )   ( 1.597704s |  0.02% |  2.08% )    	(76x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.005704s |  0.00% |  0.00% )   ( 0.006438s |  0.00% |  0.00% )    	(38x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.005462s |  0.00% |  0.00% )   ( 0.006218s |  0.00% |  0.00% )    	(36x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.005910s |  0.00% |  0.00% )   ( 0.006642s |  0.00% |  0.00% )    	(36x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.010422s |  0.00% |  0.01% )   ( 0.010582s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p23 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p23\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000322s |  0.00% |  0.00% )   ( 0.000362s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p23_PID})
-1016.3.0:       ( 68.414326s |  3.28% |  1.64% )   ( 132.940954s |  1.67% |  1.67% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p24 p24_PID >>
-1.4.0:          ( 0.002150s |  0.00% |  0.00% )   ( 0.002192s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p24 p24_PID (&)
-24.4.0:         ( 68.411858s |  3.28% | 99.99% )   ( 66.469202s |  0.83% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000326s |  0.00% |  0.00% )   ( 0.000354s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000322s |  0.00% |  0.00% )   ( 0.000364s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p24
-30.5.0:         ( 0.091176s |  0.00% |  0.13% )   ( 0.090664s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p24 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p24; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.090968s |  0.00% |  0.13% )   ( 0.090586s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.091140s |  0.00% |  0.13% )   ( 0.090800s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.091090s |  0.00% |  0.13% )   ( 0.090742s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.091846s |  0.00% |  0.13% )   ( 0.091452s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000286s |  0.00% |  0.00% )   ( 0.000324s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007354s |  0.00% |  0.00% )   ( 0.008282s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000304s |  0.00% |  0.00% )   ( 0.000346s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000268s |  0.00% |  0.00% )   ( 0.000298s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000278s |  0.00% |  0.00% )   ( 0.000326s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.008656s |  0.00% |  0.00% )   ( 0.009610s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p24
-41.5.0:         ( 0.345944s |  0.01% |  0.02% )   ( 0.011000s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.008108s |  0.00% |  0.00% )   ( 0.009056s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007730s |  0.00% |  0.00% )   ( 0.008744s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.010110s |  0.00% |  0.00% )   ( 0.008166s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.007494s |  0.00% |  0.00% )   ( 0.008424s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.059220s |  0.00% |  0.00% )   ( 0.060012s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.009990s |  0.00% |  0.00% )   ( 0.009002s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.008834s |  0.00% |  0.00% )   ( 0.009830s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p24
-54.5.0:         ( 0.007020s |  0.00% |  0.00% )   ( 0.007966s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.006920s |  0.00% |  0.00% )   ( 0.007886s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000280s |  0.00% |  0.00% )   ( 0.000320s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000344s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000340s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 67.427144s |  3.23% |  2.05% )   ( 65.812584s |  0.83% |  2.06% )    	(96x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.013780s |  0.00% |  0.02% )   ( 0.015724s |  0.00% |  0.02% )    	(96x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.427880s |  0.21% |  6.56% )   ( 4.321860s |  0.05% |  6.56% )    	(96x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 8.111988s |  0.38% | 12.03% )   ( 7.695224s |  0.09% | 11.69% )    	(96x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.367796s |  0.30% |  9.44% )   ( 6.279372s |  0.07% |  9.54% )    	(96x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.681748s |  0.36% | 11.39% )   ( 7.614928s |  0.09% | 11.57% )    	(96x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.186512s |  0.29% |  9.17% )   ( 6.112992s |  0.07% |  9.28% )    	(96x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.037880s |  0.19% |  5.98% )   ( 3.951880s |  0.04% |  6.00% )    	(96x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.205800s |  0.10% |  3.27% )   ( 2.010832s |  0.02% |  3.05% )    	(96x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.256512s |  0.20% |  6.31% )   ( 4.178944s |  0.05% |  6.34% )    	(96x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.749600s |  0.08% |  2.59% )   ( 1.732440s |  0.02% |  2.63% )    	(96x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.600060s |  0.26% |  8.30% )   ( 5.530092s |  0.06% |  8.40% )    	(96x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 12.618752s |  0.60% | 18.71% )   ( 12.471628s |  0.15% | 18.95% )    	(96x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.097324s |  0.10% |  3.11% )   ( 1.981508s |  0.02% |  3.01% )    	(96x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.071512s |  0.09% |  3.07% )   ( 1.915160s |  0.02% |  2.91% )    	(96x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007032s |  0.00% |  0.00% )   ( 0.007862s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.006842s |  0.00% |  0.00% )   ( 0.007780s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.007376s |  0.00% |  0.00% )   ( 0.008314s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000290s |  0.00% |  0.00% )   ( 0.000332s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000316s |  0.00% |  0.00% )   ( 0.000350s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.016602s |  0.00% |  0.02% )   ( 0.016742s |  0.00% |  0.02% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p24 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p24\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000318s |  0.00% |  0.00% )   ( 0.000358s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p24_PID})
-1016.3.0:       ( 73.519428s |  3.52% |  1.76% )   ( 142.961398s |  1.80% |  1.80% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p25 p25_PID >>
-1.4.0:          ( 0.002158s |  0.00% |  0.00% )   ( 0.002212s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p25 p25_PID (&)
-24.4.0:         ( 73.516968s |  3.52% | 99.99% )   ( 71.479422s |  0.90% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000354s |  0.00% |  0.00% )   ( 0.000404s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000334s |  0.00% |  0.00% )   ( 0.000376s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p25
-30.5.0:         ( 0.095928s |  0.00% |  0.13% )   ( 0.095564s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p25 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p25; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.096536s |  0.00% |  0.13% )   ( 0.096134s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.093996s |  0.00% |  0.12% )   ( 0.093680s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.106194s |  0.00% |  0.14% )   ( 0.105798s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.083500s |  0.00% |  0.11% )   ( 0.083218s |  0.00% |  0.11% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000276s |  0.00% |  0.00% )   ( 0.000316s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.004718s |  0.00% |  0.00% )   ( 0.005324s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000308s |  0.00% |  0.00% )   ( 0.000348s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000266s |  0.00% |  0.00% )   ( 0.000306s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000274s |  0.00% |  0.00% )   ( 0.000312s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.006054s |  0.00% |  0.00% )   ( 0.006708s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p25
-41.5.0:         ( 0.201232s |  0.00% |  0.01% )   ( 0.007812s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.005088s |  0.00% |  0.00% )   ( 0.005710s |  0.00% |  0.00% )    	(32x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.004698s |  0.00% |  0.00% )   ( 0.005352s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.004496s |  0.00% |  0.00% )   ( 0.005112s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004924s |  0.00% |  0.00% )   ( 0.005580s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.038542s |  0.00% |  0.00% )   ( 0.038058s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.004764s |  0.00% |  0.00% )   ( 0.005374s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.005480s |  0.00% |  0.00% )   ( 0.006114s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p25
-54.5.0:         ( 0.004536s |  0.00% |  0.00% )   ( 0.005130s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004640s |  0.00% |  0.00% )   ( 0.005312s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000280s |  0.00% |  0.00% )   ( 0.000324s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000306s |  0.00% |  0.00% )   ( 0.000354s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000296s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 72.725260s |  3.49% |  3.29% )   ( 70.874720s |  0.89% |  3.30% )    	(60x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.009524s |  0.00% |  0.01% )   ( 0.010796s |  0.00% |  0.01% )    	(60x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.711176s |  0.22% |  6.47% )   ( 4.650336s |  0.05% |  6.56% )    	(60x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.145120s |  0.43% | 12.57% )   ( 8.905996s |  0.11% | 12.56% )    	(60x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.944448s |  0.33% |  9.54% )   ( 6.794336s |  0.08% |  9.58% )    	(60x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 9.194072s |  0.44% | 12.64% )   ( 8.982584s |  0.11% | 12.67% )    	(60x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.684956s |  0.32% |  9.19% )   ( 6.554332s |  0.08% |  9.24% )    	(60x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.262648s |  0.20% |  5.86% )   ( 4.140648s |  0.05% |  5.84% )    	(60x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 1.533300s |  0.07% |  2.10% )   ( 1.514692s |  0.01% |  2.13% )    	(60x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.676900s |  0.22% |  6.43% )   ( 4.542380s |  0.05% |  6.40% )    	(60x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.265568s |  0.06% |  1.74% )   ( 1.264580s |  0.01% |  1.78% )    	(60x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.738440s |  0.27% |  7.89% )   ( 5.558256s |  0.07% |  7.84% )    	(60x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 15.479048s |  0.74% | 21.28% )   ( 15.183092s |  0.19% | 21.42% )    	(60x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.534912s |  0.07% |  2.11% )   ( 1.430700s |  0.01% |  2.01% )    	(60x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.545148s |  0.07% |  2.12% )   ( 1.341992s |  0.01% |  1.89% )    	(60x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004448s |  0.00% |  0.00% )   ( 0.005044s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.004288s |  0.00% |  0.00% )   ( 0.004860s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004658s |  0.00% |  0.00% )   ( 0.005262s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000172s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009966s |  0.00% |  0.01% )   ( 0.010108s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p25 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p25\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000302s |  0.00% |  0.00% )   ( 0.000342s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p25_PID})
-1016.3.0:       ( 68.525216s |  3.28% |  1.64% )   ( 127.678906s |  1.61% |  1.61% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p26 p26_PID >>
-1.4.0:          ( 0.002212s |  0.00% |  0.00% )   ( 0.002260s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p26 p26_PID (&)
-24.4.0:         ( 68.522664s |  3.28% | 99.99% )   ( 63.838134s |  0.80% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000446s |  0.00% |  0.00% )   ( 0.000494s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000444s |  0.00% |  0.00% )   ( 0.000500s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p26
-30.5.0:         ( 0.097528s |  0.00% |  0.14% )   ( 0.097102s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p26 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p26; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.089850s |  0.00% |  0.13% )   ( 0.089466s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.087840s |  0.00% |  0.12% )   ( 0.087480s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.094628s |  0.00% |  0.13% )   ( 0.094244s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.096408s |  0.00% |  0.14% )   ( 0.093388s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000370s |  0.00% |  0.00% )   ( 0.000422s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007902s |  0.00% |  0.00% )   ( 0.008938s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000378s |  0.00% |  0.00% )   ( 0.000424s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000262s |  0.00% |  0.00% )   ( 0.000298s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000278s |  0.00% |  0.00% )   ( 0.000318s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.009554s |  0.00% |  0.00% )   ( 0.010624s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p26
-41.5.0:         ( 0.342704s |  0.01% |  0.01% )   ( 0.011000s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.007912s |  0.00% |  0.00% )   ( 0.008960s |  0.00% |  0.00% )    	(52x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007630s |  0.00% |  0.00% )   ( 0.008620s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.007374s |  0.00% |  0.00% )   ( 0.008424s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.007698s |  0.00% |  0.00% )   ( 0.008658s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.062114s |  0.00% |  0.00% )   ( 0.062938s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.007974s |  0.00% |  0.00% )   ( 0.008988s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.009156s |  0.00% |  0.00% )   ( 0.010150s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p26
-54.5.0:         ( 0.007300s |  0.00% |  0.00% )   ( 0.008308s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007070s |  0.00% |  0.00% )   ( 0.007944s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000176s |  0.00% |  0.00% )   ( 0.000200s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000290s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000226s |  0.00% |  0.00% )   ( 0.000260s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 67.536260s |  3.24% |  1.97% )   ( 63.173600s |  0.79% |  1.97% )    	(100x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.015156s |  0.00% |  0.02% )   ( 0.017288s |  0.00% |  0.02% )    	(100x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 4.473604s |  0.21% |  6.62% )   ( 4.250756s |  0.05% |  6.72% )    	(100x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 7.678848s |  0.36% | 11.36% )   ( 7.320004s |  0.09% | 11.58% )    	(100x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 6.422000s |  0.30% |  9.50% )   ( 6.068296s |  0.07% |  9.60% )    	(100x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 7.986308s |  0.38% | 11.82% )   ( 7.306664s |  0.09% | 11.56% )    	(100x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 6.659824s |  0.31% |  9.86% )   ( 5.901936s |  0.07% |  9.34% )    	(100x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.393340s |  0.21% |  6.50% )   ( 3.904720s |  0.04% |  6.18% )    	(100x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.104420s |  0.10% |  3.11% )   ( 2.023904s |  0.02% |  3.20% )    	(100x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.251724s |  0.20% |  6.29% )   ( 3.994640s |  0.05% |  6.32% )    	(100x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 2.025184s |  0.09% |  2.99% )   ( 1.784060s |  0.02% |  2.82% )    	(100x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 5.953532s |  0.28% |  8.81% )   ( 5.430612s |  0.06% |  8.59% )    	(100x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 11.472560s |  0.55% | 16.98% )   ( 11.258848s |  0.14% | 17.82% )    	(100x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 2.008168s |  0.09% |  2.97% )   ( 1.994468s |  0.02% |  3.15% )    	(100x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 2.091592s |  0.10% |  3.09% )   ( 1.917404s |  0.02% |  3.03% )    	(100x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007606s |  0.00% |  0.00% )   ( 0.008600s |  0.00% |  0.00% )    	(50x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.006886s |  0.00% |  0.00% )   ( 0.007832s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.008136s |  0.00% |  0.00% )   ( 0.009184s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000168s |  0.00% |  0.00% )   ( 0.000192s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.009972s |  0.00% |  0.01% )   ( 0.010104s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p26 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p26\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000340s |  0.00% |  0.00% )   ( 0.000378s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p26_PID})
-1016.3.0:       ( 73.713494s |  3.53% |  1.76% )   ( 144.153902s |  1.82% |  1.82% )    	(2x)	│  │  │   << (FUNCTION): main.forkrun.local p27 p27_PID >>
-1.4.0:          ( 0.002186s |  0.00% |  0.00% )   ( 0.002228s |  0.00% |  0.00% )    	(2x)	│  │  │  ├─  local p27 p27_PID (&)
-24.4.0:         ( 73.710978s |  3.53% | 99.99% )   ( 72.075652s |  0.91% | 49.99% )    	(2x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000470s |  0.00% |  0.00% )   ( 0.000524s |  0.00% |  0.00% )    	(2x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.ZByplJ"
-26.5.0:         ( 0.000358s |  0.00% |  0.00% )   ( 0.000400s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p27
-30.5.0:         ( 0.131554s |  0.00% |  0.17% )   ( 0.097050s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p27 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p27; \nprintf \'"\'"\'\\n\'"\'"\' >&21\' EXIT
-32.5.0:         ( 0.091322s |  0.00% |  0.12% )   ( 0.091016s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 1450659 ${BASHPID}' INT
-33.5.0:         ( 0.093796s |  0.00% |  0.12% )   ( 0.093396s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 1450659 ${BASHPID}' TERM
-34.5.0:         ( 0.099486s |  0.00% |  0.13% )   ( 0.099134s |  0.00% |  0.13% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 1450659 ${BASHPID}' HUP
-35.5.0:         ( 0.105694s |  0.00% |  0.14% )   ( 0.105234s |  0.00% |  0.14% )    	(2x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.000266s |  0.00% |  0.00% )   ( 0.000302s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   true
-38.5.0:         ( 0.007398s |  0.00% |  0.00% )   ( 0.008404s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000302s |  0.00% |  0.00% )   ( 0.000342s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.ZByplJ"/.nLines
-38.5.2:         ( 0.000248s |  0.00% |  0.00% )   ( 0.000284s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000254s |  0.00% |  0.00% )   ( 0.000292s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.014652s |  0.00% |  0.00% )   ( 0.010080s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p27
-41.5.0:         ( 0.242662s |  0.01% |  0.01% )   ( 0.010660s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   read -r -u 21 _
-42.5.0:         ( 0.007710s |  0.00% |  0.00% )   ( 0.008616s |  0.00% |  0.00% )    	(48x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.quit ]]
-46.5.0:         ( 0.007408s |  0.00% |  0.00% )   ( 0.008402s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.done ]]
-46.5.1:         ( 0.006774s |  0.00% |  0.00% )   ( 0.007668s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.007470s |  0.00% |  0.00% )   ( 0.008396s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   evfd_wait 25
-49.5.0:         ( 0.072764s |  0.00% |  0.00% )   ( 0.061552s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 27 -t -d '' A
-52.5.0:         ( 0.011548s |  0.00% |  0.00% )   ( 0.008406s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   printf '\n' 1>&21
-53.5.0:         ( 0.008554s |  0.00% |  0.00% )   ( 0.009506s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.ZByplJ"/.wait/p27
-54.5.0:         ( 0.006766s |  0.00% |  0.00% )   ( 0.007682s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.006632s |  0.00% |  0.00% )   ( 0.007564s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000300s |  0.00% |  0.00% )   ( 0.000332s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000272s |  0.00% |  0.00% )   ( 0.000312s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000284s |  0.00% |  0.00% )   ( 0.000324s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 72.752300s |  3.49% |  2.14% )   ( 71.395164s |  0.90% |  2.15% )    	(92x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.013512s |  0.00% |  0.01% )   ( 0.015368s |  0.00% |  0.02% )    	(92x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 5.000592s |  0.23% |  6.87% )   ( 4.971520s |  0.06% |  6.96% )    	(92x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 9.168936s |  0.44% | 12.60% )   ( 9.068200s |  0.11% | 12.70% )    	(92x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 7.450012s |  0.35% | 10.24% )   ( 7.280188s |  0.09% | 10.19% )    	(92x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 9.097916s |  0.43% | 12.50% )   ( 9.024028s |  0.11% | 12.63% )    	(92x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 7.121396s |  0.34% |  9.78% )   ( 6.995780s |  0.08% |  9.79% )    	(92x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 4.579348s |  0.21% |  6.29% )   ( 4.383768s |  0.05% |  6.14% )    	(92x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 2.057524s |  0.09% |  2.82% )   ( 1.993712s |  0.02% |  2.79% )    	(92x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 4.869852s |  0.23% |  6.69% )   ( 4.755332s |  0.06% |  6.66% )    	(92x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 1.942116s |  0.09% |  2.66% )   ( 1.787264s |  0.02% |  2.50% )    	(92x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 6.208004s |  0.29% |  8.53% )   ( 6.039196s |  0.07% |  8.45% )    	(92x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 11.395124s |  0.54% | 15.66% )   ( 11.347384s |  0.14% | 15.89% )    	(92x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 1.953832s |  0.09% |  2.68% )   ( 1.904760s |  0.02% |  2.66% )    	(92x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 1.894136s |  0.09% |  2.60% )   ( 1.828664s |  0.02% |  2.56% )    	(92x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.007364s |  0.00% |  0.00% )   ( 0.008328s |  0.00% |  0.00% )    	(46x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.006446s |  0.00% |  0.00% )   ( 0.007342s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.009238s |  0.00% |  0.00% )   ( 0.008064s |  0.00% |  0.00% )    	(44x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '\n' 1>&21
-44.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000186s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   break
--44.5.0:        ( 0.010368s |  0.00% |  0.01% )   ( 0.010510s |  0.00% |  0.01% )    	(2x)	│  │  │  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\; $'\n'[[ -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p27 ]] && \rm -f "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p27\; $'\n'printf '\n' >&21
-245.4.0:        ( 0.000330s |  0.00% |  0.00% )   ( 0.000370s |  0.00% |  0.00% )    	(2x)	│  │  │  └─  p_PID+=(${p27_PID})
-1018.3.0:       ( 0.000161s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │   echo "${kkProcs}" > "${tmpDir}"/.nWorkers
+356.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+360.3.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │   type -a fallocate &> /dev/null
+360.3.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+360.3.2:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${fallocateFlag:=true}"
+361.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${exportOrderFlag}
+362.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
+363.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+367.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nullDelimiterFlag}
+389.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -z ${delimiterVal} ]]
+390.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   delimiterVal='$'"'"'\n'"'"
+391.3.0:        ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   ${noFuncFlag}
+391.3.1:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
+401.3.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${unescapeFlag}
+410.3.0:        ( 0.000679s |  0.00% |  0.00% )   ( 0.000545s |  0.00% |  0.00% )    	(1x)	│  │  │   mapfile -t runCmd < <(printf '%q\n' "${runCmd[@]}") (&)
+410.3.1:        ( 0.000119s |  0.00% |  0.00% )   ( 0.000139s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+410.4.0:        ( 0.000119s |  0.00% |100.00% )   ( 0.000139s |  0.00% |100.00% )    	(1x)	│  │  │  └─  printf '%q\n' "${runCmd[@]}"
+411.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringFlag}
+414.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringIDFlag}
+419.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   nLinesCur=${nLines}
+420.3.0:        ( 0.002248s |  0.00% |  0.00% )   ( 0.002312s |  0.00% |  0.00% )    	(1x)	│  │  │   mkdir -p "${tmpDir}"/.{run,wait}
+421.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
+422.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${rmTmpDirFlag}
+423.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 0 ))
+450.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │   tStart="${EPOCHREALTIME//./}"
+451.3.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   evfd_init
+455.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr=\': >"\'"${tmpDir}"\'"/.done;\n: >"\'"${tmpDir}"\'"/.quit;\nkill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
+456.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+459.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
+470.3.0:        ( 0.000524s |  0.00% |  0.00% )   ( 0.000542s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${writeFileProgType:=1}" (&)
+473.3.0:        ( 0.134833s |  0.01% |  0.02% )   ( 0.134643s |  0.01% |  0.02% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+473.4.0:        ( 0.000313s |  0.00% |  0.23% )   ( 0.000362s |  0.00% |  0.26% )    	(1x)	│  │  │  ├─  export LC_ALL=C LANG=C IFS=
+474.4.0:        ( 0.020948s |  0.00% | 15.53% )   ( 0.020912s |  0.00% | 15.53% )    	(1x)	│  │  │  │   trap - EXIT
+475.4.0:        ( 0.023859s |  0.00% | 17.69% )   ( 0.023816s |  0.00% | 17.68% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
+476.4.0:        ( 0.023524s |  0.00% | 17.44% )   ( 0.023466s |  0.00% | 17.42% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
+477.4.0:        ( 0.023587s |  0.00% | 17.49% )   ( 0.023534s |  0.00% | 17.47% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
+478.4.0:        ( 0.023313s |  0.00% | 17.29% )   ( 0.023260s |  0.00% | 17.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+479.4.0:        ( 0.000064s |  0.00% |  0.04% )   ( 0.000075s |  0.00% |  0.05% )    	(1x)	│  │  │  │   case ${writeFileProgType} in
+481.4.0:        ( 0.018993s |  0.00% | 14.08% )   ( 0.018951s |  0.00% | 14.07% )    	(1x)	│  │  │  │   evfd_copy ${fd_write} ${fd_stdin}
+490.4.0:        ( 0.000092s |  0.00% |  0.06% )   ( 0.000104s |  0.00% |  0.07% )    	(1x)	│  │  │  │   : > "${tmpDir}"/.done
+491.4.0:        ( 0.000074s |  0.00% |  0.05% )   ( 0.000086s |  0.00% |  0.06% )    	(1x)	│  │  │  │   evfd_signal
+492.4.0:        ( 0.000066s |  0.00% |  0.04% )   ( 0.000077s |  0.00% |  0.05% )    	(1x)	│  │  │  └─  (( ${verboseLevel} > 1 ))
+495.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   exitTrapStr_kill+="${pWrite_PID} "
+497.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
+502.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   outStr='>&'"${fd_stdout}"
+504.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
+505.3.0:        ( 0.000424s |  0.00% |  0.00% )   ( 0.000448s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' ${nLines} > "${tmpDir}"/.nLines (&)
+508.3.0:        ( 4.169676s |  0.38% |  0.75% )   ( 1.832734s |  0.18% |  0.36% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
+508.4.0:        ( 0.000184s |  0.00% |  0.00% )   ( 0.000213s |  0.00% |  0.01% )    	(1x)	│  │  │  │   export LC_ALL=C LANG=C IFS=
+509.4.0:        ( 0.026746s |  0.00% |  0.64% )   ( 0.026690s |  0.00% |  1.45% )    	(1x)	│  │  │  │   trap '[[ -f "'"${tmpDir}"'"/.run/pAuto ]] && \rm -f "'"${tmpDir}"'"/.run/pAuto' EXIT
+510.4.0:        ( 0.023781s |  0.00% |  0.57% )   ( 0.023740s |  0.00% |  1.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
+511.4.0:        ( 0.023495s |  0.00% |  0.56% )   ( 0.023452s |  0.00% |  1.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
+512.4.0:        ( 0.023510s |  0.00% |  0.56% )   ( 0.023458s |  0.00% |  1.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
+513.4.0:        ( 0.023207s |  0.00% |  0.55% )   ( 0.023169s |  0.00% |  1.26% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+514.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${fallocateFlag}
+515.4.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
+516.4.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fd_read_pos_old=0
+518.4.0:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=0
+519.4.0:        ( 0.090490s |  0.00% |  0.00% )   ( 0.103572s |  0.01% |  0.00% )    	(673x)	│  │  │  │   ${fallocateFlag}
+520.4.0:        ( 2.638499s |  0.24% |  0.09% )   ( 0.122798s |  0.01% |  0.00% )    	(672x)	│  │  │  │   read -u ${fd_nAuto} -t 0.1
+520.4.1:        ( 0.000898s |  0.00% |  0.00% )   ( 0.001013s |  0.00% |  0.01% )    	(5x)	│  │  │  │   continue
+521.4.0:        ( 0.091911s |  0.00% |  0.00% )   ( 0.101559s |  0.01% |  0.00% )    	(667x)	│  │  │  │   case ${REPLY} in
+535.4.0:        ( 0.090039s |  0.00% |  0.00% )   ( 0.103136s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nLinesAutoFlag}
+536.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
+539.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=$(( nLinesRead + ${REPLY} ))
+544.4.0:        ( 0.088156s |  0.00% |  0.00% )   ( 0.100941s |  0.01% |  0.00% )    	(667x)	│  │  │  │   ${lseekPosFlag}
+545.4.0:        ( 0.090337s |  0.00% |  0.00% )   ( 0.103022s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_read 0 SEEK_CUR fd_read_pos
+546.4.0:        ( 0.090550s |  0.00% |  0.00% )   ( 0.103409s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_write 0 SEEK_CUR fd_write_pos
+552.4.0:        ( 0.086590s |  0.00% |  0.00% )   ( 0.099418s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
+553.4.0:        ( 0.000081s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesEst=$(( ( ( 1 + ${nLinesRead} ) * ( 1 + ${fd_write_pos} ) ) / ( 1 + ${fd_read_pos} ) ))
+554.4.0:        ( 0.086587s |  0.00% |  0.00% )   ( 0.099419s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nSpawnFlag}
+555.4.0:        ( 0.086988s |  0.00% |  0.00% )   ( 0.099737s |  0.01% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
+556.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+557.4.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │   [[ -d "${tmpDir}"/.wait ]]
+558.4.0:        ( 0.000661s |  0.00% |  0.01% )   ( 0.000489s |  0.00% |  0.02% )    	(1x)	│  │  │  │   mapfile -t nProcsA < <(: | cat "${tmpDir}"/.wait 2> /dev/null) (&)
+558.4.1:        ( 0.002598s |  0.00% |  0.06% )   ( 0.002965s |  0.00% |  0.16% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+558.5.0:        ( 0.002598s |  0.00% |100.00% )   ( 0.002965s |  0.00% |100.00% )    	(1x)	│  │  │  │  └─  : | cat "${tmpDir}"/.wait 2> /dev/null
+559.4.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nProcsA=(${nProcsA//0/})
+560.4.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${#nProcsA[@]} > 0 ))
+562.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=$(( 1 + ( ( nLinesEst - nLinesRead ) / ( 1 + ${nProcs} ) ) ))
+563.4.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} > ${nLinesCur} ))
+564.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} >= ${nLinesMax} ))
+565.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=${nLinesMax}
+566.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
+568.4.0:        ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │   printf '%s\n' ${nLinesNew} > "${tmpDir}"/.nLines
+569.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+570.4.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesCur=${nLinesNew}
+573.4.0:        ( 0.086548s |  0.00% |  0.00% )   ( 0.099264s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${fallocateFlag}
+574.4.0:        ( 0.085854s |  0.00% |  0.00% )   ( 0.098679s |  0.00% |  0.00% )    	(667x)	│  │  │  │   case ${nWait} in
+585.4.0:        ( 0.084498s |  0.00% |  0.00% )   ( 0.096969s |  0.00% |  0.00% )    	(646x)	│  │  │  │   ((nWait--))
+589.4.0:        ( 0.091567s |  0.00% |  0.00% )   ( 0.104673s |  0.01% |  0.00% )    	(667x)	│  │  │  │   [[ -f "${tmpDir}"/.quit ]]
+535.4.1:        ( 0.087819s |  0.00% |  0.00% )   ( 0.100613s |  0.01% |  0.00% )    	(665x)	│  │  │  │   ${nSpawnFlag}
+552.4.1:        ( 0.087534s |  0.00% |  0.00% )   ( 0.100327s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nSpawnFlag}
+576.4.0:        ( 0.002837s |  0.00% |  0.00% )   ( 0.003264s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos=$(( 4096 * ( ${fd_read_pos} / 4096 ) ))
+577.4.0:        ( 0.002762s |  0.00% |  0.00% )   ( 0.003171s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${fd_read_pos} > ${fd_read_pos_old} ))
+578.4.0:        ( 0.056730s |  0.00% |  0.06% )   ( 0.043548s |  0.00% |  0.11% )    	(21x)	│  │  │  │   fallocate -p -o ${fd_read_pos_old} -l $(( ${fd_read_pos} - ${fd_read_pos_old} )) "${fPath}"
+579.4.0:        ( 0.003188s |  0.00% |  0.00% )   ( 0.003629s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+580.4.0:        ( 0.003013s |  0.00% |  0.00% )   ( 0.003450s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos_old=${fd_read_pos}
+582.4.0:        ( 0.003124s |  0.00% |  0.00% )   ( 0.003547s |  0.00% |  0.00% )    	(21x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
+529.4.0:        ( 0.000137s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
+590.4.0:        ( 0.000128s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
+591.4.0:        ( 0.000137s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fallocateFlag=false
+592.4.0:        ( 0.000130s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nSpawnFlag=false
+519.4.1:        ( 0.000130s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+519.4.2:        ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+25.4.0:         ( 0.006826s |  0.00% |  0.16% )   ( 0.006909s |  0.00% |  0.37% )    	(1x)	│  │  │  └─  ${nSpawnFlag}
+598.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'printf \'"\'"\'0\\n\'"\'"\' >&\'"${fd_nAuto}"\'; \'\'\n\'
+599.3.0:        ( 0.000130s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' "${pAuto_PID}" > "${tmpDir}"/.run/pAuto
+601.3.0:        ( 0.000105s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+980.3.0:        ( 0.001286s |  0.00% |  0.00% )   ( 0.000439s |  0.00% |  0.00% )    	(1x)	│  │  │   $'coprocSrcCode="$(echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && echo "{ \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && read -r <\\"${tmpDir}\\"/.nLines && [[ \\${REPLY} == +([0-9]) ]] && nLinesCur=\\${REPLY}"\necho """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""\nif ${readBytesFlag}; then\n    case "${readBytesProg}" in \n        \'dd\')\n            printf \'dd bs=32768 count=%sB of="%s"/.stdin.tmp.{<#>} 2>"%s"/.stdin.tmp-status.{<#>} \' "${nBytes}" "${tmpDir}" "${tmpDir}"\n${pipeReadFlag} && printf \'iflag=fullblock <&%s\\n\' "${fd_stdin}" || printf \'<&%s\\n\' "${fd_read}"\nprintf \'[[ "$(<"%s"/.stdin.tmp-status.{<#>})" == *$\'"\'"\'\\\\n\'"\'"\'"0 bytes"* ]] && A=() || A[0]=1\\n\' "${tmpDir}"\n        ;;\n        \'head\')\n            printf \'head -c %s \' "${nBytes}"\n${pipeReadFlag} && printf \'<&%s \' "${fd_stdin}" || printf \'<&%s \' "${fd_read}"\nprintf \'>"%s"/.stdin.tmp.{<#>}\\n\' "${tmpDir}"\nprintf \'[[ $(<"%s"/.stdin.tmp.{<#>}) ]] 2>/dev/null && A[0]=1 || A=()\\n\' "${tmpDir}"\n        ;;\n        \'bash\')\n            if ${stdinRunFlag}; then\n                [[ -n ${tTimeout} ]] && echo "SECONDS=0"\nprintf \'if read -r -d \'"\'\'"\' -n %s -u %s\' "${nBytes}" "${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=(\'\')\n                trailingNullFlag=true"""\n${readBytesExactFlag} && echo \'nBytesRead=1\'\necho """\n            else\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=()\n                trailingNullFlag=false"""\n${readBytesExactFlag} && echo \'nBytesRead=0\'\necho \'fi\'\nif ${readBytesExactFlag}; then\n                    echo """\n            nBytesRead+=\\${#REPLY}\n            [[ \\${nBytesRead} == 0 ]] || (( \\${nBytesRead} >= ${nBytes} )) || {"""\n[[ -n ${tTimeout} ]] && echo "while (( \\${SECONDS} < ${tTimeout} )); do" || echo "while true; do"\necho "[[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"\nprintf "if read -r -d \'\' -n \\$(( ${nBytes} - \\${nBytesRead} )) -u ${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                    ((nBytesRead++))\n                    nBytesRead+=\\${#REPLY}\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\") || A+=(\'\')\n                    (( \\${nBytesRead} >= ${nBytes} )) && { trailingNullFlag=true; break; }\n                else\n                    trailingNullFlag=false\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\")\n                    { (( \\${nBytesRead} >= ${nBytes} )) || ${doneIndicatorFlag}; } && { trailingNullFlag=false; break; }\n                    break\n                fi\n            done\n        }""";\n                fi\necho """\n        {\n            if \\${trailingNullFlag}; then\n                printf \'%s\\0\' \\"\\${A[@]}\\" \n            else\n                printf \'%s\' \\"\\${A[0]}\\" \n                printf \'\\0%s\' \\"\\${A[@]:1}\\"\n            fi \n        } >\\"${tmpDir}\\"/.stdin.tmp.{<#>}""";\n            else\n                printf \'read -r -N %s -u \' "${nBytes}"\nif ${readBytesExactFlag}; then\n                    printf \'%s \' "${fd_stdin}"\n[[ -n ${tTimeout} ]] && printf \'-t %s \' "${tTimeout} ";\n                else\n                    printf \'%s \' ${fd_read};\n                fi\necho \'-a A\';\n            fi\n        ;;\n    esac;\nelse\n    ${nLinesReadLimitFlag} && printf \'%s\' """read -r nLinesRead <\\"${tmpDir}\\"/.nLinesRead\n    (( ( nLinesReadLimit - nLinesRead ) < nLinesCur )) && nLinesCur=\\$(( nLinesReadLimit - nLinesRead ))\n    (( nLinesCur == 0 )) && A=() || """\necho "{"\n${nOrderFlag} && echo "order_get nOrder"\n${pipeReadFlag} || echo "evfd_wait ${fd_nSpawn}"\nprintf \'%s \' "mapfile"\n${lseekFlag} && printf \'%s \' \'-t\'\nprintf \'%s \' \'-n\' "\\${nLinesCur}" \'-u\'\n${pipeReadFlag} && printf \'%s \' ${fd_stdin} || printf \'%s \' ${fd_read}\n{ ${pipeReadFlag} || ${nullDelimiterFlag}; } && printf \'%s \' \'-t\'\necho """${delimiterReadStr} A\n    }"""\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || { echo "[[ \\${#A[@]} == 0 ]] || \\${doneIndicatorFlag} || {"\nif ${lseekFlag}; then\n        echo """\n                lseek ${fd_read} -1 SEEK_CUR \'\'\n                read -r -u ${fd_read} -N 1"""\nif ${nullDelimiterFlag}; then\n            echo "[[ \\${#REPLY} == 0 ]] || {";\n        else\n            echo "[[ \\"\\${REPLY}\\" == ${delimiterVal} ]] || {";\n        fi;\n    else\n        if ${nullDelimiterFlag}; then\n            echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read}"""\ncase "${nullDelimiterProg}" in \n                \'dd\')\n                    echo """\n                { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } || {"""\n                ;;\n                \'bash\')\n                    echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos0 </proc/self/fdinfo/${fd_read0}\n                nBytes=\\$(( fd_read_pos - fd_read_pos0 - \\${#A[@]} ))"""\nif ${ddAvailableFlag}; then\n                        echo """\n                    {\n                        if (( \\${nBytes}  > 65535 )); then\n                            { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } \n                        else\n                            read -r -u ${fd_read0} -N \\${nBytes} _\n                            read -r -u ${fd_read0} -d \'\'\n                            [[ \\${#REPLY} == 0 ]]\n                        fi\n                    } || {""";\n                    else\n                        echo """\n                    read -r -u ${fd_read0} -N \\${nBytes} _\n                    read -r -u ${fd_read0} -d \'\'\n                    [[ \\${#REPLY} == 0 ]] || {""";\n                    fi\n                ;;\n            esac;\n        else\n            echo "[[ \\"\\${A[-1]: -1}\\" == ${delimiterVal} ]] || {";\n        fi;\n    fi\n(( ${verboseLevel} > 2 )) && echo """\n                echo \\"Partial read at: \\${A[-1]}\\" >&${fd_stderr}"""\necho """\n                until read -r -u ${fd_read} ${delimiterReadStr}; do \n                    A[-1]+=\\"\\${REPLY}\\"; \n                done"""\nprintf \'%s\' "A[-1]+=\\"\\${REPLY}\\""\n${lseekFlag} && printf \'\\n\' || printf \'%s\\n\' "${delimiterVal}"\n(( ${verboseLevel} > 2 )) && echo "echo \\"Partial read fixed to: \\${A[-1]}\\" >&${fd_stderr}"\necho "}"; };\nfi\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || ${readBytesFlag} || echo "}"\n${nLinesReadLimitFlag} && echo """\nnLinesRead+=\\${#A[@]}\necho \\${nLinesRead} >\\"${tmpDir}\\"/.nLinesRead\n(( nLinesRead == nLinesReadLimit )) && {\n    : >\\"${tmpDir}\\"/.quit\n    echo \'0\' >\\"${tmpDir}\\"/.nLines\n}\n"""\necho """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""\nif ${lseekPosFlag}; then\n    echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos""";\nelse\n    echo """\n            IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read};\n            IFS=\\$\'\\\\t\' read -r _ fd_write_pos </proc/self/fdinfo/${fd_write}; \n                """;\nfi\necho """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""\n${nLinesAutoFlag} && echo "printf \'x\\\\n\' >&\\${fd_nAuto0}"\n${nOrderFlag} && echo ": >\\"${tmpDir}\\"/.out/.quit{<#>}"\n${nSpawnFlag} && echo """printf \'q\\\\n\' >&${fd_nSpawn}\n            printf \'q\\\\n\' >&\\${fd_nAuto0}"""\necho """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""\n${nOrderFlag} && echo """else\n            printf \'x%s\\n\' \\"\\${nOrder}\\" >&\\${fd_nOrder0}"""\necho """fi\n        continue\n    }"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && { printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""\n${fallocateFlag} && printf \'%s\' \' || \' || echo; }\n${fallocateFlag} && echo "printf \'\\\\n\' >&\\${fd_nAuto0}"\n${pipeReadFlag} || ${nullDelimiterFlag} || ${readBytesFlag} || ${lseekFlag} || { echo """\n        { [[ \\"\\${A[*]##*${delimiterVal}}\\" ]] || [[ -z \\${A[0]} ]]; } && {"""\n(( ${verboseLevel} > 2 )) && echo "echo \\"FIXING SPLIT READ\\" >&${fd_stderr}"\necho """\n            A[-1]=\\"\\${A[-1]%${delimiterVal}}\\"\n            IFS=\n            mapfile ${delimiterReadStr} A <<<\\"\\${A[*]}\\"\n        }"""; }\n${subshellRunFlag} && echo \'(\' || echo \'{\'\n{ ${exportOrderFlag} || { ${nOrderFlag} && ${substituteStringIDFlag}; }; } && echo \'nOrder0="${nOrder:1}"\'\n${exportOrderFlag} && echo "printf \'\\034%s:\\035\\n\' \\"\\${nOrder0}\\""\nprintf \'%s \' "${runCmd[@]}"\nif ${readBytesFlag} && ! { [[ ${readBytesProg} == \'bash\' ]] && ! ${stdinRunFlag}; }; then\n    if ${stdinRunFlag} || ${noFuncFlag}; then\n        printf \'<"%s"/%s\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    else\n        printf \'"$(<"%s"/%s)"\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    fi;\nelse\n    if ${stdinRunFlag}; then\n        printf \'<<<%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n    else\n        if ${noFuncFlag}; then\n            printf "<<<\\"\\${A[*]%s}\\"" "${delimiterRemoveStr}";\n        else\n            if ! ${substituteStringFlag}; then\n                printf \'%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n            fi;\n        fi;\n    fi;\nfi\n(( ${verboseLevel} > 2 )) && echo """ || {\n        {\n            printf \'\\\\n\\\\n----------------------------------------------\\\\n\\\\n\'\n            echo \'ERROR DURING \\"${runCmd[*]}\\" CALL\'\n            declare -p A nLinesCur nLinesAutoFlag\n            echo \'fd_read:\'\n            cat /proc/self/fdinfo/${fd_read}\n            echo \'fd_write:\'\n            cat /proc/self/fdinfo/${fd_write}\n            echo\n        } >&${fd_stderr}\n    }"""\n${readBytesFlag} && { [[ -n ${readBytesProg//bash/} ]] || ${stdinRunFlag}; } && printf \'\\n\\\\rm -f "\'"${tmpDir}"\'"/.stdin.tmp.{<#>}\\n\'\n${subshellRunFlag} && printf \'\\n%s \' \')\' || printf \'\\n%s \' \'}\'\necho "${outStr}"\n${nOrderFlag} && echo "printf \'%s\\\\n\' \\"\\${nOrder}\\" >&${fd_nOrder0}"\n${nSpawnFlag} && echo "printf \'l%s\\\\nt%s\\\\n\' \\${#A[@]} \\${EPOCHREALTIME//./} >&${fd_nSpawn}"\necho """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})""")"
+997.3.0:        ( 0.005964s |  0.00% |  0.00% )   ( 0.006837s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+997.4.0:        ( 0.000156s |  0.00% |  2.61% )   ( 0.000175s |  0.00% |  2.55% )    	(1x)	│  │  │  ├─  $'echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""
+998.4.0:        ( 0.000099s |  0.00% |  1.65% )   ( 0.000114s |  0.00% |  1.66% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+998.4.1:        ( 0.000118s |  0.00% |  1.97% )   ( 0.000134s |  0.00% |  1.95% )    	(1x)	│  │  │  │   echo "{ \${nLinesAutoFlag} || \${nSpawnFlag}; } && read -r <\"${tmpDir}\"/.nLines && [[ \${REPLY} == +([0-9]) ]] && nLinesCur=\${REPLY}"
+1006.4.0:       ( 0.000303s |  0.00% |  5.08% )   ( 0.000315s |  0.00% |  4.60% )    	(1x)	│  │  │  │   $'echo """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""
+1007.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1079.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
+1082.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   echo "{"
+1083.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1084.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1084.4.1:       ( 0.000079s |  0.00% |  1.32% )   ( 0.000091s |  0.00% |  1.33% )    	(1x)	│  │  │  │   echo "evfd_wait ${fd_nSpawn}"
+1085.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   printf '%s ' "mapfile"
+1086.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekFlag}
+1086.4.1:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000081s |  0.00% |  1.18% )    	(1x)	│  │  │  │   printf '%s ' '-t'
+1087.4.0:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   printf '%s ' '-n' "\${nLinesCur}" '-u'
+1088.4.0:       ( 0.000065s |  0.00% |  1.08% )   ( 0.000076s |  0.00% |  1.11% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1088.4.1:       ( 0.000070s |  0.00% |  1.17% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   printf '%s ' ${fd_read}
+1089.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1089.4.1:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1091.4.0:       ( 0.000072s |  0.00% |  1.20% )   ( 0.000083s |  0.00% |  1.21% )    	(1x)	│  │  │  │   $'echo """${delimiterReadStr} A\n    }"""
+1092.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1092.4.1:       ( 0.000079s |  0.00% |  1.32% )   ( 0.000087s |  0.00% |  1.27% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1092.4.2:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   echo "[[ \${#A[@]} == 0 ]] || \${doneIndicatorFlag} || {"
+1093.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekFlag}
+1096.4.0:       ( 0.000073s |  0.00% |  1.22% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   $'echo """\n                lseek ${fd_read} -1 SEEK_CUR \'\'\n                read -r -u ${fd_read} -N 1"""
+1097.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1100.4.0:       ( 0.000072s |  0.00% |  1.20% )   ( 0.000083s |  0.00% |  1.21% )    	(1x)	│  │  │  │   echo "[[ \"\${REPLY}\" == ${delimiterVal} ]] || {"
+1138.4.0:       ( 0.000065s |  0.00% |  1.08% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+1143.4.0:       ( 0.000075s |  0.00% |  1.25% )   ( 0.000086s |  0.00% |  1.25% )    	(1x)	│  │  │  │   $'echo """\n                until read -r -u ${fd_read} ${delimiterReadStr}; do \n                    A[-1]+=\\"\\${REPLY}\\"; \n                done"""
+1144.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   printf '%s' "A[-1]+=\"\${REPLY}\""
+1145.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekFlag}
+1145.4.1:       ( 0.000108s |  0.00% |  1.81% )   ( 0.000120s |  0.00% |  1.75% )    	(1x)	│  │  │  │   printf '\n'
+1146.4.0:       ( 0.000070s |  0.00% |  1.17% )   ( 0.000081s |  0.00% |  1.18% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+1147.4.0:       ( 0.000103s |  0.00% |  1.72% )   ( 0.000116s |  0.00% |  1.69% )    	(1x)	│  │  │  │   echo "}"
+1149.4.0:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1149.4.1:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1149.4.2:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1149.4.3:       ( 0.000077s |  0.00% |  1.29% )   ( 0.000088s |  0.00% |  1.28% )    	(1x)	│  │  │  │   echo "}"
+1150.4.0:       ( 0.000076s |  0.00% |  1.27% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
+1163.4.0:       ( 0.000087s |  0.00% |  1.45% )   ( 0.000098s |  0.00% |  1.43% )    	(1x)	│  │  │  │   $'echo """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""
+1164.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekPosFlag}
+1167.4.0:       ( 0.000081s |  0.00% |  1.35% )   ( 0.000093s |  0.00% |  1.36% )    	(1x)	│  │  │  │   $'echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos"""
+1178.4.0:       ( 0.000080s |  0.00% |  1.34% )   ( 0.000092s |  0.00% |  1.34% )    	(1x)	│  │  │  │   $'echo """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""
+1179.4.0:       ( 0.000063s |  0.00% |  1.05% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+1179.4.1:       ( 0.000074s |  0.00% |  1.24% )   ( 0.000083s |  0.00% |  1.21% )    	(1x)	│  │  │  │   echo "printf 'x\\n' >&\${fd_nAuto0}"
+1180.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1181.4.0:       ( 0.000073s |  0.00% |  1.22% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+1186.4.0:       ( 0.000079s |  0.00% |  1.32% )   ( 0.000091s |  0.00% |  1.33% )    	(1x)	│  │  │  │   $'echo """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""
+1187.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1191.4.0:       ( 0.000080s |  0.00% |  1.34% )   ( 0.000091s |  0.00% |  1.33% )    	(1x)	│  │  │  │   $'echo """fi\n        continue\n    }"""
+1192.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+1192.4.1:       ( 0.000075s |  0.00% |  1.25% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   $'printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""
+1197.4.0:       ( 0.000062s |  0.00% |  1.03% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${fallocateFlag}
+1197.4.1:       ( 0.000074s |  0.00% |  1.24% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   printf '%s' ' || '
+1198.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   ${fallocateFlag}
+1198.4.1:       ( 0.000082s |  0.00% |  1.37% )   ( 0.000094s |  0.00% |  1.37% )    	(1x)	│  │  │  │   echo "printf '\\n' >&\${fd_nAuto0}"
+1199.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000076s |  0.00% |  1.11% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1199.4.1:       ( 0.000065s |  0.00% |  1.08% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1199.4.2:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1199.4.3:       ( 0.000086s |  0.00% |  1.44% )   ( 0.000097s |  0.00% |  1.41% )    	(1x)	│  │  │  │   ${lseekFlag}
+1207.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${subshellRunFlag}
+1207.4.1:       ( 0.000090s |  0.00% |  1.50% )   ( 0.000100s |  0.00% |  1.46% )    	(1x)	│  │  │  │   echo '{'
+1208.4.0:       ( 0.000062s |  0.00% |  1.03% )   ( 0.000073s |  0.00% |  1.06% )    	(1x)	│  │  │  │   ${exportOrderFlag}
+1208.4.1:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1209.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${exportOrderFlag}
+1210.4.0:       ( 0.000086s |  0.00% |  1.44% )   ( 0.000097s |  0.00% |  1.41% )    	(1x)	│  │  │  │   printf '%s ' "${runCmd[@]}"
+1211.4.0:       ( 0.000071s |  0.00% |  1.19% )   ( 0.000082s |  0.00% |  1.19% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1218.4.0:       ( 0.000060s |  0.00% |  1.00% )   ( 0.000072s |  0.00% |  1.05% )    	(1x)	│  │  │  │   ${stdinRunFlag}
+1221.4.0:       ( 0.000061s |  0.00% |  1.02% )   ( 0.000071s |  0.00% |  1.03% )    	(1x)	│  │  │  │   ${noFuncFlag}
+1224.4.0:       ( 0.000060s |  0.00% |  1.00% )   ( 0.000070s |  0.00% |  1.02% )    	(1x)	│  │  │  │   ${substituteStringFlag}
+1225.4.0:       ( 0.000082s |  0.00% |  1.37% )   ( 0.000094s |  0.00% |  1.37% )    	(1x)	│  │  │  │   printf '%s' "\"\${A[@]${delimiterRemoveStr}}\""
+1230.4.0:       ( 0.000070s |  0.00% |  1.17% )   ( 0.000081s |  0.00% |  1.18% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+1242.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1243.4.0:       ( 0.000062s |  0.00% |  1.03% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${subshellRunFlag}
+1243.4.1:       ( 0.000083s |  0.00% |  1.39% )   ( 0.000095s |  0.00% |  1.38% )    	(1x)	│  │  │  │   printf '\n%s ' '}'
+1244.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   echo "${outStr}"
+1245.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1246.4.0:       ( 0.000072s |  0.00% |  1.20% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+1251.4.0:       ( 0.000082s |  0.00% |  1.37% )   ( 0.000093s |  0.00% |  1.36% )    	(1x)	│  │  │  └─  $'echo """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})"""
+981.3.0:        ( 0.000304s |  0.00% |  0.00% )   ( 0.000344s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
+986.3.0:        ( 0.000309s |  0.00% |  0.00% )   ( 0.000340s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'kill $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null;\n        kill -9 \'"${exitTrapStr_kill}"\' 2>/dev/null; \n        kill -9 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
+988.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'trap - INT TERM HUP USR1; \n        return ${returnVal:-0}\'
+989.3.0:        ( 0.023883s |  0.00% |  0.00% )   ( 0.023843s |  0.00% |  0.00% )    	(1x)	│  │  │   trap "${exitTrapStr}" EXIT
+993.3.0:        ( 0.023645s |  0.00% |  0.00% )   ( 0.023607s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -INT $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" INT
+997.3.0:        ( 0.023848s |  0.00% |  0.00% )   ( 0.172319s |  0.01% |  0.03% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -TERM $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" TERM
+1001.3.0:       ( 0.023291s |  0.00% |  0.00% )   ( 0.023240s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -HUP $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" HUP
+1002.3.0:       ( 0.000071s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1003.3.0:       ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
+1007.3.0:       ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+1011.3.0:       ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '\n' >&${fd_continue}
+1012.3.0:       ( 0.000065s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+1013.3.0:       ( 0.000063s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │  │   ((kkProcs=0 ))
+1013.3.1:       ( 0.003044s |  0.00% |  0.00% )   ( 0.003490s |  0.00% |  0.00% )    	(29x)	│  │  │   ((kkProcs<28 ))
+1015.3.0:       ( 0.002807s |  0.00% |  0.00% )   ( 0.003234s |  0.00% |  0.00% )    	(28x)	│  │  │   [[ -f "${tmpDir}"/.quit ]]
+1016.3.0:       ( 18.684416s |  1.70% |  3.40% )   ( 18.084702s |  1.81% |  3.63% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p0 p0_PID >>
+1.4.0:          ( 0.000578s |  0.00% |  0.00% )   ( 0.000593s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p0 p0_PID (&)
+24.4.0:         ( 18.683751s |  1.70% | 99.99% )   ( 18.084009s |  1.81% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p0
+30.5.0:         ( 0.023281s |  0.00% |  0.12% )   ( 0.023240s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p0 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p0; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023390s |  0.00% |  0.12% )   ( 0.023350s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.023709s |  0.00% |  0.12% )   ( 0.023671s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.023947s |  0.00% |  0.12% )   ( 0.023907s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.023933s |  0.00% |  0.12% )   ( 0.023889s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.002664s |  0.00% |  0.00% )   ( 0.003006s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   true
+38.5.0:         ( 0.002421s |  0.00% |  0.00% )   ( 0.002734s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000177s |  0.00% |  0.00% )   ( 0.000201s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.002814s |  0.00% |  0.00% )   ( 0.003138s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p0
+41.5.0:         ( 0.136422s |  0.01% |  0.04% )   ( 0.003536s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.002575s |  0.00% |  0.00% )   ( 0.002881s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.002361s |  0.00% |  0.00% )   ( 0.002705s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.002166s |  0.00% |  0.00% )   ( 0.002471s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002277s |  0.00% |  0.00% )   ( 0.002565s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.016330s |  0.00% |  0.00% )   ( 0.016596s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.002150s |  0.00% |  0.00% )   ( 0.002430s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.002146s |  0.00% |  0.00% )   ( 0.002421s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003673s |  0.00% |  0.00% )   ( 0.002692s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.002796s |  0.00% |  0.00% )   ( 0.003119s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p0
+66.5.0:         ( 0.002221s |  0.00% |  0.00% )   ( 0.002509s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.002176s |  0.00% |  0.00% )   ( 0.002483s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+91.5.0:         ( 18.362175s |  1.67% |  6.14% )   ( 17.891416s |  1.79% |  6.18% )    	(16x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002294s |  0.00% |  0.01% )   ( 0.002606s |  0.00% |  0.01% )    	(16x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.170640s |  0.10% |  6.37% )   ( 1.160554s |  0.11% |  6.48% )    	(16x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.294588s |  0.20% | 12.49% )   ( 2.231759s |  0.22% | 12.47% )    	(16x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.735840s |  0.15% |  9.45% )   ( 1.711857s |  0.17% |  9.56% )    	(16x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.314067s |  0.21% | 12.60% )   ( 2.253758s |  0.22% | 12.59% )    	(16x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.753530s |  0.15% |  9.54% )   ( 1.670755s |  0.16% |  9.33% )    	(16x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.074681s |  0.09% |  5.85% )   ( 1.044672s |  0.10% |  5.83% )    	(16x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.386476s |  0.03% |  2.10% )   ( 0.385622s |  0.03% |  2.15% )    	(16x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.186912s |  0.10% |  6.46% )   ( 1.153606s |  0.11% |  6.44% )    	(16x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.327040s |  0.02% |  1.78% )   ( 0.325188s |  0.03% |  1.81% )    	(16x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.456174s |  0.13% |  7.93% )   ( 1.435917s |  0.14% |  8.02% )    	(16x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.914105s |  0.35% | 21.31% )   ( 3.838269s |  0.38% | 21.45% )    	(16x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.402837s |  0.03% |  2.19% )   ( 0.354454s |  0.03% |  1.98% )    	(16x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.342991s |  0.03% |  1.86% )   ( 0.322399s |  0.03% |  1.80% )    	(16x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+88.5.1:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+38.5.1:         ( 0.002254s |  0.00% |  0.00% )   ( 0.002548s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.001960s |  0.00% |  0.00% )   ( 0.002232s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.002212s |  0.00% |  0.00% )   ( 0.002492s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000185s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000217s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.010307s |  0.00% |  0.05% )   ( 0.010388s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p0_PID})
+1013.3.0:       ( 0.002964s |  0.00% |  0.00% )   ( 0.003397s |  0.00% |  0.00% )    	(28x)	│  │  │   ((kkProcs++ ))
+1016.3.0:       ( 20.692894s |  1.88% |  3.76% )   ( 19.897838s |  1.99% |  3.99% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p1 p1_PID >>
+1.4.0:          ( 0.000595s |  0.00% |  0.00% )   ( 0.000608s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p1 p1_PID (&)
+24.4.0:         ( 20.692213s |  1.88% | 99.99% )   ( 19.897129s |  1.99% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000307s |  0.00% |  0.00% )   ( 0.000350s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000330s |  0.00% |  0.00% )   ( 0.000369s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p1
+30.5.0:         ( 0.023359s |  0.00% |  0.11% )   ( 0.023331s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p1 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p1; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023799s |  0.00% |  0.11% )   ( 0.023761s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.023969s |  0.00% |  0.11% )   ( 0.023924s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024030s |  0.00% |  0.11% )   ( 0.023987s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.023959s |  0.00% |  0.11% )   ( 0.023918s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004015s |  0.00% |  0.00% )   ( 0.004494s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
+38.5.0:         ( 0.003632s |  0.00% |  0.00% )   ( 0.004112s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000178s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004226s |  0.00% |  0.00% )   ( 0.004701s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p1
+41.5.0:         ( 0.276526s |  0.02% |  0.05% )   ( 0.005517s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003711s |  0.00% |  0.00% )   ( 0.004170s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003613s |  0.00% |  0.00% )   ( 0.004089s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.005478s |  0.00% |  0.00% )   ( 0.003912s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003643s |  0.00% |  0.00% )   ( 0.004112s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035852s |  0.00% |  0.00% )   ( 0.027406s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003384s |  0.00% |  0.00% )   ( 0.003835s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003241s |  0.00% |  0.00% )   ( 0.003690s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003496s |  0.00% |  0.00% )   ( 0.003950s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004122s |  0.00% |  0.00% )   ( 0.004579s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p1
+66.5.0:         ( 0.003255s |  0.00% |  0.00% )   ( 0.003719s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003317s |  0.00% |  0.00% )   ( 0.003747s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+91.5.0:         ( 20.190083s |  1.84% |  4.06% )   ( 19.669038s |  1.97% |  4.11% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003461s |  0.00% |  0.01% )   ( 0.003929s |  0.00% |  0.01% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.487594s |  0.13% |  7.36% )   ( 1.416911s |  0.14% |  7.20% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.688875s |  0.24% | 13.31% )   ( 2.631457s |  0.26% | 13.37% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 2.082548s |  0.18% | 10.31% )   ( 2.052776s |  0.20% | 10.43% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.662600s |  0.24% | 13.18% )   ( 2.622808s |  0.26% | 13.33% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 2.073341s |  0.18% | 10.26% )   ( 2.025565s |  0.20% | 10.29% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.291679s |  0.11% |  6.39% )   ( 1.254551s |  0.12% |  6.37% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.512002s |  0.04% |  2.53% )   ( 0.507376s |  0.05% |  2.57% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.275094s |  0.11% |  6.31% )   ( 1.203790s |  0.12% |  6.12% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.464065s |  0.04% |  2.29% )   ( 0.432990s |  0.04% |  2.20% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.443455s |  0.13% |  7.14% )   ( 1.392803s |  0.13% |  7.08% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.209471s |  0.29% | 15.89% )   ( 3.166275s |  0.31% | 16.09% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.495826s |  0.04% |  2.45% )   ( 0.487516s |  0.04% |  2.47% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.500072s |  0.04% |  2.47% )   ( 0.470291s |  0.04% |  2.39% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+88.5.1:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+38.5.1:         ( 0.003457s |  0.00% |  0.00% )   ( 0.003916s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003186s |  0.00% |  0.00% )   ( 0.003619s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003533s |  0.00% |  0.00% )   ( 0.003974s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009587s |  0.00% |  0.04% )   ( 0.009642s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p1_PID})
+1016.3.0:       ( 18.101014s |  1.64% |  3.29% )   ( 17.319932s |  1.73% |  3.47% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p2 p2_PID >>
+1.4.0:          ( 0.000597s |  0.00% |  0.00% )   ( 0.000612s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p2 p2_PID (&)
+24.4.0:         ( 18.100331s |  1.64% | 99.99% )   ( 17.319223s |  1.73% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000344s |  0.00% |  0.00% )   ( 0.000384s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000091s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p2
+30.5.0:         ( 0.023437s |  0.00% |  0.12% )   ( 0.023394s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p2 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p2; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023777s |  0.00% |  0.13% )   ( 0.023735s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024037s |  0.00% |  0.13% )   ( 0.023990s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024040s |  0.00% |  0.13% )   ( 0.023992s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.023982s |  0.00% |  0.13% )   ( 0.023934s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003308s |  0.00% |  0.00% )   ( 0.003737s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   true
+38.5.0:         ( 0.003017s |  0.00% |  0.00% )   ( 0.003435s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000234s |  0.00% |  0.00% )   ( 0.000268s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000206s |  0.00% |  0.00% )   ( 0.000236s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003928s |  0.00% |  0.00% )   ( 0.004377s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p2
+41.5.0:         ( 0.209233s |  0.01% |  0.05% )   ( 0.004950s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003452s |  0.00% |  0.00% )   ( 0.003902s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003276s |  0.00% |  0.00% )   ( 0.003705s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.002990s |  0.00% |  0.00% )   ( 0.003406s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003150s |  0.00% |  0.00% )   ( 0.003556s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.024705s |  0.00% |  0.00% )   ( 0.025020s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003038s |  0.00% |  0.00% )   ( 0.003447s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003147s |  0.00% |  0.00% )   ( 0.003503s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003250s |  0.00% |  0.00% )   ( 0.003661s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.003569s |  0.00% |  0.00% )   ( 0.003979s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p2
+66.5.0:         ( 0.002835s |  0.00% |  0.00% )   ( 0.003229s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.002714s |  0.00% |  0.00% )   ( 0.003087s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+91.5.0:         ( 17.685388s |  1.61% |  4.65% )   ( 17.101643s |  1.71% |  4.70% )    	(21x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003046s |  0.00% |  0.01% )   ( 0.003461s |  0.00% |  0.02% )    	(21x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.178295s |  0.10% |  6.66% )   ( 1.126337s |  0.11% |  6.58% )    	(21x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.129778s |  0.19% | 12.04% )   ( 2.084673s |  0.20% | 12.18% )    	(21x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.695275s |  0.15% |  9.58% )   ( 1.654062s |  0.16% |  9.67% )    	(21x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.138031s |  0.19% | 12.08% )   ( 2.069622s |  0.20% | 12.10% )    	(21x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.616167s |  0.14% |  9.13% )   ( 1.585874s |  0.15% |  9.27% )    	(21x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.010024s |  0.09% |  5.71% )   ( 0.980981s |  0.09% |  5.73% )    	(21x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.476844s |  0.04% |  2.69% )   ( 0.451985s |  0.04% |  2.64% )    	(21x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.238165s |  0.11% |  7.00% )   ( 1.088745s |  0.10% |  6.36% )    	(21x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.411537s |  0.03% |  2.32% )   ( 0.392718s |  0.03% |  2.29% )    	(21x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.377081s |  0.12% |  7.78% )   ( 1.355825s |  0.13% |  7.92% )    	(21x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.551001s |  0.32% | 20.07% )   ( 3.461244s |  0.34% | 20.23% )    	(21x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.441415s |  0.04% |  2.49% )   ( 0.432393s |  0.04% |  2.52% )    	(21x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.418729s |  0.03% |  2.36% )   ( 0.413723s |  0.04% |  2.41% )    	(21x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+88.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+38.5.1:         ( 0.003006s |  0.00% |  0.00% )   ( 0.003425s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.002729s |  0.00% |  0.00% )   ( 0.003101s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003063s |  0.00% |  0.00% )   ( 0.003441s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000212s |  0.00% |  0.00% )   ( 0.000234s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000198s |  0.00% |  0.00% )   ( 0.000219s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009463s |  0.00% |  0.05% )   ( 0.009536s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p2_PID})
+1016.3.0:       ( 18.056370s |  1.64% |  3.28% )   ( 17.124420s |  1.71% |  3.43% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p3 p3_PID >>
+1.4.0:          ( 0.000598s |  0.00% |  0.00% )   ( 0.000615s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p3 p3_PID (&)
+24.4.0:         ( 18.055688s |  1.64% | 99.99% )   ( 17.123705s |  1.71% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000345s |  0.00% |  0.00% )   ( 0.000385s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000370s |  0.00% |  0.00% )   ( 0.000407s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p3
+30.5.0:         ( 0.023666s |  0.00% |  0.13% )   ( 0.023629s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p3 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p3; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024012s |  0.00% |  0.13% )   ( 0.023971s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.023975s |  0.00% |  0.13% )   ( 0.023936s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.023989s |  0.00% |  0.13% )   ( 0.023950s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.024070s |  0.00% |  0.13% )   ( 0.024018s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003861s |  0.00% |  0.00% )   ( 0.004317s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   true
+38.5.0:         ( 0.003477s |  0.00% |  0.00% )   ( 0.003934s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004260s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p3
+41.5.0:         ( 0.296259s |  0.02% |  0.06% )   ( 0.005722s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003967s |  0.00% |  0.00% )   ( 0.004459s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003597s |  0.00% |  0.00% )   ( 0.004084s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003448s |  0.00% |  0.00% )   ( 0.003900s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003630s |  0.00% |  0.00% )   ( 0.004093s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.027104s |  0.00% |  0.00% )   ( 0.027482s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003456s |  0.00% |  0.00% )   ( 0.003904s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003428s |  0.00% |  0.00% )   ( 0.003874s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.007978s |  0.00% |  0.00% )   ( 0.004128s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.003934s |  0.00% |  0.00% )   ( 0.004409s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p3
+66.5.0:         ( 0.003277s |  0.00% |  0.00% )   ( 0.003722s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003200s |  0.00% |  0.00% )   ( 0.003646s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.540760s |  1.59% |  4.22% )   ( 16.895908s |  1.69% |  4.28% )    	(23x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003243s |  0.00% |  0.01% )   ( 0.003694s |  0.00% |  0.02% )    	(23x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.145210s |  0.10% |  6.52% )   ( 1.116214s |  0.11% |  6.60% )    	(23x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.083628s |  0.18% | 11.87% )   ( 1.986786s |  0.19% | 11.75% )    	(23x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.730885s |  0.15% |  9.86% )   ( 1.615765s |  0.16% |  9.56% )    	(23x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.045733s |  0.18% | 11.66% )   ( 1.984423s |  0.19% | 11.74% )    	(23x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.611058s |  0.14% |  9.18% )   ( 1.585733s |  0.15% |  9.38% )    	(23x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.129150s |  0.10% |  6.43% )   ( 1.042769s |  0.10% |  6.17% )    	(23x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.494757s |  0.04% |  2.82% )   ( 0.489850s |  0.04% |  2.89% )    	(23x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.107104s |  0.10% |  6.31% )   ( 1.060373s |  0.10% |  6.27% )    	(23x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.448748s |  0.04% |  2.55% )   ( 0.420115s |  0.04% |  2.48% )    	(23x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.440211s |  0.13% |  8.21% )   ( 1.375063s |  0.13% |  8.13% )    	(23x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.340385s |  0.30% | 19.04% )   ( 3.281162s |  0.32% | 19.41% )    	(23x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.488107s |  0.04% |  2.78% )   ( 0.475393s |  0.04% |  2.81% )    	(23x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.472541s |  0.04% |  2.69% )   ( 0.458568s |  0.04% |  2.71% )    	(23x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003429s |  0.00% |  0.00% )   ( 0.003877s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003211s |  0.00% |  0.00% )   ( 0.003637s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003559s |  0.00% |  0.00% )   ( 0.004004s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008700s |  0.00% |  0.04% )   ( 0.008786s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000084s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p3_PID})
+1016.3.0:       ( 22.887910s |  2.08% |  4.16% )   ( 21.923279s |  2.19% |  4.40% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p4 p4_PID >>
+1.4.0:          ( 0.000588s |  0.00% |  0.00% )   ( 0.000607s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p4 p4_PID (&)
+24.4.0:         ( 22.887238s |  2.08% | 99.99% )   ( 21.922575s |  2.19% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000352s |  0.00% |  0.00% )   ( 0.000393s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p4
+30.5.0:         ( 0.023870s |  0.00% |  0.10% )   ( 0.023828s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p4 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p4; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024004s |  0.00% |  0.10% )   ( 0.023964s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.023981s |  0.00% |  0.10% )   ( 0.023938s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024007s |  0.00% |  0.10% )   ( 0.023966s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.023971s |  0.00% |  0.10% )   ( 0.023927s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004469s |  0.00% |  0.00% )   ( 0.005016s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
+38.5.0:         ( 0.003713s |  0.00% |  0.00% )   ( 0.004215s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004663s |  0.00% |  0.00% )   ( 0.005204s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p4
+41.5.0:         ( 0.458815s |  0.04% |  0.07% )   ( 0.006616s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004351s |  0.00% |  0.00% )   ( 0.004895s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004084s |  0.00% |  0.00% )   ( 0.004580s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003803s |  0.00% |  0.00% )   ( 0.004301s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004000s |  0.00% |  0.00% )   ( 0.004472s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.030172s |  0.00% |  0.00% )   ( 0.030084s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003617s |  0.00% |  0.00% )   ( 0.004091s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003657s |  0.00% |  0.00% )   ( 0.004110s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003798s |  0.00% |  0.00% )   ( 0.004306s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004571s |  0.00% |  0.00% )   ( 0.005100s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p4
+66.5.0:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004238s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003675s |  0.00% |  0.00% )   ( 0.004186s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 22.209065s |  2.02% |  3.73% )   ( 21.688655s |  2.17% |  3.80% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003771s |  0.00% |  0.01% )   ( 0.004271s |  0.00% |  0.01% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.612229s |  0.14% |  7.25% )   ( 1.601200s |  0.16% |  7.38% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.584655s |  0.23% | 11.63% )   ( 2.525690s |  0.25% | 11.64% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 2.069910s |  0.18% |  9.32% )   ( 2.015604s |  0.20% |  9.29% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.583187s |  0.23% | 11.63% )   ( 2.535582s |  0.25% | 11.69% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.967875s |  0.17% |  8.86% )   ( 1.941663s |  0.19% |  8.95% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.469652s |  0.13% |  6.61% )   ( 1.425968s |  0.14% |  6.57% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.634176s |  0.05% |  2.85% )   ( 0.590296s |  0.05% |  2.72% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.505036s |  0.13% |  6.77% )   ( 1.460708s |  0.14% |  6.73% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.533809s |  0.04% |  2.40% )   ( 0.510409s |  0.05% |  2.35% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.801330s |  0.16% |  8.11% )   ( 1.757914s |  0.17% |  8.10% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 4.250423s |  0.38% | 19.13% )   ( 4.189076s |  0.42% | 19.31% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.620084s |  0.05% |  2.79% )   ( 0.584011s |  0.05% |  2.69% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.572928s |  0.05% |  2.57% )   ( 0.546263s |  0.05% |  2.51% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003545s |  0.00% |  0.00% )   ( 0.004020s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003609s |  0.00% |  0.00% )   ( 0.004100s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004026s |  0.00% |  0.00% )   ( 0.004518s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000105s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004993s |  0.00% |  0.02% )   ( 0.005047s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000084s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p4_PID})
+1016.3.0:       ( 20.920626s |  1.90% |  3.80% )   ( 19.990445s |  2.00% |  4.01% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p5 p5_PID >>
+1.4.0:          ( 0.000607s |  0.00% |  0.00% )   ( 0.000631s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p5 p5_PID (&)
+24.4.0:         ( 20.919932s |  1.90% | 99.99% )   ( 19.989712s |  2.00% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000345s |  0.00% |  0.00% )   ( 0.000386s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000359s |  0.00% |  0.00% )   ( 0.000403s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p5
+30.5.0:         ( 0.024239s |  0.00% |  0.11% )   ( 0.024186s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p5 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p5; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023999s |  0.00% |  0.11% )   ( 0.023956s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024019s |  0.00% |  0.11% )   ( 0.023976s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024002s |  0.00% |  0.11% )   ( 0.023957s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.023849s |  0.00% |  0.11% )   ( 0.023802s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004768s |  0.00% |  0.00% )   ( 0.005327s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
+38.5.0:         ( 0.004207s |  0.00% |  0.00% )   ( 0.004687s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005059s |  0.00% |  0.00% )   ( 0.005625s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p5
+41.5.0:         ( 0.307031s |  0.02% |  0.05% )   ( 0.006434s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004410s |  0.00% |  0.00% )   ( 0.004997s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004165s |  0.00% |  0.00% )   ( 0.004726s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003876s |  0.00% |  0.00% )   ( 0.004420s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004119s |  0.00% |  0.00% )   ( 0.004663s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035156s |  0.00% |  0.00% )   ( 0.032607s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.004093s |  0.00% |  0.00% )   ( 0.004607s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003893s |  0.00% |  0.00% )   ( 0.004426s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.005329s |  0.00% |  0.00% )   ( 0.004671s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004696s |  0.00% |  0.00% )   ( 0.005263s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p5
+66.5.0:         ( 0.003800s |  0.00% |  0.00% )   ( 0.004332s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003742s |  0.00% |  0.00% )   ( 0.004270s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000119s |  0.00% |  0.00% )   ( 0.000137s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000143s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 20.379748s |  1.85% |  3.60% )   ( 19.748371s |  1.98% |  3.65% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003993s |  0.00% |  0.01% )   ( 0.004548s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.501781s |  0.13% |  7.36% )   ( 1.433221s |  0.14% |  7.25% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.293988s |  0.20% | 11.25% )   ( 2.263800s |  0.22% | 11.46% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.878019s |  0.17% |  9.21% )   ( 1.846603s |  0.18% |  9.35% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.341121s |  0.21% | 11.48% )   ( 2.286974s |  0.22% | 11.58% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.852432s |  0.16% |  9.08% )   ( 1.806086s |  0.18% |  9.14% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.310780s |  0.11% |  6.43% )   ( 1.262101s |  0.12% |  6.39% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.626047s |  0.05% |  3.07% )   ( 0.584706s |  0.05% |  2.96% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.382251s |  0.12% |  6.78% )   ( 1.328739s |  0.13% |  6.72% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.513065s |  0.04% |  2.51% )   ( 0.502270s |  0.05% |  2.54% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.652541s |  0.15% |  8.10% )   ( 1.605233s |  0.16% |  8.12% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.788911s |  0.34% | 18.59% )   ( 3.714880s |  0.37% | 18.81% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.632912s |  0.05% |  3.10% )   ( 0.571062s |  0.05% |  2.89% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.601907s |  0.05% |  2.95% )   ( 0.538148s |  0.05% |  2.72% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004179s |  0.00% |  0.00% )   ( 0.004737s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003723s |  0.00% |  0.00% )   ( 0.004214s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.007359s |  0.00% |  0.00% )   ( 0.004697s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005008s |  0.00% |  0.02% )   ( 0.005098s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p5_PID})
+1016.3.0:       ( 17.461650s |  1.59% |  3.17% )   ( 16.502525s |  1.65% |  3.31% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p6 p6_PID >>
+1.4.0:          ( 0.000641s |  0.00% |  0.00% )   ( 0.000658s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p6 p6_PID (&)
+24.4.0:         ( 17.460922s |  1.59% | 99.99% )   ( 16.501764s |  1.65% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000331s |  0.00% |  0.00% )   ( 0.000378s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000099s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p6
+30.5.0:         ( 0.023944s |  0.00% |  0.13% )   ( 0.023900s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p6 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p6; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023993s |  0.00% |  0.13% )   ( 0.023954s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.023997s |  0.00% |  0.13% )   ( 0.023946s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.023997s |  0.00% |  0.13% )   ( 0.023951s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.024097s |  0.00% |  0.13% )   ( 0.024042s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004886s |  0.00% |  0.00% )   ( 0.005470s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
+38.5.0:         ( 0.004265s |  0.00% |  0.00% )   ( 0.004813s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005125s |  0.00% |  0.00% )   ( 0.005673s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p6
+41.5.0:         ( 0.371001s |  0.03% |  0.07% )   ( 0.006808s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004689s |  0.00% |  0.00% )   ( 0.005261s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004354s |  0.00% |  0.00% )   ( 0.004952s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.006904s |  0.00% |  0.00% )   ( 0.004495s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004542s |  0.00% |  0.00% )   ( 0.004979s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.033677s |  0.00% |  0.00% )   ( 0.034140s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.004095s |  0.00% |  0.00% )   ( 0.004647s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003928s |  0.00% |  0.00% )   ( 0.004474s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.006004s |  0.00% |  0.00% )   ( 0.004829s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.005084s |  0.00% |  0.00% )   ( 0.005602s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p6
+66.5.0:         ( 0.004058s |  0.00% |  0.00% )   ( 0.004622s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.004077s |  0.00% |  0.00% )   ( 0.004633s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.851482s |  1.53% |  3.44% )   ( 16.251992s |  1.62% |  3.51% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004115s |  0.00% |  0.02% )   ( 0.004691s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.116430s |  0.10% |  6.62% )   ( 1.085336s |  0.10% |  6.67% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.846006s |  0.16% | 10.95% )   ( 1.834517s |  0.18% | 11.28% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.596374s |  0.14% |  9.47% )   ( 1.544859s |  0.15% |  9.50% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.893789s |  0.17% | 11.23% )   ( 1.824652s |  0.18% | 11.22% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.575674s |  0.14% |  9.35% )   ( 1.494918s |  0.14% |  9.19% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.051192s |  0.09% |  6.23% )   ( 1.010572s |  0.10% |  6.21% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.603418s |  0.05% |  3.58% )   ( 0.556435s |  0.05% |  3.42% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.071687s |  0.09% |  6.35% )   ( 1.033539s |  0.10% |  6.35% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.523269s |  0.04% |  3.10% )   ( 0.486842s |  0.04% |  2.99% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.453576s |  0.13% |  8.62% )   ( 1.374924s |  0.13% |  8.46% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.003161s |  0.27% | 17.82% )   ( 2.919939s |  0.29% | 17.96% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.555135s |  0.05% |  3.29% )   ( 0.544716s |  0.05% |  3.35% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.557656s |  0.05% |  3.30% )   ( 0.536052s |  0.05% |  3.29% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003983s |  0.00% |  0.00% )   ( 0.004512s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003866s |  0.00% |  0.00% )   ( 0.004399s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004288s |  0.00% |  0.00% )   ( 0.004809s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009207s |  0.00% |  0.05% )   ( 0.009293s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p6_PID})
+1016.3.0:       ( 17.297489s |  1.57% |  3.14% )   ( 16.221858s |  1.62% |  3.25% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p7 p7_PID >>
+1.4.0:          ( 0.000626s |  0.00% |  0.00% )   ( 0.000641s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p7 p7_PID (&)
+24.4.0:         ( 17.296769s |  1.57% | 99.99% )   ( 16.221112s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000373s |  0.00% |  0.00% )   ( 0.000410s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000368s |  0.00% |  0.00% )   ( 0.000412s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p7
+30.5.0:         ( 0.024207s |  0.00% |  0.13% )   ( 0.024160s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p7 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p7; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024169s |  0.00% |  0.13% )   ( 0.024111s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024180s |  0.00% |  0.13% )   ( 0.024129s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024151s |  0.00% |  0.13% )   ( 0.024101s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.023941s |  0.00% |  0.13% )   ( 0.023888s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004778s |  0.00% |  0.00% )   ( 0.005389s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
+38.5.0:         ( 0.004324s |  0.00% |  0.00% )   ( 0.004900s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005568s |  0.00% |  0.00% )   ( 0.006211s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p7
+41.5.0:         ( 0.324488s |  0.02% |  0.06% )   ( 0.007507s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004965s |  0.00% |  0.00% )   ( 0.005573s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004464s |  0.00% |  0.00% )   ( 0.005041s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.004120s |  0.00% |  0.00% )   ( 0.004700s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004335s |  0.00% |  0.00% )   ( 0.004908s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.038007s |  0.00% |  0.00% )   ( 0.036113s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.004223s |  0.00% |  0.00% )   ( 0.004812s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.004028s |  0.00% |  0.00% )   ( 0.004568s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.008186s |  0.00% |  0.00% )   ( 0.004881s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.005336s |  0.00% |  0.00% )   ( 0.005943s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p7
+66.5.0:         ( 0.004300s |  0.00% |  0.00% )   ( 0.004921s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.004185s |  0.00% |  0.00% )   ( 0.004760s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.726939s |  1.52% |  3.22% )   ( 15.964596s |  1.60% |  3.28% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004219s |  0.00% |  0.02% )   ( 0.004814s |  0.00% |  0.03% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.127901s |  0.10% |  6.74% )   ( 1.050970s |  0.10% |  6.58% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.859475s |  0.16% | 11.11% )   ( 1.765045s |  0.17% | 11.05% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.629769s |  0.14% |  9.74% )   ( 1.544160s |  0.15% |  9.67% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.799733s |  0.16% | 10.75% )   ( 1.753367s |  0.17% | 10.98% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.487447s |  0.13% |  8.89% )   ( 1.472292s |  0.14% |  9.22% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 0.996731s |  0.09% |  5.95% )   ( 0.985926s |  0.09% |  6.17% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.604627s |  0.05% |  3.61% )   ( 0.564015s |  0.05% |  3.53% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.097500s |  0.10% |  6.56% )   ( 1.013694s |  0.10% |  6.34% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.556372s |  0.05% |  3.32% )   ( 0.513437s |  0.05% |  3.21% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.474764s |  0.13% |  8.81% )   ( 1.368921s |  0.13% |  8.57% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.849995s |  0.25% | 17.03% )   ( 2.781882s |  0.27% | 17.42% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.628226s |  0.05% |  3.75% )   ( 0.580354s |  0.05% |  3.63% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.610180s |  0.05% |  3.64% )   ( 0.565719s |  0.05% |  3.54% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004499s |  0.00% |  0.00% )   ( 0.005099s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.004181s |  0.00% |  0.00% )   ( 0.004762s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004433s |  0.00% |  0.00% )   ( 0.005005s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009285s |  0.00% |  0.05% )   ( 0.009368s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000094s |  0.00% |  0.00% )   ( 0.000105s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p7_PID})
+1016.3.0:       ( 17.726792s |  1.61% |  3.22% )   ( 16.907852s |  1.69% |  3.39% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p8 p8_PID >>
+1.4.0:          ( 0.000629s |  0.00% |  0.00% )   ( 0.000647s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p8 p8_PID (&)
+24.4.0:         ( 17.726077s |  1.61% | 99.99% )   ( 16.907104s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p8
+30.5.0:         ( 0.023956s |  0.00% |  0.13% )   ( 0.023913s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p8 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p8; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024082s |  0.00% |  0.13% )   ( 0.024034s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024110s |  0.00% |  0.13% )   ( 0.024062s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024100s |  0.00% |  0.13% )   ( 0.024051s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.024075s |  0.00% |  0.13% )   ( 0.024019s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004073s |  0.00% |  0.00% )   ( 0.004561s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
+38.5.0:         ( 0.003852s |  0.00% |  0.00% )   ( 0.004347s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000092s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004674s |  0.00% |  0.00% )   ( 0.005206s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p8
+41.5.0:         ( 0.341666s |  0.03% |  0.07% )   ( 0.006329s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004177s |  0.00% |  0.00% )   ( 0.004694s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003795s |  0.00% |  0.00% )   ( 0.004291s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003588s |  0.00% |  0.00% )   ( 0.004073s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004213s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.029380s |  0.00% |  0.00% )   ( 0.029693s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003559s |  0.00% |  0.00% )   ( 0.004055s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003624s |  0.00% |  0.00% )   ( 0.004069s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003621s |  0.00% |  0.00% )   ( 0.004058s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004277s |  0.00% |  0.00% )   ( 0.004791s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p8
+66.5.0:         ( 0.003703s |  0.00% |  0.00% )   ( 0.004204s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003557s |  0.00% |  0.00% )   ( 0.004044s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.165100s |  1.56% |  3.87% )   ( 16.674978s |  1.67% |  3.94% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003634s |  0.00% |  0.02% )   ( 0.004111s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.108324s |  0.10% |  6.45% )   ( 1.065401s |  0.10% |  6.38% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.995547s |  0.18% | 11.62% )   ( 1.939704s |  0.19% | 11.63% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.661171s |  0.15% |  9.67% )   ( 1.622156s |  0.16% |  9.72% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.011324s |  0.18% | 11.71% )   ( 1.937034s |  0.19% | 11.61% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.583318s |  0.14% |  9.22% )   ( 1.557956s |  0.15% |  9.34% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.035654s |  0.09% |  6.03% )   ( 1.004264s |  0.10% |  6.02% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.524261s |  0.04% |  3.05% )   ( 0.507158s |  0.05% |  3.04% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.091931s |  0.09% |  6.36% )   ( 1.046329s |  0.10% |  6.27% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.459096s |  0.04% |  2.67% )   ( 0.454623s |  0.04% |  2.72% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.434365s |  0.13% |  8.35% )   ( 1.403378s |  0.14% |  8.41% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.192732s |  0.29% | 18.60% )   ( 3.139628s |  0.31% | 18.82% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.543220s |  0.04% |  3.16% )   ( 0.508714s |  0.05% |  3.05% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.520523s |  0.04% |  3.03% )   ( 0.484522s |  0.04% |  2.90% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003770s |  0.00% |  0.00% )   ( 0.004266s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003651s |  0.00% |  0.00% )   ( 0.004135s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.005869s |  0.00% |  0.00% )   ( 0.004698s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000092s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005254s |  0.00% |  0.02% )   ( 0.005352s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p8_PID})
+1016.3.0:       ( 17.275334s |  1.57% |  3.14% )   ( 16.479366s |  1.65% |  3.30% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p9 p9_PID >>
+1.4.0:          ( 0.000661s |  0.00% |  0.00% )   ( 0.000674s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p9 p9_PID (&)
+24.4.0:         ( 17.274584s |  1.57% | 99.99% )   ( 16.478588s |  1.65% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000347s |  0.00% |  0.00% )   ( 0.000387s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000360s |  0.00% |  0.00% )   ( 0.000404s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p9
+30.5.0:         ( 0.024051s |  0.00% |  0.13% )   ( 0.024006s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p9 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p9; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024021s |  0.00% |  0.13% )   ( 0.023976s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024028s |  0.00% |  0.13% )   ( 0.023982s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024036s |  0.00% |  0.13% )   ( 0.023989s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.023917s |  0.00% |  0.13% )   ( 0.023873s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.005335s |  0.00% |  0.00% )   ( 0.005988s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   true
+38.5.0:         ( 0.004617s |  0.00% |  0.00% )   ( 0.005226s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005270s |  0.00% |  0.00% )   ( 0.005867s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p9
+41.5.0:         ( 0.273640s |  0.02% |  0.05% )   ( 0.006582s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004616s |  0.00% |  0.00% )   ( 0.005188s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004277s |  0.00% |  0.00% )   ( 0.004834s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.004150s |  0.00% |  0.00% )   ( 0.004630s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.007484s |  0.00% |  0.00% )   ( 0.005062s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.034107s |  0.00% |  0.00% )   ( 0.034551s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.004326s |  0.00% |  0.00% )   ( 0.004905s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.004350s |  0.00% |  0.00% )   ( 0.004932s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.010607s |  0.00% |  0.00% )   ( 0.005248s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.008360s |  0.00% |  0.00% )   ( 0.005975s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p9
+66.5.0:         ( 0.004244s |  0.00% |  0.00% )   ( 0.004835s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.004221s |  0.00% |  0.00% )   ( 0.004780s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.750642s |  1.52% |  3.34% )   ( 16.224955s |  1.62% |  3.39% )    	(29x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004298s |  0.00% |  0.02% )   ( 0.004902s |  0.00% |  0.03% )    	(29x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.182033s |  0.10% |  7.05% )   ( 1.097985s |  0.11% |  6.76% )    	(29x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.863494s |  0.16% | 11.12% )   ( 1.809771s |  0.18% | 11.15% )    	(29x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.671651s |  0.15% |  9.97% )   ( 1.568751s |  0.15% |  9.66% )    	(29x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.917204s |  0.17% | 11.44% )   ( 1.840556s |  0.18% | 11.34% )    	(29x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.538779s |  0.14% |  9.18% )   ( 1.514426s |  0.15% |  9.33% )    	(29x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.009809s |  0.09% |  6.02% )   ( 0.981908s |  0.09% |  6.05% )    	(29x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.562073s |  0.05% |  3.35% )   ( 0.548206s |  0.05% |  3.37% )    	(29x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.032278s |  0.09% |  6.16% )   ( 1.013171s |  0.10% |  6.24% )    	(29x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.509141s |  0.04% |  3.03% )   ( 0.499791s |  0.05% |  3.08% )    	(29x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.384912s |  0.12% |  8.26% )   ( 1.368384s |  0.13% |  8.43% )    	(29x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.913621s |  0.26% | 17.39% )   ( 2.858997s |  0.28% | 17.62% )    	(29x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.589468s |  0.05% |  3.51% )   ( 0.563863s |  0.05% |  3.47% )    	(29x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.571881s |  0.05% |  3.41% )   ( 0.554244s |  0.05% |  3.41% )    	(29x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004491s |  0.00% |  0.00% )   ( 0.005063s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003904s |  0.00% |  0.00% )   ( 0.004429s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.005534s |  0.00% |  0.00% )   ( 0.005080s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008911s |  0.00% |  0.05% )   ( 0.008997s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000089s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p9_PID})
+1016.3.0:       ( 18.014729s |  1.64% |  3.28% )   ( 17.321813s |  1.73% |  3.47% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p10 p10_PID >>
+1.4.0:          ( 0.000695s |  0.00% |  0.00% )   ( 0.000713s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p10 p10_PID (&)
+24.4.0:         ( 18.013946s |  1.64% | 99.99% )   ( 17.320998s |  1.73% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000092s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p10
+30.5.0:         ( 0.024235s |  0.00% |  0.13% )   ( 0.024065s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p10 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p10; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024101s |  0.00% |  0.13% )   ( 0.024002s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024228s |  0.00% |  0.13% )   ( 0.024074s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024119s |  0.00% |  0.13% )   ( 0.024021s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.024146s |  0.00% |  0.13% )   ( 0.023995s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003400s |  0.00% |  0.00% )   ( 0.003818s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   true
+38.5.0:         ( 0.003073s |  0.00% |  0.00% )   ( 0.003490s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003580s |  0.00% |  0.00% )   ( 0.004000s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p10
+41.5.0:         ( 0.223348s |  0.02% |  0.05% )   ( 0.004960s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003424s |  0.00% |  0.00% )   ( 0.003854s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003452s |  0.00% |  0.00% )   ( 0.003841s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.002968s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003042s |  0.00% |  0.00% )   ( 0.003434s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.026420s |  0.00% |  0.00% )   ( 0.024609s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003145s |  0.00% |  0.00% )   ( 0.003543s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.002960s |  0.00% |  0.00% )   ( 0.003353s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003051s |  0.00% |  0.00% )   ( 0.003423s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.003472s |  0.00% |  0.00% )   ( 0.003857s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p10
+66.5.0:         ( 0.002940s |  0.00% |  0.00% )   ( 0.003331s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.002835s |  0.00% |  0.00% )   ( 0.003230s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.582939s |  1.60% |  4.88% )   ( 17.104320s |  1.71% |  4.93% )    	(20x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002738s |  0.00% |  0.01% )   ( 0.003110s |  0.00% |  0.01% )    	(20x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.102712s |  0.10% |  6.27% )   ( 1.078677s |  0.10% |  6.30% )    	(20x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.131453s |  0.19% | 12.12% )   ( 2.067361s |  0.20% | 12.08% )    	(20x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.729431s |  0.15% |  9.83% )   ( 1.650723s |  0.16% |  9.65% )    	(20x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.105301s |  0.19% | 11.97% )   ( 2.050155s |  0.20% | 11.98% )    	(20x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.669457s |  0.15% |  9.49% )   ( 1.616490s |  0.16% |  9.45% )    	(20x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.022861s |  0.09% |  5.81% )   ( 1.000724s |  0.10% |  5.85% )    	(20x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.450059s |  0.04% |  2.55% )   ( 0.434537s |  0.04% |  2.54% )    	(20x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.151142s |  0.10% |  6.54% )   ( 1.076147s |  0.10% |  6.29% )    	(20x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.400815s |  0.03% |  2.27% )   ( 0.383257s |  0.03% |  2.24% )    	(20x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.414521s |  0.12% |  8.04% )   ( 1.403090s |  0.14% |  8.20% )    	(20x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.504920s |  0.31% | 19.93% )   ( 3.484209s |  0.34% | 20.37% )    	(20x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.446306s |  0.04% |  2.53% )   ( 0.436920s |  0.04% |  2.55% )    	(20x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.451223s |  0.04% |  2.56% )   ( 0.418920s |  0.04% |  2.44% )    	(20x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003064s |  0.00% |  0.00% )   ( 0.003460s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.002907s |  0.00% |  0.00% )   ( 0.003271s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003133s |  0.00% |  0.00% )   ( 0.003498s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009034s |  0.00% |  0.05% )   ( 0.009114s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p10_PID})
+1016.3.0:       ( 20.409591s |  1.86% |  3.71% )   ( 19.592455s |  1.96% |  3.93% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p11 p11_PID >>
+1.4.0:          ( 0.000702s |  0.00% |  0.00% )   ( 0.000717s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p11 p11_PID (&)
+24.4.0:         ( 20.408804s |  1.86% | 99.99% )   ( 19.591640s |  1.96% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p11
+30.5.0:         ( 0.024167s |  0.00% |  0.11% )   ( 0.024062s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p11 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p11; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024170s |  0.00% |  0.11% )   ( 0.024127s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024095s |  0.00% |  0.11% )   ( 0.024044s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024079s |  0.00% |  0.11% )   ( 0.024037s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.024197s |  0.00% |  0.11% )   ( 0.024145s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004345s |  0.00% |  0.00% )   ( 0.004873s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
+38.5.0:         ( 0.003889s |  0.00% |  0.00% )   ( 0.004400s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004671s |  0.00% |  0.00% )   ( 0.005199s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p11
+41.5.0:         ( 0.276908s |  0.02% |  0.05% )   ( 0.005801s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003903s |  0.00% |  0.00% )   ( 0.004378s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003732s |  0.00% |  0.00% )   ( 0.004223s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003618s |  0.00% |  0.00% )   ( 0.004120s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003674s |  0.00% |  0.00% )   ( 0.004147s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.031998s |  0.00% |  0.00% )   ( 0.030008s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003330s |  0.00% |  0.00% )   ( 0.003805s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003361s |  0.00% |  0.00% )   ( 0.003802s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.006809s |  0.00% |  0.00% )   ( 0.004053s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004284s |  0.00% |  0.00% )   ( 0.004792s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p11
+66.5.0:         ( 0.003504s |  0.00% |  0.00% )   ( 0.003969s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003429s |  0.00% |  0.00% )   ( 0.003895s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 19.908489s |  1.81% |  3.90% )   ( 19.360077s |  1.94% |  3.95% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003545s |  0.00% |  0.01% )   ( 0.004046s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.444368s |  0.13% |  7.25% )   ( 1.372122s |  0.13% |  7.08% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.386875s |  0.21% | 11.98% )   ( 2.268473s |  0.22% | 11.71% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.850824s |  0.16% |  9.29% )   ( 1.825053s |  0.18% |  9.42% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.271108s |  0.20% | 11.40% )   ( 2.248179s |  0.22% | 11.61% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.790188s |  0.16% |  8.99% )   ( 1.769156s |  0.17% |  9.13% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.265361s |  0.11% |  6.35% )   ( 1.226407s |  0.12% |  6.33% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.573046s |  0.05% |  2.87% )   ( 0.545353s |  0.05% |  2.81% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.319531s |  0.12% |  6.62% )   ( 1.279934s |  0.12% |  6.61% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.540491s |  0.04% |  2.71% )   ( 0.485608s |  0.04% |  2.50% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.575559s |  0.14% |  7.91% )   ( 1.548235s |  0.15% |  7.99% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.778952s |  0.34% | 18.98% )   ( 3.733474s |  0.37% | 19.28% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.558631s |  0.05% |  2.80% )   ( 0.539840s |  0.05% |  2.78% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.550010s |  0.05% |  2.76% )   ( 0.514197s |  0.05% |  2.65% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003762s |  0.00% |  0.00% )   ( 0.004247s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003536s |  0.00% |  0.00% )   ( 0.003992s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003803s |  0.00% |  0.00% )   ( 0.004232s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.006266s |  0.00% |  0.03% )   ( 0.006310s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p11_PID})
+1016.3.0:       ( 18.401341s |  1.67% |  3.35% )   ( 17.765330s |  1.78% |  3.56% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p12 p12_PID >>
+1.4.0:          ( 0.000826s |  0.00% |  0.00% )   ( 0.000461s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p12 p12_PID (&)
+24.4.0:         ( 18.400340s |  1.67% | 99.99% )   ( 17.764666s |  1.78% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p12
+30.5.0:         ( 0.046040s |  0.00% |  0.25% )   ( 0.045887s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p12 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p12; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.046317s |  0.00% |  0.25% )   ( 0.046157s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.046152s |  0.00% |  0.25% )   ( 0.046007s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.046238s |  0.00% |  0.25% )   ( 0.046085s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.046212s |  0.00% |  0.25% )   ( 0.046050s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.002994s |  0.00% |  0.00% )   ( 0.003345s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   true
+38.5.0:         ( 0.002690s |  0.00% |  0.00% )   ( 0.003042s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000138s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003358s |  0.00% |  0.00% )   ( 0.003761s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p12
+41.5.0:         ( 0.236089s |  0.02% |  0.06% )   ( 0.004469s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003052s |  0.00% |  0.00% )   ( 0.003448s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.002856s |  0.00% |  0.00% )   ( 0.003248s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.002567s |  0.00% |  0.00% )   ( 0.002940s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002871s |  0.00% |  0.00% )   ( 0.003229s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.024239s |  0.00% |  0.00% )   ( 0.022495s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.002533s |  0.00% |  0.00% )   ( 0.002879s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.002565s |  0.00% |  0.00% )   ( 0.002919s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.005397s |  0.00% |  0.00% )   ( 0.003195s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.003245s |  0.00% |  0.00% )   ( 0.003623s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p12
+66.5.0:         ( 0.005676s |  0.00% |  0.00% )   ( 0.003029s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.002581s |  0.00% |  0.00% )   ( 0.002956s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000152s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000143s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.852456s |  1.62% |  5.39% )   ( 17.450374s |  1.74% |  5.45% )    	(18x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002538s |  0.00% |  0.01% )   ( 0.002903s |  0.00% |  0.01% )    	(18x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.173266s |  0.10% |  6.57% )   ( 1.146973s |  0.11% |  6.57% )    	(18x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.165437s |  0.19% | 12.12% )   ( 2.155538s |  0.21% | 12.35% )    	(18x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.710386s |  0.15% |  9.58% )   ( 1.690444s |  0.16% |  9.68% )    	(18x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.260785s |  0.20% | 12.66% )   ( 2.169947s |  0.21% | 12.43% )    	(18x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.693558s |  0.15% |  9.48% )   ( 1.617100s |  0.16% |  9.26% )    	(18x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.026508s |  0.09% |  5.74% )   ( 0.995933s |  0.09% |  5.70% )    	(18x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.433529s |  0.03% |  2.42% )   ( 0.425822s |  0.04% |  2.44% )    	(18x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.151402s |  0.10% |  6.44% )   ( 1.134717s |  0.11% |  6.50% )    	(18x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.376088s |  0.03% |  2.10% )   ( 0.358639s |  0.03% |  2.05% )    	(18x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.433647s |  0.13% |  8.03% )   ( 1.413528s |  0.14% |  8.10% )    	(18x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.602978s |  0.32% | 20.18% )   ( 3.556266s |  0.35% | 20.37% )    	(18x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.422550s |  0.03% |  2.36% )   ( 0.402153s |  0.04% |  2.30% )    	(18x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.399784s |  0.03% |  2.23% )   ( 0.380411s |  0.03% |  2.17% )    	(18x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002594s |  0.00% |  0.00% )   ( 0.002950s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.002499s |  0.00% |  0.00% )   ( 0.002847s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.002844s |  0.00% |  0.00% )   ( 0.003216s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005019s |  0.00% |  0.02% )   ( 0.005092s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000175s |  0.00% |  0.00% )   ( 0.000203s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p12_PID})
+1016.3.0:       ( 18.925595s |  1.72% |  3.44% )   ( 18.491418s |  1.85% |  3.71% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p13 p13_PID >>
+1.4.0:          ( 0.001019s |  0.00% |  0.00% )   ( 0.001038s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p13 p13_PID (&)
+24.4.0:         ( 18.924430s |  1.72% | 99.99% )   ( 18.490211s |  1.85% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p13
+30.5.0:         ( 0.047422s |  0.00% |  0.25% )   ( 0.047256s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p13 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p13; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.040868s |  0.00% |  0.21% )   ( 0.040743s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.030030s |  0.00% |  0.15% )   ( 0.029938s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024210s |  0.00% |  0.12% )   ( 0.024150s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.024078s |  0.00% |  0.12% )   ( 0.024033s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.001667s |  0.00% |  0.00% )   ( 0.001894s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   true
+38.5.0:         ( 0.001682s |  0.00% |  0.00% )   ( 0.001904s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.001907s |  0.00% |  0.00% )   ( 0.002123s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p13
+41.5.0:         ( 0.095027s |  0.00% |  0.04% )   ( 0.002321s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.001702s |  0.00% |  0.00% )   ( 0.001927s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.001396s |  0.00% |  0.00% )   ( 0.001587s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.001344s |  0.00% |  0.00% )   ( 0.001529s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.001514s |  0.00% |  0.00% )   ( 0.001712s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.011435s |  0.00% |  0.00% )   ( 0.011608s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.001364s |  0.00% |  0.00% )   ( 0.001555s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.001400s |  0.00% |  0.00% )   ( 0.001579s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.001487s |  0.00% |  0.00% )   ( 0.001667s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.001735s |  0.00% |  0.00% )   ( 0.001929s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p13
+66.5.0:         ( 0.001384s |  0.00% |  0.00% )   ( 0.001593s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.001376s |  0.00% |  0.00% )   ( 0.001564s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000133s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 18.617089s |  1.69% |  9.83% )   ( 18.272462s |  1.83% |  9.88% )    	(10x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.001386s |  0.00% |  0.00% )   ( 0.001585s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.158301s |  0.10% |  6.22% )   ( 1.152009s |  0.11% |  6.30% )    	(10x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.392686s |  0.21% | 12.85% )   ( 2.373225s |  0.23% | 12.98% )    	(10x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.768380s |  0.16% |  9.49% )   ( 1.732146s |  0.17% |  9.47% )    	(10x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.384914s |  0.21% | 12.81% )   ( 2.362771s |  0.23% | 12.93% )    	(10x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.793023s |  0.16% |  9.63% )   ( 1.723074s |  0.17% |  9.42% )    	(10x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 0.990451s |  0.09% |  5.32% )   ( 0.987849s |  0.09% |  5.40% )    	(10x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.330085s |  0.03% |  1.77% )   ( 0.315292s |  0.03% |  1.72% )    	(10x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.198459s |  0.10% |  6.43% )   ( 1.177730s |  0.11% |  6.44% )    	(10x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.270887s |  0.02% |  1.45% )   ( 0.262182s |  0.02% |  1.43% )    	(10x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.476273s |  0.13% |  7.92% )   ( 1.451856s |  0.14% |  7.94% )    	(10x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 4.262081s |  0.38% | 22.89% )   ( 4.177629s |  0.41% | 22.86% )    	(10x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.305747s |  0.02% |  1.64% )   ( 0.296543s |  0.02% |  1.62% )    	(10x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.284416s |  0.02% |  1.52% )   ( 0.258571s |  0.02% |  1.41% )    	(10x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.001603s |  0.00% |  0.00% )   ( 0.001821s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.001274s |  0.00% |  0.00% )   ( 0.001443s |  0.00% |  0.00% )    	(9x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.001409s |  0.00% |  0.00% )   ( 0.001589s |  0.00% |  0.00% )    	(9x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008792s |  0.00% |  0.04% )   ( 0.008871s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000146s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p13_PID})
+1016.3.0:       ( 17.422074s |  1.58% |  3.17% )   ( 16.422235s |  1.64% |  3.29% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p14 p14_PID >>
+1.4.0:          ( 0.000967s |  0.00% |  0.00% )   ( 0.000362s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p14 p14_PID (&)
+24.4.0:         ( 17.420958s |  1.58% | 99.99% )   ( 16.421710s |  1.64% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p14
+30.5.0:         ( 0.026930s |  0.00% |  0.15% )   ( 0.026858s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p14 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p14; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024111s |  0.00% |  0.13% )   ( 0.024052s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.029287s |  0.00% |  0.16% )   ( 0.029196s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.027033s |  0.00% |  0.15% )   ( 0.026966s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.026417s |  0.00% |  0.15% )   ( 0.026336s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004962s |  0.00% |  0.00% )   ( 0.005565s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
+38.5.0:         ( 0.004515s |  0.00% |  0.00% )   ( 0.005107s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005450s |  0.00% |  0.00% )   ( 0.006102s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p14
+41.5.0:         ( 0.288795s |  0.02% |  0.05% )   ( 0.006859s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004481s |  0.00% |  0.00% )   ( 0.005048s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004239s |  0.00% |  0.00% )   ( 0.004799s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003832s |  0.00% |  0.00% )   ( 0.004377s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004204s |  0.00% |  0.00% )   ( 0.004732s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.034550s |  0.00% |  0.00% )   ( 0.034030s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003973s |  0.00% |  0.00% )   ( 0.004483s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003813s |  0.00% |  0.00% )   ( 0.004325s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.004230s |  0.00% |  0.00% )   ( 0.004678s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004748s |  0.00% |  0.00% )   ( 0.005287s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p14
+66.5.0:         ( 0.003894s |  0.00% |  0.00% )   ( 0.004419s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003918s |  0.00% |  0.00% )   ( 0.004477s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.889204s |  1.53% |  3.46% )   ( 16.163805s |  1.62% |  3.51% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004077s |  0.00% |  0.02% )   ( 0.004638s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.117442s |  0.10% |  6.61% )   ( 1.070462s |  0.10% |  6.62% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.953343s |  0.17% | 11.56% )   ( 1.819545s |  0.18% | 11.25% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.568337s |  0.14% |  9.28% )   ( 1.533608s |  0.15% |  9.48% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.904192s |  0.17% | 11.27% )   ( 1.827162s |  0.18% | 11.30% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.554489s |  0.14% |  9.20% )   ( 1.504795s |  0.15% |  9.30% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.023080s |  0.09% |  6.05% )   ( 0.983802s |  0.09% |  6.08% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.556433s |  0.05% |  3.29% )   ( 0.546982s |  0.05% |  3.38% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.058369s |  0.09% |  6.26% )   ( 1.023528s |  0.10% |  6.33% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.528122s |  0.04% |  3.12% )   ( 0.487499s |  0.04% |  3.01% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.435403s |  0.13% |  8.49% )   ( 1.359056s |  0.13% |  8.40% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.023193s |  0.27% | 17.90% )   ( 2.916383s |  0.29% | 18.04% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.606947s |  0.05% |  3.59% )   ( 0.550603s |  0.05% |  3.40% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.555777s |  0.05% |  3.29% )   ( 0.535742s |  0.05% |  3.31% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004204s |  0.00% |  0.00% )   ( 0.004768s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003873s |  0.00% |  0.00% )   ( 0.004397s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004327s |  0.00% |  0.00% )   ( 0.004873s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000103s |  0.00% |  0.00% )   ( 0.000118s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005012s |  0.00% |  0.02% )   ( 0.005078s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000149s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p14_PID})
+1016.3.0:       ( 20.355662s |  1.85% |  3.70% )   ( 19.355566s |  1.94% |  3.88% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p15 p15_PID >>
+1.4.0:          ( 0.001022s |  0.00% |  0.00% )   ( 0.001046s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p15 p15_PID (&)
+24.4.0:         ( 20.354494s |  1.85% | 99.99% )   ( 19.354352s |  1.94% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p15
+30.5.0:         ( 0.044207s |  0.00% |  0.21% )   ( 0.044065s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p15 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p15; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.044763s |  0.00% |  0.21% )   ( 0.044629s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.045091s |  0.00% |  0.22% )   ( 0.044944s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.028816s |  0.00% |  0.14% )   ( 0.028749s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.046878s |  0.00% |  0.23% )   ( 0.046723s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004375s |  0.00% |  0.00% )   ( 0.004921s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
+38.5.0:         ( 0.003986s |  0.00% |  0.00% )   ( 0.004522s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000143s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004643s |  0.00% |  0.00% )   ( 0.005160s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p15
+41.5.0:         ( 0.301694s |  0.02% |  0.05% )   ( 0.006255s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004276s |  0.00% |  0.00% )   ( 0.004808s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003961s |  0.00% |  0.00% )   ( 0.004465s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003678s |  0.00% |  0.00% )   ( 0.004165s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003792s |  0.00% |  0.00% )   ( 0.004296s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.034411s |  0.00% |  0.00% )   ( 0.031811s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003871s |  0.00% |  0.00% )   ( 0.004418s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003831s |  0.00% |  0.00% )   ( 0.004343s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.004013s |  0.00% |  0.00% )   ( 0.004531s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004579s |  0.00% |  0.00% )   ( 0.005115s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p15
+66.5.0:         ( 0.006738s |  0.00% |  0.00% )   ( 0.004232s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003619s |  0.00% |  0.00% )   ( 0.004131s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000138s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 19.735228s |  1.79% |  3.72% )   ( 19.028298s |  1.90% |  3.78% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003851s |  0.00% |  0.01% )   ( 0.004381s |  0.00% |  0.02% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.452383s |  0.13% |  7.35% )   ( 1.383147s |  0.13% |  7.26% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.361720s |  0.21% | 11.96% )   ( 2.322531s |  0.23% | 12.20% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.829364s |  0.16% |  9.26% )   ( 1.762629s |  0.17% |  9.26% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.276076s |  0.20% | 11.53% )   ( 2.164502s |  0.21% | 11.37% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.764341s |  0.16% |  8.94% )   ( 1.723234s |  0.17% |  9.05% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.238227s |  0.11% |  6.27% )   ( 1.219138s |  0.12% |  6.40% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.593244s |  0.05% |  3.00% )   ( 0.564583s |  0.05% |  2.96% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.317100s |  0.12% |  6.67% )   ( 1.254330s |  0.12% |  6.59% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.539299s |  0.04% |  2.73% )   ( 0.478631s |  0.04% |  2.51% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.565438s |  0.14% |  7.93% )   ( 1.533378s |  0.15% |  8.05% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.672679s |  0.33% | 18.60% )   ( 3.556415s |  0.35% | 18.69% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.581759s |  0.05% |  2.94% )   ( 0.547630s |  0.05% |  2.87% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.539747s |  0.04% |  2.73% )   ( 0.513769s |  0.05% |  2.70% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003807s |  0.00% |  0.00% )   ( 0.004323s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004225s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004243s |  0.00% |  0.00% )   ( 0.004719s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005010s |  0.00% |  0.02% )   ( 0.005089s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000146s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p15_PID})
+1016.3.0:       ( 17.893767s |  1.63% |  3.25% )   ( 16.896832s |  1.69% |  3.39% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p16 p16_PID >>
+1.4.0:          ( 0.001028s |  0.00% |  0.00% )   ( 0.001052s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p16 p16_PID (&)
+24.4.0:         ( 17.892596s |  1.63% | 99.99% )   ( 16.895614s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000175s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000209s |  0.00% |  0.00% )   ( 0.000232s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p16
+30.5.0:         ( 0.042369s |  0.00% |  0.23% )   ( 0.042232s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p16 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p16; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.030808s |  0.00% |  0.17% )   ( 0.030717s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.024253s |  0.00% |  0.13% )   ( 0.024200s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.024302s |  0.00% |  0.13% )   ( 0.024246s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.035532s |  0.00% |  0.19% )   ( 0.035425s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004420s |  0.00% |  0.00% )   ( 0.004930s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
+38.5.0:         ( 0.003851s |  0.00% |  0.00% )   ( 0.004361s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004901s |  0.00% |  0.00% )   ( 0.005417s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p16
+41.5.0:         ( 0.382083s |  0.03% |  0.07% )   ( 0.006280s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004157s |  0.00% |  0.00% )   ( 0.004665s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004057s |  0.00% |  0.00% )   ( 0.004578s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003694s |  0.00% |  0.00% )   ( 0.004213s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003901s |  0.00% |  0.00% )   ( 0.004415s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.034595s |  0.00% |  0.00% )   ( 0.032127s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003924s |  0.00% |  0.00% )   ( 0.004444s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003757s |  0.00% |  0.00% )   ( 0.004244s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.006814s |  0.00% |  0.00% )   ( 0.004647s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004598s |  0.00% |  0.00% )   ( 0.005137s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p16
+66.5.0:         ( 0.003771s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003809s |  0.00% |  0.00% )   ( 0.004342s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000133s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.245034s |  1.57% |  3.70% )   ( 16.620954s |  1.66% |  3.78% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003610s |  0.00% |  0.02% )   ( 0.004140s |  0.00% |  0.02% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.143094s |  0.10% |  6.62% )   ( 1.112963s |  0.11% |  6.69% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.066560s |  0.18% | 11.98% )   ( 1.980337s |  0.19% | 11.91% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.607343s |  0.14% |  9.32% )   ( 1.579989s |  0.15% |  9.50% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.049494s |  0.18% | 11.88% )   ( 1.901388s |  0.19% | 11.43% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.586611s |  0.14% |  9.20% )   ( 1.549671s |  0.15% |  9.32% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.031161s |  0.09% |  5.97% )   ( 1.011604s |  0.10% |  6.08% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.575657s |  0.05% |  3.33% )   ( 0.524705s |  0.05% |  3.15% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.077681s |  0.09% |  6.24% )   ( 1.048460s |  0.10% |  6.30% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.509937s |  0.04% |  2.95% )   ( 0.453686s |  0.04% |  2.72% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.412450s |  0.12% |  8.19% )   ( 1.371282s |  0.13% |  8.25% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.099160s |  0.28% | 17.97% )   ( 3.064574s |  0.30% | 18.43% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.552646s |  0.05% |  3.20% )   ( 0.518388s |  0.05% |  3.11% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.529630s |  0.04% |  3.07% )   ( 0.499767s |  0.05% |  3.00% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003898s |  0.00% |  0.00% )   ( 0.004418s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003685s |  0.00% |  0.00% )   ( 0.004192s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004177s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005061s |  0.00% |  0.02% )   ( 0.005132s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000143s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p16_PID})
+1016.3.0:       ( 17.167813s |  1.56% |  3.12% )   ( 16.128765s |  1.61% |  3.23% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p17 p17_PID >>
+1.4.0:          ( 0.001038s |  0.00% |  0.00% )   ( 0.001061s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p17 p17_PID (&)
+24.4.0:         ( 17.166627s |  1.56% | 99.99% )   ( 16.127533s |  1.61% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000108s |  0.00% |  0.00% )   ( 0.000122s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p17
+30.5.0:         ( 0.026955s |  0.00% |  0.15% )   ( 0.026867s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p17 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p17; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.028672s |  0.00% |  0.16% )   ( 0.028593s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.029650s |  0.00% |  0.17% )   ( 0.029561s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.026989s |  0.00% |  0.15% )   ( 0.026914s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.030843s |  0.00% |  0.17% )   ( 0.030742s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004823s |  0.00% |  0.00% )   ( 0.005344s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
+38.5.0:         ( 0.004282s |  0.00% |  0.00% )   ( 0.004855s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000152s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005257s |  0.00% |  0.00% )   ( 0.005824s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p17
+41.5.0:         ( 0.322412s |  0.02% |  0.06% )   ( 0.006788s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004605s |  0.00% |  0.00% )   ( 0.005186s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004209s |  0.00% |  0.00% )   ( 0.004773s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003962s |  0.00% |  0.00% )   ( 0.004506s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004352s |  0.00% |  0.00% )   ( 0.004817s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.033857s |  0.00% |  0.00% )   ( 0.034299s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.004253s |  0.00% |  0.00% )   ( 0.004747s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.004060s |  0.00% |  0.00% )   ( 0.004594s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.009787s |  0.00% |  0.00% )   ( 0.004922s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.005143s |  0.00% |  0.00% )   ( 0.005746s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p17
+66.5.0:         ( 0.004088s |  0.00% |  0.00% )   ( 0.004612s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003860s |  0.00% |  0.00% )   ( 0.004392s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.581945s |  1.51% |  3.57% )   ( 15.855187s |  1.58% |  3.64% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004079s |  0.00% |  0.02% )   ( 0.004626s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.151566s |  0.10% |  6.94% )   ( 1.063896s |  0.10% |  6.71% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.860719s |  0.16% | 11.22% )   ( 1.781973s |  0.17% | 11.23% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.596187s |  0.14% |  9.62% )   ( 1.529533s |  0.15% |  9.64% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.825308s |  0.16% | 11.00% )   ( 1.777420s |  0.17% | 11.21% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.520199s |  0.13% |  9.16% )   ( 1.464944s |  0.14% |  9.23% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 0.997502s |  0.09% |  6.01% )   ( 0.968759s |  0.09% |  6.11% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.569031s |  0.05% |  3.43% )   ( 0.545363s |  0.05% |  3.43% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.036970s |  0.09% |  6.25% )   ( 0.999516s |  0.10% |  6.30% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.497881s |  0.04% |  3.00% )   ( 0.470908s |  0.04% |  2.97% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.450968s |  0.13% |  8.75% )   ( 1.340816s |  0.13% |  8.45% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.892165s |  0.26% | 17.44% )   ( 2.842150s |  0.28% | 17.92% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.599399s |  0.05% |  3.61% )   ( 0.542697s |  0.05% |  3.42% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.579971s |  0.05% |  3.49% )   ( 0.522586s |  0.05% |  3.29% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004194s |  0.00% |  0.00% )   ( 0.004736s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003712s |  0.00% |  0.00% )   ( 0.004234s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004145s |  0.00% |  0.00% )   ( 0.004650s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009262s |  0.00% |  0.05% )   ( 0.009160s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000148s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p17_PID})
+1016.3.0:       ( 18.956654s |  1.72% |  3.45% )   ( 18.098688s |  1.81% |  3.63% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p18 p18_PID >>
+1.4.0:          ( 0.001054s |  0.00% |  0.00% )   ( 0.001075s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p18 p18_PID (&)
+24.4.0:         ( 18.955447s |  1.72% | 99.99% )   ( 18.097438s |  1.81% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000193s |  0.00% |  0.00% )   ( 0.000220s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000117s |  0.00% |  0.00% )   ( 0.000134s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p18
+30.5.0:         ( 0.044425s |  0.00% |  0.23% )   ( 0.044139s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p18 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p18; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.050372s |  0.00% |  0.26% )   ( 0.050008s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.040616s |  0.00% |  0.21% )   ( 0.040321s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.046343s |  0.00% |  0.24% )   ( 0.045955s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.041376s |  0.00% |  0.21% )   ( 0.041110s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003990s |  0.00% |  0.00% )   ( 0.004484s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   true
+38.5.0:         ( 0.003608s |  0.00% |  0.00% )   ( 0.004064s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000222s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004461s |  0.00% |  0.00% )   ( 0.004962s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p18
+41.5.0:         ( 0.434143s |  0.03% |  0.09% )   ( 0.006432s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003962s |  0.00% |  0.00% )   ( 0.004449s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003567s |  0.00% |  0.00% )   ( 0.004030s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003383s |  0.00% |  0.00% )   ( 0.003846s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003663s |  0.00% |  0.00% )   ( 0.004105s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.028179s |  0.00% |  0.00% )   ( 0.028492s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003647s |  0.00% |  0.00% )   ( 0.004129s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003579s |  0.00% |  0.00% )   ( 0.004040s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003682s |  0.00% |  0.00% )   ( 0.004153s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004121s |  0.00% |  0.00% )   ( 0.004593s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p18
+66.5.0:         ( 0.003378s |  0.00% |  0.00% )   ( 0.003837s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003134s |  0.00% |  0.00% )   ( 0.003579s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000180s |  0.00% |  0.00% )   ( 0.000212s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 18.205380s |  1.65% |  4.17% )   ( 17.768687s |  1.78% |  4.26% )    	(23x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003285s |  0.00% |  0.01% )   ( 0.003750s |  0.00% |  0.02% )    	(23x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.292514s |  0.11% |  7.09% )   ( 1.239192s |  0.12% |  6.97% )    	(23x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.332669s |  0.21% | 12.81% )   ( 2.278656s |  0.22% | 12.82% )    	(23x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.816359s |  0.16% |  9.97% )   ( 1.794481s |  0.17% | 10.09% )    	(23x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.209241s |  0.20% | 12.13% )   ( 2.162339s |  0.21% | 12.16% )    	(23x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.784643s |  0.16% |  9.80% )   ( 1.745969s |  0.17% |  9.82% )    	(23x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.133891s |  0.10% |  6.22% )   ( 1.119037s |  0.11% |  6.29% )    	(23x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.512835s |  0.04% |  2.81% )   ( 0.497809s |  0.04% |  2.80% )    	(23x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.243571s |  0.11% |  6.83% )   ( 1.194397s |  0.11% |  6.72% )    	(23x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.450033s |  0.04% |  2.47% )   ( 0.439313s |  0.04% |  2.47% )    	(23x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.540424s |  0.14% |  8.46% )   ( 1.529817s |  0.15% |  8.60% )    	(23x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.888516s |  0.26% | 15.86% )   ( 2.824321s |  0.28% | 15.89% )    	(23x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.514431s |  0.04% |  2.82% )   ( 0.480149s |  0.04% |  2.70% )    	(23x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.482968s |  0.04% |  2.65% )   ( 0.459457s |  0.04% |  2.58% )    	(23x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003385s |  0.00% |  0.00% )   ( 0.003840s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003128s |  0.00% |  0.00% )   ( 0.003554s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003544s |  0.00% |  0.00% )   ( 0.003969s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004951s |  0.00% |  0.02% )   ( 0.005022s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000153s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p18_PID})
+1016.3.0:       ( 17.822163s |  1.62% |  3.24% )   ( 16.594382s |  1.66% |  3.33% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p19 p19_PID >>
+1.4.0:          ( 0.001011s |  0.00% |  0.00% )   ( 0.000389s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p19 p19_PID (&)
+24.4.0:         ( 17.821002s |  1.62% | 99.99% )   ( 16.593822s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000116s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000114s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p19
+30.5.0:         ( 0.037436s |  0.00% |  0.21% )   ( 0.037305s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p19 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p19; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.028189s |  0.00% |  0.15% )   ( 0.028095s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.032522s |  0.00% |  0.18% )   ( 0.032394s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.040363s |  0.00% |  0.22% )   ( 0.040214s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.043621s |  0.00% |  0.24% )   ( 0.043451s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004919s |  0.00% |  0.00% )   ( 0.005503s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
+38.5.0:         ( 0.004311s |  0.00% |  0.00% )   ( 0.004872s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000171s |  0.00% |  0.00% )   ( 0.000192s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005311s |  0.00% |  0.00% )   ( 0.005912s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p19
+41.5.0:         ( 0.441037s |  0.04% |  0.08% )   ( 0.007253s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004961s |  0.00% |  0.00% )   ( 0.005546s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004232s |  0.00% |  0.00% )   ( 0.004789s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.004096s |  0.00% |  0.00% )   ( 0.004664s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004688s |  0.00% |  0.00% )   ( 0.004969s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035123s |  0.00% |  0.00% )   ( 0.035431s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.004319s |  0.00% |  0.00% )   ( 0.004896s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.004162s |  0.00% |  0.00% )   ( 0.004711s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.007674s |  0.00% |  0.00% )   ( 0.005102s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.005111s |  0.00% |  0.00% )   ( 0.005716s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p19
+66.5.0:         ( 0.004142s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003979s |  0.00% |  0.00% )   ( 0.004533s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.082046s |  1.55% |  3.42% )   ( 16.283125s |  1.63% |  3.50% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004346s |  0.00% |  0.02% )   ( 0.004951s |  0.00% |  0.03% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.162082s |  0.10% |  6.80% )   ( 1.114243s |  0.11% |  6.84% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.901651s |  0.17% | 11.13% )   ( 1.873953s |  0.18% | 11.50% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.610244s |  0.14% |  9.42% )   ( 1.555186s |  0.15% |  9.55% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.832265s |  0.16% | 10.72% )   ( 1.803909s |  0.18% | 11.07% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.595445s |  0.14% |  9.33% )   ( 1.499545s |  0.15% |  9.20% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.061573s |  0.09% |  6.21% )   ( 1.021668s |  0.10% |  6.27% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.590868s |  0.05% |  3.45% )   ( 0.549209s |  0.05% |  3.37% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.102321s |  0.10% |  6.45% )   ( 1.042754s |  0.10% |  6.40% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.536901s |  0.04% |  3.14% )   ( 0.483325s |  0.04% |  2.96% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.432371s |  0.13% |  8.38% )   ( 1.368904s |  0.13% |  8.40% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.045713s |  0.27% | 17.82% )   ( 2.880994s |  0.28% | 17.69% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.592355s |  0.05% |  3.46% )   ( 0.555623s |  0.05% |  3.41% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.613911s |  0.05% |  3.59% )   ( 0.528861s |  0.05% |  3.24% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004241s |  0.00% |  0.00% )   ( 0.004805s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003975s |  0.00% |  0.00% )   ( 0.004527s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004381s |  0.00% |  0.00% )   ( 0.004914s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000082s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004935s |  0.00% |  0.02% )   ( 0.005006s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p19_PID})
+1016.3.0:       ( 20.000181s |  1.82% |  3.64% )   ( 19.257299s |  1.93% |  3.86% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p20 p20_PID >>
+1.4.0:          ( 0.001056s |  0.00% |  0.00% )   ( 0.001078s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p20 p20_PID (&)
+24.4.0:         ( 19.998974s |  1.82% | 99.99% )   ( 19.256047s |  1.93% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000184s |  0.00% |  0.00% )   ( 0.000196s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000112s |  0.00% |  0.00% )   ( 0.000122s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p20
+30.5.0:         ( 0.032480s |  0.00% |  0.16% )   ( 0.032339s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p20 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p20; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.042694s |  0.00% |  0.21% )   ( 0.042544s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.047201s |  0.00% |  0.23% )   ( 0.047020s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.050544s |  0.00% |  0.25% )   ( 0.050366s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.053221s |  0.00% |  0.26% )   ( 0.053041s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003316s |  0.00% |  0.00% )   ( 0.003733s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   true
+38.5.0:         ( 0.002900s |  0.00% |  0.00% )   ( 0.003268s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003441s |  0.00% |  0.00% )   ( 0.003843s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p20
+41.5.0:         ( 0.289530s |  0.02% |  0.07% )   ( 0.004948s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003282s |  0.00% |  0.00% )   ( 0.003704s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003046s |  0.00% |  0.00% )   ( 0.003424s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.002723s |  0.00% |  0.00% )   ( 0.003093s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002837s |  0.00% |  0.00% )   ( 0.003192s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.025080s |  0.00% |  0.00% )   ( 0.022349s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.002690s |  0.00% |  0.00% )   ( 0.003037s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.002793s |  0.00% |  0.00% )   ( 0.003160s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.002854s |  0.00% |  0.00% )   ( 0.003223s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.003440s |  0.00% |  0.00% )   ( 0.003831s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p20
+66.5.0:         ( 0.002840s |  0.00% |  0.00% )   ( 0.003220s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.002816s |  0.00% |  0.00% )   ( 0.003194s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 19.401521s |  1.76% |  5.10% )   ( 18.943473s |  1.89% |  5.17% )    	(19x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002882s |  0.00% |  0.01% )   ( 0.003183s |  0.00% |  0.01% )    	(19x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.404087s |  0.12% |  7.23% )   ( 1.356978s |  0.13% |  7.16% )    	(19x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.620782s |  0.23% | 13.50% )   ( 2.557858s |  0.25% | 13.50% )    	(19x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.986761s |  0.18% | 10.24% )   ( 1.955110s |  0.19% | 10.32% )    	(19x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.597113s |  0.23% | 13.38% )   ( 2.544080s |  0.25% | 13.42% )    	(19x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.937494s |  0.17% |  9.98% )   ( 1.912050s |  0.19% | 10.09% )    	(19x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.223671s |  0.11% |  6.30% )   ( 1.173751s |  0.11% |  6.19% )    	(19x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.454282s |  0.04% |  2.34% )   ( 0.454383s |  0.04% |  2.39% )    	(19x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.280352s |  0.11% |  6.59% )   ( 1.260821s |  0.12% |  6.65% )    	(19x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.387649s |  0.03% |  1.99% )   ( 0.377582s |  0.03% |  1.99% )    	(19x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.412831s |  0.12% |  7.28% )   ( 1.329910s |  0.13% |  7.02% )    	(19x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.225882s |  0.29% | 16.62% )   ( 3.184957s |  0.31% | 16.81% )    	(19x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.442517s |  0.04% |  2.28% )   ( 0.436136s |  0.04% |  2.30% )    	(19x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.425218s |  0.03% |  2.19% )   ( 0.396674s |  0.03% |  2.09% )    	(19x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002752s |  0.00% |  0.00% )   ( 0.003105s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.002614s |  0.00% |  0.00% )   ( 0.002992s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.005952s |  0.00% |  0.00% )   ( 0.003303s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005057s |  0.00% |  0.02% )   ( 0.005128s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p20_PID})
+1016.3.0:       ( 19.074635s |  1.73% |  3.47% )   ( 18.045811s |  1.80% |  3.62% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p21 p21_PID >>
+1.4.0:          ( 0.001076s |  0.00% |  0.00% )   ( 0.001097s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p21 p21_PID (&)
+24.4.0:         ( 19.073408s |  1.73% | 99.99% )   ( 18.044540s |  1.80% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000187s |  0.00% |  0.00% )   ( 0.000214s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000108s |  0.00% |  0.00% )   ( 0.000121s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p21
+30.5.0:         ( 0.048241s |  0.00% |  0.25% )   ( 0.043998s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p21 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p21; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.040109s |  0.00% |  0.21% )   ( 0.039951s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.027438s |  0.00% |  0.14% )   ( 0.027373s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.050307s |  0.00% |  0.26% )   ( 0.050120s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.049981s |  0.00% |  0.26% )   ( 0.049809s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004567s |  0.00% |  0.00% )   ( 0.005117s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
+38.5.0:         ( 0.004211s |  0.00% |  0.00% )   ( 0.004754s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004931s |  0.00% |  0.00% )   ( 0.005472s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p21
+41.5.0:         ( 0.316144s |  0.02% |  0.05% )   ( 0.006761s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004599s |  0.00% |  0.00% )   ( 0.005155s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004234s |  0.00% |  0.00% )   ( 0.004832s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003994s |  0.00% |  0.00% )   ( 0.004540s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004253s |  0.00% |  0.00% )   ( 0.004792s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035021s |  0.00% |  0.00% )   ( 0.035442s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003961s |  0.00% |  0.00% )   ( 0.004480s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003975s |  0.00% |  0.00% )   ( 0.004522s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.008410s |  0.00% |  0.00% )   ( 0.004884s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004885s |  0.00% |  0.00% )   ( 0.005473s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p21
+66.5.0:         ( 0.003952s |  0.00% |  0.00% )   ( 0.004493s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003800s |  0.00% |  0.00% )   ( 0.004329s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 18.426510s |  1.67% |  3.57% )   ( 17.706524s |  1.77% |  3.63% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004104s |  0.00% |  0.02% )   ( 0.004674s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.348151s |  0.12% |  7.31% )   ( 1.261282s |  0.12% |  7.12% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.162338s |  0.19% | 11.73% )   ( 2.083870s |  0.20% | 11.76% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.793229s |  0.16% |  9.73% )   ( 1.681236s |  0.16% |  9.49% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.087394s |  0.19% | 11.32% )   ( 1.991265s |  0.19% | 11.24% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.669637s |  0.15% |  9.06% )   ( 1.604234s |  0.16% |  9.06% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.158111s |  0.10% |  6.28% )   ( 1.116488s |  0.11% |  6.30% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.569338s |  0.05% |  3.08% )   ( 0.552739s |  0.05% |  3.12% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.208324s |  0.11% |  6.55% )   ( 1.151082s |  0.11% |  6.50% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.512437s |  0.04% |  2.78% )   ( 0.487236s |  0.04% |  2.75% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.507753s |  0.13% |  8.18% )   ( 1.469252s |  0.14% |  8.29% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.284587s |  0.29% | 17.82% )   ( 3.214973s |  0.32% | 18.15% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.576365s |  0.05% |  3.12% )   ( 0.554109s |  0.05% |  3.12% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.544742s |  0.04% |  2.95% )   ( 0.534084s |  0.05% |  3.01% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003933s |  0.00% |  0.00% )   ( 0.004470s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003805s |  0.00% |  0.00% )   ( 0.004330s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004334s |  0.00% |  0.00% )   ( 0.004866s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.006491s |  0.00% |  0.03% )   ( 0.006552s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p21_PID})
+1016.3.0:       ( 17.795061s |  1.62% |  3.24% )   ( 16.879983s |  1.69% |  3.38% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p22 p22_PID >>
+1.4.0:          ( 0.000958s |  0.00% |  0.00% )   ( 0.000983s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p22 p22_PID (&)
+24.4.0:         ( 17.793930s |  1.62% | 99.99% )   ( 16.878798s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000194s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p22
+30.5.0:         ( 0.046139s |  0.00% |  0.25% )   ( 0.045973s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p22 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p22; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.046122s |  0.00% |  0.25% )   ( 0.045951s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.045977s |  0.00% |  0.25% )   ( 0.045798s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.045696s |  0.00% |  0.25% )   ( 0.045527s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.047395s |  0.00% |  0.26% )   ( 0.047220s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003825s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   true
+38.5.0:         ( 0.003439s |  0.00% |  0.00% )   ( 0.003885s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000192s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004076s |  0.00% |  0.00% )   ( 0.004533s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p22
+41.5.0:         ( 0.311752s |  0.02% |  0.07% )   ( 0.005616s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003731s |  0.00% |  0.00% )   ( 0.004192s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003448s |  0.00% |  0.00% )   ( 0.003871s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003063s |  0.00% |  0.00% )   ( 0.003475s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003267s |  0.00% |  0.00% )   ( 0.003698s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.026423s |  0.00% |  0.00% )   ( 0.026769s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003061s |  0.00% |  0.00% )   ( 0.003462s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003064s |  0.00% |  0.00% )   ( 0.003489s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003251s |  0.00% |  0.00% )   ( 0.003668s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.003706s |  0.00% |  0.00% )   ( 0.004123s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p22
+66.5.0:         ( 0.006095s |  0.00% |  0.00% )   ( 0.003518s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003002s |  0.00% |  0.00% )   ( 0.003407s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.156748s |  1.56% |  4.59% )   ( 16.545701s |  1.65% |  4.66% )    	(21x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003098s |  0.00% |  0.01% )   ( 0.003533s |  0.00% |  0.02% )    	(21x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.183532s |  0.10% |  6.89% )   ( 1.091775s |  0.10% |  6.59% )    	(21x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.992872s |  0.18% | 11.61% )   ( 1.939591s |  0.19% | 11.72% )    	(21x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.617815s |  0.14% |  9.42% )   ( 1.561813s |  0.15% |  9.43% )    	(21x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.087995s |  0.19% | 12.17% )   ( 1.950880s |  0.19% | 11.79% )    	(21x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.605908s |  0.14% |  9.36% )   ( 1.531404s |  0.15% |  9.25% )    	(21x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.001721s |  0.09% |  5.83% )   ( 0.988297s |  0.09% |  5.97% )    	(21x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.477560s |  0.04% |  2.78% )   ( 0.455915s |  0.04% |  2.75% )    	(21x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.094706s |  0.09% |  6.38% )   ( 1.066297s |  0.10% |  6.44% )    	(21x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.405069s |  0.03% |  2.36% )   ( 0.393851s |  0.03% |  2.38% )    	(21x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.405985s |  0.12% |  8.19% )   ( 1.373725s |  0.13% |  8.30% )    	(21x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.335244s |  0.30% | 19.43% )   ( 3.303496s |  0.33% | 19.96% )    	(21x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.483038s |  0.04% |  2.81% )   ( 0.457684s |  0.04% |  2.76% )    	(21x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.462205s |  0.04% |  2.69% )   ( 0.427440s |  0.04% |  2.58% )    	(21x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003260s |  0.00% |  0.00% )   ( 0.003697s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.004521s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003202s |  0.00% |  0.00% )   ( 0.003607s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008199s |  0.00% |  0.04% )   ( 0.008281s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000173s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p22_PID})
+1016.3.0:       ( 17.123559s |  1.56% |  3.11% )   ( 16.242292s |  1.62% |  3.26% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p23 p23_PID >>
+1.4.0:          ( 0.001115s |  0.00% |  0.00% )   ( 0.001137s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p23 p23_PID (&)
+24.4.0:         ( 17.122290s |  1.56% | 99.99% )   ( 16.240978s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000173s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000168s |  0.00% |  0.00% )   ( 0.000189s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p23
+30.5.0:         ( 0.046134s |  0.00% |  0.26% )   ( 0.045965s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p23 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p23; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.046197s |  0.00% |  0.26% )   ( 0.045993s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.046150s |  0.00% |  0.26% )   ( 0.045983s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.045930s |  0.00% |  0.26% )   ( 0.045761s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.045971s |  0.00% |  0.26% )   ( 0.045792s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004232s |  0.00% |  0.00% )   ( 0.004709s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
+38.5.0:         ( 0.003753s |  0.00% |  0.00% )   ( 0.004243s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004640s |  0.00% |  0.00% )   ( 0.005135s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p23
+41.5.0:         ( 0.276327s |  0.02% |  0.06% )   ( 0.005945s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004073s |  0.00% |  0.00% )   ( 0.004588s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003820s |  0.00% |  0.00% )   ( 0.004299s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003620s |  0.00% |  0.00% )   ( 0.004112s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004020s |  0.00% |  0.00% )   ( 0.004534s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035384s |  0.00% |  0.00% )   ( 0.030369s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003819s |  0.00% |  0.00% )   ( 0.004321s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003607s |  0.00% |  0.00% )   ( 0.004096s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.004031s |  0.00% |  0.00% )   ( 0.004389s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004508s |  0.00% |  0.00% )   ( 0.005033s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p23
+66.5.0:         ( 0.003614s |  0.00% |  0.00% )   ( 0.004127s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003486s |  0.00% |  0.00% )   ( 0.003966s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000140s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.497251s |  1.50% |  4.01% )   ( 15.892634s |  1.59% |  4.07% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003712s |  0.00% |  0.02% )   ( 0.004206s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.138182s |  0.10% |  6.89% )   ( 1.056617s |  0.10% |  6.64% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.938930s |  0.17% | 11.75% )   ( 1.828435s |  0.18% | 11.50% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.659602s |  0.15% | 10.05% )   ( 1.513020s |  0.15% |  9.52% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.844042s |  0.16% | 11.17% )   ( 1.792400s |  0.17% | 11.27% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.464604s |  0.13% |  8.87% )   ( 1.441841s |  0.14% |  9.07% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 0.981764s |  0.08% |  5.95% )   ( 0.962031s |  0.09% |  6.05% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.503475s |  0.04% |  3.05% )   ( 0.499898s |  0.05% |  3.14% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.039952s |  0.09% |  6.30% )   ( 1.015330s |  0.10% |  6.38% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.427228s |  0.03% |  2.58% )   ( 0.426514s |  0.04% |  2.68% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.386479s |  0.12% |  8.40% )   ( 1.343676s |  0.13% |  8.45% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.101217s |  0.28% | 18.79% )   ( 3.060011s |  0.30% | 19.25% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.498959s |  0.04% |  3.02% )   ( 0.483859s |  0.04% |  3.04% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.509105s |  0.04% |  3.08% )   ( 0.464796s |  0.04% |  2.92% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003636s |  0.00% |  0.00% )   ( 0.004129s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003421s |  0.00% |  0.00% )   ( 0.003886s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.006771s |  0.00% |  0.00% )   ( 0.004085s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+67.5.0:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
+76.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
+77.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000183s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf 'x\n' >&${fd_nAuto0}
+79.5.0:         ( 0.000191s |  0.00% |  0.00% )   ( 0.000211s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   : > "/dev/shm/.forkrun/forkrun.djNoad"/.quit
+80.5.0:         ( 0.000232s |  0.00% |  0.00% )   ( 0.000249s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%.0s\n' "/dev/shm/.forkrun/forkrun.djNoad"/.run/p* 1>&20
+81.5.0:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.015681s |  0.00% |  0.09% )   ( 0.010423s |  0.00% |  0.06% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000154s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p23_PID})
+1016.3.0:       ( 17.584709s |  1.60% |  3.20% )   ( 16.342467s |  1.63% |  3.28% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p24 p24_PID >>
+1.4.0:          ( 0.001059s |  0.00% |  0.00% )   ( 0.001085s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p24 p24_PID (&)
+24.4.0:         ( 17.583495s |  1.60% | 99.99% )   ( 16.341204s |  1.63% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000190s |  0.00% |  0.00% )   ( 0.000213s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000217s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p24
+30.5.0:         ( 0.046454s |  0.00% |  0.26% )   ( 0.046300s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p24 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p24; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.049461s |  0.00% |  0.28% )   ( 0.049276s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.045503s |  0.00% |  0.25% )   ( 0.045357s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.045562s |  0.00% |  0.25% )   ( 0.045412s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.045493s |  0.00% |  0.25% )   ( 0.045344s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004439s |  0.00% |  0.00% )   ( 0.004977s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
+38.5.0:         ( 0.003826s |  0.00% |  0.00% )   ( 0.004338s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004618s |  0.00% |  0.00% )   ( 0.005156s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p24
+41.5.0:         ( 0.395516s |  0.03% |  0.08% )   ( 0.006669s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004445s |  0.00% |  0.00% )   ( 0.004932s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004179s |  0.00% |  0.00% )   ( 0.004707s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003655s |  0.00% |  0.00% )   ( 0.004136s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003748s |  0.00% |  0.00% )   ( 0.004230s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.034759s |  0.00% |  0.00% )   ( 0.032126s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003740s |  0.00% |  0.00% )   ( 0.004252s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003788s |  0.00% |  0.00% )   ( 0.004271s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003796s |  0.00% |  0.00% )   ( 0.004297s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004723s |  0.00% |  0.00% )   ( 0.005281s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p24
+66.5.0:         ( 0.003838s |  0.00% |  0.00% )   ( 0.004348s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003657s |  0.00% |  0.00% )   ( 0.004175s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000172s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.850442s |  1.53% |  3.83% )   ( 15.992094s |  1.60% |  3.91% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003634s |  0.00% |  0.02% )   ( 0.004159s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.172088s |  0.10% |  6.95% )   ( 1.068235s |  0.10% |  6.67% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.974996s |  0.18% | 11.72% )   ( 1.859803s |  0.18% | 11.62% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.605200s |  0.14% |  9.52% )   ( 1.541957s |  0.15% |  9.64% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.940469s |  0.17% | 11.51% )   ( 1.849072s |  0.18% | 11.56% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.602145s |  0.14% |  9.50% )   ( 1.506223s |  0.15% |  9.41% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.005712s |  0.09% |  5.96% )   ( 0.967231s |  0.09% |  6.04% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.538818s |  0.04% |  3.19% )   ( 0.514613s |  0.05% |  3.21% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.148504s |  0.10% |  6.81% )   ( 1.028022s |  0.10% |  6.42% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.493045s |  0.04% |  2.92% )   ( 0.447442s |  0.04% |  2.79% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.412073s |  0.12% |  8.38% )   ( 1.349993s |  0.13% |  8.44% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.900782s |  0.26% | 17.21% )   ( 2.863047s |  0.28% | 17.90% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.522699s |  0.04% |  3.10% )   ( 0.501184s |  0.05% |  3.13% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.530277s |  0.04% |  3.14% )   ( 0.491113s |  0.04% |  3.07% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003663s |  0.00% |  0.00% )   ( 0.004151s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003496s |  0.00% |  0.00% )   ( 0.003979s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003868s |  0.00% |  0.00% )   ( 0.004314s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005379s |  0.00% |  0.03% )   ( 0.005450s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000155s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p24_PID})
+1016.3.0:       ( 19.238068s |  1.75% |  3.50% )   ( 18.628804s |  1.86% |  3.73% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p25 p25_PID >>
+1.4.0:          ( 0.001076s |  0.00% |  0.00% )   ( 0.001097s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p25 p25_PID (&)
+24.4.0:         ( 19.236844s |  1.75% | 99.99% )   ( 18.627537s |  1.86% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p25
+30.5.0:         ( 0.063099s |  0.00% |  0.32% )   ( 0.049333s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p25 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p25; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.053824s |  0.00% |  0.27% )   ( 0.053618s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.053773s |  0.00% |  0.27% )   ( 0.053587s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.052605s |  0.00% |  0.27% )   ( 0.052405s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.050188s |  0.00% |  0.26% )   ( 0.050018s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003770s |  0.00% |  0.00% )   ( 0.004227s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   true
+38.5.0:         ( 0.003372s |  0.00% |  0.00% )   ( 0.003817s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004026s |  0.00% |  0.00% )   ( 0.004498s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p25
+41.5.0:         ( 0.248079s |  0.02% |  0.05% )   ( 0.005087s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003470s |  0.00% |  0.00% )   ( 0.003886s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003204s |  0.00% |  0.00% )   ( 0.003645s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003062s |  0.00% |  0.00% )   ( 0.003430s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003337s |  0.00% |  0.00% )   ( 0.003749s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.025119s |  0.00% |  0.00% )   ( 0.025432s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003214s |  0.00% |  0.00% )   ( 0.003630s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003028s |  0.00% |  0.00% )   ( 0.003455s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003262s |  0.00% |  0.00% )   ( 0.003660s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.003845s |  0.00% |  0.00% )   ( 0.004267s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p25
+66.5.0:         ( 0.002931s |  0.00% |  0.00% )   ( 0.003326s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003013s |  0.00% |  0.00% )   ( 0.003442s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 18.631031s |  1.69% |  4.61% )   ( 18.271963s |  1.83% |  4.67% )    	(21x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003135s |  0.00% |  0.01% )   ( 0.003554s |  0.00% |  0.01% )    	(21x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.296525s |  0.11% |  6.95% )   ( 1.230732s |  0.12% |  6.73% )    	(21x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.320164s |  0.21% | 12.45% )   ( 2.307421s |  0.23% | 12.62% )    	(21x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.842274s |  0.16% |  9.88% )   ( 1.829259s |  0.18% | 10.01% )    	(21x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.365265s |  0.21% | 12.69% )   ( 2.303052s |  0.23% | 12.60% )    	(21x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.780127s |  0.16% |  9.55% )   ( 1.752588s |  0.17% |  9.59% )    	(21x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.142318s |  0.10% |  6.13% )   ( 1.104263s |  0.11% |  6.04% )    	(21x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.473451s |  0.04% |  2.54% )   ( 0.464443s |  0.04% |  2.54% )    	(21x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.185209s |  0.10% |  6.36% )   ( 1.141177s |  0.11% |  6.24% )    	(21x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.406918s |  0.03% |  2.18% )   ( 0.394645s |  0.03% |  2.15% )    	(21x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.429948s |  0.13% |  7.67% )   ( 1.417987s |  0.14% |  7.76% )    	(21x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.460485s |  0.31% | 18.57% )   ( 3.430053s |  0.34% | 18.77% )    	(21x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.467684s |  0.04% |  2.51% )   ( 0.454130s |  0.04% |  2.48% )    	(21x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.457528s |  0.04% |  2.45% )   ( 0.438659s |  0.04% |  2.40% )    	(21x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003199s |  0.00% |  0.00% )   ( 0.003626s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.002839s |  0.00% |  0.00% )   ( 0.003230s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003328s |  0.00% |  0.00% )   ( 0.003743s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005049s |  0.00% |  0.02% )   ( 0.005127s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000148s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p25_PID})
+1016.3.0:       ( 17.944330s |  1.63% |  3.26% )   ( 17.191196s |  1.72% |  3.45% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p26 p26_PID >>
+1.4.0:          ( 0.001141s |  0.00% |  0.00% )   ( 0.001161s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p26 p26_PID (&)
+24.4.0:         ( 17.943030s |  1.63% | 99.99% )   ( 17.189862s |  1.72% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000175s |  0.00% |  0.00% )   ( 0.000199s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000176s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p26
+30.5.0:         ( 0.053120s |  0.00% |  0.29% )   ( 0.052912s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p26 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p26; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.054125s |  0.00% |  0.30% )   ( 0.053926s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.051491s |  0.00% |  0.28% )   ( 0.051312s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.053402s |  0.00% |  0.29% )   ( 0.053199s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.054810s |  0.00% |  0.30% )   ( 0.054602s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003724s |  0.00% |  0.00% )   ( 0.004128s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   true
+38.5.0:         ( 0.003404s |  0.00% |  0.00% )   ( 0.003857s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004181s |  0.00% |  0.00% )   ( 0.004670s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p26
+41.5.0:         ( 0.371573s |  0.03% |  0.09% )   ( 0.005891s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003798s |  0.00% |  0.00% )   ( 0.004275s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.003266s |  0.00% |  0.00% )   ( 0.003695s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003096s |  0.00% |  0.00% )   ( 0.003524s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003355s |  0.00% |  0.00% )   ( 0.003791s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.026148s |  0.00% |  0.00% )   ( 0.026501s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.003278s |  0.00% |  0.00% )   ( 0.003728s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.003166s |  0.00% |  0.00% )   ( 0.003578s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.003364s |  0.00% |  0.00% )   ( 0.003807s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004044s |  0.00% |  0.00% )   ( 0.004502s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p26
+66.5.0:         ( 0.003279s |  0.00% |  0.00% )   ( 0.003746s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003173s |  0.00% |  0.00% )   ( 0.003593s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 17.210884s |  1.56% |  4.35% )   ( 16.819735s |  1.68% |  4.44% )    	(22x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003280s |  0.00% |  0.01% )   ( 0.003767s |  0.00% |  0.02% )    	(22x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.132643s |  0.10% |  6.58% )   ( 1.116036s |  0.11% |  6.63% )    	(22x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.045693s |  0.18% | 11.88% )   ( 2.016143s |  0.20% | 11.98% )    	(22x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.675494s |  0.15% |  9.73% )   ( 1.630127s |  0.16% |  9.69% )    	(22x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.078525s |  0.18% | 12.07% )   ( 2.029365s |  0.20% | 12.06% )    	(22x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.597282s |  0.14% |  9.28% )   ( 1.572673s |  0.15% |  9.35% )    	(22x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.013759s |  0.09% |  5.89% )   ( 1.013609s |  0.10% |  6.02% )    	(22x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.470659s |  0.04% |  2.73% )   ( 0.470009s |  0.04% |  2.79% )    	(22x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.139618s |  0.10% |  6.62% )   ( 1.070002s |  0.10% |  6.36% )    	(22x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.433097s |  0.03% |  2.51% )   ( 0.402533s |  0.04% |  2.39% )    	(22x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.389714s |  0.12% |  8.07% )   ( 1.368290s |  0.13% |  8.13% )    	(22x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.241958s |  0.29% | 18.83% )   ( 3.215750s |  0.32% | 19.11% )    	(22x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.492433s |  0.04% |  2.86% )   ( 0.465810s |  0.04% |  2.76% )    	(22x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.496729s |  0.04% |  2.88% )   ( 0.445621s |  0.04% |  2.64% )    	(22x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003288s |  0.00% |  0.00% )   ( 0.003727s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.005900s |  0.00% |  0.00% )   ( 0.003284s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.003409s |  0.00% |  0.00% )   ( 0.003846s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008269s |  0.00% |  0.04% )   ( 0.008344s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000159s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p26_PID})
+1016.3.0:       ( 16.992571s |  1.54% |  3.09% )   ( 16.094754s |  1.61% |  3.23% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p27 p27_PID >>
+1.4.0:          ( 0.001080s |  0.00% |  0.00% )   ( 0.001106s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p27 p27_PID (&)
+24.4.0:         ( 16.991340s |  1.54% | 99.99% )   ( 16.093476s |  1.61% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
+26.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p27
+30.5.0:         ( 0.045532s |  0.00% |  0.26% )   ( 0.045375s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p27 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p27; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.045520s |  0.00% |  0.26% )   ( 0.045336s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
+33.5.0:         ( 0.045484s |  0.00% |  0.26% )   ( 0.045332s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
+34.5.0:         ( 0.047107s |  0.00% |  0.27% )   ( 0.046904s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
+35.5.0:         ( 0.053895s |  0.00% |  0.31% )   ( 0.053710s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004686s |  0.00% |  0.00% )   ( 0.005261s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
+38.5.0:         ( 0.004145s |  0.00% |  0.00% )   ( 0.004682s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
+38.5.2:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005248s |  0.00% |  0.00% )   ( 0.005795s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p27
+41.5.0:         ( 0.347151s |  0.03% |  0.07% )   ( 0.006838s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004595s |  0.00% |  0.00% )   ( 0.005152s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
+46.5.0:         ( 0.004205s |  0.00% |  0.00% )   ( 0.004725s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
+46.5.1:         ( 0.003841s |  0.00% |  0.00% )   ( 0.004349s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004133s |  0.00% |  0.00% )   ( 0.004675s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.040563s |  0.00% |  0.00% )   ( 0.034476s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
+51.5.0:         ( 0.004066s |  0.00% |  0.00% )   ( 0.004614s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+51.5.1:         ( 0.004075s |  0.00% |  0.00% )   ( 0.004615s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.008761s |  0.00% |  0.00% )   ( 0.004709s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
+65.5.0:         ( 0.004788s |  0.00% |  0.00% )   ( 0.005357s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p27
+66.5.0:         ( 0.003999s |  0.00% |  0.00% )   ( 0.004543s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+86.5.0:         ( 0.003919s |  0.00% |  0.00% )   ( 0.004450s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+87.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+88.5.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+88.5.1:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+91.5.0:         ( 16.283651s |  1.48% |  3.54% )   ( 15.728790s |  1.57% |  3.61% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003955s |  0.00% |  0.02% )   ( 0.004479s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.081608s |  0.09% |  6.64% )   ( 1.056085s |  0.10% |  6.71% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.841276s |  0.16% | 11.30% )   ( 1.781025s |  0.17% | 11.32% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.526272s |  0.13% |  9.37% )   ( 1.510382s |  0.15% |  9.60% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.826365s |  0.16% | 11.21% )   ( 1.730181s |  0.17% | 11.00% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.457441s |  0.13% |  8.95% )   ( 1.433130s |  0.14% |  9.11% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.011809s |  0.09% |  6.21% )   ( 0.961749s |  0.09% |  6.11% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.559866s |  0.05% |  3.43% )   ( 0.544593s |  0.05% |  3.46% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.030015s |  0.09% |  6.32% )   ( 1.000936s |  0.10% |  6.36% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.523913s |  0.04% |  3.21% )   ( 0.478392s |  0.04% |  3.04% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.408485s |  0.12% |  8.64% )   ( 1.339609s |  0.13% |  8.51% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.890183s |  0.26% | 17.74% )   ( 2.829182s |  0.28% | 17.98% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.566640s |  0.05% |  3.47% )   ( 0.536685s |  0.05% |  3.41% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.555823s |  0.05% |  3.41% )   ( 0.522362s |  0.05% |  3.32% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004092s |  0.00% |  0.00% )   ( 0.004638s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+86.5.1:         ( 0.003785s |  0.00% |  0.00% )   ( 0.004294s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+89.5.0:         ( 0.004182s |  0.00% |  0.00% )   ( 0.004692s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008837s |  0.00% |  0.05% )   ( 0.008928s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+257.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p27_PID})
+1018.3.0:       ( 0.000160s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │   echo "${kkProcs}" > "${tmpDir}"/.nWorkers
 1019.3.0:       ( 0.000155s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │   : > "${tmpDir}"/.spawned
-1020.3.0:       ( 0.000131s |  0.00% |  0.00% )   ( 0.000152s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1022.3.0:       ( 0.000128s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
-1026.3.0:       ( 0.001403s |  0.00% |  0.00% )   ( 0.001420s |  0.00% |  0.00% )    	(1x)	│  │  │   declare -p > "${tmpDir}"/.vars
-1027.3.0:       ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-1071.3.0:       ( 0.000130s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1072.3.0:       ( 0.000128s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1079.3.0:       ( 24.375405s |  1.16% |  1.16% )   ( 0.001757s |  0.00% |  0.00% )    	(1x)	│  │  │   wait "${p_PID[@]}" &> /dev/null
-1081.3.0:       ( 0.000295s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1084.3.0:       ( 0.000286s |  0.00% |  0.00% )   ( 0.000326s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
--1084.3.0:      ( 0.047492s |  0.00% |  0.00% )   ( 0.047743s |  0.00% |  0.00% )    	(1x)	│  │  └─  @TRAP (EXIT): : >"/dev/shm/.forkrun/forkrun.ZByplJ"/.done\;$'\n': >"/dev/shm/.forkrun/forkrun.ZByplJ"/.quit\;$'\n'kill -USR1 $(cat </dev/null "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p* 2>/dev/null) 2>/dev/null\; $'\n'printf '0\n' >&22\; $'\n'kill $(cat </dev/null "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p* 2>/dev/null) 2>/dev/null\;$'\n'        kill -9 1450673  2>/dev/null\; $'\n'        kill -9 $(cat </dev/null "/dev/shm/.forkrun/forkrun.ZByplJ"/.run/p* 2>/dev/null) 2>/dev/null\; $'\n'trap - INT TERM HUP USR1\; $'\n'        return ${returnVal:-0}
-1084.2.1:       ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │   << (SUBSHELL) >>1
-1085.2.0:       ( 0.000149s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │   wait
--1085.2.0:      ( 0.005712s |  0.00% |  0.00% )   ( 0.003374s |  0.00% |  0.00% )    	(1x)	└─ └─  @TRAP (EXIT): \rm -rf "/dev/shm/.forkrun/forkrun.ZByplJ" 2>/dev/null
+1020.3.0:       ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1022.3.0:       ( 0.000127s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
+1026.3.0:       ( 0.001413s |  0.00% |  0.00% )   ( 0.001427s |  0.00% |  0.00% )    	(1x)	│  │  │   declare -p > "${tmpDir}"/.vars
+1027.3.0:       ( 0.000136s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
+1071.3.0:       ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1072.3.0:       ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+1079.3.0:       ( 24.430551s |  2.22% |  4.44% )   ( 0.001652s |  0.00% |  0.00% )    	(1x)	│  │  │   wait "${p_PID[@]}" &> /dev/null
+1081.3.0:       ( 0.000307s |  0.00% |  0.00% )   ( 0.000343s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1084.3.0:       ( 0.000296s |  0.00% |  0.00% )   ( 0.000331s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+25.3.0:         ( 0.049059s |  0.00% |  0.00% )   ( 0.049218s |  0.00% |  0.00% )    	(1x)	│  │  └─  ${nSpawnFlag}
+1085.2.0:       ( 0.000209s |  0.00% |  0.00% )   ( 0.000244s |  0.00% |  0.00% )    	(1x)	│  │   wait
+25.2.0:         ( 0.007418s |  0.00% |  0.00% )   ( 0.004533s |  0.00% |  0.00% )    	(1x)	└─ └─  wait
+9.0.1:          ( 547.824474s | 49.93% )            ( 499.086662s | 50.04% )             	(1x)	<< (FUNCTION): main.forkrun -z ff < /mnt/ramdisk/flist0 > /dev/null >>
+1.1.0:          ( 0.001267s |  0.00% |  0.00% )   ( 0.001060s |  0.00% |  0.00% )    	(1x)	├─  forkrun -z ff < /mnt/ramdisk/flist0 > /dev/null
+24.1.0:         ( 547.823207s | 49.93% | 99.99% )   ( 499.085602s | 50.04% | 99.99% )    	(1x)	│   << (SUBSHELL) >>
+24.2.0:         ( 0.042360s |  0.00% |  0.00% )   ( 0.042259s |  0.00% |  0.00% )    	(1x)	│  ├─  trap - EXIT INT TERM HUP USR1
+25.2.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   shopt -s extglob
+26.2.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │   local +i nLines nLines0 nLinesMax nBytes nProcs nProcsMax
+27.2.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │   local tmpDir fPath outStr delimiterVal delimiterReadStr delimiterRemoveStr exitTrapStr exitTrapStr_kill nOrder tTimeout coprocSrcCode outCur outCurHex outRead tmpDirRoot returnVal tmpVar t0 tStart0 tStart1 readBytesProg nullDelimiterProg ddQuietStr pLOAD0 trailingNullFlag lseekFlag lseekPosFlag fallocateFlag nLinesAutoFlag nLinesReadLimitFlag nSpawnFlag substituteStringFlag substituteStringIDFlag nOrderFlag readBytesFlag readBytesExactFlag nullDelimiterFlag subshellRunFlag stdinRunFlag pipeReadFlag rmTmpDirFlag exportOrderFlag noFuncFlag unescapeFlag optParseFlag continueFlag doneIndicatorFlag FORCE_allowCarriageReturnsFlag ddAvailableFlag pAddFlag fd_continue fd_nAuto fd_nAuto0 fd_nOrder fd_nOrder0 fd_read fd_read0 fd_write fd_stdout fd_stdin fd_stdin0 fd_stderr pWrite pOrder pAuto pSpawn pWrite_PID pOrder_PID pAuto_PID pSpawn_PID DEBUG_FORKRUN
+28.2.0:         ( 0.000100s |  0.00% |  0.00% )   ( 0.000113s |  0.00% |  0.00% )    	(1x)	│  │   local -i PID0 nLinesCur nLinesNew nLinesRead nLinesReadLimit nRead nWait nOrder0 nBytesRead nSpawn nSpawnLast nSpawnLastCount nCPU writeFileProgType v9 kkMax kkCur kk kkProcs kkProcs0 verboseLevel pLOAD_max pLOAD_target pAd pAdd_sysLoad pAdd_lineRated tStart fd_read_pos fd_read_pos0 fd_read_pos_old fd_write_pos pAdd0 pAdd1 inLines inTime inLines0 inTime0 inLines1 nTime1 inLinesDelta inTimeDelta pAddCount pAddMin pAddSum pAddMax
+29.2.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │   local -a A p_PID p_PID0 runCmd outHave outPrint pLOADA pLOADA0 runLines runTime
+30.2.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   local -a -i runLinesA runTimeA runWaitA runAllA spawnTimeA pLOAD1
+31.2.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   : "${verboseLevel:=0}" "${returnVal:=0}" "${fd_stdin0:=0}" "${nLinesReadLimitFlag:=false}"
+32.2.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   [[ $# == 0 ]]
+32.2.1:         ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │   optParseFlag=true
+33.2.0:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(2x)	│  │   ${optParseFlag}
+33.2.1:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(2x)	│  │   (( $# > 0  ))
+33.2.2:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(2x)	│  │   [[ "$1" == [-+]* ]]
+34.2.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │   case "${1}" in
+165.2.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [[ "${1:0:1}" == '-' ]]
+165.2.1:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │   nullDelimiterFlag=true
+215.2.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │   shift 1
+216.2.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [[ ${#} == 0 ]]
+218.2.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [ -t "${fd_stdin0}" ]
+223.2.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${tmpDirRoot} ]]
+224.2.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${TMPDIR} ]]
+226.2.0:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   [[ -d '/dev/shm' ]]
+226.2.1:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   tmpDirRoot='/dev/shm'
+230.2.0:        ( 0.001171s |  0.00% |  0.00% )   ( 0.001044s |  0.00% |  0.00% )    	(1x)	│  │   tmpDir="$(mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX)"
+230.2.1:        ( 0.008223s |  0.00% |  0.00% )   ( 0.008223s |  0.00% |  0.00% )    	(1x)	│  │   << (SUBSHELL) >>
+230.3.0:        ( 0.008223s |  0.00% |100.00% )   ( 0.008223s |  0.00% |100.00% )    	(1x)	│  │  └─  mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX
+231.2.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │   fPath="${tmpDir}"/.stdin
+232.2.0:        ( 0.001117s |  0.00% |  0.00% )   ( 0.001191s |  0.00% |  0.00% )    	(1x)	│  │   mkdir -p "${tmpDir}"/.run
+233.2.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │   : > "${fPath}"
+234.2.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │   ${rmTmpDirFlag}
+234.2.1:        ( 0.026420s |  0.00% |  0.00% )   ( 0.000962s |  0.00% |  0.00% )    	(1x)	│  │   trap '\rm -rf "'"${tmpDir}"'" 2>/dev/null' EXIT
+235.2.0:        ( 547.737056s | 49.92% | 99.98% )   ( 499.027021s | 50.03% | 99.98% )    	(1x)	│  │   << (SUBSHELL) >>
+235.3.0:        ( 0.000146s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  ├─  [[ -n ${DEBUG_FORKRUN} ]]
+1084.3.0:       ( 0.001897s |  0.00% |  0.00% )   ( 0.002239s |  0.00% |  0.00% )    	(6x)	│  │  │   << (BACKGROUND FORK) >>
+1084.4.0:       ( 0.001897s |  0.00% |100.00% )   ( 0.002239s |  0.00% |100.00% )    	(6x)	│  │  │  └─  :
+238.3.0:        ( 0.000158s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │   LC_ALL=C
+239.3.0:        ( 0.000135s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │   LANG=C
+240.3.0:        ( 0.000172s |  0.00% |  0.00% )   ( 0.000183s |  0.00% |  0.00% )    	(1x)	│  │  │   IFS=
+241.3.0:        ( 0.000200s |  0.00% |  0.00% )   ( 0.009060s |  0.00% |  0.00% )    	(1x)	│  │  │   enable -f forkrun_loadables.so evfd_init evfd_wait evfd_signal evfd_close evfd_copy order_init order_get lseek cpuusage childusage
+242.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   export LC_ALL=C LANG=C IFS=
+243.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   FORKRUN_TMPDIR="$tmpDir"
+244.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   export FORKRUN_TMPDIR="$tmpDir"
+245.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   PID0="${BASHPID}"
+246.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   shopt -s nullglob
+247.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${noFuncFlag:=false}" "${readBytesFlag:=false}" "${readBytesExactFlag:=false}" "${nullDelimiterFlag:=false}" "${FORCE_allowCarriageReturnsFlag:=false}"
+248.3.0:        ( 0.000098s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │   enable lseek &> /dev/null
+249.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekFlag:=true}"
+253.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
+254.3.0:        ( 0.000555s |  0.00% |  0.00% )   ( 0.000333s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "$(lseek $fd_read 0)" == 0 ]]
+254.3.1:        ( 0.000114s |  0.00% |  0.00% )   ( 0.000129s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+254.4.0:        ( 0.000114s |  0.00% |100.00% )   ( 0.000129s |  0.00% |100.00% )    	(1x)	│  │  │  └─  lseek $fd_read 0
+254.3.2:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekPosFlag:=true}"
+256.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowCarriageReturnsFlag:-false}
+259.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   $'runCmd=("${@//\'\r\'/}")
+261.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
+262.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
+262.3.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   noFuncFlag=false
+263.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${noFuncFlag}
+264.3.0:        ( 0.000091s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │   hash "${runCmd[0]}" &> /dev/null
+265.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
+316.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nLines} ]]
+320.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nLinesAutoFlag:=true}"
+322.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -z ${nLines} ]]
+323.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   nLines=1
+325.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == '-'* ]]
+329.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == *','* ]]
+333.3.0:        ( 0.000859s |  0.00% |  0.00% )   ( 0.000993s |  0.00% |  0.00% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun._forkrun_getVal nProcs "${nProcs%%,*}" >>
+1.4.0:          ( 0.000068s |  0.00% |  7.91% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  ├─  _forkrun_getVal nProcs "${nProcs%%,*}"
+24.4.0:         ( 0.000068s |  0.00% |  7.91% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  │   local +i -l nn
+25.4.0:         ( 0.000068s |  0.00% |  7.91% )   ( 0.000080s |  0.00% |  8.05% )    	(1x)	│  │  │  │   local vOut
+26.4.0:         ( 0.000068s |  0.00% |  7.91% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  │   local -n vOut="$1"
+27.4.0:         ( 0.000067s |  0.00% |  7.79% )   ( 0.000078s |  0.00% |  7.85% )    	(1x)	│  │  │  │   shift 1
+28.4.0:         ( 0.000071s |  0.00% |  8.26% )   ( 0.000083s |  0.00% |  8.35% )    	(1x)	│  │  │  │   local -g vOut
+29.4.0:         ( 0.000070s |  0.00% |  8.14% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  │   (( ${#pMap[@]} == 20 ))
+29.4.1:         ( 0.000115s |  0.00% | 13.38% )   ( 0.000127s |  0.00% | 12.78% )    	(1x)	│  │  │  │   local -Ag pMap=([k]=1 [m]=2 [g]=3 [t]=4 [p]=5 [e]=6 [z]=7 [y]=8 [r]=9 [q]=10 [ki]=1 [mi]=2 [gi]=3 [ti]=4 [pi]=5 [ei]=6 [zi]=7 [yi]=8 [ri]=9 [qi]=10)
+30.4.0:         ( 0.000065s |  0.00% |  7.56% )   ( 0.000077s |  0.00% |  7.75% )    	(1x)	│  │  │  │   for nn in "${@%%[Bb]*}"
+32.4.0:         ( 0.000063s |  0.00% |  7.33% )   ( 0.000074s |  0.00% |  7.45% )    	(1x)	│  │  │  │   [[ -n ${nn} ]]
+32.4.1:         ( 0.000066s |  0.00% |  7.68% )   ( 0.000077s |  0.00% |  7.75% )    	(1x)	│  │  │  │   continue
+42.4.0:         ( 0.000070s |  0.00% |  8.14% )   ( 0.000081s |  0.00% |  8.15% )    	(1x)	│  │  │  └─  local +n vOut
+334.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
+335.3.0:        ( 0.000864s |  0.00% |  0.00% )   ( 0.000672s |  0.00% |  0.00% )    	(1x)	│  │  │   $'nCPU="$({ type -a nproc &> /dev/null && nproc; } || { type -a grep &> /dev/null && grep -cE \'^processor.*: \' /proc/cpuinfo; } || { mapfile -t tmpA < /proc/cpuinfo && tmpA=("${tmpA[@]//processor*/\'\034\'}") && tmpA=("${tmpA[@]//!(\'\034\')/}") && tmpA=("${tmpA[@]//\'\034\'/1}") && tmpA="${tmpA[*]}" && tmpA="${tmpA// /}" && echo ${#tmpA}; } || printf \'8\')"
+335.3.1:        ( 0.002368s |  0.00% |  0.00% )   ( 0.002449s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+335.4.0:        ( 0.000296s |  0.00% | 12.50% )   ( 0.000317s |  0.00% | 12.94% )    	(1x)	│  │  │  ├─  type -a nproc &> /dev/null
+335.4.1:        ( 0.002072s |  0.00% | 87.50% )   ( 0.002132s |  0.00% | 87.05% )    	(1x)	│  │  │  └─  nproc
+336.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nCPU < 1 ))
+338.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nProcs} ]]
+340.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+340.3.1:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   nProcs=${nCPU}
+342.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+346.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+347.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
+348.3.0:        ( 0.000095s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nOrderFlag:=false}" "${rmTmpDirFlag:=true}" "${nLinesMax:=1024}" "${subshellRunFlag:=false}" "${pipeReadFlag:=false}" "${substituteStringFlag:=false}" "${substituteStringIDFlag:=false}" "${exportOrderFlag:=false}" "${unescapeFlag:=false}" "${stdinRunFlag:=false}"
+349.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   local -i nProcs="${nProcs}" nProcsMax="${nProcsMax}" nLines="${nLines}" nLinesMax="${nLinesMax}"
+350.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
+351.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < 2 * nLines ))
+353.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < nLines ))
+355.3.0:        ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   doneIndicatorFlag=false
+356.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+360.3.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │   type -a fallocate &> /dev/null
+360.3.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+360.3.2:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${fallocateFlag:=true}"
+361.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${exportOrderFlag}
+362.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
+363.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+367.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nullDelimiterFlag}
+368.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   delimiterReadStr="-d ''"
+369.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
+369.3.1:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nullDelimiterProg:='lseek'}"
+370.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nullDelimiterProg:=bash}"
+371.3.0:        ( 0.000108s |  0.00% |  0.00% )   ( 0.000121s |  0.00% |  0.00% )    	(1x)	│  │  │   type -p dd &> /dev/null
+372.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   ddAvailableFlag=true
+373.3.0:        ( 0.003127s |  0.00% |  0.00% )   ( 0.004061s |  0.00% |  0.00% )    	(1x)	│  │  │   dd --version | grep --color=auto -qF 'coreutils'
+374.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   ddQuietStr='status=none'
+381.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nullDelimiterProg}" == @(dd|bash|lseek) ]]
+382.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowUnsafeNullDelimiterFlag}
+383.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   nullDelimiterProg=''
+401.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${unescapeFlag}
+410.3.0:        ( 0.000576s |  0.00% |  0.00% )   ( 0.000423s |  0.00% |  0.00% )    	(1x)	│  │  │   mapfile -t runCmd < <(printf '%q\n' "${runCmd[@]}") (&)
+410.3.1:        ( 0.000089s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+410.4.0:        ( 0.000089s |  0.00% |100.00% )   ( 0.000103s |  0.00% |100.00% )    	(1x)	│  │  │  └─  printf '%q\n' "${runCmd[@]}"
+411.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringFlag}
+414.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringIDFlag}
+419.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   nLinesCur=${nLines}
+420.3.0:        ( 0.001307s |  0.00% |  0.00% )   ( 0.001386s |  0.00% |  0.00% )    	(1x)	│  │  │   mkdir -p "${tmpDir}"/.{run,wait}
+421.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
+422.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${rmTmpDirFlag}
+423.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 0 ))
+450.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   tStart="${EPOCHREALTIME//./}"
+451.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │   evfd_init
+455.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr=\': >"\'"${tmpDir}"\'"/.done;\n: >"\'"${tmpDir}"\'"/.quit;\nkill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
+456.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
+459.3.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
+470.3.0:        ( 0.000551s |  0.00% |  0.00% )   ( 0.000560s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${writeFileProgType:=1}" (&)
+473.3.0:        ( 0.136015s |  0.01% |  0.02% )   ( 0.135786s |  0.01% |  0.02% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+473.4.0:        ( 0.000121s |  0.00% |  0.08% )   ( 0.000135s |  0.00% |  0.09% )    	(1x)	│  │  │  ├─  export LC_ALL=C LANG=C IFS=
+474.4.0:        ( 0.022704s |  0.00% | 16.69% )   ( 0.022653s |  0.00% | 16.68% )    	(1x)	│  │  │  │   trap - EXIT
+475.4.0:        ( 0.023536s |  0.00% | 17.30% )   ( 0.023480s |  0.00% | 17.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
+476.4.0:        ( 0.023573s |  0.00% | 17.33% )   ( 0.023527s |  0.00% | 17.32% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
+477.4.0:        ( 0.023452s |  0.00% | 17.24% )   ( 0.023401s |  0.00% | 17.23% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
+478.4.0:        ( 0.023788s |  0.00% | 17.48% )   ( 0.023738s |  0.00% | 17.48% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+479.4.0:        ( 0.000067s |  0.00% |  0.04% )   ( 0.000079s |  0.00% |  0.05% )    	(1x)	│  │  │  │   case ${writeFileProgType} in
+481.4.0:        ( 0.018543s |  0.00% | 13.63% )   ( 0.018510s |  0.00% | 13.63% )    	(1x)	│  │  │  │   evfd_copy ${fd_write} ${fd_stdin}
+490.4.0:        ( 0.000099s |  0.00% |  0.07% )   ( 0.000108s |  0.00% |  0.07% )    	(1x)	│  │  │  │   : > "${tmpDir}"/.done
+491.4.0:        ( 0.000066s |  0.00% |  0.04% )   ( 0.000078s |  0.00% |  0.05% )    	(1x)	│  │  │  │   evfd_signal
+492.4.0:        ( 0.000066s |  0.00% |  0.04% )   ( 0.000077s |  0.00% |  0.05% )    	(1x)	│  │  │  └─  (( ${verboseLevel} > 1 ))
+495.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   exitTrapStr_kill+="${pWrite_PID} "
+497.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
+502.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   outStr='>&'"${fd_stdout}"
+504.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
+505.3.0:        ( 0.000395s |  0.00% |  0.00% )   ( 0.000424s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' ${nLines} > "${tmpDir}"/.nLines (&)
+508.3.0:        ( 4.167820s |  0.37% |  0.76% )   ( 1.825534s |  0.18% |  0.36% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
+508.4.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │   export LC_ALL=C LANG=C IFS=
+509.4.0:        ( 0.023500s |  0.00% |  0.56% )   ( 0.023395s |  0.00% |  1.28% )    	(1x)	│  │  │  │   trap '[[ -f "'"${tmpDir}"'"/.run/pAuto ]] && \rm -f "'"${tmpDir}"'"/.run/pAuto' EXIT
+510.4.0:        ( 0.023700s |  0.00% |  0.56% )   ( 0.023562s |  0.00% |  1.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
+511.4.0:        ( 0.023556s |  0.00% |  0.56% )   ( 0.023460s |  0.00% |  1.28% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
+512.4.0:        ( 0.023595s |  0.00% |  0.56% )   ( 0.023465s |  0.00% |  1.28% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
+513.4.0:        ( 0.023671s |  0.00% |  0.56% )   ( 0.023583s |  0.00% |  1.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+514.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${fallocateFlag}
+515.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
+516.4.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fd_read_pos_old=0
+518.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=0
+519.4.0:        ( 0.090719s |  0.00% |  0.00% )   ( 0.103605s |  0.01% |  0.00% )    	(673x)	│  │  │  │   ${fallocateFlag}
+520.4.0:        ( 2.635190s |  0.24% |  0.09% )   ( 0.121493s |  0.01% |  0.00% )    	(672x)	│  │  │  │   read -u ${fd_nAuto} -t 0.1
+520.4.1:        ( 0.000952s |  0.00% |  0.00% )   ( 0.001071s |  0.00% |  0.01% )    	(5x)	│  │  │  │   continue
+521.4.0:        ( 0.088451s |  0.00% |  0.00% )   ( 0.101366s |  0.01% |  0.00% )    	(667x)	│  │  │  │   case ${REPLY} in
+535.4.0:        ( 0.088203s |  0.00% |  0.00% )   ( 0.101100s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nLinesAutoFlag}
+536.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
+539.4.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=$(( nLinesRead + ${REPLY} ))
+544.4.0:        ( 0.087957s |  0.00% |  0.00% )   ( 0.100706s |  0.01% |  0.00% )    	(667x)	│  │  │  │   ${lseekPosFlag}
+545.4.0:        ( 0.090358s |  0.00% |  0.00% )   ( 0.103105s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_read 0 SEEK_CUR fd_read_pos
+546.4.0:        ( 0.090476s |  0.00% |  0.00% )   ( 0.103292s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_write 0 SEEK_CUR fd_write_pos
+552.4.0:        ( 0.086689s |  0.00% |  0.00% )   ( 0.099483s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
+553.4.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesEst=$(( ( ( 1 + ${nLinesRead} ) * ( 1 + ${fd_write_pos} ) ) / ( 1 + ${fd_read_pos} ) ))
+554.4.0:        ( 0.086701s |  0.00% |  0.00% )   ( 0.099474s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nSpawnFlag}
+555.4.0:        ( 0.086490s |  0.00% |  0.00% )   ( 0.099306s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
+556.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+557.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │   [[ -d "${tmpDir}"/.wait ]]
+558.4.0:        ( 0.000655s |  0.00% |  0.01% )   ( 0.000496s |  0.00% |  0.02% )    	(1x)	│  │  │  │   mapfile -t nProcsA < <(: | cat "${tmpDir}"/.wait 2> /dev/null) (&)
+558.4.1:        ( 0.002635s |  0.00% |  0.06% )   ( 0.003009s |  0.00% |  0.16% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+558.5.0:        ( 0.002635s |  0.00% |100.00% )   ( 0.003009s |  0.00% |100.00% )    	(1x)	│  │  │  │  └─  : | cat "${tmpDir}"/.wait 2> /dev/null
+559.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nProcsA=(${nProcsA//0/})
+560.4.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${#nProcsA[@]} > 0 ))
+562.4.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=$(( 1 + ( ( nLinesEst - nLinesRead ) / ( 1 + ${nProcs} ) ) ))
+563.4.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} > ${nLinesCur} ))
+564.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} >= ${nLinesMax} ))
+565.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=${nLinesMax}
+566.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
+568.4.0:        ( 0.000092s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │   printf '%s\n' ${nLinesNew} > "${tmpDir}"/.nLines
+569.4.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+570.4.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesCur=${nLinesNew}
+573.4.0:        ( 0.086102s |  0.00% |  0.00% )   ( 0.098838s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${fallocateFlag}
+574.4.0:        ( 0.085969s |  0.00% |  0.00% )   ( 0.098813s |  0.00% |  0.00% )    	(667x)	│  │  │  │   case ${nWait} in
+585.4.0:        ( 0.084927s |  0.00% |  0.00% )   ( 0.097494s |  0.00% |  0.00% )    	(646x)	│  │  │  │   ((nWait--))
+589.4.0:        ( 0.091655s |  0.00% |  0.00% )   ( 0.104807s |  0.01% |  0.00% )    	(667x)	│  │  │  │   [[ -f "${tmpDir}"/.quit ]]
+535.4.1:        ( 0.087827s |  0.00% |  0.00% )   ( 0.100588s |  0.01% |  0.00% )    	(665x)	│  │  │  │   ${nSpawnFlag}
+552.4.1:        ( 0.087120s |  0.00% |  0.00% )   ( 0.099834s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nSpawnFlag}
+576.4.0:        ( 0.002907s |  0.00% |  0.00% )   ( 0.003322s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos=$(( 4096 * ( ${fd_read_pos} / 4096 ) ))
+577.4.0:        ( 0.002853s |  0.00% |  0.00% )   ( 0.003262s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${fd_read_pos} > ${fd_read_pos_old} ))
+578.4.0:        ( 0.066637s |  0.00% |  0.07% )   ( 0.043589s |  0.00% |  0.11% )    	(21x)	│  │  │  │   fallocate -p -o ${fd_read_pos_old} -l $(( ${fd_read_pos} - ${fd_read_pos_old} )) "${fPath}"
+579.4.0:        ( 0.003102s |  0.00% |  0.00% )   ( 0.003513s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+580.4.0:        ( 0.003012s |  0.00% |  0.00% )   ( 0.003431s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos_old=${fd_read_pos}
+582.4.0:        ( 0.003137s |  0.00% |  0.00% )   ( 0.003543s |  0.00% |  0.00% )    	(21x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
+529.4.0:        ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.01% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
+590.4.0:        ( 0.000122s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
+591.4.0:        ( 0.000128s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fallocateFlag=false
+592.4.0:        ( 0.000123s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nSpawnFlag=false
+519.4.1:        ( 0.000124s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+519.4.2:        ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+25.4.0:         ( 0.006844s |  0.00% |  0.16% )   ( 0.006946s |  0.00% |  0.38% )    	(1x)	│  │  │  └─  ${nSpawnFlag}
+598.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'printf \'"\'"\'0\\n\'"\'"\' >&\'"${fd_nAuto}"\'; \'\'\n\'
+599.3.0:        ( 0.000111s |  0.00% |  0.00% )   ( 0.000123s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' "${pAuto_PID}" > "${tmpDir}"/.run/pAuto
+601.3.0:        ( 0.000091s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+980.3.0:        ( 0.002027s |  0.00% |  0.00% )   ( 0.001256s |  0.00% |  0.00% )    	(1x)	│  │  │   $'coprocSrcCode="$(echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && echo "{ \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && read -r <\\"${tmpDir}\\"/.nLines && [[ \\${REPLY} == +([0-9]) ]] && nLinesCur=\\${REPLY}"\necho """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""\nif ${readBytesFlag}; then\n    case "${readBytesProg}" in \n        \'dd\')\n            printf \'dd bs=32768 count=%sB of="%s"/.stdin.tmp.{<#>} 2>"%s"/.stdin.tmp-status.{<#>} \' "${nBytes}" "${tmpDir}" "${tmpDir}"\n${pipeReadFlag} && printf \'iflag=fullblock <&%s\\n\' "${fd_stdin}" || printf \'<&%s\\n\' "${fd_read}"\nprintf \'[[ "$(<"%s"/.stdin.tmp-status.{<#>})" == *$\'"\'"\'\\\\n\'"\'"\'"0 bytes"* ]] && A=() || A[0]=1\\n\' "${tmpDir}"\n        ;;\n        \'head\')\n            printf \'head -c %s \' "${nBytes}"\n${pipeReadFlag} && printf \'<&%s \' "${fd_stdin}" || printf \'<&%s \' "${fd_read}"\nprintf \'>"%s"/.stdin.tmp.{<#>}\\n\' "${tmpDir}"\nprintf \'[[ $(<"%s"/.stdin.tmp.{<#>}) ]] 2>/dev/null && A[0]=1 || A=()\\n\' "${tmpDir}"\n        ;;\n        \'bash\')\n            if ${stdinRunFlag}; then\n                [[ -n ${tTimeout} ]] && echo "SECONDS=0"\nprintf \'if read -r -d \'"\'\'"\' -n %s -u %s\' "${nBytes}" "${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=(\'\')\n                trailingNullFlag=true"""\n${readBytesExactFlag} && echo \'nBytesRead=1\'\necho """\n            else\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=()\n                trailingNullFlag=false"""\n${readBytesExactFlag} && echo \'nBytesRead=0\'\necho \'fi\'\nif ${readBytesExactFlag}; then\n                    echo """\n            nBytesRead+=\\${#REPLY}\n            [[ \\${nBytesRead} == 0 ]] || (( \\${nBytesRead} >= ${nBytes} )) || {"""\n[[ -n ${tTimeout} ]] && echo "while (( \\${SECONDS} < ${tTimeout} )); do" || echo "while true; do"\necho "[[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"\nprintf "if read -r -d \'\' -n \\$(( ${nBytes} - \\${nBytesRead} )) -u ${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                    ((nBytesRead++))\n                    nBytesRead+=\\${#REPLY}\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\") || A+=(\'\')\n                    (( \\${nBytesRead} >= ${nBytes} )) && { trailingNullFlag=true; break; }\n                else\n                    trailingNullFlag=false\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\")\n                    { (( \\${nBytesRead} >= ${nBytes} )) || ${doneIndicatorFlag}; } && { trailingNullFlag=false; break; }\n                    break\n                fi\n            done\n        }""";\n                fi\necho """\n        {\n            if \\${trailingNullFlag}; then\n                printf \'%s\\0\' \\"\\${A[@]}\\" \n            else\n                printf \'%s\' \\"\\${A[0]}\\" \n                printf \'\\0%s\' \\"\\${A[@]:1}\\"\n            fi \n        } >\\"${tmpDir}\\"/.stdin.tmp.{<#>}""";\n            else\n                printf \'read -r -N %s -u \' "${nBytes}"\nif ${readBytesExactFlag}; then\n                    printf \'%s \' "${fd_stdin}"\n[[ -n ${tTimeout} ]] && printf \'-t %s \' "${tTimeout} ";\n                else\n                    printf \'%s \' ${fd_read};\n                fi\necho \'-a A\';\n            fi\n        ;;\n    esac;\nelse\n    ${nLinesReadLimitFlag} && printf \'%s\' """read -r nLinesRead <\\"${tmpDir}\\"/.nLinesRead\n    (( ( nLinesReadLimit - nLinesRead ) < nLinesCur )) && nLinesCur=\\$(( nLinesReadLimit - nLinesRead ))\n    (( nLinesCur == 0 )) && A=() || """\necho "{"\n${nOrderFlag} && echo "order_get nOrder"\n${pipeReadFlag} || echo "evfd_wait ${fd_nSpawn}"\nprintf \'%s \' "mapfile"\n${lseekFlag} && printf \'%s \' \'-t\'\nprintf \'%s \' \'-n\' "\\${nLinesCur}" \'-u\'\n${pipeReadFlag} && printf \'%s \' ${fd_stdin} || printf \'%s \' ${fd_read}\n{ ${pipeReadFlag} || ${nullDelimiterFlag}; } && printf \'%s \' \'-t\'\necho """${delimiterReadStr} A\n    }"""\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || { echo "[[ \\${#A[@]} == 0 ]] || \\${doneIndicatorFlag} || {"\nif ${lseekFlag}; then\n        echo """\n                lseek ${fd_read} -1 SEEK_CUR \'\'\n                read -r -u ${fd_read} -N 1"""\nif ${nullDelimiterFlag}; then\n            echo "[[ \\${#REPLY} == 0 ]] || {";\n        else\n            echo "[[ \\"\\${REPLY}\\" == ${delimiterVal} ]] || {";\n        fi;\n    else\n        if ${nullDelimiterFlag}; then\n            echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read}"""\ncase "${nullDelimiterProg}" in \n                \'dd\')\n                    echo """\n                { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } || {"""\n                ;;\n                \'bash\')\n                    echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos0 </proc/self/fdinfo/${fd_read0}\n                nBytes=\\$(( fd_read_pos - fd_read_pos0 - \\${#A[@]} ))"""\nif ${ddAvailableFlag}; then\n                        echo """\n                    {\n                        if (( \\${nBytes}  > 65535 )); then\n                            { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } \n                        else\n                            read -r -u ${fd_read0} -N \\${nBytes} _\n                            read -r -u ${fd_read0} -d \'\'\n                            [[ \\${#REPLY} == 0 ]]\n                        fi\n                    } || {""";\n                    else\n                        echo """\n                    read -r -u ${fd_read0} -N \\${nBytes} _\n                    read -r -u ${fd_read0} -d \'\'\n                    [[ \\${#REPLY} == 0 ]] || {""";\n                    fi\n                ;;\n            esac;\n        else\n            echo "[[ \\"\\${A[-1]: -1}\\" == ${delimiterVal} ]] || {";\n        fi;\n    fi\n(( ${verboseLevel} > 2 )) && echo """\n                echo \\"Partial read at: \\${A[-1]}\\" >&${fd_stderr}"""\necho """\n                until read -r -u ${fd_read} ${delimiterReadStr}; do \n                    A[-1]+=\\"\\${REPLY}\\"; \n                done"""\nprintf \'%s\' "A[-1]+=\\"\\${REPLY}\\""\n${lseekFlag} && printf \'\\n\' || printf \'%s\\n\' "${delimiterVal}"\n(( ${verboseLevel} > 2 )) && echo "echo \\"Partial read fixed to: \\${A[-1]}\\" >&${fd_stderr}"\necho "}"; };\nfi\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || ${readBytesFlag} || echo "}"\n${nLinesReadLimitFlag} && echo """\nnLinesRead+=\\${#A[@]}\necho \\${nLinesRead} >\\"${tmpDir}\\"/.nLinesRead\n(( nLinesRead == nLinesReadLimit )) && {\n    : >\\"${tmpDir}\\"/.quit\n    echo \'0\' >\\"${tmpDir}\\"/.nLines\n}\n"""\necho """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""\nif ${lseekPosFlag}; then\n    echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos""";\nelse\n    echo """\n            IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read};\n            IFS=\\$\'\\\\t\' read -r _ fd_write_pos </proc/self/fdinfo/${fd_write}; \n                """;\nfi\necho """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""\n${nLinesAutoFlag} && echo "printf \'x\\\\n\' >&\\${fd_nAuto0}"\n${nOrderFlag} && echo ": >\\"${tmpDir}\\"/.out/.quit{<#>}"\n${nSpawnFlag} && echo """printf \'q\\\\n\' >&${fd_nSpawn}\n            printf \'q\\\\n\' >&\\${fd_nAuto0}"""\necho """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""\n${nOrderFlag} && echo """else\n            printf \'x%s\\n\' \\"\\${nOrder}\\" >&\\${fd_nOrder0}"""\necho """fi\n        continue\n    }"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && { printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""\n${fallocateFlag} && printf \'%s\' \' || \' || echo; }\n${fallocateFlag} && echo "printf \'\\\\n\' >&\\${fd_nAuto0}"\n${pipeReadFlag} || ${nullDelimiterFlag} || ${readBytesFlag} || ${lseekFlag} || { echo """\n        { [[ \\"\\${A[*]##*${delimiterVal}}\\" ]] || [[ -z \\${A[0]} ]]; } && {"""\n(( ${verboseLevel} > 2 )) && echo "echo \\"FIXING SPLIT READ\\" >&${fd_stderr}"\necho """\n            A[-1]=\\"\\${A[-1]%${delimiterVal}}\\"\n            IFS=\n            mapfile ${delimiterReadStr} A <<<\\"\\${A[*]}\\"\n        }"""; }\n${subshellRunFlag} && echo \'(\' || echo \'{\'\n{ ${exportOrderFlag} || { ${nOrderFlag} && ${substituteStringIDFlag}; }; } && echo \'nOrder0="${nOrder:1}"\'\n${exportOrderFlag} && echo "printf \'\\034%s:\\035\\n\' \\"\\${nOrder0}\\""\nprintf \'%s \' "${runCmd[@]}"\nif ${readBytesFlag} && ! { [[ ${readBytesProg} == \'bash\' ]] && ! ${stdinRunFlag}; }; then\n    if ${stdinRunFlag} || ${noFuncFlag}; then\n        printf \'<"%s"/%s\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    else\n        printf \'"$(<"%s"/%s)"\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    fi;\nelse\n    if ${stdinRunFlag}; then\n        printf \'<<<%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n    else\n        if ${noFuncFlag}; then\n            printf "<<<\\"\\${A[*]%s}\\"" "${delimiterRemoveStr}";\n        else\n            if ! ${substituteStringFlag}; then\n                printf \'%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n            fi;\n        fi;\n    fi;\nfi\n(( ${verboseLevel} > 2 )) && echo """ || {\n        {\n            printf \'\\\\n\\\\n----------------------------------------------\\\\n\\\\n\'\n            echo \'ERROR DURING \\"${runCmd[*]}\\" CALL\'\n            declare -p A nLinesCur nLinesAutoFlag\n            echo \'fd_read:\'\n            cat /proc/self/fdinfo/${fd_read}\n            echo \'fd_write:\'\n            cat /proc/self/fdinfo/${fd_write}\n            echo\n        } >&${fd_stderr}\n    }"""\n${readBytesFlag} && { [[ -n ${readBytesProg//bash/} ]] || ${stdinRunFlag}; } && printf \'\\n\\\\rm -f "\'"${tmpDir}"\'"/.stdin.tmp.{<#>}\\n\'\n${subshellRunFlag} && printf \'\\n%s \' \')\' || printf \'\\n%s \' \'}\'\necho "${outStr}"\n${nOrderFlag} && echo "printf \'%s\\\\n\' \\"\\${nOrder}\\" >&${fd_nOrder0}"\n${nSpawnFlag} && echo "printf \'l%s\\\\nt%s\\\\n\' \\${#A[@]} \\${EPOCHREALTIME//./} >&${fd_nSpawn}"\necho """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})""")"
+997.3.0:        ( 0.005446s |  0.00% |  0.00% )   ( 0.006230s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
+997.4.0:        ( 0.000447s |  0.00% |  8.20% )   ( 0.000499s |  0.00% |  8.00% )    	(1x)	│  │  │  ├─  $'echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""
+998.4.0:        ( 0.000282s |  0.00% |  5.17% )   ( 0.000323s |  0.00% |  5.18% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+998.4.1:        ( 0.000081s |  0.00% |  1.48% )   ( 0.000092s |  0.00% |  1.47% )    	(1x)	│  │  │  │   echo "{ \${nLinesAutoFlag} || \${nSpawnFlag}; } && read -r <\"${tmpDir}\"/.nLines && [[ \${REPLY} == +([0-9]) ]] && nLinesCur=\${REPLY}"
+1006.4.0:       ( 0.000218s |  0.00% |  4.00% )   ( 0.000230s |  0.00% |  3.69% )    	(1x)	│  │  │  │   $'echo """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""
+1007.4.0:       ( 0.000072s |  0.00% |  1.32% )   ( 0.000084s |  0.00% |  1.34% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1079.4.0:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
+1082.4.0:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   echo "{"
+1083.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1084.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1084.4.1:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000080s |  0.00% |  1.28% )    	(1x)	│  │  │  │   echo "evfd_wait ${fd_nSpawn}"
+1085.4.0:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   printf '%s ' "mapfile"
+1086.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${lseekFlag}
+1086.4.1:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   printf '%s ' '-t'
+1087.4.0:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   printf '%s ' '-n' "\${nLinesCur}" '-u'
+1088.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1088.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000083s |  0.00% |  1.33% )    	(1x)	│  │  │  │   printf '%s ' ${fd_read}
+1089.4.0:       ( 0.000072s |  0.00% |  1.32% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1089.4.1:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1089.4.2:       ( 0.000083s |  0.00% |  1.52% )   ( 0.000094s |  0.00% |  1.50% )    	(1x)	│  │  │  │   printf '%s ' '-t'
+1091.4.0:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   $'echo """${delimiterReadStr} A\n    }"""
+1092.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1092.4.1:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1092.4.2:       ( 0.000096s |  0.00% |  1.76% )   ( 0.000107s |  0.00% |  1.71% )    	(1x)	│  │  │  │   [[ -z ${nullDelimiterProg} ]]
+1149.4.0:       ( 0.000075s |  0.00% |  1.37% )   ( 0.000086s |  0.00% |  1.38% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1149.4.1:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1149.4.2:       ( 0.000073s |  0.00% |  1.34% )   ( 0.000085s |  0.00% |  1.36% )    	(1x)	│  │  │  │   [[ -z ${nullDelimiterProg} ]]
+1150.4.0:       ( 0.000080s |  0.00% |  1.46% )   ( 0.000091s |  0.00% |  1.46% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
+1163.4.0:       ( 0.000105s |  0.00% |  1.92% )   ( 0.000114s |  0.00% |  1.82% )    	(1x)	│  │  │  │   $'echo """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""
+1164.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${lseekPosFlag}
+1167.4.0:       ( 0.000077s |  0.00% |  1.41% )   ( 0.000089s |  0.00% |  1.42% )    	(1x)	│  │  │  │   $'echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos"""
+1178.4.0:       ( 0.000077s |  0.00% |  1.41% )   ( 0.000089s |  0.00% |  1.42% )    	(1x)	│  │  │  │   $'echo """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""
+1179.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+1179.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   echo "printf 'x\\n' >&\${fd_nAuto0}"
+1180.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1181.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+1186.4.0:       ( 0.000079s |  0.00% |  1.45% )   ( 0.000090s |  0.00% |  1.44% )    	(1x)	│  │  │  │   $'echo """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""
+1187.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1191.4.0:       ( 0.000094s |  0.00% |  1.72% )   ( 0.000105s |  0.00% |  1.68% )    	(1x)	│  │  │  │   $'echo """fi\n        continue\n    }"""
+1192.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
+1192.4.1:       ( 0.000089s |  0.00% |  1.63% )   ( 0.000100s |  0.00% |  1.60% )    	(1x)	│  │  │  │   $'printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""
+1197.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${fallocateFlag}
+1197.4.1:       ( 0.000088s |  0.00% |  1.61% )   ( 0.000099s |  0.00% |  1.58% )    	(1x)	│  │  │  │   printf '%s' ' || '
+1198.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${fallocateFlag}
+1198.4.1:       ( 0.000082s |  0.00% |  1.50% )   ( 0.000093s |  0.00% |  1.49% )    	(1x)	│  │  │  │   echo "printf '\\n' >&\${fd_nAuto0}"
+1199.4.0:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${pipeReadFlag}
+1199.4.1:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
+1207.4.0:       ( 0.000063s |  0.00% |  1.15% )   ( 0.000074s |  0.00% |  1.18% )    	(1x)	│  │  │  │   ${subshellRunFlag}
+1207.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000083s |  0.00% |  1.33% )    	(1x)	│  │  │  │   echo '{'
+1208.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${exportOrderFlag}
+1208.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1209.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${exportOrderFlag}
+1210.4.0:       ( 0.000090s |  0.00% |  1.65% )   ( 0.000102s |  0.00% |  1.63% )    	(1x)	│  │  │  │   printf '%s ' "${runCmd[@]}"
+1211.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1218.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${stdinRunFlag}
+1221.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000074s |  0.00% |  1.18% )    	(1x)	│  │  │  │   ${noFuncFlag}
+1224.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${substituteStringFlag}
+1225.4.0:       ( 0.000082s |  0.00% |  1.50% )   ( 0.000092s |  0.00% |  1.47% )    	(1x)	│  │  │  │   printf '%s' "\"\${A[@]${delimiterRemoveStr}}\""
+1230.4.0:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
+1242.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${readBytesFlag}
+1243.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000074s |  0.00% |  1.18% )    	(1x)	│  │  │  │   ${subshellRunFlag}
+1243.4.1:       ( 0.000088s |  0.00% |  1.61% )   ( 0.000098s |  0.00% |  1.57% )    	(1x)	│  │  │  │   printf '\n%s ' '}'
+1244.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000080s |  0.00% |  1.28% )    	(1x)	│  │  │  │   echo "${outStr}"
+1245.4.0:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   ${nOrderFlag}
+1246.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000080s |  0.00% |  1.28% )    	(1x)	│  │  │  │   ${nSpawnFlag}
+1251.4.0:       ( 0.000087s |  0.00% |  1.59% )   ( 0.000099s |  0.00% |  1.58% )    	(1x)	│  │  │  └─  $'echo """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})"""
+981.3.0:        ( 0.000291s |  0.00% |  0.00% )   ( 0.000336s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
+986.3.0:        ( 0.000293s |  0.00% |  0.00% )   ( 0.000333s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'kill $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null;\n        kill -9 \'"${exitTrapStr_kill}"\' 2>/dev/null; \n        kill -9 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
+988.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'trap - INT TERM HUP USR1; \n        return ${returnVal:-0}\'
+989.3.0:        ( 0.023891s |  0.00% |  0.00% )   ( 0.023841s |  0.00% |  0.00% )    	(1x)	│  │  │   trap "${exitTrapStr}" EXIT
+993.3.0:        ( 0.024031s |  0.00% |  0.00% )   ( 0.023979s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -INT $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" INT
+997.3.0:        ( 0.023822s |  0.00% |  0.00% )   ( 0.170118s |  0.01% |  0.03% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -TERM $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" TERM
+1001.3.0:       ( 0.023729s |  0.00% |  0.00% )   ( 0.023677s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -HUP $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" HUP
+1002.3.0:       ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1003.3.0:       ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
+1007.3.0:       ( 0.000067s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+1011.3.0:       ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '\n' >&${fd_continue}
+1012.3.0:       ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+1013.3.0:       ( 0.000064s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │  │   ((kkProcs=0 ))
+1013.3.1:       ( 0.003013s |  0.00% |  0.00% )   ( 0.003440s |  0.00% |  0.00% )    	(29x)	│  │  │   ((kkProcs<28 ))
+1015.3.0:       ( 0.002906s |  0.00% |  0.00% )   ( 0.003321s |  0.00% |  0.00% )    	(28x)	│  │  │   [[ -f "${tmpDir}"/.quit ]]
+1016.3.0:       ( 17.345828s |  1.58% |  3.16% )   ( 16.569565s |  1.66% |  3.32% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p0 p0_PID >>
+1.4.0:          ( 0.000587s |  0.00% |  0.00% )   ( 0.000599s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p0 p0_PID (&)
+24.4.0:         ( 17.345156s |  1.58% | 99.99% )   ( 16.568866s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000083s |  0.00% |  0.00% )   ( 0.000111s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p0
+30.5.0:         ( 0.023248s |  0.00% |  0.13% )   ( 0.023208s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p0 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p0; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023631s |  0.00% |  0.13% )   ( 0.023577s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.023679s |  0.00% |  0.13% )   ( 0.023645s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024013s |  0.00% |  0.13% )   ( 0.023964s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.023986s |  0.00% |  0.13% )   ( 0.023939s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004823s |  0.00% |  0.00% )   ( 0.005425s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   true
+38.5.0:         ( 0.004389s |  0.00% |  0.00% )   ( 0.004980s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000199s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005329s |  0.00% |  0.00% )   ( 0.005960s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p0
+41.5.0:         ( 0.159957s |  0.01% |  0.03% )   ( 0.006093s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004380s |  0.00% |  0.00% )   ( 0.004971s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004648s |  0.00% |  0.00% )   ( 0.005260s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004337s |  0.00% |  0.00% )   ( 0.004921s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004564s |  0.00% |  0.00% )   ( 0.005169s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.040408s |  0.00% |  0.00% )   ( 0.035329s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.006661s |  0.00% |  0.00% )   ( 0.005229s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005282s |  0.00% |  0.00% )   ( 0.005893s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p0
+54.5.0:         ( 0.004424s |  0.00% |  0.00% )   ( 0.005033s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003989s |  0.00% |  0.00% )   ( 0.004551s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+79.5.0:         ( 16.949629s |  1.54% |  3.36% )   ( 16.326061s |  1.63% |  3.39% )    	(29x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004114s |  0.00% |  0.02% )   ( 0.004681s |  0.00% |  0.02% )    	(29x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.117508s |  0.10% |  6.59% )   ( 1.081975s |  0.10% |  6.62% )    	(29x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.893573s |  0.17% | 11.17% )   ( 1.835573s |  0.18% | 11.24% )    	(29x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.642812s |  0.14% |  9.69% )   ( 1.566906s |  0.15% |  9.59% )    	(29x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.862467s |  0.16% | 10.98% )   ( 1.829442s |  0.18% | 11.20% )    	(29x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.600417s |  0.14% |  9.44% )   ( 1.530701s |  0.15% |  9.37% )    	(29x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.007433s |  0.09% |  5.94% )   ( 0.992410s |  0.09% |  6.07% )    	(29x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.575748s |  0.05% |  3.39% )   ( 0.550401s |  0.05% |  3.37% )    	(29x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.080197s |  0.09% |  6.37% )   ( 1.052708s |  0.10% |  6.44% )    	(29x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.544118s |  0.04% |  3.21% )   ( 0.493153s |  0.04% |  3.02% )    	(29x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.460154s |  0.13% |  8.61% )   ( 1.385239s |  0.13% |  8.48% )    	(29x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.001969s |  0.27% | 17.71% )   ( 2.912015s |  0.29% | 17.83% )    	(29x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.587258s |  0.05% |  3.46% )   ( 0.553359s |  0.05% |  3.38% )    	(29x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.571861s |  0.05% |  3.37% )   ( 0.537498s |  0.05% |  3.29% )    	(29x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+76.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+38.5.1:         ( 0.004267s |  0.00% |  0.00% )   ( 0.004845s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003891s |  0.00% |  0.00% )   ( 0.004415s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004234s |  0.00% |  0.00% )   ( 0.004747s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+55.5.0:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
+65.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf 'x\n' >&${fd_nAuto0}
+67.5.0:         ( 0.000190s |  0.00% |  0.00% )   ( 0.000213s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   : > "/dev/shm/.forkrun/forkrun.pqysCP"/.quit
+68.5.0:         ( 0.000228s |  0.00% |  0.00% )   ( 0.000248s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%.0s\n' "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p* 1>&20
+69.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009383s |  0.00% |  0.05% )   ( 0.009357s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p0_PID})
+1013.3.0:       ( 0.002953s |  0.00% |  0.00% )   ( 0.003382s |  0.00% |  0.00% )    	(28x)	│  │  │   ((kkProcs++ ))
+1016.3.0:       ( 18.411956s |  1.67% |  3.36% )   ( 17.841146s |  1.78% |  3.57% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p1 p1_PID >>
+1.4.0:          ( 0.000574s |  0.00% |  0.00% )   ( 0.000593s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p1 p1_PID (&)
+24.4.0:         ( 18.411297s |  1.67% | 99.99% )   ( 17.840454s |  1.78% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000337s |  0.00% |  0.00% )   ( 0.000377s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000363s |  0.00% |  0.00% )   ( 0.000399s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p1
+30.5.0:         ( 0.023521s |  0.00% |  0.12% )   ( 0.023481s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p1 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p1; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023661s |  0.00% |  0.12% )   ( 0.023624s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024043s |  0.00% |  0.13% )   ( 0.023992s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024025s |  0.00% |  0.13% )   ( 0.023983s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.023978s |  0.00% |  0.13% )   ( 0.023932s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.002854s |  0.00% |  0.00% )   ( 0.003202s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   true
+38.5.0:         ( 0.002494s |  0.00% |  0.00% )   ( 0.002827s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000177s |  0.00% |  0.00% )   ( 0.000203s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003048s |  0.00% |  0.00% )   ( 0.003388s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p1
+41.5.0:         ( 0.122060s |  0.01% |  0.03% )   ( 0.003876s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.002705s |  0.00% |  0.00% )   ( 0.003058s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.002455s |  0.00% |  0.00% )   ( 0.002799s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.002273s |  0.00% |  0.00% )   ( 0.002590s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002381s |  0.00% |  0.00% )   ( 0.002690s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.017904s |  0.00% |  0.00% )   ( 0.018176s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.005609s |  0.00% |  0.00% )   ( 0.002837s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.002729s |  0.00% |  0.00% )   ( 0.003050s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p1
+54.5.0:         ( 0.002232s |  0.00% |  0.00% )   ( 0.002559s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002212s |  0.00% |  0.00% )   ( 0.002507s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000203s |  0.00% |  0.00% )   ( 0.000236s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+79.5.0:         ( 18.107016s |  1.65% |  5.78% )   ( 17.652529s |  1.77% |  5.82% )    	(17x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002369s |  0.00% |  0.01% )   ( 0.002687s |  0.00% |  0.01% )    	(17x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.169216s |  0.10% |  6.45% )   ( 1.144761s |  0.11% |  6.48% )    	(17x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.192427s |  0.19% | 12.10% )   ( 2.169224s |  0.21% | 12.28% )    	(17x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.713158s |  0.15% |  9.46% )   ( 1.665730s |  0.16% |  9.43% )    	(17x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.200065s |  0.20% | 12.15% )   ( 2.176364s |  0.21% | 12.32% )    	(17x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.715271s |  0.15% |  9.47% )   ( 1.656376s |  0.16% |  9.38% )    	(17x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.053718s |  0.09% |  5.81% )   ( 1.026725s |  0.10% |  5.81% )    	(17x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.439112s |  0.04% |  2.42% )   ( 0.399523s |  0.04% |  2.26% )    	(17x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.150322s |  0.10% |  6.35% )   ( 1.124804s |  0.11% |  6.37% )    	(17x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.355345s |  0.03% |  1.96% )   ( 0.325868s |  0.03% |  1.84% )    	(17x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.479145s |  0.13% |  8.16% )   ( 1.409404s |  0.14% |  7.98% )    	(17x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.837117s |  0.34% | 21.19% )   ( 3.807137s |  0.38% | 21.56% )    	(17x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.410850s |  0.03% |  2.26% )   ( 0.384444s |  0.03% |  2.17% )    	(17x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.388901s |  0.03% |  2.14% )   ( 0.359482s |  0.03% |  2.03% )    	(17x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+76.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+38.5.1:         ( 0.002358s |  0.00% |  0.00% )   ( 0.002664s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002131s |  0.00% |  0.00% )   ( 0.002414s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.002399s |  0.00% |  0.00% )   ( 0.002700s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000190s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005269s |  0.00% |  0.02% )   ( 0.005377s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p1_PID})
+1016.3.0:       ( 23.940353s |  2.18% |  4.37% )   ( 23.502643s |  2.35% |  4.70% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p2 p2_PID >>
+1.4.0:          ( 0.000575s |  0.00% |  0.00% )   ( 0.000595s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p2 p2_PID (&)
+24.4.0:         ( 23.939699s |  2.18% | 99.99% )   ( 23.501955s |  2.35% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000090s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p2
+30.5.0:         ( 0.023513s |  0.00% |  0.09% )   ( 0.023475s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p2 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p2; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023914s |  0.00% |  0.09% )   ( 0.023875s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024020s |  0.00% |  0.10% )   ( 0.023975s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.023990s |  0.00% |  0.10% )   ( 0.023949s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.024018s |  0.00% |  0.10% )   ( 0.023972s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.001914s |  0.00% |  0.00% )   ( 0.002153s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   true
+38.5.0:         ( 0.001752s |  0.00% |  0.00% )   ( 0.002003s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000179s |  0.00% |  0.00% )   ( 0.000203s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.002296s |  0.00% |  0.00% )   ( 0.002562s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p2
+41.5.0:         ( 0.059998s |  0.00% |  0.01% )   ( 0.002631s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.001901s |  0.00% |  0.00% )   ( 0.002154s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.001676s |  0.00% |  0.00% )   ( 0.001913s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.001657s |  0.00% |  0.00% )   ( 0.001899s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.001918s |  0.00% |  0.00% )   ( 0.002163s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.017539s |  0.00% |  0.00% )   ( 0.014146s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.001876s |  0.00% |  0.00% )   ( 0.002119s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.002097s |  0.00% |  0.00% )   ( 0.002343s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p2
+54.5.0:         ( 0.001793s |  0.00% |  0.00% )   ( 0.002053s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.001696s |  0.00% |  0.00% )   ( 0.001907s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+79.5.0:         ( 23.711289s |  2.16% |  7.61% )   ( 23.330904s |  2.33% |  7.63% )    	(13x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.001705s |  0.00% |  0.00% )   ( 0.001949s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.722443s |  0.15% |  7.26% )   ( 1.683379s |  0.16% |  7.21% )    	(13x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 3.003090s |  0.27% | 12.66% )   ( 2.981252s |  0.29% | 12.77% )    	(13x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 2.188242s |  0.19% |  9.22% )   ( 2.169280s |  0.21% |  9.29% )    	(13x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 3.001748s |  0.27% | 12.65% )   ( 2.985823s |  0.29% | 12.79% )    	(13x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 2.124353s |  0.19% |  8.95% )   ( 2.114511s |  0.21% |  9.06% )    	(13x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.444629s |  0.13% |  6.09% )   ( 1.437575s |  0.14% |  6.16% )    	(13x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.414351s |  0.03% |  1.74% )   ( 0.404631s |  0.04% |  1.73% )    	(13x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.663245s |  0.15% |  7.01% )   ( 1.598990s |  0.16% |  6.85% )    	(13x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.355446s |  0.03% |  1.49% )   ( 0.325989s |  0.03% |  1.39% )    	(13x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.893218s |  0.17% |  7.98% )   ( 1.787336s |  0.17% |  7.66% )    	(13x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 5.187761s |  0.47% | 21.87% )   ( 5.157111s |  0.51% | 22.10% )    	(13x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.389269s |  0.03% |  1.64% )   ( 0.366307s |  0.03% |  1.57% )    	(13x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.321789s |  0.02% |  1.35% )   ( 0.316771s |  0.03% |  1.35% )    	(13x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+76.5.1:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+38.5.1:         ( 0.001688s |  0.00% |  0.00% )   ( 0.001925s |  0.00% |  0.00% )    	(12x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.001560s |  0.00% |  0.00% )   ( 0.001774s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.001621s |  0.00% |  0.00% )   ( 0.001828s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004818s |  0.00% |  0.02% )   ( 0.004894s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000079s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p2_PID})
+1016.3.0:       ( 20.090851s |  1.83% |  3.66% )   ( 19.005941s |  1.90% |  3.80% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p3 p3_PID >>
+1.4.0:          ( 0.000597s |  0.00% |  0.00% )   ( 0.000616s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p3 p3_PID (&)
+24.4.0:         ( 20.090172s |  1.83% | 99.99% )   ( 19.005229s |  1.90% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000337s |  0.00% |  0.00% )   ( 0.000378s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000358s |  0.00% |  0.00% )   ( 0.000395s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p3
+30.5.0:         ( 0.023719s |  0.00% |  0.11% )   ( 0.023680s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p3 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p3; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024050s |  0.00% |  0.11% )   ( 0.024007s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024004s |  0.00% |  0.11% )   ( 0.023958s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024016s |  0.00% |  0.11% )   ( 0.023969s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.023888s |  0.00% |  0.11% )   ( 0.023841s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004594s |  0.00% |  0.00% )   ( 0.005152s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
+38.5.0:         ( 0.004225s |  0.00% |  0.00% )   ( 0.004762s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.008070s |  0.00% |  0.00% )   ( 0.005627s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p3
+41.5.0:         ( 0.134843s |  0.01% |  0.02% )   ( 0.006017s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004365s |  0.00% |  0.00% )   ( 0.004914s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004039s |  0.00% |  0.00% )   ( 0.004549s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003921s |  0.00% |  0.00% )   ( 0.004453s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004066s |  0.00% |  0.00% )   ( 0.004592s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035203s |  0.00% |  0.00% )   ( 0.032815s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.005808s |  0.00% |  0.00% )   ( 0.004821s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004697s |  0.00% |  0.00% )   ( 0.005244s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p3
+54.5.0:         ( 0.004012s |  0.00% |  0.00% )   ( 0.004567s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.004065s |  0.00% |  0.00% )   ( 0.004591s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 19.730430s |  1.79% |  3.63% )   ( 18.773724s |  1.88% |  3.65% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003859s |  0.00% |  0.01% )   ( 0.004412s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.433748s |  0.13% |  7.26% )   ( 1.369304s |  0.13% |  7.29% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.249113s |  0.20% | 11.39% )   ( 2.153230s |  0.21% | 11.46% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.776005s |  0.16% |  9.00% )   ( 1.740648s |  0.17% |  9.27% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.225945s |  0.20% | 11.28% )   ( 2.127244s |  0.21% | 11.33% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.759403s |  0.16% |  8.91% )   ( 1.706787s |  0.17% |  9.09% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.257085s |  0.11% |  6.37% )   ( 1.197009s |  0.12% |  6.37% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.648488s |  0.05% |  3.28% )   ( 0.569902s |  0.05% |  3.03% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.336177s |  0.12% |  6.77% )   ( 1.243370s |  0.12% |  6.62% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.572777s |  0.05% |  2.90% )   ( 0.505257s |  0.05% |  2.69% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.680105s |  0.15% |  8.51% )   ( 1.546806s |  0.15% |  8.23% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.588542s |  0.32% | 18.18% )   ( 3.498598s |  0.35% | 18.63% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.598479s |  0.05% |  3.03% )   ( 0.571219s |  0.05% |  3.04% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.600704s |  0.05% |  3.04% )   ( 0.539938s |  0.05% |  2.87% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004096s |  0.00% |  0.00% )   ( 0.004633s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003632s |  0.00% |  0.00% )   ( 0.004124s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004115s |  0.00% |  0.00% )   ( 0.004613s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004886s |  0.00% |  0.02% )   ( 0.004961s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000082s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p3_PID})
+1016.3.0:       ( 20.964465s |  1.91% |  3.82% )   ( 20.345126s |  2.04% |  4.07% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p4 p4_PID >>
+1.4.0:          ( 0.000595s |  0.00% |  0.00% )   ( 0.000615s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p4 p4_PID (&)
+24.4.0:         ( 20.963788s |  1.91% | 99.99% )   ( 20.344415s |  2.04% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000106s |  0.00% |  0.00% )   ( 0.000130s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p4
+30.5.0:         ( 0.023932s |  0.00% |  0.11% )   ( 0.023889s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p4 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p4; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024020s |  0.00% |  0.11% )   ( 0.023975s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.023998s |  0.00% |  0.11% )   ( 0.023951s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.023982s |  0.00% |  0.11% )   ( 0.023938s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.024021s |  0.00% |  0.11% )   ( 0.023974s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003305s |  0.00% |  0.00% )   ( 0.003660s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   true
+38.5.0:         ( 0.002855s |  0.00% |  0.00% )   ( 0.003244s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003412s |  0.00% |  0.00% )   ( 0.003798s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p4
+41.5.0:         ( 0.216284s |  0.01% |  0.05% )   ( 0.004949s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003226s |  0.00% |  0.00% )   ( 0.003623s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.002836s |  0.00% |  0.00% )   ( 0.003203s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.002632s |  0.00% |  0.00% )   ( 0.002989s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002763s |  0.00% |  0.00% )   ( 0.003107s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.022704s |  0.00% |  0.00% )   ( 0.023008s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003076s |  0.00% |  0.00% )   ( 0.003445s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.003364s |  0.00% |  0.00% )   ( 0.003756s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p4
+54.5.0:         ( 0.002717s |  0.00% |  0.00% )   ( 0.003100s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002680s |  0.00% |  0.00% )   ( 0.003038s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 20.558006s |  1.87% |  5.16% )   ( 20.144542s |  2.01% |  5.21% )    	(19x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002687s |  0.00% |  0.01% )   ( 0.003049s |  0.00% |  0.01% )    	(19x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.446096s |  0.13% |  7.03% )   ( 1.425486s |  0.14% |  7.07% )    	(19x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.822022s |  0.25% | 13.72% )   ( 2.739495s |  0.27% | 13.59% )    	(19x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 2.126774s |  0.19% | 10.34% )   ( 2.090068s |  0.20% | 10.37% )    	(19x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.797636s |  0.25% | 13.60% )   ( 2.761828s |  0.27% | 13.71% )    	(19x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 2.099638s |  0.19% | 10.21% )   ( 2.065150s |  0.20% | 10.25% )    	(19x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.334292s |  0.12% |  6.49% )   ( 1.280122s |  0.12% |  6.35% )    	(19x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.486667s |  0.04% |  2.36% )   ( 0.476451s |  0.04% |  2.36% )    	(19x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.259417s |  0.11% |  6.12% )   ( 1.242641s |  0.12% |  6.16% )    	(19x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.431735s |  0.03% |  2.10% )   ( 0.390245s |  0.03% |  1.93% )    	(19x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.410297s |  0.12% |  6.86% )   ( 1.402324s |  0.14% |  6.96% )    	(19x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.469317s |  0.31% | 16.87% )   ( 3.420294s |  0.34% | 16.97% )    	(19x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.444979s |  0.04% |  2.16% )   ( 0.439085s |  0.04% |  2.17% )    	(19x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.426449s |  0.03% |  2.07% )   ( 0.408304s |  0.04% |  2.02% )    	(19x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002710s |  0.00% |  0.00% )   ( 0.003049s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002585s |  0.00% |  0.00% )   ( 0.002945s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.002899s |  0.00% |  0.00% )   ( 0.003264s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004988s |  0.00% |  0.02% )   ( 0.005056s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000082s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p4_PID})
+1016.3.0:       ( 18.686540s |  1.70% |  3.41% )   ( 17.950753s |  1.80% |  3.59% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p5 p5_PID >>
+1.4.0:          ( 0.000622s |  0.00% |  0.00% )   ( 0.000637s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p5 p5_PID (&)
+24.4.0:         ( 18.685835s |  1.70% | 99.99% )   ( 17.950019s |  1.79% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000334s |  0.00% |  0.00% )   ( 0.000374s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000351s |  0.00% |  0.00% )   ( 0.000395s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p5
+30.5.0:         ( 0.023957s |  0.00% |  0.12% )   ( 0.023914s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p5 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p5; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024036s |  0.00% |  0.12% )   ( 0.023995s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024014s |  0.00% |  0.12% )   ( 0.023969s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024016s |  0.00% |  0.12% )   ( 0.023970s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.024003s |  0.00% |  0.12% )   ( 0.023954s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003366s |  0.00% |  0.00% )   ( 0.003769s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   true
+38.5.0:         ( 0.003100s |  0.00% |  0.00% )   ( 0.003518s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003681s |  0.00% |  0.00% )   ( 0.004120s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p5
+41.5.0:         ( 0.170713s |  0.01% |  0.04% )   ( 0.004860s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003066s |  0.00% |  0.00% )   ( 0.003452s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.002886s |  0.00% |  0.00% )   ( 0.003284s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.002767s |  0.00% |  0.00% )   ( 0.003169s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002954s |  0.00% |  0.00% )   ( 0.003347s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.024042s |  0.00% |  0.00% )   ( 0.024361s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003555s |  0.00% |  0.00% )   ( 0.003612s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.003782s |  0.00% |  0.00% )   ( 0.004223s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p5
+54.5.0:         ( 0.003028s |  0.00% |  0.00% )   ( 0.003443s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002867s |  0.00% |  0.00% )   ( 0.003261s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 18.320841s |  1.67% |  4.90% )   ( 17.745292s |  1.77% |  4.94% )    	(20x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002934s |  0.00% |  0.01% )   ( 0.003348s |  0.00% |  0.01% )    	(20x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.159751s |  0.10% |  6.33% )   ( 1.123405s |  0.11% |  6.33% )    	(20x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.252738s |  0.20% | 12.29% )   ( 2.193477s |  0.21% | 12.36% )    	(20x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.717496s |  0.15% |  9.37% )   ( 1.668875s |  0.16% |  9.40% )    	(20x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.151869s |  0.19% | 11.74% )   ( 2.101800s |  0.21% | 11.84% )    	(20x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.748607s |  0.15% |  9.54% )   ( 1.662552s |  0.16% |  9.36% )    	(20x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.125773s |  0.10% |  6.14% )   ( 1.059106s |  0.10% |  5.96% )    	(20x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.519209s |  0.04% |  2.83% )   ( 0.463685s |  0.04% |  2.61% )    	(20x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.145972s |  0.10% |  6.25% )   ( 1.136490s |  0.11% |  6.40% )    	(20x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.398324s |  0.03% |  2.17% )   ( 0.397565s |  0.03% |  2.24% )    	(20x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.499839s |  0.13% |  8.18% )   ( 1.447330s |  0.14% |  8.15% )    	(20x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.681647s |  0.33% | 20.09% )   ( 3.618279s |  0.36% | 20.39% )    	(20x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.469087s |  0.04% |  2.56% )   ( 0.451898s |  0.04% |  2.54% )    	(20x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.447595s |  0.04% |  2.44% )   ( 0.417482s |  0.04% |  2.35% )    	(20x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002972s |  0.00% |  0.00% )   ( 0.003360s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002800s |  0.00% |  0.00% )   ( 0.003151s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.002990s |  0.00% |  0.00% )   ( 0.003356s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000083s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000083s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005112s |  0.00% |  0.02% )   ( 0.005183s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p5_PID})
+1016.3.0:       ( 17.423112s |  1.58% |  3.18% )   ( 16.368416s |  1.64% |  3.28% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p6 p6_PID >>
+1.4.0:          ( 0.000628s |  0.00% |  0.00% )   ( 0.000643s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p6 p6_PID (&)
+24.4.0:         ( 17.422400s |  1.58% | 99.99% )   ( 16.367675s |  1.64% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000094s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p6
+30.5.0:         ( 0.023945s |  0.00% |  0.13% )   ( 0.023900s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p6 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p6; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024028s |  0.00% |  0.13% )   ( 0.023986s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.023989s |  0.00% |  0.13% )   ( 0.023942s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024011s |  0.00% |  0.13% )   ( 0.023963s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.023975s |  0.00% |  0.13% )   ( 0.023928s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.005016s |  0.00% |  0.00% )   ( 0.005617s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
+38.5.0:         ( 0.004533s |  0.00% |  0.00% )   ( 0.005134s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005569s |  0.00% |  0.00% )   ( 0.006169s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p6
+41.5.0:         ( 0.173836s |  0.01% |  0.03% )   ( 0.006517s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004784s |  0.00% |  0.00% )   ( 0.005379s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004459s |  0.00% |  0.00% )   ( 0.005054s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004283s |  0.00% |  0.00% )   ( 0.004845s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004512s |  0.00% |  0.00% )   ( 0.005114s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035086s |  0.00% |  0.00% )   ( 0.035546s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.010935s |  0.00% |  0.00% )   ( 0.005416s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005419s |  0.00% |  0.00% )   ( 0.006061s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p6
+54.5.0:         ( 0.004477s |  0.00% |  0.00% )   ( 0.005118s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.004302s |  0.00% |  0.00% )   ( 0.004890s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.014804s |  1.55% |  3.25% )   ( 16.124700s |  1.61% |  3.28% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004372s |  0.00% |  0.02% )   ( 0.004971s |  0.00% |  0.03% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.123012s |  0.10% |  6.60% )   ( 1.075231s |  0.10% |  6.66% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.873228s |  0.17% | 11.00% )   ( 1.794696s |  0.17% | 11.13% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.631585s |  0.14% |  9.58% )   ( 1.567146s |  0.15% |  9.71% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.864851s |  0.16% | 10.96% )   ( 1.766432s |  0.17% | 10.95% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.562524s |  0.14% |  9.18% )   ( 1.491857s |  0.14% |  9.25% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.043565s |  0.09% |  6.13% )   ( 1.000967s |  0.10% |  6.20% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.583088s |  0.05% |  3.42% )   ( 0.580684s |  0.05% |  3.60% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.182746s |  0.10% |  6.95% )   ( 1.012993s |  0.10% |  6.28% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.563567s |  0.05% |  3.31% )   ( 0.520577s |  0.05% |  3.22% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.476115s |  0.13% |  8.67% )   ( 1.392452s |  0.13% |  8.63% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.838039s |  0.25% | 16.67% )   ( 2.758285s |  0.27% | 17.10% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.643901s |  0.05% |  3.78% )   ( 0.587756s |  0.05% |  3.64% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.624211s |  0.05% |  3.66% )   ( 0.570653s |  0.05% |  3.53% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004573s |  0.00% |  0.00% )   ( 0.005166s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.004309s |  0.00% |  0.00% )   ( 0.004895s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004631s |  0.00% |  0.00% )   ( 0.005194s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000186s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005973s |  0.00% |  0.03% )   ( 0.006065s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000084s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p6_PID})
+1016.3.0:       ( 17.979824s |  1.63% |  3.28% )   ( 17.290321s |  1.73% |  3.46% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p7 p7_PID >>
+1.4.0:          ( 0.000618s |  0.00% |  0.00% )   ( 0.000638s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p7 p7_PID (&)
+24.4.0:         ( 17.979115s |  1.63% | 99.99% )   ( 17.289582s |  1.73% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000335s |  0.00% |  0.00% )   ( 0.000374s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p7
+30.5.0:         ( 0.023937s |  0.00% |  0.13% )   ( 0.023894s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p7 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p7; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024025s |  0.00% |  0.13% )   ( 0.023982s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024053s |  0.00% |  0.13% )   ( 0.024005s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.023889s |  0.00% |  0.13% )   ( 0.023849s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.024011s |  0.00% |  0.13% )   ( 0.023962s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004112s |  0.00% |  0.00% )   ( 0.004683s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
+38.5.0:         ( 0.003782s |  0.00% |  0.00% )   ( 0.004290s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004532s |  0.00% |  0.00% )   ( 0.005045s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p7
+41.5.0:         ( 0.124549s |  0.01% |  0.02% )   ( 0.005109s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003697s |  0.00% |  0.00% )   ( 0.004160s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003586s |  0.00% |  0.00% )   ( 0.004059s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003390s |  0.00% |  0.00% )   ( 0.003864s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003651s |  0.00% |  0.00% )   ( 0.004132s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035393s |  0.00% |  0.00% )   ( 0.029076s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003931s |  0.00% |  0.00% )   ( 0.004403s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004308s |  0.00% |  0.00% )   ( 0.004796s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p7
+54.5.0:         ( 0.003443s |  0.00% |  0.00% )   ( 0.003913s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003440s |  0.00% |  0.00% )   ( 0.003925s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.640616s |  1.60% |  4.08% )   ( 17.070054s |  1.71% |  4.11% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003439s |  0.00% |  0.01% )   ( 0.003829s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.190261s |  0.10% |  6.74% )   ( 1.119997s |  0.11% |  6.56% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.143862s |  0.19% | 12.15% )   ( 2.018165s |  0.20% | 11.82% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.732634s |  0.15% |  9.82% )   ( 1.642398s |  0.16% |  9.62% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.019144s |  0.18% | 11.44% )   ( 2.000761s |  0.20% | 11.72% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.653216s |  0.15% |  9.37% )   ( 1.607110s |  0.16% |  9.41% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.056256s |  0.09% |  5.98% )   ( 1.029662s |  0.10% |  6.03% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.515686s |  0.04% |  2.92% )   ( 0.509850s |  0.05% |  2.98% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.150280s |  0.10% |  6.52% )   ( 1.105091s |  0.11% |  6.47% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.490361s |  0.04% |  2.77% )   ( 0.452554s |  0.04% |  2.65% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.463990s |  0.13% |  8.29% )   ( 1.425757s |  0.14% |  8.35% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.212315s |  0.29% | 18.20% )   ( 3.185208s |  0.31% | 18.65% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.502598s |  0.04% |  2.84% )   ( 0.490933s |  0.04% |  2.87% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.506574s |  0.04% |  2.87% )   ( 0.478739s |  0.04% |  2.80% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003714s |  0.00% |  0.00% )   ( 0.004188s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003363s |  0.00% |  0.00% )   ( 0.003809s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003728s |  0.00% |  0.00% )   ( 0.004195s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004933s |  0.00% |  0.02% )   ( 0.005016s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000091s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p7_PID})
+1016.3.0:       ( 20.104291s |  1.83% |  3.67% )   ( 19.343334s |  1.93% |  3.87% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p8 p8_PID >>
+1.4.0:          ( 0.000623s |  0.00% |  0.00% )   ( 0.000639s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p8 p8_PID (&)
+24.4.0:         ( 20.103582s |  1.83% | 99.99% )   ( 19.342593s |  1.93% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000117s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000116s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p8
+30.5.0:         ( 0.024672s |  0.00% |  0.12% )   ( 0.024624s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p8 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p8; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024062s |  0.00% |  0.11% )   ( 0.024017s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024053s |  0.00% |  0.11% )   ( 0.024006s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024093s |  0.00% |  0.11% )   ( 0.024030s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.024013s |  0.00% |  0.11% )   ( 0.023967s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004947s |  0.00% |  0.00% )   ( 0.005554s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
+38.5.0:         ( 0.004672s |  0.00% |  0.00% )   ( 0.005268s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005606s |  0.00% |  0.00% )   ( 0.006233s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p8
+41.5.0:         ( 0.112967s |  0.01% |  0.01% )   ( 0.006169s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004681s |  0.00% |  0.00% )   ( 0.005298s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004520s |  0.00% |  0.00% )   ( 0.005130s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004262s |  0.00% |  0.00% )   ( 0.004830s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004557s |  0.00% |  0.00% )   ( 0.005154s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.036089s |  0.00% |  0.00% )   ( 0.036564s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004636s |  0.00% |  0.00% )   ( 0.005209s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005346s |  0.00% |  0.00% )   ( 0.005980s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p8
+54.5.0:         ( 0.004362s |  0.00% |  0.00% )   ( 0.004941s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.004430s |  0.00% |  0.00% )   ( 0.005018s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 19.759245s |  1.80% |  3.27% )   ( 19.099302s |  1.91% |  3.29% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.007527s |  0.00% |  0.03% )   ( 0.005121s |  0.00% |  0.02% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.425582s |  0.12% |  7.21% )   ( 1.383907s |  0.13% |  7.24% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.251133s |  0.20% | 11.39% )   ( 2.197693s |  0.22% | 11.50% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.824526s |  0.16% |  9.23% )   ( 1.780339s |  0.17% |  9.32% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.156656s |  0.19% | 10.91% )   ( 2.114805s |  0.21% | 11.07% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.793490s |  0.16% |  9.07% )   ( 1.724117s |  0.17% |  9.02% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.253657s |  0.11% |  6.34% )   ( 1.217062s |  0.12% |  6.37% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.641328s |  0.05% |  3.24% )   ( 0.607093s |  0.06% |  3.17% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.324301s |  0.12% |  6.70% )   ( 1.250729s |  0.12% |  6.54% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.581833s |  0.05% |  2.94% )   ( 0.547570s |  0.05% |  2.86% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.670766s |  0.15% |  8.45% )   ( 1.591537s |  0.15% |  8.33% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.583027s |  0.32% | 18.13% )   ( 3.481879s |  0.34% | 18.23% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.630355s |  0.05% |  3.19% )   ( 0.614209s |  0.06% |  3.21% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.615064s |  0.05% |  3.11% )   ( 0.583241s |  0.05% |  3.05% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004599s |  0.00% |  0.00% )   ( 0.005182s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.004172s |  0.00% |  0.00% )   ( 0.004750s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.007695s |  0.00% |  0.00% )   ( 0.005269s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005096s |  0.00% |  0.02% )   ( 0.005177s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p8_PID})
+1016.3.0:       ( 17.251847s |  1.57% |  3.14% )   ( 16.284476s |  1.63% |  3.26% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p9 p9_PID >>
+1.4.0:          ( 0.000630s |  0.00% |  0.00% )   ( 0.000647s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p9 p9_PID (&)
+24.4.0:         ( 17.251130s |  1.57% | 99.99% )   ( 16.283728s |  1.63% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000313s |  0.00% |  0.00% )   ( 0.000359s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000091s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p9
+30.5.0:         ( 0.023910s |  0.00% |  0.13% )   ( 0.023864s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p9 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p9; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024069s |  0.00% |  0.13% )   ( 0.024021s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024160s |  0.00% |  0.14% )   ( 0.024106s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024058s |  0.00% |  0.13% )   ( 0.024012s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.023822s |  0.00% |  0.13% )   ( 0.023769s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.005158s |  0.00% |  0.00% )   ( 0.005798s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
+38.5.0:         ( 0.004592s |  0.00% |  0.00% )   ( 0.005205s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005350s |  0.00% |  0.00% )   ( 0.005937s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p9
+41.5.0:         ( 0.345214s |  0.03% |  0.06% )   ( 0.007257s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004898s |  0.00% |  0.00% )   ( 0.005511s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004495s |  0.00% |  0.00% )   ( 0.005053s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004144s |  0.00% |  0.00% )   ( 0.004711s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004352s |  0.00% |  0.00% )   ( 0.004889s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.037517s |  0.00% |  0.00% )   ( 0.034994s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004474s |  0.00% |  0.00% )   ( 0.005035s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005299s |  0.00% |  0.00% )   ( 0.005892s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p9
+54.5.0:         ( 0.004290s |  0.00% |  0.00% )   ( 0.004878s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.007195s |  0.00% |  0.00% )   ( 0.004763s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 16.670748s |  1.51% |  3.22% )   ( 16.038668s |  1.60% |  3.28% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004298s |  0.00% |  0.02% )   ( 0.004898s |  0.00% |  0.03% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.085667s |  0.09% |  6.51% )   ( 1.060092s |  0.10% |  6.60% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.772610s |  0.16% | 10.63% )   ( 1.752632s |  0.17% | 10.92% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.594130s |  0.14% |  9.56% )   ( 1.527397s |  0.15% |  9.52% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.832046s |  0.16% | 10.98% )   ( 1.755950s |  0.17% | 10.94% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.538476s |  0.14% |  9.22% )   ( 1.477990s |  0.14% |  9.21% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.043964s |  0.09% |  6.26% )   ( 0.996913s |  0.09% |  6.21% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.602737s |  0.05% |  3.61% )   ( 0.584221s |  0.05% |  3.64% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.146884s |  0.10% |  6.87% )   ( 1.025642s |  0.10% |  6.39% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.550260s |  0.05% |  3.30% )   ( 0.515742s |  0.05% |  3.21% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.389785s |  0.12% |  8.33% )   ( 1.355819s |  0.13% |  8.45% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.876022s |  0.26% | 17.25% )   ( 2.835469s |  0.28% | 17.67% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.635784s |  0.05% |  3.81% )   ( 0.577947s |  0.05% |  3.60% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.598085s |  0.05% |  3.58% )   ( 0.567956s |  0.05% |  3.54% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004481s |  0.00% |  0.00% )   ( 0.005086s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.004132s |  0.00% |  0.00% )   ( 0.004690s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004643s |  0.00% |  0.00% )   ( 0.005205s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008982s |  0.00% |  0.05% )   ( 0.009072s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p9_PID})
+1016.3.0:       ( 17.632035s |  1.60% |  3.21% )   ( 16.714659s |  1.67% |  3.34% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p10 p10_PID >>
+1.4.0:          ( 0.000622s |  0.00% |  0.00% )   ( 0.000641s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p10 p10_PID (&)
+24.4.0:         ( 17.631323s |  1.60% | 99.99% )   ( 16.713914s |  1.67% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000098s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p10
+30.5.0:         ( 0.024353s |  0.00% |  0.13% )   ( 0.024257s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p10 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p10; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.024399s |  0.00% |  0.13% )   ( 0.024352s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024249s |  0.00% |  0.13% )   ( 0.024197s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024213s |  0.00% |  0.13% )   ( 0.024165s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.024161s |  0.00% |  0.13% )   ( 0.024111s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004387s |  0.00% |  0.00% )   ( 0.004899s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
+38.5.0:         ( 0.004109s |  0.00% |  0.00% )   ( 0.004632s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000099s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004962s |  0.00% |  0.00% )   ( 0.005492s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p10
+41.5.0:         ( 0.380790s |  0.03% |  0.07% )   ( 0.006838s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004512s |  0.00% |  0.00% )   ( 0.005046s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004284s |  0.00% |  0.00% )   ( 0.004862s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003838s |  0.00% |  0.00% )   ( 0.004343s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003832s |  0.00% |  0.00% )   ( 0.004320s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035633s |  0.00% |  0.00% )   ( 0.032988s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004034s |  0.00% |  0.00% )   ( 0.004519s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004659s |  0.00% |  0.00% )   ( 0.005199s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p10
+54.5.0:         ( 0.003758s |  0.00% |  0.00% )   ( 0.004275s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003722s |  0.00% |  0.00% )   ( 0.004203s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.026002s |  1.55% |  3.71% )   ( 16.478007s |  1.65% |  3.79% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003677s |  0.00% |  0.02% )   ( 0.004181s |  0.00% |  0.02% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.173114s |  0.10% |  6.89% )   ( 1.102900s |  0.11% |  6.69% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.909298s |  0.17% | 11.21% )   ( 1.892260s |  0.18% | 11.48% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.596800s |  0.14% |  9.37% )   ( 1.559014s |  0.15% |  9.46% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.943909s |  0.17% | 11.41% )   ( 1.871054s |  0.18% | 11.35% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.571905s |  0.14% |  9.23% )   ( 1.528901s |  0.15% |  9.27% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.016460s |  0.09% |  5.97% )   ( 0.981595s |  0.09% |  5.95% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.530811s |  0.04% |  3.11% )   ( 0.520738s |  0.05% |  3.16% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.080899s |  0.09% |  6.34% )   ( 1.045743s |  0.10% |  6.34% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.495448s |  0.04% |  2.90% )   ( 0.461877s |  0.04% |  2.80% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.412623s |  0.12% |  8.29% )   ( 1.387117s |  0.13% |  8.41% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.145594s |  0.28% | 18.47% )   ( 3.081893s |  0.30% | 18.70% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.544843s |  0.04% |  3.20% )   ( 0.525332s |  0.05% |  3.18% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.600621s |  0.05% |  3.52% )   ( 0.515402s |  0.05% |  3.12% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003933s |  0.00% |  0.00% )   ( 0.004470s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004230s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004151s |  0.00% |  0.00% )   ( 0.004675s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008667s |  0.00% |  0.04% )   ( 0.008751s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p10_PID})
+1016.3.0:       ( 17.776033s |  1.62% |  3.24% )   ( 16.866249s |  1.69% |  3.37% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p11 p11_PID >>
+1.4.0:          ( 0.000639s |  0.00% |  0.00% )   ( 0.000655s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p11 p11_PID (&)
+24.4.0:         ( 17.775307s |  1.62% | 99.99% )   ( 16.865493s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000094s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000094s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p11
+30.5.0:         ( 0.024287s |  0.00% |  0.13% )   ( 0.024172s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p11 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p11; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.023959s |  0.00% |  0.13% )   ( 0.023914s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024098s |  0.00% |  0.13% )   ( 0.024041s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024114s |  0.00% |  0.13% )   ( 0.024070s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.024096s |  0.00% |  0.13% )   ( 0.024049s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004328s |  0.00% |  0.00% )   ( 0.004852s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
+38.5.0:         ( 0.003799s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000114s |  0.00% |  0.00% )   ( 0.000131s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004537s |  0.00% |  0.00% )   ( 0.005061s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p11
+41.5.0:         ( 0.286700s |  0.02% |  0.06% )   ( 0.005989s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004158s |  0.00% |  0.00% )   ( 0.004648s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003701s |  0.00% |  0.00% )   ( 0.004190s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003720s |  0.00% |  0.00% )   ( 0.004220s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003709s |  0.00% |  0.00% )   ( 0.004155s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.028938s |  0.00% |  0.00% )   ( 0.029318s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003942s |  0.00% |  0.00% )   ( 0.004425s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004419s |  0.00% |  0.00% )   ( 0.004923s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p11
+54.5.0:         ( 0.003600s |  0.00% |  0.00% )   ( 0.004071s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003472s |  0.00% |  0.00% )   ( 0.003937s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.275322s |  1.57% |  3.88% )   ( 16.639217s |  1.66% |  3.94% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003332s |  0.00% |  0.01% )   ( 0.003821s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.099849s |  0.10% |  6.36% )   ( 1.083337s |  0.10% |  6.51% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.969165s |  0.17% | 11.39% )   ( 1.913867s |  0.19% | 11.50% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.622925s |  0.14% |  9.39% )   ( 1.583724s |  0.15% |  9.51% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.995245s |  0.18% | 11.54% )   ( 1.918130s |  0.19% | 11.52% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.629136s |  0.14% |  9.43% )   ( 1.565173s |  0.15% |  9.40% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.053825s |  0.09% |  6.10% )   ( 0.997380s |  0.10% |  5.99% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.552700s |  0.05% |  3.19% )   ( 0.517386s |  0.05% |  3.10% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.078587s |  0.09% |  6.24% )   ( 1.052144s |  0.10% |  6.32% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.472262s |  0.04% |  2.73% )   ( 0.444995s |  0.04% |  2.67% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.445491s |  0.13% |  8.36% )   ( 1.392525s |  0.13% |  8.36% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.223585s |  0.29% | 18.66% )   ( 3.154791s |  0.31% | 18.95% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.568169s |  0.05% |  3.28% )   ( 0.517691s |  0.05% |  3.11% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.561051s |  0.05% |  3.24% )   ( 0.494253s |  0.04% |  2.97% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003614s |  0.00% |  0.00% )   ( 0.004077s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003554s |  0.00% |  0.00% )   ( 0.003940s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003766s |  0.00% |  0.00% )   ( 0.004224s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008530s |  0.00% |  0.04% )   ( 0.008616s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p11_PID})
+1016.3.0:       ( 17.560980s |  1.60% |  3.20% )   ( 16.588781s |  1.66% |  3.32% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p12 p12_PID >>
+1.4.0:          ( 0.000782s |  0.00% |  0.00% )   ( 0.000813s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p12 p12_PID (&)
+24.4.0:         ( 17.560026s |  1.60% | 99.99% )   ( 16.587771s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p12
+30.5.0:         ( 0.046062s |  0.00% |  0.26% )   ( 0.045908s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p12 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p12; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.046186s |  0.00% |  0.26% )   ( 0.046027s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.046174s |  0.00% |  0.26% )   ( 0.046022s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.046151s |  0.00% |  0.26% )   ( 0.045996s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.046083s |  0.00% |  0.26% )   ( 0.045915s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004722s |  0.00% |  0.00% )   ( 0.005304s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
+38.5.0:         ( 0.004422s |  0.00% |  0.00% )   ( 0.004949s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005458s |  0.00% |  0.00% )   ( 0.006045s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p12
+41.5.0:         ( 0.136961s |  0.01% |  0.02% )   ( 0.006057s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004389s |  0.00% |  0.00% )   ( 0.004950s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004436s |  0.00% |  0.00% )   ( 0.005014s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004121s |  0.00% |  0.00% )   ( 0.004637s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004432s |  0.00% |  0.00% )   ( 0.004991s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.037928s |  0.00% |  0.00% )   ( 0.035410s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004266s |  0.00% |  0.00% )   ( 0.004793s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005034s |  0.00% |  0.00% )   ( 0.005589s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p12
+54.5.0:         ( 0.005766s |  0.00% |  0.00% )   ( 0.004620s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003921s |  0.00% |  0.00% )   ( 0.004457s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000141s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.081487s |  1.55% |  3.60% )   ( 16.240193s |  1.62% |  3.62% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004032s |  0.00% |  0.02% )   ( 0.004572s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.123199s |  0.10% |  6.57% )   ( 1.094244s |  0.10% |  6.73% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.006486s |  0.18% | 11.74% )   ( 1.850923s |  0.18% | 11.39% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.603896s |  0.14% |  9.38% )   ( 1.556750s |  0.15% |  9.58% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.913511s |  0.17% | 11.20% )   ( 1.842184s |  0.18% | 11.34% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.619421s |  0.14% |  9.48% )   ( 1.522945s |  0.15% |  9.37% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.036785s |  0.09% |  6.06% )   ( 0.996914s |  0.09% |  6.13% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.577465s |  0.05% |  3.38% )   ( 0.544684s |  0.05% |  3.35% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.084950s |  0.09% |  6.35% )   ( 1.040399s |  0.10% |  6.40% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.532641s |  0.04% |  3.11% )   ( 0.483523s |  0.04% |  2.97% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.450448s |  0.13% |  8.49% )   ( 1.375585s |  0.13% |  8.47% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.930588s |  0.26% | 17.15% )   ( 2.865362s |  0.28% | 17.64% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.613095s |  0.05% |  3.58% )   ( 0.537673s |  0.05% |  3.31% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.584970s |  0.05% |  3.42% )   ( 0.524435s |  0.05% |  3.22% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004199s |  0.00% |  0.00% )   ( 0.004738s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003835s |  0.00% |  0.00% )   ( 0.004356s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.007347s |  0.00% |  0.00% )   ( 0.004881s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005354s |  0.00% |  0.03% )   ( 0.005461s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000172s |  0.00% |  0.00% )   ( 0.000197s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p12_PID})
+1016.3.0:       ( 18.437445s |  1.68% |  3.36% )   ( 17.855609s |  1.79% |  3.57% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p13 p13_PID >>
+1.4.0:          ( 0.000953s |  0.00% |  0.00% )   ( 0.000975s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p13 p13_PID (&)
+24.4.0:         ( 18.436348s |  1.68% | 99.99% )   ( 17.854468s |  1.79% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p13
+30.5.0:         ( 0.047560s |  0.00% |  0.25% )   ( 0.047404s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p13 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p13; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.030950s |  0.00% |  0.16% )   ( 0.030849s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.027754s |  0.00% |  0.15% )   ( 0.027677s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.030035s |  0.00% |  0.16% )   ( 0.029951s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.029242s |  0.00% |  0.15% )   ( 0.029150s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.002819s |  0.00% |  0.00% )   ( 0.003137s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   true
+38.5.0:         ( 0.002538s |  0.00% |  0.00% )   ( 0.002874s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003089s |  0.00% |  0.00% )   ( 0.003429s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p13
+41.5.0:         ( 0.098645s |  0.00% |  0.03% )   ( 0.003603s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.002536s |  0.00% |  0.00% )   ( 0.002856s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.002240s |  0.00% |  0.00% )   ( 0.002544s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.002215s |  0.00% |  0.00% )   ( 0.002506s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002353s |  0.00% |  0.00% )   ( 0.002644s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.016551s |  0.00% |  0.00% )   ( 0.016797s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004416s |  0.00% |  0.00% )   ( 0.002572s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.002626s |  0.00% |  0.00% )   ( 0.002928s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p13
+54.5.0:         ( 0.002166s |  0.00% |  0.00% )   ( 0.002468s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002075s |  0.00% |  0.00% )   ( 0.002348s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 18.109512s |  1.65% |  6.54% )   ( 17.620588s |  1.76% |  6.57% )    	(15x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002280s |  0.00% |  0.01% )   ( 0.002597s |  0.00% |  0.01% )    	(15x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.191298s |  0.10% |  6.57% )   ( 1.142313s |  0.11% |  6.48% )    	(15x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.271052s |  0.20% | 12.54% )   ( 2.193690s |  0.21% | 12.44% )    	(15x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.733444s |  0.15% |  9.57% )   ( 1.693926s |  0.16% |  9.61% )    	(15x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.239971s |  0.20% | 12.36% )   ( 2.178054s |  0.21% | 12.36% )    	(15x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.685251s |  0.15% |  9.30% )   ( 1.647288s |  0.16% |  9.34% )    	(15x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.099415s |  0.10% |  6.07% )   ( 1.059296s |  0.10% |  6.01% )    	(15x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.415557s |  0.03% |  2.29% )   ( 0.389091s |  0.03% |  2.20% )    	(15x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.160641s |  0.10% |  6.40% )   ( 1.132273s |  0.11% |  6.42% )    	(15x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.343803s |  0.03% |  1.89% )   ( 0.319131s |  0.03% |  1.81% )    	(15x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.423201s |  0.12% |  7.85% )   ( 1.401883s |  0.14% |  7.95% )    	(15x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.796691s |  0.34% | 20.96% )   ( 3.755718s |  0.37% | 21.31% )    	(15x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.374351s |  0.03% |  2.06% )   ( 0.362469s |  0.03% |  2.05% )    	(15x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.372557s |  0.03% |  2.05% )   ( 0.342859s |  0.03% |  1.94% )    	(15x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002440s |  0.00% |  0.00% )   ( 0.002775s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002041s |  0.00% |  0.00% )   ( 0.002316s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.002413s |  0.00% |  0.00% )   ( 0.002686s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008995s |  0.00% |  0.04% )   ( 0.009070s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000144s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p13_PID})
+1016.3.0:       ( 19.129914s |  1.74% |  3.49% )   ( 18.339357s |  1.83% |  3.67% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p14 p14_PID >>
+1.4.0:          ( 0.000995s |  0.00% |  0.00% )   ( 0.001018s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p14 p14_PID (&)
+24.4.0:         ( 19.128772s |  1.74% | 99.99% )   ( 18.338169s |  1.83% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p14
+30.5.0:         ( 0.043675s |  0.00% |  0.22% )   ( 0.043545s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p14 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p14; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.040312s |  0.00% |  0.21% )   ( 0.040188s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.024269s |  0.00% |  0.12% )   ( 0.024206s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.024133s |  0.00% |  0.12% )   ( 0.024082s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.030149s |  0.00% |  0.15% )   ( 0.030063s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004267s |  0.00% |  0.00% )   ( 0.004796s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
+38.5.0:         ( 0.003732s |  0.00% |  0.00% )   ( 0.004208s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000138s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004466s |  0.00% |  0.00% )   ( 0.004958s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p14
+41.5.0:         ( 0.178049s |  0.01% |  0.03% )   ( 0.005578s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003743s |  0.00% |  0.00% )   ( 0.004210s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003813s |  0.00% |  0.00% )   ( 0.004296s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003684s |  0.00% |  0.00% )   ( 0.004169s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003683s |  0.00% |  0.00% )   ( 0.004147s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.032897s |  0.00% |  0.00% )   ( 0.030300s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003854s |  0.00% |  0.00% )   ( 0.004345s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004201s |  0.00% |  0.00% )   ( 0.004685s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p14
+54.5.0:         ( 0.003382s |  0.00% |  0.00% )   ( 0.003796s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003299s |  0.00% |  0.00% )   ( 0.003736s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000098s |  0.00% |  0.00% )   ( 0.000113s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 18.696278s |  1.70% |  4.07% )   ( 18.074358s |  1.81% |  4.10% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003491s |  0.00% |  0.01% )   ( 0.003976s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.261218s |  0.11% |  6.74% )   ( 1.236188s |  0.12% |  6.83% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.358810s |  0.21% | 12.61% )   ( 2.261072s |  0.22% | 12.50% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.882123s |  0.17% | 10.06% )   ( 1.809875s |  0.18% | 10.01% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.289368s |  0.20% | 12.24% )   ( 2.236471s |  0.22% | 12.37% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.730184s |  0.15% |  9.25% )   ( 1.651103s |  0.16% |  9.13% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.112532s |  0.10% |  5.95% )   ( 1.097816s |  0.11% |  6.07% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.512260s |  0.04% |  2.73% )   ( 0.510769s |  0.05% |  2.82% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.205551s |  0.10% |  6.44% )   ( 1.128796s |  0.11% |  6.24% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.483573s |  0.04% |  2.58% )   ( 0.444555s |  0.04% |  2.45% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.448511s |  0.13% |  7.74% )   ( 1.410948s |  0.14% |  7.80% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.366849s |  0.30% | 18.00% )   ( 3.289976s |  0.32% | 18.20% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.510949s |  0.04% |  2.73% )   ( 0.501009s |  0.05% |  2.77% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.530859s |  0.04% |  2.83% )   ( 0.491804s |  0.04% |  2.72% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003605s |  0.00% |  0.00% )   ( 0.004105s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003178s |  0.00% |  0.00% )   ( 0.003631s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003743s |  0.00% |  0.00% )   ( 0.004167s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005137s |  0.00% |  0.02% )   ( 0.005208s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000147s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p14_PID})
+1016.3.0:       ( 18.049810s |  1.64% |  3.29% )   ( 17.416631s |  1.74% |  3.49% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p15 p15_PID >>
+1.4.0:          ( 0.000958s |  0.00% |  0.00% )   ( 0.000371s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p15 p15_PID (&)
+24.4.0:         ( 18.048696s |  1.64% | 99.99% )   ( 17.416087s |  1.74% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p15
+30.5.0:         ( 0.027038s |  0.00% |  0.14% )   ( 0.026954s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p15 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p15; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.032072s |  0.00% |  0.17% )   ( 0.031968s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.029399s |  0.00% |  0.16% )   ( 0.029306s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.029255s |  0.00% |  0.16% )   ( 0.029160s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.031681s |  0.00% |  0.17% )   ( 0.031579s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003281s |  0.00% |  0.00% )   ( 0.003673s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   true
+38.5.0:         ( 0.002863s |  0.00% |  0.00% )   ( 0.003256s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003543s |  0.00% |  0.00% )   ( 0.003956s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p15
+41.5.0:         ( 0.140997s |  0.01% |  0.03% )   ( 0.004383s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003182s |  0.00% |  0.00% )   ( 0.003598s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.002912s |  0.00% |  0.00% )   ( 0.003291s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.002647s |  0.00% |  0.00% )   ( 0.003032s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002795s |  0.00% |  0.00% )   ( 0.003165s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.022849s |  0.00% |  0.00% )   ( 0.023135s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.002858s |  0.00% |  0.00% )   ( 0.003241s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.003429s |  0.00% |  0.00% )   ( 0.003823s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p15
+54.5.0:         ( 0.002693s |  0.00% |  0.00% )   ( 0.003065s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002545s |  0.00% |  0.00% )   ( 0.002908s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.684800s |  1.61% |  5.15% )   ( 17.183395s |  1.72% |  5.19% )    	(19x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002747s |  0.00% |  0.01% )   ( 0.003128s |  0.00% |  0.01% )    	(19x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.138981s |  0.10% |  6.44% )   ( 1.131436s |  0.11% |  6.58% )    	(19x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.138811s |  0.19% | 12.09% )   ( 2.119643s |  0.21% | 12.33% )    	(19x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.695621s |  0.15% |  9.58% )   ( 1.658545s |  0.16% |  9.65% )    	(19x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.121997s |  0.19% | 11.99% )   ( 2.076249s |  0.20% | 12.08% )    	(19x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.665315s |  0.15% |  9.41% )   ( 1.599936s |  0.16% |  9.31% )    	(19x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.055871s |  0.09% |  5.97% )   ( 0.997668s |  0.10% |  5.80% )    	(19x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.466537s |  0.04% |  2.63% )   ( 0.437998s |  0.04% |  2.54% )    	(19x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.115009s |  0.10% |  6.30% )   ( 1.087629s |  0.10% |  6.32% )    	(19x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.399304s |  0.03% |  2.25% )   ( 0.371610s |  0.03% |  2.16% )    	(19x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.452911s |  0.13% |  8.21% )   ( 1.383084s |  0.13% |  8.04% )    	(19x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.574948s |  0.32% | 20.21% )   ( 3.491948s |  0.35% | 20.32% )    	(19x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.440545s |  0.04% |  2.49% )   ( 0.427640s |  0.04% |  2.48% )    	(19x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.416203s |  0.03% |  2.35% )   ( 0.396881s |  0.03% |  2.30% )    	(19x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002720s |  0.00% |  0.00% )   ( 0.003096s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002533s |  0.00% |  0.00% )   ( 0.002893s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.002870s |  0.00% |  0.00% )   ( 0.003236s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008747s |  0.00% |  0.04% )   ( 0.008840s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000156s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p15_PID})
+1016.3.0:       ( 17.401283s |  1.58% |  3.17% )   ( 16.652497s |  1.66% |  3.33% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p16 p16_PID >>
+1.4.0:          ( 0.001005s |  0.00% |  0.00% )   ( 0.001027s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p16 p16_PID (&)
+24.4.0:         ( 17.400129s |  1.58% | 99.99% )   ( 16.651298s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p16
+30.5.0:         ( 0.044282s |  0.00% |  0.25% )   ( 0.044137s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p16 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p16; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.038806s |  0.00% |  0.22% )   ( 0.038693s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.045978s |  0.00% |  0.26% )   ( 0.045800s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.045844s |  0.00% |  0.26% )   ( 0.045701s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.045580s |  0.00% |  0.26% )   ( 0.045434s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004334s |  0.00% |  0.00% )   ( 0.004850s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
+38.5.0:         ( 0.003860s |  0.00% |  0.00% )   ( 0.004355s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004679s |  0.00% |  0.00% )   ( 0.005203s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p16
+41.5.0:         ( 0.125193s |  0.01% |  0.02% )   ( 0.005534s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003984s |  0.00% |  0.00% )   ( 0.004505s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003849s |  0.00% |  0.00% )   ( 0.004358s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003618s |  0.00% |  0.00% )   ( 0.004099s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003778s |  0.00% |  0.00% )   ( 0.004265s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.029647s |  0.00% |  0.00% )   ( 0.030055s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003992s |  0.00% |  0.00% )   ( 0.004492s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004464s |  0.00% |  0.00% )   ( 0.004958s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p16
+54.5.0:         ( 0.003622s |  0.00% |  0.00% )   ( 0.004144s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003388s |  0.00% |  0.00% )   ( 0.003867s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000141s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 16.958868s |  1.54% |  4.06% )   ( 16.323259s |  1.63% |  4.08% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003603s |  0.00% |  0.02% )   ( 0.004105s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.106106s |  0.10% |  6.52% )   ( 1.090992s |  0.10% |  6.68% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.026583s |  0.18% | 11.94% )   ( 1.919891s |  0.19% | 11.76% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.629021s |  0.14% |  9.60% )   ( 1.573370s |  0.15% |  9.63% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.978653s |  0.18% | 11.66% )   ( 1.911724s |  0.19% | 11.71% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.560506s |  0.14% |  9.20% )   ( 1.524434s |  0.15% |  9.33% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.021080s |  0.09% |  6.02% )   ( 0.976818s |  0.09% |  5.98% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.530525s |  0.04% |  3.12% )   ( 0.487940s |  0.04% |  2.98% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.061055s |  0.09% |  6.25% )   ( 1.023947s |  0.10% |  6.27% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.512582s |  0.04% |  3.02% )   ( 0.439083s |  0.04% |  2.68% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.390710s |  0.12% |  8.20% )   ( 1.355323s |  0.13% |  8.30% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.139556s |  0.28% | 18.51% )   ( 3.059777s |  0.30% | 18.74% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.501547s |  0.04% |  2.95% )   ( 0.485554s |  0.04% |  2.97% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.497341s |  0.04% |  2.93% )   ( 0.470301s |  0.04% |  2.88% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004319s |  0.00% |  0.00% )   ( 0.004278s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003351s |  0.00% |  0.00% )   ( 0.003817s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003693s |  0.00% |  0.00% )   ( 0.004157s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+55.5.0:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
+64.5.0:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
+65.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf 'x\n' >&${fd_nAuto0}
+67.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   : > "/dev/shm/.forkrun/forkrun.pqysCP"/.quit
+68.5.0:         ( 0.000215s |  0.00% |  0.00% )   ( 0.000237s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%.0s\n' "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p* 1>&20
+69.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009088s |  0.00% |  0.05% )   ( 0.009170s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000149s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p16_PID})
+1016.3.0:       ( 20.385612s |  1.85% |  3.72% )   ( 19.574872s |  1.96% |  3.92% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p17 p17_PID >>
+1.4.0:          ( 0.001054s |  0.00% |  0.00% )   ( 0.001077s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p17 p17_PID (&)
+24.4.0:         ( 20.384408s |  1.85% | 99.99% )   ( 19.573622s |  1.96% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p17
+30.5.0:         ( 0.045686s |  0.00% |  0.22% )   ( 0.045534s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p17 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p17; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.032362s |  0.00% |  0.15% )   ( 0.032263s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.030424s |  0.00% |  0.14% )   ( 0.030343s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.045294s |  0.00% |  0.22% )   ( 0.045137s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.039404s |  0.00% |  0.19% )   ( 0.039270s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.005247s |  0.00% |  0.00% )   ( 0.005841s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
+38.5.0:         ( 0.004637s |  0.00% |  0.00% )   ( 0.005236s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005487s |  0.00% |  0.00% )   ( 0.006105s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p17
+41.5.0:         ( 0.228438s |  0.02% |  0.03% )   ( 0.006725s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004793s |  0.00% |  0.00% )   ( 0.005395s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004543s |  0.00% |  0.00% )   ( 0.005132s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004394s |  0.00% |  0.00% )   ( 0.004984s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004668s |  0.00% |  0.00% )   ( 0.005266s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.040138s |  0.00% |  0.00% )   ( 0.037612s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.007761s |  0.00% |  0.00% )   ( 0.005421s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005296s |  0.00% |  0.00% )   ( 0.005872s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p17
+54.5.0:         ( 0.004213s |  0.00% |  0.00% )   ( 0.004797s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.004122s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 19.848242s |  1.80% |  3.24% )   ( 19.256811s |  1.93% |  3.27% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004393s |  0.00% |  0.02% )   ( 0.004998s |  0.00% |  0.02% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.494326s |  0.13% |  7.52% )   ( 1.410539s |  0.14% |  7.32% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.240431s |  0.20% | 11.28% )   ( 2.189382s |  0.21% | 11.36% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.825307s |  0.16% |  9.19% )   ( 1.806654s |  0.18% |  9.38% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.216563s |  0.20% | 11.16% )   ( 2.148263s |  0.21% | 11.15% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.825027s |  0.16% |  9.19% )   ( 1.755388s |  0.17% |  9.11% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.291863s |  0.11% |  6.50% )   ( 1.269213s |  0.12% |  6.59% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.654506s |  0.05% |  3.29% )   ( 0.611947s |  0.06% |  3.17% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.336148s |  0.12% |  6.73% )   ( 1.287299s |  0.12% |  6.68% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.560241s |  0.05% |  2.82% )   ( 0.542473s |  0.05% |  2.81% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.647786s |  0.15% |  8.30% )   ( 1.575919s |  0.15% |  8.18% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.489142s |  0.31% | 17.57% )   ( 3.453567s |  0.34% | 17.93% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.639283s |  0.05% |  3.22% )   ( 0.613183s |  0.06% |  3.18% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.623226s |  0.05% |  3.13% )   ( 0.587986s |  0.05% |  3.05% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004486s |  0.00% |  0.00% )   ( 0.005055s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.004079s |  0.00% |  0.00% )   ( 0.004629s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004614s |  0.00% |  0.00% )   ( 0.005173s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.004776s |  0.00% |  0.02% )   ( 0.004851s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p17_PID})
+1016.3.0:       ( 18.087147s |  1.64% |  3.30% )   ( 17.536829s |  1.75% |  3.51% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p18 p18_PID >>
+1.4.0:          ( 0.001025s |  0.00% |  0.00% )   ( 0.001046s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p18 p18_PID (&)
+24.4.0:         ( 18.085971s |  1.64% | 99.99% )   ( 17.535609s |  1.75% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000180s |  0.00% |  0.00% )   ( 0.000205s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000183s |  0.00% |  0.00% )   ( 0.000206s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p18
+30.5.0:         ( 0.038257s |  0.00% |  0.21% )   ( 0.038137s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p18 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p18; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.039444s |  0.00% |  0.21% )   ( 0.039312s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.048332s |  0.00% |  0.26% )   ( 0.048175s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.043810s |  0.00% |  0.24% )   ( 0.043653s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.037350s |  0.00% |  0.20% )   ( 0.037214s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003072s |  0.00% |  0.00% )   ( 0.003427s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   true
+38.5.0:         ( 0.002831s |  0.00% |  0.00% )   ( 0.003208s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003219s |  0.00% |  0.00% )   ( 0.003604s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p18
+41.5.0:         ( 0.133016s |  0.01% |  0.04% )   ( 0.004377s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003115s |  0.00% |  0.00% )   ( 0.003502s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.002612s |  0.00% |  0.00% )   ( 0.002968s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.002524s |  0.00% |  0.00% )   ( 0.002860s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002739s |  0.00% |  0.00% )   ( 0.003077s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.023121s |  0.00% |  0.00% )   ( 0.020399s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.002799s |  0.00% |  0.00% )   ( 0.003142s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.003098s |  0.00% |  0.00% )   ( 0.003474s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p18
+54.5.0:         ( 0.002457s |  0.00% |  0.00% )   ( 0.002791s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002392s |  0.00% |  0.00% )   ( 0.002724s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000183s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.673646s |  1.61% |  5.74% )   ( 17.250180s |  1.72% |  5.78% )    	(17x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002525s |  0.00% |  0.01% )   ( 0.002888s |  0.00% |  0.01% )    	(17x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.118364s |  0.10% |  6.32% )   ( 1.111567s |  0.11% |  6.44% )    	(17x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.132027s |  0.19% | 12.06% )   ( 2.096200s |  0.21% | 12.15% )    	(17x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.711951s |  0.15% |  9.68% )   ( 1.652772s |  0.16% |  9.58% )    	(17x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.151986s |  0.19% | 12.17% )   ( 2.116424s |  0.21% | 12.26% )    	(17x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.649350s |  0.15% |  9.33% )   ( 1.599971s |  0.16% |  9.27% )    	(17x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.035810s |  0.09% |  5.86% )   ( 1.007784s |  0.10% |  5.84% )    	(17x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.424534s |  0.03% |  2.40% )   ( 0.407120s |  0.04% |  2.36% )    	(17x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.164434s |  0.10% |  6.58% )   ( 1.126258s |  0.11% |  6.52% )    	(17x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.366866s |  0.03% |  2.07% )   ( 0.342831s |  0.03% |  1.98% )    	(17x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.406003s |  0.12% |  7.95% )   ( 1.398688s |  0.14% |  8.10% )    	(17x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.691824s |  0.33% | 20.88% )   ( 3.614474s |  0.36% | 20.95% )    	(17x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.442805s |  0.04% |  2.50% )   ( 0.402830s |  0.04% |  2.33% )    	(17x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.375167s |  0.03% |  2.12% )   ( 0.370373s |  0.03% |  2.14% )    	(17x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002727s |  0.00% |  0.00% )   ( 0.003086s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002453s |  0.00% |  0.00% )   ( 0.002775s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.002663s |  0.00% |  0.00% )   ( 0.002961s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008773s |  0.00% |  0.04% )   ( 0.008851s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p18_PID})
+1016.3.0:       ( 17.844334s |  1.62% |  3.25% )   ( 16.766980s |  1.68% |  3.35% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p19 p19_PID >>
+1.4.0:          ( 0.001008s |  0.00% |  0.00% )   ( 0.001032s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p19 p19_PID (&)
+24.4.0:         ( 17.843173s |  1.62% | 99.99% )   ( 16.765772s |  1.68% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p19
+30.5.0:         ( 0.045784s |  0.00% |  0.25% )   ( 0.045635s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p19 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p19; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.045404s |  0.00% |  0.25% )   ( 0.045258s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.045494s |  0.00% |  0.25% )   ( 0.045346s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.026827s |  0.00% |  0.15% )   ( 0.026751s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.038096s |  0.00% |  0.21% )   ( 0.037969s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004683s |  0.00% |  0.00% )   ( 0.005180s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
+38.5.0:         ( 0.004319s |  0.00% |  0.00% )   ( 0.004907s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005115s |  0.00% |  0.00% )   ( 0.005707s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p19
+41.5.0:         ( 0.220941s |  0.02% |  0.04% )   ( 0.007039s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.005006s |  0.00% |  0.00% )   ( 0.005585s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004565s |  0.00% |  0.00% )   ( 0.005178s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004170s |  0.00% |  0.00% )   ( 0.004747s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004543s |  0.00% |  0.00% )   ( 0.005136s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.037183s |  0.00% |  0.00% )   ( 0.034626s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004505s |  0.00% |  0.00% )   ( 0.005071s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005180s |  0.00% |  0.00% )   ( 0.005748s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p19
+54.5.0:         ( 0.004035s |  0.00% |  0.00% )   ( 0.004586s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.004056s |  0.00% |  0.00% )   ( 0.004603s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.314328s |  1.57% |  3.46% )   ( 16.445910s |  1.64% |  3.50% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003968s |  0.00% |  0.02% )   ( 0.004528s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.183751s |  0.10% |  6.83% )   ( 1.127565s |  0.11% |  6.85% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.978258s |  0.18% | 11.42% )   ( 1.914523s |  0.19% | 11.64% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.661086s |  0.15% |  9.59% )   ( 1.601110s |  0.16% |  9.73% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.887780s |  0.17% | 10.90% )   ( 1.824335s |  0.18% | 11.09% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.582660s |  0.14% |  9.14% )   ( 1.504410s |  0.15% |  9.14% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.125081s |  0.10% |  6.49% )   ( 1.029629s |  0.10% |  6.26% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.666472s |  0.06% |  3.84% )   ( 0.555218s |  0.05% |  3.37% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.140089s |  0.10% |  6.58% )   ( 1.067740s |  0.10% |  6.49% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.580526s |  0.05% |  3.35% )   ( 0.499031s |  0.05% |  3.03% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.379609s |  0.12% |  7.96% )   ( 1.352683s |  0.13% |  8.22% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.004289s |  0.27% | 17.35% )   ( 2.876806s |  0.28% | 17.49% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.573064s |  0.05% |  3.30% )   ( 0.553130s |  0.05% |  3.36% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.547695s |  0.04% |  3.16% )   ( 0.535202s |  0.05% |  3.25% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004060s |  0.00% |  0.00% )   ( 0.004577s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.004050s |  0.00% |  0.00% )   ( 0.004579s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004555s |  0.00% |  0.00% )   ( 0.005127s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000095s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005161s |  0.00% |  0.02% )   ( 0.005234s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000153s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p19_PID})
+1016.3.0:       ( 19.302600s |  1.75% |  3.52% )   ( 18.738481s |  1.87% |  3.75% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p20 p20_PID >>
+1.4.0:          ( 0.001044s |  0.00% |  0.00% )   ( 0.001065s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p20 p20_PID (&)
+24.4.0:         ( 19.301399s |  1.75% | 99.99% )   ( 18.737243s |  1.87% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000227s |  0.00% |  0.00% )   ( 0.000250s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000223s |  0.00% |  0.00% )   ( 0.000250s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p20
+30.5.0:         ( 0.047746s |  0.00% |  0.24% )   ( 0.047569s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p20 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p20; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.035208s |  0.00% |  0.18% )   ( 0.035083s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.039361s |  0.00% |  0.20% )   ( 0.039220s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.041877s |  0.00% |  0.21% )   ( 0.041726s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.047765s |  0.00% |  0.24% )   ( 0.047578s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003009s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   true
+38.5.0:         ( 0.002741s |  0.00% |  0.00% )   ( 0.003091s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000176s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003320s |  0.00% |  0.00% )   ( 0.003699s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p20
+41.5.0:         ( 0.146078s |  0.01% |  0.04% )   ( 0.004360s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003084s |  0.00% |  0.00% )   ( 0.003462s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.002748s |  0.00% |  0.00% )   ( 0.003104s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.002513s |  0.00% |  0.00% )   ( 0.002876s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.002724s |  0.00% |  0.00% )   ( 0.003066s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.020647s |  0.00% |  0.00% )   ( 0.020929s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.005758s |  0.00% |  0.00% )   ( 0.003101s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.003017s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p20
+54.5.0:         ( 0.002515s |  0.00% |  0.00% )   ( 0.002867s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002406s |  0.00% |  0.00% )   ( 0.002741s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 18.870826s |  1.72% |  5.75% )   ( 18.446748s |  1.84% |  5.79% )    	(17x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.002613s |  0.00% |  0.01% )   ( 0.002968s |  0.00% |  0.01% )    	(17x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.250586s |  0.11% |  6.62% )   ( 1.248910s |  0.12% |  6.77% )    	(17x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.451030s |  0.22% | 12.98% )   ( 2.394212s |  0.24% | 12.97% )    	(17x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.872332s |  0.17% |  9.92% )   ( 1.853000s |  0.18% | 10.04% )    	(17x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.444508s |  0.22% | 12.95% )   ( 2.412566s |  0.24% | 13.07% )    	(17x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.836616s |  0.16% |  9.73% )   ( 1.802387s |  0.18% |  9.77% )    	(17x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.106073s |  0.10% |  5.86% )   ( 1.101339s |  0.11% |  5.97% )    	(17x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.458012s |  0.04% |  2.42% )   ( 0.427473s |  0.04% |  2.31% )    	(17x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.282952s |  0.11% |  6.79% )   ( 1.222971s |  0.12% |  6.62% )    	(17x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.372182s |  0.03% |  1.97% )   ( 0.356397s |  0.03% |  1.93% )    	(17x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.599134s |  0.14% |  8.47% )   ( 1.560155s |  0.15% |  8.45% )    	(17x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.346660s |  0.30% | 17.73% )   ( 3.295484s |  0.33% | 17.86% )    	(17x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.452502s |  0.04% |  2.39% )   ( 0.397214s |  0.03% |  2.15% )    	(17x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.395626s |  0.03% |  2.09% )   ( 0.371672s |  0.03% |  2.01% )    	(17x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002613s |  0.00% |  0.00% )   ( 0.002963s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002331s |  0.00% |  0.00% )   ( 0.002642s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.002538s |  0.00% |  0.00% )   ( 0.002835s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008977s |  0.00% |  0.04% )   ( 0.009057s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000157s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p20_PID})
+1016.3.0:       ( 17.569410s |  1.60% |  3.20% )   ( 16.787610s |  1.68% |  3.36% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p21 p21_PID >>
+1.4.0:          ( 0.001044s |  0.00% |  0.00% )   ( 0.001066s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p21 p21_PID (&)
+24.4.0:         ( 17.568211s |  1.60% | 99.99% )   ( 16.786371s |  1.68% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000103s |  0.00% |  0.00% )   ( 0.000116s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p21
+30.5.0:         ( 0.046319s |  0.00% |  0.26% )   ( 0.046046s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p21 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p21; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.045950s |  0.00% |  0.26% )   ( 0.045774s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.044590s |  0.00% |  0.25% )   ( 0.044433s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.048141s |  0.00% |  0.27% )   ( 0.047956s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.048566s |  0.00% |  0.27% )   ( 0.048403s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004386s |  0.00% |  0.00% )   ( 0.004869s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   true
+38.5.0:         ( 0.003888s |  0.00% |  0.00% )   ( 0.004370s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000198s |  0.00% |  0.00% )   ( 0.000218s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004573s |  0.00% |  0.00% )   ( 0.005086s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p21
+41.5.0:         ( 0.171132s |  0.01% |  0.04% )   ( 0.005718s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003935s |  0.00% |  0.00% )   ( 0.004415s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003625s |  0.00% |  0.00% )   ( 0.004116s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003423s |  0.00% |  0.00% )   ( 0.003864s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003532s |  0.00% |  0.00% )   ( 0.003994s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.028040s |  0.00% |  0.00% )   ( 0.028419s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004539s |  0.00% |  0.00% )   ( 0.004149s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004091s |  0.00% |  0.00% )   ( 0.004575s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p21
+54.5.0:         ( 0.003385s |  0.00% |  0.00% )   ( 0.003857s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003285s |  0.00% |  0.00% )   ( 0.003732s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 17.071895s |  1.55% |  4.22% )   ( 16.450069s |  1.64% |  4.26% )    	(23x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003315s |  0.00% |  0.01% )   ( 0.003771s |  0.00% |  0.02% )    	(23x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.201512s |  0.10% |  7.03% )   ( 1.102695s |  0.11% |  6.70% )    	(23x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.040436s |  0.18% | 11.95% )   ( 1.937334s |  0.19% | 11.77% )    	(23x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.642377s |  0.14% |  9.62% )   ( 1.567147s |  0.15% |  9.52% )    	(23x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.957719s |  0.17% | 11.46% )   ( 1.918765s |  0.19% | 11.66% )    	(23x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.579924s |  0.14% |  9.25% )   ( 1.522012s |  0.15% |  9.25% )    	(23x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 0.982235s |  0.08% |  5.75% )   ( 0.965382s |  0.09% |  5.86% )    	(23x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.485430s |  0.04% |  2.84% )   ( 0.475805s |  0.04% |  2.89% )    	(23x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.060100s |  0.09% |  6.20% )   ( 1.015450s |  0.10% |  6.17% )    	(23x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.445319s |  0.04% |  2.60% )   ( 0.415815s |  0.04% |  2.52% )    	(23x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.391721s |  0.12% |  8.15% )   ( 1.375324s |  0.13% |  8.36% )    	(23x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.249848s |  0.29% | 19.03% )   ( 3.202548s |  0.32% | 19.46% )    	(23x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.517305s |  0.04% |  3.03% )   ( 0.481231s |  0.04% |  2.92% )    	(23x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.514654s |  0.04% |  3.01% )   ( 0.466790s |  0.04% |  2.83% )    	(23x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003599s |  0.00% |  0.00% )   ( 0.004060s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003207s |  0.00% |  0.00% )   ( 0.003643s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003488s |  0.00% |  0.00% )   ( 0.003924s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009148s |  0.00% |  0.05% )   ( 0.009220s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000155s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p21_PID})
+1016.3.0:       ( 17.220653s |  1.56% |  3.14% )   ( 16.438183s |  1.64% |  3.29% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p22 p22_PID >>
+1.4.0:          ( 0.000921s |  0.00% |  0.00% )   ( 0.000946s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p22 p22_PID (&)
+24.4.0:         ( 17.219553s |  1.56% | 99.99% )   ( 16.437027s |  1.64% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000167s |  0.00% |  0.00% )   ( 0.000186s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p22
+30.5.0:         ( 0.046122s |  0.00% |  0.26% )   ( 0.045959s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p22 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p22; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.046393s |  0.00% |  0.26% )   ( 0.046188s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.045995s |  0.00% |  0.26% )   ( 0.045820s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.046717s |  0.00% |  0.27% )   ( 0.046541s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.051604s |  0.00% |  0.29% )   ( 0.051399s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004364s |  0.00% |  0.00% )   ( 0.004891s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
+38.5.0:         ( 0.007089s |  0.00% |  0.00% )   ( 0.004607s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004616s |  0.00% |  0.00% )   ( 0.005164s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p22
+41.5.0:         ( 0.127083s |  0.01% |  0.02% )   ( 0.005180s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004123s |  0.00% |  0.00% )   ( 0.004656s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003709s |  0.00% |  0.00% )   ( 0.004212s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003568s |  0.00% |  0.00% )   ( 0.004028s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003798s |  0.00% |  0.00% )   ( 0.004284s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.029556s |  0.00% |  0.00% )   ( 0.029972s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003832s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004305s |  0.00% |  0.00% )   ( 0.004798s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p22
+54.5.0:         ( 0.003510s |  0.00% |  0.00% )   ( 0.003998s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003500s |  0.00% |  0.00% )   ( 0.003984s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000140s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 16.758100s |  1.52% |  4.05% )   ( 16.093863s |  1.61% |  4.07% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003534s |  0.00% |  0.02% )   ( 0.004035s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.098322s |  0.10% |  6.55% )   ( 1.052884s |  0.10% |  6.54% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.886160s |  0.17% | 11.25% )   ( 1.858893s |  0.18% | 11.55% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.561774s |  0.14% |  9.31% )   ( 1.538122s |  0.15% |  9.55% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.864949s |  0.16% | 11.12% )   ( 1.836237s |  0.18% | 11.40% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.565357s |  0.14% |  9.34% )   ( 1.500681s |  0.15% |  9.32% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.004335s |  0.09% |  5.99% )   ( 0.971927s |  0.09% |  6.03% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.520300s |  0.04% |  3.10% )   ( 0.500231s |  0.05% |  3.10% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.108542s |  0.10% |  6.61% )   ( 1.026121s |  0.10% |  6.37% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.509967s |  0.04% |  3.04% )   ( 0.439176s |  0.04% |  2.72% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.474813s |  0.13% |  8.80% )   ( 1.362058s |  0.13% |  8.46% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.093469s |  0.28% | 18.45% )   ( 3.030496s |  0.30% | 18.83% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.532975s |  0.04% |  3.18% )   ( 0.498706s |  0.05% |  3.09% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.533603s |  0.04% |  3.18% )   ( 0.474296s |  0.04% |  2.94% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003602s |  0.00% |  0.00% )   ( 0.004059s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003375s |  0.00% |  0.00% )   ( 0.003806s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003705s |  0.00% |  0.00% )   ( 0.004164s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.009388s |  0.00% |  0.05% )   ( 0.009471s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000179s |  0.00% |  0.00% )   ( 0.000210s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p22_PID})
+1016.3.0:       ( 17.001640s |  1.54% |  3.10% )   ( 16.255723s |  1.63% |  3.25% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p23 p23_PID >>
+1.4.0:          ( 0.001052s |  0.00% |  0.00% )   ( 0.001076s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p23 p23_PID (&)
+24.4.0:         ( 17.000439s |  1.54% | 99.99% )   ( 16.254476s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p23
+30.5.0:         ( 0.043034s |  0.00% |  0.25% )   ( 0.042874s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p23 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p23; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.046743s |  0.00% |  0.27% )   ( 0.046572s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.051388s |  0.00% |  0.30% )   ( 0.051210s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.047747s |  0.00% |  0.28% )   ( 0.047586s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.053974s |  0.00% |  0.31% )   ( 0.053790s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.005171s |  0.00% |  0.00% )   ( 0.005770s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
+38.5.0:         ( 0.004558s |  0.00% |  0.00% )   ( 0.005135s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005481s |  0.00% |  0.00% )   ( 0.006096s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p23
+41.5.0:         ( 0.187565s |  0.01% |  0.03% )   ( 0.006335s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004549s |  0.00% |  0.00% )   ( 0.005107s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004276s |  0.00% |  0.00% )   ( 0.004833s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003901s |  0.00% |  0.00% )   ( 0.004431s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004210s |  0.00% |  0.00% )   ( 0.004772s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.037974s |  0.00% |  0.00% )   ( 0.035427s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004493s |  0.00% |  0.00% )   ( 0.005067s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.005198s |  0.00% |  0.00% )   ( 0.005802s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p23
+54.5.0:         ( 0.004177s |  0.00% |  0.00% )   ( 0.004701s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.004168s |  0.00% |  0.00% )   ( 0.004740s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000184s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000112s |  0.00% |  0.00% )   ( 0.000129s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 16.458787s |  1.50% |  3.45% )   ( 15.889319s |  1.59% |  3.49% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004099s |  0.00% |  0.02% )   ( 0.004680s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.067563s |  0.09% |  6.48% )   ( 1.050717s |  0.10% |  6.61% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.835202s |  0.16% | 11.15% )   ( 1.758313s |  0.17% | 11.06% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.592155s |  0.14% |  9.67% )   ( 1.532215s |  0.15% |  9.64% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.781050s |  0.16% | 10.82% )   ( 1.775538s |  0.17% | 11.17% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.550051s |  0.14% |  9.41% )   ( 1.474113s |  0.14% |  9.27% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 0.994847s |  0.09% |  6.04% )   ( 0.958492s |  0.09% |  6.03% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.600107s |  0.05% |  3.64% )   ( 0.550046s |  0.05% |  3.46% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.071131s |  0.09% |  6.50% )   ( 1.002688s |  0.10% |  6.31% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.516017s |  0.04% |  3.13% )   ( 0.486253s |  0.04% |  3.06% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.386258s |  0.12% |  8.42% )   ( 1.341978s |  0.13% |  8.44% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.919186s |  0.26% | 17.73% )   ( 2.871318s |  0.28% | 18.07% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.579634s |  0.05% |  3.52% )   ( 0.552822s |  0.05% |  3.47% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.561487s |  0.05% |  3.41% )   ( 0.530146s |  0.05% |  3.33% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004457s |  0.00% |  0.00% )   ( 0.004936s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003895s |  0.00% |  0.00% )   ( 0.004456s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004388s |  0.00% |  0.00% )   ( 0.004929s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008829s |  0.00% |  0.05% )   ( 0.008910s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000149s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p23_PID})
+1016.3.0:       ( 19.828396s |  1.80% |  3.62% )   ( 19.255158s |  1.93% |  3.85% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p24 p24_PID >>
+1.4.0:          ( 0.001034s |  0.00% |  0.00% )   ( 0.001057s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p24 p24_PID (&)
+24.4.0:         ( 19.827207s |  1.80% | 99.99% )   ( 19.253928s |  1.93% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000114s |  0.00% |  0.00% )   ( 0.000128s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p24
+30.5.0:         ( 0.039265s |  0.00% |  0.19% )   ( 0.039116s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p24 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p24; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.046535s |  0.00% |  0.23% )   ( 0.046330s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.051263s |  0.00% |  0.25% )   ( 0.051047s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.052544s |  0.00% |  0.26% )   ( 0.052320s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.050334s |  0.00% |  0.25% )   ( 0.050148s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.003565s |  0.00% |  0.00% )   ( 0.004005s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   true
+38.5.0:         ( 0.003073s |  0.00% |  0.00% )   ( 0.003486s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000179s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000165s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.003623s |  0.00% |  0.00% )   ( 0.004042s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p24
+41.5.0:         ( 0.185074s |  0.01% |  0.04% )   ( 0.004915s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.003503s |  0.00% |  0.00% )   ( 0.003923s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003152s |  0.00% |  0.00% )   ( 0.003572s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003058s |  0.00% |  0.00% )   ( 0.003472s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003227s |  0.00% |  0.00% )   ( 0.003650s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.024465s |  0.00% |  0.00% )   ( 0.024819s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.003030s |  0.00% |  0.00% )   ( 0.003424s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.003440s |  0.00% |  0.00% )   ( 0.003833s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p24
+54.5.0:         ( 0.002948s |  0.00% |  0.00% )   ( 0.003342s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.002951s |  0.00% |  0.00% )   ( 0.003343s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 19.325705s |  1.76% |  4.87% )   ( 18.927259s |  1.89% |  4.91% )    	(20x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003014s |  0.00% |  0.01% )   ( 0.003412s |  0.00% |  0.01% )    	(20x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.364062s |  0.12% |  7.05% )   ( 1.350147s |  0.13% |  7.13% )    	(20x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.549852s |  0.23% | 13.19% )   ( 2.529367s |  0.25% | 13.36% )    	(20x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 2.032830s |  0.18% | 10.51% )   ( 1.959546s |  0.19% | 10.35% )    	(20x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.564362s |  0.23% | 13.26% )   ( 2.515209s |  0.25% | 13.28% )    	(20x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.928999s |  0.17% |  9.98% )   ( 1.913722s |  0.19% | 10.11% )    	(20x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.241538s |  0.11% |  6.42% )   ( 1.186870s |  0.11% |  6.27% )    	(20x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.545469s |  0.04% |  2.82% )   ( 0.481883s |  0.04% |  2.54% )    	(20x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.281061s |  0.11% |  6.62% )   ( 1.258457s |  0.12% |  6.64% )    	(20x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.408275s |  0.03% |  2.11% )   ( 0.392954s |  0.03% |  2.07% )    	(20x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.337453s |  0.12% |  6.92% )   ( 1.323296s |  0.13% |  6.99% )    	(20x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.163453s |  0.28% | 16.36% )   ( 3.147282s |  0.31% | 16.62% )    	(20x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.469150s |  0.04% |  2.42% )   ( 0.449308s |  0.04% |  2.37% )    	(20x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.436187s |  0.03% |  2.25% )   ( 0.415806s |  0.04% |  2.19% )    	(20x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.002887s |  0.00% |  0.00% )   ( 0.003274s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.002872s |  0.00% |  0.00% )   ( 0.003264s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003164s |  0.00% |  0.00% )   ( 0.003570s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.006166s |  0.00% |  0.03% )   ( 0.006231s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000155s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p24_PID})
+1016.3.0:       ( 17.547131s |  1.59% |  3.20% )   ( 16.579476s |  1.66% |  3.32% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p25 p25_PID >>
+1.4.0:          ( 0.001032s |  0.00% |  0.00% )   ( 0.001055s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p25 p25_PID (&)
+24.4.0:         ( 17.545942s |  1.59% | 99.99% )   ( 16.578241s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p25
+30.5.0:         ( 0.043903s |  0.00% |  0.25% )   ( 0.043711s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p25 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p25; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.045676s |  0.00% |  0.26% )   ( 0.045485s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.045646s |  0.00% |  0.26% )   ( 0.045494s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.045669s |  0.00% |  0.26% )   ( 0.045471s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.045565s |  0.00% |  0.25% )   ( 0.045416s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004476s |  0.00% |  0.00% )   ( 0.005018s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
+38.5.0:         ( 0.004159s |  0.00% |  0.00% )   ( 0.004700s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005059s |  0.00% |  0.00% )   ( 0.005615s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p25
+41.5.0:         ( 0.244390s |  0.02% |  0.04% )   ( 0.006508s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004399s |  0.00% |  0.00% )   ( 0.004941s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004199s |  0.00% |  0.00% )   ( 0.004746s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003854s |  0.00% |  0.00% )   ( 0.004380s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004112s |  0.00% |  0.00% )   ( 0.004628s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.035328s |  0.00% |  0.00% )   ( 0.032776s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.004420s |  0.00% |  0.00% )   ( 0.004979s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004926s |  0.00% |  0.00% )   ( 0.005477s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p25
+54.5.0:         ( 0.003949s |  0.00% |  0.00% )   ( 0.004507s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003814s |  0.00% |  0.00% )   ( 0.004348s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000168s |  0.00% |  0.00% )   ( 0.000191s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 16.972811s |  1.54% |  3.58% )   ( 16.238667s |  1.62% |  3.62% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004053s |  0.00% |  0.02% )   ( 0.004598s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.102913s |  0.10% |  6.49% )   ( 1.092280s |  0.10% |  6.72% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.894521s |  0.17% | 11.16% )   ( 1.854290s |  0.18% | 11.41% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.699737s |  0.15% | 10.01% )   ( 1.589406s |  0.15% |  9.78% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.851059s |  0.16% | 10.90% )   ( 1.836156s |  0.18% | 11.30% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.533502s |  0.13% |  9.03% )   ( 1.496415s |  0.15% |  9.21% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.090610s |  0.09% |  6.42% )   ( 0.993468s |  0.09% |  6.11% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.594679s |  0.05% |  3.50% )   ( 0.534815s |  0.05% |  3.29% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.106751s |  0.10% |  6.52% )   ( 1.033955s |  0.10% |  6.36% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.513245s |  0.04% |  3.02% )   ( 0.478421s |  0.04% |  2.94% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.406717s |  0.12% |  8.28% )   ( 1.345762s |  0.13% |  8.28% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.021955s |  0.27% | 17.80% )   ( 2.913099s |  0.29% | 17.93% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.587303s |  0.05% |  3.46% )   ( 0.540854s |  0.05% |  3.33% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.565766s |  0.05% |  3.33% )   ( 0.525148s |  0.05% |  3.23% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004006s |  0.00% |  0.00% )   ( 0.004547s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003652s |  0.00% |  0.00% )   ( 0.004155s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004058s |  0.00% |  0.00% )   ( 0.004568s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.006514s |  0.00% |  0.03% )   ( 0.006566s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000157s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p25_PID})
+1016.3.0:       ( 17.127500s |  1.56% |  3.12% )   ( 16.202666s |  1.62% |  3.24% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p26 p26_PID >>
+1.4.0:          ( 0.001058s |  0.00% |  0.00% )   ( 0.001083s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p26 p26_PID (&)
+24.4.0:         ( 17.126285s |  1.56% | 99.99% )   ( 16.201392s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p26
+30.5.0:         ( 0.045597s |  0.00% |  0.26% )   ( 0.045387s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p26 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p26; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.045641s |  0.00% |  0.26% )   ( 0.045453s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.045611s |  0.00% |  0.26% )   ( 0.045404s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.045603s |  0.00% |  0.26% )   ( 0.045452s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.046050s |  0.00% |  0.26% )   ( 0.045834s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004192s |  0.00% |  0.00% )   ( 0.004688s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
+38.5.0:         ( 0.003908s |  0.00% |  0.00% )   ( 0.004432s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000133s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.004747s |  0.00% |  0.00% )   ( 0.005284s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p26
+41.5.0:         ( 0.260952s |  0.02% |  0.05% )   ( 0.006348s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004254s |  0.00% |  0.00% )   ( 0.004793s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.003861s |  0.00% |  0.00% )   ( 0.004371s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.003691s |  0.00% |  0.00% )   ( 0.004182s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.003894s |  0.00% |  0.00% )   ( 0.004383s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.030256s |  0.00% |  0.00% )   ( 0.030703s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.007332s |  0.00% |  0.00% )   ( 0.004631s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004399s |  0.00% |  0.00% )   ( 0.004918s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p26
+54.5.0:         ( 0.003704s |  0.00% |  0.00% )   ( 0.004189s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.003704s |  0.00% |  0.00% )   ( 0.004186s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000115s |  0.00% |  0.00% )   ( 0.000132s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000172s |  0.00% |  0.00% )   ( 0.000195s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 16.537659s |  1.50% |  3.86% )   ( 15.863837s |  1.59% |  3.91% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.003823s |  0.00% |  0.02% )   ( 0.004392s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.154451s |  0.10% |  6.98% )   ( 1.066506s |  0.10% |  6.72% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 1.910263s |  0.17% | 11.55% )   ( 1.826647s |  0.18% | 11.51% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.606087s |  0.14% |  9.71% )   ( 1.530206s |  0.15% |  9.64% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 1.902158s |  0.17% | 11.50% )   ( 1.801628s |  0.18% | 11.35% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.527534s |  0.13% |  9.23% )   ( 1.482892s |  0.14% |  9.34% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.031461s |  0.09% |  6.23% )   ( 0.953973s |  0.09% |  6.01% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.553736s |  0.05% |  3.34% )   ( 0.509535s |  0.05% |  3.21% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.033876s |  0.09% |  6.25% )   ( 1.013368s |  0.10% |  6.38% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.483979s |  0.04% |  2.92% )   ( 0.449365s |  0.04% |  2.83% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.345119s |  0.12% |  8.13% )   ( 1.330373s |  0.13% |  8.38% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 2.965835s |  0.27% | 17.93% )   ( 2.908074s |  0.29% | 18.33% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.505704s |  0.04% |  3.05% )   ( 0.500672s |  0.05% |  3.15% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.513633s |  0.04% |  3.10% )   ( 0.486206s |  0.04% |  3.06% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.003831s |  0.00% |  0.00% )   ( 0.004327s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003376s |  0.00% |  0.00% )   ( 0.003832s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.003671s |  0.00% |  0.00% )   ( 0.004134s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.008882s |  0.00% |  0.05% )   ( 0.008967s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000157s |  0.00% |  0.00% )   ( 0.000191s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p26_PID})
+1016.3.0:       ( 18.801552s |  1.71% |  3.43% )   ( 17.652445s |  1.77% |  3.53% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p27 p27_PID >>
+1.4.0:          ( 0.001114s |  0.00% |  0.00% )   ( 0.001138s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p27 p27_PID (&)
+24.4.0:         ( 18.800274s |  1.71% | 99.99% )   ( 17.651125s |  1.76% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+24.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000183s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
+26.5.0:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000219s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p27
+30.5.0:         ( 0.069481s |  0.00% |  0.36% )   ( 0.052802s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p27 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p27; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
+32.5.0:         ( 0.051085s |  0.00% |  0.27% )   ( 0.050896s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
+33.5.0:         ( 0.049742s |  0.00% |  0.26% )   ( 0.049520s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
+34.5.0:         ( 0.052029s |  0.00% |  0.27% )   ( 0.051822s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
+35.5.0:         ( 0.049507s |  0.00% |  0.26% )   ( 0.049331s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
+37.5.0:         ( 0.004842s |  0.00% |  0.00% )   ( 0.005431s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
+38.5.0:         ( 0.004397s |  0.00% |  0.00% )   ( 0.004983s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
+38.5.1:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
+38.5.2:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
+38.5.3:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
+40.5.0:         ( 0.005452s |  0.00% |  0.00% )   ( 0.006084s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p27
+41.5.0:         ( 0.293171s |  0.02% |  0.05% )   ( 0.006925s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
+42.5.0:         ( 0.004638s |  0.00% |  0.00% )   ( 0.005233s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
+46.5.0:         ( 0.004539s |  0.00% |  0.00% )   ( 0.005116s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
+46.5.1:         ( 0.004228s |  0.00% |  0.00% )   ( 0.004783s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
+48.5.0:         ( 0.004470s |  0.00% |  0.00% )   ( 0.005044s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
+49.5.0:         ( 0.034793s |  0.00% |  0.00% )   ( 0.035232s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
+52.5.0:         ( 0.005900s |  0.00% |  0.00% )   ( 0.005084s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
+53.5.0:         ( 0.004985s |  0.00% |  0.00% )   ( 0.005567s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p27
+54.5.0:         ( 0.004099s |  0.00% |  0.00% )   ( 0.004637s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
+74.5.0:         ( 0.004064s |  0.00% |  0.00% )   ( 0.004605s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
+75.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
+76.5.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
+76.5.1:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
+79.5.0:         ( 18.129733s |  1.65% |  3.44% )   ( 17.276992s |  1.73% |  3.49% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
+1.6.0:          ( 0.004241s |  0.00% |  0.02% )   ( 0.004819s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
+24.6.0:         ( 1.255461s |  0.11% |  6.92% )   ( 1.230028s |  0.12% |  7.11% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
+25.6.0:         ( 2.183331s |  0.19% | 12.04% )   ( 2.079887s |  0.20% | 12.03% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
+26.6.0:         ( 1.716581s |  0.15% |  9.46% )   ( 1.617124s |  0.16% |  9.35% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
+27.6.0:         ( 2.059729s |  0.18% | 11.36% )   ( 1.908775s |  0.19% | 11.04% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
+28.6.0:         ( 1.612699s |  0.14% |  8.89% )   ( 1.561487s |  0.15% |  9.03% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
+29.6.0:         ( 1.137649s |  0.10% |  6.27% )   ( 1.087558s |  0.10% |  6.29% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
+30.6.0:         ( 0.613408s |  0.05% |  3.38% )   ( 0.579521s |  0.05% |  3.35% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
+31.6.0:         ( 1.157830s |  0.10% |  6.38% )   ( 1.119088s |  0.11% |  6.47% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
+32.6.0:         ( 0.553479s |  0.05% |  3.05% )   ( 0.496811s |  0.04% |  2.87% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
+33.6.0:         ( 1.461200s |  0.13% |  8.05% )   ( 1.422270s |  0.14% |  8.23% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
+34.6.0:         ( 3.152307s |  0.28% | 17.38% )   ( 3.070538s |  0.30% | 17.77% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
+35.6.0:         ( 0.625274s |  0.05% |  3.44% )   ( 0.559718s |  0.05% |  3.23% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
+36.6.0:         ( 0.596544s |  0.05% |  3.29% )   ( 0.539368s |  0.05% |  3.12% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
+38.5.1:         ( 0.004403s |  0.00% |  0.00% )   ( 0.004984s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
+74.5.1:         ( 0.003900s |  0.00% |  0.00% )   ( 0.004438s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
+77.5.0:         ( 0.004215s |  0.00% |  0.00% )   ( 0.004746s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
+43.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
+44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
+20.5.0:         ( 0.005244s |  0.00% |  0.02% )   ( 0.005313s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
+245.4.0:        ( 0.000164s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p27_PID})
+1018.3.0:       ( 0.000168s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │   echo "${kkProcs}" > "${tmpDir}"/.nWorkers
+1019.3.0:       ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │   : > "${tmpDir}"/.spawned
+1020.3.0:       ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1022.3.0:       ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
+1026.3.0:       ( 0.001392s |  0.00% |  0.00% )   ( 0.001407s |  0.00% |  0.00% )    	(1x)	│  │  │   declare -p > "${tmpDir}"/.vars
+1027.3.0:       ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
+1071.3.0:       ( 0.000132s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1072.3.0:       ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+1079.3.0:       ( 24.349537s |  2.21% |  4.44% )   ( 0.001683s |  0.00% |  0.00% )    	(1x)	│  │  │   wait "${p_PID[@]}" &> /dev/null
+1081.3.0:       ( 0.000293s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
+1084.3.0:       ( 0.000288s |  0.00% |  0.00% )   ( 0.000329s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
+25.3.0:         ( 0.046335s |  0.00% |  0.00% )   ( 0.046597s |  0.00% |  0.00% )    	(1x)	│  │  └─  ${nSpawnFlag}
+1085.2.0:       ( 0.000091s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │   wait
+25.2.0:         ( 0.004710s |  0.00% |  0.00% )   ( 0.002389s |  0.00% |  0.00% )    	(1x)	└─ └─  wait
 
-WALL CLOCK TIME: 0.081830s
-TOTAL RUN TIME:  2083.635678s
-TOTAL CPU TIME:  7915.694776s
+WALL CLOCK TIME: 51.090641s
+TOTAL RUN TIME:  1097.053967s
+TOTAL CPU TIME:  997.263137s
 
