@@ -511,10 +511,6 @@ fi
     [[ "${FUNCNAME[0]}" == "trap" ]] && ! ${timep_SKIP_DEBUG_FLAG} && {
         timep_SKIP_DEBUG_NEXT_FLAG=true
     }
-    ${timep_SKIP_DEBUG_UNTIL_FUNC_FLAG} && (( timep_FUNCNAME_N > 0 )) && {
-        timep_SKIP_DEBUG_FLAG=false
-        timep_SKIP_DEBUG_UNTIL_FUNC_FLAG=false
-    }
     ${timep_SKIP_DEBUG_FLAG} || {
         timep_NPIPE[${timep_FNEST_CUR}]=${timep_NPIPE0}
         if (( 10#0${timep_START_CTIME_SELF_A[${timep_FNEST_CUR:-0}]} > 10#0${timep_END_CTIME_SELF} )); then
@@ -891,7 +887,7 @@ timep_SKIP_DEBUG_FLAG=false'"'"' "${trapType}"
         esac
 
     timep_runVarsSrc='
-declare -g timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD  timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BASHPID_STR_0 timep_BG_PID_COUNTER timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR timep_NEXEC_END timep_SKIP_DEBUG_UNTIL_FUNC_FLAG timep_START_TIME timep_START_UTIME timep_START_STIME timep_BG_FUNC_RETURN_TRAP_FLAG 
+declare -g timep_BASHPID_PREV timep_BASHPID_STR timep_BASH_SUBSHELL_PREV timep_EXEC_ARG timep_BG_PID_PREV timep_CHILD_PGID timep_CHILD_TPID timep_CMD_TYPE timep_ENDTIME timep_ENDTIME0 timep_FD timep_LOCK_FD  timep_FUNCNAME_STR timep_IS_BG_INDICATOR timep_IS_BG_FLAG timep_IS_FUNC_FLAG timep_IS_FUNC_FLAG_1 timep_IS_SUBSHELL_FLAG timep_SUBSHELL_INIT_FLAG timep_SUBSHELL_INIT_NEXT_FLAG timep_NEXEC_N timep_NO_PRINT_FLAG timep_NPIDWRAP timep_NPIPE0 timep_PARENT_PGID timep_PARENT_TPID timep_SIMPLEFORK_CUR_FLAG timep_SIMPLEFORK_NEXT_FLAG timep_SKIP_DEBUG_FLAG timep_SKIP_DEBUG_NEXT_FLAG timep_BASH_SUBSHELL_DIFF timep_BASH_SUBSHELL_DIFF_0 timep_KK timep_BASHPID_ADD_CUR timep_NPIDWRAP_PREV_0 timep_BASH_COMMAND_PREV_0 timep_CMD_TYPE_PREV_0 timep_BASHPID_PREV_0 timep_ENDTIME_PREV_0 timep_BASH_SUBSHELL_PREV_0 timep_BASHPID_STR_0 timep_BG_PID_COUNTER timep_LINENO_0 timep_START_UTIME0 timep_START_STIME0 timep_END_TIME timep_END_CTIME timep_START_CTIME_SELF timep_END_CTIME_SELF timep_END_UTIME timep_END_STIME timep_END_UTIME0 timep_END_STIME0 timep_pidCur timep_BASH_COMMAND_CUR timep_FUNCNAME_N timep_LINENO_INIT_FLAG timep_TRAP_OPTS timep_NEXEC_HASH_CUR timep_NEXEC_END timep_START_TIME timep_START_UTIME timep_START_STIME timep_BG_FUNC_RETURN_TRAP_FLAG 
 declare -ga timep_BASH_COMMAND_PREV timep_NEXEC_A timep_NPIPE timep_STARTTIME timep_A timep_LINENO timep_LINENO_OFFSET timep_LINENO_OFFSET_PREV timep_BASHPID_ADD timep_STARTTIME timep_START_CTIME_SELF_A timep_pidA timep_NEXEC_HASH_A timep_AVAILABLE_BUILTINS timep_LAST_CMD_WORD timep_IS_BG_FUNC_FLAG timep_BASH_SOURCE_N timep_IS_SOURCE_FLAG timep_FNEST
 declare -gx timep_TMPDIR timep_NEXEC_0 timep_NEXEC_CUR timep_LOCK_FD timep_NPIDWRAP timep_FNEST_CUR
 : "${timep_FNEST_CUR:=0}"
@@ -937,7 +933,6 @@ echo "IN BASH_ENV SETUP" >>"${timep_TMPDIR}/run.log.txt"
         timep_IS_FUNC_FLAG_1=false
         timep_SUBSHELL_INIT_FLAG=false
         timep_LINENO_INIT_FLAG=true
-        timep_SKIP_DEBUG_UNTIL_FUNC_FLAG=false
         timep_BG_FUNC_RETURN_TRAP_FLAG=false
 
         timep_BASH_COMMAND_PREV[${timep_FNEST_CUR}]='"''"'
@@ -975,11 +970,7 @@ timep_NEXEC_HASH_A=("${timep_NEXEC_HASH_CUR}")
 . "${timep_TMPDIR}/functions.bash";
 export BASH_ENV="${timep_TMPDIR}/env.bash"
 . "${timep_TMPDIR}/setup.bash"
-'
-[[ "${timep_runType}" == 'f' ]] && timep_runMainSrc+='timep_SKIP_DEBUG_UNTIL_FUNC_FLAG=true
-timep_SKIP_DEBUG_FLAG=true
-'
-timep_runMainSrc+='echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.start.wtime"
+echo "${EPOCHREALTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.start.wtime"
 builtin trap "${timep_DEBUG_TRAP_STR_0}${timep_DEBUG_TRAP_STR_1}" DEBUG
 '
 
@@ -1010,7 +1001,8 @@ echo "${timep_END_CTIME//[^0-9]/}" >"${timep_TMPDIR}/.log/.final.end.ctime"
 #    }
 
     # save script/function (with added debug trap) in new script file and make it executable
-    [[ "${timep_runType}" == 'f' ]] || _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
+    #[[ "${timep_runType}" == 'f' ]] || 
+    _timep_getFuncSrc -q -r "${timep_TMPDIR}/main.bash" >>"${timep_TMPDIR}/functions.bash"
     #declare -f timep >>"${timep_TMPDIR}/functions.bash"
     declare -f _timep_SETUP >>"${timep_TMPDIR}/functions.bash"
     echo "${timep_runSetupSrc}" >"${timep_TMPDIR}/setup.bash"
@@ -1727,7 +1719,7 @@ _timep_PROCESS_LOG() {
         # single-command command/process substitutions dont get a endtime logged (uses endWTime='+' as indicator), since they wont trigger a EXIT trap
         # figure out the most reasonable endtime for these lines by looking at starttimes for the parent, then grandparent, etc.
         # to get the closest timestamp that is greater than the starttime for this command and use that as the endtime
-        [[ "${endWTime}" == '+' ]] && {
+        [[ "${endWTimeA[$kk]}" == '+' ]] && {
             (( ${#logA_time[@]} > 0 )) || {
                 if [[ -f "${timep_TMPDIR}/.log/.times/${logCur##*\/}" ]]; then
                     logA_time_files=("${timep_TMPDIR}/.log/.times/${logCur##*\/}")
@@ -2089,7 +2081,7 @@ printf '%s;' "${fgA[@]}")"
             # check if this is the start of a pipeline
             [[ ${isPipeA[$kk]} ]] && (( isPipeA[$kk] >= 1 )) && inPipeFlag=true
         fi
-        (( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
+        #(( logDepth == 0 )) && [[ "${timep_runType}" == 'f' ]] && printf '\n│'
 
         # add merged up log to current << ... >> log line, including for "in the middle of a pipeline" commands
         [[ ${mergeA[$kk]} ]] && [[ -e "${mergeA[$kk]}.out" ]] && {
@@ -2107,7 +2099,7 @@ printf '%s;' "${fgA[@]}")"
                 printf '\n└─ %s' "${logMergeA[-1]}"
             fi
         }
-        (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
+        #(( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && ! ${inPipeFlag} && printf '\n│'
 
     done >"${logCur}.out"
 
@@ -2133,18 +2125,7 @@ printf '%s;' "${fgA[@]}")"
 
         #(( linenoUniqCountA[${linenoUniqA[$kk]}] = linenoUniqCountA[${linenoUniqA[$kk]}] ))
 
-        [[ "${nestDiagramOutCurA[$kk]}" == 'x' ]] && {
-            if (( logDepth <= 1 )) && [[ "${timep_runType}" == 'f' ]] && [[ "${nestDiagramOutCurA[$kk]}" == 'x'* ]] ; then
-                case "$kk" in
-                    $kkLast) printf '└─ \n' ;;
-                    0|1) : ;;
-                    2) printf '├─ \n' ;;
-                    *) printf '│  \n' ;;
-                esac
-            elif (( logDepth == 0 )); then
-                printf '\n'
-            fi
-        }
+        [[ "${nestDiagramOutCurA[$kk]}" == 'x' ]] && (( logDepth == 0 )) && printf '\n'
 
         cmd="${cmdOutCurA[$kk]/#<< \(SUBSHELL\): *([0-9\-]) >>/<< (SUBSHELL) >>}"
         cmd="${cmd/#<< \(BACKGROUND FORK\): *([0-9\-]) >>/<< (BACKGROUND FORK) >>}"
@@ -2499,7 +2480,7 @@ _timep_GET_TIMES() {
     \mv -f "${logCur}" "${logCur}.tmp"
 
     # move @TRAP lines into the cmd of ther next line, then sort by NEXEC
-    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n([^\n]+[ \t]+\:\:[ \t'"'"']+<< \([^\n]+\)\: [^\n]* >>[^\n]*)/'$'\034''\1/g; s/((^|\n)@TRAP \([^\)]+\)\: [^'$'\034'']+)('$'\034''[^\n]+)\n/\3\n\1\n/g; s/'$'\034''/\n/g; s/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*\n)([^\n]+[ \t]\:\:)[ \t]/\1\3\t\2/g' <"${logCur}.tmp" | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n([^\n]+[ \t]+\:\:[ \t'"'"']+<< \([^\n]+\)\: [^\n]* >>[^\n]*)/'$'\034''\1/g; s/((^|\n)@TRAP \([^\)]+\)\: [^'$'\034'']+)('$'\034''[^\n]+)\n/\3\n\1\n/g; s/'$'\034''/\n/g; s/^@TRAP/'$'\035''\n@TRAP/; s/\n(@TRAP \([^\)\:\n]+\)\: [^\n]*)\n([^\n]+[ \t]+\:\:[ \t]+)[^\n]*/\n\2\1/g; s/^'$'\035''\n//' <"${logCur}.tmp" | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
 
     \rm "${logCur}.tmp"
 
@@ -3162,10 +3143,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 a00="${nd}${nd:+ }${a0%%?( )?(-)?("'")[0-9\.]*}";
 
-                [[ "${timep_runType}" == 'f' ]] && {
-                    a00="${a00#*+([─├│└])+( )}"
+                #[[ "${timep_runType}" == 'f' ]] && {
+                #    a00="${a00#*+([─├│└])+( )}"
                     [[ "${a0}" == [├└]─* ]] && a00="${a00#[├└]─}"
-                }
+                #}
 
                 a000="${a0##*([^0-9\.\-])}"
 
@@ -3173,11 +3154,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
                 #{ echo; declare -p tw Tw tc Tc cnt nd lno cind cmd a0 a00 a000 spacerN0; echo; } >&2
 
-                [[ "${timep_runType}" == 'f' ]] && {
-                    [[ ${a00} ]] || printf '│\n'$'\034'
-                }
+                #[[ "${timep_runType}" == 'f' ]] && {
+                #    [[ ${a00} ]] || printf '│\n'$'\034'
+                #}
 
-                if  { { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); } && { [[ ${pw##*( )} == '0.00' ]] || [[ "${pw##*( )}" == "${p1w##*( )}" ]]; } &&  { [[ ${pc##*( )} == '0.00' ]] || [[ "${pc##*( )}" == "${p1c##*( )}" ]]; }; then
+                #if  { { [[ "${timep_runType}" == 'f' ]] && (( depthCur <= 1 )); } || (( depthCur == 0 )); } 
+                if (( depthCur == 0 )) && { [[ ${pw##*( )} == '0.00' ]] || [[ "${pw##*( )}" == "${p1w##*( )}" ]]; } &&  { [[ ${pc##*( )} == '0.00' ]] || [[ "${pc##*( )}" == "${p1c##*( )}" ]]; }; then
                     printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% )            ( %ss |%s%% )             \t(%sx)\t%s%s\n' "${a0}" '' "${tw}"  "${pw}" "${tc}" "${pc}" "${cnt}" "${a00}" "${cmd}"
                 else
                     printf '%s%'"${spacerN0}"'.0s \t( %ss |%s%% |%s%% )   ( %ss |%s%% |%s%% )    \t(%sx)\t%s%s\n' "${a0}" '' "${tw}" "${p1w}" "${pw}" "${tc}" "${p1c}" "${pc}" "${cnt}" "${a00}" "${cmd}"
@@ -3203,12 +3185,11 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
 
         logOutF0="$({
             echo "${logHeader}";
-            if [[ "${timep_runType}" == 'f' ]]; then
-                printf '%s' "${logOut[@]}" #| sed -zE 's/\n\n/\n\x00/g; s/^(.*)'$'\034''([^'$'\034'']+)$/\2\1\n/g'
-
-            else
+            #if [[ "${timep_runType}" == 'f' ]]; then
+            #    printf '%s' "${logOut[@]}" #| sed -zE 's/\n\n/\n\x00/g; s/^(.*)'$'\034''([^'$'\034'']+)$/\2\1\n/g'
+            #else
                 printf '%s' "${logOut[@]#$'\n'}"
-            fi
+            #fi
             printf '\n%s\n' "${logFooter}"
         }  | sed -zE 's/\n\n\n+/\n\n/g')"
 
@@ -3228,11 +3209,10 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
         # combine blocks from the same line number
         # for functions - add in space between top lvl commands inside the function
         {
-            if [[ "${timep_runType}" == 'f' ]]; then
-                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; { [[ "${line}" == WALL* ]] || [[ "${line}" == TOTAL* ]]; } && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } | { lll=false; while IFS='' read -r l; do ll="${l#*\)*\)*\)    }"; if [[ "$ll" == '<<'* ]] || [[ "$ll" == '│   <<'* ]]; then ${lll} && echo '@@@@@'; lll=true; echo; else lll=false; fi; echo "$l"; done; } | sed -zE s/'\n@@@@@\n'/\n/g
-            else
-                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; { [[ "${line}" == WALL* ]] || [[ "${line}" == TOTAL* ]]; } && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; }
-            fi | sed -zE s/'\n\n([0-9\-])/\x00\1/g' | sort -n -t. -z -k1,1 | { read -r -d '' l; if [[ "${l}" == [0-9\-]* ]]; then l0="${l%%.*}"; else l0=''; fi; echo "$l"; while read -r -d '' l; do if [[ "${l}" == [0-9\-]* ]]; then l1="${l%%.*}"; else l1=''; fi; { [[ $l0 ]] && [[ $l1 ]] && [[ "$l0" == "$l1" ]]; } || echo; echo "$l"; l0="$l1"; done; }
+            #if [[ "${timep_runType}" == 'f' ]]; then
+            #    sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; { [[ "${line}" == WALL* ]] || [[ "${line}" == TOTAL* ]]; } && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } | { lll=false; while IFS='' read -r l; do ll="${l#*\)*\)*\)    }"; if [[ "$ll" == '<<'* ]] || [[ "$ll" == '│   <<'* ]]; then ${lll} && echo '@@@@@'; lll=true; echo; else lll=false; fi; echo "$l"; done; } | sed -zE s/'\n@@@@@\n'/\n/g
+            #else
+                sed -zE 's/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g' <<<"${logOutF}" | sed -E 's/^( *)([├│└][ ─]*)*//; s/^(-?[0-9\.]+: *) \t[ \t]*(\([^\)]+\)[ \t]+\([^\)]+\)[ \t]+)(\([0-9\+x\)[ \t]+.*)$/\1\2\3/; s/^│[ \t]*$//' | sed -zE 's/\n([ \t]*\n)+/\x00/g' | { read -r -d '' line; printf '%s\n' "${line}"; ln0="${line%%.*}"; while IFS='' read -r -d '' line; do ln1="${line%%.*}"; [[ "$ln0" == "$ln1" ]] || printf '\n'; { [[ "${line}" == WALL* ]] || [[ "${line}" == TOTAL* ]]; } && printf '\n'; ln0="${ln1}"; printf '%s\n' "${line}"; done; } | sed -zE s/'\n\n([0-9\-])/\x00\1/g' | sort -n -t. -z -k1,1 | { read -r -d '' l; if [[ "${l}" == [0-9\-]* ]]; then l0="${l%%.*}"; else l0=''; fi; echo "$l"; while read -r -d '' l; do if [[ "${l}" == [0-9\-]* ]]; then l1="${l%%.*}"; else l1=''; fi; { [[ $l0 ]] && [[ $l1 ]] && [[ "$l0" == "$l1" ]]; } || echo; echo "$l"; l0="$l1"; done; }
             echo "${logFooter}"
         } | sed -zE 's/^\n*//; s/\n\n\n+/\n\n/g; s/\(\&\)[ \t]*(\n([^\n]*[^\(][^\^][^\)\n][ \t]*\n)*[^\n]*)[ \t]*\(\^\)[ \t]*/\1/g; s/\(\^\)[ \t]*\n/\n/g' >"${logPathCur}"
 
