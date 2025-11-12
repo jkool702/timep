@@ -697,8 +697,8 @@ echo "IN WRITE NORMAL COMMAND BRANCH" >>"${timep_TMPDIR}/run.log.txt"
             ${timep_IS_BG_FLAG} && [[ -z ${timep_IS_BG_INDICATOR} ]] && timep_IS_BG_INDICATOR='"'"'(&)'"'"'
             [[ -s "${timep_TMPDIR}/.log/.endtimes/${timep_NEXEC_HASH_CUR}.${timep_NEXEC_CUR}" ]] && {
                 {
-                    while read -r -u ${timep_FD_ENDTIME} timep_END_TIME0 timep_END_CTIME0; do
-                        (( 10#0${timep_END_TIME0//[^0-9]/} < 10#0${timep_END_TIME//[^0-9]/} )) && (( 10#0${timep_END_TIME0//[^0-9]/} > 10#0${timep_START_TIME[${timep_FNEST_CUR}]%$'\t'*} )) && {
+                    while IFS=$'"'"'\t'"'"' read -r -u ${timep_FD_ENDTIME} timep_END_TIME0 timep_END_CTIME0; do
+                        (( 10#0${timep_END_TIME0//[^0-9]/} < 10#0${timep_END_TIME//[^0-9]/} )) && (( 10#0${timep_END_TIME0//[^0-9]/} > 10#0${timep_STARTTIME[${timep_FNEST_CUR}]%$'"'"'\t'"'"'*} )) && {
                             timep_END_TIME="${timep_END_TIME0}"
                             timep_END_CTIME="${timep_END_CTIME0}"
                         }
@@ -1667,7 +1667,7 @@ _timep_PROCESS_LOG() {
             elif [[ "${cmdA[$kk]//"'"/}" == '<< (SUBSHELL): '*' >>' ]] && (( kk < nlogA - 1 )) && _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.endtimes/log.${nexecHashA[$kk]}"; then
                 # sanity check - ensure the childs logs last wall-clock end time is before the next commands start time
                 IFS=$'\t' read -r endWTimeChild _ <"${timep_TMPDIR}/.log/.endtimes/log.${nexecHashA[$kk]}"
-                (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > 10#0${endWTimeChild} )) || cmdA[$kk]="${cmdA[$kk]/\(SUBSHELL\)/\(BACKGROUND FORK\)}"
+                (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} < 10#0${endWTimeChild//[^0-9]/} )) && (( 10#0${endWTimeChild//[^0-9]/} > 0 )) && cmdA[$kk]="${cmdA[$kk]/\(SUBSHELL\)/\(BACKGROUND FORK\)}"
             fi
 
             # for background forks, assume the end time is the start time of the 1st command in the child process minus 1 microsecond
@@ -1693,7 +1693,7 @@ _timep_PROCESS_LOG() {
                    [[ "${endWTime}" == '-' ]] && {
                         (( endWTime = 10#0${startWTime//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
                         # if endtimes are reasonable save them
-                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && { [[ -z ${endWTime} ]] || [[ "${endWTime}" == '-' ]]; } && (( endWTime > startWTime )) && endWTimeA[$kk]="${endWTime}"
+                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && (( endWTime > startWTime )) && endWTimeA[$kk]="${endWTime}"
                     }
                 }
 
@@ -1702,7 +1702,7 @@ _timep_PROCESS_LOG() {
                     cTimeA[$kk]="${cTime}"
                     [[ "${endCTime}" == '-' ]] && {
                         (( endCTime = 10#0${startCTime//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
-                        [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && { [[ -z ${endCTime} ]] || [[ "${endCTime}" == '-' ]]; } && (( endCTime > startCTime )) && endCTimeA[$kk]="${endCTime}"
+                        [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && (( endCTime > startCTime )) && endCTimeA[$kk]="${endCTime}"
                     }
                 }
             }
@@ -2470,7 +2470,7 @@ _timep_GET_TIMES() {
 
     # pre process currenbt log (integrate traps, sort by NEXEC) and save, then load into logA
     \mv "${logCur}" "${logCur}.raw"
-    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)(([^\n]+<< \(((SUBSHELL)|(BACKGROUND FORK)|(CHILD))\[^\n]* >>[^\n]*)*)($|\n)/\1\3\n\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
+    sed -zE 's/^[0-9]+/1/; s/\n\n+/\n/g; s/\n(@TRAP \([^\)]+\)\: [^\n]*)/'$'\034''\n\1/g; s/'$'\034''\n/ \:\: /g' <"${logCur}.raw" | sed -E 's/ \:\: @TRAP/\n@TRAP/' | sed -zE 's/(^|\n)(@TRAP \([^\)]+\)\: [^\n]*)\n([^\n]+)\:\:[^\n]+\n/\n\3::\t\2\n/g; s/(^|\n)\n([^\n]+\t\:\:\t@TRAP)/\1\2/g' | grep -vE '1'$'\t''[0-9]+\.[0-9]+'$'\t\t''F:0' | sort -V -k11,11 >"${logCur}"
     mapfile -t logA <"${logCur}" 
 
     logA=("${logA[@]#*$'\t'}")
@@ -2481,8 +2481,8 @@ _timep_GET_TIMES() {
 
     unset "logA"
 
-#    printf '%s\n' "${tStartA[@]}" "${tEndA[@]}" | grep -vE '^[ \t+\-]*$' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
-    printf '%s\n' "${tStartA[@]}" | grep -vE '[^0-9]' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
+#    printf '%s\n' "${tStartA[@]}" | grep -vE '^[ \t+\-]*$' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
+    printf '%s\n' "${tStartA[@]//./}" "${tEndA[@]//./}" | grep -vE '[^0-9]' | sort -g > "${timep_TMPDIR}/.log/.times/${logCur##*\/}"
 
     return 0
 }
@@ -2494,7 +2494,7 @@ _timep_GET_TIMES() {
 #       a given nesting lvl must finish before moving on to the next nesting lvl
 
     # get log names
-    mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}/.log" -maxdepth 1 -name 'log.*' | grep -vE '\.((init_[csr])|(out.*))$' | sort -V)
+    mapfile -t timep_LOG_NAME < <(find "${timep_TMPDIR}/.log" -maxdepth 1 -name 'log.*' | grep -vE '\.((init_[cs])|(out(\.combined)?)|(raw))$' | sort -V)
 
     # get nesting lvl for each log
     timep_LOG_NESTING=()
