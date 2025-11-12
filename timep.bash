@@ -1661,16 +1661,6 @@ _timep_PROCESS_LOG() {
                 (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} < 10#0${endWTimeChild//[^0-9]/} )) && (( 10#0${endWTimeChild//[^0-9]/} > 0 )) && cmdA[$kk]="${cmdA[$kk]/\(SUBSHELL\)/\(BACKGROUND FORK\)}"
 
                 # for background forks, assume the end time is the start time of the 1st command in the child process or the start of the next command in te parent (whichever is earlier)minus 1 microsecond
-            elif [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && [[ "${endWTime}" == '-' ]]; then
-                isBackgroundForkFlagA[$kk]=true
-                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )); then
-                     (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
-                     endWTimeA[$kk]="${endWTime}"
-                fi
-                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
-                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime - 1 > 10#0${startWTimeA[$kk]//[^0-9]/} )) && { [[ "${endWTimeA[$kk]}" == '-' ]] || (( endWTime - 1 < endWTimeA[$kk] )); } && (( endWTimeA[$kk] = endWTime - 1 ))
-                fi
-                [[ "${endWTimeA[$kk]}" == '-' ]] || (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
             fi
 
             # get child run/cpu time to set as time for the merge command
@@ -1683,7 +1673,7 @@ _timep_PROCESS_LOG() {
                     [[ "${endWTimeA[$kk]}" == '-' ]] && {
                         (( endWTime = 10#0${startWTime//[^0-9]/} + 10#0${wTime//[^0-9]/} ))
                         # if endtimes are reasonable save them
-                        [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]] && (( endWTime > startWTime )) && endWTimeA[$kk]="${endWTime}"
+                        (( endWTime > 10#0${startWTime//[^0-9]/} )) && endWTimeA[$kk]="${endWTime}"
                     }
                 }
 
@@ -1692,10 +1682,21 @@ _timep_PROCESS_LOG() {
                     cTimeA[$kk]="${cTime}"
                     [[ "${endCTimeA[$kk]}" == '-' ]] && {
                         (( endCTime = 10#0${startCTime//[^0-9]/} + 10#0${cTime//[^0-9]/} ))
-                        [[ ${endCTime} ]] && ! [[ "${endCTime}" == '-' ]] && (( endCTime > startCTime )) && endCTimeA[$kk]="${endCTime}"
+                        (( endCTime > 10#0${startCTime//[^0-9]/}  )) && endCTimeA[$kk]="${endCTime}"
                     }
                 }
             }
+
+            if [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]]; then
+                isBackgroundForkFlagA[$kk]=true
+                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )); then
+                     (( endWTimeA[$kk] = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
+                fi
+                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
+                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime - 1 > 10#0${startWTimeA[$kk]//[^0-9]/} )) && { [[ "${endWTimeA[$kk]}" == '-' ]] || (( endWTime - 1 < endWTimeA[$kk] )); } && (( endWTimeA[$kk] = endWTime - 1 ))
+                fi
+                [[ "${endCTimeA[$kk]}" == '-' ]] && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 1 ))
+            fi
 
         else
             normalCmdFlagA[$kk]=true
@@ -1707,11 +1708,11 @@ _timep_PROCESS_LOG() {
         [[ "${endWTimeA[$kk]}" == '-' ]] && {
 
             # if we still dont have a endtime but we have a runtime, assume endtime is starttime + runtime
-            (( startWTimeA[$kk] > 0 )) && (( 10#0${wTimeA[$kk]//[^0-9]/} > 0 )) && (( endWTimeA[$kk] = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
-            (( startCTimeA[$kk] > 0 )) && (( 10#0${cTimeA[$kk]//[^0-9]/} > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
+            ! ${isBackgroundForkFlagA[$kk]} && (( startWTimeA[$kk] > 0 )) && (( 10#0${wTimeA[$kk]//[^0-9]/} > 0 )) && (( endWTimeA[$kk] = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
+            ! ${isBackgroundForkFlagA[$kk]} && (( 10#0${startCTimeA[$kk]//[^0-9]/} > 0 )) && (( 10#0${cTimeA[$kk]//[^0-9]/} > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
 
             # if we still dont have a valid end cpu time then assume it took as much cpu time as it took wall-clock time
-            ${timep_CLOCK_GETTIME_FLAG} && if { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } &&  [[ ${endWTimeA[$kk]} ]] && ! [[ "${endWTimeA[$kk]}" == '-' ]]; then
+            ${timep_CLOCK_GETTIME_FLAG} && if { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } && (( 10#0${endWTimeA[$kk]//[^0-9]/} > 0 ))&& (( 10#0${startWTimeA[$kk]//[^0-9]/} > 0 )); then
                 cTimeA[$kk]="${wTimeA[$kk]}"
                 (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
             fi
@@ -1819,7 +1820,7 @@ _timep_PROCESS_LOG() {
             elif [[ ${startCTimeA[$kk]//[^0-9]/} ]] && (( 10#0${endCTimeA[$kk]//[^0-9]/} >= 10#0${startCTimeA[$kk]//[^0-9]/} )); then
                 # case where end - start is less than double the correction. Compromise and use (end - start)/2
                  (( cTimeA[$kk] = 1 + ( 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ) >> 1 ))
-           elif ${timep_CLOCK_GETTIME_FLAG}; then
+           elif ${timep_CLOCK_GETTIME_FLAG} && (( 10#0${endCTimeA[$kk]//[^0-9]/} > 0 )); then
                 # if we are using getCPUtime and our end time is before the start time, then chances are getCPUtime is reading from a new clock even though there isnt a full subshell. This happens on things like arithmitic evaluations  `(( ... ))`
                 # assume the start clock is 0 here, which makes the time equal to end - 0 - correction --> end - correction
                 (( cTimeA[$kk] = 10#0${endCTimeA[$kk]//[^0-9]/} - timep_CTIME_CORRECTION ))
@@ -1851,7 +1852,7 @@ _timep_PROCESS_LOG() {
                 (( wTimeTotal = wTimeTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
                 #(( wTimeSelfTotal = wTimeSelfTotal + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
             }
-            (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
+            (( 10#0${endCTimeA[$kk]//[^0-9]/} > 10#0${startCTimeA[$kk]//[^0-9]/} )) && (( ( 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ) <= (10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}) )) && (( cTimeTotal = cTimeTotal + 10#0${endCTimeA[$kk]//[^0-9]/} - 10#0${startCTimeA[$kk]//[^0-9]/} ))
 
         elif ${isMergeIndicatorA[$kk]}; then
             # current line is a merge indicator (but not a background fork). add child self time.
@@ -2389,7 +2390,7 @@ _timep_COMBINE_FLAMEGRAPH() {
         printf -v Y '%s' "${F[@]}"
         f1+="${Y}"$'\n'
         (( kk1 = kk + 1 ))
-        printf '\rPROGRESS: FINISHED %s OF %s FRAMES (%s of 6) %16.d' "${kk1}" "${#f2[@]}" "${svgCombineInd}" '' >&2
+        (( kk1 & 15 == 0 )) && printf '\rPROGRESS: FINISHED %s OF %s FRAMES (%s of 6) %16.d' "${kk1}" "${#f2[@]}" "${svgCombineInd}" '' >&2
     done
 
     IFS=' ' read -r yMin0 yMax0 < <(grep -oE '^.* y="[0-9\.]+"' <"${svg0}" | grep -vE '^<((rect)|(text id))' | grep -oE ' y="[0-9\.]+"' | sed -E 's/^ y="//; s/(\.5)?"$//' | sort -n | sed -zE 's/^([0-9]+)\n.*\n([0-9]+)\n?$/\1 \2/')
