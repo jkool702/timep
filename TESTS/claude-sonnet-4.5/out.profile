@@ -2,3559 +2,2495 @@ LINE DEPTH CMD 	COMBINED WALL-CLOCK TIME          COMBINED CPU TIME             
 line.depth.cmd:	( time | total % | cur depth % )  ( time | total % | cur depth % )   	(count) <command>
 _______________	__________________________________________________________________	____________________________________
 
-9.0.0:          ( 549.229493s | 50.06% )            ( 498.176475s | 49.95% )             	(1x)	<< (FUNCTION): main.forkrun ff < /mnt/ramdisk/flist > /dev/null >>
-1.1.0:          ( 0.000654s |  0.00% |  0.00% )   ( 0.000322s |  0.00% |  0.00% )    	(1x)	├─  forkrun ff < /mnt/ramdisk/flist > /dev/null
-24.1.0:         ( 549.228839s | 50.06% | 99.99% )   ( 498.176153s | 49.95% | 99.99% )    	(1x)	│   << (SUBSHELL) >>
-24.2.0:         ( 0.041673s |  0.00% |  0.00% )   ( 0.041010s |  0.00% |  0.00% )    	(1x)	│  ├─  trap - EXIT INT TERM HUP USR1
-25.2.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   shopt -s extglob
-26.2.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │   local +i nLines nLines0 nLinesMax nBytes nProcs nProcsMax
-27.2.0:         ( 0.000121s |  0.00% |  0.00% )   ( 0.000134s |  0.00% |  0.00% )    	(1x)	│  │   local tmpDir fPath outStr delimiterVal delimiterReadStr delimiterRemoveStr exitTrapStr exitTrapStr_kill nOrder tTimeout coprocSrcCode outCur outCurHex outRead tmpDirRoot returnVal tmpVar t0 tStart0 tStart1 readBytesProg nullDelimiterProg ddQuietStr pLOAD0 trailingNullFlag lseekFlag lseekPosFlag fallocateFlag nLinesAutoFlag nLinesReadLimitFlag nSpawnFlag substituteStringFlag substituteStringIDFlag nOrderFlag readBytesFlag readBytesExactFlag nullDelimiterFlag subshellRunFlag stdinRunFlag pipeReadFlag rmTmpDirFlag exportOrderFlag noFuncFlag unescapeFlag optParseFlag continueFlag doneIndicatorFlag FORCE_allowCarriageReturnsFlag ddAvailableFlag pAddFlag fd_continue fd_nAuto fd_nAuto0 fd_nOrder fd_nOrder0 fd_read fd_read0 fd_write fd_stdout fd_stdin fd_stdin0 fd_stderr pWrite pOrder pAuto pSpawn pWrite_PID pOrder_PID pAuto_PID pSpawn_PID DEBUG_FORKRUN
-28.2.0:         ( 0.000099s |  0.00% |  0.00% )   ( 0.000111s |  0.00% |  0.00% )    	(1x)	│  │   local -i PID0 nLinesCur nLinesNew nLinesRead nLinesReadLimit nRead nWait nOrder0 nBytesRead nSpawn nSpawnLast nSpawnLastCount nCPU writeFileProgType v9 kkMax kkCur kk kkProcs kkProcs0 verboseLevel pLOAD_max pLOAD_target pAd pAdd_sysLoad pAdd_lineRated tStart fd_read_pos fd_read_pos0 fd_read_pos_old fd_write_pos pAdd0 pAdd1 inLines inTime inLines0 inTime0 inLines1 nTime1 inLinesDelta inTimeDelta pAddCount pAddMin pAddSum pAddMax
-29.2.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │   local -a A p_PID p_PID0 runCmd outHave outPrint pLOADA pLOADA0 runLines runTime
-30.2.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   local -a -i runLinesA runTimeA runWaitA runAllA spawnTimeA pLOAD1
-31.2.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   : "${verboseLevel:=0}" "${returnVal:=0}" "${fd_stdin0:=0}" "${nLinesReadLimitFlag:=false}"
-32.2.0:         ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   [[ $# == 0 ]]
-32.2.1:         ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   optParseFlag=true
-33.2.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │   ${optParseFlag}
-33.2.1:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   (( $# > 0  ))
-33.2.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   [[ "$1" == [-+]* ]]
-218.2.0:        ( 0.000079s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   [ -t "${fd_stdin0}" ]
-223.2.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${tmpDirRoot} ]]
-224.2.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${TMPDIR} ]]
-226.2.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │   [[ -d '/dev/shm' ]]
-226.2.1:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │   tmpDirRoot='/dev/shm'
-230.2.0:        ( 0.001171s |  0.00% |  0.00% )   ( 0.001039s |  0.00% |  0.00% )    	(1x)	│  │   tmpDir="$(mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX)"
-230.2.1:        ( 0.007245s |  0.00% |  0.00% )   ( 0.007245s |  0.00% |  0.00% )    	(1x)	│  │   << (SUBSHELL) >>
-230.3.0:        ( 0.007245s |  0.00% |100.00% )   ( 0.007245s |  0.00% |100.00% )    	(1x)	│  │  └─  mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX
-231.2.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   fPath="${tmpDir}"/.stdin
-232.2.0:        ( 0.001037s |  0.00% |  0.00% )   ( 0.001110s |  0.00% |  0.00% )    	(1x)	│  │   mkdir -p "${tmpDir}"/.run
-233.2.0:        ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │   : > "${fPath}"
-234.2.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │   ${rmTmpDirFlag}
-234.2.1:        ( 0.026759s |  0.00% |  0.00% )   ( 0.000982s |  0.00% |  0.00% )    	(1x)	│  │   trap '\rm -rf "'"${tmpDir}"'" 2>/dev/null' EXIT
-1084.2.0:       ( 549.141823s | 50.05% | 99.98% )   ( 498.118237s | 49.94% | 99.98% )    	(1x)	│  │   << (SUBSHELL) >>
-235.3.0:        ( 0.000143s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  ├─  [[ -n ${DEBUG_FORKRUN} ]]
-1084.3.0:       ( 0.001735s |  0.00% |  0.00% )   ( 0.002033s |  0.00% |  0.00% )    	(6x)	│  │  │   << (BACKGROUND FORK) >>
-1084.4.0:       ( 0.001735s |  0.00% |100.00% )   ( 0.002033s |  0.00% |100.00% )    	(6x)	│  │  │  └─  :
-238.3.0:        ( 0.000158s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │   LC_ALL=C
-239.3.0:        ( 0.000161s |  0.00% |  0.00% )   ( 0.007229s |  0.00% |  0.00% )    	(1x)	│  │  │   LANG=C
-240.3.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.008974s |  0.00% |  0.00% )    	(1x)	│  │  │   IFS=
-241.3.0:        ( 0.000194s |  0.00% |  0.00% )   ( 0.000205s |  0.00% |  0.00% )    	(1x)	│  │  │   enable -f forkrun_loadables.so evfd_init evfd_wait evfd_signal evfd_close evfd_copy order_init order_get lseek cpuusage childusage
-242.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   export LC_ALL=C LANG=C IFS=
-243.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   FORKRUN_TMPDIR="$tmpDir"
-244.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   export FORKRUN_TMPDIR="$tmpDir"
-245.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   PID0="${BASHPID}"
-246.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   shopt -s nullglob
-247.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${noFuncFlag:=false}" "${readBytesFlag:=false}" "${readBytesExactFlag:=false}" "${nullDelimiterFlag:=false}" "${FORCE_allowCarriageReturnsFlag:=false}"
-248.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   enable lseek &> /dev/null
-249.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekFlag:=true}"
-253.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
-254.3.0:        ( 0.000542s |  0.00% |  0.00% )   ( 0.000319s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "$(lseek $fd_read 0)" == 0 ]]
-254.3.1:        ( 0.000112s |  0.00% |  0.00% )   ( 0.000128s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-254.4.0:        ( 0.000112s |  0.00% |100.00% )   ( 0.000128s |  0.00% |100.00% )    	(1x)	│  │  │  └─  lseek $fd_read 0
-254.3.2:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekPosFlag:=true}"
-256.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowCarriageReturnsFlag:-false}
-259.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   $'runCmd=("${@//\'\r\'/}")
-261.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
-262.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
-262.3.1:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   noFuncFlag=false
-263.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   ${noFuncFlag}
-264.3.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │   hash "${runCmd[0]}" &> /dev/null
-265.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
-316.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nLines} ]]
-320.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nLinesAutoFlag:=true}"
-322.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -z ${nLines} ]]
-323.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   nLines=1
-325.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == '-'* ]]
-329.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == *','* ]]
-333.3.0:        ( 0.000887s |  0.00% |  0.00% )   ( 0.001021s |  0.00% |  0.00% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun._forkrun_getVal nProcs "${nProcs%%,*}" >>
-1.4.0:          ( 0.000069s |  0.00% |  7.77% )   ( 0.000080s |  0.00% |  7.83% )    	(1x)	│  │  │  ├─  _forkrun_getVal nProcs "${nProcs%%,*}"
-24.4.0:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000078s |  0.00% |  7.63% )    	(1x)	│  │  │  │   local +i -l nn
-25.4.0:         ( 0.000089s |  0.00% | 10.03% )   ( 0.000096s |  0.00% |  9.40% )    	(1x)	│  │  │  │   local vOut
-26.4.0:         ( 0.000068s |  0.00% |  7.66% )   ( 0.000080s |  0.00% |  7.83% )    	(1x)	│  │  │  │   local -n vOut="$1"
-27.4.0:         ( 0.000066s |  0.00% |  7.44% )   ( 0.000077s |  0.00% |  7.54% )    	(1x)	│  │  │  │   shift 1
-28.4.0:         ( 0.000069s |  0.00% |  7.77% )   ( 0.000081s |  0.00% |  7.93% )    	(1x)	│  │  │  │   local -g vOut
-29.4.0:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000079s |  0.00% |  7.73% )    	(1x)	│  │  │  │   (( ${#pMap[@]} == 20 ))
-29.4.1:         ( 0.000121s |  0.00% | 13.64% )   ( 0.000133s |  0.00% | 13.02% )    	(1x)	│  │  │  │   local -Ag pMap=([k]=1 [m]=2 [g]=3 [t]=4 [p]=5 [e]=6 [z]=7 [y]=8 [r]=9 [q]=10 [ki]=1 [mi]=2 [gi]=3 [ti]=4 [pi]=5 [ei]=6 [zi]=7 [yi]=8 [ri]=9 [qi]=10)
-30.4.0:         ( 0.000068s |  0.00% |  7.66% )   ( 0.000081s |  0.00% |  7.93% )    	(1x)	│  │  │  │   for nn in "${@%%[Bb]*}"
-32.4.0:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000078s |  0.00% |  7.63% )    	(1x)	│  │  │  │   [[ -n ${nn} ]]
-32.4.1:         ( 0.000067s |  0.00% |  7.55% )   ( 0.000078s |  0.00% |  7.63% )    	(1x)	│  │  │  │   continue
-42.4.0:         ( 0.000069s |  0.00% |  7.77% )   ( 0.000080s |  0.00% |  7.83% )    	(1x)	│  │  │  └─  local +n vOut
-334.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
-335.3.0:        ( 0.000892s |  0.00% |  0.00% )   ( 0.000700s |  0.00% |  0.00% )    	(1x)	│  │  │   $'nCPU="$({ type -a nproc &> /dev/null && nproc; } || { type -a grep &> /dev/null && grep -cE \'^processor.*: \' /proc/cpuinfo; } || { mapfile -t tmpA < /proc/cpuinfo && tmpA=("${tmpA[@]//processor*/\'\034\'}") && tmpA=("${tmpA[@]//!(\'\034\')/}") && tmpA=("${tmpA[@]//\'\034\'/1}") && tmpA="${tmpA[*]}" && tmpA="${tmpA// /}" && echo ${#tmpA}; } || printf \'8\')"
-335.3.1:        ( 0.001986s |  0.00% |  0.00% )   ( 0.002078s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-335.4.0:        ( 0.000186s |  0.00% |  9.36% )   ( 0.000203s |  0.00% |  9.76% )    	(1x)	│  │  │  ├─  type -a nproc &> /dev/null
-335.4.1:        ( 0.001800s |  0.00% | 90.63% )   ( 0.001875s |  0.00% | 90.23% )    	(1x)	│  │  │  └─  nproc
-336.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nCPU < 1 ))
-338.3.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nProcs} ]]
-340.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-340.3.1:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   nProcs=${nCPU}
-342.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-346.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-347.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
-348.3.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nOrderFlag:=false}" "${rmTmpDirFlag:=true}" "${nLinesMax:=1024}" "${subshellRunFlag:=false}" "${pipeReadFlag:=false}" "${substituteStringFlag:=false}" "${substituteStringIDFlag:=false}" "${exportOrderFlag:=false}" "${unescapeFlag:=false}" "${stdinRunFlag:=false}"
-349.3.0:        ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   local -i nProcs="${nProcs}" nProcsMax="${nProcsMax}" nLines="${nLines}" nLinesMax="${nLinesMax}"
-350.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
-351.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < 2 * nLines ))
-353.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < nLines ))
-355.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   doneIndicatorFlag=false
-356.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-360.3.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │   type -a fallocate &> /dev/null
-360.3.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-360.3.2:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${fallocateFlag:=true}"
-361.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${exportOrderFlag}
-362.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
-363.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-367.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nullDelimiterFlag}
-389.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -z ${delimiterVal} ]]
-390.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   delimiterVal='$'"'"'\n'"'"
-391.3.0:        ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   ${noFuncFlag}
-391.3.1:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
-401.3.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${unescapeFlag}
-410.3.0:        ( 0.000679s |  0.00% |  0.00% )   ( 0.000545s |  0.00% |  0.00% )    	(1x)	│  │  │   mapfile -t runCmd < <(printf '%q\n' "${runCmd[@]}") (&)
-410.3.1:        ( 0.000119s |  0.00% |  0.00% )   ( 0.000139s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-410.4.0:        ( 0.000119s |  0.00% |100.00% )   ( 0.000139s |  0.00% |100.00% )    	(1x)	│  │  │  └─  printf '%q\n' "${runCmd[@]}"
-411.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringFlag}
-414.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringIDFlag}
-419.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │   nLinesCur=${nLines}
-420.3.0:        ( 0.002248s |  0.00% |  0.00% )   ( 0.002312s |  0.00% |  0.00% )    	(1x)	│  │  │   mkdir -p "${tmpDir}"/.{run,wait}
-421.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
-422.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${rmTmpDirFlag}
-423.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 0 ))
-450.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │   tStart="${EPOCHREALTIME//./}"
-451.3.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   evfd_init
-455.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr=\': >"\'"${tmpDir}"\'"/.done;\n: >"\'"${tmpDir}"\'"/.quit;\nkill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
-456.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-459.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
-470.3.0:        ( 0.000524s |  0.00% |  0.00% )   ( 0.000542s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${writeFileProgType:=1}" (&)
-473.3.0:        ( 0.134833s |  0.01% |  0.02% )   ( 0.134643s |  0.01% |  0.02% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
-473.4.0:        ( 0.000313s |  0.00% |  0.23% )   ( 0.000362s |  0.00% |  0.26% )    	(1x)	│  │  │  ├─  export LC_ALL=C LANG=C IFS=
-474.4.0:        ( 0.020948s |  0.00% | 15.53% )   ( 0.020912s |  0.00% | 15.53% )    	(1x)	│  │  │  │   trap - EXIT
-475.4.0:        ( 0.023859s |  0.00% | 17.69% )   ( 0.023816s |  0.00% | 17.68% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
-476.4.0:        ( 0.023524s |  0.00% | 17.44% )   ( 0.023466s |  0.00% | 17.42% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
-477.4.0:        ( 0.023587s |  0.00% | 17.49% )   ( 0.023534s |  0.00% | 17.47% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
-478.4.0:        ( 0.023313s |  0.00% | 17.29% )   ( 0.023260s |  0.00% | 17.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-479.4.0:        ( 0.000064s |  0.00% |  0.04% )   ( 0.000075s |  0.00% |  0.05% )    	(1x)	│  │  │  │   case ${writeFileProgType} in
-481.4.0:        ( 0.018993s |  0.00% | 14.08% )   ( 0.018951s |  0.00% | 14.07% )    	(1x)	│  │  │  │   evfd_copy ${fd_write} ${fd_stdin}
-490.4.0:        ( 0.000092s |  0.00% |  0.06% )   ( 0.000104s |  0.00% |  0.07% )    	(1x)	│  │  │  │   : > "${tmpDir}"/.done
-491.4.0:        ( 0.000074s |  0.00% |  0.05% )   ( 0.000086s |  0.00% |  0.06% )    	(1x)	│  │  │  │   evfd_signal
-492.4.0:        ( 0.000066s |  0.00% |  0.04% )   ( 0.000077s |  0.00% |  0.05% )    	(1x)	│  │  │  └─  (( ${verboseLevel} > 1 ))
-495.3.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   exitTrapStr_kill+="${pWrite_PID} "
-497.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-502.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   outStr='>&'"${fd_stdout}"
-504.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
-505.3.0:        ( 0.000424s |  0.00% |  0.00% )   ( 0.000448s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' ${nLines} > "${tmpDir}"/.nLines (&)
-508.3.0:        ( 4.169676s |  0.38% |  0.75% )   ( 1.832734s |  0.18% |  0.36% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
-.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
-508.4.0:        ( 0.000184s |  0.00% |  0.00% )   ( 0.000213s |  0.00% |  0.01% )    	(1x)	│  │  │  │   export LC_ALL=C LANG=C IFS=
-509.4.0:        ( 0.026746s |  0.00% |  0.64% )   ( 0.026690s |  0.00% |  1.45% )    	(1x)	│  │  │  │   trap '[[ -f "'"${tmpDir}"'"/.run/pAuto ]] && \rm -f "'"${tmpDir}"'"/.run/pAuto' EXIT
-510.4.0:        ( 0.023781s |  0.00% |  0.57% )   ( 0.023740s |  0.00% |  1.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
-511.4.0:        ( 0.023495s |  0.00% |  0.56% )   ( 0.023452s |  0.00% |  1.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
-512.4.0:        ( 0.023510s |  0.00% |  0.56% )   ( 0.023458s |  0.00% |  1.27% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
-513.4.0:        ( 0.023207s |  0.00% |  0.55% )   ( 0.023169s |  0.00% |  1.26% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-514.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${fallocateFlag}
-515.4.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
-516.4.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fd_read_pos_old=0
-518.4.0:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=0
-519.4.0:        ( 0.090490s |  0.00% |  0.00% )   ( 0.103572s |  0.01% |  0.00% )    	(673x)	│  │  │  │   ${fallocateFlag}
-520.4.0:        ( 2.638499s |  0.24% |  0.09% )   ( 0.122798s |  0.01% |  0.00% )    	(672x)	│  │  │  │   read -u ${fd_nAuto} -t 0.1
-520.4.1:        ( 0.000898s |  0.00% |  0.00% )   ( 0.001013s |  0.00% |  0.01% )    	(5x)	│  │  │  │   continue
-521.4.0:        ( 0.091911s |  0.00% |  0.00% )   ( 0.101559s |  0.01% |  0.00% )    	(667x)	│  │  │  │   case ${REPLY} in
-535.4.0:        ( 0.090039s |  0.00% |  0.00% )   ( 0.103136s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nLinesAutoFlag}
-536.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
-539.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=$(( nLinesRead + ${REPLY} ))
-544.4.0:        ( 0.088156s |  0.00% |  0.00% )   ( 0.100941s |  0.01% |  0.00% )    	(667x)	│  │  │  │   ${lseekPosFlag}
-545.4.0:        ( 0.090337s |  0.00% |  0.00% )   ( 0.103022s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_read 0 SEEK_CUR fd_read_pos
-546.4.0:        ( 0.090550s |  0.00% |  0.00% )   ( 0.103409s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_write 0 SEEK_CUR fd_write_pos
-552.4.0:        ( 0.086590s |  0.00% |  0.00% )   ( 0.099418s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
-553.4.0:        ( 0.000081s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesEst=$(( ( ( 1 + ${nLinesRead} ) * ( 1 + ${fd_write_pos} ) ) / ( 1 + ${fd_read_pos} ) ))
-554.4.0:        ( 0.086587s |  0.00% |  0.00% )   ( 0.099419s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nSpawnFlag}
-555.4.0:        ( 0.086988s |  0.00% |  0.00% )   ( 0.099737s |  0.01% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
-556.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-557.4.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │   [[ -d "${tmpDir}"/.wait ]]
-558.4.0:        ( 0.000661s |  0.00% |  0.01% )   ( 0.000489s |  0.00% |  0.02% )    	(1x)	│  │  │  │   mapfile -t nProcsA < <(: | cat "${tmpDir}"/.wait 2> /dev/null) (&)
-558.4.1:        ( 0.002598s |  0.00% |  0.06% )   ( 0.002965s |  0.00% |  0.16% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
-558.5.0:        ( 0.002598s |  0.00% |100.00% )   ( 0.002965s |  0.00% |100.00% )    	(1x)	│  │  │  │  └─  : | cat "${tmpDir}"/.wait 2> /dev/null
-559.4.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nProcsA=(${nProcsA//0/})
-560.4.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${#nProcsA[@]} > 0 ))
-562.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=$(( 1 + ( ( nLinesEst - nLinesRead ) / ( 1 + ${nProcs} ) ) ))
-563.4.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} > ${nLinesCur} ))
-564.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} >= ${nLinesMax} ))
-565.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=${nLinesMax}
-566.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-568.4.0:        ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │   printf '%s\n' ${nLinesNew} > "${tmpDir}"/.nLines
-569.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-570.4.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesCur=${nLinesNew}
-573.4.0:        ( 0.086548s |  0.00% |  0.00% )   ( 0.099264s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${fallocateFlag}
-574.4.0:        ( 0.085854s |  0.00% |  0.00% )   ( 0.098679s |  0.00% |  0.00% )    	(667x)	│  │  │  │   case ${nWait} in
-585.4.0:        ( 0.084498s |  0.00% |  0.00% )   ( 0.096969s |  0.00% |  0.00% )    	(646x)	│  │  │  │   ((nWait--))
-589.4.0:        ( 0.091567s |  0.00% |  0.00% )   ( 0.104673s |  0.01% |  0.00% )    	(667x)	│  │  │  │   [[ -f "${tmpDir}"/.quit ]]
-535.4.1:        ( 0.087819s |  0.00% |  0.00% )   ( 0.100613s |  0.01% |  0.00% )    	(665x)	│  │  │  │   ${nSpawnFlag}
-552.4.1:        ( 0.087534s |  0.00% |  0.00% )   ( 0.100327s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nSpawnFlag}
-576.4.0:        ( 0.002837s |  0.00% |  0.00% )   ( 0.003264s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos=$(( 4096 * ( ${fd_read_pos} / 4096 ) ))
-577.4.0:        ( 0.002762s |  0.00% |  0.00% )   ( 0.003171s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${fd_read_pos} > ${fd_read_pos_old} ))
-578.4.0:        ( 0.056730s |  0.00% |  0.06% )   ( 0.043548s |  0.00% |  0.11% )    	(21x)	│  │  │  │   fallocate -p -o ${fd_read_pos_old} -l $(( ${fd_read_pos} - ${fd_read_pos_old} )) "${fPath}"
-579.4.0:        ( 0.003188s |  0.00% |  0.00% )   ( 0.003629s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-580.4.0:        ( 0.003013s |  0.00% |  0.00% )   ( 0.003450s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos_old=${fd_read_pos}
-582.4.0:        ( 0.003124s |  0.00% |  0.00% )   ( 0.003547s |  0.00% |  0.00% )    	(21x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
-529.4.0:        ( 0.000137s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-590.4.0:        ( 0.000128s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-591.4.0:        ( 0.000137s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fallocateFlag=false
-592.4.0:        ( 0.000130s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nSpawnFlag=false
-519.4.1:        ( 0.000130s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-519.4.2:        ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-25.4.0:         ( 0.006826s |  0.00% |  0.16% )   ( 0.006909s |  0.00% |  0.37% )    	(1x)	│  │  │  └─  ${nSpawnFlag}
-598.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'printf \'"\'"\'0\\n\'"\'"\' >&\'"${fd_nAuto}"\'; \'\'\n\'
-599.3.0:        ( 0.000130s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' "${pAuto_PID}" > "${tmpDir}"/.run/pAuto
-601.3.0:        ( 0.000105s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-980.3.0:        ( 0.001286s |  0.00% |  0.00% )   ( 0.000439s |  0.00% |  0.00% )    	(1x)	│  │  │   $'coprocSrcCode="$(echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && echo "{ \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && read -r <\\"${tmpDir}\\"/.nLines && [[ \\${REPLY} == +([0-9]) ]] && nLinesCur=\\${REPLY}"\necho """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""\nif ${readBytesFlag}; then\n    case "${readBytesProg}" in \n        \'dd\')\n            printf \'dd bs=32768 count=%sB of="%s"/.stdin.tmp.{<#>} 2>"%s"/.stdin.tmp-status.{<#>} \' "${nBytes}" "${tmpDir}" "${tmpDir}"\n${pipeReadFlag} && printf \'iflag=fullblock <&%s\\n\' "${fd_stdin}" || printf \'<&%s\\n\' "${fd_read}"\nprintf \'[[ "$(<"%s"/.stdin.tmp-status.{<#>})" == *$\'"\'"\'\\\\n\'"\'"\'"0 bytes"* ]] && A=() || A[0]=1\\n\' "${tmpDir}"\n        ;;\n        \'head\')\n            printf \'head -c %s \' "${nBytes}"\n${pipeReadFlag} && printf \'<&%s \' "${fd_stdin}" || printf \'<&%s \' "${fd_read}"\nprintf \'>"%s"/.stdin.tmp.{<#>}\\n\' "${tmpDir}"\nprintf \'[[ $(<"%s"/.stdin.tmp.{<#>}) ]] 2>/dev/null && A[0]=1 || A=()\\n\' "${tmpDir}"\n        ;;\n        \'bash\')\n            if ${stdinRunFlag}; then\n                [[ -n ${tTimeout} ]] && echo "SECONDS=0"\nprintf \'if read -r -d \'"\'\'"\' -n %s -u %s\' "${nBytes}" "${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=(\'\')\n                trailingNullFlag=true"""\n${readBytesExactFlag} && echo \'nBytesRead=1\'\necho """\n            else\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=()\n                trailingNullFlag=false"""\n${readBytesExactFlag} && echo \'nBytesRead=0\'\necho \'fi\'\nif ${readBytesExactFlag}; then\n                    echo """\n            nBytesRead+=\\${#REPLY}\n            [[ \\${nBytesRead} == 0 ]] || (( \\${nBytesRead} >= ${nBytes} )) || {"""\n[[ -n ${tTimeout} ]] && echo "while (( \\${SECONDS} < ${tTimeout} )); do" || echo "while true; do"\necho "[[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"\nprintf "if read -r -d \'\' -n \\$(( ${nBytes} - \\${nBytesRead} )) -u ${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                    ((nBytesRead++))\n                    nBytesRead+=\\${#REPLY}\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\") || A+=(\'\')\n                    (( \\${nBytesRead} >= ${nBytes} )) && { trailingNullFlag=true; break; }\n                else\n                    trailingNullFlag=false\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\")\n                    { (( \\${nBytesRead} >= ${nBytes} )) || ${doneIndicatorFlag}; } && { trailingNullFlag=false; break; }\n                    break\n                fi\n            done\n        }""";\n                fi\necho """\n        {\n            if \\${trailingNullFlag}; then\n                printf \'%s\\0\' \\"\\${A[@]}\\" \n            else\n                printf \'%s\' \\"\\${A[0]}\\" \n                printf \'\\0%s\' \\"\\${A[@]:1}\\"\n            fi \n        } >\\"${tmpDir}\\"/.stdin.tmp.{<#>}""";\n            else\n                printf \'read -r -N %s -u \' "${nBytes}"\nif ${readBytesExactFlag}; then\n                    printf \'%s \' "${fd_stdin}"\n[[ -n ${tTimeout} ]] && printf \'-t %s \' "${tTimeout} ";\n                else\n                    printf \'%s \' ${fd_read};\n                fi\necho \'-a A\';\n            fi\n        ;;\n    esac;\nelse\n    ${nLinesReadLimitFlag} && printf \'%s\' """read -r nLinesRead <\\"${tmpDir}\\"/.nLinesRead\n    (( ( nLinesReadLimit - nLinesRead ) < nLinesCur )) && nLinesCur=\\$(( nLinesReadLimit - nLinesRead ))\n    (( nLinesCur == 0 )) && A=() || """\necho "{"\n${nOrderFlag} && echo "order_get nOrder"\n${pipeReadFlag} || echo "evfd_wait ${fd_nSpawn}"\nprintf \'%s \' "mapfile"\n${lseekFlag} && printf \'%s \' \'-t\'\nprintf \'%s \' \'-n\' "\\${nLinesCur}" \'-u\'\n${pipeReadFlag} && printf \'%s \' ${fd_stdin} || printf \'%s \' ${fd_read}\n{ ${pipeReadFlag} || ${nullDelimiterFlag}; } && printf \'%s \' \'-t\'\necho """${delimiterReadStr} A\n    }"""\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || { echo "[[ \\${#A[@]} == 0 ]] || \\${doneIndicatorFlag} || {"\nif ${lseekFlag}; then\n        echo """\n                lseek ${fd_read} -1 SEEK_CUR \'\'\n                read -r -u ${fd_read} -N 1"""\nif ${nullDelimiterFlag}; then\n            echo "[[ \\${#REPLY} == 0 ]] || {";\n        else\n            echo "[[ \\"\\${REPLY}\\" == ${delimiterVal} ]] || {";\n        fi;\n    else\n        if ${nullDelimiterFlag}; then\n            echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read}"""\ncase "${nullDelimiterProg}" in \n                \'dd\')\n                    echo """\n                { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } || {"""\n                ;;\n                \'bash\')\n                    echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos0 </proc/self/fdinfo/${fd_read0}\n                nBytes=\\$(( fd_read_pos - fd_read_pos0 - \\${#A[@]} ))"""\nif ${ddAvailableFlag}; then\n                        echo """\n                    {\n                        if (( \\${nBytes}  > 65535 )); then\n                            { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } \n                        else\n                            read -r -u ${fd_read0} -N \\${nBytes} _\n                            read -r -u ${fd_read0} -d \'\'\n                            [[ \\${#REPLY} == 0 ]]\n                        fi\n                    } || {""";\n                    else\n                        echo """\n                    read -r -u ${fd_read0} -N \\${nBytes} _\n                    read -r -u ${fd_read0} -d \'\'\n                    [[ \\${#REPLY} == 0 ]] || {""";\n                    fi\n                ;;\n            esac;\n        else\n            echo "[[ \\"\\${A[-1]: -1}\\" == ${delimiterVal} ]] || {";\n        fi;\n    fi\n(( ${verboseLevel} > 2 )) && echo """\n                echo \\"Partial read at: \\${A[-1]}\\" >&${fd_stderr}"""\necho """\n                until read -r -u ${fd_read} ${delimiterReadStr}; do \n                    A[-1]+=\\"\\${REPLY}\\"; \n                done"""\nprintf \'%s\' "A[-1]+=\\"\\${REPLY}\\""\n${lseekFlag} && printf \'\\n\' || printf \'%s\\n\' "${delimiterVal}"\n(( ${verboseLevel} > 2 )) && echo "echo \\"Partial read fixed to: \\${A[-1]}\\" >&${fd_stderr}"\necho "}"; };\nfi\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || ${readBytesFlag} || echo "}"\n${nLinesReadLimitFlag} && echo """\nnLinesRead+=\\${#A[@]}\necho \\${nLinesRead} >\\"${tmpDir}\\"/.nLinesRead\n(( nLinesRead == nLinesReadLimit )) && {\n    : >\\"${tmpDir}\\"/.quit\n    echo \'0\' >\\"${tmpDir}\\"/.nLines\n}\n"""\necho """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""\nif ${lseekPosFlag}; then\n    echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos""";\nelse\n    echo """\n            IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read};\n            IFS=\\$\'\\\\t\' read -r _ fd_write_pos </proc/self/fdinfo/${fd_write}; \n                """;\nfi\necho """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""\n${nLinesAutoFlag} && echo "printf \'x\\\\n\' >&\\${fd_nAuto0}"\n${nOrderFlag} && echo ": >\\"${tmpDir}\\"/.out/.quit{<#>}"\n${nSpawnFlag} && echo """printf \'q\\\\n\' >&${fd_nSpawn}\n            printf \'q\\\\n\' >&\\${fd_nAuto0}"""\necho """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""\n${nOrderFlag} && echo """else\n            printf \'x%s\\n\' \\"\\${nOrder}\\" >&\\${fd_nOrder0}"""\necho """fi\n        continue\n    }"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && { printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""\n${fallocateFlag} && printf \'%s\' \' || \' || echo; }\n${fallocateFlag} && echo "printf \'\\\\n\' >&\\${fd_nAuto0}"\n${pipeReadFlag} || ${nullDelimiterFlag} || ${readBytesFlag} || ${lseekFlag} || { echo """\n        { [[ \\"\\${A[*]##*${delimiterVal}}\\" ]] || [[ -z \\${A[0]} ]]; } && {"""\n(( ${verboseLevel} > 2 )) && echo "echo \\"FIXING SPLIT READ\\" >&${fd_stderr}"\necho """\n            A[-1]=\\"\\${A[-1]%${delimiterVal}}\\"\n            IFS=\n            mapfile ${delimiterReadStr} A <<<\\"\\${A[*]}\\"\n        }"""; }\n${subshellRunFlag} && echo \'(\' || echo \'{\'\n{ ${exportOrderFlag} || { ${nOrderFlag} && ${substituteStringIDFlag}; }; } && echo \'nOrder0="${nOrder:1}"\'\n${exportOrderFlag} && echo "printf \'\\034%s:\\035\\n\' \\"\\${nOrder0}\\""\nprintf \'%s \' "${runCmd[@]}"\nif ${readBytesFlag} && ! { [[ ${readBytesProg} == \'bash\' ]] && ! ${stdinRunFlag}; }; then\n    if ${stdinRunFlag} || ${noFuncFlag}; then\n        printf \'<"%s"/%s\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    else\n        printf \'"$(<"%s"/%s)"\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    fi;\nelse\n    if ${stdinRunFlag}; then\n        printf \'<<<%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n    else\n        if ${noFuncFlag}; then\n            printf "<<<\\"\\${A[*]%s}\\"" "${delimiterRemoveStr}";\n        else\n            if ! ${substituteStringFlag}; then\n                printf \'%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n            fi;\n        fi;\n    fi;\nfi\n(( ${verboseLevel} > 2 )) && echo """ || {\n        {\n            printf \'\\\\n\\\\n----------------------------------------------\\\\n\\\\n\'\n            echo \'ERROR DURING \\"${runCmd[*]}\\" CALL\'\n            declare -p A nLinesCur nLinesAutoFlag\n            echo \'fd_read:\'\n            cat /proc/self/fdinfo/${fd_read}\n            echo \'fd_write:\'\n            cat /proc/self/fdinfo/${fd_write}\n            echo\n        } >&${fd_stderr}\n    }"""\n${readBytesFlag} && { [[ -n ${readBytesProg//bash/} ]] || ${stdinRunFlag}; } && printf \'\\n\\\\rm -f "\'"${tmpDir}"\'"/.stdin.tmp.{<#>}\\n\'\n${subshellRunFlag} && printf \'\\n%s \' \')\' || printf \'\\n%s \' \'}\'\necho "${outStr}"\n${nOrderFlag} && echo "printf \'%s\\\\n\' \\"\\${nOrder}\\" >&${fd_nOrder0}"\n${nSpawnFlag} && echo "printf \'l%s\\\\nt%s\\\\n\' \\${#A[@]} \\${EPOCHREALTIME//./} >&${fd_nSpawn}"\necho """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})""")"
-997.3.0:        ( 0.005964s |  0.00% |  0.00% )   ( 0.006837s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-997.4.0:        ( 0.000156s |  0.00% |  2.61% )   ( 0.000175s |  0.00% |  2.55% )    	(1x)	│  │  │  ├─  $'echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""
-998.4.0:        ( 0.000099s |  0.00% |  1.65% )   ( 0.000114s |  0.00% |  1.66% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-998.4.1:        ( 0.000118s |  0.00% |  1.97% )   ( 0.000134s |  0.00% |  1.95% )    	(1x)	│  │  │  │   echo "{ \${nLinesAutoFlag} || \${nSpawnFlag}; } && read -r <\"${tmpDir}\"/.nLines && [[ \${REPLY} == +([0-9]) ]] && nLinesCur=\${REPLY}"
-1006.4.0:       ( 0.000303s |  0.00% |  5.08% )   ( 0.000315s |  0.00% |  4.60% )    	(1x)	│  │  │  │   $'echo """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""
-1007.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1079.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
-1082.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   echo "{"
-1083.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1084.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1084.4.1:       ( 0.000079s |  0.00% |  1.32% )   ( 0.000091s |  0.00% |  1.33% )    	(1x)	│  │  │  │   echo "evfd_wait ${fd_nSpawn}"
-1085.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   printf '%s ' "mapfile"
-1086.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekFlag}
-1086.4.1:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000081s |  0.00% |  1.18% )    	(1x)	│  │  │  │   printf '%s ' '-t'
-1087.4.0:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   printf '%s ' '-n' "\${nLinesCur}" '-u'
-1088.4.0:       ( 0.000065s |  0.00% |  1.08% )   ( 0.000076s |  0.00% |  1.11% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1088.4.1:       ( 0.000070s |  0.00% |  1.17% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   printf '%s ' ${fd_read}
-1089.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1089.4.1:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1091.4.0:       ( 0.000072s |  0.00% |  1.20% )   ( 0.000083s |  0.00% |  1.21% )    	(1x)	│  │  │  │   $'echo """${delimiterReadStr} A\n    }"""
-1092.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1092.4.1:       ( 0.000079s |  0.00% |  1.32% )   ( 0.000087s |  0.00% |  1.27% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1092.4.2:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   echo "[[ \${#A[@]} == 0 ]] || \${doneIndicatorFlag} || {"
-1093.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekFlag}
-1096.4.0:       ( 0.000073s |  0.00% |  1.22% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   $'echo """\n                lseek ${fd_read} -1 SEEK_CUR \'\'\n                read -r -u ${fd_read} -N 1"""
-1097.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1100.4.0:       ( 0.000072s |  0.00% |  1.20% )   ( 0.000083s |  0.00% |  1.21% )    	(1x)	│  │  │  │   echo "[[ \"\${REPLY}\" == ${delimiterVal} ]] || {"
-1138.4.0:       ( 0.000065s |  0.00% |  1.08% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-1143.4.0:       ( 0.000075s |  0.00% |  1.25% )   ( 0.000086s |  0.00% |  1.25% )    	(1x)	│  │  │  │   $'echo """\n                until read -r -u ${fd_read} ${delimiterReadStr}; do \n                    A[-1]+=\\"\\${REPLY}\\"; \n                done"""
-1144.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   printf '%s' "A[-1]+=\"\${REPLY}\""
-1145.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekFlag}
-1145.4.1:       ( 0.000108s |  0.00% |  1.81% )   ( 0.000120s |  0.00% |  1.75% )    	(1x)	│  │  │  │   printf '\n'
-1146.4.0:       ( 0.000070s |  0.00% |  1.17% )   ( 0.000081s |  0.00% |  1.18% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-1147.4.0:       ( 0.000103s |  0.00% |  1.72% )   ( 0.000116s |  0.00% |  1.69% )    	(1x)	│  │  │  │   echo "}"
-1149.4.0:       ( 0.000069s |  0.00% |  1.15% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1149.4.1:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1149.4.2:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1149.4.3:       ( 0.000077s |  0.00% |  1.29% )   ( 0.000088s |  0.00% |  1.28% )    	(1x)	│  │  │  │   echo "}"
-1150.4.0:       ( 0.000076s |  0.00% |  1.27% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
-1163.4.0:       ( 0.000087s |  0.00% |  1.45% )   ( 0.000098s |  0.00% |  1.43% )    	(1x)	│  │  │  │   $'echo """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""
-1164.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${lseekPosFlag}
-1167.4.0:       ( 0.000081s |  0.00% |  1.35% )   ( 0.000093s |  0.00% |  1.36% )    	(1x)	│  │  │  │   $'echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos"""
-1178.4.0:       ( 0.000080s |  0.00% |  1.34% )   ( 0.000092s |  0.00% |  1.34% )    	(1x)	│  │  │  │   $'echo """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""
-1179.4.0:       ( 0.000063s |  0.00% |  1.05% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-1179.4.1:       ( 0.000074s |  0.00% |  1.24% )   ( 0.000083s |  0.00% |  1.21% )    	(1x)	│  │  │  │   echo "printf 'x\\n' >&\${fd_nAuto0}"
-1180.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1181.4.0:       ( 0.000073s |  0.00% |  1.22% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-1186.4.0:       ( 0.000079s |  0.00% |  1.32% )   ( 0.000091s |  0.00% |  1.33% )    	(1x)	│  │  │  │   $'echo """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""
-1187.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1191.4.0:       ( 0.000080s |  0.00% |  1.34% )   ( 0.000091s |  0.00% |  1.33% )    	(1x)	│  │  │  │   $'echo """fi\n        continue\n    }"""
-1192.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-1192.4.1:       ( 0.000075s |  0.00% |  1.25% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   $'printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""
-1197.4.0:       ( 0.000062s |  0.00% |  1.03% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${fallocateFlag}
-1197.4.1:       ( 0.000074s |  0.00% |  1.24% )   ( 0.000085s |  0.00% |  1.24% )    	(1x)	│  │  │  │   printf '%s' ' || '
-1198.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000075s |  0.00% |  1.09% )    	(1x)	│  │  │  │   ${fallocateFlag}
-1198.4.1:       ( 0.000082s |  0.00% |  1.37% )   ( 0.000094s |  0.00% |  1.37% )    	(1x)	│  │  │  │   echo "printf '\\n' >&\${fd_nAuto0}"
-1199.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000076s |  0.00% |  1.11% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1199.4.1:       ( 0.000065s |  0.00% |  1.08% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1199.4.2:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1199.4.3:       ( 0.000086s |  0.00% |  1.44% )   ( 0.000097s |  0.00% |  1.41% )    	(1x)	│  │  │  │   ${lseekFlag}
-1207.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${subshellRunFlag}
-1207.4.1:       ( 0.000090s |  0.00% |  1.50% )   ( 0.000100s |  0.00% |  1.46% )    	(1x)	│  │  │  │   echo '{'
-1208.4.0:       ( 0.000062s |  0.00% |  1.03% )   ( 0.000073s |  0.00% |  1.06% )    	(1x)	│  │  │  │   ${exportOrderFlag}
-1208.4.1:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1209.4.0:       ( 0.000064s |  0.00% |  1.07% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${exportOrderFlag}
-1210.4.0:       ( 0.000086s |  0.00% |  1.44% )   ( 0.000097s |  0.00% |  1.41% )    	(1x)	│  │  │  │   printf '%s ' "${runCmd[@]}"
-1211.4.0:       ( 0.000071s |  0.00% |  1.19% )   ( 0.000082s |  0.00% |  1.19% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1218.4.0:       ( 0.000060s |  0.00% |  1.00% )   ( 0.000072s |  0.00% |  1.05% )    	(1x)	│  │  │  │   ${stdinRunFlag}
-1221.4.0:       ( 0.000061s |  0.00% |  1.02% )   ( 0.000071s |  0.00% |  1.03% )    	(1x)	│  │  │  │   ${noFuncFlag}
-1224.4.0:       ( 0.000060s |  0.00% |  1.00% )   ( 0.000070s |  0.00% |  1.02% )    	(1x)	│  │  │  │   ${substituteStringFlag}
-1225.4.0:       ( 0.000082s |  0.00% |  1.37% )   ( 0.000094s |  0.00% |  1.37% )    	(1x)	│  │  │  │   printf '%s' "\"\${A[@]${delimiterRemoveStr}}\""
-1230.4.0:       ( 0.000070s |  0.00% |  1.17% )   ( 0.000081s |  0.00% |  1.18% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-1242.4.0:       ( 0.000066s |  0.00% |  1.10% )   ( 0.000077s |  0.00% |  1.12% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1243.4.0:       ( 0.000062s |  0.00% |  1.03% )   ( 0.000074s |  0.00% |  1.08% )    	(1x)	│  │  │  │   ${subshellRunFlag}
-1243.4.1:       ( 0.000083s |  0.00% |  1.39% )   ( 0.000095s |  0.00% |  1.38% )    	(1x)	│  │  │  │   printf '\n%s ' '}'
-1244.4.0:       ( 0.000067s |  0.00% |  1.12% )   ( 0.000078s |  0.00% |  1.14% )    	(1x)	│  │  │  │   echo "${outStr}"
-1245.4.0:       ( 0.000068s |  0.00% |  1.14% )   ( 0.000079s |  0.00% |  1.15% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1246.4.0:       ( 0.000072s |  0.00% |  1.20% )   ( 0.000080s |  0.00% |  1.17% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-1251.4.0:       ( 0.000082s |  0.00% |  1.37% )   ( 0.000093s |  0.00% |  1.36% )    	(1x)	│  │  │  └─  $'echo """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})"""
-981.3.0:        ( 0.000304s |  0.00% |  0.00% )   ( 0.000344s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-986.3.0:        ( 0.000309s |  0.00% |  0.00% )   ( 0.000340s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'kill $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null;\n        kill -9 \'"${exitTrapStr_kill}"\' 2>/dev/null; \n        kill -9 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
-988.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'trap - INT TERM HUP USR1; \n        return ${returnVal:-0}\'
-989.3.0:        ( 0.023883s |  0.00% |  0.00% )   ( 0.023843s |  0.00% |  0.00% )    	(1x)	│  │  │   trap "${exitTrapStr}" EXIT
-993.3.0:        ( 0.023645s |  0.00% |  0.00% )   ( 0.023607s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -INT $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" INT
-997.3.0:        ( 0.023848s |  0.00% |  0.00% )   ( 0.172319s |  0.01% |  0.03% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -TERM $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" TERM
-1001.3.0:       ( 0.023291s |  0.00% |  0.00% )   ( 0.023240s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -HUP $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" HUP
-1002.3.0:       ( 0.000071s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1003.3.0:       ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
-1007.3.0:       ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1011.3.0:       ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '\n' >&${fd_continue}
-1012.3.0:       ( 0.000065s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1013.3.0:       ( 0.000063s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │  │   ((kkProcs=0 ))
-1013.3.1:       ( 0.003044s |  0.00% |  0.00% )   ( 0.003490s |  0.00% |  0.00% )    	(29x)	│  │  │   ((kkProcs<28 ))
-1015.3.0:       ( 0.002807s |  0.00% |  0.00% )   ( 0.003234s |  0.00% |  0.00% )    	(28x)	│  │  │   [[ -f "${tmpDir}"/.quit ]]
-1016.3.0:       ( 18.684416s |  1.70% |  3.40% )   ( 18.084702s |  1.81% |  3.63% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p0 p0_PID >>
-1.4.0:          ( 0.000578s |  0.00% |  0.00% )   ( 0.000593s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p0 p0_PID (&)
-24.4.0:         ( 18.683751s |  1.70% | 99.99% )   ( 18.084009s |  1.81% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p0
-30.5.0:         ( 0.023281s |  0.00% |  0.12% )   ( 0.023240s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p0 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p0; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023390s |  0.00% |  0.12% )   ( 0.023350s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.023709s |  0.00% |  0.12% )   ( 0.023671s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.023947s |  0.00% |  0.12% )   ( 0.023907s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.023933s |  0.00% |  0.12% )   ( 0.023889s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.002664s |  0.00% |  0.00% )   ( 0.003006s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   true
-38.5.0:         ( 0.002421s |  0.00% |  0.00% )   ( 0.002734s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000177s |  0.00% |  0.00% )   ( 0.000201s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.002814s |  0.00% |  0.00% )   ( 0.003138s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p0
-41.5.0:         ( 0.136422s |  0.01% |  0.04% )   ( 0.003536s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.002575s |  0.00% |  0.00% )   ( 0.002881s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.002361s |  0.00% |  0.00% )   ( 0.002705s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.002166s |  0.00% |  0.00% )   ( 0.002471s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002277s |  0.00% |  0.00% )   ( 0.002565s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.016330s |  0.00% |  0.00% )   ( 0.016596s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.002150s |  0.00% |  0.00% )   ( 0.002430s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.002146s |  0.00% |  0.00% )   ( 0.002421s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003673s |  0.00% |  0.00% )   ( 0.002692s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.002796s |  0.00% |  0.00% )   ( 0.003119s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p0
-66.5.0:         ( 0.002221s |  0.00% |  0.00% )   ( 0.002509s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.002176s |  0.00% |  0.00% )   ( 0.002483s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-91.5.0:         ( 18.362175s |  1.67% |  6.14% )   ( 17.891416s |  1.79% |  6.18% )    	(16x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002294s |  0.00% |  0.01% )   ( 0.002606s |  0.00% |  0.01% )    	(16x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.170640s |  0.10% |  6.37% )   ( 1.160554s |  0.11% |  6.48% )    	(16x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.294588s |  0.20% | 12.49% )   ( 2.231759s |  0.22% | 12.47% )    	(16x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.735840s |  0.15% |  9.45% )   ( 1.711857s |  0.17% |  9.56% )    	(16x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.314067s |  0.21% | 12.60% )   ( 2.253758s |  0.22% | 12.59% )    	(16x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.753530s |  0.15% |  9.54% )   ( 1.670755s |  0.16% |  9.33% )    	(16x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.074681s |  0.09% |  5.85% )   ( 1.044672s |  0.10% |  5.83% )    	(16x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.386476s |  0.03% |  2.10% )   ( 0.385622s |  0.03% |  2.15% )    	(16x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.186912s |  0.10% |  6.46% )   ( 1.153606s |  0.11% |  6.44% )    	(16x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.327040s |  0.02% |  1.78% )   ( 0.325188s |  0.03% |  1.81% )    	(16x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.456174s |  0.13% |  7.93% )   ( 1.435917s |  0.14% |  8.02% )    	(16x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.914105s |  0.35% | 21.31% )   ( 3.838269s |  0.38% | 21.45% )    	(16x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.402837s |  0.03% |  2.19% )   ( 0.354454s |  0.03% |  1.98% )    	(16x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.342991s |  0.03% |  1.86% )   ( 0.322399s |  0.03% |  1.80% )    	(16x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-88.5.1:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.002254s |  0.00% |  0.00% )   ( 0.002548s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.001960s |  0.00% |  0.00% )   ( 0.002232s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.002212s |  0.00% |  0.00% )   ( 0.002492s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000185s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000217s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.010307s |  0.00% |  0.05% )   ( 0.010388s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p0_PID})
-1013.3.0:       ( 0.002964s |  0.00% |  0.00% )   ( 0.003397s |  0.00% |  0.00% )    	(28x)	│  │  │   ((kkProcs++ ))
-1016.3.0:       ( 20.692894s |  1.88% |  3.76% )   ( 19.897838s |  1.99% |  3.99% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p1 p1_PID >>
-1.4.0:          ( 0.000595s |  0.00% |  0.00% )   ( 0.000608s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p1 p1_PID (&)
-24.4.0:         ( 20.692213s |  1.88% | 99.99% )   ( 19.897129s |  1.99% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000307s |  0.00% |  0.00% )   ( 0.000350s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000330s |  0.00% |  0.00% )   ( 0.000369s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p1
-30.5.0:         ( 0.023359s |  0.00% |  0.11% )   ( 0.023331s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p1 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p1; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023799s |  0.00% |  0.11% )   ( 0.023761s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.023969s |  0.00% |  0.11% )   ( 0.023924s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024030s |  0.00% |  0.11% )   ( 0.023987s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.023959s |  0.00% |  0.11% )   ( 0.023918s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004015s |  0.00% |  0.00% )   ( 0.004494s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
-38.5.0:         ( 0.003632s |  0.00% |  0.00% )   ( 0.004112s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000178s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004226s |  0.00% |  0.00% )   ( 0.004701s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p1
-41.5.0:         ( 0.276526s |  0.02% |  0.05% )   ( 0.005517s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003711s |  0.00% |  0.00% )   ( 0.004170s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003613s |  0.00% |  0.00% )   ( 0.004089s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.005478s |  0.00% |  0.00% )   ( 0.003912s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003643s |  0.00% |  0.00% )   ( 0.004112s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035852s |  0.00% |  0.00% )   ( 0.027406s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003384s |  0.00% |  0.00% )   ( 0.003835s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003241s |  0.00% |  0.00% )   ( 0.003690s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003496s |  0.00% |  0.00% )   ( 0.003950s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004122s |  0.00% |  0.00% )   ( 0.004579s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p1
-66.5.0:         ( 0.003255s |  0.00% |  0.00% )   ( 0.003719s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003317s |  0.00% |  0.00% )   ( 0.003747s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-91.5.0:         ( 20.190083s |  1.84% |  4.06% )   ( 19.669038s |  1.97% |  4.11% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003461s |  0.00% |  0.01% )   ( 0.003929s |  0.00% |  0.01% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.487594s |  0.13% |  7.36% )   ( 1.416911s |  0.14% |  7.20% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.688875s |  0.24% | 13.31% )   ( 2.631457s |  0.26% | 13.37% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 2.082548s |  0.18% | 10.31% )   ( 2.052776s |  0.20% | 10.43% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.662600s |  0.24% | 13.18% )   ( 2.622808s |  0.26% | 13.33% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 2.073341s |  0.18% | 10.26% )   ( 2.025565s |  0.20% | 10.29% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.291679s |  0.11% |  6.39% )   ( 1.254551s |  0.12% |  6.37% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.512002s |  0.04% |  2.53% )   ( 0.507376s |  0.05% |  2.57% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.275094s |  0.11% |  6.31% )   ( 1.203790s |  0.12% |  6.12% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.464065s |  0.04% |  2.29% )   ( 0.432990s |  0.04% |  2.20% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.443455s |  0.13% |  7.14% )   ( 1.392803s |  0.13% |  7.08% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.209471s |  0.29% | 15.89% )   ( 3.166275s |  0.31% | 16.09% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.495826s |  0.04% |  2.45% )   ( 0.487516s |  0.04% |  2.47% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.500072s |  0.04% |  2.47% )   ( 0.470291s |  0.04% |  2.39% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-88.5.1:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.003457s |  0.00% |  0.00% )   ( 0.003916s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003186s |  0.00% |  0.00% )   ( 0.003619s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003533s |  0.00% |  0.00% )   ( 0.003974s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009587s |  0.00% |  0.04% )   ( 0.009642s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p1_PID})
-1016.3.0:       ( 18.101014s |  1.64% |  3.29% )   ( 17.319932s |  1.73% |  3.47% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p2 p2_PID >>
-1.4.0:          ( 0.000597s |  0.00% |  0.00% )   ( 0.000612s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p2 p2_PID (&)
-24.4.0:         ( 18.100331s |  1.64% | 99.99% )   ( 17.319223s |  1.73% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000344s |  0.00% |  0.00% )   ( 0.000384s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000091s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p2
-30.5.0:         ( 0.023437s |  0.00% |  0.12% )   ( 0.023394s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p2 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p2; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023777s |  0.00% |  0.13% )   ( 0.023735s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024037s |  0.00% |  0.13% )   ( 0.023990s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024040s |  0.00% |  0.13% )   ( 0.023992s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.023982s |  0.00% |  0.13% )   ( 0.023934s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003308s |  0.00% |  0.00% )   ( 0.003737s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   true
-38.5.0:         ( 0.003017s |  0.00% |  0.00% )   ( 0.003435s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000234s |  0.00% |  0.00% )   ( 0.000268s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000206s |  0.00% |  0.00% )   ( 0.000236s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003928s |  0.00% |  0.00% )   ( 0.004377s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p2
-41.5.0:         ( 0.209233s |  0.01% |  0.05% )   ( 0.004950s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003452s |  0.00% |  0.00% )   ( 0.003902s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003276s |  0.00% |  0.00% )   ( 0.003705s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.002990s |  0.00% |  0.00% )   ( 0.003406s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003150s |  0.00% |  0.00% )   ( 0.003556s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.024705s |  0.00% |  0.00% )   ( 0.025020s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003038s |  0.00% |  0.00% )   ( 0.003447s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003147s |  0.00% |  0.00% )   ( 0.003503s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003250s |  0.00% |  0.00% )   ( 0.003661s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.003569s |  0.00% |  0.00% )   ( 0.003979s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p2
-66.5.0:         ( 0.002835s |  0.00% |  0.00% )   ( 0.003229s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.002714s |  0.00% |  0.00% )   ( 0.003087s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-91.5.0:         ( 17.685388s |  1.61% |  4.65% )   ( 17.101643s |  1.71% |  4.70% )    	(21x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003046s |  0.00% |  0.01% )   ( 0.003461s |  0.00% |  0.02% )    	(21x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.178295s |  0.10% |  6.66% )   ( 1.126337s |  0.11% |  6.58% )    	(21x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.129778s |  0.19% | 12.04% )   ( 2.084673s |  0.20% | 12.18% )    	(21x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.695275s |  0.15% |  9.58% )   ( 1.654062s |  0.16% |  9.67% )    	(21x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.138031s |  0.19% | 12.08% )   ( 2.069622s |  0.20% | 12.10% )    	(21x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.616167s |  0.14% |  9.13% )   ( 1.585874s |  0.15% |  9.27% )    	(21x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.010024s |  0.09% |  5.71% )   ( 0.980981s |  0.09% |  5.73% )    	(21x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.476844s |  0.04% |  2.69% )   ( 0.451985s |  0.04% |  2.64% )    	(21x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.238165s |  0.11% |  7.00% )   ( 1.088745s |  0.10% |  6.36% )    	(21x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.411537s |  0.03% |  2.32% )   ( 0.392718s |  0.03% |  2.29% )    	(21x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.377081s |  0.12% |  7.78% )   ( 1.355825s |  0.13% |  7.92% )    	(21x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.551001s |  0.32% | 20.07% )   ( 3.461244s |  0.34% | 20.23% )    	(21x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.441415s |  0.04% |  2.49% )   ( 0.432393s |  0.04% |  2.52% )    	(21x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.418729s |  0.03% |  2.36% )   ( 0.413723s |  0.04% |  2.41% )    	(21x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-88.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.003006s |  0.00% |  0.00% )   ( 0.003425s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.002729s |  0.00% |  0.00% )   ( 0.003101s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003063s |  0.00% |  0.00% )   ( 0.003441s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000212s |  0.00% |  0.00% )   ( 0.000234s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000198s |  0.00% |  0.00% )   ( 0.000219s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009463s |  0.00% |  0.05% )   ( 0.009536s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p2_PID})
-1016.3.0:       ( 18.056370s |  1.64% |  3.28% )   ( 17.124420s |  1.71% |  3.43% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p3 p3_PID >>
-1.4.0:          ( 0.000598s |  0.00% |  0.00% )   ( 0.000615s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p3 p3_PID (&)
-24.4.0:         ( 18.055688s |  1.64% | 99.99% )   ( 17.123705s |  1.71% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000345s |  0.00% |  0.00% )   ( 0.000385s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000370s |  0.00% |  0.00% )   ( 0.000407s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p3
-30.5.0:         ( 0.023666s |  0.00% |  0.13% )   ( 0.023629s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p3 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p3; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024012s |  0.00% |  0.13% )   ( 0.023971s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.023975s |  0.00% |  0.13% )   ( 0.023936s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.023989s |  0.00% |  0.13% )   ( 0.023950s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.024070s |  0.00% |  0.13% )   ( 0.024018s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003861s |  0.00% |  0.00% )   ( 0.004317s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   true
-38.5.0:         ( 0.003477s |  0.00% |  0.00% )   ( 0.003934s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004260s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p3
-41.5.0:         ( 0.296259s |  0.02% |  0.06% )   ( 0.005722s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003967s |  0.00% |  0.00% )   ( 0.004459s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003597s |  0.00% |  0.00% )   ( 0.004084s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003448s |  0.00% |  0.00% )   ( 0.003900s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003630s |  0.00% |  0.00% )   ( 0.004093s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.027104s |  0.00% |  0.00% )   ( 0.027482s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003456s |  0.00% |  0.00% )   ( 0.003904s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003428s |  0.00% |  0.00% )   ( 0.003874s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.007978s |  0.00% |  0.00% )   ( 0.004128s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.003934s |  0.00% |  0.00% )   ( 0.004409s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p3
-66.5.0:         ( 0.003277s |  0.00% |  0.00% )   ( 0.003722s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003200s |  0.00% |  0.00% )   ( 0.003646s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.540760s |  1.59% |  4.22% )   ( 16.895908s |  1.69% |  4.28% )    	(23x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003243s |  0.00% |  0.01% )   ( 0.003694s |  0.00% |  0.02% )    	(23x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.145210s |  0.10% |  6.52% )   ( 1.116214s |  0.11% |  6.60% )    	(23x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.083628s |  0.18% | 11.87% )   ( 1.986786s |  0.19% | 11.75% )    	(23x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.730885s |  0.15% |  9.86% )   ( 1.615765s |  0.16% |  9.56% )    	(23x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.045733s |  0.18% | 11.66% )   ( 1.984423s |  0.19% | 11.74% )    	(23x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.611058s |  0.14% |  9.18% )   ( 1.585733s |  0.15% |  9.38% )    	(23x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.129150s |  0.10% |  6.43% )   ( 1.042769s |  0.10% |  6.17% )    	(23x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.494757s |  0.04% |  2.82% )   ( 0.489850s |  0.04% |  2.89% )    	(23x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.107104s |  0.10% |  6.31% )   ( 1.060373s |  0.10% |  6.27% )    	(23x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.448748s |  0.04% |  2.55% )   ( 0.420115s |  0.04% |  2.48% )    	(23x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.440211s |  0.13% |  8.21% )   ( 1.375063s |  0.13% |  8.13% )    	(23x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.340385s |  0.30% | 19.04% )   ( 3.281162s |  0.32% | 19.41% )    	(23x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.488107s |  0.04% |  2.78% )   ( 0.475393s |  0.04% |  2.81% )    	(23x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.472541s |  0.04% |  2.69% )   ( 0.458568s |  0.04% |  2.71% )    	(23x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003429s |  0.00% |  0.00% )   ( 0.003877s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003211s |  0.00% |  0.00% )   ( 0.003637s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003559s |  0.00% |  0.00% )   ( 0.004004s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008700s |  0.00% |  0.04% )   ( 0.008786s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000084s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p3_PID})
-1016.3.0:       ( 22.887910s |  2.08% |  4.16% )   ( 21.923279s |  2.19% |  4.40% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p4 p4_PID >>
-1.4.0:          ( 0.000588s |  0.00% |  0.00% )   ( 0.000607s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p4 p4_PID (&)
-24.4.0:         ( 22.887238s |  2.08% | 99.99% )   ( 21.922575s |  2.19% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000352s |  0.00% |  0.00% )   ( 0.000393s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p4
-30.5.0:         ( 0.023870s |  0.00% |  0.10% )   ( 0.023828s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p4 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p4; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024004s |  0.00% |  0.10% )   ( 0.023964s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.023981s |  0.00% |  0.10% )   ( 0.023938s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024007s |  0.00% |  0.10% )   ( 0.023966s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.023971s |  0.00% |  0.10% )   ( 0.023927s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004469s |  0.00% |  0.00% )   ( 0.005016s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
-38.5.0:         ( 0.003713s |  0.00% |  0.00% )   ( 0.004215s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004663s |  0.00% |  0.00% )   ( 0.005204s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p4
-41.5.0:         ( 0.458815s |  0.04% |  0.07% )   ( 0.006616s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004351s |  0.00% |  0.00% )   ( 0.004895s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004084s |  0.00% |  0.00% )   ( 0.004580s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003803s |  0.00% |  0.00% )   ( 0.004301s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004000s |  0.00% |  0.00% )   ( 0.004472s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.030172s |  0.00% |  0.00% )   ( 0.030084s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003617s |  0.00% |  0.00% )   ( 0.004091s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003657s |  0.00% |  0.00% )   ( 0.004110s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003798s |  0.00% |  0.00% )   ( 0.004306s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004571s |  0.00% |  0.00% )   ( 0.005100s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p4
-66.5.0:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004238s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003675s |  0.00% |  0.00% )   ( 0.004186s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 22.209065s |  2.02% |  3.73% )   ( 21.688655s |  2.17% |  3.80% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003771s |  0.00% |  0.01% )   ( 0.004271s |  0.00% |  0.01% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.612229s |  0.14% |  7.25% )   ( 1.601200s |  0.16% |  7.38% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.584655s |  0.23% | 11.63% )   ( 2.525690s |  0.25% | 11.64% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 2.069910s |  0.18% |  9.32% )   ( 2.015604s |  0.20% |  9.29% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.583187s |  0.23% | 11.63% )   ( 2.535582s |  0.25% | 11.69% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.967875s |  0.17% |  8.86% )   ( 1.941663s |  0.19% |  8.95% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.469652s |  0.13% |  6.61% )   ( 1.425968s |  0.14% |  6.57% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.634176s |  0.05% |  2.85% )   ( 0.590296s |  0.05% |  2.72% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.505036s |  0.13% |  6.77% )   ( 1.460708s |  0.14% |  6.73% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.533809s |  0.04% |  2.40% )   ( 0.510409s |  0.05% |  2.35% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.801330s |  0.16% |  8.11% )   ( 1.757914s |  0.17% |  8.10% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 4.250423s |  0.38% | 19.13% )   ( 4.189076s |  0.42% | 19.31% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.620084s |  0.05% |  2.79% )   ( 0.584011s |  0.05% |  2.69% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.572928s |  0.05% |  2.57% )   ( 0.546263s |  0.05% |  2.51% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003545s |  0.00% |  0.00% )   ( 0.004020s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003609s |  0.00% |  0.00% )   ( 0.004100s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004026s |  0.00% |  0.00% )   ( 0.004518s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000105s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004993s |  0.00% |  0.02% )   ( 0.005047s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000084s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p4_PID})
-1016.3.0:       ( 20.920626s |  1.90% |  3.80% )   ( 19.990445s |  2.00% |  4.01% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p5 p5_PID >>
-1.4.0:          ( 0.000607s |  0.00% |  0.00% )   ( 0.000631s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p5 p5_PID (&)
-24.4.0:         ( 20.919932s |  1.90% | 99.99% )   ( 19.989712s |  2.00% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000345s |  0.00% |  0.00% )   ( 0.000386s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000359s |  0.00% |  0.00% )   ( 0.000403s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p5
-30.5.0:         ( 0.024239s |  0.00% |  0.11% )   ( 0.024186s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p5 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p5; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023999s |  0.00% |  0.11% )   ( 0.023956s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024019s |  0.00% |  0.11% )   ( 0.023976s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024002s |  0.00% |  0.11% )   ( 0.023957s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.023849s |  0.00% |  0.11% )   ( 0.023802s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004768s |  0.00% |  0.00% )   ( 0.005327s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
-38.5.0:         ( 0.004207s |  0.00% |  0.00% )   ( 0.004687s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005059s |  0.00% |  0.00% )   ( 0.005625s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p5
-41.5.0:         ( 0.307031s |  0.02% |  0.05% )   ( 0.006434s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004410s |  0.00% |  0.00% )   ( 0.004997s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004165s |  0.00% |  0.00% )   ( 0.004726s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003876s |  0.00% |  0.00% )   ( 0.004420s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004119s |  0.00% |  0.00% )   ( 0.004663s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035156s |  0.00% |  0.00% )   ( 0.032607s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.004093s |  0.00% |  0.00% )   ( 0.004607s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003893s |  0.00% |  0.00% )   ( 0.004426s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.005329s |  0.00% |  0.00% )   ( 0.004671s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004696s |  0.00% |  0.00% )   ( 0.005263s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p5
-66.5.0:         ( 0.003800s |  0.00% |  0.00% )   ( 0.004332s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003742s |  0.00% |  0.00% )   ( 0.004270s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000119s |  0.00% |  0.00% )   ( 0.000137s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000143s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 20.379748s |  1.85% |  3.60% )   ( 19.748371s |  1.98% |  3.65% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003993s |  0.00% |  0.01% )   ( 0.004548s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.501781s |  0.13% |  7.36% )   ( 1.433221s |  0.14% |  7.25% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.293988s |  0.20% | 11.25% )   ( 2.263800s |  0.22% | 11.46% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.878019s |  0.17% |  9.21% )   ( 1.846603s |  0.18% |  9.35% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.341121s |  0.21% | 11.48% )   ( 2.286974s |  0.22% | 11.58% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.852432s |  0.16% |  9.08% )   ( 1.806086s |  0.18% |  9.14% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.310780s |  0.11% |  6.43% )   ( 1.262101s |  0.12% |  6.39% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.626047s |  0.05% |  3.07% )   ( 0.584706s |  0.05% |  2.96% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.382251s |  0.12% |  6.78% )   ( 1.328739s |  0.13% |  6.72% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.513065s |  0.04% |  2.51% )   ( 0.502270s |  0.05% |  2.54% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.652541s |  0.15% |  8.10% )   ( 1.605233s |  0.16% |  8.12% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.788911s |  0.34% | 18.59% )   ( 3.714880s |  0.37% | 18.81% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.632912s |  0.05% |  3.10% )   ( 0.571062s |  0.05% |  2.89% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.601907s |  0.05% |  2.95% )   ( 0.538148s |  0.05% |  2.72% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004179s |  0.00% |  0.00% )   ( 0.004737s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003723s |  0.00% |  0.00% )   ( 0.004214s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.007359s |  0.00% |  0.00% )   ( 0.004697s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005008s |  0.00% |  0.02% )   ( 0.005098s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p5_PID})
-1016.3.0:       ( 17.461650s |  1.59% |  3.17% )   ( 16.502525s |  1.65% |  3.31% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p6 p6_PID >>
-1.4.0:          ( 0.000641s |  0.00% |  0.00% )   ( 0.000658s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p6 p6_PID (&)
-24.4.0:         ( 17.460922s |  1.59% | 99.99% )   ( 16.501764s |  1.65% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000331s |  0.00% |  0.00% )   ( 0.000378s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000099s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p6
-30.5.0:         ( 0.023944s |  0.00% |  0.13% )   ( 0.023900s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p6 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p6; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023993s |  0.00% |  0.13% )   ( 0.023954s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.023997s |  0.00% |  0.13% )   ( 0.023946s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.023997s |  0.00% |  0.13% )   ( 0.023951s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.024097s |  0.00% |  0.13% )   ( 0.024042s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004886s |  0.00% |  0.00% )   ( 0.005470s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
-38.5.0:         ( 0.004265s |  0.00% |  0.00% )   ( 0.004813s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005125s |  0.00% |  0.00% )   ( 0.005673s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p6
-41.5.0:         ( 0.371001s |  0.03% |  0.07% )   ( 0.006808s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004689s |  0.00% |  0.00% )   ( 0.005261s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004354s |  0.00% |  0.00% )   ( 0.004952s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.006904s |  0.00% |  0.00% )   ( 0.004495s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004542s |  0.00% |  0.00% )   ( 0.004979s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.033677s |  0.00% |  0.00% )   ( 0.034140s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.004095s |  0.00% |  0.00% )   ( 0.004647s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003928s |  0.00% |  0.00% )   ( 0.004474s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.006004s |  0.00% |  0.00% )   ( 0.004829s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.005084s |  0.00% |  0.00% )   ( 0.005602s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p6
-66.5.0:         ( 0.004058s |  0.00% |  0.00% )   ( 0.004622s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.004077s |  0.00% |  0.00% )   ( 0.004633s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.851482s |  1.53% |  3.44% )   ( 16.251992s |  1.62% |  3.51% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004115s |  0.00% |  0.02% )   ( 0.004691s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.116430s |  0.10% |  6.62% )   ( 1.085336s |  0.10% |  6.67% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.846006s |  0.16% | 10.95% )   ( 1.834517s |  0.18% | 11.28% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.596374s |  0.14% |  9.47% )   ( 1.544859s |  0.15% |  9.50% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.893789s |  0.17% | 11.23% )   ( 1.824652s |  0.18% | 11.22% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.575674s |  0.14% |  9.35% )   ( 1.494918s |  0.14% |  9.19% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.051192s |  0.09% |  6.23% )   ( 1.010572s |  0.10% |  6.21% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.603418s |  0.05% |  3.58% )   ( 0.556435s |  0.05% |  3.42% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.071687s |  0.09% |  6.35% )   ( 1.033539s |  0.10% |  6.35% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.523269s |  0.04% |  3.10% )   ( 0.486842s |  0.04% |  2.99% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.453576s |  0.13% |  8.62% )   ( 1.374924s |  0.13% |  8.46% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.003161s |  0.27% | 17.82% )   ( 2.919939s |  0.29% | 17.96% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.555135s |  0.05% |  3.29% )   ( 0.544716s |  0.05% |  3.35% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.557656s |  0.05% |  3.30% )   ( 0.536052s |  0.05% |  3.29% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003983s |  0.00% |  0.00% )   ( 0.004512s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003866s |  0.00% |  0.00% )   ( 0.004399s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004288s |  0.00% |  0.00% )   ( 0.004809s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009207s |  0.00% |  0.05% )   ( 0.009293s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p6_PID})
-1016.3.0:       ( 17.297489s |  1.57% |  3.14% )   ( 16.221858s |  1.62% |  3.25% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p7 p7_PID >>
-1.4.0:          ( 0.000626s |  0.00% |  0.00% )   ( 0.000641s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p7 p7_PID (&)
-24.4.0:         ( 17.296769s |  1.57% | 99.99% )   ( 16.221112s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000373s |  0.00% |  0.00% )   ( 0.000410s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000368s |  0.00% |  0.00% )   ( 0.000412s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p7
-30.5.0:         ( 0.024207s |  0.00% |  0.13% )   ( 0.024160s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p7 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p7; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024169s |  0.00% |  0.13% )   ( 0.024111s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024180s |  0.00% |  0.13% )   ( 0.024129s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024151s |  0.00% |  0.13% )   ( 0.024101s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.023941s |  0.00% |  0.13% )   ( 0.023888s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004778s |  0.00% |  0.00% )   ( 0.005389s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
-38.5.0:         ( 0.004324s |  0.00% |  0.00% )   ( 0.004900s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005568s |  0.00% |  0.00% )   ( 0.006211s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p7
-41.5.0:         ( 0.324488s |  0.02% |  0.06% )   ( 0.007507s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004965s |  0.00% |  0.00% )   ( 0.005573s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004464s |  0.00% |  0.00% )   ( 0.005041s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.004120s |  0.00% |  0.00% )   ( 0.004700s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004335s |  0.00% |  0.00% )   ( 0.004908s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.038007s |  0.00% |  0.00% )   ( 0.036113s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.004223s |  0.00% |  0.00% )   ( 0.004812s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.004028s |  0.00% |  0.00% )   ( 0.004568s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.008186s |  0.00% |  0.00% )   ( 0.004881s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.005336s |  0.00% |  0.00% )   ( 0.005943s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p7
-66.5.0:         ( 0.004300s |  0.00% |  0.00% )   ( 0.004921s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.004185s |  0.00% |  0.00% )   ( 0.004760s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.726939s |  1.52% |  3.22% )   ( 15.964596s |  1.60% |  3.28% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004219s |  0.00% |  0.02% )   ( 0.004814s |  0.00% |  0.03% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.127901s |  0.10% |  6.74% )   ( 1.050970s |  0.10% |  6.58% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.859475s |  0.16% | 11.11% )   ( 1.765045s |  0.17% | 11.05% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.629769s |  0.14% |  9.74% )   ( 1.544160s |  0.15% |  9.67% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.799733s |  0.16% | 10.75% )   ( 1.753367s |  0.17% | 10.98% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.487447s |  0.13% |  8.89% )   ( 1.472292s |  0.14% |  9.22% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 0.996731s |  0.09% |  5.95% )   ( 0.985926s |  0.09% |  6.17% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.604627s |  0.05% |  3.61% )   ( 0.564015s |  0.05% |  3.53% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.097500s |  0.10% |  6.56% )   ( 1.013694s |  0.10% |  6.34% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.556372s |  0.05% |  3.32% )   ( 0.513437s |  0.05% |  3.21% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.474764s |  0.13% |  8.81% )   ( 1.368921s |  0.13% |  8.57% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.849995s |  0.25% | 17.03% )   ( 2.781882s |  0.27% | 17.42% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.628226s |  0.05% |  3.75% )   ( 0.580354s |  0.05% |  3.63% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.610180s |  0.05% |  3.64% )   ( 0.565719s |  0.05% |  3.54% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004499s |  0.00% |  0.00% )   ( 0.005099s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.004181s |  0.00% |  0.00% )   ( 0.004762s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004433s |  0.00% |  0.00% )   ( 0.005005s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009285s |  0.00% |  0.05% )   ( 0.009368s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000094s |  0.00% |  0.00% )   ( 0.000105s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p7_PID})
-1016.3.0:       ( 17.726792s |  1.61% |  3.22% )   ( 16.907852s |  1.69% |  3.39% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p8 p8_PID >>
-1.4.0:          ( 0.000629s |  0.00% |  0.00% )   ( 0.000647s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p8 p8_PID (&)
-24.4.0:         ( 17.726077s |  1.61% | 99.99% )   ( 16.907104s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p8
-30.5.0:         ( 0.023956s |  0.00% |  0.13% )   ( 0.023913s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p8 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p8; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024082s |  0.00% |  0.13% )   ( 0.024034s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024110s |  0.00% |  0.13% )   ( 0.024062s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024100s |  0.00% |  0.13% )   ( 0.024051s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.024075s |  0.00% |  0.13% )   ( 0.024019s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004073s |  0.00% |  0.00% )   ( 0.004561s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
-38.5.0:         ( 0.003852s |  0.00% |  0.00% )   ( 0.004347s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000092s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004674s |  0.00% |  0.00% )   ( 0.005206s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p8
-41.5.0:         ( 0.341666s |  0.03% |  0.07% )   ( 0.006329s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004177s |  0.00% |  0.00% )   ( 0.004694s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003795s |  0.00% |  0.00% )   ( 0.004291s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003588s |  0.00% |  0.00% )   ( 0.004073s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004213s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.029380s |  0.00% |  0.00% )   ( 0.029693s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003559s |  0.00% |  0.00% )   ( 0.004055s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003624s |  0.00% |  0.00% )   ( 0.004069s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003621s |  0.00% |  0.00% )   ( 0.004058s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004277s |  0.00% |  0.00% )   ( 0.004791s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p8
-66.5.0:         ( 0.003703s |  0.00% |  0.00% )   ( 0.004204s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003557s |  0.00% |  0.00% )   ( 0.004044s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.165100s |  1.56% |  3.87% )   ( 16.674978s |  1.67% |  3.94% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003634s |  0.00% |  0.02% )   ( 0.004111s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.108324s |  0.10% |  6.45% )   ( 1.065401s |  0.10% |  6.38% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.995547s |  0.18% | 11.62% )   ( 1.939704s |  0.19% | 11.63% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.661171s |  0.15% |  9.67% )   ( 1.622156s |  0.16% |  9.72% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.011324s |  0.18% | 11.71% )   ( 1.937034s |  0.19% | 11.61% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.583318s |  0.14% |  9.22% )   ( 1.557956s |  0.15% |  9.34% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.035654s |  0.09% |  6.03% )   ( 1.004264s |  0.10% |  6.02% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.524261s |  0.04% |  3.05% )   ( 0.507158s |  0.05% |  3.04% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.091931s |  0.09% |  6.36% )   ( 1.046329s |  0.10% |  6.27% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.459096s |  0.04% |  2.67% )   ( 0.454623s |  0.04% |  2.72% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.434365s |  0.13% |  8.35% )   ( 1.403378s |  0.14% |  8.41% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.192732s |  0.29% | 18.60% )   ( 3.139628s |  0.31% | 18.82% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.543220s |  0.04% |  3.16% )   ( 0.508714s |  0.05% |  3.05% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.520523s |  0.04% |  3.03% )   ( 0.484522s |  0.04% |  2.90% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003770s |  0.00% |  0.00% )   ( 0.004266s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003651s |  0.00% |  0.00% )   ( 0.004135s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.005869s |  0.00% |  0.00% )   ( 0.004698s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000092s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005254s |  0.00% |  0.02% )   ( 0.005352s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p8_PID})
-1016.3.0:       ( 17.275334s |  1.57% |  3.14% )   ( 16.479366s |  1.65% |  3.30% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p9 p9_PID >>
-1.4.0:          ( 0.000661s |  0.00% |  0.00% )   ( 0.000674s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p9 p9_PID (&)
-24.4.0:         ( 17.274584s |  1.57% | 99.99% )   ( 16.478588s |  1.65% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000347s |  0.00% |  0.00% )   ( 0.000387s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000360s |  0.00% |  0.00% )   ( 0.000404s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p9
-30.5.0:         ( 0.024051s |  0.00% |  0.13% )   ( 0.024006s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p9 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p9; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024021s |  0.00% |  0.13% )   ( 0.023976s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024028s |  0.00% |  0.13% )   ( 0.023982s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024036s |  0.00% |  0.13% )   ( 0.023989s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.023917s |  0.00% |  0.13% )   ( 0.023873s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.005335s |  0.00% |  0.00% )   ( 0.005988s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   true
-38.5.0:         ( 0.004617s |  0.00% |  0.00% )   ( 0.005226s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005270s |  0.00% |  0.00% )   ( 0.005867s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p9
-41.5.0:         ( 0.273640s |  0.02% |  0.05% )   ( 0.006582s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004616s |  0.00% |  0.00% )   ( 0.005188s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004277s |  0.00% |  0.00% )   ( 0.004834s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.004150s |  0.00% |  0.00% )   ( 0.004630s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.007484s |  0.00% |  0.00% )   ( 0.005062s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.034107s |  0.00% |  0.00% )   ( 0.034551s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.004326s |  0.00% |  0.00% )   ( 0.004905s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.004350s |  0.00% |  0.00% )   ( 0.004932s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.010607s |  0.00% |  0.00% )   ( 0.005248s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.008360s |  0.00% |  0.00% )   ( 0.005975s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p9
-66.5.0:         ( 0.004244s |  0.00% |  0.00% )   ( 0.004835s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.004221s |  0.00% |  0.00% )   ( 0.004780s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.750642s |  1.52% |  3.34% )   ( 16.224955s |  1.62% |  3.39% )    	(29x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004298s |  0.00% |  0.02% )   ( 0.004902s |  0.00% |  0.03% )    	(29x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.182033s |  0.10% |  7.05% )   ( 1.097985s |  0.11% |  6.76% )    	(29x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.863494s |  0.16% | 11.12% )   ( 1.809771s |  0.18% | 11.15% )    	(29x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.671651s |  0.15% |  9.97% )   ( 1.568751s |  0.15% |  9.66% )    	(29x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.917204s |  0.17% | 11.44% )   ( 1.840556s |  0.18% | 11.34% )    	(29x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.538779s |  0.14% |  9.18% )   ( 1.514426s |  0.15% |  9.33% )    	(29x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.009809s |  0.09% |  6.02% )   ( 0.981908s |  0.09% |  6.05% )    	(29x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.562073s |  0.05% |  3.35% )   ( 0.548206s |  0.05% |  3.37% )    	(29x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.032278s |  0.09% |  6.16% )   ( 1.013171s |  0.10% |  6.24% )    	(29x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.509141s |  0.04% |  3.03% )   ( 0.499791s |  0.05% |  3.08% )    	(29x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.384912s |  0.12% |  8.26% )   ( 1.368384s |  0.13% |  8.43% )    	(29x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.913621s |  0.26% | 17.39% )   ( 2.858997s |  0.28% | 17.62% )    	(29x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.589468s |  0.05% |  3.51% )   ( 0.563863s |  0.05% |  3.47% )    	(29x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.571881s |  0.05% |  3.41% )   ( 0.554244s |  0.05% |  3.41% )    	(29x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004491s |  0.00% |  0.00% )   ( 0.005063s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003904s |  0.00% |  0.00% )   ( 0.004429s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.005534s |  0.00% |  0.00% )   ( 0.005080s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008911s |  0.00% |  0.05% )   ( 0.008997s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000089s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p9_PID})
-1016.3.0:       ( 18.014729s |  1.64% |  3.28% )   ( 17.321813s |  1.73% |  3.47% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p10 p10_PID >>
-1.4.0:          ( 0.000695s |  0.00% |  0.00% )   ( 0.000713s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p10 p10_PID (&)
-24.4.0:         ( 18.013946s |  1.64% | 99.99% )   ( 17.320998s |  1.73% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000092s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p10
-30.5.0:         ( 0.024235s |  0.00% |  0.13% )   ( 0.024065s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p10 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p10; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024101s |  0.00% |  0.13% )   ( 0.024002s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024228s |  0.00% |  0.13% )   ( 0.024074s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024119s |  0.00% |  0.13% )   ( 0.024021s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.024146s |  0.00% |  0.13% )   ( 0.023995s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003400s |  0.00% |  0.00% )   ( 0.003818s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   true
-38.5.0:         ( 0.003073s |  0.00% |  0.00% )   ( 0.003490s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003580s |  0.00% |  0.00% )   ( 0.004000s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p10
-41.5.0:         ( 0.223348s |  0.02% |  0.05% )   ( 0.004960s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003424s |  0.00% |  0.00% )   ( 0.003854s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003452s |  0.00% |  0.00% )   ( 0.003841s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.002968s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003042s |  0.00% |  0.00% )   ( 0.003434s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.026420s |  0.00% |  0.00% )   ( 0.024609s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003145s |  0.00% |  0.00% )   ( 0.003543s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.002960s |  0.00% |  0.00% )   ( 0.003353s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003051s |  0.00% |  0.00% )   ( 0.003423s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.003472s |  0.00% |  0.00% )   ( 0.003857s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p10
-66.5.0:         ( 0.002940s |  0.00% |  0.00% )   ( 0.003331s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.002835s |  0.00% |  0.00% )   ( 0.003230s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.582939s |  1.60% |  4.88% )   ( 17.104320s |  1.71% |  4.93% )    	(20x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002738s |  0.00% |  0.01% )   ( 0.003110s |  0.00% |  0.01% )    	(20x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.102712s |  0.10% |  6.27% )   ( 1.078677s |  0.10% |  6.30% )    	(20x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.131453s |  0.19% | 12.12% )   ( 2.067361s |  0.20% | 12.08% )    	(20x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.729431s |  0.15% |  9.83% )   ( 1.650723s |  0.16% |  9.65% )    	(20x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.105301s |  0.19% | 11.97% )   ( 2.050155s |  0.20% | 11.98% )    	(20x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.669457s |  0.15% |  9.49% )   ( 1.616490s |  0.16% |  9.45% )    	(20x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.022861s |  0.09% |  5.81% )   ( 1.000724s |  0.10% |  5.85% )    	(20x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.450059s |  0.04% |  2.55% )   ( 0.434537s |  0.04% |  2.54% )    	(20x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.151142s |  0.10% |  6.54% )   ( 1.076147s |  0.10% |  6.29% )    	(20x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.400815s |  0.03% |  2.27% )   ( 0.383257s |  0.03% |  2.24% )    	(20x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.414521s |  0.12% |  8.04% )   ( 1.403090s |  0.14% |  8.20% )    	(20x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.504920s |  0.31% | 19.93% )   ( 3.484209s |  0.34% | 20.37% )    	(20x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.446306s |  0.04% |  2.53% )   ( 0.436920s |  0.04% |  2.55% )    	(20x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.451223s |  0.04% |  2.56% )   ( 0.418920s |  0.04% |  2.44% )    	(20x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003064s |  0.00% |  0.00% )   ( 0.003460s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.002907s |  0.00% |  0.00% )   ( 0.003271s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003133s |  0.00% |  0.00% )   ( 0.003498s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009034s |  0.00% |  0.05% )   ( 0.009114s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p10_PID})
-1016.3.0:       ( 20.409591s |  1.86% |  3.71% )   ( 19.592455s |  1.96% |  3.93% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p11 p11_PID >>
-1.4.0:          ( 0.000702s |  0.00% |  0.00% )   ( 0.000717s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p11 p11_PID (&)
-24.4.0:         ( 20.408804s |  1.86% | 99.99% )   ( 19.591640s |  1.96% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p11
-30.5.0:         ( 0.024167s |  0.00% |  0.11% )   ( 0.024062s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p11 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p11; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024170s |  0.00% |  0.11% )   ( 0.024127s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024095s |  0.00% |  0.11% )   ( 0.024044s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024079s |  0.00% |  0.11% )   ( 0.024037s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.024197s |  0.00% |  0.11% )   ( 0.024145s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004345s |  0.00% |  0.00% )   ( 0.004873s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
-38.5.0:         ( 0.003889s |  0.00% |  0.00% )   ( 0.004400s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004671s |  0.00% |  0.00% )   ( 0.005199s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p11
-41.5.0:         ( 0.276908s |  0.02% |  0.05% )   ( 0.005801s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003903s |  0.00% |  0.00% )   ( 0.004378s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003732s |  0.00% |  0.00% )   ( 0.004223s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003618s |  0.00% |  0.00% )   ( 0.004120s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003674s |  0.00% |  0.00% )   ( 0.004147s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.031998s |  0.00% |  0.00% )   ( 0.030008s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003330s |  0.00% |  0.00% )   ( 0.003805s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003361s |  0.00% |  0.00% )   ( 0.003802s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.006809s |  0.00% |  0.00% )   ( 0.004053s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004284s |  0.00% |  0.00% )   ( 0.004792s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p11
-66.5.0:         ( 0.003504s |  0.00% |  0.00% )   ( 0.003969s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003429s |  0.00% |  0.00% )   ( 0.003895s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 19.908489s |  1.81% |  3.90% )   ( 19.360077s |  1.94% |  3.95% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003545s |  0.00% |  0.01% )   ( 0.004046s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.444368s |  0.13% |  7.25% )   ( 1.372122s |  0.13% |  7.08% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.386875s |  0.21% | 11.98% )   ( 2.268473s |  0.22% | 11.71% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.850824s |  0.16% |  9.29% )   ( 1.825053s |  0.18% |  9.42% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.271108s |  0.20% | 11.40% )   ( 2.248179s |  0.22% | 11.61% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.790188s |  0.16% |  8.99% )   ( 1.769156s |  0.17% |  9.13% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.265361s |  0.11% |  6.35% )   ( 1.226407s |  0.12% |  6.33% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.573046s |  0.05% |  2.87% )   ( 0.545353s |  0.05% |  2.81% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.319531s |  0.12% |  6.62% )   ( 1.279934s |  0.12% |  6.61% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.540491s |  0.04% |  2.71% )   ( 0.485608s |  0.04% |  2.50% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.575559s |  0.14% |  7.91% )   ( 1.548235s |  0.15% |  7.99% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.778952s |  0.34% | 18.98% )   ( 3.733474s |  0.37% | 19.28% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.558631s |  0.05% |  2.80% )   ( 0.539840s |  0.05% |  2.78% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.550010s |  0.05% |  2.76% )   ( 0.514197s |  0.05% |  2.65% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003762s |  0.00% |  0.00% )   ( 0.004247s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003536s |  0.00% |  0.00% )   ( 0.003992s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003803s |  0.00% |  0.00% )   ( 0.004232s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.006266s |  0.00% |  0.03% )   ( 0.006310s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p11_PID})
-1016.3.0:       ( 18.401341s |  1.67% |  3.35% )   ( 17.765330s |  1.78% |  3.56% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p12 p12_PID >>
-1.4.0:          ( 0.000826s |  0.00% |  0.00% )   ( 0.000461s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p12 p12_PID (&)
-24.4.0:         ( 18.400340s |  1.67% | 99.99% )   ( 17.764666s |  1.78% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p12
-30.5.0:         ( 0.046040s |  0.00% |  0.25% )   ( 0.045887s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p12 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p12; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.046317s |  0.00% |  0.25% )   ( 0.046157s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.046152s |  0.00% |  0.25% )   ( 0.046007s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.046238s |  0.00% |  0.25% )   ( 0.046085s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.046212s |  0.00% |  0.25% )   ( 0.046050s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.002994s |  0.00% |  0.00% )   ( 0.003345s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   true
-38.5.0:         ( 0.002690s |  0.00% |  0.00% )   ( 0.003042s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000138s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003358s |  0.00% |  0.00% )   ( 0.003761s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p12
-41.5.0:         ( 0.236089s |  0.02% |  0.06% )   ( 0.004469s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003052s |  0.00% |  0.00% )   ( 0.003448s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.002856s |  0.00% |  0.00% )   ( 0.003248s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.002567s |  0.00% |  0.00% )   ( 0.002940s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002871s |  0.00% |  0.00% )   ( 0.003229s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.024239s |  0.00% |  0.00% )   ( 0.022495s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.002533s |  0.00% |  0.00% )   ( 0.002879s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.002565s |  0.00% |  0.00% )   ( 0.002919s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.005397s |  0.00% |  0.00% )   ( 0.003195s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.003245s |  0.00% |  0.00% )   ( 0.003623s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p12
-66.5.0:         ( 0.005676s |  0.00% |  0.00% )   ( 0.003029s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.002581s |  0.00% |  0.00% )   ( 0.002956s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000152s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000143s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.852456s |  1.62% |  5.39% )   ( 17.450374s |  1.74% |  5.45% )    	(18x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002538s |  0.00% |  0.01% )   ( 0.002903s |  0.00% |  0.01% )    	(18x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.173266s |  0.10% |  6.57% )   ( 1.146973s |  0.11% |  6.57% )    	(18x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.165437s |  0.19% | 12.12% )   ( 2.155538s |  0.21% | 12.35% )    	(18x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.710386s |  0.15% |  9.58% )   ( 1.690444s |  0.16% |  9.68% )    	(18x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.260785s |  0.20% | 12.66% )   ( 2.169947s |  0.21% | 12.43% )    	(18x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.693558s |  0.15% |  9.48% )   ( 1.617100s |  0.16% |  9.26% )    	(18x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.026508s |  0.09% |  5.74% )   ( 0.995933s |  0.09% |  5.70% )    	(18x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.433529s |  0.03% |  2.42% )   ( 0.425822s |  0.04% |  2.44% )    	(18x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.151402s |  0.10% |  6.44% )   ( 1.134717s |  0.11% |  6.50% )    	(18x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.376088s |  0.03% |  2.10% )   ( 0.358639s |  0.03% |  2.05% )    	(18x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.433647s |  0.13% |  8.03% )   ( 1.413528s |  0.14% |  8.10% )    	(18x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.602978s |  0.32% | 20.18% )   ( 3.556266s |  0.35% | 20.37% )    	(18x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.422550s |  0.03% |  2.36% )   ( 0.402153s |  0.04% |  2.30% )    	(18x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.399784s |  0.03% |  2.23% )   ( 0.380411s |  0.03% |  2.17% )    	(18x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002594s |  0.00% |  0.00% )   ( 0.002950s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.002499s |  0.00% |  0.00% )   ( 0.002847s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.002844s |  0.00% |  0.00% )   ( 0.003216s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005019s |  0.00% |  0.02% )   ( 0.005092s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000175s |  0.00% |  0.00% )   ( 0.000203s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p12_PID})
-1016.3.0:       ( 18.925595s |  1.72% |  3.44% )   ( 18.491418s |  1.85% |  3.71% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p13 p13_PID >>
-1.4.0:          ( 0.001019s |  0.00% |  0.00% )   ( 0.001038s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p13 p13_PID (&)
-24.4.0:         ( 18.924430s |  1.72% | 99.99% )   ( 18.490211s |  1.85% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p13
-30.5.0:         ( 0.047422s |  0.00% |  0.25% )   ( 0.047256s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p13 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p13; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.040868s |  0.00% |  0.21% )   ( 0.040743s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.030030s |  0.00% |  0.15% )   ( 0.029938s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024210s |  0.00% |  0.12% )   ( 0.024150s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.024078s |  0.00% |  0.12% )   ( 0.024033s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.001667s |  0.00% |  0.00% )   ( 0.001894s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   true
-38.5.0:         ( 0.001682s |  0.00% |  0.00% )   ( 0.001904s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.001907s |  0.00% |  0.00% )   ( 0.002123s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p13
-41.5.0:         ( 0.095027s |  0.00% |  0.04% )   ( 0.002321s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.001702s |  0.00% |  0.00% )   ( 0.001927s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.001396s |  0.00% |  0.00% )   ( 0.001587s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.001344s |  0.00% |  0.00% )   ( 0.001529s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.001514s |  0.00% |  0.00% )   ( 0.001712s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.011435s |  0.00% |  0.00% )   ( 0.011608s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.001364s |  0.00% |  0.00% )   ( 0.001555s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.001400s |  0.00% |  0.00% )   ( 0.001579s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.001487s |  0.00% |  0.00% )   ( 0.001667s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.001735s |  0.00% |  0.00% )   ( 0.001929s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p13
-66.5.0:         ( 0.001384s |  0.00% |  0.00% )   ( 0.001593s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.001376s |  0.00% |  0.00% )   ( 0.001564s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000133s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 18.617089s |  1.69% |  9.83% )   ( 18.272462s |  1.83% |  9.88% )    	(10x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.001386s |  0.00% |  0.00% )   ( 0.001585s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.158301s |  0.10% |  6.22% )   ( 1.152009s |  0.11% |  6.30% )    	(10x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.392686s |  0.21% | 12.85% )   ( 2.373225s |  0.23% | 12.98% )    	(10x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.768380s |  0.16% |  9.49% )   ( 1.732146s |  0.17% |  9.47% )    	(10x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.384914s |  0.21% | 12.81% )   ( 2.362771s |  0.23% | 12.93% )    	(10x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.793023s |  0.16% |  9.63% )   ( 1.723074s |  0.17% |  9.42% )    	(10x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 0.990451s |  0.09% |  5.32% )   ( 0.987849s |  0.09% |  5.40% )    	(10x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.330085s |  0.03% |  1.77% )   ( 0.315292s |  0.03% |  1.72% )    	(10x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.198459s |  0.10% |  6.43% )   ( 1.177730s |  0.11% |  6.44% )    	(10x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.270887s |  0.02% |  1.45% )   ( 0.262182s |  0.02% |  1.43% )    	(10x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.476273s |  0.13% |  7.92% )   ( 1.451856s |  0.14% |  7.94% )    	(10x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 4.262081s |  0.38% | 22.89% )   ( 4.177629s |  0.41% | 22.86% )    	(10x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.305747s |  0.02% |  1.64% )   ( 0.296543s |  0.02% |  1.62% )    	(10x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.284416s |  0.02% |  1.52% )   ( 0.258571s |  0.02% |  1.41% )    	(10x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.001603s |  0.00% |  0.00% )   ( 0.001821s |  0.00% |  0.00% )    	(10x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.001274s |  0.00% |  0.00% )   ( 0.001443s |  0.00% |  0.00% )    	(9x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.001409s |  0.00% |  0.00% )   ( 0.001589s |  0.00% |  0.00% )    	(9x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008792s |  0.00% |  0.04% )   ( 0.008871s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000146s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p13_PID})
-1016.3.0:       ( 17.422074s |  1.58% |  3.17% )   ( 16.422235s |  1.64% |  3.29% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p14 p14_PID >>
-1.4.0:          ( 0.000967s |  0.00% |  0.00% )   ( 0.000362s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p14 p14_PID (&)
-24.4.0:         ( 17.420958s |  1.58% | 99.99% )   ( 16.421710s |  1.64% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p14
-30.5.0:         ( 0.026930s |  0.00% |  0.15% )   ( 0.026858s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p14 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p14; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024111s |  0.00% |  0.13% )   ( 0.024052s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.029287s |  0.00% |  0.16% )   ( 0.029196s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.027033s |  0.00% |  0.15% )   ( 0.026966s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.026417s |  0.00% |  0.15% )   ( 0.026336s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004962s |  0.00% |  0.00% )   ( 0.005565s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
-38.5.0:         ( 0.004515s |  0.00% |  0.00% )   ( 0.005107s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005450s |  0.00% |  0.00% )   ( 0.006102s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p14
-41.5.0:         ( 0.288795s |  0.02% |  0.05% )   ( 0.006859s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004481s |  0.00% |  0.00% )   ( 0.005048s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004239s |  0.00% |  0.00% )   ( 0.004799s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003832s |  0.00% |  0.00% )   ( 0.004377s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004204s |  0.00% |  0.00% )   ( 0.004732s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.034550s |  0.00% |  0.00% )   ( 0.034030s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003973s |  0.00% |  0.00% )   ( 0.004483s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003813s |  0.00% |  0.00% )   ( 0.004325s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.004230s |  0.00% |  0.00% )   ( 0.004678s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004748s |  0.00% |  0.00% )   ( 0.005287s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p14
-66.5.0:         ( 0.003894s |  0.00% |  0.00% )   ( 0.004419s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003918s |  0.00% |  0.00% )   ( 0.004477s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.889204s |  1.53% |  3.46% )   ( 16.163805s |  1.62% |  3.51% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004077s |  0.00% |  0.02% )   ( 0.004638s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.117442s |  0.10% |  6.61% )   ( 1.070462s |  0.10% |  6.62% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.953343s |  0.17% | 11.56% )   ( 1.819545s |  0.18% | 11.25% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.568337s |  0.14% |  9.28% )   ( 1.533608s |  0.15% |  9.48% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.904192s |  0.17% | 11.27% )   ( 1.827162s |  0.18% | 11.30% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.554489s |  0.14% |  9.20% )   ( 1.504795s |  0.15% |  9.30% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.023080s |  0.09% |  6.05% )   ( 0.983802s |  0.09% |  6.08% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.556433s |  0.05% |  3.29% )   ( 0.546982s |  0.05% |  3.38% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.058369s |  0.09% |  6.26% )   ( 1.023528s |  0.10% |  6.33% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.528122s |  0.04% |  3.12% )   ( 0.487499s |  0.04% |  3.01% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.435403s |  0.13% |  8.49% )   ( 1.359056s |  0.13% |  8.40% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.023193s |  0.27% | 17.90% )   ( 2.916383s |  0.29% | 18.04% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.606947s |  0.05% |  3.59% )   ( 0.550603s |  0.05% |  3.40% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.555777s |  0.05% |  3.29% )   ( 0.535742s |  0.05% |  3.31% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004204s |  0.00% |  0.00% )   ( 0.004768s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003873s |  0.00% |  0.00% )   ( 0.004397s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004327s |  0.00% |  0.00% )   ( 0.004873s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000103s |  0.00% |  0.00% )   ( 0.000118s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005012s |  0.00% |  0.02% )   ( 0.005078s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000149s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p14_PID})
-1016.3.0:       ( 20.355662s |  1.85% |  3.70% )   ( 19.355566s |  1.94% |  3.88% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p15 p15_PID >>
-1.4.0:          ( 0.001022s |  0.00% |  0.00% )   ( 0.001046s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p15 p15_PID (&)
-24.4.0:         ( 20.354494s |  1.85% | 99.99% )   ( 19.354352s |  1.94% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p15
-30.5.0:         ( 0.044207s |  0.00% |  0.21% )   ( 0.044065s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p15 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p15; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.044763s |  0.00% |  0.21% )   ( 0.044629s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.045091s |  0.00% |  0.22% )   ( 0.044944s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.028816s |  0.00% |  0.14% )   ( 0.028749s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.046878s |  0.00% |  0.23% )   ( 0.046723s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004375s |  0.00% |  0.00% )   ( 0.004921s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
-38.5.0:         ( 0.003986s |  0.00% |  0.00% )   ( 0.004522s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000143s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004643s |  0.00% |  0.00% )   ( 0.005160s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p15
-41.5.0:         ( 0.301694s |  0.02% |  0.05% )   ( 0.006255s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004276s |  0.00% |  0.00% )   ( 0.004808s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003961s |  0.00% |  0.00% )   ( 0.004465s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003678s |  0.00% |  0.00% )   ( 0.004165s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003792s |  0.00% |  0.00% )   ( 0.004296s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.034411s |  0.00% |  0.00% )   ( 0.031811s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003871s |  0.00% |  0.00% )   ( 0.004418s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003831s |  0.00% |  0.00% )   ( 0.004343s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.004013s |  0.00% |  0.00% )   ( 0.004531s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004579s |  0.00% |  0.00% )   ( 0.005115s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p15
-66.5.0:         ( 0.006738s |  0.00% |  0.00% )   ( 0.004232s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003619s |  0.00% |  0.00% )   ( 0.004131s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000138s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 19.735228s |  1.79% |  3.72% )   ( 19.028298s |  1.90% |  3.78% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003851s |  0.00% |  0.01% )   ( 0.004381s |  0.00% |  0.02% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.452383s |  0.13% |  7.35% )   ( 1.383147s |  0.13% |  7.26% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.361720s |  0.21% | 11.96% )   ( 2.322531s |  0.23% | 12.20% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.829364s |  0.16% |  9.26% )   ( 1.762629s |  0.17% |  9.26% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.276076s |  0.20% | 11.53% )   ( 2.164502s |  0.21% | 11.37% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.764341s |  0.16% |  8.94% )   ( 1.723234s |  0.17% |  9.05% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.238227s |  0.11% |  6.27% )   ( 1.219138s |  0.12% |  6.40% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.593244s |  0.05% |  3.00% )   ( 0.564583s |  0.05% |  2.96% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.317100s |  0.12% |  6.67% )   ( 1.254330s |  0.12% |  6.59% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.539299s |  0.04% |  2.73% )   ( 0.478631s |  0.04% |  2.51% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.565438s |  0.14% |  7.93% )   ( 1.533378s |  0.15% |  8.05% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.672679s |  0.33% | 18.60% )   ( 3.556415s |  0.35% | 18.69% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.581759s |  0.05% |  2.94% )   ( 0.547630s |  0.05% |  2.87% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.539747s |  0.04% |  2.73% )   ( 0.513769s |  0.05% |  2.70% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003807s |  0.00% |  0.00% )   ( 0.004323s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004225s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004243s |  0.00% |  0.00% )   ( 0.004719s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005010s |  0.00% |  0.02% )   ( 0.005089s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000146s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p15_PID})
-1016.3.0:       ( 17.893767s |  1.63% |  3.25% )   ( 16.896832s |  1.69% |  3.39% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p16 p16_PID >>
-1.4.0:          ( 0.001028s |  0.00% |  0.00% )   ( 0.001052s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p16 p16_PID (&)
-24.4.0:         ( 17.892596s |  1.63% | 99.99% )   ( 16.895614s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000175s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000209s |  0.00% |  0.00% )   ( 0.000232s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p16
-30.5.0:         ( 0.042369s |  0.00% |  0.23% )   ( 0.042232s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p16 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p16; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.030808s |  0.00% |  0.17% )   ( 0.030717s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.024253s |  0.00% |  0.13% )   ( 0.024200s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.024302s |  0.00% |  0.13% )   ( 0.024246s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.035532s |  0.00% |  0.19% )   ( 0.035425s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004420s |  0.00% |  0.00% )   ( 0.004930s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
-38.5.0:         ( 0.003851s |  0.00% |  0.00% )   ( 0.004361s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004901s |  0.00% |  0.00% )   ( 0.005417s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p16
-41.5.0:         ( 0.382083s |  0.03% |  0.07% )   ( 0.006280s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004157s |  0.00% |  0.00% )   ( 0.004665s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004057s |  0.00% |  0.00% )   ( 0.004578s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003694s |  0.00% |  0.00% )   ( 0.004213s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003901s |  0.00% |  0.00% )   ( 0.004415s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.034595s |  0.00% |  0.00% )   ( 0.032127s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003924s |  0.00% |  0.00% )   ( 0.004444s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003757s |  0.00% |  0.00% )   ( 0.004244s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.006814s |  0.00% |  0.00% )   ( 0.004647s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004598s |  0.00% |  0.00% )   ( 0.005137s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p16
-66.5.0:         ( 0.003771s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003809s |  0.00% |  0.00% )   ( 0.004342s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000133s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.245034s |  1.57% |  3.70% )   ( 16.620954s |  1.66% |  3.78% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003610s |  0.00% |  0.02% )   ( 0.004140s |  0.00% |  0.02% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.143094s |  0.10% |  6.62% )   ( 1.112963s |  0.11% |  6.69% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.066560s |  0.18% | 11.98% )   ( 1.980337s |  0.19% | 11.91% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.607343s |  0.14% |  9.32% )   ( 1.579989s |  0.15% |  9.50% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.049494s |  0.18% | 11.88% )   ( 1.901388s |  0.19% | 11.43% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.586611s |  0.14% |  9.20% )   ( 1.549671s |  0.15% |  9.32% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.031161s |  0.09% |  5.97% )   ( 1.011604s |  0.10% |  6.08% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.575657s |  0.05% |  3.33% )   ( 0.524705s |  0.05% |  3.15% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.077681s |  0.09% |  6.24% )   ( 1.048460s |  0.10% |  6.30% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.509937s |  0.04% |  2.95% )   ( 0.453686s |  0.04% |  2.72% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.412450s |  0.12% |  8.19% )   ( 1.371282s |  0.13% |  8.25% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.099160s |  0.28% | 17.97% )   ( 3.064574s |  0.30% | 18.43% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.552646s |  0.05% |  3.20% )   ( 0.518388s |  0.05% |  3.11% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.529630s |  0.04% |  3.07% )   ( 0.499767s |  0.05% |  3.00% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003898s |  0.00% |  0.00% )   ( 0.004418s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003685s |  0.00% |  0.00% )   ( 0.004192s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004177s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005061s |  0.00% |  0.02% )   ( 0.005132s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000143s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p16_PID})
-1016.3.0:       ( 17.167813s |  1.56% |  3.12% )   ( 16.128765s |  1.61% |  3.23% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p17 p17_PID >>
-1.4.0:          ( 0.001038s |  0.00% |  0.00% )   ( 0.001061s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p17 p17_PID (&)
-24.4.0:         ( 17.166627s |  1.56% | 99.99% )   ( 16.127533s |  1.61% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000108s |  0.00% |  0.00% )   ( 0.000122s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p17
-30.5.0:         ( 0.026955s |  0.00% |  0.15% )   ( 0.026867s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p17 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p17; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.028672s |  0.00% |  0.16% )   ( 0.028593s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.029650s |  0.00% |  0.17% )   ( 0.029561s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.026989s |  0.00% |  0.15% )   ( 0.026914s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.030843s |  0.00% |  0.17% )   ( 0.030742s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004823s |  0.00% |  0.00% )   ( 0.005344s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
-38.5.0:         ( 0.004282s |  0.00% |  0.00% )   ( 0.004855s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000152s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005257s |  0.00% |  0.00% )   ( 0.005824s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p17
-41.5.0:         ( 0.322412s |  0.02% |  0.06% )   ( 0.006788s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004605s |  0.00% |  0.00% )   ( 0.005186s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004209s |  0.00% |  0.00% )   ( 0.004773s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003962s |  0.00% |  0.00% )   ( 0.004506s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004352s |  0.00% |  0.00% )   ( 0.004817s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.033857s |  0.00% |  0.00% )   ( 0.034299s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.004253s |  0.00% |  0.00% )   ( 0.004747s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.004060s |  0.00% |  0.00% )   ( 0.004594s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.009787s |  0.00% |  0.00% )   ( 0.004922s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.005143s |  0.00% |  0.00% )   ( 0.005746s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p17
-66.5.0:         ( 0.004088s |  0.00% |  0.00% )   ( 0.004612s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003860s |  0.00% |  0.00% )   ( 0.004392s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.581945s |  1.51% |  3.57% )   ( 15.855187s |  1.58% |  3.64% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004079s |  0.00% |  0.02% )   ( 0.004626s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.151566s |  0.10% |  6.94% )   ( 1.063896s |  0.10% |  6.71% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.860719s |  0.16% | 11.22% )   ( 1.781973s |  0.17% | 11.23% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.596187s |  0.14% |  9.62% )   ( 1.529533s |  0.15% |  9.64% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.825308s |  0.16% | 11.00% )   ( 1.777420s |  0.17% | 11.21% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.520199s |  0.13% |  9.16% )   ( 1.464944s |  0.14% |  9.23% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 0.997502s |  0.09% |  6.01% )   ( 0.968759s |  0.09% |  6.11% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.569031s |  0.05% |  3.43% )   ( 0.545363s |  0.05% |  3.43% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.036970s |  0.09% |  6.25% )   ( 0.999516s |  0.10% |  6.30% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.497881s |  0.04% |  3.00% )   ( 0.470908s |  0.04% |  2.97% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.450968s |  0.13% |  8.75% )   ( 1.340816s |  0.13% |  8.45% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.892165s |  0.26% | 17.44% )   ( 2.842150s |  0.28% | 17.92% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.599399s |  0.05% |  3.61% )   ( 0.542697s |  0.05% |  3.42% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.579971s |  0.05% |  3.49% )   ( 0.522586s |  0.05% |  3.29% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004194s |  0.00% |  0.00% )   ( 0.004736s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003712s |  0.00% |  0.00% )   ( 0.004234s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004145s |  0.00% |  0.00% )   ( 0.004650s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009262s |  0.00% |  0.05% )   ( 0.009160s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000148s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p17_PID})
-1016.3.0:       ( 18.956654s |  1.72% |  3.45% )   ( 18.098688s |  1.81% |  3.63% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p18 p18_PID >>
-1.4.0:          ( 0.001054s |  0.00% |  0.00% )   ( 0.001075s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p18 p18_PID (&)
-24.4.0:         ( 18.955447s |  1.72% | 99.99% )   ( 18.097438s |  1.81% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000193s |  0.00% |  0.00% )   ( 0.000220s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000117s |  0.00% |  0.00% )   ( 0.000134s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p18
-30.5.0:         ( 0.044425s |  0.00% |  0.23% )   ( 0.044139s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p18 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p18; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.050372s |  0.00% |  0.26% )   ( 0.050008s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.040616s |  0.00% |  0.21% )   ( 0.040321s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.046343s |  0.00% |  0.24% )   ( 0.045955s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.041376s |  0.00% |  0.21% )   ( 0.041110s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003990s |  0.00% |  0.00% )   ( 0.004484s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   true
-38.5.0:         ( 0.003608s |  0.00% |  0.00% )   ( 0.004064s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000222s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004461s |  0.00% |  0.00% )   ( 0.004962s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p18
-41.5.0:         ( 0.434143s |  0.03% |  0.09% )   ( 0.006432s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003962s |  0.00% |  0.00% )   ( 0.004449s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003567s |  0.00% |  0.00% )   ( 0.004030s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003383s |  0.00% |  0.00% )   ( 0.003846s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003663s |  0.00% |  0.00% )   ( 0.004105s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.028179s |  0.00% |  0.00% )   ( 0.028492s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003647s |  0.00% |  0.00% )   ( 0.004129s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003579s |  0.00% |  0.00% )   ( 0.004040s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003682s |  0.00% |  0.00% )   ( 0.004153s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004121s |  0.00% |  0.00% )   ( 0.004593s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p18
-66.5.0:         ( 0.003378s |  0.00% |  0.00% )   ( 0.003837s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003134s |  0.00% |  0.00% )   ( 0.003579s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000180s |  0.00% |  0.00% )   ( 0.000212s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 18.205380s |  1.65% |  4.17% )   ( 17.768687s |  1.78% |  4.26% )    	(23x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003285s |  0.00% |  0.01% )   ( 0.003750s |  0.00% |  0.02% )    	(23x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.292514s |  0.11% |  7.09% )   ( 1.239192s |  0.12% |  6.97% )    	(23x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.332669s |  0.21% | 12.81% )   ( 2.278656s |  0.22% | 12.82% )    	(23x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.816359s |  0.16% |  9.97% )   ( 1.794481s |  0.17% | 10.09% )    	(23x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.209241s |  0.20% | 12.13% )   ( 2.162339s |  0.21% | 12.16% )    	(23x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.784643s |  0.16% |  9.80% )   ( 1.745969s |  0.17% |  9.82% )    	(23x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.133891s |  0.10% |  6.22% )   ( 1.119037s |  0.11% |  6.29% )    	(23x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.512835s |  0.04% |  2.81% )   ( 0.497809s |  0.04% |  2.80% )    	(23x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.243571s |  0.11% |  6.83% )   ( 1.194397s |  0.11% |  6.72% )    	(23x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.450033s |  0.04% |  2.47% )   ( 0.439313s |  0.04% |  2.47% )    	(23x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.540424s |  0.14% |  8.46% )   ( 1.529817s |  0.15% |  8.60% )    	(23x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.888516s |  0.26% | 15.86% )   ( 2.824321s |  0.28% | 15.89% )    	(23x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.514431s |  0.04% |  2.82% )   ( 0.480149s |  0.04% |  2.70% )    	(23x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.482968s |  0.04% |  2.65% )   ( 0.459457s |  0.04% |  2.58% )    	(23x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003385s |  0.00% |  0.00% )   ( 0.003840s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003128s |  0.00% |  0.00% )   ( 0.003554s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003544s |  0.00% |  0.00% )   ( 0.003969s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004951s |  0.00% |  0.02% )   ( 0.005022s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000153s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p18_PID})
-1016.3.0:       ( 17.822163s |  1.62% |  3.24% )   ( 16.594382s |  1.66% |  3.33% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p19 p19_PID >>
-1.4.0:          ( 0.001011s |  0.00% |  0.00% )   ( 0.000389s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p19 p19_PID (&)
-24.4.0:         ( 17.821002s |  1.62% | 99.99% )   ( 16.593822s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000116s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000114s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p19
-30.5.0:         ( 0.037436s |  0.00% |  0.21% )   ( 0.037305s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p19 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p19; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.028189s |  0.00% |  0.15% )   ( 0.028095s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.032522s |  0.00% |  0.18% )   ( 0.032394s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.040363s |  0.00% |  0.22% )   ( 0.040214s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.043621s |  0.00% |  0.24% )   ( 0.043451s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004919s |  0.00% |  0.00% )   ( 0.005503s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
-38.5.0:         ( 0.004311s |  0.00% |  0.00% )   ( 0.004872s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000171s |  0.00% |  0.00% )   ( 0.000192s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005311s |  0.00% |  0.00% )   ( 0.005912s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p19
-41.5.0:         ( 0.441037s |  0.04% |  0.08% )   ( 0.007253s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004961s |  0.00% |  0.00% )   ( 0.005546s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004232s |  0.00% |  0.00% )   ( 0.004789s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.004096s |  0.00% |  0.00% )   ( 0.004664s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004688s |  0.00% |  0.00% )   ( 0.004969s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035123s |  0.00% |  0.00% )   ( 0.035431s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.004319s |  0.00% |  0.00% )   ( 0.004896s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.004162s |  0.00% |  0.00% )   ( 0.004711s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.007674s |  0.00% |  0.00% )   ( 0.005102s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.005111s |  0.00% |  0.00% )   ( 0.005716s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p19
-66.5.0:         ( 0.004142s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003979s |  0.00% |  0.00% )   ( 0.004533s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.082046s |  1.55% |  3.42% )   ( 16.283125s |  1.63% |  3.50% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004346s |  0.00% |  0.02% )   ( 0.004951s |  0.00% |  0.03% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.162082s |  0.10% |  6.80% )   ( 1.114243s |  0.11% |  6.84% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.901651s |  0.17% | 11.13% )   ( 1.873953s |  0.18% | 11.50% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.610244s |  0.14% |  9.42% )   ( 1.555186s |  0.15% |  9.55% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.832265s |  0.16% | 10.72% )   ( 1.803909s |  0.18% | 11.07% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.595445s |  0.14% |  9.33% )   ( 1.499545s |  0.15% |  9.20% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.061573s |  0.09% |  6.21% )   ( 1.021668s |  0.10% |  6.27% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.590868s |  0.05% |  3.45% )   ( 0.549209s |  0.05% |  3.37% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.102321s |  0.10% |  6.45% )   ( 1.042754s |  0.10% |  6.40% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.536901s |  0.04% |  3.14% )   ( 0.483325s |  0.04% |  2.96% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.432371s |  0.13% |  8.38% )   ( 1.368904s |  0.13% |  8.40% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.045713s |  0.27% | 17.82% )   ( 2.880994s |  0.28% | 17.69% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.592355s |  0.05% |  3.46% )   ( 0.555623s |  0.05% |  3.41% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.613911s |  0.05% |  3.59% )   ( 0.528861s |  0.05% |  3.24% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004241s |  0.00% |  0.00% )   ( 0.004805s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003975s |  0.00% |  0.00% )   ( 0.004527s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004381s |  0.00% |  0.00% )   ( 0.004914s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000082s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004935s |  0.00% |  0.02% )   ( 0.005006s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p19_PID})
-1016.3.0:       ( 20.000181s |  1.82% |  3.64% )   ( 19.257299s |  1.93% |  3.86% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p20 p20_PID >>
-1.4.0:          ( 0.001056s |  0.00% |  0.00% )   ( 0.001078s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p20 p20_PID (&)
-24.4.0:         ( 19.998974s |  1.82% | 99.99% )   ( 19.256047s |  1.93% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000184s |  0.00% |  0.00% )   ( 0.000196s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000112s |  0.00% |  0.00% )   ( 0.000122s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p20
-30.5.0:         ( 0.032480s |  0.00% |  0.16% )   ( 0.032339s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p20 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p20; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.042694s |  0.00% |  0.21% )   ( 0.042544s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.047201s |  0.00% |  0.23% )   ( 0.047020s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.050544s |  0.00% |  0.25% )   ( 0.050366s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.053221s |  0.00% |  0.26% )   ( 0.053041s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003316s |  0.00% |  0.00% )   ( 0.003733s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   true
-38.5.0:         ( 0.002900s |  0.00% |  0.00% )   ( 0.003268s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003441s |  0.00% |  0.00% )   ( 0.003843s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p20
-41.5.0:         ( 0.289530s |  0.02% |  0.07% )   ( 0.004948s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003282s |  0.00% |  0.00% )   ( 0.003704s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003046s |  0.00% |  0.00% )   ( 0.003424s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.002723s |  0.00% |  0.00% )   ( 0.003093s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002837s |  0.00% |  0.00% )   ( 0.003192s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.025080s |  0.00% |  0.00% )   ( 0.022349s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.002690s |  0.00% |  0.00% )   ( 0.003037s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.002793s |  0.00% |  0.00% )   ( 0.003160s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.002854s |  0.00% |  0.00% )   ( 0.003223s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.003440s |  0.00% |  0.00% )   ( 0.003831s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p20
-66.5.0:         ( 0.002840s |  0.00% |  0.00% )   ( 0.003220s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.002816s |  0.00% |  0.00% )   ( 0.003194s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 19.401521s |  1.76% |  5.10% )   ( 18.943473s |  1.89% |  5.17% )    	(19x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002882s |  0.00% |  0.01% )   ( 0.003183s |  0.00% |  0.01% )    	(19x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.404087s |  0.12% |  7.23% )   ( 1.356978s |  0.13% |  7.16% )    	(19x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.620782s |  0.23% | 13.50% )   ( 2.557858s |  0.25% | 13.50% )    	(19x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.986761s |  0.18% | 10.24% )   ( 1.955110s |  0.19% | 10.32% )    	(19x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.597113s |  0.23% | 13.38% )   ( 2.544080s |  0.25% | 13.42% )    	(19x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.937494s |  0.17% |  9.98% )   ( 1.912050s |  0.19% | 10.09% )    	(19x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.223671s |  0.11% |  6.30% )   ( 1.173751s |  0.11% |  6.19% )    	(19x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.454282s |  0.04% |  2.34% )   ( 0.454383s |  0.04% |  2.39% )    	(19x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.280352s |  0.11% |  6.59% )   ( 1.260821s |  0.12% |  6.65% )    	(19x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.387649s |  0.03% |  1.99% )   ( 0.377582s |  0.03% |  1.99% )    	(19x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.412831s |  0.12% |  7.28% )   ( 1.329910s |  0.13% |  7.02% )    	(19x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.225882s |  0.29% | 16.62% )   ( 3.184957s |  0.31% | 16.81% )    	(19x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.442517s |  0.04% |  2.28% )   ( 0.436136s |  0.04% |  2.30% )    	(19x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.425218s |  0.03% |  2.19% )   ( 0.396674s |  0.03% |  2.09% )    	(19x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002752s |  0.00% |  0.00% )   ( 0.003105s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.002614s |  0.00% |  0.00% )   ( 0.002992s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.005952s |  0.00% |  0.00% )   ( 0.003303s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005057s |  0.00% |  0.02% )   ( 0.005128s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p20_PID})
-1016.3.0:       ( 19.074635s |  1.73% |  3.47% )   ( 18.045811s |  1.80% |  3.62% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p21 p21_PID >>
-1.4.0:          ( 0.001076s |  0.00% |  0.00% )   ( 0.001097s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p21 p21_PID (&)
-24.4.0:         ( 19.073408s |  1.73% | 99.99% )   ( 18.044540s |  1.80% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000187s |  0.00% |  0.00% )   ( 0.000214s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000108s |  0.00% |  0.00% )   ( 0.000121s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p21
-30.5.0:         ( 0.048241s |  0.00% |  0.25% )   ( 0.043998s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p21 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p21; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.040109s |  0.00% |  0.21% )   ( 0.039951s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.027438s |  0.00% |  0.14% )   ( 0.027373s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.050307s |  0.00% |  0.26% )   ( 0.050120s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.049981s |  0.00% |  0.26% )   ( 0.049809s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004567s |  0.00% |  0.00% )   ( 0.005117s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
-38.5.0:         ( 0.004211s |  0.00% |  0.00% )   ( 0.004754s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004931s |  0.00% |  0.00% )   ( 0.005472s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p21
-41.5.0:         ( 0.316144s |  0.02% |  0.05% )   ( 0.006761s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004599s |  0.00% |  0.00% )   ( 0.005155s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004234s |  0.00% |  0.00% )   ( 0.004832s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003994s |  0.00% |  0.00% )   ( 0.004540s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004253s |  0.00% |  0.00% )   ( 0.004792s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035021s |  0.00% |  0.00% )   ( 0.035442s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003961s |  0.00% |  0.00% )   ( 0.004480s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003975s |  0.00% |  0.00% )   ( 0.004522s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.008410s |  0.00% |  0.00% )   ( 0.004884s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004885s |  0.00% |  0.00% )   ( 0.005473s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p21
-66.5.0:         ( 0.003952s |  0.00% |  0.00% )   ( 0.004493s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003800s |  0.00% |  0.00% )   ( 0.004329s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 18.426510s |  1.67% |  3.57% )   ( 17.706524s |  1.77% |  3.63% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004104s |  0.00% |  0.02% )   ( 0.004674s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.348151s |  0.12% |  7.31% )   ( 1.261282s |  0.12% |  7.12% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.162338s |  0.19% | 11.73% )   ( 2.083870s |  0.20% | 11.76% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.793229s |  0.16% |  9.73% )   ( 1.681236s |  0.16% |  9.49% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.087394s |  0.19% | 11.32% )   ( 1.991265s |  0.19% | 11.24% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.669637s |  0.15% |  9.06% )   ( 1.604234s |  0.16% |  9.06% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.158111s |  0.10% |  6.28% )   ( 1.116488s |  0.11% |  6.30% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.569338s |  0.05% |  3.08% )   ( 0.552739s |  0.05% |  3.12% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.208324s |  0.11% |  6.55% )   ( 1.151082s |  0.11% |  6.50% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.512437s |  0.04% |  2.78% )   ( 0.487236s |  0.04% |  2.75% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.507753s |  0.13% |  8.18% )   ( 1.469252s |  0.14% |  8.29% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.284587s |  0.29% | 17.82% )   ( 3.214973s |  0.32% | 18.15% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.576365s |  0.05% |  3.12% )   ( 0.554109s |  0.05% |  3.12% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.544742s |  0.04% |  2.95% )   ( 0.534084s |  0.05% |  3.01% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003933s |  0.00% |  0.00% )   ( 0.004470s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003805s |  0.00% |  0.00% )   ( 0.004330s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004334s |  0.00% |  0.00% )   ( 0.004866s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.006491s |  0.00% |  0.03% )   ( 0.006552s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p21_PID})
-1016.3.0:       ( 17.795061s |  1.62% |  3.24% )   ( 16.879983s |  1.69% |  3.38% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p22 p22_PID >>
-1.4.0:          ( 0.000958s |  0.00% |  0.00% )   ( 0.000983s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p22 p22_PID (&)
-24.4.0:         ( 17.793930s |  1.62% | 99.99% )   ( 16.878798s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000194s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p22
-30.5.0:         ( 0.046139s |  0.00% |  0.25% )   ( 0.045973s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p22 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p22; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.046122s |  0.00% |  0.25% )   ( 0.045951s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.045977s |  0.00% |  0.25% )   ( 0.045798s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.045696s |  0.00% |  0.25% )   ( 0.045527s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.047395s |  0.00% |  0.26% )   ( 0.047220s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003825s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   true
-38.5.0:         ( 0.003439s |  0.00% |  0.00% )   ( 0.003885s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000192s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004076s |  0.00% |  0.00% )   ( 0.004533s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p22
-41.5.0:         ( 0.311752s |  0.02% |  0.07% )   ( 0.005616s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003731s |  0.00% |  0.00% )   ( 0.004192s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003448s |  0.00% |  0.00% )   ( 0.003871s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003063s |  0.00% |  0.00% )   ( 0.003475s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003267s |  0.00% |  0.00% )   ( 0.003698s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.026423s |  0.00% |  0.00% )   ( 0.026769s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003061s |  0.00% |  0.00% )   ( 0.003462s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003064s |  0.00% |  0.00% )   ( 0.003489s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003251s |  0.00% |  0.00% )   ( 0.003668s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.003706s |  0.00% |  0.00% )   ( 0.004123s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p22
-66.5.0:         ( 0.006095s |  0.00% |  0.00% )   ( 0.003518s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003002s |  0.00% |  0.00% )   ( 0.003407s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.156748s |  1.56% |  4.59% )   ( 16.545701s |  1.65% |  4.66% )    	(21x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003098s |  0.00% |  0.01% )   ( 0.003533s |  0.00% |  0.02% )    	(21x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.183532s |  0.10% |  6.89% )   ( 1.091775s |  0.10% |  6.59% )    	(21x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.992872s |  0.18% | 11.61% )   ( 1.939591s |  0.19% | 11.72% )    	(21x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.617815s |  0.14% |  9.42% )   ( 1.561813s |  0.15% |  9.43% )    	(21x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.087995s |  0.19% | 12.17% )   ( 1.950880s |  0.19% | 11.79% )    	(21x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.605908s |  0.14% |  9.36% )   ( 1.531404s |  0.15% |  9.25% )    	(21x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.001721s |  0.09% |  5.83% )   ( 0.988297s |  0.09% |  5.97% )    	(21x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.477560s |  0.04% |  2.78% )   ( 0.455915s |  0.04% |  2.75% )    	(21x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.094706s |  0.09% |  6.38% )   ( 1.066297s |  0.10% |  6.44% )    	(21x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.405069s |  0.03% |  2.36% )   ( 0.393851s |  0.03% |  2.38% )    	(21x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.405985s |  0.12% |  8.19% )   ( 1.373725s |  0.13% |  8.30% )    	(21x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.335244s |  0.30% | 19.43% )   ( 3.303496s |  0.33% | 19.96% )    	(21x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.483038s |  0.04% |  2.81% )   ( 0.457684s |  0.04% |  2.76% )    	(21x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.462205s |  0.04% |  2.69% )   ( 0.427440s |  0.04% |  2.58% )    	(21x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003260s |  0.00% |  0.00% )   ( 0.003697s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.004521s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003202s |  0.00% |  0.00% )   ( 0.003607s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000136s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008199s |  0.00% |  0.04% )   ( 0.008281s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000173s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p22_PID})
-1016.3.0:       ( 17.123559s |  1.56% |  3.11% )   ( 16.242292s |  1.62% |  3.26% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p23 p23_PID >>
-1.4.0:          ( 0.001115s |  0.00% |  0.00% )   ( 0.001137s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p23 p23_PID (&)
-24.4.0:         ( 17.122290s |  1.56% | 99.99% )   ( 16.240978s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000173s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000168s |  0.00% |  0.00% )   ( 0.000189s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p23
-30.5.0:         ( 0.046134s |  0.00% |  0.26% )   ( 0.045965s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p23 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p23; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.046197s |  0.00% |  0.26% )   ( 0.045993s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.046150s |  0.00% |  0.26% )   ( 0.045983s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.045930s |  0.00% |  0.26% )   ( 0.045761s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.045971s |  0.00% |  0.26% )   ( 0.045792s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004232s |  0.00% |  0.00% )   ( 0.004709s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
-38.5.0:         ( 0.003753s |  0.00% |  0.00% )   ( 0.004243s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004640s |  0.00% |  0.00% )   ( 0.005135s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p23
-41.5.0:         ( 0.276327s |  0.02% |  0.06% )   ( 0.005945s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004073s |  0.00% |  0.00% )   ( 0.004588s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003820s |  0.00% |  0.00% )   ( 0.004299s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003620s |  0.00% |  0.00% )   ( 0.004112s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004020s |  0.00% |  0.00% )   ( 0.004534s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035384s |  0.00% |  0.00% )   ( 0.030369s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003819s |  0.00% |  0.00% )   ( 0.004321s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003607s |  0.00% |  0.00% )   ( 0.004096s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.004031s |  0.00% |  0.00% )   ( 0.004389s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004508s |  0.00% |  0.00% )   ( 0.005033s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p23
-66.5.0:         ( 0.003614s |  0.00% |  0.00% )   ( 0.004127s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003486s |  0.00% |  0.00% )   ( 0.003966s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000140s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.497251s |  1.50% |  4.01% )   ( 15.892634s |  1.59% |  4.07% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003712s |  0.00% |  0.02% )   ( 0.004206s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.138182s |  0.10% |  6.89% )   ( 1.056617s |  0.10% |  6.64% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.938930s |  0.17% | 11.75% )   ( 1.828435s |  0.18% | 11.50% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.659602s |  0.15% | 10.05% )   ( 1.513020s |  0.15% |  9.52% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.844042s |  0.16% | 11.17% )   ( 1.792400s |  0.17% | 11.27% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.464604s |  0.13% |  8.87% )   ( 1.441841s |  0.14% |  9.07% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 0.981764s |  0.08% |  5.95% )   ( 0.962031s |  0.09% |  6.05% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.503475s |  0.04% |  3.05% )   ( 0.499898s |  0.05% |  3.14% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.039952s |  0.09% |  6.30% )   ( 1.015330s |  0.10% |  6.38% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.427228s |  0.03% |  2.58% )   ( 0.426514s |  0.04% |  2.68% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.386479s |  0.12% |  8.40% )   ( 1.343676s |  0.13% |  8.45% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.101217s |  0.28% | 18.79% )   ( 3.060011s |  0.30% | 19.25% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.498959s |  0.04% |  3.02% )   ( 0.483859s |  0.04% |  3.04% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.509105s |  0.04% |  3.08% )   ( 0.464796s |  0.04% |  2.92% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003636s |  0.00% |  0.00% )   ( 0.004129s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003421s |  0.00% |  0.00% )   ( 0.003886s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.006771s |  0.00% |  0.00% )   ( 0.004085s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-67.5.0:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000168s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
-76.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
-77.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000183s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf 'x\n' >&${fd_nAuto0}
-79.5.0:         ( 0.000191s |  0.00% |  0.00% )   ( 0.000211s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   : > "/dev/shm/.forkrun/forkrun.djNoad"/.quit
-80.5.0:         ( 0.000232s |  0.00% |  0.00% )   ( 0.000249s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%.0s\n' "/dev/shm/.forkrun/forkrun.djNoad"/.run/p* 1>&20
-81.5.0:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.015681s |  0.00% |  0.09% )   ( 0.010423s |  0.00% |  0.06% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000154s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p23_PID})
-1016.3.0:       ( 17.584709s |  1.60% |  3.20% )   ( 16.342467s |  1.63% |  3.28% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p24 p24_PID >>
-1.4.0:          ( 0.001059s |  0.00% |  0.00% )   ( 0.001085s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p24 p24_PID (&)
-24.4.0:         ( 17.583495s |  1.60% | 99.99% )   ( 16.341204s |  1.63% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000190s |  0.00% |  0.00% )   ( 0.000213s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000217s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p24
-30.5.0:         ( 0.046454s |  0.00% |  0.26% )   ( 0.046300s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p24 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p24; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.049461s |  0.00% |  0.28% )   ( 0.049276s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.045503s |  0.00% |  0.25% )   ( 0.045357s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.045562s |  0.00% |  0.25% )   ( 0.045412s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.045493s |  0.00% |  0.25% )   ( 0.045344s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004439s |  0.00% |  0.00% )   ( 0.004977s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
-38.5.0:         ( 0.003826s |  0.00% |  0.00% )   ( 0.004338s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004618s |  0.00% |  0.00% )   ( 0.005156s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p24
-41.5.0:         ( 0.395516s |  0.03% |  0.08% )   ( 0.006669s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004445s |  0.00% |  0.00% )   ( 0.004932s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004179s |  0.00% |  0.00% )   ( 0.004707s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003655s |  0.00% |  0.00% )   ( 0.004136s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003748s |  0.00% |  0.00% )   ( 0.004230s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.034759s |  0.00% |  0.00% )   ( 0.032126s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003740s |  0.00% |  0.00% )   ( 0.004252s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003788s |  0.00% |  0.00% )   ( 0.004271s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003796s |  0.00% |  0.00% )   ( 0.004297s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004723s |  0.00% |  0.00% )   ( 0.005281s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p24
-66.5.0:         ( 0.003838s |  0.00% |  0.00% )   ( 0.004348s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003657s |  0.00% |  0.00% )   ( 0.004175s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000172s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.850442s |  1.53% |  3.83% )   ( 15.992094s |  1.60% |  3.91% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003634s |  0.00% |  0.02% )   ( 0.004159s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.172088s |  0.10% |  6.95% )   ( 1.068235s |  0.10% |  6.67% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.974996s |  0.18% | 11.72% )   ( 1.859803s |  0.18% | 11.62% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.605200s |  0.14% |  9.52% )   ( 1.541957s |  0.15% |  9.64% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.940469s |  0.17% | 11.51% )   ( 1.849072s |  0.18% | 11.56% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.602145s |  0.14% |  9.50% )   ( 1.506223s |  0.15% |  9.41% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.005712s |  0.09% |  5.96% )   ( 0.967231s |  0.09% |  6.04% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.538818s |  0.04% |  3.19% )   ( 0.514613s |  0.05% |  3.21% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.148504s |  0.10% |  6.81% )   ( 1.028022s |  0.10% |  6.42% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.493045s |  0.04% |  2.92% )   ( 0.447442s |  0.04% |  2.79% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.412073s |  0.12% |  8.38% )   ( 1.349993s |  0.13% |  8.44% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.900782s |  0.26% | 17.21% )   ( 2.863047s |  0.28% | 17.90% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.522699s |  0.04% |  3.10% )   ( 0.501184s |  0.05% |  3.13% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.530277s |  0.04% |  3.14% )   ( 0.491113s |  0.04% |  3.07% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003663s |  0.00% |  0.00% )   ( 0.004151s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003496s |  0.00% |  0.00% )   ( 0.003979s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003868s |  0.00% |  0.00% )   ( 0.004314s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005379s |  0.00% |  0.03% )   ( 0.005450s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000155s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p24_PID})
-1016.3.0:       ( 19.238068s |  1.75% |  3.50% )   ( 18.628804s |  1.86% |  3.73% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p25 p25_PID >>
-1.4.0:          ( 0.001076s |  0.00% |  0.00% )   ( 0.001097s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p25 p25_PID (&)
-24.4.0:         ( 19.236844s |  1.75% | 99.99% )   ( 18.627537s |  1.86% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p25
-30.5.0:         ( 0.063099s |  0.00% |  0.32% )   ( 0.049333s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p25 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p25; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.053824s |  0.00% |  0.27% )   ( 0.053618s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.053773s |  0.00% |  0.27% )   ( 0.053587s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.052605s |  0.00% |  0.27% )   ( 0.052405s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.050188s |  0.00% |  0.26% )   ( 0.050018s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003770s |  0.00% |  0.00% )   ( 0.004227s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   true
-38.5.0:         ( 0.003372s |  0.00% |  0.00% )   ( 0.003817s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004026s |  0.00% |  0.00% )   ( 0.004498s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p25
-41.5.0:         ( 0.248079s |  0.02% |  0.05% )   ( 0.005087s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003470s |  0.00% |  0.00% )   ( 0.003886s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003204s |  0.00% |  0.00% )   ( 0.003645s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003062s |  0.00% |  0.00% )   ( 0.003430s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003337s |  0.00% |  0.00% )   ( 0.003749s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.025119s |  0.00% |  0.00% )   ( 0.025432s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003214s |  0.00% |  0.00% )   ( 0.003630s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003028s |  0.00% |  0.00% )   ( 0.003455s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003262s |  0.00% |  0.00% )   ( 0.003660s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.003845s |  0.00% |  0.00% )   ( 0.004267s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p25
-66.5.0:         ( 0.002931s |  0.00% |  0.00% )   ( 0.003326s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003013s |  0.00% |  0.00% )   ( 0.003442s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 18.631031s |  1.69% |  4.61% )   ( 18.271963s |  1.83% |  4.67% )    	(21x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003135s |  0.00% |  0.01% )   ( 0.003554s |  0.00% |  0.01% )    	(21x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.296525s |  0.11% |  6.95% )   ( 1.230732s |  0.12% |  6.73% )    	(21x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.320164s |  0.21% | 12.45% )   ( 2.307421s |  0.23% | 12.62% )    	(21x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.842274s |  0.16% |  9.88% )   ( 1.829259s |  0.18% | 10.01% )    	(21x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.365265s |  0.21% | 12.69% )   ( 2.303052s |  0.23% | 12.60% )    	(21x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.780127s |  0.16% |  9.55% )   ( 1.752588s |  0.17% |  9.59% )    	(21x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.142318s |  0.10% |  6.13% )   ( 1.104263s |  0.11% |  6.04% )    	(21x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.473451s |  0.04% |  2.54% )   ( 0.464443s |  0.04% |  2.54% )    	(21x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.185209s |  0.10% |  6.36% )   ( 1.141177s |  0.11% |  6.24% )    	(21x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.406918s |  0.03% |  2.18% )   ( 0.394645s |  0.03% |  2.15% )    	(21x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.429948s |  0.13% |  7.67% )   ( 1.417987s |  0.14% |  7.76% )    	(21x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.460485s |  0.31% | 18.57% )   ( 3.430053s |  0.34% | 18.77% )    	(21x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.467684s |  0.04% |  2.51% )   ( 0.454130s |  0.04% |  2.48% )    	(21x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.457528s |  0.04% |  2.45% )   ( 0.438659s |  0.04% |  2.40% )    	(21x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003199s |  0.00% |  0.00% )   ( 0.003626s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.002839s |  0.00% |  0.00% )   ( 0.003230s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003328s |  0.00% |  0.00% )   ( 0.003743s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005049s |  0.00% |  0.02% )   ( 0.005127s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000148s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p25_PID})
-1016.3.0:       ( 17.944330s |  1.63% |  3.26% )   ( 17.191196s |  1.72% |  3.45% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p26 p26_PID >>
-1.4.0:          ( 0.001141s |  0.00% |  0.00% )   ( 0.001161s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p26 p26_PID (&)
-24.4.0:         ( 17.943030s |  1.63% | 99.99% )   ( 17.189862s |  1.72% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000175s |  0.00% |  0.00% )   ( 0.000199s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000176s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p26
-30.5.0:         ( 0.053120s |  0.00% |  0.29% )   ( 0.052912s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p26 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p26; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.054125s |  0.00% |  0.30% )   ( 0.053926s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.051491s |  0.00% |  0.28% )   ( 0.051312s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.053402s |  0.00% |  0.29% )   ( 0.053199s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.054810s |  0.00% |  0.30% )   ( 0.054602s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003724s |  0.00% |  0.00% )   ( 0.004128s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   true
-38.5.0:         ( 0.003404s |  0.00% |  0.00% )   ( 0.003857s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004181s |  0.00% |  0.00% )   ( 0.004670s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p26
-41.5.0:         ( 0.371573s |  0.03% |  0.09% )   ( 0.005891s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003798s |  0.00% |  0.00% )   ( 0.004275s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.003266s |  0.00% |  0.00% )   ( 0.003695s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003096s |  0.00% |  0.00% )   ( 0.003524s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003355s |  0.00% |  0.00% )   ( 0.003791s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.026148s |  0.00% |  0.00% )   ( 0.026501s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.003278s |  0.00% |  0.00% )   ( 0.003728s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.003166s |  0.00% |  0.00% )   ( 0.003578s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.003364s |  0.00% |  0.00% )   ( 0.003807s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004044s |  0.00% |  0.00% )   ( 0.004502s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p26
-66.5.0:         ( 0.003279s |  0.00% |  0.00% )   ( 0.003746s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003173s |  0.00% |  0.00% )   ( 0.003593s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000149s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 17.210884s |  1.56% |  4.35% )   ( 16.819735s |  1.68% |  4.44% )    	(22x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003280s |  0.00% |  0.01% )   ( 0.003767s |  0.00% |  0.02% )    	(22x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.132643s |  0.10% |  6.58% )   ( 1.116036s |  0.11% |  6.63% )    	(22x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.045693s |  0.18% | 11.88% )   ( 2.016143s |  0.20% | 11.98% )    	(22x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.675494s |  0.15% |  9.73% )   ( 1.630127s |  0.16% |  9.69% )    	(22x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.078525s |  0.18% | 12.07% )   ( 2.029365s |  0.20% | 12.06% )    	(22x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.597282s |  0.14% |  9.28% )   ( 1.572673s |  0.15% |  9.35% )    	(22x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.013759s |  0.09% |  5.89% )   ( 1.013609s |  0.10% |  6.02% )    	(22x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.470659s |  0.04% |  2.73% )   ( 0.470009s |  0.04% |  2.79% )    	(22x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.139618s |  0.10% |  6.62% )   ( 1.070002s |  0.10% |  6.36% )    	(22x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.433097s |  0.03% |  2.51% )   ( 0.402533s |  0.04% |  2.39% )    	(22x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.389714s |  0.12% |  8.07% )   ( 1.368290s |  0.13% |  8.13% )    	(22x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.241958s |  0.29% | 18.83% )   ( 3.215750s |  0.32% | 19.11% )    	(22x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.492433s |  0.04% |  2.86% )   ( 0.465810s |  0.04% |  2.76% )    	(22x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.496729s |  0.04% |  2.88% )   ( 0.445621s |  0.04% |  2.64% )    	(22x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003288s |  0.00% |  0.00% )   ( 0.003727s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.005900s |  0.00% |  0.00% )   ( 0.003284s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.003409s |  0.00% |  0.00% )   ( 0.003846s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008269s |  0.00% |  0.04% )   ( 0.008344s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000159s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p26_PID})
-1016.3.0:       ( 16.992571s |  1.54% |  3.09% )   ( 16.094754s |  1.61% |  3.23% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p27 p27_PID >>
-1.4.0:          ( 0.001080s |  0.00% |  0.00% )   ( 0.001106s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p27 p27_PID (&)
-24.4.0:         ( 16.991340s |  1.54% | 99.99% )   ( 16.093476s |  1.61% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.djNoad"
-26.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.djNoad"/.run/p27
-30.5.0:         ( 0.045532s |  0.00% |  0.26% )   ( 0.045375s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.djNoad"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p27 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.djNoad"/.run/p27; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.045520s |  0.00% |  0.26% )   ( 0.045336s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3350840 ${BASHPID}' INT
-33.5.0:         ( 0.045484s |  0.00% |  0.26% )   ( 0.045332s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3350840 ${BASHPID}' TERM
-34.5.0:         ( 0.047107s |  0.00% |  0.27% )   ( 0.046904s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3350840 ${BASHPID}' HUP
-35.5.0:         ( 0.053895s |  0.00% |  0.31% )   ( 0.053710s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004686s |  0.00% |  0.00% )   ( 0.005261s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
-38.5.0:         ( 0.004145s |  0.00% |  0.00% )   ( 0.004682s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.djNoad"/.nLines
-38.5.2:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005248s |  0.00% |  0.00% )   ( 0.005795s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p27
-41.5.0:         ( 0.347151s |  0.03% |  0.07% )   ( 0.006838s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004595s |  0.00% |  0.00% )   ( 0.005152s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.quit ]]
-46.5.0:         ( 0.004205s |  0.00% |  0.00% )   ( 0.004725s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.djNoad"/.done ]]
-46.5.1:         ( 0.003841s |  0.00% |  0.00% )   ( 0.004349s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004133s |  0.00% |  0.00% )   ( 0.004675s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.040563s |  0.00% |  0.00% )   ( 0.034476s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 A
-51.5.0:         ( 0.004066s |  0.00% |  0.00% )   ( 0.004614s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-51.5.1:         ( 0.004075s |  0.00% |  0.00% )   ( 0.004615s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.008761s |  0.00% |  0.00% )   ( 0.004709s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
-65.5.0:         ( 0.004788s |  0.00% |  0.00% )   ( 0.005357s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.djNoad"/.wait/p27
-66.5.0:         ( 0.003999s |  0.00% |  0.00% )   ( 0.004543s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-86.5.0:         ( 0.003919s |  0.00% |  0.00% )   ( 0.004450s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-87.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-88.5.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-88.5.1:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-91.5.0:         ( 16.283651s |  1.48% |  3.54% )   ( 15.728790s |  1.57% |  3.61% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003955s |  0.00% |  0.02% )   ( 0.004479s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.081608s |  0.09% |  6.64% )   ( 1.056085s |  0.10% |  6.71% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.841276s |  0.16% | 11.30% )   ( 1.781025s |  0.17% | 11.32% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.526272s |  0.13% |  9.37% )   ( 1.510382s |  0.15% |  9.60% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.826365s |  0.16% | 11.21% )   ( 1.730181s |  0.17% | 11.00% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.457441s |  0.13% |  8.95% )   ( 1.433130s |  0.14% |  9.11% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.011809s |  0.09% |  6.21% )   ( 0.961749s |  0.09% |  6.11% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.559866s |  0.05% |  3.43% )   ( 0.544593s |  0.05% |  3.46% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.030015s |  0.09% |  6.32% )   ( 1.000936s |  0.10% |  6.36% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.523913s |  0.04% |  3.21% )   ( 0.478392s |  0.04% |  3.04% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.408485s |  0.12% |  8.64% )   ( 1.339609s |  0.13% |  8.51% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.890183s |  0.26% | 17.74% )   ( 2.829182s |  0.28% | 17.98% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.566640s |  0.05% |  3.47% )   ( 0.536685s |  0.05% |  3.41% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.555823s |  0.05% |  3.41% )   ( 0.522362s |  0.05% |  3.32% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004092s |  0.00% |  0.00% )   ( 0.004638s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-86.5.1:         ( 0.003785s |  0.00% |  0.00% )   ( 0.004294s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-89.5.0:         ( 0.004182s |  0.00% |  0.00% )   ( 0.004692s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008837s |  0.00% |  0.05% )   ( 0.008928s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-257.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p27_PID})
-1018.3.0:       ( 0.000160s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │   echo "${kkProcs}" > "${tmpDir}"/.nWorkers
-1019.3.0:       ( 0.000155s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │   : > "${tmpDir}"/.spawned
-1020.3.0:       ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1022.3.0:       ( 0.000127s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
-1026.3.0:       ( 0.001413s |  0.00% |  0.00% )   ( 0.001427s |  0.00% |  0.00% )    	(1x)	│  │  │   declare -p > "${tmpDir}"/.vars
-1027.3.0:       ( 0.000136s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-1071.3.0:       ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1072.3.0:       ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1079.3.0:       ( 24.430551s |  2.22% |  4.44% )   ( 0.001652s |  0.00% |  0.00% )    	(1x)	│  │  │   wait "${p_PID[@]}" &> /dev/null
-1081.3.0:       ( 0.000307s |  0.00% |  0.00% )   ( 0.000343s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1084.3.0:       ( 0.000296s |  0.00% |  0.00% )   ( 0.000331s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-25.3.0:         ( 0.049059s |  0.00% |  0.00% )   ( 0.049218s |  0.00% |  0.00% )    	(1x)	│  │  └─  ${nSpawnFlag}
-1085.2.0:       ( 0.000209s |  0.00% |  0.00% )   ( 0.000244s |  0.00% |  0.00% )    	(1x)	│  │   wait
-25.2.0:         ( 0.007418s |  0.00% |  0.00% )   ( 0.004533s |  0.00% |  0.00% )    	(1x)	└─ └─  wait
-9.0.1:          ( 547.824474s | 49.93% )            ( 499.086662s | 50.04% )             	(1x)	<< (FUNCTION): main.forkrun -z ff < /mnt/ramdisk/flist0 > /dev/null >>
-1.1.0:          ( 0.001267s |  0.00% |  0.00% )   ( 0.001060s |  0.00% |  0.00% )    	(1x)	├─  forkrun -z ff < /mnt/ramdisk/flist0 > /dev/null
-24.1.0:         ( 547.823207s | 49.93% | 99.99% )   ( 499.085602s | 50.04% | 99.99% )    	(1x)	│   << (SUBSHELL) >>
-24.2.0:         ( 0.042360s |  0.00% |  0.00% )   ( 0.042259s |  0.00% |  0.00% )    	(1x)	│  ├─  trap - EXIT INT TERM HUP USR1
-25.2.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   shopt -s extglob
-26.2.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │   local +i nLines nLines0 nLinesMax nBytes nProcs nProcsMax
-27.2.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │   local tmpDir fPath outStr delimiterVal delimiterReadStr delimiterRemoveStr exitTrapStr exitTrapStr_kill nOrder tTimeout coprocSrcCode outCur outCurHex outRead tmpDirRoot returnVal tmpVar t0 tStart0 tStart1 readBytesProg nullDelimiterProg ddQuietStr pLOAD0 trailingNullFlag lseekFlag lseekPosFlag fallocateFlag nLinesAutoFlag nLinesReadLimitFlag nSpawnFlag substituteStringFlag substituteStringIDFlag nOrderFlag readBytesFlag readBytesExactFlag nullDelimiterFlag subshellRunFlag stdinRunFlag pipeReadFlag rmTmpDirFlag exportOrderFlag noFuncFlag unescapeFlag optParseFlag continueFlag doneIndicatorFlag FORCE_allowCarriageReturnsFlag ddAvailableFlag pAddFlag fd_continue fd_nAuto fd_nAuto0 fd_nOrder fd_nOrder0 fd_read fd_read0 fd_write fd_stdout fd_stdin fd_stdin0 fd_stderr pWrite pOrder pAuto pSpawn pWrite_PID pOrder_PID pAuto_PID pSpawn_PID DEBUG_FORKRUN
-28.2.0:         ( 0.000100s |  0.00% |  0.00% )   ( 0.000113s |  0.00% |  0.00% )    	(1x)	│  │   local -i PID0 nLinesCur nLinesNew nLinesRead nLinesReadLimit nRead nWait nOrder0 nBytesRead nSpawn nSpawnLast nSpawnLastCount nCPU writeFileProgType v9 kkMax kkCur kk kkProcs kkProcs0 verboseLevel pLOAD_max pLOAD_target pAd pAdd_sysLoad pAdd_lineRated tStart fd_read_pos fd_read_pos0 fd_read_pos_old fd_write_pos pAdd0 pAdd1 inLines inTime inLines0 inTime0 inLines1 nTime1 inLinesDelta inTimeDelta pAddCount pAddMin pAddSum pAddMax
-29.2.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │   local -a A p_PID p_PID0 runCmd outHave outPrint pLOADA pLOADA0 runLines runTime
-30.2.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   local -a -i runLinesA runTimeA runWaitA runAllA spawnTimeA pLOAD1
-31.2.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │   : "${verboseLevel:=0}" "${returnVal:=0}" "${fd_stdin0:=0}" "${nLinesReadLimitFlag:=false}"
-32.2.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   [[ $# == 0 ]]
-32.2.1:         ( 0.000064s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │   optParseFlag=true
-33.2.0:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(2x)	│  │   ${optParseFlag}
-33.2.1:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(2x)	│  │   (( $# > 0  ))
-33.2.2:         ( 0.000131s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(2x)	│  │   [[ "$1" == [-+]* ]]
-34.2.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │   case "${1}" in
-165.2.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [[ "${1:0:1}" == '-' ]]
-165.2.1:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │   nullDelimiterFlag=true
-215.2.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │   shift 1
-216.2.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [[ ${#} == 0 ]]
-218.2.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [ -t "${fd_stdin0}" ]
-223.2.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${tmpDirRoot} ]]
-224.2.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   [[ -n ${TMPDIR} ]]
-226.2.0:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   [[ -d '/dev/shm' ]]
-226.2.1:        ( 0.000062s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │   tmpDirRoot='/dev/shm'
-230.2.0:        ( 0.001171s |  0.00% |  0.00% )   ( 0.001044s |  0.00% |  0.00% )    	(1x)	│  │   tmpDir="$(mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX)"
-230.2.1:        ( 0.008223s |  0.00% |  0.00% )   ( 0.008223s |  0.00% |  0.00% )    	(1x)	│  │   << (SUBSHELL) >>
-230.3.0:        ( 0.008223s |  0.00% |100.00% )   ( 0.008223s |  0.00% |100.00% )    	(1x)	│  │  └─  mktemp -p "${tmpDirRoot}/.forkrun" -d forkrun.XXXXXX
-231.2.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │   fPath="${tmpDir}"/.stdin
-232.2.0:        ( 0.001117s |  0.00% |  0.00% )   ( 0.001191s |  0.00% |  0.00% )    	(1x)	│  │   mkdir -p "${tmpDir}"/.run
-233.2.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │   : > "${fPath}"
-234.2.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │   ${rmTmpDirFlag}
-234.2.1:        ( 0.026420s |  0.00% |  0.00% )   ( 0.000962s |  0.00% |  0.00% )    	(1x)	│  │   trap '\rm -rf "'"${tmpDir}"'" 2>/dev/null' EXIT
-235.2.0:        ( 547.737056s | 49.92% | 99.98% )   ( 499.027021s | 50.03% | 99.98% )    	(1x)	│  │   << (SUBSHELL) >>
-235.3.0:        ( 0.000146s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  ├─  [[ -n ${DEBUG_FORKRUN} ]]
-1084.3.0:       ( 0.001897s |  0.00% |  0.00% )   ( 0.002239s |  0.00% |  0.00% )    	(6x)	│  │  │   << (BACKGROUND FORK) >>
-1084.4.0:       ( 0.001897s |  0.00% |100.00% )   ( 0.002239s |  0.00% |100.00% )    	(6x)	│  │  │  └─  :
-238.3.0:        ( 0.000158s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │   LC_ALL=C
-239.3.0:        ( 0.000135s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │   LANG=C
-240.3.0:        ( 0.000172s |  0.00% |  0.00% )   ( 0.000183s |  0.00% |  0.00% )    	(1x)	│  │  │   IFS=
-241.3.0:        ( 0.000200s |  0.00% |  0.00% )   ( 0.009060s |  0.00% |  0.00% )    	(1x)	│  │  │   enable -f forkrun_loadables.so evfd_init evfd_wait evfd_signal evfd_close evfd_copy order_init order_get lseek cpuusage childusage
-242.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   export LC_ALL=C LANG=C IFS=
-243.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   FORKRUN_TMPDIR="$tmpDir"
-244.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   export FORKRUN_TMPDIR="$tmpDir"
-245.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   PID0="${BASHPID}"
-246.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   shopt -s nullglob
-247.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${noFuncFlag:=false}" "${readBytesFlag:=false}" "${readBytesExactFlag:=false}" "${nullDelimiterFlag:=false}" "${FORCE_allowCarriageReturnsFlag:=false}"
-248.3.0:        ( 0.000098s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │   enable lseek &> /dev/null
-249.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekFlag:=true}"
-253.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
-254.3.0:        ( 0.000555s |  0.00% |  0.00% )   ( 0.000333s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "$(lseek $fd_read 0)" == 0 ]]
-254.3.1:        ( 0.000114s |  0.00% |  0.00% )   ( 0.000129s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-254.4.0:        ( 0.000114s |  0.00% |100.00% )   ( 0.000129s |  0.00% |100.00% )    	(1x)	│  │  │  └─  lseek $fd_read 0
-254.3.2:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${lseekPosFlag:=true}"
-256.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowCarriageReturnsFlag:-false}
-259.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   $'runCmd=("${@//\'\r\'/}")
-261.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
-262.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${#runCmd[@]} > 0 ))
-262.3.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   noFuncFlag=false
-263.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   ${noFuncFlag}
-264.3.0:        ( 0.000091s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │   hash "${runCmd[0]}" &> /dev/null
-265.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
-316.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nLines} ]]
-320.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nLinesAutoFlag:=true}"
-322.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -z ${nLines} ]]
-323.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   nLines=1
-325.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == '-'* ]]
-329.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nProcs}" == *','* ]]
-333.3.0:        ( 0.000859s |  0.00% |  0.00% )   ( 0.000993s |  0.00% |  0.00% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun._forkrun_getVal nProcs "${nProcs%%,*}" >>
-1.4.0:          ( 0.000068s |  0.00% |  7.91% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  ├─  _forkrun_getVal nProcs "${nProcs%%,*}"
-24.4.0:         ( 0.000068s |  0.00% |  7.91% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  │   local +i -l nn
-25.4.0:         ( 0.000068s |  0.00% |  7.91% )   ( 0.000080s |  0.00% |  8.05% )    	(1x)	│  │  │  │   local vOut
-26.4.0:         ( 0.000068s |  0.00% |  7.91% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  │   local -n vOut="$1"
-27.4.0:         ( 0.000067s |  0.00% |  7.79% )   ( 0.000078s |  0.00% |  7.85% )    	(1x)	│  │  │  │   shift 1
-28.4.0:         ( 0.000071s |  0.00% |  8.26% )   ( 0.000083s |  0.00% |  8.35% )    	(1x)	│  │  │  │   local -g vOut
-29.4.0:         ( 0.000070s |  0.00% |  8.14% )   ( 0.000079s |  0.00% |  7.95% )    	(1x)	│  │  │  │   (( ${#pMap[@]} == 20 ))
-29.4.1:         ( 0.000115s |  0.00% | 13.38% )   ( 0.000127s |  0.00% | 12.78% )    	(1x)	│  │  │  │   local -Ag pMap=([k]=1 [m]=2 [g]=3 [t]=4 [p]=5 [e]=6 [z]=7 [y]=8 [r]=9 [q]=10 [ki]=1 [mi]=2 [gi]=3 [ti]=4 [pi]=5 [ei]=6 [zi]=7 [yi]=8 [ri]=9 [qi]=10)
-30.4.0:         ( 0.000065s |  0.00% |  7.56% )   ( 0.000077s |  0.00% |  7.75% )    	(1x)	│  │  │  │   for nn in "${@%%[Bb]*}"
-32.4.0:         ( 0.000063s |  0.00% |  7.33% )   ( 0.000074s |  0.00% |  7.45% )    	(1x)	│  │  │  │   [[ -n ${nn} ]]
-32.4.1:         ( 0.000066s |  0.00% |  7.68% )   ( 0.000077s |  0.00% |  7.75% )    	(1x)	│  │  │  │   continue
-42.4.0:         ( 0.000070s |  0.00% |  8.14% )   ( 0.000081s |  0.00% |  8.15% )    	(1x)	│  │  │  └─  local +n vOut
-334.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
-335.3.0:        ( 0.000864s |  0.00% |  0.00% )   ( 0.000672s |  0.00% |  0.00% )    	(1x)	│  │  │   $'nCPU="$({ type -a nproc &> /dev/null && nproc; } || { type -a grep &> /dev/null && grep -cE \'^processor.*: \' /proc/cpuinfo; } || { mapfile -t tmpA < /proc/cpuinfo && tmpA=("${tmpA[@]//processor*/\'\034\'}") && tmpA=("${tmpA[@]//!(\'\034\')/}") && tmpA=("${tmpA[@]//\'\034\'/1}") && tmpA="${tmpA[*]}" && tmpA="${tmpA// /}" && echo ${#tmpA}; } || printf \'8\')"
-335.3.1:        ( 0.002368s |  0.00% |  0.00% )   ( 0.002449s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-335.4.0:        ( 0.000296s |  0.00% | 12.50% )   ( 0.000317s |  0.00% | 12.94% )    	(1x)	│  │  │  ├─  type -a nproc &> /dev/null
-335.4.1:        ( 0.002072s |  0.00% | 87.50% )   ( 0.002132s |  0.00% | 87.05% )    	(1x)	│  │  │  └─  nproc
-336.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nCPU < 1 ))
-338.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ -n ${nProcs} ]]
-340.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-340.3.1:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   nProcs=${nCPU}
-342.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-346.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-347.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nSpawnFlag:=false}"
-348.3.0:        ( 0.000095s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nOrderFlag:=false}" "${rmTmpDirFlag:=true}" "${nLinesMax:=1024}" "${subshellRunFlag:=false}" "${pipeReadFlag:=false}" "${substituteStringFlag:=false}" "${substituteStringIDFlag:=false}" "${exportOrderFlag:=false}" "${unescapeFlag:=false}" "${stdinRunFlag:=false}"
-349.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │   local -i nProcs="${nProcs}" nProcsMax="${nProcsMax}" nLines="${nLines}" nLinesMax="${nLinesMax}"
-350.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
-351.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < 2 * nLines ))
-353.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   (( nLinesMax < nLines ))
-355.3.0:        ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   doneIndicatorFlag=false
-356.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-360.3.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │   type -a fallocate &> /dev/null
-360.3.1:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-360.3.2:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${fallocateFlag:=true}"
-361.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${exportOrderFlag}
-362.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${readBytesFlag}
-363.3.0:        ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-367.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nullDelimiterFlag}
-368.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   delimiterReadStr="-d ''"
-369.3.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   ${lseekFlag}
-369.3.1:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nullDelimiterProg:='lseek'}"
-370.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${nullDelimiterProg:=bash}"
-371.3.0:        ( 0.000108s |  0.00% |  0.00% )   ( 0.000121s |  0.00% |  0.00% )    	(1x)	│  │  │   type -p dd &> /dev/null
-372.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   ddAvailableFlag=true
-373.3.0:        ( 0.003127s |  0.00% |  0.00% )   ( 0.004061s |  0.00% |  0.00% )    	(1x)	│  │  │   dd --version | grep --color=auto -qF 'coreutils'
-374.3.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   ddQuietStr='status=none'
-381.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │   [[ "${nullDelimiterProg}" == @(dd|bash|lseek) ]]
-382.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${FORCE_allowUnsafeNullDelimiterFlag}
-383.3.0:        ( 0.000078s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │   nullDelimiterProg=''
-401.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${unescapeFlag}
-410.3.0:        ( 0.000576s |  0.00% |  0.00% )   ( 0.000423s |  0.00% |  0.00% )    	(1x)	│  │  │   mapfile -t runCmd < <(printf '%q\n' "${runCmd[@]}") (&)
-410.3.1:        ( 0.000089s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-410.4.0:        ( 0.000089s |  0.00% |100.00% )   ( 0.000103s |  0.00% |100.00% )    	(1x)	│  │  │  └─  printf '%q\n' "${runCmd[@]}"
-411.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringFlag}
-414.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${substituteStringIDFlag}
-419.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   nLinesCur=${nLines}
-420.3.0:        ( 0.001307s |  0.00% |  0.00% )   ( 0.001386s |  0.00% |  0.00% )    	(1x)	│  │  │   mkdir -p "${tmpDir}"/.{run,wait}
-421.3.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
-422.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │   ${rmTmpDirFlag}
-423.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 0 ))
-450.3.0:        ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   tStart="${EPOCHREALTIME//./}"
-451.3.0:        ( 0.000080s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │   evfd_init
-455.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr=\': >"\'"${tmpDir}"\'"/.done;\n: >"\'"${tmpDir}"\'"/.quit;\nkill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
-456.3.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   ${pipeReadFlag}
-459.3.0:        ( 0.000063s |  0.00% |  0.00% )   ( 0.000074s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesReadLimitFlag}
-470.3.0:        ( 0.000551s |  0.00% |  0.00% )   ( 0.000560s |  0.00% |  0.00% )    	(1x)	│  │  │   : "${writeFileProgType:=1}" (&)
-473.3.0:        ( 0.136015s |  0.01% |  0.02% )   ( 0.135786s |  0.01% |  0.02% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
-473.4.0:        ( 0.000121s |  0.00% |  0.08% )   ( 0.000135s |  0.00% |  0.09% )    	(1x)	│  │  │  ├─  export LC_ALL=C LANG=C IFS=
-474.4.0:        ( 0.022704s |  0.00% | 16.69% )   ( 0.022653s |  0.00% | 16.68% )    	(1x)	│  │  │  │   trap - EXIT
-475.4.0:        ( 0.023536s |  0.00% | 17.30% )   ( 0.023480s |  0.00% | 17.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
-476.4.0:        ( 0.023573s |  0.00% | 17.33% )   ( 0.023527s |  0.00% | 17.32% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
-477.4.0:        ( 0.023452s |  0.00% | 17.24% )   ( 0.023401s |  0.00% | 17.23% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
-478.4.0:        ( 0.023788s |  0.00% | 17.48% )   ( 0.023738s |  0.00% | 17.48% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-479.4.0:        ( 0.000067s |  0.00% |  0.04% )   ( 0.000079s |  0.00% |  0.05% )    	(1x)	│  │  │  │   case ${writeFileProgType} in
-481.4.0:        ( 0.018543s |  0.00% | 13.63% )   ( 0.018510s |  0.00% | 13.63% )    	(1x)	│  │  │  │   evfd_copy ${fd_write} ${fd_stdin}
-490.4.0:        ( 0.000099s |  0.00% |  0.07% )   ( 0.000108s |  0.00% |  0.07% )    	(1x)	│  │  │  │   : > "${tmpDir}"/.done
-491.4.0:        ( 0.000066s |  0.00% |  0.04% )   ( 0.000078s |  0.00% |  0.05% )    	(1x)	│  │  │  │   evfd_signal
-492.4.0:        ( 0.000066s |  0.00% |  0.04% )   ( 0.000077s |  0.00% |  0.05% )    	(1x)	│  │  │  └─  (( ${verboseLevel} > 1 ))
-495.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   exitTrapStr_kill+="${pWrite_PID} "
-497.3.0:        ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-502.3.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   outStr='>&'"${fd_stdout}"
-504.3.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nLinesAutoFlag}
-505.3.0:        ( 0.000395s |  0.00% |  0.00% )   ( 0.000424s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' ${nLines} > "${tmpDir}"/.nLines (&)
-508.3.0:        ( 4.167820s |  0.37% |  0.76% )   ( 1.825534s |  0.18% |  0.36% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
-.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
-508.4.0:        ( 0.000088s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │   export LC_ALL=C LANG=C IFS=
-509.4.0:        ( 0.023500s |  0.00% |  0.56% )   ( 0.023395s |  0.00% |  1.28% )    	(1x)	│  │  │  │   trap '[[ -f "'"${tmpDir}"'"/.run/pAuto ]] && \rm -f "'"${tmpDir}"'"/.run/pAuto' EXIT
-510.4.0:        ( 0.023700s |  0.00% |  0.56% )   ( 0.023562s |  0.00% |  1.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT '"${PID0}"' ${BASHPID}' INT
-511.4.0:        ( 0.023556s |  0.00% |  0.56% )   ( 0.023460s |  0.00% |  1.28% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM '"${PID0}"' ${BASHPID}' TERM
-512.4.0:        ( 0.023595s |  0.00% |  0.56% )   ( 0.023465s |  0.00% |  1.28% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP '"${PID0}"' ${BASHPID}' HUP
-513.4.0:        ( 0.023671s |  0.00% |  0.56% )   ( 0.023583s |  0.00% |  1.29% )    	(1x)	│  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-514.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${fallocateFlag}
-515.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
-516.4.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fd_read_pos_old=0
-518.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=0
-519.4.0:        ( 0.090719s |  0.00% |  0.00% )   ( 0.103605s |  0.01% |  0.00% )    	(673x)	│  │  │  │   ${fallocateFlag}
-520.4.0:        ( 2.635190s |  0.24% |  0.09% )   ( 0.121493s |  0.01% |  0.00% )    	(672x)	│  │  │  │   read -u ${fd_nAuto} -t 0.1
-520.4.1:        ( 0.000952s |  0.00% |  0.00% )   ( 0.001071s |  0.00% |  0.01% )    	(5x)	│  │  │  │   continue
-521.4.0:        ( 0.088451s |  0.00% |  0.00% )   ( 0.101366s |  0.01% |  0.00% )    	(667x)	│  │  │  │   case ${REPLY} in
-535.4.0:        ( 0.088203s |  0.00% |  0.00% )   ( 0.101100s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nLinesAutoFlag}
-536.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
-539.4.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesRead=$(( nLinesRead + ${REPLY} ))
-544.4.0:        ( 0.087957s |  0.00% |  0.00% )   ( 0.100706s |  0.01% |  0.00% )    	(667x)	│  │  │  │   ${lseekPosFlag}
-545.4.0:        ( 0.090358s |  0.00% |  0.00% )   ( 0.103105s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_read 0 SEEK_CUR fd_read_pos
-546.4.0:        ( 0.090476s |  0.00% |  0.00% )   ( 0.103292s |  0.01% |  0.00% )    	(667x)	│  │  │  │   lseek $fd_write 0 SEEK_CUR fd_write_pos
-552.4.0:        ( 0.086689s |  0.00% |  0.00% )   ( 0.099483s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
-553.4.0:        ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesEst=$(( ( ( 1 + ${nLinesRead} ) * ( 1 + ${fd_write_pos} ) ) / ( 1 + ${fd_read_pos} ) ))
-554.4.0:        ( 0.086701s |  0.00% |  0.00% )   ( 0.099474s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nSpawnFlag}
-555.4.0:        ( 0.086490s |  0.00% |  0.00% )   ( 0.099306s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${nLinesAutoFlag}
-556.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-557.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │   [[ -d "${tmpDir}"/.wait ]]
-558.4.0:        ( 0.000655s |  0.00% |  0.01% )   ( 0.000496s |  0.00% |  0.02% )    	(1x)	│  │  │  │   mapfile -t nProcsA < <(: | cat "${tmpDir}"/.wait 2> /dev/null) (&)
-558.4.1:        ( 0.002635s |  0.00% |  0.06% )   ( 0.003009s |  0.00% |  0.16% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
-558.5.0:        ( 0.002635s |  0.00% |100.00% )   ( 0.003009s |  0.00% |100.00% )    	(1x)	│  │  │  │  └─  : | cat "${tmpDir}"/.wait 2> /dev/null
-559.4.0:        ( 0.000072s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nProcsA=(${nProcsA//0/})
-560.4.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${#nProcsA[@]} > 0 ))
-562.4.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=$(( 1 + ( ( nLinesEst - nLinesRead ) / ( 1 + ${nProcs} ) ) ))
-563.4.0:        ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} > ${nLinesCur} ))
-564.4.0:        ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${nLinesNew} >= ${nLinesMax} ))
-565.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesNew=${nLinesMax}
-566.4.0:        ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-568.4.0:        ( 0.000092s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │   printf '%s\n' ${nLinesNew} > "${tmpDir}"/.nLines
-569.4.0:        ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-570.4.0:        ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesCur=${nLinesNew}
-573.4.0:        ( 0.086102s |  0.00% |  0.00% )   ( 0.098838s |  0.00% |  0.00% )    	(667x)	│  │  │  │   ${fallocateFlag}
-574.4.0:        ( 0.085969s |  0.00% |  0.00% )   ( 0.098813s |  0.00% |  0.00% )    	(667x)	│  │  │  │   case ${nWait} in
-585.4.0:        ( 0.084927s |  0.00% |  0.00% )   ( 0.097494s |  0.00% |  0.00% )    	(646x)	│  │  │  │   ((nWait--))
-589.4.0:        ( 0.091655s |  0.00% |  0.00% )   ( 0.104807s |  0.01% |  0.00% )    	(667x)	│  │  │  │   [[ -f "${tmpDir}"/.quit ]]
-535.4.1:        ( 0.087827s |  0.00% |  0.00% )   ( 0.100588s |  0.01% |  0.00% )    	(665x)	│  │  │  │   ${nSpawnFlag}
-552.4.1:        ( 0.087120s |  0.00% |  0.00% )   ( 0.099834s |  0.01% |  0.00% )    	(666x)	│  │  │  │   ${nSpawnFlag}
-576.4.0:        ( 0.002907s |  0.00% |  0.00% )   ( 0.003322s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos=$(( 4096 * ( ${fd_read_pos} / 4096 ) ))
-577.4.0:        ( 0.002853s |  0.00% |  0.00% )   ( 0.003262s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${fd_read_pos} > ${fd_read_pos_old} ))
-578.4.0:        ( 0.066637s |  0.00% |  0.07% )   ( 0.043589s |  0.00% |  0.11% )    	(21x)	│  │  │  │   fallocate -p -o ${fd_read_pos_old} -l $(( ${fd_read_pos} - ${fd_read_pos_old} )) "${fPath}"
-579.4.0:        ( 0.003102s |  0.00% |  0.00% )   ( 0.003513s |  0.00% |  0.00% )    	(21x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-580.4.0:        ( 0.003012s |  0.00% |  0.00% )   ( 0.003431s |  0.00% |  0.00% )    	(21x)	│  │  │  │   fd_read_pos_old=${fd_read_pos}
-582.4.0:        ( 0.003137s |  0.00% |  0.00% )   ( 0.003543s |  0.00% |  0.00% )    	(21x)	│  │  │  │   nWait=$(( 16 + ( ${nProcs} / 2 ) ))
-529.4.0:        ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.01% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-590.4.0:        ( 0.000122s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nLinesAutoFlag=false
-591.4.0:        ( 0.000128s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │   fallocateFlag=false
-592.4.0:        ( 0.000123s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │   nSpawnFlag=false
-519.4.1:        ( 0.000124s |  0.00% |  0.00% )   ( 0.000151s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-519.4.2:        ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-25.4.0:         ( 0.006844s |  0.00% |  0.16% )   ( 0.006946s |  0.00% |  0.38% )    	(1x)	│  │  │  └─  ${nSpawnFlag}
-598.3.0:        ( 0.000074s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'printf \'"\'"\'0\\n\'"\'"\' >&\'"${fd_nAuto}"\'; \'\'\n\'
-599.3.0:        ( 0.000111s |  0.00% |  0.00% )   ( 0.000123s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '%s\n' "${pAuto_PID}" > "${tmpDir}"/.run/pAuto
-601.3.0:        ( 0.000091s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-980.3.0:        ( 0.002027s |  0.00% |  0.00% )   ( 0.001256s |  0.00% |  0.00% )    	(1x)	│  │  │   $'coprocSrcCode="$(echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && echo "{ \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && read -r <\\"${tmpDir}\\"/.nLines && [[ \\${REPLY} == +([0-9]) ]] && nLinesCur=\\${REPLY}"\necho """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""\nif ${readBytesFlag}; then\n    case "${readBytesProg}" in \n        \'dd\')\n            printf \'dd bs=32768 count=%sB of="%s"/.stdin.tmp.{<#>} 2>"%s"/.stdin.tmp-status.{<#>} \' "${nBytes}" "${tmpDir}" "${tmpDir}"\n${pipeReadFlag} && printf \'iflag=fullblock <&%s\\n\' "${fd_stdin}" || printf \'<&%s\\n\' "${fd_read}"\nprintf \'[[ "$(<"%s"/.stdin.tmp-status.{<#>})" == *$\'"\'"\'\\\\n\'"\'"\'"0 bytes"* ]] && A=() || A[0]=1\\n\' "${tmpDir}"\n        ;;\n        \'head\')\n            printf \'head -c %s \' "${nBytes}"\n${pipeReadFlag} && printf \'<&%s \' "${fd_stdin}" || printf \'<&%s \' "${fd_read}"\nprintf \'>"%s"/.stdin.tmp.{<#>}\\n\' "${tmpDir}"\nprintf \'[[ $(<"%s"/.stdin.tmp.{<#>}) ]] 2>/dev/null && A[0]=1 || A=()\\n\' "${tmpDir}"\n        ;;\n        \'bash\')\n            if ${stdinRunFlag}; then\n                [[ -n ${tTimeout} ]] && echo "SECONDS=0"\nprintf \'if read -r -d \'"\'\'"\' -n %s -u %s\' "${nBytes}" "${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=(\'\')\n                trailingNullFlag=true"""\n${readBytesExactFlag} && echo \'nBytesRead=1\'\necho """\n            else\n                [[ \\${REPLY} ]] && A=(\\"\\${REPLY}\\") || A=()\n                trailingNullFlag=false"""\n${readBytesExactFlag} && echo \'nBytesRead=0\'\necho \'fi\'\nif ${readBytesExactFlag}; then\n                    echo """\n            nBytesRead+=\\${#REPLY}\n            [[ \\${nBytesRead} == 0 ]] || (( \\${nBytesRead} >= ${nBytes} )) || {"""\n[[ -n ${tTimeout} ]] && echo "while (( \\${SECONDS} < ${tTimeout} )); do" || echo "while true; do"\necho "[[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"\nprintf "if read -r -d \'\' -n \\$(( ${nBytes} - \\${nBytesRead} )) -u ${fd_read}"\n[[ -n ${tTimeout} ]] && printf \' -t %s\' "${tTimeout}"\necho """; then\n                    ((nBytesRead++))\n                    nBytesRead+=\\${#REPLY}\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\") || A+=(\'\')\n                    (( \\${nBytesRead} >= ${nBytes} )) && { trailingNullFlag=true; break; }\n                else\n                    trailingNullFlag=false\n                    [[ \\${REPLY} ]] && A+=(\\"\\${REPLY}\\")\n                    { (( \\${nBytesRead} >= ${nBytes} )) || ${doneIndicatorFlag}; } && { trailingNullFlag=false; break; }\n                    break\n                fi\n            done\n        }""";\n                fi\necho """\n        {\n            if \\${trailingNullFlag}; then\n                printf \'%s\\0\' \\"\\${A[@]}\\" \n            else\n                printf \'%s\' \\"\\${A[0]}\\" \n                printf \'\\0%s\' \\"\\${A[@]:1}\\"\n            fi \n        } >\\"${tmpDir}\\"/.stdin.tmp.{<#>}""";\n            else\n                printf \'read -r -N %s -u \' "${nBytes}"\nif ${readBytesExactFlag}; then\n                    printf \'%s \' "${fd_stdin}"\n[[ -n ${tTimeout} ]] && printf \'-t %s \' "${tTimeout} ";\n                else\n                    printf \'%s \' ${fd_read};\n                fi\necho \'-a A\';\n            fi\n        ;;\n    esac;\nelse\n    ${nLinesReadLimitFlag} && printf \'%s\' """read -r nLinesRead <\\"${tmpDir}\\"/.nLinesRead\n    (( ( nLinesReadLimit - nLinesRead ) < nLinesCur )) && nLinesCur=\\$(( nLinesReadLimit - nLinesRead ))\n    (( nLinesCur == 0 )) && A=() || """\necho "{"\n${nOrderFlag} && echo "order_get nOrder"\n${pipeReadFlag} || echo "evfd_wait ${fd_nSpawn}"\nprintf \'%s \' "mapfile"\n${lseekFlag} && printf \'%s \' \'-t\'\nprintf \'%s \' \'-n\' "\\${nLinesCur}" \'-u\'\n${pipeReadFlag} && printf \'%s \' ${fd_stdin} || printf \'%s \' ${fd_read}\n{ ${pipeReadFlag} || ${nullDelimiterFlag}; } && printf \'%s \' \'-t\'\necho """${delimiterReadStr} A\n    }"""\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || { echo "[[ \\${#A[@]} == 0 ]] || \\${doneIndicatorFlag} || {"\nif ${lseekFlag}; then\n        echo """\n                lseek ${fd_read} -1 SEEK_CUR \'\'\n                read -r -u ${fd_read} -N 1"""\nif ${nullDelimiterFlag}; then\n            echo "[[ \\${#REPLY} == 0 ]] || {";\n        else\n            echo "[[ \\"\\${REPLY}\\" == ${delimiterVal} ]] || {";\n        fi;\n    else\n        if ${nullDelimiterFlag}; then\n            echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read}"""\ncase "${nullDelimiterProg}" in \n                \'dd\')\n                    echo """\n                { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } || {"""\n                ;;\n                \'bash\')\n                    echo """\n                IFS=\\$\'\\\\t\' read -r _ fd_read_pos0 </proc/self/fdinfo/${fd_read0}\n                nBytes=\\$(( fd_read_pos - fd_read_pos0 - \\${#A[@]} ))"""\nif ${ddAvailableFlag}; then\n                        echo """\n                    {\n                        if (( \\${nBytes}  > 65535 )); then\n                            { dd if=\\"${fPath}\\" bs=1 count=1 ${ddQuietStr} skip=\\$(( fd_read_pos - 1 )) | read -t 1 -r -d \'\'; } \n                        else\n                            read -r -u ${fd_read0} -N \\${nBytes} _\n                            read -r -u ${fd_read0} -d \'\'\n                            [[ \\${#REPLY} == 0 ]]\n                        fi\n                    } || {""";\n                    else\n                        echo """\n                    read -r -u ${fd_read0} -N \\${nBytes} _\n                    read -r -u ${fd_read0} -d \'\'\n                    [[ \\${#REPLY} == 0 ]] || {""";\n                    fi\n                ;;\n            esac;\n        else\n            echo "[[ \\"\\${A[-1]: -1}\\" == ${delimiterVal} ]] || {";\n        fi;\n    fi\n(( ${verboseLevel} > 2 )) && echo """\n                echo \\"Partial read at: \\${A[-1]}\\" >&${fd_stderr}"""\necho """\n                until read -r -u ${fd_read} ${delimiterReadStr}; do \n                    A[-1]+=\\"\\${REPLY}\\"; \n                done"""\nprintf \'%s\' "A[-1]+=\\"\\${REPLY}\\""\n${lseekFlag} && printf \'\\n\' || printf \'%s\\n\' "${delimiterVal}"\n(( ${verboseLevel} > 2 )) && echo "echo \\"Partial read fixed to: \\${A[-1]}\\" >&${fd_stderr}"\necho "}"; };\nfi\n${pipeReadFlag} || { ${nullDelimiterFlag} && [[ -z ${nullDelimiterProg} ]]; } || ${readBytesFlag} || echo "}"\n${nLinesReadLimitFlag} && echo """\nnLinesRead+=\\${#A[@]}\necho \\${nLinesRead} >\\"${tmpDir}\\"/.nLinesRead\n(( nLinesRead == nLinesReadLimit )) && {\n    : >\\"${tmpDir}\\"/.quit\n    echo \'0\' >\\"${tmpDir}\\"/.nLines\n}\n"""\necho """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""\nif ${lseekPosFlag}; then\n    echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos""";\nelse\n    echo """\n            IFS=\\$\'\\\\t\' read -r _ fd_read_pos </proc/self/fdinfo/${fd_read};\n            IFS=\\$\'\\\\t\' read -r _ fd_write_pos </proc/self/fdinfo/${fd_write}; \n                """;\nfi\necho """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""\n${nLinesAutoFlag} && echo "printf \'x\\\\n\' >&\\${fd_nAuto0}"\n${nOrderFlag} && echo ": >\\"${tmpDir}\\"/.out/.quit{<#>}"\n${nSpawnFlag} && echo """printf \'q\\\\n\' >&${fd_nSpawn}\n            printf \'q\\\\n\' >&\\${fd_nAuto0}"""\necho """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""\n${nOrderFlag} && echo """else\n            printf \'x%s\\n\' \\"\\${nOrder}\\" >&\\${fd_nOrder0}"""\necho """fi\n        continue\n    }"""\n{ ${nLinesAutoFlag} || ${nSpawnFlag}; } && { printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""\n${fallocateFlag} && printf \'%s\' \' || \' || echo; }\n${fallocateFlag} && echo "printf \'\\\\n\' >&\\${fd_nAuto0}"\n${pipeReadFlag} || ${nullDelimiterFlag} || ${readBytesFlag} || ${lseekFlag} || { echo """\n        { [[ \\"\\${A[*]##*${delimiterVal}}\\" ]] || [[ -z \\${A[0]} ]]; } && {"""\n(( ${verboseLevel} > 2 )) && echo "echo \\"FIXING SPLIT READ\\" >&${fd_stderr}"\necho """\n            A[-1]=\\"\\${A[-1]%${delimiterVal}}\\"\n            IFS=\n            mapfile ${delimiterReadStr} A <<<\\"\\${A[*]}\\"\n        }"""; }\n${subshellRunFlag} && echo \'(\' || echo \'{\'\n{ ${exportOrderFlag} || { ${nOrderFlag} && ${substituteStringIDFlag}; }; } && echo \'nOrder0="${nOrder:1}"\'\n${exportOrderFlag} && echo "printf \'\\034%s:\\035\\n\' \\"\\${nOrder0}\\""\nprintf \'%s \' "${runCmd[@]}"\nif ${readBytesFlag} && ! { [[ ${readBytesProg} == \'bash\' ]] && ! ${stdinRunFlag}; }; then\n    if ${stdinRunFlag} || ${noFuncFlag}; then\n        printf \'<"%s"/%s\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    else\n        printf \'"$(<"%s"/%s)"\' "${tmpDir}" \'.stdin.tmp.{<#>}\';\n    fi;\nelse\n    if ${stdinRunFlag}; then\n        printf \'<<<%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n    else\n        if ${noFuncFlag}; then\n            printf "<<<\\"\\${A[*]%s}\\"" "${delimiterRemoveStr}";\n        else\n            if ! ${substituteStringFlag}; then\n                printf \'%s\' "\\"\\${A[@]${delimiterRemoveStr}}\\"";\n            fi;\n        fi;\n    fi;\nfi\n(( ${verboseLevel} > 2 )) && echo """ || {\n        {\n            printf \'\\\\n\\\\n----------------------------------------------\\\\n\\\\n\'\n            echo \'ERROR DURING \\"${runCmd[*]}\\" CALL\'\n            declare -p A nLinesCur nLinesAutoFlag\n            echo \'fd_read:\'\n            cat /proc/self/fdinfo/${fd_read}\n            echo \'fd_write:\'\n            cat /proc/self/fdinfo/${fd_write}\n            echo\n        } >&${fd_stderr}\n    }"""\n${readBytesFlag} && { [[ -n ${readBytesProg//bash/} ]] || ${stdinRunFlag}; } && printf \'\\n\\\\rm -f "\'"${tmpDir}"\'"/.stdin.tmp.{<#>}\\n\'\n${subshellRunFlag} && printf \'\\n%s \' \')\' || printf \'\\n%s \' \'}\'\necho "${outStr}"\n${nOrderFlag} && echo "printf \'%s\\\\n\' \\"\\${nOrder}\\" >&${fd_nOrder0}"\n${nSpawnFlag} && echo "printf \'l%s\\\\nt%s\\\\n\' \\${#A[@]} \\${EPOCHREALTIME//./} >&${fd_nSpawn}"\necho """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})""")"
-997.3.0:        ( 0.005446s |  0.00% |  0.00% )   ( 0.006230s |  0.00% |  0.00% )    	(1x)	│  │  │   << (SUBSHELL) >>
-997.4.0:        ( 0.000447s |  0.00% |  8.20% )   ( 0.000499s |  0.00% |  8.00% )    	(1x)	│  │  │  ├─  $'echo """\nlocal p{<#>} p{<#>}_PID\n\n{ coproc p{<#>} {\nexport LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR=\\"${tmpDir}\\"\n\necho \\"\\${BASH_PID}\\" >\\"${tmpDir}\\"/.run/p{<#>}\n\ntrap \': >\\"${tmpDir}\\"/.quit; \n[[ -f \\"${tmpDir}\\"/.run/p{<#>} ]] && \\\\rm -f \\"${tmpDir}\\"/.run/p{<#>}; \nprintf \'\\"\'\\"\'\\n\'\\"\'\\"\' >&${fd_continue}\' EXIT\n\ntrap \'trap - TERM INT HUP USR1; kill -INT ${PID0} \\${BASHPID}\' INT\ntrap \'trap - TERM INT HUP USR1; kill -TERM ${PID0} \\${BASHPID}\' TERM\ntrap \'trap - TERM INT HUP USR1; kill -HUP ${PID0} \\${BASHPID}\' HUP\ntrap \'trap - TERM INT HUP USR1\' USR1\n\nwhile true; do"""
-998.4.0:        ( 0.000282s |  0.00% |  5.17% )   ( 0.000323s |  0.00% |  5.18% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-998.4.1:        ( 0.000081s |  0.00% |  1.48% )   ( 0.000092s |  0.00% |  1.47% )    	(1x)	│  │  │  │   echo "{ \${nLinesAutoFlag} || \${nSpawnFlag}; } && read -r <\"${tmpDir}\"/.nLines && [[ \${REPLY} == +([0-9]) ]] && nLinesCur=\${REPLY}"
-1006.4.0:       ( 0.000218s |  0.00% |  4.00% )   ( 0.000230s |  0.00% |  3.69% )    	(1x)	│  │  │  │   $'echo """\n    echo 1 >\\"${tmpDir}\\"/.wait/p{<#>}\n    read -r -u ${fd_continue} _\n    [[ -f \\"${tmpDir}\\"/.quit ]] && {\n        printf \'\\n\' >&${fd_continue}\n        break\n    }\n    [[ -f \\"${tmpDir}\\"/.done ]] && doneIndicatorFlag=true"""
-1007.4.0:       ( 0.000072s |  0.00% |  1.32% )   ( 0.000084s |  0.00% |  1.34% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1079.4.0:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
-1082.4.0:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   echo "{"
-1083.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1084.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1084.4.1:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000080s |  0.00% |  1.28% )    	(1x)	│  │  │  │   echo "evfd_wait ${fd_nSpawn}"
-1085.4.0:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   printf '%s ' "mapfile"
-1086.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${lseekFlag}
-1086.4.1:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   printf '%s ' '-t'
-1087.4.0:       ( 0.000070s |  0.00% |  1.28% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   printf '%s ' '-n' "\${nLinesCur}" '-u'
-1088.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1088.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000083s |  0.00% |  1.33% )    	(1x)	│  │  │  │   printf '%s ' ${fd_read}
-1089.4.0:       ( 0.000072s |  0.00% |  1.32% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1089.4.1:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1089.4.2:       ( 0.000083s |  0.00% |  1.52% )   ( 0.000094s |  0.00% |  1.50% )    	(1x)	│  │  │  │   printf '%s ' '-t'
-1091.4.0:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   $'echo """${delimiterReadStr} A\n    }"""
-1092.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1092.4.1:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1092.4.2:       ( 0.000096s |  0.00% |  1.76% )   ( 0.000107s |  0.00% |  1.71% )    	(1x)	│  │  │  │   [[ -z ${nullDelimiterProg} ]]
-1149.4.0:       ( 0.000075s |  0.00% |  1.37% )   ( 0.000086s |  0.00% |  1.38% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1149.4.1:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1149.4.2:       ( 0.000073s |  0.00% |  1.34% )   ( 0.000085s |  0.00% |  1.36% )    	(1x)	│  │  │  │   [[ -z ${nullDelimiterProg} ]]
-1150.4.0:       ( 0.000080s |  0.00% |  1.46% )   ( 0.000091s |  0.00% |  1.46% )    	(1x)	│  │  │  │   ${nLinesReadLimitFlag}
-1163.4.0:       ( 0.000105s |  0.00% |  1.92% )   ( 0.000114s |  0.00% |  1.82% )    	(1x)	│  │  │  │   $'echo """\n    printf \'\\\\n\' >&${fd_continue}\n    echo 0 >\\"${tmpDir}\\"/.wait/p{<#>}\n    [[ \\${#A[@]} == 0 ]] && {\n        \\${doneIndicatorFlag} || { \n          [[ -f \\"${tmpDir}\\"/.done ]] && {"""
-1164.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${lseekPosFlag}
-1167.4.0:       ( 0.000077s |  0.00% |  1.41% )   ( 0.000089s |  0.00% |  1.42% )    	(1x)	│  │  │  │   $'echo """\n            lseek $fd_read 0 SEEK_CUR fd_read_pos \n            lseek $fd_write 0 SEEK_CUR fd_write_pos"""
-1178.4.0:       ( 0.000077s |  0.00% |  1.41% )   ( 0.000089s |  0.00% |  1.42% )    	(1x)	│  │  │  │   $'echo """\n            [[ \\"\\${fd_read_pos}\\" == \\"\\${fd_write_pos}\\" ]] && doneIndicatorFlag=true\n          }\n        }\n        if \\${doneIndicatorFlag} || [[ -f \\"${tmpDir}\\"/.quit ]]; then"""
-1179.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-1179.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   echo "printf 'x\\n' >&\${fd_nAuto0}"
-1180.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1181.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-1186.4.0:       ( 0.000079s |  0.00% |  1.45% )   ( 0.000090s |  0.00% |  1.44% )    	(1x)	│  │  │  │   $'echo """\n            : >\\"${tmpDir}\\"/.quit\n            printf \'%.0s\\\\n\' \\"${tmpDir}\\"/.run/p* >&${fd_continue}\n            break"""
-1187.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1191.4.0:       ( 0.000094s |  0.00% |  1.72% )   ( 0.000105s |  0.00% |  1.68% )    	(1x)	│  │  │  │   $'echo """fi\n        continue\n    }"""
-1192.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nLinesAutoFlag}
-1192.4.1:       ( 0.000089s |  0.00% |  1.63% )   ( 0.000100s |  0.00% |  1.60% )    	(1x)	│  │  │  │   $'printf \'%s\' """\n    { \\${nLinesAutoFlag} || \\${nSpawnFlag}; } && {\n        printf \'%s\\\\n\' \\${#A[@]} >&\\${fd_nAuto0}\n        (( \\${nLinesCur} < ${nLinesMax} )) || nLinesAutoFlag=false\n    }"""
-1197.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${fallocateFlag}
-1197.4.1:       ( 0.000088s |  0.00% |  1.61% )   ( 0.000099s |  0.00% |  1.58% )    	(1x)	│  │  │  │   printf '%s' ' || '
-1198.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${fallocateFlag}
-1198.4.1:       ( 0.000082s |  0.00% |  1.50% )   ( 0.000093s |  0.00% |  1.49% )    	(1x)	│  │  │  │   echo "printf '\\n' >&\${fd_nAuto0}"
-1199.4.0:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000077s |  0.00% |  1.23% )    	(1x)	│  │  │  │   ${pipeReadFlag}
-1199.4.1:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${nullDelimiterFlag}
-1207.4.0:       ( 0.000063s |  0.00% |  1.15% )   ( 0.000074s |  0.00% |  1.18% )    	(1x)	│  │  │  │   ${subshellRunFlag}
-1207.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000083s |  0.00% |  1.33% )    	(1x)	│  │  │  │   echo '{'
-1208.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${exportOrderFlag}
-1208.4.1:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1209.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000078s |  0.00% |  1.25% )    	(1x)	│  │  │  │   ${exportOrderFlag}
-1210.4.0:       ( 0.000090s |  0.00% |  1.65% )   ( 0.000102s |  0.00% |  1.63% )    	(1x)	│  │  │  │   printf '%s ' "${runCmd[@]}"
-1211.4.0:       ( 0.000065s |  0.00% |  1.19% )   ( 0.000076s |  0.00% |  1.21% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1218.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${stdinRunFlag}
-1221.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000074s |  0.00% |  1.18% )    	(1x)	│  │  │  │   ${noFuncFlag}
-1224.4.0:       ( 0.000066s |  0.00% |  1.21% )   ( 0.000075s |  0.00% |  1.20% )    	(1x)	│  │  │  │   ${substituteStringFlag}
-1225.4.0:       ( 0.000082s |  0.00% |  1.50% )   ( 0.000092s |  0.00% |  1.47% )    	(1x)	│  │  │  │   printf '%s' "\"\${A[@]${delimiterRemoveStr}}\""
-1230.4.0:       ( 0.000071s |  0.00% |  1.30% )   ( 0.000082s |  0.00% |  1.31% )    	(1x)	│  │  │  │   (( ${verboseLevel} > 2 ))
-1242.4.0:       ( 0.000067s |  0.00% |  1.23% )   ( 0.000079s |  0.00% |  1.26% )    	(1x)	│  │  │  │   ${readBytesFlag}
-1243.4.0:       ( 0.000064s |  0.00% |  1.17% )   ( 0.000074s |  0.00% |  1.18% )    	(1x)	│  │  │  │   ${subshellRunFlag}
-1243.4.1:       ( 0.000088s |  0.00% |  1.61% )   ( 0.000098s |  0.00% |  1.57% )    	(1x)	│  │  │  │   printf '\n%s ' '}'
-1244.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000080s |  0.00% |  1.28% )    	(1x)	│  │  │  │   echo "${outStr}"
-1245.4.0:       ( 0.000069s |  0.00% |  1.26% )   ( 0.000081s |  0.00% |  1.30% )    	(1x)	│  │  │  │   ${nOrderFlag}
-1246.4.0:       ( 0.000068s |  0.00% |  1.24% )   ( 0.000080s |  0.00% |  1.28% )    	(1x)	│  │  │  │   ${nSpawnFlag}
-1251.4.0:       ( 0.000087s |  0.00% |  1.59% )   ( 0.000099s |  0.00% |  1.58% )    	(1x)	│  │  │  └─  $'echo """\ndone\n} 2>&${fd_stderr} {fd_nAuto0}>&${fd_nAuto}\n} 2>/dev/null\np_PID+=(\\${p{<#>}_PID})"""
-981.3.0:        ( 0.000291s |  0.00% |  0.00% )   ( 0.000336s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-986.3.0:        ( 0.000293s |  0.00% |  0.00% )   ( 0.000333s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'kill $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null;\n        kill -9 \'"${exitTrapStr_kill}"\' 2>/dev/null; \n        kill -9 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) 2>/dev/null; \'\'\n\'
-988.3.0:        ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │   $'exitTrapStr+=\'trap - INT TERM HUP USR1; \n        return ${returnVal:-0}\'
-989.3.0:        ( 0.023891s |  0.00% |  0.00% )   ( 0.023841s |  0.00% |  0.00% )    	(1x)	│  │  │   trap "${exitTrapStr}" EXIT
-993.3.0:        ( 0.024031s |  0.00% |  0.00% )   ( 0.023979s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -INT $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" INT
-997.3.0:        ( 0.023822s |  0.00% |  0.00% )   ( 0.170118s |  0.01% |  0.03% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -TERM $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" TERM
-1001.3.0:       ( 0.023729s |  0.00% |  0.00% )   ( 0.023677s |  0.00% |  0.00% )    	(1x)	│  │  │   $'trap \'trap - TERM INT HUP USR1; \n        returnVal=1; \n        kill -USR1 $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null); \n        kill -HUP $(cat </dev/null "\'"${tmpDir}"\'"/.run/p* 2>/dev/null) \'"${PID0}" HUP
-1002.3.0:       ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1003.3.0:       ( 0.000064s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
-1007.3.0:       ( 0.000067s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1011.3.0:       ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │   printf '\n' >&${fd_continue}
-1012.3.0:       ( 0.000063s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1013.3.0:       ( 0.000064s |  0.00% |  0.00% )   ( 0.000073s |  0.00% |  0.00% )    	(1x)	│  │  │   ((kkProcs=0 ))
-1013.3.1:       ( 0.003013s |  0.00% |  0.00% )   ( 0.003440s |  0.00% |  0.00% )    	(29x)	│  │  │   ((kkProcs<28 ))
-1015.3.0:       ( 0.002906s |  0.00% |  0.00% )   ( 0.003321s |  0.00% |  0.00% )    	(28x)	│  │  │   [[ -f "${tmpDir}"/.quit ]]
-1016.3.0:       ( 17.345828s |  1.58% |  3.16% )   ( 16.569565s |  1.66% |  3.32% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p0 p0_PID >>
-1.4.0:          ( 0.000587s |  0.00% |  0.00% )   ( 0.000599s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p0 p0_PID (&)
-24.4.0:         ( 17.345156s |  1.58% | 99.99% )   ( 16.568866s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000083s |  0.00% |  0.00% )   ( 0.000111s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p0
-30.5.0:         ( 0.023248s |  0.00% |  0.13% )   ( 0.023208s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p0 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p0; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023631s |  0.00% |  0.13% )   ( 0.023577s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.023679s |  0.00% |  0.13% )   ( 0.023645s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024013s |  0.00% |  0.13% )   ( 0.023964s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.023986s |  0.00% |  0.13% )   ( 0.023939s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004823s |  0.00% |  0.00% )   ( 0.005425s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   true
-38.5.0:         ( 0.004389s |  0.00% |  0.00% )   ( 0.004980s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000174s |  0.00% |  0.00% )   ( 0.000199s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005329s |  0.00% |  0.00% )   ( 0.005960s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p0
-41.5.0:         ( 0.159957s |  0.01% |  0.03% )   ( 0.006093s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004380s |  0.00% |  0.00% )   ( 0.004971s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004648s |  0.00% |  0.00% )   ( 0.005260s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004337s |  0.00% |  0.00% )   ( 0.004921s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004564s |  0.00% |  0.00% )   ( 0.005169s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.040408s |  0.00% |  0.00% )   ( 0.035329s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.006661s |  0.00% |  0.00% )   ( 0.005229s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005282s |  0.00% |  0.00% )   ( 0.005893s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p0
-54.5.0:         ( 0.004424s |  0.00% |  0.00% )   ( 0.005033s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003989s |  0.00% |  0.00% )   ( 0.004551s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-79.5.0:         ( 16.949629s |  1.54% |  3.36% )   ( 16.326061s |  1.63% |  3.39% )    	(29x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004114s |  0.00% |  0.02% )   ( 0.004681s |  0.00% |  0.02% )    	(29x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.117508s |  0.10% |  6.59% )   ( 1.081975s |  0.10% |  6.62% )    	(29x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.893573s |  0.17% | 11.17% )   ( 1.835573s |  0.18% | 11.24% )    	(29x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.642812s |  0.14% |  9.69% )   ( 1.566906s |  0.15% |  9.59% )    	(29x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.862467s |  0.16% | 10.98% )   ( 1.829442s |  0.18% | 11.20% )    	(29x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.600417s |  0.14% |  9.44% )   ( 1.530701s |  0.15% |  9.37% )    	(29x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.007433s |  0.09% |  5.94% )   ( 0.992410s |  0.09% |  6.07% )    	(29x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.575748s |  0.05% |  3.39% )   ( 0.550401s |  0.05% |  3.37% )    	(29x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.080197s |  0.09% |  6.37% )   ( 1.052708s |  0.10% |  6.44% )    	(29x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.544118s |  0.04% |  3.21% )   ( 0.493153s |  0.04% |  3.02% )    	(29x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.460154s |  0.13% |  8.61% )   ( 1.385239s |  0.13% |  8.48% )    	(29x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.001969s |  0.27% | 17.71% )   ( 2.912015s |  0.29% | 17.83% )    	(29x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.587258s |  0.05% |  3.46% )   ( 0.553359s |  0.05% |  3.38% )    	(29x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.571861s |  0.05% |  3.37% )   ( 0.537498s |  0.05% |  3.29% )    	(29x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-76.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.004267s |  0.00% |  0.00% )   ( 0.004845s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003891s |  0.00% |  0.00% )   ( 0.004415s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004234s |  0.00% |  0.00% )   ( 0.004747s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-55.5.0:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
-65.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf 'x\n' >&${fd_nAuto0}
-67.5.0:         ( 0.000190s |  0.00% |  0.00% )   ( 0.000213s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   : > "/dev/shm/.forkrun/forkrun.pqysCP"/.quit
-68.5.0:         ( 0.000228s |  0.00% |  0.00% )   ( 0.000248s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%.0s\n' "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p* 1>&20
-69.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009383s |  0.00% |  0.05% )   ( 0.009357s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p0_PID})
-1013.3.0:       ( 0.002953s |  0.00% |  0.00% )   ( 0.003382s |  0.00% |  0.00% )    	(28x)	│  │  │   ((kkProcs++ ))
-1016.3.0:       ( 18.411956s |  1.67% |  3.36% )   ( 17.841146s |  1.78% |  3.57% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p1 p1_PID >>
-1.4.0:          ( 0.000574s |  0.00% |  0.00% )   ( 0.000593s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p1 p1_PID (&)
-24.4.0:         ( 18.411297s |  1.67% | 99.99% )   ( 17.840454s |  1.78% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000337s |  0.00% |  0.00% )   ( 0.000377s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000363s |  0.00% |  0.00% )   ( 0.000399s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p1
-30.5.0:         ( 0.023521s |  0.00% |  0.12% )   ( 0.023481s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p1 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p1; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023661s |  0.00% |  0.12% )   ( 0.023624s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024043s |  0.00% |  0.13% )   ( 0.023992s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024025s |  0.00% |  0.13% )   ( 0.023983s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.023978s |  0.00% |  0.13% )   ( 0.023932s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.002854s |  0.00% |  0.00% )   ( 0.003202s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   true
-38.5.0:         ( 0.002494s |  0.00% |  0.00% )   ( 0.002827s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000177s |  0.00% |  0.00% )   ( 0.000203s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000146s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003048s |  0.00% |  0.00% )   ( 0.003388s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p1
-41.5.0:         ( 0.122060s |  0.01% |  0.03% )   ( 0.003876s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.002705s |  0.00% |  0.00% )   ( 0.003058s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.002455s |  0.00% |  0.00% )   ( 0.002799s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.002273s |  0.00% |  0.00% )   ( 0.002590s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002381s |  0.00% |  0.00% )   ( 0.002690s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.017904s |  0.00% |  0.00% )   ( 0.018176s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.005609s |  0.00% |  0.00% )   ( 0.002837s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.002729s |  0.00% |  0.00% )   ( 0.003050s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p1
-54.5.0:         ( 0.002232s |  0.00% |  0.00% )   ( 0.002559s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002212s |  0.00% |  0.00% )   ( 0.002507s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000203s |  0.00% |  0.00% )   ( 0.000236s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-79.5.0:         ( 18.107016s |  1.65% |  5.78% )   ( 17.652529s |  1.77% |  5.82% )    	(17x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002369s |  0.00% |  0.01% )   ( 0.002687s |  0.00% |  0.01% )    	(17x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.169216s |  0.10% |  6.45% )   ( 1.144761s |  0.11% |  6.48% )    	(17x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.192427s |  0.19% | 12.10% )   ( 2.169224s |  0.21% | 12.28% )    	(17x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.713158s |  0.15% |  9.46% )   ( 1.665730s |  0.16% |  9.43% )    	(17x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.200065s |  0.20% | 12.15% )   ( 2.176364s |  0.21% | 12.32% )    	(17x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.715271s |  0.15% |  9.47% )   ( 1.656376s |  0.16% |  9.38% )    	(17x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.053718s |  0.09% |  5.81% )   ( 1.026725s |  0.10% |  5.81% )    	(17x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.439112s |  0.04% |  2.42% )   ( 0.399523s |  0.04% |  2.26% )    	(17x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.150322s |  0.10% |  6.35% )   ( 1.124804s |  0.11% |  6.37% )    	(17x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.355345s |  0.03% |  1.96% )   ( 0.325868s |  0.03% |  1.84% )    	(17x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.479145s |  0.13% |  8.16% )   ( 1.409404s |  0.14% |  7.98% )    	(17x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.837117s |  0.34% | 21.19% )   ( 3.807137s |  0.38% | 21.56% )    	(17x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.410850s |  0.03% |  2.26% )   ( 0.384444s |  0.03% |  2.17% )    	(17x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.388901s |  0.03% |  2.14% )   ( 0.359482s |  0.03% |  2.03% )    	(17x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-76.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.002358s |  0.00% |  0.00% )   ( 0.002664s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002131s |  0.00% |  0.00% )   ( 0.002414s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002399s |  0.00% |  0.00% )   ( 0.002700s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000190s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005269s |  0.00% |  0.02% )   ( 0.005377s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000085s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p1_PID})
-1016.3.0:       ( 23.940353s |  2.18% |  4.37% )   ( 23.502643s |  2.35% |  4.70% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p2 p2_PID >>
-1.4.0:          ( 0.000575s |  0.00% |  0.00% )   ( 0.000595s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p2 p2_PID (&)
-24.4.0:         ( 23.939699s |  2.18% | 99.99% )   ( 23.501955s |  2.35% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000090s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p2
-30.5.0:         ( 0.023513s |  0.00% |  0.09% )   ( 0.023475s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p2 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p2; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023914s |  0.00% |  0.09% )   ( 0.023875s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024020s |  0.00% |  0.10% )   ( 0.023975s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.023990s |  0.00% |  0.10% )   ( 0.023949s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.024018s |  0.00% |  0.10% )   ( 0.023972s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.001914s |  0.00% |  0.00% )   ( 0.002153s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   true
-38.5.0:         ( 0.001752s |  0.00% |  0.00% )   ( 0.002003s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000179s |  0.00% |  0.00% )   ( 0.000203s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.002296s |  0.00% |  0.00% )   ( 0.002562s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p2
-41.5.0:         ( 0.059998s |  0.00% |  0.01% )   ( 0.002631s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.001901s |  0.00% |  0.00% )   ( 0.002154s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.001676s |  0.00% |  0.00% )   ( 0.001913s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.001657s |  0.00% |  0.00% )   ( 0.001899s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.001918s |  0.00% |  0.00% )   ( 0.002163s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.017539s |  0.00% |  0.00% )   ( 0.014146s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.001876s |  0.00% |  0.00% )   ( 0.002119s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.002097s |  0.00% |  0.00% )   ( 0.002343s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p2
-54.5.0:         ( 0.001793s |  0.00% |  0.00% )   ( 0.002053s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.001696s |  0.00% |  0.00% )   ( 0.001907s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(2x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-79.5.0:         ( 23.711289s |  2.16% |  7.61% )   ( 23.330904s |  2.33% |  7.63% )    	(13x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.001705s |  0.00% |  0.00% )   ( 0.001949s |  0.00% |  0.00% )    	(13x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.722443s |  0.15% |  7.26% )   ( 1.683379s |  0.16% |  7.21% )    	(13x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 3.003090s |  0.27% | 12.66% )   ( 2.981252s |  0.29% | 12.77% )    	(13x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 2.188242s |  0.19% |  9.22% )   ( 2.169280s |  0.21% |  9.29% )    	(13x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 3.001748s |  0.27% | 12.65% )   ( 2.985823s |  0.29% | 12.79% )    	(13x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 2.124353s |  0.19% |  8.95% )   ( 2.114511s |  0.21% |  9.06% )    	(13x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.444629s |  0.13% |  6.09% )   ( 1.437575s |  0.14% |  6.16% )    	(13x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.414351s |  0.03% |  1.74% )   ( 0.404631s |  0.04% |  1.73% )    	(13x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.663245s |  0.15% |  7.01% )   ( 1.598990s |  0.16% |  6.85% )    	(13x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.355446s |  0.03% |  1.49% )   ( 0.325989s |  0.03% |  1.39% )    	(13x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.893218s |  0.17% |  7.98% )   ( 1.787336s |  0.17% |  7.66% )    	(13x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 5.187761s |  0.47% | 21.87% )   ( 5.157111s |  0.51% | 22.10% )    	(13x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.389269s |  0.03% |  1.64% )   ( 0.366307s |  0.03% |  1.57% )    	(13x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.321789s |  0.02% |  1.35% )   ( 0.316771s |  0.03% |  1.35% )    	(13x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-76.5.1:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-38.5.1:         ( 0.001688s |  0.00% |  0.00% )   ( 0.001925s |  0.00% |  0.00% )    	(12x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.001560s |  0.00% |  0.00% )   ( 0.001774s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.001621s |  0.00% |  0.00% )   ( 0.001828s |  0.00% |  0.00% )    	(11x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004818s |  0.00% |  0.02% )   ( 0.004894s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000079s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p2_PID})
-1016.3.0:       ( 20.090851s |  1.83% |  3.66% )   ( 19.005941s |  1.90% |  3.80% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p3 p3_PID >>
-1.4.0:          ( 0.000597s |  0.00% |  0.00% )   ( 0.000616s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p3 p3_PID (&)
-24.4.0:         ( 20.090172s |  1.83% | 99.99% )   ( 19.005229s |  1.90% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000337s |  0.00% |  0.00% )   ( 0.000378s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000358s |  0.00% |  0.00% )   ( 0.000395s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p3
-30.5.0:         ( 0.023719s |  0.00% |  0.11% )   ( 0.023680s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p3 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p3; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024050s |  0.00% |  0.11% )   ( 0.024007s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024004s |  0.00% |  0.11% )   ( 0.023958s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024016s |  0.00% |  0.11% )   ( 0.023969s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.023888s |  0.00% |  0.11% )   ( 0.023841s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004594s |  0.00% |  0.00% )   ( 0.005152s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
-38.5.0:         ( 0.004225s |  0.00% |  0.00% )   ( 0.004762s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.008070s |  0.00% |  0.00% )   ( 0.005627s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p3
-41.5.0:         ( 0.134843s |  0.01% |  0.02% )   ( 0.006017s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004365s |  0.00% |  0.00% )   ( 0.004914s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004039s |  0.00% |  0.00% )   ( 0.004549s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003921s |  0.00% |  0.00% )   ( 0.004453s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004066s |  0.00% |  0.00% )   ( 0.004592s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035203s |  0.00% |  0.00% )   ( 0.032815s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.005808s |  0.00% |  0.00% )   ( 0.004821s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004697s |  0.00% |  0.00% )   ( 0.005244s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p3
-54.5.0:         ( 0.004012s |  0.00% |  0.00% )   ( 0.004567s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004065s |  0.00% |  0.00% )   ( 0.004591s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 19.730430s |  1.79% |  3.63% )   ( 18.773724s |  1.88% |  3.65% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003859s |  0.00% |  0.01% )   ( 0.004412s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.433748s |  0.13% |  7.26% )   ( 1.369304s |  0.13% |  7.29% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.249113s |  0.20% | 11.39% )   ( 2.153230s |  0.21% | 11.46% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.776005s |  0.16% |  9.00% )   ( 1.740648s |  0.17% |  9.27% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.225945s |  0.20% | 11.28% )   ( 2.127244s |  0.21% | 11.33% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.759403s |  0.16% |  8.91% )   ( 1.706787s |  0.17% |  9.09% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.257085s |  0.11% |  6.37% )   ( 1.197009s |  0.12% |  6.37% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.648488s |  0.05% |  3.28% )   ( 0.569902s |  0.05% |  3.03% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.336177s |  0.12% |  6.77% )   ( 1.243370s |  0.12% |  6.62% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.572777s |  0.05% |  2.90% )   ( 0.505257s |  0.05% |  2.69% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.680105s |  0.15% |  8.51% )   ( 1.546806s |  0.15% |  8.23% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.588542s |  0.32% | 18.18% )   ( 3.498598s |  0.35% | 18.63% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.598479s |  0.05% |  3.03% )   ( 0.571219s |  0.05% |  3.04% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.600704s |  0.05% |  3.04% )   ( 0.539938s |  0.05% |  2.87% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004096s |  0.00% |  0.00% )   ( 0.004633s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003632s |  0.00% |  0.00% )   ( 0.004124s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004115s |  0.00% |  0.00% )   ( 0.004613s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004886s |  0.00% |  0.02% )   ( 0.004961s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000082s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p3_PID})
-1016.3.0:       ( 20.964465s |  1.91% |  3.82% )   ( 20.345126s |  2.04% |  4.07% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p4 p4_PID >>
-1.4.0:          ( 0.000595s |  0.00% |  0.00% )   ( 0.000615s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p4 p4_PID (&)
-24.4.0:         ( 20.963788s |  1.91% | 99.99% )   ( 20.344415s |  2.04% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000106s |  0.00% |  0.00% )   ( 0.000130s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p4
-30.5.0:         ( 0.023932s |  0.00% |  0.11% )   ( 0.023889s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p4 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p4; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024020s |  0.00% |  0.11% )   ( 0.023975s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.023998s |  0.00% |  0.11% )   ( 0.023951s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.023982s |  0.00% |  0.11% )   ( 0.023938s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.024021s |  0.00% |  0.11% )   ( 0.023974s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003305s |  0.00% |  0.00% )   ( 0.003660s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   true
-38.5.0:         ( 0.002855s |  0.00% |  0.00% )   ( 0.003244s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003412s |  0.00% |  0.00% )   ( 0.003798s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p4
-41.5.0:         ( 0.216284s |  0.01% |  0.05% )   ( 0.004949s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003226s |  0.00% |  0.00% )   ( 0.003623s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.002836s |  0.00% |  0.00% )   ( 0.003203s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.002632s |  0.00% |  0.00% )   ( 0.002989s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002763s |  0.00% |  0.00% )   ( 0.003107s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.022704s |  0.00% |  0.00% )   ( 0.023008s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003076s |  0.00% |  0.00% )   ( 0.003445s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.003364s |  0.00% |  0.00% )   ( 0.003756s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p4
-54.5.0:         ( 0.002717s |  0.00% |  0.00% )   ( 0.003100s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002680s |  0.00% |  0.00% )   ( 0.003038s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 20.558006s |  1.87% |  5.16% )   ( 20.144542s |  2.01% |  5.21% )    	(19x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002687s |  0.00% |  0.01% )   ( 0.003049s |  0.00% |  0.01% )    	(19x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.446096s |  0.13% |  7.03% )   ( 1.425486s |  0.14% |  7.07% )    	(19x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.822022s |  0.25% | 13.72% )   ( 2.739495s |  0.27% | 13.59% )    	(19x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 2.126774s |  0.19% | 10.34% )   ( 2.090068s |  0.20% | 10.37% )    	(19x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.797636s |  0.25% | 13.60% )   ( 2.761828s |  0.27% | 13.71% )    	(19x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 2.099638s |  0.19% | 10.21% )   ( 2.065150s |  0.20% | 10.25% )    	(19x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.334292s |  0.12% |  6.49% )   ( 1.280122s |  0.12% |  6.35% )    	(19x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.486667s |  0.04% |  2.36% )   ( 0.476451s |  0.04% |  2.36% )    	(19x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.259417s |  0.11% |  6.12% )   ( 1.242641s |  0.12% |  6.16% )    	(19x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.431735s |  0.03% |  2.10% )   ( 0.390245s |  0.03% |  1.93% )    	(19x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.410297s |  0.12% |  6.86% )   ( 1.402324s |  0.14% |  6.96% )    	(19x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.469317s |  0.31% | 16.87% )   ( 3.420294s |  0.34% | 16.97% )    	(19x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.444979s |  0.04% |  2.16% )   ( 0.439085s |  0.04% |  2.17% )    	(19x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.426449s |  0.03% |  2.07% )   ( 0.408304s |  0.04% |  2.02% )    	(19x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002710s |  0.00% |  0.00% )   ( 0.003049s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002585s |  0.00% |  0.00% )   ( 0.002945s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002899s |  0.00% |  0.00% )   ( 0.003264s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004988s |  0.00% |  0.02% )   ( 0.005056s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000082s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p4_PID})
-1016.3.0:       ( 18.686540s |  1.70% |  3.41% )   ( 17.950753s |  1.80% |  3.59% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p5 p5_PID >>
-1.4.0:          ( 0.000622s |  0.00% |  0.00% )   ( 0.000637s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p5 p5_PID (&)
-24.4.0:         ( 18.685835s |  1.70% | 99.99% )   ( 17.950019s |  1.79% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000334s |  0.00% |  0.00% )   ( 0.000374s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000351s |  0.00% |  0.00% )   ( 0.000395s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p5
-30.5.0:         ( 0.023957s |  0.00% |  0.12% )   ( 0.023914s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p5 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p5; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024036s |  0.00% |  0.12% )   ( 0.023995s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024014s |  0.00% |  0.12% )   ( 0.023969s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024016s |  0.00% |  0.12% )   ( 0.023970s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.024003s |  0.00% |  0.12% )   ( 0.023954s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003366s |  0.00% |  0.00% )   ( 0.003769s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   true
-38.5.0:         ( 0.003100s |  0.00% |  0.00% )   ( 0.003518s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003681s |  0.00% |  0.00% )   ( 0.004120s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p5
-41.5.0:         ( 0.170713s |  0.01% |  0.04% )   ( 0.004860s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003066s |  0.00% |  0.00% )   ( 0.003452s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.002886s |  0.00% |  0.00% )   ( 0.003284s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.002767s |  0.00% |  0.00% )   ( 0.003169s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002954s |  0.00% |  0.00% )   ( 0.003347s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.024042s |  0.00% |  0.00% )   ( 0.024361s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003555s |  0.00% |  0.00% )   ( 0.003612s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.003782s |  0.00% |  0.00% )   ( 0.004223s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p5
-54.5.0:         ( 0.003028s |  0.00% |  0.00% )   ( 0.003443s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002867s |  0.00% |  0.00% )   ( 0.003261s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000076s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 18.320841s |  1.67% |  4.90% )   ( 17.745292s |  1.77% |  4.94% )    	(20x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002934s |  0.00% |  0.01% )   ( 0.003348s |  0.00% |  0.01% )    	(20x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.159751s |  0.10% |  6.33% )   ( 1.123405s |  0.11% |  6.33% )    	(20x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.252738s |  0.20% | 12.29% )   ( 2.193477s |  0.21% | 12.36% )    	(20x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.717496s |  0.15% |  9.37% )   ( 1.668875s |  0.16% |  9.40% )    	(20x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.151869s |  0.19% | 11.74% )   ( 2.101800s |  0.21% | 11.84% )    	(20x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.748607s |  0.15% |  9.54% )   ( 1.662552s |  0.16% |  9.36% )    	(20x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.125773s |  0.10% |  6.14% )   ( 1.059106s |  0.10% |  5.96% )    	(20x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.519209s |  0.04% |  2.83% )   ( 0.463685s |  0.04% |  2.61% )    	(20x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.145972s |  0.10% |  6.25% )   ( 1.136490s |  0.11% |  6.40% )    	(20x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.398324s |  0.03% |  2.17% )   ( 0.397565s |  0.03% |  2.24% )    	(20x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.499839s |  0.13% |  8.18% )   ( 1.447330s |  0.14% |  8.15% )    	(20x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.681647s |  0.33% | 20.09% )   ( 3.618279s |  0.36% | 20.39% )    	(20x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.469087s |  0.04% |  2.56% )   ( 0.451898s |  0.04% |  2.54% )    	(20x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.447595s |  0.04% |  2.44% )   ( 0.417482s |  0.04% |  2.35% )    	(20x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002972s |  0.00% |  0.00% )   ( 0.003360s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002800s |  0.00% |  0.00% )   ( 0.003151s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002990s |  0.00% |  0.00% )   ( 0.003356s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000083s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000083s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005112s |  0.00% |  0.02% )   ( 0.005183s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000083s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p5_PID})
-1016.3.0:       ( 17.423112s |  1.58% |  3.18% )   ( 16.368416s |  1.64% |  3.28% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p6 p6_PID >>
-1.4.0:          ( 0.000628s |  0.00% |  0.00% )   ( 0.000643s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p6 p6_PID (&)
-24.4.0:         ( 17.422400s |  1.58% | 99.99% )   ( 16.367675s |  1.64% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000094s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p6
-30.5.0:         ( 0.023945s |  0.00% |  0.13% )   ( 0.023900s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p6 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p6; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024028s |  0.00% |  0.13% )   ( 0.023986s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.023989s |  0.00% |  0.13% )   ( 0.023942s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024011s |  0.00% |  0.13% )   ( 0.023963s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.023975s |  0.00% |  0.13% )   ( 0.023928s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.005016s |  0.00% |  0.00% )   ( 0.005617s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
-38.5.0:         ( 0.004533s |  0.00% |  0.00% )   ( 0.005134s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005569s |  0.00% |  0.00% )   ( 0.006169s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p6
-41.5.0:         ( 0.173836s |  0.01% |  0.03% )   ( 0.006517s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004784s |  0.00% |  0.00% )   ( 0.005379s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004459s |  0.00% |  0.00% )   ( 0.005054s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004283s |  0.00% |  0.00% )   ( 0.004845s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004512s |  0.00% |  0.00% )   ( 0.005114s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035086s |  0.00% |  0.00% )   ( 0.035546s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.010935s |  0.00% |  0.00% )   ( 0.005416s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005419s |  0.00% |  0.00% )   ( 0.006061s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p6
-54.5.0:         ( 0.004477s |  0.00% |  0.00% )   ( 0.005118s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004302s |  0.00% |  0.00% )   ( 0.004890s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000075s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.014804s |  1.55% |  3.25% )   ( 16.124700s |  1.61% |  3.28% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004372s |  0.00% |  0.02% )   ( 0.004971s |  0.00% |  0.03% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.123012s |  0.10% |  6.60% )   ( 1.075231s |  0.10% |  6.66% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.873228s |  0.17% | 11.00% )   ( 1.794696s |  0.17% | 11.13% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.631585s |  0.14% |  9.58% )   ( 1.567146s |  0.15% |  9.71% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.864851s |  0.16% | 10.96% )   ( 1.766432s |  0.17% | 10.95% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.562524s |  0.14% |  9.18% )   ( 1.491857s |  0.14% |  9.25% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.043565s |  0.09% |  6.13% )   ( 1.000967s |  0.10% |  6.20% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.583088s |  0.05% |  3.42% )   ( 0.580684s |  0.05% |  3.60% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.182746s |  0.10% |  6.95% )   ( 1.012993s |  0.10% |  6.28% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.563567s |  0.05% |  3.31% )   ( 0.520577s |  0.05% |  3.22% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.476115s |  0.13% |  8.67% )   ( 1.392452s |  0.13% |  8.63% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.838039s |  0.25% | 16.67% )   ( 2.758285s |  0.27% | 17.10% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.643901s |  0.05% |  3.78% )   ( 0.587756s |  0.05% |  3.64% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.624211s |  0.05% |  3.66% )   ( 0.570653s |  0.05% |  3.53% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004573s |  0.00% |  0.00% )   ( 0.005166s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.004309s |  0.00% |  0.00% )   ( 0.004895s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004631s |  0.00% |  0.00% )   ( 0.005194s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000186s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005973s |  0.00% |  0.03% )   ( 0.006065s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000084s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p6_PID})
-1016.3.0:       ( 17.979824s |  1.63% |  3.28% )   ( 17.290321s |  1.73% |  3.46% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p7 p7_PID >>
-1.4.0:          ( 0.000618s |  0.00% |  0.00% )   ( 0.000638s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p7 p7_PID (&)
-24.4.0:         ( 17.979115s |  1.63% | 99.99% )   ( 17.289582s |  1.73% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000335s |  0.00% |  0.00% )   ( 0.000374s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p7
-30.5.0:         ( 0.023937s |  0.00% |  0.13% )   ( 0.023894s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p7 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p7; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024025s |  0.00% |  0.13% )   ( 0.023982s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024053s |  0.00% |  0.13% )   ( 0.024005s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.023889s |  0.00% |  0.13% )   ( 0.023849s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.024011s |  0.00% |  0.13% )   ( 0.023962s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004112s |  0.00% |  0.00% )   ( 0.004683s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
-38.5.0:         ( 0.003782s |  0.00% |  0.00% )   ( 0.004290s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004532s |  0.00% |  0.00% )   ( 0.005045s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p7
-41.5.0:         ( 0.124549s |  0.01% |  0.02% )   ( 0.005109s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003697s |  0.00% |  0.00% )   ( 0.004160s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003586s |  0.00% |  0.00% )   ( 0.004059s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003390s |  0.00% |  0.00% )   ( 0.003864s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003651s |  0.00% |  0.00% )   ( 0.004132s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035393s |  0.00% |  0.00% )   ( 0.029076s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003931s |  0.00% |  0.00% )   ( 0.004403s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004308s |  0.00% |  0.00% )   ( 0.004796s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p7
-54.5.0:         ( 0.003443s |  0.00% |  0.00% )   ( 0.003913s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003440s |  0.00% |  0.00% )   ( 0.003925s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000077s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.640616s |  1.60% |  4.08% )   ( 17.070054s |  1.71% |  4.11% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003439s |  0.00% |  0.01% )   ( 0.003829s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.190261s |  0.10% |  6.74% )   ( 1.119997s |  0.11% |  6.56% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.143862s |  0.19% | 12.15% )   ( 2.018165s |  0.20% | 11.82% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.732634s |  0.15% |  9.82% )   ( 1.642398s |  0.16% |  9.62% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.019144s |  0.18% | 11.44% )   ( 2.000761s |  0.20% | 11.72% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.653216s |  0.15% |  9.37% )   ( 1.607110s |  0.16% |  9.41% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.056256s |  0.09% |  5.98% )   ( 1.029662s |  0.10% |  6.03% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.515686s |  0.04% |  2.92% )   ( 0.509850s |  0.05% |  2.98% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.150280s |  0.10% |  6.52% )   ( 1.105091s |  0.11% |  6.47% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.490361s |  0.04% |  2.77% )   ( 0.452554s |  0.04% |  2.65% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.463990s |  0.13% |  8.29% )   ( 1.425757s |  0.14% |  8.35% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.212315s |  0.29% | 18.20% )   ( 3.185208s |  0.31% | 18.65% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.502598s |  0.04% |  2.84% )   ( 0.490933s |  0.04% |  2.87% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.506574s |  0.04% |  2.87% )   ( 0.478739s |  0.04% |  2.80% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003714s |  0.00% |  0.00% )   ( 0.004188s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003363s |  0.00% |  0.00% )   ( 0.003809s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003728s |  0.00% |  0.00% )   ( 0.004195s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004933s |  0.00% |  0.02% )   ( 0.005016s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000091s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p7_PID})
-1016.3.0:       ( 20.104291s |  1.83% |  3.67% )   ( 19.343334s |  1.93% |  3.87% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p8 p8_PID >>
-1.4.0:          ( 0.000623s |  0.00% |  0.00% )   ( 0.000639s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p8 p8_PID (&)
-24.4.0:         ( 20.103582s |  1.83% | 99.99% )   ( 19.342593s |  1.93% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000117s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000101s |  0.00% |  0.00% )   ( 0.000116s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p8
-30.5.0:         ( 0.024672s |  0.00% |  0.12% )   ( 0.024624s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p8 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p8; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024062s |  0.00% |  0.11% )   ( 0.024017s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024053s |  0.00% |  0.11% )   ( 0.024006s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024093s |  0.00% |  0.11% )   ( 0.024030s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.024013s |  0.00% |  0.11% )   ( 0.023967s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004947s |  0.00% |  0.00% )   ( 0.005554s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
-38.5.0:         ( 0.004672s |  0.00% |  0.00% )   ( 0.005268s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005606s |  0.00% |  0.00% )   ( 0.006233s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p8
-41.5.0:         ( 0.112967s |  0.01% |  0.01% )   ( 0.006169s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004681s |  0.00% |  0.00% )   ( 0.005298s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004520s |  0.00% |  0.00% )   ( 0.005130s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004262s |  0.00% |  0.00% )   ( 0.004830s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004557s |  0.00% |  0.00% )   ( 0.005154s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.036089s |  0.00% |  0.00% )   ( 0.036564s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004636s |  0.00% |  0.00% )   ( 0.005209s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005346s |  0.00% |  0.00% )   ( 0.005980s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p8
-54.5.0:         ( 0.004362s |  0.00% |  0.00% )   ( 0.004941s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004430s |  0.00% |  0.00% )   ( 0.005018s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 19.759245s |  1.80% |  3.27% )   ( 19.099302s |  1.91% |  3.29% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.007527s |  0.00% |  0.03% )   ( 0.005121s |  0.00% |  0.02% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.425582s |  0.12% |  7.21% )   ( 1.383907s |  0.13% |  7.24% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.251133s |  0.20% | 11.39% )   ( 2.197693s |  0.22% | 11.50% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.824526s |  0.16% |  9.23% )   ( 1.780339s |  0.17% |  9.32% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.156656s |  0.19% | 10.91% )   ( 2.114805s |  0.21% | 11.07% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.793490s |  0.16% |  9.07% )   ( 1.724117s |  0.17% |  9.02% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.253657s |  0.11% |  6.34% )   ( 1.217062s |  0.12% |  6.37% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.641328s |  0.05% |  3.24% )   ( 0.607093s |  0.06% |  3.17% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.324301s |  0.12% |  6.70% )   ( 1.250729s |  0.12% |  6.54% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.581833s |  0.05% |  2.94% )   ( 0.547570s |  0.05% |  2.86% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.670766s |  0.15% |  8.45% )   ( 1.591537s |  0.15% |  8.33% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.583027s |  0.32% | 18.13% )   ( 3.481879s |  0.34% | 18.23% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.630355s |  0.05% |  3.19% )   ( 0.614209s |  0.06% |  3.21% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.615064s |  0.05% |  3.11% )   ( 0.583241s |  0.05% |  3.05% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004599s |  0.00% |  0.00% )   ( 0.005182s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.004172s |  0.00% |  0.00% )   ( 0.004750s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.007695s |  0.00% |  0.00% )   ( 0.005269s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005096s |  0.00% |  0.02% )   ( 0.005177s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000086s |  0.00% |  0.00% )   ( 0.000102s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p8_PID})
-1016.3.0:       ( 17.251847s |  1.57% |  3.14% )   ( 16.284476s |  1.63% |  3.26% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p9 p9_PID >>
-1.4.0:          ( 0.000630s |  0.00% |  0.00% )   ( 0.000647s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p9 p9_PID (&)
-24.4.0:         ( 17.251130s |  1.57% | 99.99% )   ( 16.283728s |  1.63% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000313s |  0.00% |  0.00% )   ( 0.000359s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000091s |  0.00% |  0.00% )   ( 0.000103s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p9
-30.5.0:         ( 0.023910s |  0.00% |  0.13% )   ( 0.023864s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p9 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p9; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024069s |  0.00% |  0.13% )   ( 0.024021s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024160s |  0.00% |  0.14% )   ( 0.024106s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024058s |  0.00% |  0.13% )   ( 0.024012s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.023822s |  0.00% |  0.13% )   ( 0.023769s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.005158s |  0.00% |  0.00% )   ( 0.005798s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
-38.5.0:         ( 0.004592s |  0.00% |  0.00% )   ( 0.005205s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005350s |  0.00% |  0.00% )   ( 0.005937s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p9
-41.5.0:         ( 0.345214s |  0.03% |  0.06% )   ( 0.007257s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004898s |  0.00% |  0.00% )   ( 0.005511s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004495s |  0.00% |  0.00% )   ( 0.005053s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004144s |  0.00% |  0.00% )   ( 0.004711s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004352s |  0.00% |  0.00% )   ( 0.004889s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.037517s |  0.00% |  0.00% )   ( 0.034994s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004474s |  0.00% |  0.00% )   ( 0.005035s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005299s |  0.00% |  0.00% )   ( 0.005892s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p9
-54.5.0:         ( 0.004290s |  0.00% |  0.00% )   ( 0.004878s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.007195s |  0.00% |  0.00% )   ( 0.004763s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000080s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 16.670748s |  1.51% |  3.22% )   ( 16.038668s |  1.60% |  3.28% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004298s |  0.00% |  0.02% )   ( 0.004898s |  0.00% |  0.03% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.085667s |  0.09% |  6.51% )   ( 1.060092s |  0.10% |  6.60% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.772610s |  0.16% | 10.63% )   ( 1.752632s |  0.17% | 10.92% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.594130s |  0.14% |  9.56% )   ( 1.527397s |  0.15% |  9.52% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.832046s |  0.16% | 10.98% )   ( 1.755950s |  0.17% | 10.94% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.538476s |  0.14% |  9.22% )   ( 1.477990s |  0.14% |  9.21% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.043964s |  0.09% |  6.26% )   ( 0.996913s |  0.09% |  6.21% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.602737s |  0.05% |  3.61% )   ( 0.584221s |  0.05% |  3.64% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.146884s |  0.10% |  6.87% )   ( 1.025642s |  0.10% |  6.39% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.550260s |  0.05% |  3.30% )   ( 0.515742s |  0.05% |  3.21% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.389785s |  0.12% |  8.33% )   ( 1.355819s |  0.13% |  8.45% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.876022s |  0.26% | 17.25% )   ( 2.835469s |  0.28% | 17.67% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.635784s |  0.05% |  3.81% )   ( 0.577947s |  0.05% |  3.60% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.598085s |  0.05% |  3.58% )   ( 0.567956s |  0.05% |  3.54% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004481s |  0.00% |  0.00% )   ( 0.005086s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.004132s |  0.00% |  0.00% )   ( 0.004690s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004643s |  0.00% |  0.00% )   ( 0.005205s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000149s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008982s |  0.00% |  0.05% )   ( 0.009072s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p9_PID})
-1016.3.0:       ( 17.632035s |  1.60% |  3.21% )   ( 16.714659s |  1.67% |  3.34% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p10 p10_PID >>
-1.4.0:          ( 0.000622s |  0.00% |  0.00% )   ( 0.000641s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p10 p10_PID (&)
-24.4.0:         ( 17.631323s |  1.60% | 99.99% )   ( 16.713914s |  1.67% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000093s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000098s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p10
-30.5.0:         ( 0.024353s |  0.00% |  0.13% )   ( 0.024257s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p10 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p10; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.024399s |  0.00% |  0.13% )   ( 0.024352s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024249s |  0.00% |  0.13% )   ( 0.024197s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024213s |  0.00% |  0.13% )   ( 0.024165s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.024161s |  0.00% |  0.13% )   ( 0.024111s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004387s |  0.00% |  0.00% )   ( 0.004899s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   true
-38.5.0:         ( 0.004109s |  0.00% |  0.00% )   ( 0.004632s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000099s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004962s |  0.00% |  0.00% )   ( 0.005492s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p10
-41.5.0:         ( 0.380790s |  0.03% |  0.07% )   ( 0.006838s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004512s |  0.00% |  0.00% )   ( 0.005046s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004284s |  0.00% |  0.00% )   ( 0.004862s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003838s |  0.00% |  0.00% )   ( 0.004343s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003832s |  0.00% |  0.00% )   ( 0.004320s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035633s |  0.00% |  0.00% )   ( 0.032988s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004034s |  0.00% |  0.00% )   ( 0.004519s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004659s |  0.00% |  0.00% )   ( 0.005199s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p10
-54.5.0:         ( 0.003758s |  0.00% |  0.00% )   ( 0.004275s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003722s |  0.00% |  0.00% )   ( 0.004203s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.026002s |  1.55% |  3.71% )   ( 16.478007s |  1.65% |  3.79% )    	(26x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003677s |  0.00% |  0.02% )   ( 0.004181s |  0.00% |  0.02% )    	(26x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.173114s |  0.10% |  6.89% )   ( 1.102900s |  0.11% |  6.69% )    	(26x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.909298s |  0.17% | 11.21% )   ( 1.892260s |  0.18% | 11.48% )    	(26x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.596800s |  0.14% |  9.37% )   ( 1.559014s |  0.15% |  9.46% )    	(26x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.943909s |  0.17% | 11.41% )   ( 1.871054s |  0.18% | 11.35% )    	(26x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.571905s |  0.14% |  9.23% )   ( 1.528901s |  0.15% |  9.27% )    	(26x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.016460s |  0.09% |  5.97% )   ( 0.981595s |  0.09% |  5.95% )    	(26x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.530811s |  0.04% |  3.11% )   ( 0.520738s |  0.05% |  3.16% )    	(26x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.080899s |  0.09% |  6.34% )   ( 1.045743s |  0.10% |  6.34% )    	(26x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.495448s |  0.04% |  2.90% )   ( 0.461877s |  0.04% |  2.80% )    	(26x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.412623s |  0.12% |  8.29% )   ( 1.387117s |  0.13% |  8.41% )    	(26x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.145594s |  0.28% | 18.47% )   ( 3.081893s |  0.30% | 18.70% )    	(26x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.544843s |  0.04% |  3.20% )   ( 0.525332s |  0.05% |  3.18% )    	(26x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.600621s |  0.05% |  3.52% )   ( 0.515402s |  0.05% |  3.12% )    	(26x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003933s |  0.00% |  0.00% )   ( 0.004470s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003727s |  0.00% |  0.00% )   ( 0.004230s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004151s |  0.00% |  0.00% )   ( 0.004675s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008667s |  0.00% |  0.04% )   ( 0.008751s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000090s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p10_PID})
-1016.3.0:       ( 17.776033s |  1.62% |  3.24% )   ( 16.866249s |  1.69% |  3.37% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p11 p11_PID >>
-1.4.0:          ( 0.000639s |  0.00% |  0.00% )   ( 0.000655s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p11 p11_PID (&)
-24.4.0:         ( 17.775307s |  1.62% | 99.99% )   ( 16.865493s |  1.69% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000094s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000094s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p11
-30.5.0:         ( 0.024287s |  0.00% |  0.13% )   ( 0.024172s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p11 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p11; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.023959s |  0.00% |  0.13% )   ( 0.023914s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024098s |  0.00% |  0.13% )   ( 0.024041s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024114s |  0.00% |  0.13% )   ( 0.024070s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.024096s |  0.00% |  0.13% )   ( 0.024049s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004328s |  0.00% |  0.00% )   ( 0.004852s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
-38.5.0:         ( 0.003799s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000114s |  0.00% |  0.00% )   ( 0.000131s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004537s |  0.00% |  0.00% )   ( 0.005061s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p11
-41.5.0:         ( 0.286700s |  0.02% |  0.06% )   ( 0.005989s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004158s |  0.00% |  0.00% )   ( 0.004648s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003701s |  0.00% |  0.00% )   ( 0.004190s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003720s |  0.00% |  0.00% )   ( 0.004220s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003709s |  0.00% |  0.00% )   ( 0.004155s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.028938s |  0.00% |  0.00% )   ( 0.029318s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003942s |  0.00% |  0.00% )   ( 0.004425s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004419s |  0.00% |  0.00% )   ( 0.004923s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p11
-54.5.0:         ( 0.003600s |  0.00% |  0.00% )   ( 0.004071s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003472s |  0.00% |  0.00% )   ( 0.003937s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.275322s |  1.57% |  3.88% )   ( 16.639217s |  1.66% |  3.94% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003332s |  0.00% |  0.01% )   ( 0.003821s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.099849s |  0.10% |  6.36% )   ( 1.083337s |  0.10% |  6.51% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.969165s |  0.17% | 11.39% )   ( 1.913867s |  0.19% | 11.50% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.622925s |  0.14% |  9.39% )   ( 1.583724s |  0.15% |  9.51% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.995245s |  0.18% | 11.54% )   ( 1.918130s |  0.19% | 11.52% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.629136s |  0.14% |  9.43% )   ( 1.565173s |  0.15% |  9.40% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.053825s |  0.09% |  6.10% )   ( 0.997380s |  0.10% |  5.99% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.552700s |  0.05% |  3.19% )   ( 0.517386s |  0.05% |  3.10% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.078587s |  0.09% |  6.24% )   ( 1.052144s |  0.10% |  6.32% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.472262s |  0.04% |  2.73% )   ( 0.444995s |  0.04% |  2.67% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.445491s |  0.13% |  8.36% )   ( 1.392525s |  0.13% |  8.36% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.223585s |  0.29% | 18.66% )   ( 3.154791s |  0.31% | 18.95% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.568169s |  0.05% |  3.28% )   ( 0.517691s |  0.05% |  3.11% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.561051s |  0.05% |  3.24% )   ( 0.494253s |  0.04% |  2.97% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003614s |  0.00% |  0.00% )   ( 0.004077s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003554s |  0.00% |  0.00% )   ( 0.003940s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003766s |  0.00% |  0.00% )   ( 0.004224s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008530s |  0.00% |  0.04% )   ( 0.008616s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000087s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p11_PID})
-1016.3.0:       ( 17.560980s |  1.60% |  3.20% )   ( 16.588781s |  1.66% |  3.32% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p12 p12_PID >>
-1.4.0:          ( 0.000782s |  0.00% |  0.00% )   ( 0.000813s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p12 p12_PID (&)
-24.4.0:         ( 17.560026s |  1.60% | 99.99% )   ( 16.587771s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000181s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p12
-30.5.0:         ( 0.046062s |  0.00% |  0.26% )   ( 0.045908s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p12 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p12; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.046186s |  0.00% |  0.26% )   ( 0.046027s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.046174s |  0.00% |  0.26% )   ( 0.046022s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.046151s |  0.00% |  0.26% )   ( 0.045996s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.046083s |  0.00% |  0.26% )   ( 0.045915s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004722s |  0.00% |  0.00% )   ( 0.005304s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
-38.5.0:         ( 0.004422s |  0.00% |  0.00% )   ( 0.004949s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005458s |  0.00% |  0.00% )   ( 0.006045s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p12
-41.5.0:         ( 0.136961s |  0.01% |  0.02% )   ( 0.006057s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004389s |  0.00% |  0.00% )   ( 0.004950s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004436s |  0.00% |  0.00% )   ( 0.005014s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004121s |  0.00% |  0.00% )   ( 0.004637s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004432s |  0.00% |  0.00% )   ( 0.004991s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.037928s |  0.00% |  0.00% )   ( 0.035410s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004266s |  0.00% |  0.00% )   ( 0.004793s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005034s |  0.00% |  0.00% )   ( 0.005589s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p12
-54.5.0:         ( 0.005766s |  0.00% |  0.00% )   ( 0.004620s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003921s |  0.00% |  0.00% )   ( 0.004457s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000141s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.081487s |  1.55% |  3.60% )   ( 16.240193s |  1.62% |  3.62% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004032s |  0.00% |  0.02% )   ( 0.004572s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.123199s |  0.10% |  6.57% )   ( 1.094244s |  0.10% |  6.73% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.006486s |  0.18% | 11.74% )   ( 1.850923s |  0.18% | 11.39% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.603896s |  0.14% |  9.38% )   ( 1.556750s |  0.15% |  9.58% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.913511s |  0.17% | 11.20% )   ( 1.842184s |  0.18% | 11.34% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.619421s |  0.14% |  9.48% )   ( 1.522945s |  0.15% |  9.37% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.036785s |  0.09% |  6.06% )   ( 0.996914s |  0.09% |  6.13% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.577465s |  0.05% |  3.38% )   ( 0.544684s |  0.05% |  3.35% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.084950s |  0.09% |  6.35% )   ( 1.040399s |  0.10% |  6.40% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.532641s |  0.04% |  3.11% )   ( 0.483523s |  0.04% |  2.97% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.450448s |  0.13% |  8.49% )   ( 1.375585s |  0.13% |  8.47% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.930588s |  0.26% | 17.15% )   ( 2.865362s |  0.28% | 17.64% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.613095s |  0.05% |  3.58% )   ( 0.537673s |  0.05% |  3.31% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.584970s |  0.05% |  3.42% )   ( 0.524435s |  0.05% |  3.22% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004199s |  0.00% |  0.00% )   ( 0.004738s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003835s |  0.00% |  0.00% )   ( 0.004356s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.007347s |  0.00% |  0.00% )   ( 0.004881s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000098s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005354s |  0.00% |  0.03% )   ( 0.005461s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000172s |  0.00% |  0.00% )   ( 0.000197s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p12_PID})
-1016.3.0:       ( 18.437445s |  1.68% |  3.36% )   ( 17.855609s |  1.79% |  3.57% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p13 p13_PID >>
-1.4.0:          ( 0.000953s |  0.00% |  0.00% )   ( 0.000975s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p13 p13_PID (&)
-24.4.0:         ( 18.436348s |  1.68% | 99.99% )   ( 17.854468s |  1.79% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p13
-30.5.0:         ( 0.047560s |  0.00% |  0.25% )   ( 0.047404s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p13 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p13; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.030950s |  0.00% |  0.16% )   ( 0.030849s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.027754s |  0.00% |  0.15% )   ( 0.027677s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.030035s |  0.00% |  0.16% )   ( 0.029951s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.029242s |  0.00% |  0.15% )   ( 0.029150s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.002819s |  0.00% |  0.00% )   ( 0.003137s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   true
-38.5.0:         ( 0.002538s |  0.00% |  0.00% )   ( 0.002874s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000087s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003089s |  0.00% |  0.00% )   ( 0.003429s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p13
-41.5.0:         ( 0.098645s |  0.00% |  0.03% )   ( 0.003603s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.002536s |  0.00% |  0.00% )   ( 0.002856s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.002240s |  0.00% |  0.00% )   ( 0.002544s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.002215s |  0.00% |  0.00% )   ( 0.002506s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002353s |  0.00% |  0.00% )   ( 0.002644s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.016551s |  0.00% |  0.00% )   ( 0.016797s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004416s |  0.00% |  0.00% )   ( 0.002572s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.002626s |  0.00% |  0.00% )   ( 0.002928s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p13
-54.5.0:         ( 0.002166s |  0.00% |  0.00% )   ( 0.002468s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002075s |  0.00% |  0.00% )   ( 0.002348s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 18.109512s |  1.65% |  6.54% )   ( 17.620588s |  1.76% |  6.57% )    	(15x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002280s |  0.00% |  0.01% )   ( 0.002597s |  0.00% |  0.01% )    	(15x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.191298s |  0.10% |  6.57% )   ( 1.142313s |  0.11% |  6.48% )    	(15x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.271052s |  0.20% | 12.54% )   ( 2.193690s |  0.21% | 12.44% )    	(15x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.733444s |  0.15% |  9.57% )   ( 1.693926s |  0.16% |  9.61% )    	(15x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.239971s |  0.20% | 12.36% )   ( 2.178054s |  0.21% | 12.36% )    	(15x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.685251s |  0.15% |  9.30% )   ( 1.647288s |  0.16% |  9.34% )    	(15x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.099415s |  0.10% |  6.07% )   ( 1.059296s |  0.10% |  6.01% )    	(15x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.415557s |  0.03% |  2.29% )   ( 0.389091s |  0.03% |  2.20% )    	(15x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.160641s |  0.10% |  6.40% )   ( 1.132273s |  0.11% |  6.42% )    	(15x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.343803s |  0.03% |  1.89% )   ( 0.319131s |  0.03% |  1.81% )    	(15x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.423201s |  0.12% |  7.85% )   ( 1.401883s |  0.14% |  7.95% )    	(15x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.796691s |  0.34% | 20.96% )   ( 3.755718s |  0.37% | 21.31% )    	(15x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.374351s |  0.03% |  2.06% )   ( 0.362469s |  0.03% |  2.05% )    	(15x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.372557s |  0.03% |  2.05% )   ( 0.342859s |  0.03% |  1.94% )    	(15x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002440s |  0.00% |  0.00% )   ( 0.002775s |  0.00% |  0.00% )    	(15x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002041s |  0.00% |  0.00% )   ( 0.002316s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002413s |  0.00% |  0.00% )   ( 0.002686s |  0.00% |  0.00% )    	(14x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008995s |  0.00% |  0.04% )   ( 0.009070s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000144s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p13_PID})
-1016.3.0:       ( 19.129914s |  1.74% |  3.49% )   ( 18.339357s |  1.83% |  3.67% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p14 p14_PID >>
-1.4.0:          ( 0.000995s |  0.00% |  0.00% )   ( 0.001018s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p14 p14_PID (&)
-24.4.0:         ( 19.128772s |  1.74% | 99.99% )   ( 18.338169s |  1.83% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000155s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p14
-30.5.0:         ( 0.043675s |  0.00% |  0.22% )   ( 0.043545s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p14 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p14; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.040312s |  0.00% |  0.21% )   ( 0.040188s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.024269s |  0.00% |  0.12% )   ( 0.024206s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.024133s |  0.00% |  0.12% )   ( 0.024082s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.030149s |  0.00% |  0.15% )   ( 0.030063s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004267s |  0.00% |  0.00% )   ( 0.004796s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
-38.5.0:         ( 0.003732s |  0.00% |  0.00% )   ( 0.004208s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000120s |  0.00% |  0.00% )   ( 0.000138s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004466s |  0.00% |  0.00% )   ( 0.004958s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p14
-41.5.0:         ( 0.178049s |  0.01% |  0.03% )   ( 0.005578s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003743s |  0.00% |  0.00% )   ( 0.004210s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003813s |  0.00% |  0.00% )   ( 0.004296s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003684s |  0.00% |  0.00% )   ( 0.004169s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003683s |  0.00% |  0.00% )   ( 0.004147s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.032897s |  0.00% |  0.00% )   ( 0.030300s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003854s |  0.00% |  0.00% )   ( 0.004345s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004201s |  0.00% |  0.00% )   ( 0.004685s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p14
-54.5.0:         ( 0.003382s |  0.00% |  0.00% )   ( 0.003796s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003299s |  0.00% |  0.00% )   ( 0.003736s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000098s |  0.00% |  0.00% )   ( 0.000113s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 18.696278s |  1.70% |  4.07% )   ( 18.074358s |  1.81% |  4.10% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003491s |  0.00% |  0.01% )   ( 0.003976s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.261218s |  0.11% |  6.74% )   ( 1.236188s |  0.12% |  6.83% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.358810s |  0.21% | 12.61% )   ( 2.261072s |  0.22% | 12.50% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.882123s |  0.17% | 10.06% )   ( 1.809875s |  0.18% | 10.01% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.289368s |  0.20% | 12.24% )   ( 2.236471s |  0.22% | 12.37% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.730184s |  0.15% |  9.25% )   ( 1.651103s |  0.16% |  9.13% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.112532s |  0.10% |  5.95% )   ( 1.097816s |  0.11% |  6.07% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.512260s |  0.04% |  2.73% )   ( 0.510769s |  0.05% |  2.82% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.205551s |  0.10% |  6.44% )   ( 1.128796s |  0.11% |  6.24% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.483573s |  0.04% |  2.58% )   ( 0.444555s |  0.04% |  2.45% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.448511s |  0.13% |  7.74% )   ( 1.410948s |  0.14% |  7.80% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.366849s |  0.30% | 18.00% )   ( 3.289976s |  0.32% | 18.20% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.510949s |  0.04% |  2.73% )   ( 0.501009s |  0.05% |  2.77% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.530859s |  0.04% |  2.83% )   ( 0.491804s |  0.04% |  2.72% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003605s |  0.00% |  0.00% )   ( 0.004105s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003178s |  0.00% |  0.00% )   ( 0.003631s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003743s |  0.00% |  0.00% )   ( 0.004167s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000074s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005137s |  0.00% |  0.02% )   ( 0.005208s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000147s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p14_PID})
-1016.3.0:       ( 18.049810s |  1.64% |  3.29% )   ( 17.416631s |  1.74% |  3.49% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p15 p15_PID >>
-1.4.0:          ( 0.000958s |  0.00% |  0.00% )   ( 0.000371s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p15 p15_PID (&)
-24.4.0:         ( 18.048696s |  1.64% | 99.99% )   ( 17.416087s |  1.74% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000095s |  0.00% |  0.00% )   ( 0.000110s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p15
-30.5.0:         ( 0.027038s |  0.00% |  0.14% )   ( 0.026954s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p15 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p15; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.032072s |  0.00% |  0.17% )   ( 0.031968s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.029399s |  0.00% |  0.16% )   ( 0.029306s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.029255s |  0.00% |  0.16% )   ( 0.029160s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.031681s |  0.00% |  0.17% )   ( 0.031579s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003281s |  0.00% |  0.00% )   ( 0.003673s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   true
-38.5.0:         ( 0.002863s |  0.00% |  0.00% )   ( 0.003256s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003543s |  0.00% |  0.00% )   ( 0.003956s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p15
-41.5.0:         ( 0.140997s |  0.01% |  0.03% )   ( 0.004383s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003182s |  0.00% |  0.00% )   ( 0.003598s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.002912s |  0.00% |  0.00% )   ( 0.003291s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.002647s |  0.00% |  0.00% )   ( 0.003032s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002795s |  0.00% |  0.00% )   ( 0.003165s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.022849s |  0.00% |  0.00% )   ( 0.023135s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.002858s |  0.00% |  0.00% )   ( 0.003241s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.003429s |  0.00% |  0.00% )   ( 0.003823s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p15
-54.5.0:         ( 0.002693s |  0.00% |  0.00% )   ( 0.003065s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002545s |  0.00% |  0.00% )   ( 0.002908s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000078s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.684800s |  1.61% |  5.15% )   ( 17.183395s |  1.72% |  5.19% )    	(19x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002747s |  0.00% |  0.01% )   ( 0.003128s |  0.00% |  0.01% )    	(19x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.138981s |  0.10% |  6.44% )   ( 1.131436s |  0.11% |  6.58% )    	(19x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.138811s |  0.19% | 12.09% )   ( 2.119643s |  0.21% | 12.33% )    	(19x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.695621s |  0.15% |  9.58% )   ( 1.658545s |  0.16% |  9.65% )    	(19x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.121997s |  0.19% | 11.99% )   ( 2.076249s |  0.20% | 12.08% )    	(19x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.665315s |  0.15% |  9.41% )   ( 1.599936s |  0.16% |  9.31% )    	(19x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.055871s |  0.09% |  5.97% )   ( 0.997668s |  0.10% |  5.80% )    	(19x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.466537s |  0.04% |  2.63% )   ( 0.437998s |  0.04% |  2.54% )    	(19x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.115009s |  0.10% |  6.30% )   ( 1.087629s |  0.10% |  6.32% )    	(19x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.399304s |  0.03% |  2.25% )   ( 0.371610s |  0.03% |  2.16% )    	(19x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.452911s |  0.13% |  8.21% )   ( 1.383084s |  0.13% |  8.04% )    	(19x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.574948s |  0.32% | 20.21% )   ( 3.491948s |  0.35% | 20.32% )    	(19x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.440545s |  0.04% |  2.49% )   ( 0.427640s |  0.04% |  2.48% )    	(19x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.416203s |  0.03% |  2.35% )   ( 0.396881s |  0.03% |  2.30% )    	(19x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002720s |  0.00% |  0.00% )   ( 0.003096s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002533s |  0.00% |  0.00% )   ( 0.002893s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002870s |  0.00% |  0.00% )   ( 0.003236s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000162s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008747s |  0.00% |  0.04% )   ( 0.008840s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000156s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p15_PID})
-1016.3.0:       ( 17.401283s |  1.58% |  3.17% )   ( 16.652497s |  1.66% |  3.33% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p16 p16_PID >>
-1.4.0:          ( 0.001005s |  0.00% |  0.00% )   ( 0.001027s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p16 p16_PID (&)
-24.4.0:         ( 17.400129s |  1.58% | 99.99% )   ( 16.651298s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000096s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000097s |  0.00% |  0.00% )   ( 0.000109s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p16
-30.5.0:         ( 0.044282s |  0.00% |  0.25% )   ( 0.044137s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p16 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p16; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.038806s |  0.00% |  0.22% )   ( 0.038693s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.045978s |  0.00% |  0.26% )   ( 0.045800s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.045844s |  0.00% |  0.26% )   ( 0.045701s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.045580s |  0.00% |  0.26% )   ( 0.045434s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004334s |  0.00% |  0.00% )   ( 0.004850s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
-38.5.0:         ( 0.003860s |  0.00% |  0.00% )   ( 0.004355s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004679s |  0.00% |  0.00% )   ( 0.005203s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p16
-41.5.0:         ( 0.125193s |  0.01% |  0.02% )   ( 0.005534s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003984s |  0.00% |  0.00% )   ( 0.004505s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003849s |  0.00% |  0.00% )   ( 0.004358s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003618s |  0.00% |  0.00% )   ( 0.004099s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003778s |  0.00% |  0.00% )   ( 0.004265s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.029647s |  0.00% |  0.00% )   ( 0.030055s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003992s |  0.00% |  0.00% )   ( 0.004492s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004464s |  0.00% |  0.00% )   ( 0.004958s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p16
-54.5.0:         ( 0.003622s |  0.00% |  0.00% )   ( 0.004144s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003388s |  0.00% |  0.00% )   ( 0.003867s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000141s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000130s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 16.958868s |  1.54% |  4.06% )   ( 16.323259s |  1.63% |  4.08% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003603s |  0.00% |  0.02% )   ( 0.004105s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.106106s |  0.10% |  6.52% )   ( 1.090992s |  0.10% |  6.68% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.026583s |  0.18% | 11.94% )   ( 1.919891s |  0.19% | 11.76% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.629021s |  0.14% |  9.60% )   ( 1.573370s |  0.15% |  9.63% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.978653s |  0.18% | 11.66% )   ( 1.911724s |  0.19% | 11.71% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.560506s |  0.14% |  9.20% )   ( 1.524434s |  0.15% |  9.33% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.021080s |  0.09% |  6.02% )   ( 0.976818s |  0.09% |  5.98% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.530525s |  0.04% |  3.12% )   ( 0.487940s |  0.04% |  2.98% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.061055s |  0.09% |  6.25% )   ( 1.023947s |  0.10% |  6.27% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.512582s |  0.04% |  3.02% )   ( 0.439083s |  0.04% |  2.68% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.390710s |  0.12% |  8.20% )   ( 1.355323s |  0.13% |  8.30% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.139556s |  0.28% | 18.51% )   ( 3.059777s |  0.30% | 18.74% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.501547s |  0.04% |  2.95% )   ( 0.485554s |  0.04% |  2.97% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.497341s |  0.04% |  2.93% )   ( 0.470301s |  0.04% |  2.88% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004319s |  0.00% |  0.00% )   ( 0.004278s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003351s |  0.00% |  0.00% )   ( 0.003817s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003693s |  0.00% |  0.00% )   ( 0.004157s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-55.5.0:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
-64.5.0:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ${doneIndicatorFlag}
-65.5.0:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf 'x\n' >&${fd_nAuto0}
-67.5.0:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   : > "/dev/shm/.forkrun/forkrun.pqysCP"/.quit
-68.5.0:         ( 0.000215s |  0.00% |  0.00% )   ( 0.000237s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%.0s\n' "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p* 1>&20
-69.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000163s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009088s |  0.00% |  0.05% )   ( 0.009170s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000149s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p16_PID})
-1016.3.0:       ( 20.385612s |  1.85% |  3.72% )   ( 19.574872s |  1.96% |  3.92% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p17 p17_PID >>
-1.4.0:          ( 0.001054s |  0.00% |  0.00% )   ( 0.001077s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p17 p17_PID (&)
-24.4.0:         ( 20.384408s |  1.85% | 99.99% )   ( 19.573622s |  1.96% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000170s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p17
-30.5.0:         ( 0.045686s |  0.00% |  0.22% )   ( 0.045534s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p17 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p17; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.032362s |  0.00% |  0.15% )   ( 0.032263s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.030424s |  0.00% |  0.14% )   ( 0.030343s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.045294s |  0.00% |  0.22% )   ( 0.045137s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.039404s |  0.00% |  0.19% )   ( 0.039270s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.005247s |  0.00% |  0.00% )   ( 0.005841s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   true
-38.5.0:         ( 0.004637s |  0.00% |  0.00% )   ( 0.005236s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005487s |  0.00% |  0.00% )   ( 0.006105s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p17
-41.5.0:         ( 0.228438s |  0.02% |  0.03% )   ( 0.006725s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004793s |  0.00% |  0.00% )   ( 0.005395s |  0.00% |  0.00% )    	(31x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004543s |  0.00% |  0.00% )   ( 0.005132s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004394s |  0.00% |  0.00% )   ( 0.004984s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004668s |  0.00% |  0.00% )   ( 0.005266s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.040138s |  0.00% |  0.00% )   ( 0.037612s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.007761s |  0.00% |  0.00% )   ( 0.005421s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005296s |  0.00% |  0.00% )   ( 0.005872s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p17
-54.5.0:         ( 0.004213s |  0.00% |  0.00% )   ( 0.004797s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004122s |  0.00% |  0.00% )   ( 0.004691s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 19.848242s |  1.80% |  3.24% )   ( 19.256811s |  1.93% |  3.27% )    	(30x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004393s |  0.00% |  0.02% )   ( 0.004998s |  0.00% |  0.02% )    	(30x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.494326s |  0.13% |  7.52% )   ( 1.410539s |  0.14% |  7.32% )    	(30x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.240431s |  0.20% | 11.28% )   ( 2.189382s |  0.21% | 11.36% )    	(30x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.825307s |  0.16% |  9.19% )   ( 1.806654s |  0.18% |  9.38% )    	(30x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.216563s |  0.20% | 11.16% )   ( 2.148263s |  0.21% | 11.15% )    	(30x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.825027s |  0.16% |  9.19% )   ( 1.755388s |  0.17% |  9.11% )    	(30x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.291863s |  0.11% |  6.50% )   ( 1.269213s |  0.12% |  6.59% )    	(30x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.654506s |  0.05% |  3.29% )   ( 0.611947s |  0.06% |  3.17% )    	(30x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.336148s |  0.12% |  6.73% )   ( 1.287299s |  0.12% |  6.68% )    	(30x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.560241s |  0.05% |  2.82% )   ( 0.542473s |  0.05% |  2.81% )    	(30x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.647786s |  0.15% |  8.30% )   ( 1.575919s |  0.15% |  8.18% )    	(30x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.489142s |  0.31% | 17.57% )   ( 3.453567s |  0.34% | 17.93% )    	(30x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.639283s |  0.05% |  3.22% )   ( 0.613183s |  0.06% |  3.18% )    	(30x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.623226s |  0.05% |  3.13% )   ( 0.587986s |  0.05% |  3.05% )    	(30x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004486s |  0.00% |  0.00% )   ( 0.005055s |  0.00% |  0.00% )    	(30x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.004079s |  0.00% |  0.00% )   ( 0.004629s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004614s |  0.00% |  0.00% )   ( 0.005173s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.004776s |  0.00% |  0.02% )   ( 0.004851s |  0.00% |  0.02% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000150s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p17_PID})
-1016.3.0:       ( 18.087147s |  1.64% |  3.30% )   ( 17.536829s |  1.75% |  3.51% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p18 p18_PID >>
-1.4.0:          ( 0.001025s |  0.00% |  0.00% )   ( 0.001046s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p18 p18_PID (&)
-24.4.0:         ( 18.085971s |  1.64% | 99.99% )   ( 17.535609s |  1.75% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000180s |  0.00% |  0.00% )   ( 0.000205s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000183s |  0.00% |  0.00% )   ( 0.000206s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p18
-30.5.0:         ( 0.038257s |  0.00% |  0.21% )   ( 0.038137s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p18 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p18; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.039444s |  0.00% |  0.21% )   ( 0.039312s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.048332s |  0.00% |  0.26% )   ( 0.048175s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.043810s |  0.00% |  0.24% )   ( 0.043653s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.037350s |  0.00% |  0.20% )   ( 0.037214s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003072s |  0.00% |  0.00% )   ( 0.003427s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   true
-38.5.0:         ( 0.002831s |  0.00% |  0.00% )   ( 0.003208s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003219s |  0.00% |  0.00% )   ( 0.003604s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p18
-41.5.0:         ( 0.133016s |  0.01% |  0.04% )   ( 0.004377s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003115s |  0.00% |  0.00% )   ( 0.003502s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.002612s |  0.00% |  0.00% )   ( 0.002968s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.002524s |  0.00% |  0.00% )   ( 0.002860s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002739s |  0.00% |  0.00% )   ( 0.003077s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.023121s |  0.00% |  0.00% )   ( 0.020399s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.002799s |  0.00% |  0.00% )   ( 0.003142s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.003098s |  0.00% |  0.00% )   ( 0.003474s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p18
-54.5.0:         ( 0.002457s |  0.00% |  0.00% )   ( 0.002791s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002392s |  0.00% |  0.00% )   ( 0.002724s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000183s |  0.00% |  0.00% )   ( 0.000198s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.673646s |  1.61% |  5.74% )   ( 17.250180s |  1.72% |  5.78% )    	(17x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002525s |  0.00% |  0.01% )   ( 0.002888s |  0.00% |  0.01% )    	(17x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.118364s |  0.10% |  6.32% )   ( 1.111567s |  0.11% |  6.44% )    	(17x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.132027s |  0.19% | 12.06% )   ( 2.096200s |  0.21% | 12.15% )    	(17x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.711951s |  0.15% |  9.68% )   ( 1.652772s |  0.16% |  9.58% )    	(17x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.151986s |  0.19% | 12.17% )   ( 2.116424s |  0.21% | 12.26% )    	(17x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.649350s |  0.15% |  9.33% )   ( 1.599971s |  0.16% |  9.27% )    	(17x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.035810s |  0.09% |  5.86% )   ( 1.007784s |  0.10% |  5.84% )    	(17x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.424534s |  0.03% |  2.40% )   ( 0.407120s |  0.04% |  2.36% )    	(17x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.164434s |  0.10% |  6.58% )   ( 1.126258s |  0.11% |  6.52% )    	(17x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.366866s |  0.03% |  2.07% )   ( 0.342831s |  0.03% |  1.98% )    	(17x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.406003s |  0.12% |  7.95% )   ( 1.398688s |  0.14% |  8.10% )    	(17x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.691824s |  0.33% | 20.88% )   ( 3.614474s |  0.36% | 20.95% )    	(17x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.442805s |  0.04% |  2.50% )   ( 0.402830s |  0.04% |  2.33% )    	(17x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.375167s |  0.03% |  2.12% )   ( 0.370373s |  0.03% |  2.14% )    	(17x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002727s |  0.00% |  0.00% )   ( 0.003086s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002453s |  0.00% |  0.00% )   ( 0.002775s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002663s |  0.00% |  0.00% )   ( 0.002961s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000169s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008773s |  0.00% |  0.04% )   ( 0.008851s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000151s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p18_PID})
-1016.3.0:       ( 17.844334s |  1.62% |  3.25% )   ( 16.766980s |  1.68% |  3.35% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p19 p19_PID >>
-1.4.0:          ( 0.001008s |  0.00% |  0.00% )   ( 0.001032s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p19 p19_PID (&)
-24.4.0:         ( 17.843173s |  1.62% | 99.99% )   ( 16.765772s |  1.68% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000178s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p19
-30.5.0:         ( 0.045784s |  0.00% |  0.25% )   ( 0.045635s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p19 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p19; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.045404s |  0.00% |  0.25% )   ( 0.045258s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.045494s |  0.00% |  0.25% )   ( 0.045346s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.026827s |  0.00% |  0.15% )   ( 0.026751s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.038096s |  0.00% |  0.21% )   ( 0.037969s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004683s |  0.00% |  0.00% )   ( 0.005180s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
-38.5.0:         ( 0.004319s |  0.00% |  0.00% )   ( 0.004907s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005115s |  0.00% |  0.00% )   ( 0.005707s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p19
-41.5.0:         ( 0.220941s |  0.02% |  0.04% )   ( 0.007039s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.005006s |  0.00% |  0.00% )   ( 0.005585s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004565s |  0.00% |  0.00% )   ( 0.005178s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004170s |  0.00% |  0.00% )   ( 0.004747s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004543s |  0.00% |  0.00% )   ( 0.005136s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.037183s |  0.00% |  0.00% )   ( 0.034626s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004505s |  0.00% |  0.00% )   ( 0.005071s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005180s |  0.00% |  0.00% )   ( 0.005748s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p19
-54.5.0:         ( 0.004035s |  0.00% |  0.00% )   ( 0.004586s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004056s |  0.00% |  0.00% )   ( 0.004603s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000129s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.314328s |  1.57% |  3.46% )   ( 16.445910s |  1.64% |  3.50% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003968s |  0.00% |  0.02% )   ( 0.004528s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.183751s |  0.10% |  6.83% )   ( 1.127565s |  0.11% |  6.85% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.978258s |  0.18% | 11.42% )   ( 1.914523s |  0.19% | 11.64% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.661086s |  0.15% |  9.59% )   ( 1.601110s |  0.16% |  9.73% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.887780s |  0.17% | 10.90% )   ( 1.824335s |  0.18% | 11.09% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.582660s |  0.14% |  9.14% )   ( 1.504410s |  0.15% |  9.14% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.125081s |  0.10% |  6.49% )   ( 1.029629s |  0.10% |  6.26% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.666472s |  0.06% |  3.84% )   ( 0.555218s |  0.05% |  3.37% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.140089s |  0.10% |  6.58% )   ( 1.067740s |  0.10% |  6.49% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.580526s |  0.05% |  3.35% )   ( 0.499031s |  0.05% |  3.03% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.379609s |  0.12% |  7.96% )   ( 1.352683s |  0.13% |  8.22% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.004289s |  0.27% | 17.35% )   ( 2.876806s |  0.28% | 17.49% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.573064s |  0.05% |  3.30% )   ( 0.553130s |  0.05% |  3.36% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.547695s |  0.04% |  3.16% )   ( 0.535202s |  0.05% |  3.25% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004060s |  0.00% |  0.00% )   ( 0.004577s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.004050s |  0.00% |  0.00% )   ( 0.004579s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004555s |  0.00% |  0.00% )   ( 0.005127s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000095s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000085s |  0.00% |  0.00% )   ( 0.000097s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005161s |  0.00% |  0.02% )   ( 0.005234s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000153s |  0.00% |  0.00% )   ( 0.000176s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p19_PID})
-1016.3.0:       ( 19.302600s |  1.75% |  3.52% )   ( 18.738481s |  1.87% |  3.75% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p20 p20_PID >>
-1.4.0:          ( 0.001044s |  0.00% |  0.00% )   ( 0.001065s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p20 p20_PID (&)
-24.4.0:         ( 19.301399s |  1.75% | 99.99% )   ( 18.737243s |  1.87% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000227s |  0.00% |  0.00% )   ( 0.000250s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000223s |  0.00% |  0.00% )   ( 0.000250s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p20
-30.5.0:         ( 0.047746s |  0.00% |  0.24% )   ( 0.047569s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p20 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p20; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.035208s |  0.00% |  0.18% )   ( 0.035083s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.039361s |  0.00% |  0.20% )   ( 0.039220s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.041877s |  0.00% |  0.21% )   ( 0.041726s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.047765s |  0.00% |  0.24% )   ( 0.047578s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003009s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   true
-38.5.0:         ( 0.002741s |  0.00% |  0.00% )   ( 0.003091s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000164s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000176s |  0.00% |  0.00% )   ( 0.000193s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003320s |  0.00% |  0.00% )   ( 0.003699s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p20
-41.5.0:         ( 0.146078s |  0.01% |  0.04% )   ( 0.004360s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003084s |  0.00% |  0.00% )   ( 0.003462s |  0.00% |  0.00% )    	(18x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.002748s |  0.00% |  0.00% )   ( 0.003104s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.002513s |  0.00% |  0.00% )   ( 0.002876s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.002724s |  0.00% |  0.00% )   ( 0.003066s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.020647s |  0.00% |  0.00% )   ( 0.020929s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.005758s |  0.00% |  0.00% )   ( 0.003101s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.003017s |  0.00% |  0.00% )   ( 0.003372s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p20
-54.5.0:         ( 0.002515s |  0.00% |  0.00% )   ( 0.002867s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002406s |  0.00% |  0.00% )   ( 0.002741s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000155s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000124s |  0.00% |  0.00% )   ( 0.000142s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000148s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 18.870826s |  1.72% |  5.75% )   ( 18.446748s |  1.84% |  5.79% )    	(17x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.002613s |  0.00% |  0.01% )   ( 0.002968s |  0.00% |  0.01% )    	(17x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.250586s |  0.11% |  6.62% )   ( 1.248910s |  0.12% |  6.77% )    	(17x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.451030s |  0.22% | 12.98% )   ( 2.394212s |  0.24% | 12.97% )    	(17x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.872332s |  0.17% |  9.92% )   ( 1.853000s |  0.18% | 10.04% )    	(17x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.444508s |  0.22% | 12.95% )   ( 2.412566s |  0.24% | 13.07% )    	(17x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.836616s |  0.16% |  9.73% )   ( 1.802387s |  0.18% |  9.77% )    	(17x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.106073s |  0.10% |  5.86% )   ( 1.101339s |  0.11% |  5.97% )    	(17x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.458012s |  0.04% |  2.42% )   ( 0.427473s |  0.04% |  2.31% )    	(17x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.282952s |  0.11% |  6.79% )   ( 1.222971s |  0.12% |  6.62% )    	(17x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.372182s |  0.03% |  1.97% )   ( 0.356397s |  0.03% |  1.93% )    	(17x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.599134s |  0.14% |  8.47% )   ( 1.560155s |  0.15% |  8.45% )    	(17x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.346660s |  0.30% | 17.73% )   ( 3.295484s |  0.33% | 17.86% )    	(17x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.452502s |  0.04% |  2.39% )   ( 0.397214s |  0.03% |  2.15% )    	(17x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.395626s |  0.03% |  2.09% )   ( 0.371672s |  0.03% |  2.01% )    	(17x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002613s |  0.00% |  0.00% )   ( 0.002963s |  0.00% |  0.00% )    	(17x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002331s |  0.00% |  0.00% )   ( 0.002642s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.002538s |  0.00% |  0.00% )   ( 0.002835s |  0.00% |  0.00% )    	(16x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000158s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008977s |  0.00% |  0.04% )   ( 0.009057s |  0.00% |  0.04% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000157s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p20_PID})
-1016.3.0:       ( 17.569410s |  1.60% |  3.20% )   ( 16.787610s |  1.68% |  3.36% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p21 p21_PID >>
-1.4.0:          ( 0.001044s |  0.00% |  0.00% )   ( 0.001066s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p21 p21_PID (&)
-24.4.0:         ( 17.568211s |  1.60% | 99.99% )   ( 16.786371s |  1.68% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000150s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000103s |  0.00% |  0.00% )   ( 0.000116s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p21
-30.5.0:         ( 0.046319s |  0.00% |  0.26% )   ( 0.046046s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p21 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p21; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.045950s |  0.00% |  0.26% )   ( 0.045774s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.044590s |  0.00% |  0.25% )   ( 0.044433s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.048141s |  0.00% |  0.27% )   ( 0.047956s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.048566s |  0.00% |  0.27% )   ( 0.048403s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004386s |  0.00% |  0.00% )   ( 0.004869s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   true
-38.5.0:         ( 0.003888s |  0.00% |  0.00% )   ( 0.004370s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000198s |  0.00% |  0.00% )   ( 0.000218s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000152s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000148s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004573s |  0.00% |  0.00% )   ( 0.005086s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p21
-41.5.0:         ( 0.171132s |  0.01% |  0.04% )   ( 0.005718s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003935s |  0.00% |  0.00% )   ( 0.004415s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003625s |  0.00% |  0.00% )   ( 0.004116s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003423s |  0.00% |  0.00% )   ( 0.003864s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003532s |  0.00% |  0.00% )   ( 0.003994s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.028040s |  0.00% |  0.00% )   ( 0.028419s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004539s |  0.00% |  0.00% )   ( 0.004149s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004091s |  0.00% |  0.00% )   ( 0.004575s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p21
-54.5.0:         ( 0.003385s |  0.00% |  0.00% )   ( 0.003857s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003285s |  0.00% |  0.00% )   ( 0.003732s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000138s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000144s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 17.071895s |  1.55% |  4.22% )   ( 16.450069s |  1.64% |  4.26% )    	(23x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003315s |  0.00% |  0.01% )   ( 0.003771s |  0.00% |  0.02% )    	(23x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.201512s |  0.10% |  7.03% )   ( 1.102695s |  0.11% |  6.70% )    	(23x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.040436s |  0.18% | 11.95% )   ( 1.937334s |  0.19% | 11.77% )    	(23x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.642377s |  0.14% |  9.62% )   ( 1.567147s |  0.15% |  9.52% )    	(23x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.957719s |  0.17% | 11.46% )   ( 1.918765s |  0.19% | 11.66% )    	(23x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.579924s |  0.14% |  9.25% )   ( 1.522012s |  0.15% |  9.25% )    	(23x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 0.982235s |  0.08% |  5.75% )   ( 0.965382s |  0.09% |  5.86% )    	(23x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.485430s |  0.04% |  2.84% )   ( 0.475805s |  0.04% |  2.89% )    	(23x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.060100s |  0.09% |  6.20% )   ( 1.015450s |  0.10% |  6.17% )    	(23x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.445319s |  0.04% |  2.60% )   ( 0.415815s |  0.04% |  2.52% )    	(23x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.391721s |  0.12% |  8.15% )   ( 1.375324s |  0.13% |  8.36% )    	(23x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.249848s |  0.29% | 19.03% )   ( 3.202548s |  0.32% | 19.46% )    	(23x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.517305s |  0.04% |  3.03% )   ( 0.481231s |  0.04% |  2.92% )    	(23x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.514654s |  0.04% |  3.01% )   ( 0.466790s |  0.04% |  2.83% )    	(23x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003599s |  0.00% |  0.00% )   ( 0.004060s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003207s |  0.00% |  0.00% )   ( 0.003643s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003488s |  0.00% |  0.00% )   ( 0.003924s |  0.00% |  0.00% )    	(22x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009148s |  0.00% |  0.05% )   ( 0.009220s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000155s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p21_PID})
-1016.3.0:       ( 17.220653s |  1.56% |  3.14% )   ( 16.438183s |  1.64% |  3.29% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p22 p22_PID >>
-1.4.0:          ( 0.000921s |  0.00% |  0.00% )   ( 0.000946s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p22 p22_PID (&)
-24.4.0:         ( 17.219553s |  1.56% | 99.99% )   ( 16.437027s |  1.64% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000161s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000167s |  0.00% |  0.00% )   ( 0.000186s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p22
-30.5.0:         ( 0.046122s |  0.00% |  0.26% )   ( 0.045959s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p22 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p22; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.046393s |  0.00% |  0.26% )   ( 0.046188s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.045995s |  0.00% |  0.26% )   ( 0.045820s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.046717s |  0.00% |  0.27% )   ( 0.046541s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.051604s |  0.00% |  0.29% )   ( 0.051399s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004364s |  0.00% |  0.00% )   ( 0.004891s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   true
-38.5.0:         ( 0.007089s |  0.00% |  0.00% )   ( 0.004607s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000169s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004616s |  0.00% |  0.00% )   ( 0.005164s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p22
-41.5.0:         ( 0.127083s |  0.01% |  0.02% )   ( 0.005180s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004123s |  0.00% |  0.00% )   ( 0.004656s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003709s |  0.00% |  0.00% )   ( 0.004212s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003568s |  0.00% |  0.00% )   ( 0.004028s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003798s |  0.00% |  0.00% )   ( 0.004284s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.029556s |  0.00% |  0.00% )   ( 0.029972s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003832s |  0.00% |  0.00% )   ( 0.004300s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004305s |  0.00% |  0.00% )   ( 0.004798s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p22
-54.5.0:         ( 0.003510s |  0.00% |  0.00% )   ( 0.003998s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003500s |  0.00% |  0.00% )   ( 0.003984s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000122s |  0.00% |  0.00% )   ( 0.000140s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 16.758100s |  1.52% |  4.05% )   ( 16.093863s |  1.61% |  4.07% )    	(24x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003534s |  0.00% |  0.02% )   ( 0.004035s |  0.00% |  0.02% )    	(24x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.098322s |  0.10% |  6.55% )   ( 1.052884s |  0.10% |  6.54% )    	(24x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.886160s |  0.17% | 11.25% )   ( 1.858893s |  0.18% | 11.55% )    	(24x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.561774s |  0.14% |  9.31% )   ( 1.538122s |  0.15% |  9.55% )    	(24x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.864949s |  0.16% | 11.12% )   ( 1.836237s |  0.18% | 11.40% )    	(24x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.565357s |  0.14% |  9.34% )   ( 1.500681s |  0.15% |  9.32% )    	(24x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.004335s |  0.09% |  5.99% )   ( 0.971927s |  0.09% |  6.03% )    	(24x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.520300s |  0.04% |  3.10% )   ( 0.500231s |  0.05% |  3.10% )    	(24x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.108542s |  0.10% |  6.61% )   ( 1.026121s |  0.10% |  6.37% )    	(24x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.509967s |  0.04% |  3.04% )   ( 0.439176s |  0.04% |  2.72% )    	(24x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.474813s |  0.13% |  8.80% )   ( 1.362058s |  0.13% |  8.46% )    	(24x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.093469s |  0.28% | 18.45% )   ( 3.030496s |  0.30% | 18.83% )    	(24x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.532975s |  0.04% |  3.18% )   ( 0.498706s |  0.05% |  3.09% )    	(24x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.533603s |  0.04% |  3.18% )   ( 0.474296s |  0.04% |  2.94% )    	(24x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003602s |  0.00% |  0.00% )   ( 0.004059s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003375s |  0.00% |  0.00% )   ( 0.003806s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003705s |  0.00% |  0.00% )   ( 0.004164s |  0.00% |  0.00% )    	(23x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.009388s |  0.00% |  0.05% )   ( 0.009471s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000179s |  0.00% |  0.00% )   ( 0.000210s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p22_PID})
-1016.3.0:       ( 17.001640s |  1.54% |  3.10% )   ( 16.255723s |  1.63% |  3.25% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p23 p23_PID >>
-1.4.0:          ( 0.001052s |  0.00% |  0.00% )   ( 0.001076s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p23 p23_PID (&)
-24.4.0:         ( 17.000439s |  1.54% | 99.99% )   ( 16.254476s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p23
-30.5.0:         ( 0.043034s |  0.00% |  0.25% )   ( 0.042874s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p23 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p23; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.046743s |  0.00% |  0.27% )   ( 0.046572s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.051388s |  0.00% |  0.30% )   ( 0.051210s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.047747s |  0.00% |  0.28% )   ( 0.047586s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.053974s |  0.00% |  0.31% )   ( 0.053790s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.005171s |  0.00% |  0.00% )   ( 0.005770s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
-38.5.0:         ( 0.004558s |  0.00% |  0.00% )   ( 0.005135s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000166s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000135s |  0.00% |  0.00% )   ( 0.000154s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000132s |  0.00% |  0.00% )   ( 0.000150s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005481s |  0.00% |  0.00% )   ( 0.006096s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p23
-41.5.0:         ( 0.187565s |  0.01% |  0.03% )   ( 0.006335s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004549s |  0.00% |  0.00% )   ( 0.005107s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004276s |  0.00% |  0.00% )   ( 0.004833s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003901s |  0.00% |  0.00% )   ( 0.004431s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004210s |  0.00% |  0.00% )   ( 0.004772s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.037974s |  0.00% |  0.00% )   ( 0.035427s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004493s |  0.00% |  0.00% )   ( 0.005067s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.005198s |  0.00% |  0.00% )   ( 0.005802s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p23
-54.5.0:         ( 0.004177s |  0.00% |  0.00% )   ( 0.004701s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004168s |  0.00% |  0.00% )   ( 0.004740s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000184s |  0.00% |  0.00% )   ( 0.000208s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000112s |  0.00% |  0.00% )   ( 0.000129s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000164s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 16.458787s |  1.50% |  3.45% )   ( 15.889319s |  1.59% |  3.49% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004099s |  0.00% |  0.02% )   ( 0.004680s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.067563s |  0.09% |  6.48% )   ( 1.050717s |  0.10% |  6.61% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.835202s |  0.16% | 11.15% )   ( 1.758313s |  0.17% | 11.06% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.592155s |  0.14% |  9.67% )   ( 1.532215s |  0.15% |  9.64% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.781050s |  0.16% | 10.82% )   ( 1.775538s |  0.17% | 11.17% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.550051s |  0.14% |  9.41% )   ( 1.474113s |  0.14% |  9.27% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 0.994847s |  0.09% |  6.04% )   ( 0.958492s |  0.09% |  6.03% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.600107s |  0.05% |  3.64% )   ( 0.550046s |  0.05% |  3.46% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.071131s |  0.09% |  6.50% )   ( 1.002688s |  0.10% |  6.31% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.516017s |  0.04% |  3.13% )   ( 0.486253s |  0.04% |  3.06% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.386258s |  0.12% |  8.42% )   ( 1.341978s |  0.13% |  8.44% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.919186s |  0.26% | 17.73% )   ( 2.871318s |  0.28% | 18.07% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.579634s |  0.05% |  3.52% )   ( 0.552822s |  0.05% |  3.47% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.561487s |  0.05% |  3.41% )   ( 0.530146s |  0.05% |  3.33% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004457s |  0.00% |  0.00% )   ( 0.004936s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003895s |  0.00% |  0.00% )   ( 0.004456s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004388s |  0.00% |  0.00% )   ( 0.004929s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000151s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008829s |  0.00% |  0.05% )   ( 0.008910s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000149s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p23_PID})
-1016.3.0:       ( 19.828396s |  1.80% |  3.62% )   ( 19.255158s |  1.93% |  3.85% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p24 p24_PID >>
-1.4.0:          ( 0.001034s |  0.00% |  0.00% )   ( 0.001057s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p24 p24_PID (&)
-24.4.0:         ( 19.827207s |  1.80% | 99.99% )   ( 19.253928s |  1.93% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000160s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000114s |  0.00% |  0.00% )   ( 0.000128s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p24
-30.5.0:         ( 0.039265s |  0.00% |  0.19% )   ( 0.039116s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p24 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p24; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.046535s |  0.00% |  0.23% )   ( 0.046330s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.051263s |  0.00% |  0.25% )   ( 0.051047s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.052544s |  0.00% |  0.26% )   ( 0.052320s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.050334s |  0.00% |  0.25% )   ( 0.050148s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.003565s |  0.00% |  0.00% )   ( 0.004005s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   true
-38.5.0:         ( 0.003073s |  0.00% |  0.00% )   ( 0.003486s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000179s |  0.00% |  0.00% )   ( 0.000202s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000165s |  0.00% |  0.00% )   ( 0.000185s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000145s |  0.00% |  0.00% )   ( 0.000165s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.003623s |  0.00% |  0.00% )   ( 0.004042s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p24
-41.5.0:         ( 0.185074s |  0.01% |  0.04% )   ( 0.004915s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.003503s |  0.00% |  0.00% )   ( 0.003923s |  0.00% |  0.00% )    	(21x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003152s |  0.00% |  0.00% )   ( 0.003572s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003058s |  0.00% |  0.00% )   ( 0.003472s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003227s |  0.00% |  0.00% )   ( 0.003650s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.024465s |  0.00% |  0.00% )   ( 0.024819s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.003030s |  0.00% |  0.00% )   ( 0.003424s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.003440s |  0.00% |  0.00% )   ( 0.003833s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p24
-54.5.0:         ( 0.002948s |  0.00% |  0.00% )   ( 0.003342s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.002951s |  0.00% |  0.00% )   ( 0.003343s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000179s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000158s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 19.325705s |  1.76% |  4.87% )   ( 18.927259s |  1.89% |  4.91% )    	(20x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003014s |  0.00% |  0.01% )   ( 0.003412s |  0.00% |  0.01% )    	(20x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.364062s |  0.12% |  7.05% )   ( 1.350147s |  0.13% |  7.13% )    	(20x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.549852s |  0.23% | 13.19% )   ( 2.529367s |  0.25% | 13.36% )    	(20x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 2.032830s |  0.18% | 10.51% )   ( 1.959546s |  0.19% | 10.35% )    	(20x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.564362s |  0.23% | 13.26% )   ( 2.515209s |  0.25% | 13.28% )    	(20x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.928999s |  0.17% |  9.98% )   ( 1.913722s |  0.19% | 10.11% )    	(20x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.241538s |  0.11% |  6.42% )   ( 1.186870s |  0.11% |  6.27% )    	(20x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.545469s |  0.04% |  2.82% )   ( 0.481883s |  0.04% |  2.54% )    	(20x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.281061s |  0.11% |  6.62% )   ( 1.258457s |  0.12% |  6.64% )    	(20x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.408275s |  0.03% |  2.11% )   ( 0.392954s |  0.03% |  2.07% )    	(20x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.337453s |  0.12% |  6.92% )   ( 1.323296s |  0.13% |  6.99% )    	(20x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.163453s |  0.28% | 16.36% )   ( 3.147282s |  0.31% | 16.62% )    	(20x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.469150s |  0.04% |  2.42% )   ( 0.449308s |  0.04% |  2.37% )    	(20x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.436187s |  0.03% |  2.25% )   ( 0.415806s |  0.04% |  2.19% )    	(20x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.002887s |  0.00% |  0.00% )   ( 0.003274s |  0.00% |  0.00% )    	(20x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.002872s |  0.00% |  0.00% )   ( 0.003264s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003164s |  0.00% |  0.00% )   ( 0.003570s |  0.00% |  0.00% )    	(19x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.006166s |  0.00% |  0.03% )   ( 0.006231s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000155s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p24_PID})
-1016.3.0:       ( 17.547131s |  1.59% |  3.20% )   ( 16.579476s |  1.66% |  3.32% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p25 p25_PID >>
-1.4.0:          ( 0.001032s |  0.00% |  0.00% )   ( 0.001055s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p25 p25_PID (&)
-24.4.0:         ( 17.545942s |  1.59% | 99.99% )   ( 16.578241s |  1.66% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000147s |  0.00% |  0.00% )   ( 0.000167s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000157s |  0.00% |  0.00% )   ( 0.000177s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p25
-30.5.0:         ( 0.043903s |  0.00% |  0.25% )   ( 0.043711s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p25 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p25; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.045676s |  0.00% |  0.26% )   ( 0.045485s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.045646s |  0.00% |  0.26% )   ( 0.045494s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.045669s |  0.00% |  0.26% )   ( 0.045471s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.045565s |  0.00% |  0.25% )   ( 0.045416s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004476s |  0.00% |  0.00% )   ( 0.005018s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   true
-38.5.0:         ( 0.004159s |  0.00% |  0.00% )   ( 0.004700s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000153s |  0.00% |  0.00% )   ( 0.000171s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005059s |  0.00% |  0.00% )   ( 0.005615s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p25
-41.5.0:         ( 0.244390s |  0.02% |  0.04% )   ( 0.006508s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004399s |  0.00% |  0.00% )   ( 0.004941s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004199s |  0.00% |  0.00% )   ( 0.004746s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003854s |  0.00% |  0.00% )   ( 0.004380s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004112s |  0.00% |  0.00% )   ( 0.004628s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.035328s |  0.00% |  0.00% )   ( 0.032776s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.004420s |  0.00% |  0.00% )   ( 0.004979s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004926s |  0.00% |  0.00% )   ( 0.005477s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p25
-54.5.0:         ( 0.003949s |  0.00% |  0.00% )   ( 0.004507s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003814s |  0.00% |  0.00% )   ( 0.004348s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000142s |  0.00% |  0.00% )   ( 0.000161s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000163s |  0.00% |  0.00% )   ( 0.000187s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000168s |  0.00% |  0.00% )   ( 0.000191s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 16.972811s |  1.54% |  3.58% )   ( 16.238667s |  1.62% |  3.62% )    	(27x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004053s |  0.00% |  0.02% )   ( 0.004598s |  0.00% |  0.02% )    	(27x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.102913s |  0.10% |  6.49% )   ( 1.092280s |  0.10% |  6.72% )    	(27x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.894521s |  0.17% | 11.16% )   ( 1.854290s |  0.18% | 11.41% )    	(27x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.699737s |  0.15% | 10.01% )   ( 1.589406s |  0.15% |  9.78% )    	(27x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.851059s |  0.16% | 10.90% )   ( 1.836156s |  0.18% | 11.30% )    	(27x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.533502s |  0.13% |  9.03% )   ( 1.496415s |  0.15% |  9.21% )    	(27x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.090610s |  0.09% |  6.42% )   ( 0.993468s |  0.09% |  6.11% )    	(27x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.594679s |  0.05% |  3.50% )   ( 0.534815s |  0.05% |  3.29% )    	(27x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.106751s |  0.10% |  6.52% )   ( 1.033955s |  0.10% |  6.36% )    	(27x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.513245s |  0.04% |  3.02% )   ( 0.478421s |  0.04% |  2.94% )    	(27x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.406717s |  0.12% |  8.28% )   ( 1.345762s |  0.13% |  8.28% )    	(27x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.021955s |  0.27% | 17.80% )   ( 2.913099s |  0.29% | 17.93% )    	(27x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.587303s |  0.05% |  3.46% )   ( 0.540854s |  0.05% |  3.33% )    	(27x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.565766s |  0.05% |  3.33% )   ( 0.525148s |  0.05% |  3.23% )    	(27x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004006s |  0.00% |  0.00% )   ( 0.004547s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003652s |  0.00% |  0.00% )   ( 0.004155s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004058s |  0.00% |  0.00% )   ( 0.004568s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000088s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.006514s |  0.00% |  0.03% )   ( 0.006566s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000157s |  0.00% |  0.00% )   ( 0.000180s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p25_PID})
-1016.3.0:       ( 17.127500s |  1.56% |  3.12% )   ( 16.202666s |  1.62% |  3.24% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p26 p26_PID >>
-1.4.0:          ( 0.001058s |  0.00% |  0.00% )   ( 0.001083s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p26 p26_PID (&)
-24.4.0:         ( 17.126285s |  1.56% | 99.99% )   ( 16.201392s |  1.62% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000170s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000162s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p26
-30.5.0:         ( 0.045597s |  0.00% |  0.26% )   ( 0.045387s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p26 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p26; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.045641s |  0.00% |  0.26% )   ( 0.045453s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.045611s |  0.00% |  0.26% )   ( 0.045404s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.045603s |  0.00% |  0.26% )   ( 0.045452s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.046050s |  0.00% |  0.26% )   ( 0.045834s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004192s |  0.00% |  0.00% )   ( 0.004688s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   true
-38.5.0:         ( 0.003908s |  0.00% |  0.00% )   ( 0.004432s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000154s |  0.00% |  0.00% )   ( 0.000172s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000133s |  0.00% |  0.00% )   ( 0.000153s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000126s |  0.00% |  0.00% )   ( 0.000146s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.004747s |  0.00% |  0.00% )   ( 0.005284s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p26
-41.5.0:         ( 0.260952s |  0.02% |  0.05% )   ( 0.006348s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004254s |  0.00% |  0.00% )   ( 0.004793s |  0.00% |  0.00% )    	(26x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.003861s |  0.00% |  0.00% )   ( 0.004371s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.003691s |  0.00% |  0.00% )   ( 0.004182s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.003894s |  0.00% |  0.00% )   ( 0.004383s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.030256s |  0.00% |  0.00% )   ( 0.030703s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.007332s |  0.00% |  0.00% )   ( 0.004631s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004399s |  0.00% |  0.00% )   ( 0.004918s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p26
-54.5.0:         ( 0.003704s |  0.00% |  0.00% )   ( 0.004189s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.003704s |  0.00% |  0.00% )   ( 0.004186s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000156s |  0.00% |  0.00% )   ( 0.000175s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000115s |  0.00% |  0.00% )   ( 0.000132s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000172s |  0.00% |  0.00% )   ( 0.000195s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 16.537659s |  1.50% |  3.86% )   ( 15.863837s |  1.59% |  3.91% )    	(25x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.003823s |  0.00% |  0.02% )   ( 0.004392s |  0.00% |  0.02% )    	(25x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.154451s |  0.10% |  6.98% )   ( 1.066506s |  0.10% |  6.72% )    	(25x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 1.910263s |  0.17% | 11.55% )   ( 1.826647s |  0.18% | 11.51% )    	(25x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.606087s |  0.14% |  9.71% )   ( 1.530206s |  0.15% |  9.64% )    	(25x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 1.902158s |  0.17% | 11.50% )   ( 1.801628s |  0.18% | 11.35% )    	(25x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.527534s |  0.13% |  9.23% )   ( 1.482892s |  0.14% |  9.34% )    	(25x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.031461s |  0.09% |  6.23% )   ( 0.953973s |  0.09% |  6.01% )    	(25x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.553736s |  0.05% |  3.34% )   ( 0.509535s |  0.05% |  3.21% )    	(25x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.033876s |  0.09% |  6.25% )   ( 1.013368s |  0.10% |  6.38% )    	(25x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.483979s |  0.04% |  2.92% )   ( 0.449365s |  0.04% |  2.83% )    	(25x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.345119s |  0.12% |  8.13% )   ( 1.330373s |  0.13% |  8.38% )    	(25x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 2.965835s |  0.27% | 17.93% )   ( 2.908074s |  0.29% | 18.33% )    	(25x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.505704s |  0.04% |  3.05% )   ( 0.500672s |  0.05% |  3.15% )    	(25x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.513633s |  0.04% |  3.10% )   ( 0.486206s |  0.04% |  3.06% )    	(25x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.003831s |  0.00% |  0.00% )   ( 0.004327s |  0.00% |  0.00% )    	(25x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003376s |  0.00% |  0.00% )   ( 0.003832s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.003671s |  0.00% |  0.00% )   ( 0.004134s |  0.00% |  0.00% )    	(24x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000140s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000141s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.008882s |  0.00% |  0.05% )   ( 0.008967s |  0.00% |  0.05% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000157s |  0.00% |  0.00% )   ( 0.000191s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p26_PID})
-1016.3.0:       ( 18.801552s |  1.71% |  3.43% )   ( 17.652445s |  1.77% |  3.53% )    	(1x)	│  │  │   << (FUNCTION): main.forkrun.local p27 p27_PID >>
-1.4.0:          ( 0.001114s |  0.00% |  0.00% )   ( 0.001138s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─  local p27 p27_PID (&)
-24.4.0:         ( 18.800274s |  1.71% | 99.99% )   ( 17.651125s |  1.76% | 99.99% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
-24.5.0:         ( 0.000159s |  0.00% |  0.00% )   ( 0.000183s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─  export LC_ALL=C LANG=C IFS= FORKRUN_TMPDIR="/dev/shm/.forkrun/forkrun.pqysCP"
-26.5.0:         ( 0.000194s |  0.00% |  0.00% )   ( 0.000219s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   echo "${BASH_PID}" > "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p27
-30.5.0:         ( 0.069481s |  0.00% |  0.36% )   ( 0.052802s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   $'trap \': >"/dev/shm/.forkrun/forkrun.pqysCP"/.quit; \n[[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p27 ]] && \\rm -f "/dev/shm/.forkrun/forkrun.pqysCP"/.run/p27; \nprintf \'"\'"\'\\n\'"\'"\' >&20\' EXIT
-32.5.0:         ( 0.051085s |  0.00% |  0.27% )   ( 0.050896s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -INT 3359628 ${BASHPID}' INT
-33.5.0:         ( 0.049742s |  0.00% |  0.26% )   ( 0.049520s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -TERM 3359628 ${BASHPID}' TERM
-34.5.0:         ( 0.052029s |  0.00% |  0.27% )   ( 0.051822s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1; kill -HUP 3359628 ${BASHPID}' HUP
-35.5.0:         ( 0.049507s |  0.00% |  0.26% )   ( 0.049331s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │   trap 'trap - TERM INT HUP USR1' USR1
-37.5.0:         ( 0.004842s |  0.00% |  0.00% )   ( 0.005431s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   true
-38.5.0:         ( 0.004397s |  0.00% |  0.00% )   ( 0.004983s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   ${nLinesAutoFlag}
-38.5.1:         ( 0.000166s |  0.00% |  0.00% )   ( 0.000188s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   read -r < "/dev/shm/.forkrun/forkrun.pqysCP"/.nLines
-38.5.2:         ( 0.000139s |  0.00% |  0.00% )   ( 0.000159s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   [[ ${REPLY} == +([0-9]) ]]
-38.5.3:         ( 0.000134s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesCur=${REPLY}
-40.5.0:         ( 0.005452s |  0.00% |  0.00% )   ( 0.006084s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   echo 1 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p27
-41.5.0:         ( 0.293171s |  0.02% |  0.05% )   ( 0.006925s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   read -r -u 20 _
-42.5.0:         ( 0.004638s |  0.00% |  0.00% )   ( 0.005233s |  0.00% |  0.00% )    	(29x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.quit ]]
-46.5.0:         ( 0.004539s |  0.00% |  0.00% )   ( 0.005116s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ -f "/dev/shm/.forkrun/forkrun.pqysCP"/.done ]]
-46.5.1:         ( 0.004228s |  0.00% |  0.00% )   ( 0.004783s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   doneIndicatorFlag=true
-48.5.0:         ( 0.004470s |  0.00% |  0.00% )   ( 0.005044s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   evfd_wait 24
-49.5.0:         ( 0.034793s |  0.00% |  0.00% )   ( 0.035232s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   mapfile -t -n ${nLinesCur} -u 26 -t -d '' A
-52.5.0:         ( 0.005900s |  0.00% |  0.00% )   ( 0.005084s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   printf '\n' 1>&20
-53.5.0:         ( 0.004985s |  0.00% |  0.00% )   ( 0.005567s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   echo 0 > "/dev/shm/.forkrun/forkrun.pqysCP"/.wait/p27
-54.5.0:         ( 0.004099s |  0.00% |  0.00% )   ( 0.004637s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   [[ ${#A[@]} == 0 ]]
-74.5.0:         ( 0.004064s |  0.00% |  0.00% )   ( 0.004605s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nLinesAutoFlag}
-75.5.0:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000157s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '%s\n' ${#A[@]} >&${fd_nAuto0}
-76.5.0:         ( 0.000128s |  0.00% |  0.00% )   ( 0.000147s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( ${nLinesCur} < 1024 ))
-76.5.1:         ( 0.000137s |  0.00% |  0.00% )   ( 0.000160s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   nLinesAutoFlag=false
-79.5.0:         ( 18.129733s |  1.65% |  3.44% )   ( 17.276992s |  1.73% |  3.49% )    	(28x)	│  │  │  │  │   << (FUNCTION): main.forkrun.source.ff "${A[@]}" >>
-1.6.0:          ( 0.004241s |  0.00% |  0.02% )   ( 0.004819s |  0.00% |  0.02% )    	(28x)	│  │  │  │  │  ├─  ff "${A[@]}"
-24.6.0:         ( 1.255461s |  0.11% |  6.92% )   ( 1.230028s |  0.12% |  7.11% )    	(28x)	│  │  │  │  │  │   sha1sum "${@}"
-25.6.0:         ( 2.183331s |  0.19% | 12.04% )   ( 2.079887s |  0.20% | 12.03% )    	(28x)	│  │  │  │  │  │   sha256sum "${@}"
-26.6.0:         ( 1.716581s |  0.15% |  9.46% )   ( 1.617124s |  0.16% |  9.35% )    	(28x)	│  │  │  │  │  │   sha512sum "${@}"
-27.6.0:         ( 2.059729s |  0.18% | 11.36% )   ( 1.908775s |  0.19% | 11.04% )    	(28x)	│  │  │  │  │  │   sha224sum "${@}"
-28.6.0:         ( 1.612699s |  0.14% |  8.89% )   ( 1.561487s |  0.15% |  9.03% )    	(28x)	│  │  │  │  │  │   sha384sum "${@}"
-29.6.0:         ( 1.137649s |  0.10% |  6.27% )   ( 1.087558s |  0.10% |  6.29% )    	(28x)	│  │  │  │  │  │   md5sum "${@}"
-30.6.0:         ( 0.613408s |  0.05% |  3.38% )   ( 0.579521s |  0.05% |  3.35% )    	(28x)	│  │  │  │  │  │   sum -s "${@}"
-31.6.0:         ( 1.157830s |  0.10% |  6.38% )   ( 1.119088s |  0.11% |  6.47% )    	(28x)	│  │  │  │  │  │   sum -r "${@}"
-32.6.0:         ( 0.553479s |  0.05% |  3.05% )   ( 0.496811s |  0.04% |  2.87% )    	(28x)	│  │  │  │  │  │   cksum "${@}"
-33.6.0:         ( 1.461200s |  0.13% |  8.05% )   ( 1.422270s |  0.14% |  8.23% )    	(28x)	│  │  │  │  │  │   b2sum "${@}"
-34.6.0:         ( 3.152307s |  0.28% | 17.38% )   ( 3.070538s |  0.30% | 17.77% )    	(28x)	│  │  │  │  │  │   cksum -a sm3 "${@}"
-35.6.0:         ( 0.625274s |  0.05% |  3.44% )   ( 0.559718s |  0.05% |  3.23% )    	(28x)	│  │  │  │  │  │   xxhsum "${@}"
-36.6.0:         ( 0.596544s |  0.05% |  3.29% )   ( 0.539368s |  0.05% |  3.12% )    	(28x)	│  │  │  │  │  └─  xxhsum -H3 "${@}"
-38.5.1:         ( 0.004403s |  0.00% |  0.00% )   ( 0.004984s |  0.00% |  0.00% )    	(28x)	│  │  │  │  │   ${nSpawnFlag}
-74.5.1:         ( 0.003900s |  0.00% |  0.00% )   ( 0.004438s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   ${nSpawnFlag}
-77.5.0:         ( 0.004215s |  0.00% |  0.00% )   ( 0.004746s |  0.00% |  0.00% )    	(27x)	│  │  │  │  │   printf '\n' >&${fd_nAuto0}
-43.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   printf '\n' 1>&20
-44.5.0:         ( 0.000081s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   break
-20.5.0:         ( 0.005244s |  0.00% |  0.02% )   ( 0.005313s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  break
-245.4.0:        ( 0.000164s |  0.00% |  0.00% )   ( 0.000182s |  0.00% |  0.00% )    	(1x)	│  │  │  └─  p_PID+=(${p27_PID})
-1018.3.0:       ( 0.000168s |  0.00% |  0.00% )   ( 0.000184s |  0.00% |  0.00% )    	(1x)	│  │  │   echo "${kkProcs}" > "${tmpDir}"/.nWorkers
-1019.3.0:       ( 0.000153s |  0.00% |  0.00% )   ( 0.000173s |  0.00% |  0.00% )    	(1x)	│  │  │   : > "${tmpDir}"/.spawned
-1020.3.0:       ( 0.000127s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1022.3.0:       ( 0.000126s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 3 ))
-1026.3.0:       ( 0.001392s |  0.00% |  0.00% )   ( 0.001407s |  0.00% |  0.00% )    	(1x)	│  │  │   declare -p > "${tmpDir}"/.vars
-1027.3.0:       ( 0.000137s |  0.00% |  0.00% )   ( 0.000156s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nOrderFlag}
-1071.3.0:       ( 0.000132s |  0.00% |  0.00% )   ( 0.000145s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1072.3.0:       ( 0.000125s |  0.00% |  0.00% )   ( 0.000144s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-1079.3.0:       ( 24.349537s |  2.21% |  4.44% )   ( 0.001683s |  0.00% |  0.00% )    	(1x)	│  │  │   wait "${p_PID[@]}" &> /dev/null
-1081.3.0:       ( 0.000293s |  0.00% |  0.00% )   ( 0.000338s |  0.00% |  0.00% )    	(1x)	│  │  │   (( ${verboseLevel} > 1 ))
-1084.3.0:       ( 0.000288s |  0.00% |  0.00% )   ( 0.000329s |  0.00% |  0.00% )    	(1x)	│  │  │   ${nSpawnFlag}
-25.3.0:         ( 0.046335s |  0.00% |  0.00% )   ( 0.046597s |  0.00% |  0.00% )    	(1x)	│  │  └─  ${nSpawnFlag}
-1085.2.0:       ( 0.000091s |  0.00% |  0.00% )   ( 0.000107s |  0.00% |  0.00% )    	(1x)	│  │   wait
-25.2.0:         ( 0.004710s |  0.00% |  0.00% )   ( 0.002389s |  0.00% |  0.00% )    	(1x)	└─ └─  wait
+9.0.0:          ( 0.000139s |  0.00% )            ( 0.000157s |  0.00% )             	(1x)	set -euo pipefail
 
-WALL CLOCK TIME: 51.090641s
-TOTAL RUN TIME:  1097.053967s
-TOTAL CPU TIME:  997.263137s
+456.0.0:        ( 0.026052s |  0.19% )            ( 0.025883s |  0.13% )             	(1x)	trap 'echo "MAIN_EXIT"' EXIT
+
+459.0.0:        ( 13.210138s | 99.80% )            ( 19.806467s | 99.86% )             	(1x)	<< (FUNCTION): main.main "$@" >>
+.1.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	├─
+1.1.0:          ( 0.000072s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│   main "$@"
+24.1.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│   echo "=== TIMEP NIGHTMARE STRESS TEST ==="
+25.1.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│   echo "Starting comprehensive profiler stress test..."
+26.1.0:         ( 0.000068s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│   echo
+29.1.0:         ( 0.025313s |  0.19% |  0.19% )   ( 0.025214s |  0.12% |  0.12% )    	(1x)	│   trap 'echo "GLOBAL_USR1"' USR1
+31.1.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│   echo "1. Trap Hell..."
+32.1.0:         ( 1.739231s | 13.13% | 13.16% )   ( 1.454871s |  7.33% |  7.34% )    	(1x)	│   << (FUNCTION): main.main.trap_hell 0 2> /dev/null >>
+.2.0:           ( 0.000002s |  0.00% |  0.00% )   ( 0.000002s |  0.00% |  0.00% )    	(2x)	│  ├─
+1.2.0:          ( 0.000066s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   trap_hell 0 2> /dev/null
+24.2.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│  │   local depth="${1:-0}"
+27.2.0:         ( 0.028494s |  0.21% |  1.63% )   ( 0.027847s |  0.14% |  1.91% )    	(1x)	│  │   trap 'echo "EXIT $depth"; trap "echo NESTED_EXIT $depth" EXIT' EXIT
+28.2.0:         ( 0.045760s |  0.34% |  2.63% )   ( 0.045048s |  0.22% |  3.09% )    	(1x)	│  │   trap 'echo "RETURN $depth"; trap "echo NESTED_RETURN $depth" RETURN' RETURN
+29.2.0:         ( 0.031229s |  0.23% |  1.79% )   ( 0.030739s |  0.15% |  2.11% )    	(1x)	│  │   trap 'echo "DEBUG $depth"' DEBUG
+33.2.0:         ( 0.000477s |  0.00% |  0.02% )   ( 0.000498s |  0.00% |  0.03% )    	(1x)	│  │   (( depth < 3 )) (&)
+34.2.0:         ( 1.212139s |  9.15% | 69.69% )   ( 0.641752s |  3.23% | 44.11% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+.3.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  ├─
+34.3.0:         ( 1.181586s |  8.92% | 97.47% )   ( 0.611277s |  3.08% | 95.25% )    	(1x)	│  │  │   << (FUNCTION): main.main.trap_hell.trap_hell $((depth + 1)) >>
+.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
+1.4.0:          ( 0.000080s |  0.00% |  0.00% )   ( 0.000096s |  0.00% |  0.01% )    	(1x)	│  │  │  │   trap_hell $((depth + 1))
+24.4.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000100s |  0.00% |  0.01% )    	(1x)	│  │  │  │   local depth="${1:-0}"
+27.4.0:         ( 0.038332s |  0.28% |  3.24% )   ( 0.038164s |  0.19% |  6.24% )    	(1x)	│  │  │  │   trap 'echo "EXIT $depth"; trap "echo NESTED_EXIT $depth" EXIT' EXIT
+28.4.0:         ( 0.052789s |  0.39% |  4.46% )   ( 0.052558s |  0.26% |  8.59% )    	(1x)	│  │  │  │   trap 'echo "RETURN $depth"; trap "echo NESTED_RETURN $depth" RETURN' RETURN
+29.4.0:         ( 0.030315s |  0.22% |  2.56% )   ( 0.030204s |  0.15% |  4.94% )    	(1x)	│  │  │  │   trap 'echo "DEBUG $depth"' DEBUG
+32.4.0:         ( 0.000624s |  0.00% |  0.05% )   ( 0.000655s |  0.00% |  0.10% )    	(1x)	│  │  │  │   (( depth < 3 )) (&)
+33.4.0:         ( 0.557056s |  4.20% | 47.14% )   ( 0.419681s |  2.11% | 68.65% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+33.5.0:         ( 0.492552s |  3.72% | 88.42% )   ( 0.358579s |  1.80% | 85.44% )    	(1x)	│  │  │  │  │   << (FUNCTION): main.main.trap_hell.trap_hell.trap_hell $((depth + 1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000295s |  0.00% |  0.05% )   ( 0.000337s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │   trap_hell $((depth + 1))
+24.6.0:         ( 0.000072s |  0.00% |  0.01% )   ( 0.000088s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │   local depth="${1:-0}"
+27.6.0:         ( 0.028733s |  0.21% |  5.83% )   ( 0.028658s |  0.14% |  7.99% )    	(1x)	│  │  │  │  │  │   trap 'echo "EXIT $depth"; trap "echo NESTED_EXIT $depth" EXIT' EXIT
+28.6.0:         ( 0.044168s |  0.33% |  8.96% )   ( 0.044040s |  0.22% | 12.28% )    	(1x)	│  │  │  │  │  │   trap 'echo "RETURN $depth"; trap "echo NESTED_RETURN $depth" RETURN' RETURN
+29.6.0:         ( 0.028271s |  0.21% |  5.73% )   ( 0.028191s |  0.14% |  7.86% )    	(1x)	│  │  │  │  │  │   trap 'echo "DEBUG $depth"' DEBUG
+32.6.0:         ( 0.000462s |  0.00% |  0.09% )   ( 0.000481s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │   (( depth < 3 )) (&)
+33.6.0:         ( 0.167079s |  1.26% | 33.92% )   ( 0.166226s |  0.83% | 46.35% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+.7.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  ├─
+33.7.0:         ( 0.136285s |  1.02% | 81.56% )   ( 0.135493s |  0.68% | 81.51% )    	(1x)	│  │  │  │  │  │  │   << (FUNCTION): main.main.trap_hell.trap_hell.trap_hell.trap_hell $((depth + 1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000138s |  0.00% |  0.10% )   ( 0.000158s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   trap_hell $((depth + 1))
+24.8.0:         ( 0.000133s |  0.00% |  0.09% )   ( 0.000158s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${1:-0}"
+27.8.0:         ( 0.054731s |  0.41% | 40.15% )   ( 0.054111s |  0.27% | 39.93% )    	(1x)	│  │  │  │  │  │  │  │   trap 'echo "EXIT $depth"; trap "echo NESTED_EXIT $depth" EXIT' EXIT
+28.8.0:         ( 0.046325s |  0.34% | 33.99% )   ( 0.046155s |  0.23% | 34.06% )    	(1x)	│  │  │  │  │  │  │  │   trap 'echo "RETURN $depth"; trap "echo NESTED_RETURN $depth" RETURN' RETURN
+29.8.0:         ( 0.031638s |  0.23% | 23.21% )   ( 0.031544s |  0.15% | 23.28% )    	(1x)	│  │  │  │  │  │  │  │   trap 'echo "DEBUG $depth"' DEBUG
+32.8.0:         ( 0.000091s |  0.00% |  0.06% )   ( 0.000114s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+38.8.0:         ( 0.000181s |  0.00% |  0.13% )   ( 0.000203s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │   kill -USR1 $$ 2> /dev/null
+-38.8.0:        ( 0.003047s |  0.02% |  2.23% )   ( 0.003049s |  0.01% |  2.25% )    	(1x)	│  │  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 3
+-33.7.0:        ( 0.030724s |  0.23% | 18.38% )   ( 0.030648s |  0.15% | 18.43% )    	(1x)	│  │  │  │  │  │  │   @TRAP (EXIT): echo "EXIT $depth"\; trap "echo NESTED_EXIT $depth" EXIT; @TRAP (RETURN): echo NESTED_RETURN 3
+-5.7.0:         ( 0.000069s |  0.00% |  0.04% )   ( 0.000084s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │  │  └─  kill -USR1 $$ 2> /dev/null (?)
+34.6.0:         ( 0.219438s |  1.65% | 44.55% )   ( 0.086492s |  0.43% | 24.12% )    	(1x)	│  │  │  │  │  │   << (FUNCTION): main.main.trap_hell.trap_hell.trap_hell.trap_hell_inner $((depth + 1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000129s |  0.00% |  0.05% )   ( 0.000154s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │   trap_hell_inner $((depth + 1))
+24.7.0:         ( 0.053438s |  0.40% | 24.35% )   ( 0.053238s |  0.26% | 61.55% )    	(1x)	│  │  │  │  │  │  │   trap 'trap - DEBUG; echo "Modified DEBUG $1"' DEBUG
+24.7.1:         ( 0.000546s |  0.00% |  0.24% )   ( 0.000577s |  0.00% |  0.66% )    	(1x)	│  │  │  │  │  │  │   : (&)
+24.7.2:         ( 0.134118s |  1.01% | 61.11% )   ( 0.001395s |  0.00% |  1.61% )    	(1x)	│  │  │  │  │  │  │   wait
+25.7.0:         ( 0.029122s |  0.22% | 13.27% )   ( 0.029035s |  0.14% | 33.56% )    	(1x)	│  │  │  │  │  │  │   trap - DEBUG
+-25.7.0:        ( 0.002084s |  0.01% |  0.94% )   ( 0.002092s |  0.01% |  2.41% )    	(1x)	│  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 2
+37.6.0:         ( 0.000167s |  0.00% |  0.03% )   ( 0.000193s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │  │   kill -USR1 $$ 2> /dev/null
+-37.6.0:        ( 0.003866s |  0.02% |  0.78% )   ( 0.003872s |  0.01% |  1.07% )    	(1x)	│  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 2
+-33.5.0:        ( 0.064372s |  0.48% | 11.55% )   ( 0.060946s |  0.30% | 14.52% )    	(1x)	│  │  │  │  │   @TRAP (EXIT): echo "EXIT $depth"\; trap "echo NESTED_EXIT $depth" EXIT; @TRAP (RETURN): echo NESTED_RETURN 2
+-6.5.0:         ( 0.000131s |  0.00% |  0.02% )   ( 0.000155s |  0.00% |  0.03% )    	(1x)	│  │  │  │  └─  kill -USR1 $$ 2> /dev/null (?)
+34.4.0:         ( 0.500176s |  3.77% | 42.33% )   ( 0.067666s |  0.34% | 11.06% )    	(1x)	│  │  │  │   << (FUNCTION): main.main.trap_hell.trap_hell.trap_hell_inner $((depth + 1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000116s |  0.00% |  0.02% )   ( 0.000140s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   trap_hell_inner $((depth + 1))
+24.5.0:         ( 0.031569s |  0.23% |  6.31% )   ( 0.031454s |  0.15% | 46.48% )    	(1x)	│  │  │  │  │   trap 'trap - DEBUG; echo "Modified DEBUG $1"' DEBUG
+24.5.1:         ( 0.000416s |  0.00% |  0.08% )   ( 0.000438s |  0.00% |  0.64% )    	(1x)	│  │  │  │  │   : (&)
+24.5.2:         ( 0.426273s |  3.22% | 85.22% )   ( 0.000504s |  0.00% |  0.74% )    	(1x)	│  │  │  │  │   wait
+25.5.0:         ( 0.039754s |  0.30% |  7.94% )   ( 0.033073s |  0.16% | 48.87% )    	(1x)	│  │  │  │  │   trap - DEBUG
+-25.5.0:        ( 0.002047s |  0.01% |  0.40% )   ( 0.002056s |  0.01% |  3.03% )    	(1x)	│  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 1
+37.4.0:         ( 0.000092s |  0.00% |  0.00% )   ( 0.000108s |  0.00% |  0.01% )    	(1x)	│  │  │  │   kill -USR1 $$ 2> /dev/null
+-37.4.0:        ( 0.002037s |  0.01% |  0.17% )   ( 0.002044s |  0.01% |  0.33% )    	(1x)	│  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 1
+-34.3.0:        ( 0.030481s |  0.23% |  2.51% )   ( 0.030388s |  0.15% |  4.73% )    	(1x)	│  │  │   @TRAP (EXIT): echo "EXIT $depth"\; trap "echo NESTED_EXIT $depth" EXIT; @TRAP (RETURN): echo NESTED_RETURN 1
+-5.3.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.01% )    	(1x)	│  │  └─  kill -USR1 $$ 2> /dev/null (?)
+35.2.0:         ( 0.415611s |  3.13% | 23.89% )   ( 0.062857s |  0.31% |  4.32% )    	(1x)	│  │   << (FUNCTION): main.main.trap_hell.trap_hell_inner $((depth + 1)) >>
+.3.0:           ( 0.000002s |  0.00% |  0.00% )   ( 0.000002s |  0.00% |  0.00% )    	(2x)	│  │  ├─
+1.3.0:          ( 0.000071s |  0.00% |  0.01% )   ( 0.000085s |  0.00% |  0.13% )    	(1x)	│  │  │   trap_hell_inner $((depth + 1))
+24.3.0:         ( 0.031895s |  0.24% |  7.67% )   ( 0.031782s |  0.16% | 50.56% )    	(1x)	│  │  │   trap 'trap - DEBUG; echo "Modified DEBUG $1"' DEBUG
+24.3.1:         ( 0.000403s |  0.00% |  0.09% )   ( 0.000428s |  0.00% |  0.68% )    	(1x)	│  │  │   : (&)
+24.3.2:         ( 0.352953s |  2.66% | 84.92% )   ( 0.000325s |  0.00% |  0.51% )    	(1x)	│  │  │   wait
+-24.3.0:        ( 0.002629s |  0.01% |  0.63% )   ( 0.002639s |  0.01% |  4.19% )    	(1x)	│  │  │   @TRAP (USR1): echo "GLOBAL_USR1"
+25.3.0:         ( 0.025588s |  0.19% |  6.15% )   ( 0.025516s |  0.12% | 40.59% )    	(1x)	│  │  │   trap - DEBUG
+-25.3.0:        ( 0.002070s |  0.01% |  0.49% )   ( 0.002080s |  0.01% |  3.30% )    	(1x)	│  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+38.2.0:         ( 0.000090s |  0.00% |  0.00% )   ( 0.000105s |  0.00% |  0.00% )    	(1x)	│  │   kill -USR1 $$ 2> /dev/null
+-38.2.0:        ( 0.002082s |  0.01% |  0.11% )   ( 0.002091s |  0.01% |  0.14% )    	(1x)	│  │   @TRAP (USR1): echo "GLOBAL_USR1"
+--9.2.0:         	( 0.002000s |  0.01% |  0.11% )   ( 0.002010s |  0.01% |  0.13% )    	(1x)	│  └─  -@TRAP (RETURN): echo NESTED_RETURN 0
+34.1.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│   echo "2. Fork Cascade..."
+35.1.0:         ( 5.196069s | 39.25% | 39.33% )   ( 12.391060s | 62.47% | 62.56% )    	(1x)	│   << (FUNCTION): main.main.fork_cascade 3 0 >>
+.2.0:           ( 0.000002s |  0.00% |  0.00% )   ( 0.000002s |  0.00% |  0.00% )    	(2x)	│  ├─
+1.2.0:          ( 0.000070s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   fork_cascade 3 0
+24.2.0:         ( 0.000086s |  0.00% |  0.00% )   ( 0.000101s |  0.00% |  0.00% )    	(1x)	│  │   local n="${1:-5}"
+25.2.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│  │   local depth="${2:-0}"
+27.2.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│  │   (( depth < 3 ))
+28.2.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │   ((i=0))
+28.2.1:         ( 0.001369s |  0.01% |  0.00% )   ( 0.001424s |  0.00% |  0.00% )    	(3x)	│  │   ((i<n)) (&)
+30.2.0:         ( 0.774363s |  5.85% | 14.90% )   ( 1.553648s |  7.83% | 12.53% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+30.3.0:         ( 0.768803s |  5.80% | 99.28% )   ( 0.776824s |  3.91% | 50.00% )    	(1x)	│  │  ├─  << (BACKGROUND FORK) >>
+30.4.0:         ( 0.768803s |  5.80% |100.00% )   ( 0.776824s |  3.91% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000142s |  0.00% |  0.01% )   ( 0.000164s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.5.0:         ( 0.000134s |  0.00% |  0.01% )   ( 0.000159s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   local n="${1:-5}"
+25.5.0:         ( 0.000121s |  0.00% |  0.01% )   ( 0.000145s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   local depth="${2:-0}"
+27.5.0:         ( 0.000109s |  0.00% |  0.01% )   ( 0.000132s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   (( depth < 3 ))
+28.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   ((i=0))
+28.5.1:         ( 0.001197s |  0.00% |  0.07% )   ( 0.001259s |  0.00% |  0.08% )    	(2x)	│  │  │  │  │   ((i<n)) (&)
+31.5.0:         ( 0.321042s |  2.42% | 41.75% )   ( 0.224056s |  1.12% | 28.84% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.238344s |  1.80% | 74.24% )   ( 0.142286s |  0.71% | 63.50% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.238344s |  1.80% |100.00% )   ( 0.142286s |  0.71% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000125s |  0.00% |  0.05% )   ( 0.000150s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000133s |  0.00% |  0.05% )   ( 0.000163s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000163s |  0.00% |  0.06% )   ( 0.000183s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000134s |  0.00% |  0.05% )   ( 0.000159s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000132s |  0.00% |  0.05% )   ( 0.000158s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000680s |  0.00% |  0.28% )   ( 0.000718s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+30.8.0:         ( 0.161668s |  1.22% | 67.82% )   ( 0.093045s |  0.46% | 65.39% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.073143s |  0.55% | 45.24% )   ( 0.051544s |  0.25% | 55.39% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.073143s |  0.55% |100.00% )   ( 0.051544s |  0.25% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000136s |  0.00% |  0.18% )   ( 0.000167s |  0.00% |  0.32% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000255s |  0.00% |  0.34% )   ( 0.000283s |  0.00% |  0.54% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000172s |  0.00% |  0.23% )   ( 0.000206s |  0.00% |  0.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000438s |  0.00% |  0.59% )   ( 0.000324s |  0.00% |  0.62% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.002049s |  0.01% |  2.80% )   ( 0.000568s |  0.00% |  1.10% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.017085s |  0.12% | 23.35% )   ( 0.013324s |  0.06% | 25.84% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.004167s |  0.03% | 24.38% )   ( 0.000404s |  0.00% |  3.03% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.012918s |  0.09% | 37.80% )   ( 0.012920s |  0.06% | 48.48% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.012918s |  0.09% |100.00% )   ( 0.012920s |  0.06% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.012693s |  0.09% | 17.35% )   ( 0.009591s |  0.04% | 18.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.003500s |  0.02% | 27.57% )   ( 0.000395s |  0.00% |  4.11% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.000337s |  0.00% |  2.65% )   ( 0.000338s |  0.00% |  3.52% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000337s |  0.00% |100.00% )   ( 0.000338s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.004428s |  0.03% | 34.88% )   ( 0.004429s |  0.02% | 46.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.004428s |  0.03% |100.00% )   ( 0.004429s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.009007s |  0.06% | 12.31% )   ( 0.004165s |  0.02% |  8.08% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.088525s |  0.66% | 54.75% )   ( 0.041501s |  0.20% | 44.60% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.088525s |  0.66% |100.00% )   ( 0.041501s |  0.20% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000247s |  0.00% |  0.27% )   ( 0.000288s |  0.00% |  0.69% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000225s |  0.00% |  0.25% )   ( 0.000252s |  0.00% |  0.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000191s |  0.00% |  0.21% )   ( 0.000217s |  0.00% |  0.52% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000183s |  0.00% |  0.20% )   ( 0.000208s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.001118s |  0.00% |  1.26% )   ( 0.000600s |  0.00% |  1.44% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.025499s |  0.19% | 28.80% )   ( 0.002368s |  0.01% |  5.70% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.023545s |  0.17% | 92.33% )   ( 0.000412s |  0.00% | 17.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.000095s |  0.00% |  0.37% )   ( 0.000096s |  0.00% |  4.05% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.000095s |  0.00% |100.00% )   ( 0.000096s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.001859s |  0.01% |  7.29% )   ( 0.001860s |  0.00% | 78.54% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.001859s |  0.01% |100.00% )   ( 0.001860s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.024429s |  0.18% | 27.59% )   ( 0.015633s |  0.07% | 37.66% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.009199s |  0.06% | 37.65% )   ( 0.000399s |  0.00% |  2.55% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.007615s |  0.05% | 15.58% )   ( 0.007617s |  0.03% | 24.36% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.007615s |  0.05% |100.00% )   ( 0.007617s |  0.03% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.003924s |  0.02% |  4.43% )   ( 0.003933s |  0.01% |  9.47% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000134s |  0.00% |  0.05% )   ( 0.000160s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.000165s |  0.00% |  0.06% )   ( 0.000192s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000144s |  0.00% |  0.06% )   ( 0.000171s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001529s |  0.01% |  0.64% )   ( 0.000897s |  0.00% |  0.63% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.008723s |  0.06% |  3.65% )   ( 0.004540s |  0.02% |  3.19% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004565s |  0.03% | 52.33% )   ( 0.000380s |  0.00% |  8.37% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.004158s |  0.03% | 23.83% )   ( 0.004160s |  0.02% | 45.81% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.004158s |  0.03% |100.00% )   ( 0.004160s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.020354s |  0.15% |  8.53% )   ( 0.016589s |  0.08% | 11.65% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004143s |  0.03% | 20.35% )   ( 0.000376s |  0.00% |  2.26% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.016211s |  0.12% | 39.82% )   ( 0.016213s |  0.08% | 48.86% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.016211s |  0.12% |100.00% )   ( 0.016213s |  0.08% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004813s |  0.03% |  2.01% )   ( 0.004031s |  0.02% |  2.83% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.082698s |  0.62% | 25.75% )   ( 0.081770s |  0.41% | 36.49% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.082698s |  0.62% |100.00% )   ( 0.081770s |  0.41% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000145s |  0.00% |  0.17% )   ( 0.000175s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000144s |  0.00% |  0.17% )   ( 0.000177s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000203s |  0.00% |  0.24% )   ( 0.000232s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000161s |  0.00% |  0.19% )   ( 0.000193s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000147s |  0.00% |  0.17% )   ( 0.000169s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000165s |  0.00% |  0.19% )   ( 0.000194s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000176s |  0.00% |  0.21% )   ( 0.000210s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.003293s |  0.02% |  3.98% )   ( 0.000626s |  0.00% |  0.76% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.013044s |  0.09% | 15.77% )   ( 0.005351s |  0.02% |  6.54% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.008137s |  0.06% | 62.38% )   ( 0.000442s |  0.00% |  8.26% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.004907s |  0.03% | 18.80% )   ( 0.004909s |  0.02% | 45.86% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.004907s |  0.03% |100.00% )   ( 0.004909s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.044645s |  0.33% | 53.98% )   ( 0.032346s |  0.16% | 39.55% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.012715s |  0.09% | 28.48% )   ( 0.000414s |  0.00% |  1.27% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.031930s |  0.24% | 35.75% )   ( 0.031932s |  0.16% | 49.36% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.031930s |  0.24% |100.00% )   ( 0.031932s |  0.16% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.007076s |  0.05% |  8.55% )   ( 0.004399s |  0.02% |  5.37% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.0:         ( 0.000214s |  0.00% |  0.01% )   ( 0.000257s |  0.00% |  0.01% )    	(2x)	│  │  │  │  │   ((i++))
+30.5.0:         ( 0.314837s |  2.37% | 40.95% )   ( 0.434829s |  2.19% | 55.97% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.256771s |  1.93% | 81.55% )   ( 0.370346s |  1.86% | 85.17% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.256771s |  1.93% |100.00% )   ( 0.370346s |  1.86% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000156s |  0.00% |  0.06% )   ( 0.000181s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000140s |  0.00% |  0.05% )   ( 0.000165s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000199s |  0.00% |  0.07% )   ( 0.000226s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000150s |  0.00% |  0.05% )   ( 0.000180s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000203s |  0.00% |  0.07% )   ( 0.000232s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000679s |  0.00% |  0.26% )   ( 0.000706s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+30.8.0:         ( 0.174670s |  1.31% | 68.02% )   ( 0.166284s |  0.83% | 44.89% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.094099s |  0.71% | 53.87% )   ( 0.054972s |  0.27% | 33.05% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.094099s |  0.71% |100.00% )   ( 0.054972s |  0.27% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000149s |  0.00% |  0.15% )   ( 0.000175s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000176s |  0.00% |  0.18% )   ( 0.000210s |  0.00% |  0.38% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000149s |  0.00% |  0.15% )   ( 0.000169s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000173s |  0.00% |  0.18% )   ( 0.000209s |  0.00% |  0.38% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.000861s |  0.00% |  0.91% )   ( 0.000579s |  0.00% |  1.05% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.048687s |  0.36% | 51.74% )   ( 0.035059s |  0.17% | 63.77% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.014052s |  0.10% | 28.86% )   ( 0.000423s |  0.00% |  1.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.034630s |  0.26% | 71.12% )   ( 0.034631s |  0.17% | 98.77% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.034630s |  0.26% |100.00% )   ( 0.034631s |  0.17% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000005s |  0.00% |  0.01% )   ( 0.000005s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000005s |  0.00% |100.00% )   ( 0.000005s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.036734s |  0.27% | 39.03% )   ( 0.014557s |  0.07% | 26.48% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.022610s |  0.17% | 61.55% )   ( 0.000431s |  0.00% |  2.96% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.014124s |  0.10% | 19.22% )   ( 0.014126s |  0.07% | 48.51% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.014124s |  0.10% |100.00% )   ( 0.014126s |  0.07% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.007169s |  0.05% |  7.61% )   ( 0.004013s |  0.02% |  7.30% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.075443s |  0.56% | 43.19% )   ( 0.028170s |  0.14% | 16.94% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.10.0:        ( 0.075443s |  0.56% |100.00% )   ( 0.028170s |  0.14% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000220s |  0.00% |  0.29% )   ( 0.000249s |  0.00% |  0.88% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000160s |  0.00% |  0.21% )   ( 0.000186s |  0.00% |  0.66% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000252s |  0.00% |  0.33% )   ( 0.000274s |  0.00% |  0.97% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000201s |  0.00% |  0.26% )   ( 0.000230s |  0.00% |  0.81% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.000814s |  0.00% |  1.07% )   ( 0.000584s |  0.00% |  2.07% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.035021s |  0.26% | 46.42% )   ( 0.011235s |  0.05% | 39.88% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.024222s |  0.18% | 69.16% )   ( 0.000434s |  0.00% |  3.86% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.010799s |  0.08% | 15.41% )   ( 0.010801s |  0.05% | 48.06% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.010799s |  0.08% |100.00% )   ( 0.010801s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.034091s |  0.25% | 45.18% )   ( 0.010959s |  0.05% | 38.90% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.023549s |  0.17% | 69.07% )   ( 0.000415s |  0.00% |  3.78% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.010542s |  0.07% | 15.46% )   ( 0.010544s |  0.05% | 48.10% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.010542s |  0.07% |100.00% )   ( 0.010544s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004683s |  0.03% |  6.20% )   ( 0.004452s |  0.02% | 15.80% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000186s |  0.00% |  0.07% )   ( 0.000212s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.000148s |  0.00% |  0.05% )   ( 0.000178s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000146s |  0.00% |  0.05% )   ( 0.000171s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.002202s |  0.01% |  0.85% )   ( 0.000883s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.017200s |  0.12% |  6.69% )   ( 0.010188s |  0.05% |  2.75% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.007438s |  0.05% | 43.24% )   ( 0.000424s |  0.00% |  4.16% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.009762s |  0.07% | 28.37% )   ( 0.009764s |  0.04% | 47.91% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.009762s |  0.07% |100.00% )   ( 0.009764s |  0.04% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.009325s |  0.07% |  3.63% )   ( 0.005156s |  0.02% |  1.39% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004584s |  0.03% | 49.15% )   ( 0.000413s |  0.00% |  8.01% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.003540s |  0.02% | 37.96% )   ( 0.003541s |  0.01% | 68.67% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.003540s |  0.02% |100.00% )   ( 0.003541s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.001201s |  0.00% | 12.87% )   ( 0.001202s |  0.00% | 23.31% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.001201s |  0.00% |100.00% )   ( 0.001202s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.003948s |  0.02% |  1.53% )   ( 0.003955s |  0.01% |  1.06% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.058066s |  0.43% | 18.44% )   ( 0.064483s |  0.32% | 14.82% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.058066s |  0.43% |100.00% )   ( 0.064483s |  0.32% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000167s |  0.00% |  0.28% )   ( 0.000199s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000144s |  0.00% |  0.24% )   ( 0.000164s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000176s |  0.00% |  0.30% )   ( 0.000210s |  0.00% |  0.32% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000143s |  0.00% |  0.24% )   ( 0.000170s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000138s |  0.00% |  0.23% )   ( 0.000163s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000174s |  0.00% |  0.29% )   ( 0.000205s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000135s |  0.00% |  0.23% )   ( 0.000159s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.005062s |  0.03% |  8.71% )   ( 0.000602s |  0.00% |  0.93% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.019857s |  0.15% | 34.19% )   ( 0.015355s |  0.07% | 23.81% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004882s |  0.03% | 24.58% )   ( 0.000378s |  0.00% |  2.46% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.014975s |  0.11% | 37.70% )   ( 0.014977s |  0.07% | 48.76% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.014975s |  0.11% |100.00% )   ( 0.014977s |  0.07% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.019319s |  0.14% | 33.27% )   ( 0.013943s |  0.07% | 21.62% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.005739s |  0.04% | 29.70% )   ( 0.000361s |  0.00% |  2.58% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.010154s |  0.07% | 52.55% )   ( 0.010155s |  0.05% | 72.83% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.010154s |  0.07% |100.00% )   ( 0.010155s |  0.05% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.003426s |  0.02% | 17.73% )   ( 0.003427s |  0.01% | 24.57% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.003426s |  0.02% |100.00% )   ( 0.003427s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.009020s |  0.06% | 15.53% )   ( 0.004014s |  0.02% |  6.22% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.1:         ( 0.000139s |  0.00% |  0.01% )   ( 0.000166s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   ((i<n))
+34.5.0:         ( 0.000534s |  0.00% |  0.06% )   ( 0.000564s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │   wait
+38.5.0:         ( 0.000823s |  0.00% |  0.10% )   ( 0.000591s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.5.1:         ( 0.065129s |  0.49% |  8.47% )   ( 0.058283s |  0.29% |  7.50% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+38.6.0:         ( 0.012601s |  0.09% | 19.34% )   ( 0.005751s |  0.02% |  9.86% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.026264s |  0.19% | 20.16% )   ( 0.026266s |  0.13% | 22.53% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.026264s |  0.19% |100.00% )   ( 0.026266s |  0.13% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+38.5.2:         ( 0.059124s |  0.44% |  7.69% )   ( 0.051811s |  0.26% |  6.66% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+38.6.0:         ( 0.007698s |  0.05% | 13.02% )   ( 0.000397s |  0.00% |  0.76% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.025705s |  0.19% | 21.73% )   ( 0.025707s |  0.12% | 24.80% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.025705s |  0.19% |100.00% )   ( 0.025707s |  0.12% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+-38.5.0:        ( 0.005191s |  0.03% |  0.67% )   ( 0.004325s |  0.02% |  0.55% )    	(1x)	│  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.2.0:         ( 0.193665s |  1.46% |  3.72% )   ( 0.335406s |  1.69% |  2.70% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+31.3.0:         ( 0.188072s |  1.42% | 97.11% )   ( 0.167703s |  0.84% | 50.00% )    	(1x)	│  │  ├─  << (BACKGROUND FORK) >>
+31.4.0:         ( 0.188072s |  1.42% |100.00% )   ( 0.167703s |  0.84% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000279s |  0.00% |  0.14% )   ( 0.000322s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.5.0:         ( 0.000071s |  0.00% |  0.03% )   ( 0.000087s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │   local n="${1:-5}"
+25.5.0:         ( 0.000069s |  0.00% |  0.03% )   ( 0.000085s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │   local depth="${2:-0}"
+27.5.0:         ( 0.000071s |  0.00% |  0.03% )   ( 0.000082s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │   (( depth < 3 ))
+28.5.0:         ( 0.000065s |  0.00% |  0.03% )   ( 0.000080s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │   ((i=0))
+28.5.1:         ( 0.000466s |  0.00% |  0.24% )   ( 0.000482s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │   ((i<n)) (&)
+31.5.0:         ( 0.152873s |  1.15% | 81.28% )   ( 0.144452s |  0.72% | 86.13% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.109399s |  0.82% | 71.56% )   ( 0.112129s |  0.56% | 77.62% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.109399s |  0.82% |100.00% )   ( 0.112129s |  0.56% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000192s |  0.00% |  0.17% )   ( 0.000173s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000133s |  0.00% |  0.12% )   ( 0.000158s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000133s |  0.00% |  0.12% )   ( 0.000158s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000177s |  0.00% |  0.16% )   ( 0.000170s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000124s |  0.00% |  0.11% )   ( 0.000148s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000124s |  0.00% |  0.11% )   ( 0.000149s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000132s |  0.00% |  0.12% )   ( 0.000158s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.000931s |  0.00% |  0.85% )   ( 0.000662s |  0.00% |  0.59% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.041263s |  0.31% | 37.71% )   ( 0.036112s |  0.18% | 32.20% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.005533s |  0.04% | 13.40% )   ( 0.000394s |  0.00% |  1.09% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.017857s |  0.13% | 21.63% )   ( 0.017859s |  0.09% | 24.72% )    	(2x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.017857s |  0.13% |100.00% )   ( 0.017859s |  0.09% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.052134s |  0.39% | 47.65% )   ( 0.034934s |  0.17% | 31.15% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.017577s |  0.13% | 33.71% )   ( 0.000375s |  0.00% |  1.07% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.034557s |  0.26% | 33.14% )   ( 0.034559s |  0.17% | 49.46% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.034557s |  0.26% |100.00% )   ( 0.034559s |  0.17% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004421s |  0.03% |  4.04% )   ( 0.004372s |  0.02% |  3.89% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.043474s |  0.32% | 28.43% )   ( 0.032323s |  0.16% | 22.37% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.043474s |  0.32% |100.00% )   ( 0.032323s |  0.16% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000128s |  0.00% |  0.29% )   ( 0.000153s |  0.00% |  0.47% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000134s |  0.00% |  0.30% )   ( 0.000152s |  0.00% |  0.47% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000136s |  0.00% |  0.31% )   ( 0.000169s |  0.00% |  0.52% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000164s |  0.00% |  0.37% )   ( 0.000182s |  0.00% |  0.56% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000130s |  0.00% |  0.29% )   ( 0.000149s |  0.00% |  0.46% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000124s |  0.00% |  0.28% )   ( 0.000149s |  0.00% |  0.46% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000128s |  0.00% |  0.29% )   ( 0.000154s |  0.00% |  0.47% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.002849s |  0.02% |  6.55% )   ( 0.000591s |  0.00% |  1.82% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.013499s |  0.10% | 31.05% )   ( 0.008385s |  0.04% | 25.94% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.005524s |  0.04% | 40.92% )   ( 0.000408s |  0.00% |  4.86% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.007975s |  0.06% | 29.53% )   ( 0.007977s |  0.04% | 47.56% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.007975s |  0.06% |100.00% )   ( 0.007977s |  0.04% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.011297s |  0.08% | 25.98% )   ( 0.005158s |  0.02% | 15.95% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.006548s |  0.04% | 57.96% )   ( 0.000407s |  0.00% |  7.89% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.004749s |  0.03% | 21.01% )   ( 0.004751s |  0.02% | 46.05% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.004749s |  0.03% |100.00% )   ( 0.004751s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.003549s |  0.02% |  8.16% )   ( 0.003537s |  0.01% | 10.94% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.0:         ( 0.000068s |  0.00% |  0.03% )   ( 0.000084s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │   ((i++))
+28.5.1:         ( 0.000082s |  0.00% |  0.04% )   ( 0.000106s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │   ((i<n))
+34.5.0:         ( 0.000131s |  0.00% |  0.06% )   ( 0.000156s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │   wait
+38.5.0:         ( 0.000814s |  0.00% |  0.43% )   ( 0.000600s |  0.00% |  0.35% )    	(1x)	│  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.5.1:         ( 0.012007s |  0.09% |  6.38% )   ( 0.005436s |  0.02% |  3.24% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+38.6.0:         ( 0.006964s |  0.05% | 57.99% )   ( 0.000391s |  0.00% |  7.19% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.005043s |  0.03% | 21.00% )   ( 0.005045s |  0.02% | 46.40% )    	(2x)	│  │  │  │  │  │   << (SUBSHELL) >>
+38.7.0:         ( 0.005043s |  0.03% |100.00% )   ( 0.005045s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+38.5.2:         ( 0.016953s |  0.12% |  9.01% )   ( 0.011685s |  0.05% |  6.96% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+38.6.0:         ( 0.004539s |  0.03% | 26.77% )   ( 0.000395s |  0.00% |  3.38% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.005643s |  0.04% | 16.64% )   ( 0.005645s |  0.02% | 24.15% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.005643s |  0.04% |100.00% )   ( 0.005645s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+-38.5.0:        ( 0.004122s |  0.03% |  2.19% )   ( 0.004045s |  0.02% |  2.41% )    	(1x)	│  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.2.0:         ( 0.000209s |  0.00% |  0.00% )   ( 0.000254s |  0.00% |  0.00% )    	(3x)	│  │   ((i++))
+31.2.0:         ( 0.354405s |  2.67% |  6.82% )   ( 0.663410s |  3.34% |  5.35% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+31.3.0:         ( 0.350535s |  2.64% | 98.90% )   ( 0.331705s |  1.67% | 50.00% )    	(1x)	│  │  ├─  << (BACKGROUND FORK) >>
+31.4.0:         ( 0.350535s |  2.64% |100.00% )   ( 0.331705s |  1.67% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000177s |  0.00% |  0.05% )   ( 0.000212s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.5.0:         ( 0.000073s |  0.00% |  0.02% )   ( 0.000088s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   local n="${1:-5}"
+25.5.0:         ( 0.000069s |  0.00% |  0.01% )   ( 0.000085s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   local depth="${2:-0}"
+27.5.0:         ( 0.000067s |  0.00% |  0.01% )   ( 0.000082s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   (( depth < 3 ))
+28.5.0:         ( 0.000067s |  0.00% |  0.01% )   ( 0.000082s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   ((i=0))
+28.5.1:         ( 0.000465s |  0.00% |  0.13% )   ( 0.000481s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │   ((i<n)) (&)
+31.5.0:         ( 0.326365s |  2.46% | 93.10% )   ( 0.312065s |  1.57% | 94.07% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.116103s |  0.87% | 35.57% )   ( 0.161687s |  0.81% | 51.81% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.116103s |  0.87% |100.00% )   ( 0.161687s |  0.81% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000129s |  0.00% |  0.11% )   ( 0.000153s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000133s |  0.00% |  0.11% )   ( 0.000158s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000178s |  0.00% |  0.15% )   ( 0.000210s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000129s |  0.00% |  0.11% )   ( 0.000155s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000131s |  0.00% |  0.11% )   ( 0.000151s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000157s |  0.00% |  0.13% )   ( 0.000192s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000130s |  0.00% |  0.11% )   ( 0.000154s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.002357s |  0.01% |  2.03% )   ( 0.000631s |  0.00% |  0.39% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.030798s |  0.23% | 26.52% )   ( 0.024154s |  0.12% | 14.93% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.007022s |  0.05% | 22.80% )   ( 0.000376s |  0.00% |  1.55% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.023776s |  0.17% | 38.59% )   ( 0.023778s |  0.11% | 49.22% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.023776s |  0.17% |100.00% )   ( 0.023778s |  0.11% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.061498s |  0.46% | 52.96% )   ( 0.053750s |  0.27% | 33.24% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.008140s |  0.06% | 13.23% )   ( 0.000390s |  0.00% |  0.72% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.053358s |  0.40% | 43.38% )   ( 0.053360s |  0.26% | 49.63% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.053358s |  0.40% |100.00% )   ( 0.053360s |  0.26% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.006283s |  0.04% |  5.41% )   ( 0.004074s |  0.02% |  2.51% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.210262s |  1.58% | 64.42% )   ( 0.150378s |  0.75% | 48.18% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.210262s |  1.58% |100.00% )   ( 0.150378s |  0.75% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000139s |  0.00% |  0.06% )   ( 0.000164s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000133s |  0.00% |  0.06% )   ( 0.000158s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000138s |  0.00% |  0.06% )   ( 0.000157s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000126s |  0.00% |  0.05% )   ( 0.000151s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000125s |  0.00% |  0.05% )   ( 0.000150s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000124s |  0.00% |  0.05% )   ( 0.000153s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000129s |  0.00% |  0.06% )   ( 0.000155s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.000829s |  0.00% |  0.39% )   ( 0.000613s |  0.00% |  0.40% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.100594s |  0.75% | 47.84% )   ( 0.070402s |  0.35% | 46.81% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.035818s |  0.27% | 35.60% )   ( 0.005638s |  0.02% |  8.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.032380s |  0.24% | 16.09% )   ( 0.032382s |  0.16% | 22.99% )    	(2x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.032380s |  0.24% |100.00% )   ( 0.032382s |  0.16% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.103505s |  0.78% | 49.22% )   ( 0.074211s |  0.37% | 49.34% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.029697s |  0.22% | 28.69% )   ( 0.000415s |  0.00% |  0.55% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.036896s |  0.27% | 17.82% )   ( 0.036898s |  0.18% | 24.86% )    	(2x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.036896s |  0.27% |100.00% )   ( 0.036898s |  0.18% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004419s |  0.03% |  2.10% )   ( 0.004063s |  0.02% |  2.70% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.0:         ( 0.000070s |  0.00% |  0.01% )   ( 0.000085s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   ((i++))
+28.5.1:         ( 0.000068s |  0.00% |  0.01% )   ( 0.000082s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   ((i<n))
+34.5.0:         ( 0.000071s |  0.00% |  0.02% )   ( 0.000086s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   wait
+38.5.0:         ( 0.000787s |  0.00% |  0.22% )   ( 0.000577s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.5.1:         ( 0.008332s |  0.06% |  2.37% )   ( 0.004831s |  0.02% |  1.45% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+38.6.0:         ( 0.003895s |  0.02% | 46.74% )   ( 0.000392s |  0.00% |  8.11% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.004437s |  0.03% | 26.62% )   ( 0.004439s |  0.02% | 45.94% )    	(2x)	│  │  │  │  │  │   << (SUBSHELL) >>
+38.7.0:         ( 0.004437s |  0.03% |100.00% )   ( 0.004439s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+38.5.2:         ( 0.008855s |  0.06% |  2.52% )   ( 0.008867s |  0.04% |  2.67% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+38.6.0:         ( 0.004994s |  0.03% | 56.39% )   ( 0.005004s |  0.02% | 56.43% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.003861s |  0.02% | 21.80% )   ( 0.003863s |  0.01% | 21.78% )    	(2x)	│  │  │  │  │  │   << (SUBSHELL) >>
+38.7.0:         ( 0.003861s |  0.02% |100.00% )   ( 0.003863s |  0.01% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+-38.5.0:        ( 0.005068s |  0.03% |  1.44% )   ( 0.004081s |  0.02% |  1.23% )    	(1x)	│  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+30.2.0:         ( 0.785279s |  5.93% | 15.11% )   ( 1.276656s |  6.43% | 10.30% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+30.3.0:         ( 0.779800s |  5.89% | 99.30% )   ( 0.638328s |  3.21% | 50.00% )    	(1x)	│  │  ├─  << (BACKGROUND FORK) >>
+30.4.0:         ( 0.779800s |  5.89% |100.00% )   ( 0.638328s |  3.21% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000071s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.5.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   local n="${1:-5}"
+25.5.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   local depth="${2:-0}"
+27.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   (( depth < 3 ))
+28.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   ((i=0))
+28.5.1:         ( 0.001003s |  0.00% |  0.06% )   ( 0.001058s |  0.00% |  0.08% )    	(2x)	│  │  │  │  │   ((i<n)) (&)
+30.5.0:         ( 0.260292s |  1.96% | 33.37% )   ( 0.256475s |  1.29% | 40.17% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.206920s |  1.56% | 79.49% )   ( 0.188760s |  0.95% | 73.59% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.206920s |  1.56% |100.00% )   ( 0.188760s |  0.95% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000071s |  0.00% |  0.03% )   ( 0.000086s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000133s |  0.00% |  0.06% )   ( 0.000159s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000170s |  0.00% |  0.08% )   ( 0.000204s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000139s |  0.00% |  0.06% )   ( 0.000168s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000141s |  0.00% |  0.06% )   ( 0.000167s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.003729s |  0.02% |  1.80% )   ( 0.001476s |  0.00% |  0.78% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+31.8.0:         ( 0.124489s |  0.94% | 60.16% )   ( 0.108514s |  0.54% | 57.48% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.068902s |  0.52% | 55.34% )   ( 0.037490s |  0.18% | 34.54% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.068902s |  0.52% |100.00% )   ( 0.037490s |  0.18% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000259s |  0.00% |  0.37% )   ( 0.000304s |  0.00% |  0.81% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000156s |  0.00% |  0.22% )   ( 0.000178s |  0.00% |  0.47% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.001057s |  0.00% |  1.53% )   ( 0.000310s |  0.00% |  0.82% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000156s |  0.00% |  0.22% )   ( 0.000182s |  0.00% |  0.48% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.001589s |  0.01% |  2.30% )   ( 0.000563s |  0.00% |  1.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.025686s |  0.19% | 37.27% )   ( 0.001807s |  0.00% |  4.81% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.024312s |  0.18% | 94.65% )   ( 0.000431s |  0.00% | 23.85% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.001345s |  0.01% |  5.23% )   ( 0.001346s |  0.00% | 74.48% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.001345s |  0.01% |100.00% )   ( 0.001346s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000029s |  0.00% |  0.11% )   ( 0.000030s |  0.00% |  1.66% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000029s |  0.00% |100.00% )   ( 0.000030s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.019311s |  0.14% | 28.02% )   ( 0.014103s |  0.07% | 37.61% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.005617s |  0.04% | 29.08% )   ( 0.000407s |  0.00% |  2.88% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.013694s |  0.10% | 35.45% )   ( 0.013696s |  0.06% | 48.55% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.013694s |  0.10% |100.00% )   ( 0.013696s |  0.06% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.011969s |  0.09% | 17.37% )   ( 0.004132s |  0.02% | 11.02% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.055587s |  0.41% | 44.65% )   ( 0.071024s |  0.35% | 65.45% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.055587s |  0.41% |100.00% )   ( 0.071024s |  0.35% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000140s |  0.00% |  0.25% )   ( 0.000165s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000145s |  0.00% |  0.26% )   ( 0.000171s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000155s |  0.00% |  0.27% )   ( 0.000186s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000208s |  0.00% |  0.37% )   ( 0.000243s |  0.00% |  0.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.002137s |  0.01% |  3.84% )   ( 0.000587s |  0.00% |  0.82% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.022839s |  0.17% | 41.08% )   ( 0.016395s |  0.08% | 23.08% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.006827s |  0.05% | 29.89% )   ( 0.000381s |  0.00% |  2.32% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.016012s |  0.12% | 35.05% )   ( 0.016014s |  0.08% | 48.83% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.016012s |  0.12% |100.00% )   ( 0.016014s |  0.08% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.023175s |  0.17% | 41.69% )   ( 0.016405s |  0.08% | 23.09% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.007155s |  0.05% | 30.87% )   ( 0.000383s |  0.00% |  2.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.016020s |  0.12% | 34.56% )   ( 0.016022s |  0.08% | 48.83% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.016020s |  0.12% |100.00% )   ( 0.016022s |  0.08% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004187s |  0.03% |  7.53% )   ( 0.004071s |  0.02% |  5.73% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000168s |  0.00% |  0.08% )   ( 0.000194s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.001234s |  0.00% |  0.59% )   ( 0.000228s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.001904s |  0.01% |  0.92% )   ( 0.000346s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001570s |  0.01% |  0.75% )   ( 0.000925s |  0.00% |  0.49% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.036186s |  0.27% | 17.48% )   ( 0.022846s |  0.11% | 12.10% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.013785s |  0.10% | 38.09% )   ( 0.000443s |  0.00% |  1.93% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.022401s |  0.16% | 30.95% )   ( 0.022403s |  0.11% | 49.03% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.022401s |  0.16% |100.00% )   ( 0.022403s |  0.11% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.019911s |  0.15% |  9.62% )   ( 0.013309s |  0.06% |  7.05% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.006988s |  0.05% | 35.09% )   ( 0.000384s |  0.00% |  2.88% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.011210s |  0.08% | 56.30% )   ( 0.011211s |  0.05% | 84.23% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.011210s |  0.08% |100.00% )   ( 0.011211s |  0.05% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.001713s |  0.01% |  8.60% )   ( 0.001714s |  0.00% | 12.87% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.001713s |  0.01% |100.00% )   ( 0.001714s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004034s |  0.03% |  1.94% )   ( 0.003982s |  0.02% |  2.10% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.053372s |  0.40% | 20.50% )   ( 0.067715s |  0.34% | 26.40% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.053372s |  0.40% |100.00% )   ( 0.067715s |  0.34% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000131s |  0.00% |  0.24% )   ( 0.000158s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000143s |  0.00% |  0.26% )   ( 0.000170s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000148s |  0.00% |  0.27% )   ( 0.000169s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000183s |  0.00% |  0.34% )   ( 0.000222s |  0.00% |  0.32% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000175s |  0.00% |  0.32% )   ( 0.000202s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000149s |  0.00% |  0.27% )   ( 0.000175s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.002345s |  0.01% |  4.39% )   ( 0.000279s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.002786s |  0.02% |  5.21% )   ( 0.000580s |  0.00% |  0.85% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.020107s |  0.15% | 37.67% )   ( 0.014160s |  0.07% | 20.91% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.006345s |  0.04% | 31.55% )   ( 0.000396s |  0.00% |  2.79% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.013762s |  0.10% | 34.22% )   ( 0.013764s |  0.06% | 48.60% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.013762s |  0.10% |100.00% )   ( 0.013764s |  0.06% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.020040s |  0.15% | 37.54% )   ( 0.016652s |  0.08% | 24.59% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.003826s |  0.02% | 19.09% )   ( 0.000436s |  0.00% |  2.61% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.016214s |  0.12% | 40.45% )   ( 0.016216s |  0.08% | 48.69% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.016214s |  0.12% |100.00% )   ( 0.016216s |  0.08% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004734s |  0.03% |  8.86% )   ( 0.004135s |  0.02% |  6.10% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.0:         ( 0.000143s |  0.00% |  0.00% )   ( 0.000174s |  0.00% |  0.01% )    	(2x)	│  │  │  │  │   ((i++))
+30.5.0:         ( 0.362861s |  2.74% | 46.53% )   ( 0.240608s |  1.21% | 37.69% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.221295s |  1.67% | 60.98% )   ( 0.122339s |  0.61% | 50.84% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.221295s |  1.67% |100.00% )   ( 0.122339s |  0.61% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000142s |  0.00% |  0.06% )   ( 0.000171s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000130s |  0.00% |  0.05% )   ( 0.000156s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000132s |  0.00% |  0.05% )   ( 0.000158s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000127s |  0.00% |  0.05% )   ( 0.000152s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000125s |  0.00% |  0.05% )   ( 0.000150s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000613s |  0.00% |  0.27% )   ( 0.001306s |  0.00% |  1.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+31.8.0:         ( 0.073737s |  0.55% | 33.32% )   ( 0.031472s |  0.15% | 25.72% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.026974s |  0.20% | 36.58% )   ( 0.015736s |  0.07% | 50.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+31.10.0:        ( 0.026974s |  0.20% |100.00% )   ( 0.015736s |  0.07% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000130s |  0.00% |  0.48% )   ( 0.000152s |  0.00% |  0.96% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000196s |  0.00% |  0.72% )   ( 0.000216s |  0.00% |  1.37% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000179s |  0.00% |  0.66% )   ( 0.000202s |  0.00% |  1.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000142s |  0.00% |  0.52% )   ( 0.000170s |  0.00% |  1.08% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.000814s |  0.00% |  3.01% )   ( 0.000568s |  0.00% |  3.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.005844s |  0.04% | 21.66% )   ( 0.001532s |  0.00% |  9.73% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.004696s |  0.03% | 80.35% )   ( 0.000382s |  0.00% | 24.93% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.001148s |  0.00% |  9.82% )   ( 0.001150s |  0.00% | 37.53% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.001148s |  0.00% |100.00% )   ( 0.001150s |  0.00% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.013544s |  0.10% | 50.21% )   ( 0.008735s |  0.04% | 55.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.005230s |  0.03% | 38.61% )   ( 0.000418s |  0.00% |  4.78% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.003940s |  0.02% | 29.09% )   ( 0.003941s |  0.01% | 45.11% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.003940s |  0.02% |100.00% )   ( 0.003941s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000434s |  0.00% |  3.20% )   ( 0.000435s |  0.00% |  4.97% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000434s |  0.00% |100.00% )   ( 0.000435s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.006124s |  0.04% | 22.70% )   ( 0.004160s |  0.02% | 26.43% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+30.8.0:         ( 0.035963s |  0.27% | 16.25% )   ( 0.025476s |  0.12% | 20.82% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.035963s |  0.27% |100.00% )   ( 0.025476s |  0.12% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (SUBSHELL) >>
+30.10.0:        ( 0.035963s |  0.27% |100.00% )   ( 0.025476s |  0.12% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000161s |  0.00% |  0.44% )   ( 0.000189s |  0.00% |  0.74% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000158s |  0.00% |  0.43% )   ( 0.000182s |  0.00% |  0.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000134s |  0.00% |  0.37% )   ( 0.000160s |  0.00% |  0.62% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000130s |  0.00% |  0.36% )   ( 0.000155s |  0.00% |  0.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.001756s |  0.01% |  4.88% )   ( 0.000540s |  0.00% |  2.11% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.014580s |  0.11% | 40.54% )   ( 0.011574s |  0.05% | 45.43% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.003423s |  0.02% | 23.47% )   ( 0.000415s |  0.00% |  3.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.011157s |  0.08% | 38.26% )   ( 0.011159s |  0.05% | 48.20% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.011157s |  0.08% |100.00% )   ( 0.011159s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.015104s |  0.11% | 41.99% )   ( 0.008732s |  0.04% | 34.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.006761s |  0.05% | 44.76% )   ( 0.000387s |  0.00% |  4.43% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.007780s |  0.05% | 51.50% )   ( 0.007781s |  0.03% | 89.10% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.007780s |  0.05% |100.00% )   ( 0.007781s |  0.03% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000563s |  0.00% |  3.72% )   ( 0.000564s |  0.00% |  6.45% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000563s |  0.00% |100.00% )   ( 0.000564s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.003939s |  0.02% | 10.95% )   ( 0.003943s |  0.01% | 15.47% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000204s |  0.00% |  0.09% )   ( 0.000226s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.000217s |  0.00% |  0.09% )   ( 0.000245s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000148s |  0.00% |  0.06% )   ( 0.000178s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.003008s |  0.02% |  1.35% )   ( 0.000597s |  0.00% |  0.48% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.012133s |  0.09% |  5.48% )   ( 0.005273s |  0.02% |  4.31% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.007259s |  0.05% | 59.82% )   ( 0.000397s |  0.00% |  7.52% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.004874s |  0.03% | 20.08% )   ( 0.004876s |  0.02% | 46.23% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.004874s |  0.03% |100.00% )   ( 0.004876s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.011783s |  0.08% |  5.32% )   ( 0.007894s |  0.03% |  6.45% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004257s |  0.03% | 36.12% )   ( 0.000366s |  0.00% |  4.63% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.007526s |  0.05% | 31.93% )   ( 0.007528s |  0.03% | 47.68% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.007526s |  0.05% |100.00% )   ( 0.007528s |  0.03% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004601s |  0.03% |  2.07% )   ( 0.004245s |  0.02% |  3.46% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.141566s |  1.06% | 39.01% )   ( 0.118269s |  0.59% | 49.15% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.141566s |  1.06% |100.00% )   ( 0.118269s |  0.59% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000126s |  0.00% |  0.08% )   ( 0.000151s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000137s |  0.00% |  0.09% )   ( 0.000156s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000133s |  0.00% |  0.09% )   ( 0.000158s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000123s |  0.00% |  0.08% )   ( 0.000147s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000130s |  0.00% |  0.09% )   ( 0.000150s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000123s |  0.00% |  0.08% )   ( 0.000148s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000179s |  0.00% |  0.12% )   ( 0.000213s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001166s |  0.00% |  0.82% )   ( 0.000619s |  0.00% |  0.52% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.035179s |  0.26% | 24.84% )   ( 0.034073s |  0.17% | 28.80% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.006447s |  0.04% | 18.32% )   ( 0.005339s |  0.02% | 15.66% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.028732s |  0.21% | 40.83% )   ( 0.028734s |  0.14% | 42.16% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.028732s |  0.21% |100.00% )   ( 0.028734s |  0.14% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.052668s |  0.39% | 37.20% )   ( 0.044404s |  0.22% | 37.54% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.013788s |  0.10% | 26.17% )   ( 0.005520s |  0.02% | 12.43% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.019440s |  0.14% | 18.45% )   ( 0.019442s |  0.09% | 21.89% )    	(2x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.019440s |  0.14% |100.00% )   ( 0.019442s |  0.09% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.010089s |  0.07% |  7.12% )   ( 0.003976s |  0.02% |  3.36% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.1:         ( 0.000117s |  0.00% |  0.01% )   ( 0.000139s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   ((i<n))
+34.5.0:         ( 0.000425s |  0.00% |  0.05% )   ( 0.000452s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │   wait
+38.5.0:         ( 0.000836s |  0.00% |  0.10% )   ( 0.000594s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.5.1:         ( 0.073170s |  0.55% |  9.38% )   ( 0.065899s |  0.33% | 10.32% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+38.6.0:         ( 0.012992s |  0.09% | 17.75% )   ( 0.005717s |  0.02% |  8.67% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.030089s |  0.22% | 20.56% )   ( 0.030091s |  0.15% | 22.83% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.030089s |  0.22% |100.00% )   ( 0.030091s |  0.15% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+38.5.2:         ( 0.076425s |  0.57% |  9.80% )   ( 0.068392s |  0.34% | 10.71% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+38.6.0:         ( 0.007871s |  0.05% | 10.29% )   ( 0.000406s |  0.00% |  0.59% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.033991s |  0.25% | 22.23% )   ( 0.033993s |  0.17% | 24.85% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.033991s |  0.25% |100.00% )   ( 0.033993s |  0.17% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+-38.5.0:        ( 0.004186s |  0.03% |  0.53% )   ( 0.004119s |  0.02% |  0.64% )    	(1x)	│  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.2.0:         ( 0.306420s |  2.31% |  5.89% )   ( 0.562924s |  2.83% |  4.54% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+31.3.0:         ( 0.300395s |  2.26% | 98.03% )   ( 0.281462s |  1.41% | 50.00% )    	(1x)	│  │  ├─  << (BACKGROUND FORK) >>
+31.4.0:         ( 0.300395s |  2.26% |100.00% )   ( 0.281462s |  1.41% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000067s |  0.00% |  0.02% )   ( 0.000082s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.5.0:         ( 0.000070s |  0.00% |  0.02% )   ( 0.000085s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │   local n="${1:-5}"
+25.5.0:         ( 0.000073s |  0.00% |  0.02% )   ( 0.000089s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │   local depth="${2:-0}"
+27.5.0:         ( 0.000066s |  0.00% |  0.02% )   ( 0.000081s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   (( depth < 3 ))
+28.5.0:         ( 0.000065s |  0.00% |  0.02% )   ( 0.000080s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   ((i=0))
+28.5.1:         ( 0.000559s |  0.00% |  0.18% )   ( 0.000592s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │   ((i<n)) (&)
+31.5.0:         ( 0.267616s |  2.02% | 89.08% )   ( 0.257716s |  1.29% | 91.56% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.149434s |  1.12% | 55.83% )   ( 0.220304s |  1.11% | 85.48% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.149434s |  1.12% |100.00% )   ( 0.220304s |  1.11% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000131s |  0.00% |  0.08% )   ( 0.000152s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000129s |  0.00% |  0.08% )   ( 0.000155s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000129s |  0.00% |  0.08% )   ( 0.000156s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000146s |  0.00% |  0.09% )   ( 0.000159s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000127s |  0.00% |  0.08% )   ( 0.000153s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000125s |  0.00% |  0.08% )   ( 0.000151s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000251s |  0.00% |  0.16% )   ( 0.000286s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001240s |  0.00% |  0.82% )   ( 0.000652s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.059959s |  0.45% | 40.12% )   ( 0.057588s |  0.29% | 26.14% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.007734s |  0.05% | 12.89% )   ( 0.005361s |  0.02% |  9.30% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.052225s |  0.39% | 43.55% )   ( 0.052227s |  0.26% | 45.34% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.052225s |  0.39% |100.00% )   ( 0.052227s |  0.26% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.059899s |  0.45% | 40.08% )   ( 0.049630s |  0.25% | 22.52% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.010670s |  0.08% | 17.81% )   ( 0.000400s |  0.00% |  0.80% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.049224s |  0.37% | 82.17% )   ( 0.049225s |  0.24% | 99.18% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.049224s |  0.37% |100.00% )   ( 0.049225s |  0.24% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.000005s |  0.00% |  0.00% )   ( 0.000005s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.000005s |  0.00% |100.00% )   ( 0.000005s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.003990s |  0.03% |  2.67% )   ( 0.004003s |  0.02% |  1.81% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.118182s |  0.89% | 44.16% )   ( 0.037412s |  0.18% | 14.51% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.118182s |  0.89% |100.00% )   ( 0.037412s |  0.18% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000134s |  0.00% |  0.11% )   ( 0.000154s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000121s |  0.00% |  0.10% )   ( 0.000148s |  0.00% |  0.39% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000186s |  0.00% |  0.15% )   ( 0.000216s |  0.00% |  0.57% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000138s |  0.00% |  0.11% )   ( 0.000158s |  0.00% |  0.42% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000124s |  0.00% |  0.10% )   ( 0.000149s |  0.00% |  0.39% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000125s |  0.00% |  0.10% )   ( 0.000151s |  0.00% |  0.40% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000135s |  0.00% |  0.11% )   ( 0.000155s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.003356s |  0.02% |  2.83% )   ( 0.000567s |  0.00% |  1.51% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.013564s |  0.10% | 11.47% )   ( 0.008882s |  0.04% | 23.74% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.005057s |  0.03% | 37.28% )   ( 0.000373s |  0.00% |  4.19% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.008507s |  0.06% | 31.35% )   ( 0.008509s |  0.04% | 47.90% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.008507s |  0.06% |100.00% )   ( 0.008509s |  0.04% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.012712s |  0.09% | 10.75% )   ( 0.007394s |  0.03% | 19.76% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.005720s |  0.04% | 44.99% )   ( 0.000400s |  0.00% |  5.40% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.006992s |  0.05% | 27.50% )   ( 0.006994s |  0.03% | 47.29% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.006992s |  0.05% |100.00% )   ( 0.006994s |  0.03% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.003143s |  0.02% |  2.65% )   ( 0.003161s |  0.01% |  8.44% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.0:         ( 0.000080s |  0.00% |  0.02% )   ( 0.000092s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │   ((i++))
+28.5.1:         ( 0.000127s |  0.00% |  0.04% )   ( 0.000151s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │   ((i<n))
+34.5.0:         ( 0.000136s |  0.00% |  0.04% )   ( 0.000161s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │   wait
+38.5.0:         ( 0.000807s |  0.00% |  0.26% )   ( 0.000586s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.5.1:         ( 0.015574s |  0.11% |  5.18% )   ( 0.005121s |  0.02% |  1.81% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+38.6.0:         ( 0.008353s |  0.06% | 53.63% )   ( 0.000395s |  0.00% |  7.71% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.002361s |  0.01% |  7.57% )   ( 0.002363s |  0.01% | 23.07% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.002361s |  0.01% |100.00% )   ( 0.002363s |  0.01% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+38.5.2:         ( 0.010319s |  0.07% |  3.43% )   ( 0.001006s |  0.00% |  0.35% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+38.6.0:         ( 0.007650s |  0.05% | 74.13% )   ( 0.000348s |  0.00% | 34.59% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.000327s |  0.00% |  1.58% )   ( 0.000329s |  0.00% | 16.35% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.000327s |  0.00% |100.00% )   ( 0.000329s |  0.00% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+-38.5.0:        ( 0.004835s |  0.03% |  1.60% )   ( 0.015619s |  0.07% |  5.54% )    	(1x)	│  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+30.2.0:         ( 0.834087s |  6.30% | 16.05% )   ( 1.763358s |  8.89% | 14.23% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+30.3.0:         ( 0.828004s |  6.25% | 99.27% )   ( 0.881679s |  4.44% | 50.00% )    	(1x)	│  │  ├─  << (BACKGROUND FORK) >>
+30.4.0:         ( 0.828004s |  6.25% |100.00% )   ( 0.881679s |  4.44% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000067s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.5.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   local n="${1:-5}"
+25.5.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000089s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   local depth="${2:-0}"
+27.5.0:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000081s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( depth < 3 ))
+28.5.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000080s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ((i=0))
+28.5.1:         ( 0.001214s |  0.00% |  0.07% )   ( 0.001274s |  0.00% |  0.07% )    	(2x)	│  │  │  │  │   ((i<n)) (&)
+31.5.0:         ( 0.398111s |  3.00% | 48.08% )   ( 0.410424s |  2.06% | 46.55% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.277894s |  2.09% | 69.80% )   ( 0.340623s |  1.71% | 82.99% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.277894s |  2.09% |100.00% )   ( 0.340623s |  1.71% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000125s |  0.00% |  0.04% )   ( 0.000150s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000370s |  0.00% |  0.13% )   ( 0.000226s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000134s |  0.00% |  0.04% )   ( 0.000160s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000126s |  0.00% |  0.04% )   ( 0.000150s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000137s |  0.00% |  0.04% )   ( 0.000162s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000622s |  0.00% |  0.22% )   ( 0.000655s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+30.8.0:         ( 0.044955s |  0.33% | 16.17% )   ( 0.033784s |  0.17% |  9.91% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.030634s |  0.23% | 68.14% )   ( 0.016892s |  0.08% | 50.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.030634s |  0.23% |100.00% )   ( 0.016892s |  0.08% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000174s |  0.00% |  0.56% )   ( 0.000195s |  0.00% |  1.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000241s |  0.00% |  0.78% )   ( 0.000267s |  0.00% |  1.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000155s |  0.00% |  0.50% )   ( 0.000174s |  0.00% |  1.03% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000177s |  0.00% |  0.57% )   ( 0.000204s |  0.00% |  1.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.000819s |  0.00% |  2.67% )   ( 0.000598s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.016028s |  0.12% | 52.32% )   ( 0.008823s |  0.04% | 52.23% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.006251s |  0.04% | 39.00% )   ( 0.000387s |  0.00% |  4.38% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.004216s |  0.03% | 13.15% )   ( 0.004218s |  0.02% | 23.90% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.004216s |  0.03% |100.00% )   ( 0.004218s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.006678s |  0.05% | 21.79% )   ( 0.002615s |  0.01% | 15.48% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.004494s |  0.03% | 67.29% )   ( 0.000443s |  0.00% | 16.94% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.001084s |  0.00% |  8.11% )   ( 0.001086s |  0.00% | 20.76% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.001084s |  0.00% |100.00% )   ( 0.001086s |  0.00% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.006361s |  0.04% | 20.76% )   ( 0.004015s |  0.02% | 23.76% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.8.0:         ( 0.066769s |  0.50% | 24.02% )   ( 0.093040s |  0.46% | 27.31% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.056955s |  0.43% | 85.30% )   ( 0.046520s |  0.23% | 50.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+31.10.0:        ( 0.056955s |  0.43% |100.00% )   ( 0.046520s |  0.23% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000272s |  0.00% |  0.47% )   ( 0.000306s |  0.00% |  0.65% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000188s |  0.00% |  0.33% )   ( 0.000226s |  0.00% |  0.48% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000214s |  0.00% |  0.37% )   ( 0.000236s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000151s |  0.00% |  0.26% )   ( 0.000178s |  0.00% |  0.38% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.001882s |  0.01% |  3.30% )   ( 0.000581s |  0.00% |  1.24% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.015344s |  0.11% | 26.94% )   ( 0.009500s |  0.04% | 20.42% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.006172s |  0.04% | 40.22% )   ( 0.000340s |  0.00% |  3.57% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.004578s |  0.03% | 14.91% )   ( 0.004580s |  0.02% | 24.10% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.004578s |  0.03% |100.00% )   ( 0.004580s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.034932s |  0.26% | 61.33% )   ( 0.031548s |  0.15% | 67.81% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.003788s |  0.02% | 10.84% )   ( 0.000402s |  0.00% |  1.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.031144s |  0.23% | 44.57% )   ( 0.031146s |  0.15% | 49.36% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.031144s |  0.23% |100.00% )   ( 0.031146s |  0.15% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.003971s |  0.03% |  6.97% )   ( 0.003944s |  0.01% |  8.47% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000208s |  0.00% |  0.07% )   ( 0.000257s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.000226s |  0.00% |  0.08% )   ( 0.000248s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000192s |  0.00% |  0.06% )   ( 0.000220s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001657s |  0.01% |  0.59% )   ( 0.000548s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.023878s |  0.18% |  8.59% )   ( 0.012208s |  0.06% |  3.58% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.012096s |  0.09% | 50.65% )   ( 0.000424s |  0.00% |  3.47% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.011782s |  0.08% | 24.67% )   ( 0.011784s |  0.05% | 48.26% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.011782s |  0.08% |100.00% )   ( 0.011784s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.031465s |  0.23% | 11.32% )   ( 0.027869s |  0.14% |  8.18% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004013s |  0.03% | 12.75% )   ( 0.000415s |  0.00% |  1.48% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.027452s |  0.20% | 43.62% )   ( 0.027454s |  0.13% | 49.25% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.027452s |  0.20% |100.00% )   ( 0.027454s |  0.13% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004505s |  0.03% |  1.62% )   ( 0.004044s |  0.02% |  1.18% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.120217s |  0.90% | 30.19% )   ( 0.069801s |  0.35% | 17.00% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.120217s |  0.90% |100.00% )   ( 0.069801s |  0.35% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000128s |  0.00% |  0.10% )   ( 0.000154s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000158s |  0.00% |  0.13% )   ( 0.000182s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000148s |  0.00% |  0.12% )   ( 0.000174s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000130s |  0.00% |  0.10% )   ( 0.000156s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000158s |  0.00% |  0.13% )   ( 0.000189s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000131s |  0.00% |  0.10% )   ( 0.000162s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000168s |  0.00% |  0.13% )   ( 0.000194s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001178s |  0.00% |  0.97% )   ( 0.000584s |  0.00% |  0.83% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.065814s |  0.49% | 54.74% )   ( 0.061573s |  0.31% | 88.21% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.009930s |  0.07% | 15.08% )   ( 0.005701s |  0.02% |  9.25% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.027934s |  0.21% | 21.22% )   ( 0.027936s |  0.14% | 22.68% )    	(2x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.027934s |  0.21% |100.00% )   ( 0.027936s |  0.14% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.004897s |  0.03% |  4.07% )   ( 0.001234s |  0.00% |  1.76% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004073s |  0.03% | 83.17% )   ( 0.000409s |  0.00% | 33.14% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.000013s |  0.00% |  0.26% )   ( 0.000013s |  0.00% |  1.05% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.000013s |  0.00% |100.00% )   ( 0.000013s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.000811s |  0.00% | 16.56% )   ( 0.000812s |  0.00% | 65.80% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.000811s |  0.00% |100.00% )   ( 0.000812s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004099s |  0.03% |  3.40% )   ( 0.003964s |  0.01% |  5.67% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.0:         ( 0.000271s |  0.00% |  0.01% )   ( 0.000322s |  0.00% |  0.01% )    	(2x)	│  │  │  │  │   ((i++))
+30.5.0:         ( 0.241931s |  1.82% | 29.21% )   ( 0.299248s |  1.50% | 33.94% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.179371s |  1.35% | 74.14% )   ( 0.236273s |  1.19% | 78.95% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.179371s |  1.35% |100.00% )   ( 0.236273s |  1.19% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000125s |  0.00% |  0.06% )   ( 0.000150s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000140s |  0.00% |  0.07% )   ( 0.000161s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000127s |  0.00% |  0.07% )   ( 0.000151s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000124s |  0.00% |  0.06% )   ( 0.000149s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000125s |  0.00% |  0.06% )   ( 0.000149s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.001305s |  0.00% |  0.72% )   ( 0.000647s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+30.8.0:         ( 0.037921s |  0.28% | 21.14% )   ( 0.027912s |  0.14% | 11.81% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.026019s |  0.19% | 68.61% )   ( 0.013956s |  0.07% | 50.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.026019s |  0.19% |100.00% )   ( 0.013956s |  0.07% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000203s |  0.00% |  0.78% )   ( 0.000236s |  0.00% |  1.69% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.001672s |  0.01% |  6.42% )   ( 0.000311s |  0.00% |  2.22% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000161s |  0.00% |  0.61% )   ( 0.000188s |  0.00% |  1.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000129s |  0.00% |  0.49% )   ( 0.000162s |  0.00% |  1.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.001728s |  0.01% |  6.64% )   ( 0.000580s |  0.00% |  4.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.010843s |  0.08% | 41.67% )   ( 0.007513s |  0.03% | 53.83% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.003732s |  0.02% | 34.41% )   ( 0.000400s |  0.00% |  5.32% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.007111s |  0.05% | 32.79% )   ( 0.007113s |  0.03% | 47.33% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.007111s |  0.05% |100.00% )   ( 0.007113s |  0.03% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.004307s |  0.03% | 16.55% )   ( 0.000984s |  0.00% |  7.05% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.003721s |  0.02% | 86.39% )   ( 0.000396s |  0.00% | 40.24% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.000586s |  0.00% |  6.80% )   ( 0.000588s |  0.00% | 29.87% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000586s |  0.00% |100.00% )   ( 0.000588s |  0.00% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.006975s |  0.05% | 26.80% )   ( 0.003981s |  0.02% | 28.52% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.8.0:         ( 0.057395s |  0.43% | 31.99% )   ( 0.060669s |  0.30% | 25.67% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.057395s |  0.43% |100.00% )   ( 0.060669s |  0.30% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (SUBSHELL) >>
+31.10.0:        ( 0.057395s |  0.43% |100.00% )   ( 0.060669s |  0.30% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000155s |  0.00% |  0.27% )   ( 0.000182s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000286s |  0.00% |  0.49% )   ( 0.000319s |  0.00% |  0.52% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000187s |  0.00% |  0.32% )   ( 0.000210s |  0.00% |  0.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000170s |  0.00% |  0.29% )   ( 0.000196s |  0.00% |  0.32% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.11.0:        ( 0.000841s |  0.00% |  1.46% )   ( 0.000594s |  0.00% |  0.97% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.019618s |  0.14% | 34.18% )   ( 0.011648s |  0.05% | 19.19% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.008341s |  0.06% | 42.51% )   ( 0.000369s |  0.00% |  3.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.011277s |  0.08% | 28.74% )   ( 0.011279s |  0.05% | 48.41% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.011277s |  0.08% |100.00% )   ( 0.011279s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.019384s |  0.14% | 33.77% )   ( 0.015848s |  0.07% | 26.12% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.003940s |  0.02% | 20.32% )   ( 0.000402s |  0.00% |  2.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.014616s |  0.11% | 75.40% )   ( 0.014617s |  0.07% | 92.23% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.014616s |  0.11% |100.00% )   ( 0.014617s |  0.07% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000828s |  0.00% |  4.27% )   ( 0.000829s |  0.00% |  5.23% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000828s |  0.00% |100.00% )   ( 0.000829s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.014177s |  0.10% | 24.70% )   ( 0.004175s |  0.02% |  6.88% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000129s |  0.00% |  0.07% )   ( 0.000154s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.001535s |  0.01% |  0.85% )   ( 0.000264s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000138s |  0.00% |  0.07% )   ( 0.000164s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.000871s |  0.00% |  0.48% )   ( 0.000566s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.034862s |  0.26% | 19.43% )   ( 0.027852s |  0.14% | 11.78% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.007414s |  0.05% | 21.26% )   ( 0.000402s |  0.00% |  1.44% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.027448s |  0.20% | 39.36% )   ( 0.027450s |  0.13% | 49.27% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.027448s |  0.20% |100.00% )   ( 0.027450s |  0.13% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.034115s |  0.25% | 19.01% )   ( 0.028716s |  0.14% | 12.15% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.005795s |  0.04% | 16.98% )   ( 0.000394s |  0.00% |  1.37% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.028320s |  0.21% | 41.50% )   ( 0.028322s |  0.14% | 49.31% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.028320s |  0.21% |100.00% )   ( 0.028322s |  0.14% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.006855s |  0.05% |  3.82% )   ( 0.004088s |  0.02% |  1.73% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.062560s |  0.47% | 25.85% )   ( 0.062975s |  0.31% | 21.04% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.062560s |  0.47% |100.00% )   ( 0.062975s |  0.31% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000124s |  0.00% |  0.19% )   ( 0.000148s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000143s |  0.00% |  0.22% )   ( 0.000162s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000132s |  0.00% |  0.21% )   ( 0.000157s |  0.00% |  0.24% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000125s |  0.00% |  0.19% )   ( 0.000151s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000171s |  0.00% |  0.27% )   ( 0.000203s |  0.00% |  0.32% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000130s |  0.00% |  0.20% )   ( 0.000160s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000133s |  0.00% |  0.21% )   ( 0.000158s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001528s |  0.01% |  2.44% )   ( 0.000651s |  0.00% |  1.03% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.022140s |  0.16% | 35.39% )   ( 0.007884s |  0.03% | 12.51% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.014627s |  0.11% | 66.06% )   ( 0.000369s |  0.00% |  4.68% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.007513s |  0.05% | 16.96% )   ( 0.007515s |  0.03% | 47.65% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.007513s |  0.05% |100.00% )   ( 0.007515s |  0.03% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.028273s |  0.21% | 45.19% )   ( 0.020712s |  0.10% | 32.88% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.007990s |  0.06% | 28.26% )   ( 0.000427s |  0.00% |  2.06% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.020283s |  0.15% | 35.86% )   ( 0.020285s |  0.10% | 48.96% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.020283s |  0.15% |100.00% )   ( 0.020285s |  0.10% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.006210s |  0.04% |  9.92% )   ( 0.003992s |  0.02% |  6.33% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.1:         ( 0.000128s |  0.00% |  0.01% )   ( 0.000154s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   ((i<n))
+34.5.0:         ( 0.000435s |  0.00% |  0.05% )   ( 0.000458s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │   wait
+38.5.0:         ( 0.001041s |  0.00% |  0.12% )   ( 0.000516s |  0.00% |  0.05% )    	(1x)	│  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.5.1:         ( 0.092873s |  0.70% | 11.21% )   ( 0.084270s |  0.42% |  9.55% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+38.6.0:         ( 0.008116s |  0.06% |  8.73% )   ( 0.000416s |  0.00% |  0.49% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.041925s |  0.31% | 22.57% )   ( 0.041927s |  0.21% | 24.87% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.041925s |  0.31% |100.00% )   ( 0.041927s |  0.21% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+38.5.2:         ( 0.087281s |  0.65% | 10.54% )   ( 0.080320s |  0.40% |  9.10% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+38.6.0:         ( 0.007367s |  0.05% |  8.44% )   ( 0.000402s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.039957s |  0.30% | 22.88% )   ( 0.039959s |  0.20% | 24.87% )    	(2x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.039957s |  0.30% |100.00% )   ( 0.039959s |  0.20% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+-38.5.0:        ( 0.004376s |  0.03% |  0.52% )   ( 0.004273s |  0.02% |  0.48% )    	(1x)	│  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.2.1:         ( 0.000066s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│  │   ((i<n))
+34.2.0:         ( 0.021907s |  0.16% |  0.42% )   ( 0.000302s |  0.00% |  0.00% )    	(1x)	│  │   wait
+-34.2.0:        ( 0.007310s |  0.05% |  0.14% )   ( 0.004306s |  0.02% |  0.03% )    	(1x)	│  │   @TRAP (USR1): echo "GLOBAL_USR1"
+38.2.0:         ( 0.002280s |  0.01% |  0.04% )   ( 0.000562s |  0.00% |  0.00% )    	(1x)	│  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.2.1:         ( 0.061429s |  0.46% |  1.18% )   ( 0.047940s |  0.24% |  0.38% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+38.3.0:         ( 0.013911s |  0.10% | 22.64% )   ( 0.000420s |  0.00% |  0.87% )    	(1x)	│  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.3.1:         ( 0.046866s |  0.35% | 76.29% )   ( 0.046867s |  0.23% | 97.76% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+38.4.0:         ( 0.046866s |  0.35% |100.00% )   ( 0.046867s |  0.23% |100.00% )    	(1x)	│  │  │  └─  cat 1>&2
+38.3.2:         ( 0.000652s |  0.00% |  1.06% )   ( 0.000653s |  0.00% |  1.36% )    	(1x)	│  │  │   << (SUBSHELL) >>
+38.4.0:         ( 0.000652s |  0.00% |100.00% )   ( 0.000653s |  0.00% |100.00% )    	(1x)	│  │  └─ └─  cat 1>&2
+38.2.2:         ( 0.032661s |  0.24% |  0.62% )   ( 0.020915s |  0.10% |  0.16% )    	(1x)	│  │   << (SUBSHELL) >>
+38.3.0:         ( 0.012069s |  0.09% | 36.95% )   ( 0.000321s |  0.00% |  1.53% )    	(1x)	│  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.3.1:         ( 0.020592s |  0.15% | 31.52% )   ( 0.020594s |  0.10% | 49.23% )    	(2x)	│  │  │   << (SUBSHELL) >>
+38.4.0:         ( 0.020592s |  0.15% |100.00% )   ( 0.020594s |  0.10% |100.00% )    	(2x)	│  │  └─ └─  cat 1>&2
+-38.2.0:        ( 0.007087s |  0.05% |  0.13% )   ( 0.004043s |  0.02% |  0.03% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+37.1.0:         ( 0.000082s |  0.00% |  0.00% )   ( 0.000104s |  0.00% |  0.00% )    	(1x)	│   echo "3. Eval Nightmare..."
+38.1.0:         ( 0.034809s |  0.26% |  0.26% )   ( 0.014986s |  0.07% |  0.07% )    	(1x)	│   << (FUNCTION): main.main.eval_nightmare 0 >>
+.2.0:           ( 0.000002s |  0.00% |  0.00% )   ( 0.000002s |  0.00% |  0.00% )    	(2x)	│  ├─
+1.2.0:          ( 0.000068s |  0.00% |  0.19% )   ( 0.000083s |  0.00% |  0.55% )    	(1x)	│  │   eval_nightmare 0
+24.2.0:         ( 0.000137s |  0.00% |  0.39% )   ( 0.000165s |  0.00% |  1.10% )    	(1x)	│  │   local depth="${1:-0}"
+25.2.0:         ( 0.000070s |  0.00% |  0.20% )   ( 0.000086s |  0.00% |  0.57% )    	(1x)	│  │   local max_depth=4
+27.2.0:         ( 0.000119s |  0.00% |  0.34% )   ( 0.000142s |  0.00% |  0.94% )    	(1x)	│  │   (( depth >= max_depth ))
+33.2.0:         ( 0.000072s |  0.00% |  0.20% )   ( 0.000087s |  0.00% |  0.58% )    	(1x)	│  │   local cmd="eval_nightmare \$((depth + 1))"
+45.2.0:         ( 0.000605s |  0.00% |  1.73% )   ( 0.000627s |  0.00% |  4.18% )    	(1x)	│  │   $'eval "\n        {\n            result=\\$(\n                eval \\"\n                    <(echo \'$cmd\') 2>&1\n                \\" 2>&1\n            )\n            echo \\"EVAL-$depth: \\$result\\"\n        } &\n    " (&)
+51.2.0:         ( 0.001295s |  0.00% |  3.72% )   ( 0.001050s |  0.00% |  7.00% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+51.3.0:         ( 0.000477s |  0.00% | 36.83% )   ( 0.000304s |  0.00% | 28.95% )    	(1x)	│  │  ├─  $'result=$(eval "\n                    <(echo \'eval_nightmare $((depth + 1))\') 2>&1\n                " 2>&1)
+53.3.0:         ( 0.000706s |  0.00% | 54.51% )   ( 0.000618s |  0.00% | 58.85% )    	(1x)	│  │  │   << (SUBSHELL) >>
+53.4.0:         ( 0.000099s |  0.00% | 14.02% )   ( 0.000115s |  0.00% | 18.60% )    	(1x)	│  │  │  ├─  $'eval "\n                    <(echo \'eval_nightmare $((depth + 1))\') 2>&1\n                " 2>&1
+54.4.0:         ( 0.000518s |  0.00% | 73.37% )   ( 0.000398s |  0.00% | 64.40% )    	(1x)	│  │  │  │   <(echo 'eval_nightmare 1') 2>&1 (&)
+54.4.1:         ( 0.000089s |  0.00% | 12.60% )   ( 0.000105s |  0.00% | 16.99% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+54.5.0:         ( 0.000089s |  0.00% |100.00% )   ( 0.000105s |  0.00% |100.00% )    	(1x)	│  │  │  └─ └─  echo 'eval_nightmare 1'
+52.3.0:         ( 0.000112s |  0.00% |  8.64% )   ( 0.000128s |  0.00% | 12.19% )    	(1x)	│  │  └─  echo "EVAL-0: $result"
+54.2.0:         ( 0.000522s |  0.00% |  1.49% )   ( 0.000346s |  0.00% |  2.30% )    	(1x)	│  │   $'eval "$(cat <<-\'NESTED\'\nfor ((i=0; i<2; i++)); do\n    ( eval "echo NESTED-${depth}-\\$i" ) &\ndone\nwait\nNESTED\n)"
+54.2.1:         ( 0.001007s |  0.00% |  2.89% )   ( 0.001082s |  0.00% |  7.22% )    	(1x)	│  │   << (SUBSHELL) >>
+54.3.0:         ( 0.001007s |  0.00% |100.00% )   ( 0.001082s |  0.00% |100.00% )    	(1x)	│  │  └─  $'cat <<-\'NESTED\'\nfor ((i=0; i<2; i++)); do\n    ( eval "echo NESTED-${depth}-\\$i" ) &\ndone\nwait\nNESTED\n
+54.2.2:         ( 0.000073s |  0.00% |  0.20% )   ( 0.000089s |  0.00% |  0.59% )    	(1x)	│  │   ((i=0))
+54.2.3:         ( 0.000953s |  0.00% |  1.36% )   ( 0.001007s |  0.00% |  3.35% )    	(2x)	│  │   ((i<2)) (&)
+55.2.0:         ( 0.000326s |  0.00% |  0.46% )   ( 0.000382s |  0.00% |  1.27% )    	(2x)	│  │   << (BACKGROUND FORK) >>
+55.3.0:         ( 0.000174s |  0.00% | 53.37% )   ( 0.000200s |  0.00% | 52.35% )    	(2x)	│  │  ├─  eval "echo NESTED-${depth}-\$i"
+55.3.1:         ( 0.000152s |  0.00% | 46.62% )   ( 0.000182s |  0.00% | 47.64% )    	(2x)	│  │  └─  echo NESTED-0-$i
+54.2.0:         ( 0.000195s |  0.00% |  0.28% )   ( 0.003971s |  0.02% | 13.24% )    	(2x)	│  │   ((i++))
+54.2.1:         ( 0.000071s |  0.00% |  0.20% )   ( 0.000086s |  0.00% |  0.57% )    	(1x)	│  │   ((i<2))
+57.2.0:         ( 0.022038s |  0.16% | 63.31% )   ( 0.000154s |  0.00% |  1.02% )    	(1x)	│  │   wait
+-57.2.0:        ( 0.002090s |  0.01% |  6.00% )   ( 0.002097s |  0.01% | 13.99% )    	(1x)	│  │   @TRAP (USR1): echo "GLOBAL_USR1"
+--61.2.0:        	( 0.002090s |  0.01% |  6.00% )   ( 0.002098s |  0.01% | 13.99% )    	(1x)	│  └─  -@TRAP (RETURN): echo NESTED_RETURN 0
+40.1.0:         ( 0.000070s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│   echo "4. Pipeline Chaos..."
+41.1.0:         ( 0.287846s |  2.17% |  2.17% )   ( 0.048181s |  0.24% |  0.24% )    	(1x)	│   << (FUNCTION): main.main.pipeline_chaos >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+1.2.0:          ( 0.001123s |  0.00% |  0.39% )   ( 0.000886s |  0.00% |  1.83% )    	(1x)	│  │   pipeline_chaos
+24.2.0:         ( 0.021351s |  0.16% |  7.41% )   ( 0.007282s |  0.03% | 15.11% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.000602s |  0.00% |  2.81% )   ( 0.000646s |  0.00% |  8.87% )    	(1x)	│  │  ├─  echo "START"
+24.3.1:         ( 0.020749s |  0.15% | 97.18% )   ( 0.006636s |  0.03% | 91.12% )    	(1x)	│  │  │   tee >(sleep 0.01; cat 1>&2) | << (BACKGROUND FORK): 1124375 >> | cat
+24.4.0:         ( 0.012381s |  0.09% | 93.36% )   ( 0.002482s |  0.01% | 72.06% )    	(1x)	│  │  │  ├─  sleep 0.01
+24.4.1:         ( 0.000880s |  0.00% |  6.63% )   ( 0.000962s |  0.00% | 27.93% )    	(1x)	│  │  └─ └─  cat 1>&2
+24.2.1:         ( 0.035906s |  0.27% | 12.47% )   ( 0.021259s |  0.10% | 44.12% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.020068s |  0.15% | 27.94% )   ( 0.004451s |  0.02% | 10.46% )    	(2x)	│  │  ├─  read -r line
+25.3.0:         ( 0.000405s |  0.00% |  1.12% )   ( 0.000441s |  0.00% |  2.07% )    	(1x)	│  │  │   echo "$line" (&)
+25.3.1:         ( 0.000362s |  0.00% |  1.00% )   ( 0.001278s |  0.00% |  6.01% )    	(1x)	│  │  │   tee >(cat) >(cat) >(cat) > /dev/null (&)
+25.3.2:         ( 0.001185s |  0.00% |  3.30% )   ( 0.001187s |  0.00% |  5.58% )    	(1x)	│  │  │   << (SUBSHELL) >>
+25.4.0:         ( 0.001185s |  0.00% | 50.00% )   ( 0.001187s |  0.00% | 50.00% )    	(2x)	│  │  │  ├─  << (SUBSHELL) >>
+25.5.0:         ( 0.001185s |  0.00% |100.00% )   ( 0.001187s |  0.00% |100.00% )    	(2x)	│  │  │  └─ └─  cat
+25.3.3:         ( 0.013812s |  0.10% | 38.46% )   ( 0.013813s |  0.06% | 64.97% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+25.4.0:         ( 0.013812s |  0.10% |100.00% )   ( 0.013813s |  0.06% |100.00% )    	(1x)	│  │  │  ├─  << (SUBSHELL) >>
+25.5.0:         ( 0.013812s |  0.10% |100.00% )   ( 0.013813s |  0.06% |100.00% )    	(1x)	│  │  │  └─ └─  cat
+27.3.0:         ( 0.000074s |  0.00% |  0.20% )   ( 0.000089s |  0.00% |  0.41% )    	(1x)	│  │  └─  wait
+24.2.2:         ( 0.019816s |  0.14% |  6.88% )   ( 0.008635s |  0.04% | 17.92% )    	(1x)	│  │   << (SUBSHELL) >> | : | :
+24.3.0:         ( 0.004021s |  0.03% | 20.29% )   ( 0.000826s |  0.00% |  9.56% )    	(1x)	│  │  ├─  cat | $'tee >(while read -r x; do\n    ( echo "SUB1: $x" ) &\ndone\nwait)
+29.3.0:         ( 0.015795s |  0.11% | 79.70% )   ( 0.007809s |  0.03% | 90.43% )    	(1x)	│  │  │   << (SUBSHELL) >>
+29.4.0:         ( 0.006482s |  0.04% | 13.67% )   ( 0.001447s |  0.00% |  6.17% )    	(3x)	│  │  │  ├─  read -r x (&)
+30.4.0:         ( 0.000276s |  0.00% |  0.58% )   ( 0.000323s |  0.00% |  1.37% )    	(3x)	│  │  │  │   << (BACKGROUND FORK) >>
+30.5.0:         ( 0.000276s |  0.00% |100.00% )   ( 0.000323s |  0.00% |100.00% )    	(3x)	│  │  │  │  └─  echo "SUB1: $x"
+29.4.0:         ( 0.008964s |  0.06% | 56.75% )   ( 0.005950s |  0.03% | 76.19% )    	(1x)	│  │  │  │   read -r x
+32.4.0:         ( 0.000073s |  0.00% |  0.46% )   ( 0.000089s |  0.00% |  1.13% )    	(1x)	│  │  └─ └─  wait
+24.2.3:         ( 0.101282s |  0.76% | 35.18% )   ( 0.001250s |  0.00% |  2.59% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.101282s |  0.76% |100.00% )   ( 0.001250s |  0.00% |100.00% )    	(1x)	│  │  └─  sleep 0.1
+24.2.4:         ( 0.001852s |  0.01% |  0.64% )   ( 0.002711s |  0.01% |  5.62% )    	(1x)	│  │   : (&) | << (BACKGROUND FORK): 1124391 >> | :
+24.3.0:         ( 0.051537s |  0.38% |100.00% )   ( 0.001603s |  0.00% |100.00% )    	(1x)	│  │  └─  sleep 0.05
+25.2.0:         ( 0.100930s |  0.76% | 35.06% )   ( 0.000593s |  0.00% |  1.23% )    	(1x)	│  │   wait
+-25.2.0:        ( 0.005585s |  0.04% |  1.94% )   ( 0.005564s |  0.02% | 11.54% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+43.1.0:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│   echo "5. Coprocess Tangle..."
+44.1.0:         ( 0.125219s |  0.94% |  0.94% )   ( 0.029360s |  0.14% |  0.14% )    	(1x)	│   << (FUNCTION): main.main.coprocess_tangle 2> /dev/null >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+346.2.0:        ( 0.000064s |  0.00% |  0.05% )   ( 0.000079s |  0.00% |  0.26% )    	(1x)	│  │   for i in {1..3}
+24.2.0:         ( 0.040969s |  0.30% | 32.71% )   ( 0.005891s |  0.02% | 20.06% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.005771s |  0.04% |  3.52% )   ( 0.000536s |  0.00% |  2.27% )    	(4x)	│  │  ├─  read -r line
+25.3.0:         ( 0.000304s |  0.00% |  0.24% )   ( 0.000353s |  0.00% |  1.99% )    	(3x)	│  │  │   echo "C1: $line"
+26.3.0:         ( 0.034894s |  0.26% | 28.39% )   ( 0.005002s |  0.02% | 28.30% )    	(3x)	│  │  └─  sleep 0.01
+24.2.1:         ( 0.037326s |  0.28% | 29.80% )   ( 0.007015s |  0.03% | 23.89% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.000480s |  0.00% |  0.32% )   ( 0.000537s |  0.00% |  1.91% )    	(4x)	│  │  ├─  read -r line
+25.3.0:         ( 0.000238s |  0.00% |  0.21% )   ( 0.000285s |  0.00% |  1.35% )    	(3x)	│  │  │   echo "C2: $line" >&${COPROC1[1]}
+26.3.0:         ( 0.036608s |  0.27% | 32.69% )   ( 0.006193s |  0.03% | 29.42% )    	(3x)	│  │  └─  sleep 0.01
+24.2.2:         ( 0.000231s |  0.00% |  0.06% )   ( 0.000277s |  0.00% |  0.31% )    	(3x)	│  │   echo "DATA $i" >&${COPROC2[1]}
+25.2.0:         ( 0.030027s |  0.22% |  7.99% )   ( 0.000474s |  0.00% |  0.53% )    	(3x)	│  │   read -r -t 0.1 -u ${COPROC1[0]} result
+23.2.0:         ( 0.000135s |  0.00% |  0.05% )   ( 0.000161s |  0.00% |  0.27% )    	(2x)	│  │   for i in {1..3}
+29.2.0:         ( 0.000086s |  0.00% |  0.06% )   ( 0.000101s |  0.00% |  0.34% )    	(1x)	│  │   exec {COPROC1[0]}>&- {COPROC1[1]}>&-
+30.2.0:         ( 0.000082s |  0.00% |  0.06% )   ( 0.000098s |  0.00% |  0.33% )    	(1x)	│  │   exec {COPROC2[0]}>&- {COPROC2[1]}>&-
+31.2.0:         ( 0.012269s |  0.09% |  9.79% )   ( 0.000340s |  0.00% |  1.15% )    	(1x)	│  │   wait
+-31.2.0:        ( 0.002011s |  0.01% |  1.60% )   ( 0.002017s |  0.01% |  6.86% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+46.1.0:         ( 0.000077s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│   echo "6. Subshell Spiral..."
+47.1.0:         ( 0.181010s |  1.36% |  1.37% )   ( 0.179371s |  0.90% |  0.90% )    	(1x)	│   << (FUNCTION): main.main.subshell_spiral >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+391.2.0:        ( 0.001039s |  0.00% |  0.57% )   ( 0.002371s |  0.01% |  1.32% )    	(1x)	│  │   wait
+24.2.0:         ( 0.000712s |  0.00% |  0.39% )   ( 0.001054s |  0.00% |  0.58% )    	(1x)	│  │   echo "DEEP" (&)
+24.2.1:         ( 0.000196s |  0.00% |  0.05% )   ( 0.000231s |  0.00% |  0.06% )    	(2x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.000196s |  0.00% |100.00% )   ( 0.000231s |  0.00% |100.00% )    	(2x)	│  │  └─  wait
+24.2.2:         ( 0.097348s |  0.73% | 53.78% )   ( 0.053317s |  0.26% | 29.72% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+.3.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  ├─
+24.3.0:         ( 0.041433s |  0.31% | 42.56% )   ( 0.041246s |  0.20% | 77.35% )    	(1x)	│  │  │   trap 'echo "SUB_EXIT"' EXIT
+25.3.0:         ( 0.001535s |  0.01% |  0.52% )   ( 0.001600s |  0.00% |  1.00% )    	(3x)	│  │  │   for i in {1..3} (&)
+26.3.0:         ( 0.035944s |  0.27% | 12.30% )   ( 0.006097s |  0.03% |  3.81% )    	(3x)	│  │  │   << (BACKGROUND FORK) >>
+26.4.0:         ( 0.035668s |  0.26% | 99.23% )   ( 0.005781s |  0.02% | 94.81% )    	(3x)	│  │  │  ├─  sleep 0.01
+26.4.1:         ( 0.000276s |  0.00% |  0.76% )   ( 0.000316s |  0.00% |  5.18% )    	(3x)	│  │  │  └─  echo "BG $i"
+28.3.0:         ( 0.014590s |  0.11% | 14.98% )   ( 0.000532s |  0.00% |  0.99% )    	(1x)	│  │  │   wait
+-28.3.0:        ( 0.003845s |  0.02% |  3.94% )   ( 0.003841s |  0.01% |  7.20% )    	(1x)	│  │  └─  @TRAP (EXIT): echo "SUB_EXIT"
+25.2.0:         ( 0.066349s |  0.50% | 36.65% )   ( 0.066376s |  0.33% | 37.00% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+25.3.0:         ( 0.005688s |  0.04% |  8.57% )   ( 0.005689s |  0.02% |  8.57% )    	(1x)	│  │  ├─  cat
+26.3.0:         ( 0.060661s |  0.45% | 91.42% )   ( 0.060687s |  0.30% | 91.42% )    	(1x)	│  │  │   << (SUBSHELL) >>
+26.4.0:         ( 0.000485s |  0.00% |  0.79% )   ( 0.000509s |  0.00% |  0.83% )    	(1x)	│  │  │  ├─  tee >(cat 1>&2) (&)
+27.4.0:         ( 0.000220s |  0.00% |  0.36% )   ( 0.000221s |  0.00% |  0.36% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+27.5.0:         ( 0.000220s |  0.00% |100.00% )   ( 0.000221s |  0.00% |100.00% )    	(1x)	│  │  │  │  └─  cat > /dev/null
+26.4.0:         ( 0.059956s |  0.45% | 98.83% )   ( 0.059957s |  0.30% | 98.79% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+26.5.0:         ( 0.059956s |  0.45% |100.00% )   ( 0.059957s |  0.30% |100.00% )    	(1x)	│  │  │  │  ├─  << (SUBSHELL) >>
+26.6.0:         ( 0.059956s |  0.45% |100.00% )   ( 0.059957s |  0.30% |100.00% )    	(1x)	│  │  └─ └─ └─ └─  cat 1>&2
+-24.2.0:        ( 0.002462s |  0.01% |  1.36% )   ( 0.002473s |  0.01% |  1.37% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+49.1.0:         ( 0.000065s |  0.00% |  0.00% )   ( 0.000079s |  0.00% |  0.00% )    	(1x)	│   echo "7. Arithmetic Storm..."
+50.1.0:         ( 0.018914s |  0.14% |  0.14% )   ( 0.035062s |  0.17% |  0.17% )    	(1x)	│   << (FUNCTION): main.main.arithmetic_storm >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+1.2.0:          ( 0.000067s |  0.00% |  0.35% )   ( 0.000082s |  0.00% |  0.23% )    	(1x)	│  │   arithmetic_storm
+24.2.0:         ( 0.000069s |  0.00% |  0.36% )   ( 0.000080s |  0.00% |  0.22% )    	(1x)	│  │   ((i=0))
+24.2.1:         ( 0.000383s |  0.00% |  0.33% )   ( 0.000470s |  0.00% |  0.22% )    	(6x)	│  │   ((i<5))
+25.2.0:         ( 0.002267s |  0.01% |  2.39% )   ( 0.002372s |  0.01% |  1.35% )    	(5x)	│  │   (( j = i * 2 )) (&)
+28.2.0:         ( 0.000538s |  0.00% |  0.56% )   ( 0.000635s |  0.00% |  0.36% )    	(5x)	│  │   << (BACKGROUND FORK) >>
+28.3.0:         ( 0.000538s |  0.00% |100.00% )   ( 0.000635s |  0.00% |100.00% )    	(5x)	│  │  └─  (( k = j + 1 ))
+31.2.0:         ( 0.000383s |  0.00% |  0.40% )   ( 0.000452s |  0.00% |  0.25% )    	(5x)	│  │   result=$(( j * 3 ))
+34.2.0:         ( 0.002633s |  0.01% |  2.78% )   ( 0.013264s |  0.06% |  7.56% )    	(5x)	│  │   echo $((i)) (&)
+34.2.1:         ( 0.001407s |  0.01% |  1.48% )   ( 0.001636s |  0.00% |  0.93% )    	(5x)	│  │   << (BACKGROUND FORK) >>
+34.3.0:         ( 0.000775s |  0.00% | 55.08% )   ( 0.000883s |  0.00% | 53.97% )    	(5x)	│  │  ├─  read -r n
+34.3.1:         ( 0.000632s |  0.00% | 44.91% )   ( 0.000753s |  0.00% | 46.02% )    	(5x)	│  │  └─  (( n++ ))
+37.2.0:         ( 0.000366s |  0.00% |  0.38% )   ( 0.000443s |  0.00% |  0.25% )    	(5x)	│  │   eval "(( m = $i + $j ))"
+37.2.1:         ( 0.000067s |  0.00% |  0.35% )   ( 0.000081s |  0.00% |  0.23% )    	(1x)	│  │   (( m = 0 + 0 ))
+24.2.0:         ( 0.000317s |  0.00% |  0.33% )   ( 0.000389s |  0.00% |  0.22% )    	(5x)	│  │   ((i++))
+37.2.1:         ( 0.000074s |  0.00% |  0.39% )   ( 0.010363s |  0.05% | 29.55% )    	(1x)	│  │   (( m = 1 + 2 ))
+37.2.1:         ( 0.000066s |  0.00% |  0.34% )   ( 0.000081s |  0.00% |  0.23% )    	(1x)	│  │   (( m = 2 + 4 ))
+37.2.1:         ( 0.000065s |  0.00% |  0.34% )   ( 0.000080s |  0.00% |  0.22% )    	(1x)	│  │   (( m = 3 + 6 ))
+37.2.1:         ( 0.000064s |  0.00% |  0.33% )   ( 0.000078s |  0.00% |  0.22% )    	(1x)	│  │   (( m = 4 + 8 ))
+39.2.0:         ( 0.000429s |  0.00% |  2.26% )   ( 0.000269s |  0.00% |  0.76% )    	(1x)	│  │   wait
+-39.2.0:        ( 0.002006s |  0.01% | 10.60% )   ( 0.002015s |  0.01% |  5.74% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+52.1.0:         ( 0.000084s |  0.00% |  0.00% )   ( 0.000099s |  0.00% |  0.00% )    	(1x)	│   echo "8. Here-Doc Horror..."
+53.1.0:         ( 0.023378s |  0.17% |  0.17% )   ( 0.008888s |  0.04% |  0.04% )    	(1x)	│   << (FUNCTION): main.main.heredoc_nightmare >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.01% )    	(1x)	│  ├─
+1.2.0:          ( 0.000070s |  0.00% |  0.29% )   ( 0.000086s |  0.00% |  0.96% )    	(1x)	│  │   heredoc_nightmare
+24.2.0:         ( 0.000373s |  0.00% |  1.59% )   ( 0.000404s |  0.00% |  4.54% )    	(1x)	│  │   $'cat <<-EOF\nLine 1: $(echo "CMD_SUB")\nLine 2: $( (echo "NESTED") )\nLine 3: $({ echo "BRACED"; })\nEOF\n (&)
+24.2.1:         ( 0.000339s |  0.00% |  1.45% )   ( 0.000400s |  0.00% |  4.50% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.000151s |  0.00% | 44.54% )   ( 0.000178s |  0.00% | 44.50% )    	(1x)	│  │  ├─  << (SUBSHELL) >>
+24.4.0:         ( 0.000151s |  0.00% |100.00% )   ( 0.000178s |  0.00% |100.00% )    	(1x)	│  │  │  └─  echo "CMD_SUB"
+24.3.1:         ( 0.000102s |  0.00% | 30.08% )   ( 0.000119s |  0.00% | 29.75% )    	(1x)	│  │  │   << (SUBSHELL) >>
+24.4.0:         ( 0.000102s |  0.00% |100.00% )   ( 0.000119s |  0.00% |100.00% )    	(1x)	│  │  │  ├─  << (SUBSHELL) >>
+24.5.0:         ( 0.000102s |  0.00% |100.00% )   ( 0.000119s |  0.00% |100.00% )    	(1x)	│  │  │  └─ └─  echo "NESTED"
+24.3.2:         ( 0.000086s |  0.00% | 25.36% )   ( 0.000103s |  0.00% | 25.75% )    	(1x)	│  │  │   << (SUBSHELL) >>
+24.4.0:         ( 0.000086s |  0.00% |100.00% )   ( 0.000103s |  0.00% |100.00% )    	(1x)	│  │  └─ └─  echo "BRACED"
+24.2.2:         ( 0.000519s |  0.00% |  2.22% )   ( 0.000550s |  0.00% |  6.18% )    	(1x)	│  │   tee >(cat 1>&2) > /dev/null (&)
+24.2.3:         ( 0.000288s |  0.00% |  1.23% )   ( 0.000289s |  0.00% |  3.25% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+24.3.0:         ( 0.000288s |  0.00% |100.00% )   ( 0.000289s |  0.00% |100.00% )    	(1x)	│  │  ├─  << (SUBSHELL) >>
+24.4.0:         ( 0.000288s |  0.00% |100.00% )   ( 0.000289s |  0.00% |100.00% )    	(1x)	│  │  └─ └─  cat 1>&2
+32.2.0:         ( 0.002554s |  0.01% | 10.92% )   ( 0.002397s |  0.01% | 26.96% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+32.3.0:         ( 0.001207s |  0.00% | 47.25% )   ( 0.000951s |  0.00% | 39.67% )    	(1x)	│  │  ├─  $'cat <<-\'LITERAL\'\nLITERAL_LINE\nLITERAL\n
+32.3.1:         ( 0.001257s |  0.00% | 49.21% )   ( 0.001340s |  0.00% | 55.90% )    	(1x)	│  │  │   << (SUBSHELL) >>
+32.4.0:         ( 0.000944s |  0.00% | 75.09% )   ( 0.000977s |  0.00% | 72.91% )    	(1x)	│  │  │  ├─  read -r line (&)
+35.4.0:         ( 0.000313s |  0.00% | 24.90% )   ( 0.000363s |  0.00% | 27.08% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+35.5.0:         ( 0.000313s |  0.00% |100.00% )   ( 0.000363s |  0.00% |100.00% )    	(1x)	│  │  │  └─ └─  echo "PROCESSED: $line"
+37.3.0:         ( 0.000090s |  0.00% |  3.52% )   ( 0.000106s |  0.00% |  4.42% )    	(1x)	│  │  └─  wait
+40.2.0:         ( 0.016443s |  0.12% | 70.33% )   ( 0.000324s |  0.00% |  3.64% )    	(1x)	│  │   wait
+-40.2.0:        ( 0.002031s |  0.01% |  8.68% )   ( 0.002040s |  0.01% | 22.95% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+55.1.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000087s |  0.00% |  0.00% )    	(1x)	│   echo "9. Recursive Background..."
+56.1.0:         ( 0.346270s |  2.61% |  2.62% )   ( 0.317828s |  1.60% |  1.60% )    	(1x)	│   << (FUNCTION): main.main.recursive_bg 3 >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+1.2.0:          ( 0.000066s |  0.00% |  0.01% )   ( 0.000080s |  0.00% |  0.02% )    	(1x)	│  │   recursive_bg 3
+24.2.0:         ( 0.000069s |  0.00% |  0.01% )   ( 0.000084s |  0.00% |  0.02% )    	(1x)	│  │   local n="${1:-3}"
+26.2.0:         ( 0.000601s |  0.00% |  0.17% )   ( 0.000619s |  0.00% |  0.19% )    	(1x)	│  │   (( n <= 0 )) (&)
+31.2.0:         ( 0.080814s |  0.61% | 23.33% )   ( 0.055825s |  0.28% | 17.56% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+31.3.0:         ( 0.080814s |  0.61% |100.00% )   ( 0.055825s |  0.28% |100.00% )    	(1x)	│  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg $((n-1)) >>
+.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
+1.4.0:          ( 0.000134s |  0.00% |  0.16% )   ( 0.000160s |  0.00% |  0.28% )    	(1x)	│  │  │  │   recursive_bg $((n-1))
+24.4.0:         ( 0.000140s |  0.00% |  0.17% )   ( 0.000166s |  0.00% |  0.29% )    	(1x)	│  │  │  │   local n="${1:-3}"
+26.4.0:         ( 0.000551s |  0.00% |  0.68% )   ( 0.000571s |  0.00% |  1.02% )    	(1x)	│  │  │  │   (( n <= 0 )) (&)
+31.4.0:         ( 0.017204s |  0.12% | 21.28% )   ( 0.017473s |  0.08% | 31.29% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+31.5.0:         ( 0.017204s |  0.12% |100.00% )   ( 0.017473s |  0.08% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000325s |  0.00% |  1.88% )   ( 0.000376s |  0.00% |  2.15% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000149s |  0.00% |  0.86% )   ( 0.000176s |  0.00% |  1.00% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000879s |  0.00% |  5.10% )   ( 0.000915s |  0.00% |  5.23% )    	(1x)	│  │  │  │  │  │   (( n <= 0 )) (&)
+31.6.0:         ( 0.004344s |  0.03% | 25.24% )   ( 0.004451s |  0.02% | 25.47% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.7.0:         ( 0.004344s |  0.03% |100.00% )   ( 0.004451s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000137s |  0.00% |  3.15% )   ( 0.000157s |  0.00% |  3.52% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000138s |  0.00% |  3.17% )   ( 0.000168s |  0.00% |  3.77% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000129s |  0.00% |  2.96% )   ( 0.000154s |  0.00% |  3.45% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000151s |  0.00% |  3.47% )   ( 0.000177s |  0.00% |  3.97% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.003788s |  0.02% | 87.20% )   ( 0.003794s |  0.01% | 85.23% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.6.0:         ( 0.004359s |  0.03% | 25.33% )   ( 0.004465s |  0.02% | 25.55% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.7.0:         ( 0.004359s |  0.03% |100.00% )   ( 0.004465s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000135s |  0.00% |  3.09% )   ( 0.000154s |  0.00% |  3.44% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000136s |  0.00% |  3.11% )   ( 0.000161s |  0.00% |  3.60% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000126s |  0.00% |  2.89% )   ( 0.000151s |  0.00% |  3.38% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000150s |  0.00% |  3.44% )   ( 0.000175s |  0.00% |  3.91% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.003811s |  0.02% | 87.42% )   ( 0.003823s |  0.01% | 85.62% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.6.0:         ( 0.004447s |  0.03% | 25.84% )   ( 0.004561s |  0.02% | 26.10% )    	(1x)	│  │  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000134s |  0.00% |  3.01% )   ( 0.000164s |  0.00% |  3.59% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000137s |  0.00% |  3.08% )   ( 0.000163s |  0.00% |  3.57% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000135s |  0.00% |  3.03% )   ( 0.000158s |  0.00% |  3.46% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000154s |  0.00% |  3.46% )   ( 0.000180s |  0.00% |  3.94% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003886s |  0.02% | 87.38% )   ( 0.003895s |  0.01% | 85.39% )    	(1x)	│  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.6.0:         ( 0.000665s |  0.00% |  3.86% )   ( 0.000486s |  0.00% |  2.78% )    	(1x)	│  │  │  │  │  │   wait 2> /dev/null
+-35.6.0:        ( 0.002035s |  0.01% | 11.82% )   ( 0.002042s |  0.01% | 11.68% )    	(1x)	│  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.4.0:         ( 0.019763s |  0.14% | 24.45% )   ( 0.017225s |  0.08% | 30.85% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+32.5.0:         ( 0.019763s |  0.14% |100.00% )   ( 0.017225s |  0.08% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000250s |  0.00% |  1.26% )   ( 0.000287s |  0.00% |  1.66% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000293s |  0.00% |  1.48% )   ( 0.000340s |  0.00% |  1.97% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000778s |  0.00% |  3.93% )   ( 0.000584s |  0.00% |  3.39% )    	(1x)	│  │  │  │  │  │   (( n <= 0 )) (&)
+31.6.0:         ( 0.004341s |  0.03% | 21.96% )   ( 0.004456s |  0.02% | 25.86% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.7.0:         ( 0.004341s |  0.03% |100.00% )   ( 0.004456s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000138s |  0.00% |  3.17% )   ( 0.000160s |  0.00% |  3.59% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000138s |  0.00% |  3.17% )   ( 0.000167s |  0.00% |  3.74% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000131s |  0.00% |  3.01% )   ( 0.000157s |  0.00% |  3.52% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000150s |  0.00% |  3.45% )   ( 0.000174s |  0.00% |  3.90% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.003783s |  0.02% | 87.14% )   ( 0.003797s |  0.01% | 85.21% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.6.0:         ( 0.004450s |  0.03% | 22.51% )   ( 0.004565s |  0.02% | 26.50% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.7.0:         ( 0.004450s |  0.03% |100.00% )   ( 0.004565s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000133s |  0.00% |  2.98% )   ( 0.000160s |  0.00% |  3.50% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000149s |  0.00% |  3.34% )   ( 0.000169s |  0.00% |  3.70% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000135s |  0.00% |  3.03% )   ( 0.000161s |  0.00% |  3.52% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000162s |  0.00% |  3.64% )   ( 0.000189s |  0.00% |  4.14% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.003870s |  0.02% | 86.96% )   ( 0.003885s |  0.01% | 85.10% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.6.0:         ( 0.004413s |  0.03% | 22.32% )   ( 0.004523s |  0.02% | 26.25% )    	(1x)	│  │  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000124s |  0.00% |  2.80% )   ( 0.000149s |  0.00% |  3.29% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000134s |  0.00% |  3.03% )   ( 0.000159s |  0.00% |  3.51% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000129s |  0.00% |  2.92% )   ( 0.000153s |  0.00% |  3.38% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000148s |  0.00% |  3.35% )   ( 0.000174s |  0.00% |  3.84% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003877s |  0.02% | 87.85% )   ( 0.003887s |  0.01% | 85.93% )    	(1x)	│  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.6.0:         ( 0.003183s |  0.02% | 16.10% )   ( 0.000409s |  0.00% |  2.37% )    	(1x)	│  │  │  │  │  │   wait 2> /dev/null
+-35.6.0:        ( 0.002054s |  0.01% | 10.39% )   ( 0.002060s |  0.01% | 11.95% )    	(1x)	│  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.4.0:         ( 0.040906s |  0.30% | 50.61% )   ( 0.018088s |  0.09% | 32.40% )    	(1x)	│  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000069s |  0.00% |  0.16% )   ( 0.000085s |  0.00% |  0.46% )    	(1x)	│  │  │  │  │   recursive_bg $((n-1))
+24.5.0:         ( 0.000071s |  0.00% |  0.17% )   ( 0.000087s |  0.00% |  0.48% )    	(1x)	│  │  │  │  │   local n="${1:-3}"
+26.5.0:         ( 0.000769s |  0.00% |  1.87% )   ( 0.000798s |  0.00% |  4.41% )    	(1x)	│  │  │  │  │   (( n <= 0 )) (&)
+31.5.0:         ( 0.004299s |  0.03% | 10.50% )   ( 0.004409s |  0.02% | 24.37% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+31.6.0:         ( 0.004299s |  0.03% |100.00% )   ( 0.004409s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000127s |  0.00% |  2.95% )   ( 0.000153s |  0.00% |  3.47% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000135s |  0.00% |  3.14% )   ( 0.000160s |  0.00% |  3.62% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000124s |  0.00% |  2.88% )   ( 0.000150s |  0.00% |  3.40% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000149s |  0.00% |  3.46% )   ( 0.000173s |  0.00% |  3.92% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003763s |  0.02% | 87.53% )   ( 0.003772s |  0.01% | 85.55% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.5.0:         ( 0.004447s |  0.03% | 10.87% )   ( 0.004564s |  0.02% | 25.23% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+32.6.0:         ( 0.004447s |  0.03% |100.00% )   ( 0.004564s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000164s |  0.00% |  3.68% )   ( 0.000189s |  0.00% |  4.14% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000139s |  0.00% |  3.12% )   ( 0.000166s |  0.00% |  3.63% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000141s |  0.00% |  3.17% )   ( 0.000170s |  0.00% |  3.72% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000161s |  0.00% |  3.62% )   ( 0.000191s |  0.00% |  4.18% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003841s |  0.02% | 86.37% )   ( 0.003847s |  0.01% | 84.29% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.5.0:         ( 0.004468s |  0.03% | 10.92% )   ( 0.004586s |  0.02% | 25.35% )    	(1x)	│  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000135s |  0.00% |  3.02% )   ( 0.000163s |  0.00% |  3.55% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000132s |  0.00% |  2.95% )   ( 0.000161s |  0.00% |  3.51% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000129s |  0.00% |  2.88% )   ( 0.000158s |  0.00% |  3.44% )    	(1x)	│  │  │  │  │  │   (( n <= 0 ))
+27.6.0:         ( 0.000155s |  0.00% |  3.46% )   ( 0.000181s |  0.00% |  3.94% )    	(1x)	│  │  │  │  │  │   return
+-27.6.0:        ( 0.003916s |  0.02% | 87.64% )   ( 0.003922s |  0.01% | 85.52% )    	(1x)	│  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.5.0:         ( 0.023942s |  0.18% | 58.52% )   ( 0.000706s |  0.00% |  3.90% )    	(1x)	│  │  │  │  │   wait 2> /dev/null
+-35.5.0:        ( 0.002840s |  0.02% |  6.94% )   ( 0.002852s |  0.01% | 15.76% )    	(1x)	│  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.4.0:         ( 0.000086s |  0.00% |  0.10% )   ( 0.000102s |  0.00% |  0.18% )    	(1x)	│  │  │  │   wait 2> /dev/null
+-35.4.0:        ( 0.002029s |  0.01% |  2.51% )   ( 0.002039s |  0.01% |  3.65% )    	(1x)	│  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.2.0:         ( 0.116293s |  0.87% | 33.58% )   ( 0.053860s |  0.27% | 16.94% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+32.3.0:         ( 0.116293s |  0.87% |100.00% )   ( 0.053860s |  0.27% |100.00% )    	(1x)	│  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg $((n-1)) >>
+.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
+1.4.0:          ( 0.000112s |  0.00% |  0.09% )   ( 0.000135s |  0.00% |  0.25% )    	(1x)	│  │  │  │   recursive_bg $((n-1))
+24.4.0:         ( 0.000126s |  0.00% |  0.10% )   ( 0.000144s |  0.00% |  0.26% )    	(1x)	│  │  │  │   local n="${1:-3}"
+26.4.0:         ( 0.000805s |  0.00% |  0.69% )   ( 0.000829s |  0.00% |  1.53% )    	(1x)	│  │  │  │   (( n <= 0 )) (&)
+31.4.0:         ( 0.017316s |  0.13% | 14.88% )   ( 0.017597s |  0.08% | 32.67% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+31.5.0:         ( 0.017316s |  0.13% |100.00% )   ( 0.017597s |  0.08% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000137s |  0.00% |  0.79% )   ( 0.000164s |  0.00% |  0.93% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000232s |  0.00% |  1.33% )   ( 0.000276s |  0.00% |  1.56% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.001178s |  0.00% |  6.80% )   ( 0.001210s |  0.00% |  6.87% )    	(1x)	│  │  │  │  │  │   (( n <= 0 )) (&)
+31.6.0:         ( 0.004331s |  0.03% | 25.01% )   ( 0.004439s |  0.02% | 25.22% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.7.0:         ( 0.004331s |  0.03% |100.00% )   ( 0.004439s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000127s |  0.00% |  2.93% )   ( 0.000152s |  0.00% |  3.42% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000136s |  0.00% |  3.14% )   ( 0.000161s |  0.00% |  3.62% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000127s |  0.00% |  2.93% )   ( 0.000152s |  0.00% |  3.42% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000148s |  0.00% |  3.41% )   ( 0.000174s |  0.00% |  3.91% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.003792s |  0.02% | 87.55% )   ( 0.003799s |  0.01% | 85.58% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.6.0:         ( 0.004332s |  0.03% | 25.01% )   ( 0.004441s |  0.02% | 25.23% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.7.0:         ( 0.004332s |  0.03% |100.00% )   ( 0.004441s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000126s |  0.00% |  2.90% )   ( 0.000151s |  0.00% |  3.40% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000143s |  0.00% |  3.30% )   ( 0.000167s |  0.00% |  3.76% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000127s |  0.00% |  2.93% )   ( 0.000152s |  0.00% |  3.42% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000146s |  0.00% |  3.37% )   ( 0.000171s |  0.00% |  3.85% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.003789s |  0.02% | 87.46% )   ( 0.003799s |  0.01% | 85.54% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.6.0:         ( 0.004427s |  0.03% | 25.56% )   ( 0.004540s |  0.02% | 25.79% )    	(1x)	│  │  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000135s |  0.00% |  3.04% )   ( 0.000161s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000141s |  0.00% |  3.18% )   ( 0.000162s |  0.00% |  3.56% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000125s |  0.00% |  2.82% )   ( 0.000150s |  0.00% |  3.30% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000152s |  0.00% |  3.43% )   ( 0.000178s |  0.00% |  3.92% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003873s |  0.02% | 87.48% )   ( 0.003888s |  0.01% | 85.63% )    	(1x)	│  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.6.0:         ( 0.000635s |  0.00% |  3.66% )   ( 0.000474s |  0.00% |  2.69% )    	(1x)	│  │  │  │  │  │   wait 2> /dev/null
+-35.6.0:        ( 0.002043s |  0.01% | 11.79% )   ( 0.002052s |  0.01% | 11.66% )    	(1x)	│  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.4.0:         ( 0.032784s |  0.24% | 28.19% )   ( 0.014591s |  0.07% | 27.09% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+32.5.0:         ( 0.032784s |  0.24% |100.00% )   ( 0.014591s |  0.07% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000147s |  0.00% |  0.44% )   ( 0.000168s |  0.00% |  1.15% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000141s |  0.00% |  0.43% )   ( 0.000173s |  0.00% |  1.18% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000770s |  0.00% |  2.34% )   ( 0.000579s |  0.00% |  3.96% )    	(1x)	│  │  │  │  │  │   (( n <= 0 )) (&)
+31.6.0:         ( 0.002461s |  0.01% |  7.50% )   ( 0.002536s |  0.01% | 17.38% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.7.0:         ( 0.002461s |  0.01% |100.00% )   ( 0.002536s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.04% )   ( 0.000001s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000081s |  0.00% |  3.29% )   ( 0.000098s |  0.00% |  3.86% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000073s |  0.00% |  2.96% )   ( 0.000088s |  0.00% |  3.47% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000067s |  0.00% |  2.72% )   ( 0.000082s |  0.00% |  3.23% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000081s |  0.00% |  3.29% )   ( 0.000097s |  0.00% |  3.82% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.002158s |  0.01% | 87.68% )   ( 0.002170s |  0.01% | 85.56% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.6.0:         ( 0.005157s |  0.03% | 15.73% )   ( 0.004072s |  0.02% | 27.90% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.7.0:         ( 0.005157s |  0.03% |100.00% )   ( 0.004072s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000126s |  0.00% |  2.44% )   ( 0.000152s |  0.00% |  3.73% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000133s |  0.00% |  2.57% )   ( 0.000159s |  0.00% |  3.90% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000139s |  0.00% |  2.69% )   ( 0.000169s |  0.00% |  4.15% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000149s |  0.00% |  2.88% )   ( 0.000175s |  0.00% |  4.29% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.004609s |  0.03% | 89.37% )   ( 0.003416s |  0.01% | 83.88% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.6.0:         ( 0.007448s |  0.05% | 22.71% )   ( 0.004553s |  0.02% | 31.20% )    	(1x)	│  │  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000126s |  0.00% |  1.69% )   ( 0.000151s |  0.00% |  3.31% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000139s |  0.00% |  1.86% )   ( 0.000164s |  0.00% |  3.60% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000133s |  0.00% |  1.78% )   ( 0.000153s |  0.00% |  3.36% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000157s |  0.00% |  2.10% )   ( 0.000182s |  0.00% |  3.99% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.006892s |  0.05% | 92.53% )   ( 0.003902s |  0.01% | 85.70% )    	(1x)	│  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.6.0:         ( 0.014623s |  0.11% | 44.60% )   ( 0.000464s |  0.00% |  3.18% )    	(1x)	│  │  │  │  │  │   wait 2> /dev/null
+-35.6.0:        ( 0.002036s |  0.01% |  6.21% )   ( 0.002045s |  0.01% | 14.01% )    	(1x)	│  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.4.0:         ( 0.063072s |  0.47% | 54.23% )   ( 0.018462s |  0.09% | 34.27% )    	(1x)	│  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000067s |  0.00% |  0.10% )   ( 0.000082s |  0.00% |  0.44% )    	(1x)	│  │  │  │  │   recursive_bg $((n-1))
+24.5.0:         ( 0.000077s |  0.00% |  0.12% )   ( 0.000088s |  0.00% |  0.47% )    	(1x)	│  │  │  │  │   local n="${1:-3}"
+26.5.0:         ( 0.000730s |  0.00% |  1.15% )   ( 0.000619s |  0.00% |  3.35% )    	(1x)	│  │  │  │  │   (( n <= 0 )) (&)
+31.5.0:         ( 0.004384s |  0.03% |  6.95% )   ( 0.004494s |  0.02% | 24.34% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+31.6.0:         ( 0.004384s |  0.03% |100.00% )   ( 0.004494s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000125s |  0.00% |  2.85% )   ( 0.000150s |  0.00% |  3.33% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000135s |  0.00% |  3.07% )   ( 0.000159s |  0.00% |  3.53% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000128s |  0.00% |  2.91% )   ( 0.000153s |  0.00% |  3.40% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000154s |  0.00% |  3.51% )   ( 0.000184s |  0.00% |  4.09% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003841s |  0.02% | 87.61% )   ( 0.003847s |  0.01% | 85.60% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.5.0:         ( 0.004452s |  0.03% |  7.05% )   ( 0.004576s |  0.02% | 24.78% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+32.6.0:         ( 0.004452s |  0.03% |100.00% )   ( 0.004576s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000128s |  0.00% |  2.87% )   ( 0.000153s |  0.00% |  3.34% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000175s |  0.00% |  3.93% )   ( 0.000209s |  0.00% |  4.56% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000140s |  0.00% |  3.14% )   ( 0.000167s |  0.00% |  3.64% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000157s |  0.00% |  3.52% )   ( 0.000185s |  0.00% |  4.04% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003851s |  0.02% | 86.50% )   ( 0.003861s |  0.01% | 84.37% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.5.0:         ( 0.004406s |  0.03% |  6.98% )   ( 0.004522s |  0.02% | 24.49% )    	(1x)	│  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000140s |  0.00% |  3.17% )   ( 0.000166s |  0.00% |  3.67% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000141s |  0.00% |  3.20% )   ( 0.000168s |  0.00% |  3.71% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000133s |  0.00% |  3.01% )   ( 0.000159s |  0.00% |  3.51% )    	(1x)	│  │  │  │  │  │   (( n <= 0 ))
+27.6.0:         ( 0.000156s |  0.00% |  3.54% )   ( 0.000183s |  0.00% |  4.04% )    	(1x)	│  │  │  │  │  │   return
+-27.6.0:        ( 0.003835s |  0.02% | 87.04% )   ( 0.003845s |  0.01% | 85.02% )    	(1x)	│  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.5.0:         ( 0.045720s |  0.34% | 72.48% )   ( 0.000847s |  0.00% |  4.58% )    	(1x)	│  │  │  │  │   wait 2> /dev/null
+-35.5.0:        ( 0.003235s |  0.02% |  5.12% )   ( 0.003233s |  0.01% | 17.51% )    	(1x)	│  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.4.0:         ( 0.000091s |  0.00% |  0.07% )   ( 0.000106s |  0.00% |  0.19% )    	(1x)	│  │  │  │   wait 2> /dev/null
+-35.4.0:        ( 0.001986s |  0.01% |  1.70% )   ( 0.001995s |  0.01% |  3.70% )    	(1x)	│  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.2.0:         ( 0.143438s |  1.08% | 41.42% )   ( 0.095560s |  0.48% | 30.06% )    	(1x)	│  │   << (FUNCTION): main.main.recursive_bg.recursive_bg $((n-1)) >>
+.3.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  ├─
+1.3.0:          ( 0.000067s |  0.00% |  0.04% )   ( 0.000082s |  0.00% |  0.08% )    	(1x)	│  │  │   recursive_bg $((n-1))
+24.3.0:         ( 0.000086s |  0.00% |  0.05% )   ( 0.000092s |  0.00% |  0.09% )    	(1x)	│  │  │   local n="${1:-3}"
+26.3.0:         ( 0.000690s |  0.00% |  0.48% )   ( 0.000612s |  0.00% |  0.64% )    	(1x)	│  │  │   (( n <= 0 )) (&)
+31.3.0:         ( 0.017667s |  0.13% | 12.31% )   ( 0.017834s |  0.08% | 18.66% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+31.4.0:         ( 0.017667s |  0.13% |100.00% )   ( 0.017834s |  0.08% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000070s |  0.00% |  0.39% )   ( 0.000085s |  0.00% |  0.47% )    	(1x)	│  │  │  │  │   recursive_bg $((n-1))
+24.5.0:         ( 0.000076s |  0.00% |  0.43% )   ( 0.000087s |  0.00% |  0.48% )    	(1x)	│  │  │  │  │   local n="${1:-3}"
+26.5.0:         ( 0.000732s |  0.00% |  4.14% )   ( 0.000764s |  0.00% |  4.28% )    	(1x)	│  │  │  │  │   (( n <= 0 )) (&)
+31.5.0:         ( 0.004320s |  0.03% | 24.45% )   ( 0.004426s |  0.02% | 24.81% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+31.6.0:         ( 0.004320s |  0.03% |100.00% )   ( 0.004426s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000130s |  0.00% |  3.00% )   ( 0.000156s |  0.00% |  3.52% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000134s |  0.00% |  3.10% )   ( 0.000160s |  0.00% |  3.61% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000128s |  0.00% |  2.96% )   ( 0.000152s |  0.00% |  3.43% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000150s |  0.00% |  3.47% )   ( 0.000175s |  0.00% |  3.95% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003777s |  0.02% | 87.43% )   ( 0.003782s |  0.01% | 85.44% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.5.0:         ( 0.003790s |  0.02% | 21.45% )   ( 0.003888s |  0.01% | 21.80% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+32.6.0:         ( 0.003790s |  0.02% |100.00% )   ( 0.003888s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000143s |  0.00% |  3.77% )   ( 0.000165s |  0.00% |  4.24% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000144s |  0.00% |  3.79% )   ( 0.000171s |  0.00% |  4.39% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000140s |  0.00% |  3.69% )   ( 0.000166s |  0.00% |  4.26% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000112s |  0.00% |  2.95% )   ( 0.000131s |  0.00% |  3.36% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003250s |  0.02% | 85.75% )   ( 0.003254s |  0.01% | 83.69% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.5.0:         ( 0.004461s |  0.03% | 25.25% )   ( 0.004573s |  0.02% | 25.64% )    	(1x)	│  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000131s |  0.00% |  2.93% )   ( 0.000160s |  0.00% |  3.49% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000140s |  0.00% |  3.13% )   ( 0.000166s |  0.00% |  3.63% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000129s |  0.00% |  2.89% )   ( 0.000155s |  0.00% |  3.38% )    	(1x)	│  │  │  │  │  │   (( n <= 0 ))
+27.6.0:         ( 0.000162s |  0.00% |  3.63% )   ( 0.000188s |  0.00% |  4.11% )    	(1x)	│  │  │  │  │  │   return
+-27.6.0:        ( 0.003898s |  0.02% | 87.37% )   ( 0.003903s |  0.01% | 85.34% )    	(1x)	│  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.5.0:         ( 0.000840s |  0.00% |  4.75% )   ( 0.000633s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │   wait 2> /dev/null
+-35.5.0:        ( 0.003377s |  0.02% | 19.11% )   ( 0.003377s |  0.01% | 18.93% )    	(1x)	│  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.3.0:         ( 0.016610s |  0.12% | 11.57% )   ( 0.016696s |  0.08% | 17.47% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+32.4.0:         ( 0.016610s |  0.12% |100.00% )   ( 0.016696s |  0.08% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000069s |  0.00% |  0.41% )   ( 0.000085s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │   recursive_bg $((n-1))
+24.5.0:         ( 0.000073s |  0.00% |  0.43% )   ( 0.000089s |  0.00% |  0.53% )    	(1x)	│  │  │  │  │   local n="${1:-3}"
+26.5.0:         ( 0.000589s |  0.00% |  3.54% )   ( 0.000497s |  0.00% |  2.97% )    	(1x)	│  │  │  │  │   (( n <= 0 )) (&)
+31.5.0:         ( 0.004378s |  0.03% | 26.35% )   ( 0.004493s |  0.02% | 26.91% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+31.6.0:         ( 0.004378s |  0.03% |100.00% )   ( 0.004493s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000129s |  0.00% |  2.94% )   ( 0.000159s |  0.00% |  3.53% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000209s |  0.00% |  4.77% )   ( 0.000236s |  0.00% |  5.25% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000135s |  0.00% |  3.08% )   ( 0.000161s |  0.00% |  3.58% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000160s |  0.00% |  3.65% )   ( 0.000187s |  0.00% |  4.16% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003744s |  0.02% | 85.51% )   ( 0.003749s |  0.01% | 83.44% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.5.0:         ( 0.004289s |  0.03% | 25.82% )   ( 0.004395s |  0.02% | 26.32% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+32.6.0:         ( 0.004289s |  0.03% |100.00% )   ( 0.004395s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000131s |  0.00% |  3.05% )   ( 0.000156s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000137s |  0.00% |  3.19% )   ( 0.000162s |  0.00% |  3.68% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000127s |  0.00% |  2.96% )   ( 0.000152s |  0.00% |  3.45% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 ))
+27.7.0:         ( 0.000148s |  0.00% |  3.45% )   ( 0.000174s |  0.00% |  3.95% )    	(1x)	│  │  │  │  │  │  │   return
+-27.7.0:        ( 0.003745s |  0.02% | 87.31% )   ( 0.003750s |  0.01% | 85.32% )    	(1x)	│  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.5.0:         ( 0.004484s |  0.03% | 26.99% )   ( 0.004593s |  0.02% | 27.50% )    	(1x)	│  │  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000137s |  0.00% |  3.05% )   ( 0.000167s |  0.00% |  3.63% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000142s |  0.00% |  3.16% )   ( 0.000167s |  0.00% |  3.63% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000135s |  0.00% |  3.01% )   ( 0.000160s |  0.00% |  3.48% )    	(1x)	│  │  │  │  │  │   (( n <= 0 ))
+27.6.0:         ( 0.000167s |  0.00% |  3.72% )   ( 0.000190s |  0.00% |  4.13% )    	(1x)	│  │  │  │  │  │   return
+-27.6.0:        ( 0.003902s |  0.02% | 87.02% )   ( 0.003908s |  0.01% | 85.08% )    	(1x)	│  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.5.0:         ( 0.000690s |  0.00% |  4.15% )   ( 0.000497s |  0.00% |  2.97% )    	(1x)	│  │  │  │  │   wait 2> /dev/null
+-35.5.0:        ( 0.002037s |  0.01% | 12.26% )   ( 0.002046s |  0.01% | 12.25% )    	(1x)	│  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.3.0:         ( 0.103087s |  0.77% | 71.86% )   ( 0.023511s |  0.11% | 24.60% )    	(1x)	│  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.4.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  ├─
+1.4.0:          ( 0.000071s |  0.00% |  0.06% )   ( 0.000086s |  0.00% |  0.36% )    	(1x)	│  │  │  │   recursive_bg $((n-1))
+24.4.0:         ( 0.000072s |  0.00% |  0.06% )   ( 0.000087s |  0.00% |  0.37% )    	(1x)	│  │  │  │   local n="${1:-3}"
+26.4.0:         ( 0.000583s |  0.00% |  0.56% )   ( 0.000590s |  0.00% |  2.50% )    	(1x)	│  │  │  │   (( n <= 0 )) (&)
+31.4.0:         ( 0.004472s |  0.03% |  4.33% )   ( 0.004595s |  0.02% | 19.54% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+31.5.0:         ( 0.004472s |  0.03% |100.00% )   ( 0.004595s |  0.02% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000188s |  0.00% |  4.20% )   ( 0.000225s |  0.00% |  4.89% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000144s |  0.00% |  3.22% )   ( 0.000163s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000138s |  0.00% |  3.08% )   ( 0.000167s |  0.00% |  3.63% )    	(1x)	│  │  │  │  │  │   (( n <= 0 ))
+27.6.0:         ( 0.000160s |  0.00% |  3.57% )   ( 0.000190s |  0.00% |  4.13% )    	(1x)	│  │  │  │  │  │   return
+-27.6.0:        ( 0.003841s |  0.02% | 85.88% )   ( 0.003849s |  0.01% | 83.76% )    	(1x)	│  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.4.0:         ( 0.003878s |  0.02% |  3.76% )   ( 0.003972s |  0.02% | 16.89% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+32.5.0:         ( 0.003878s |  0.02% |100.00% )   ( 0.003972s |  0.02% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.6.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000069s |  0.00% |  1.77% )   ( 0.000084s |  0.00% |  2.11% )    	(1x)	│  │  │  │  │  │   recursive_bg $((n-1))
+24.6.0:         ( 0.000097s |  0.00% |  2.50% )   ( 0.000123s |  0.00% |  3.09% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000118s |  0.00% |  3.04% )   ( 0.000143s |  0.00% |  3.60% )    	(1x)	│  │  │  │  │  │   (( n <= 0 ))
+27.6.0:         ( 0.000127s |  0.00% |  3.27% )   ( 0.000151s |  0.00% |  3.80% )    	(1x)	│  │  │  │  │  │   return
+-27.6.0:        ( 0.003466s |  0.02% | 89.37% )   ( 0.003470s |  0.01% | 87.36% )    	(1x)	│  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.4.0:         ( 0.002952s |  0.02% |  2.86% )   ( 0.003029s |  0.01% | 12.88% )    	(1x)	│  │  │  │   << (FUNCTION): main.main.recursive_bg.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.5.0:           ( 0.000001s |  0.00% |  0.03% )   ( 0.000001s |  0.00% |  0.03% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000072s |  0.00% |  2.43% )   ( 0.000088s |  0.00% |  2.90% )    	(1x)	│  │  │  │  │   recursive_bg $((n-1))
+24.5.0:         ( 0.000073s |  0.00% |  2.47% )   ( 0.000089s |  0.00% |  2.93% )    	(1x)	│  │  │  │  │   local n="${1:-3}"
+26.5.0:         ( 0.000198s |  0.00% |  6.70% )   ( 0.000219s |  0.00% |  7.23% )    	(1x)	│  │  │  │  │   (( n <= 0 ))
+27.5.0:         ( 0.000132s |  0.00% |  4.47% )   ( 0.000156s |  0.00% |  5.15% )    	(1x)	│  │  │  │  │   return
+-27.5.0:        ( 0.002476s |  0.01% | 83.87% )   ( 0.002476s |  0.01% | 81.74% )    	(1x)	│  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.4.0:         ( 0.084968s |  0.64% | 82.42% )   ( 0.000546s |  0.00% |  2.32% )    	(1x)	│  │  │  │   wait 2> /dev/null
+-35.4.0:        ( 0.002035s |  0.01% |  1.97% )   ( 0.002038s |  0.01% |  8.66% )    	(1x)	│  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.3.0:         ( 0.000086s |  0.00% |  0.05% )   ( 0.000101s |  0.00% |  0.10% )    	(1x)	│  │  │   wait 2> /dev/null
+-35.3.0:        ( 0.002094s |  0.01% |  1.45% )   ( 0.002101s |  0.01% |  2.19% )    	(1x)	│  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.2.0:         ( 0.000085s |  0.00% |  0.02% )   ( 0.000100s |  0.00% |  0.03% )    	(1x)	│  │   wait 2> /dev/null
+-35.2.0:        ( 0.002005s |  0.01% |  0.57% )   ( 0.002014s |  0.01% |  0.63% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+58.1.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000084s |  0.00% |  0.00% )    	(1x)	│   echo "10. Signal Storm..."
+59.1.0:         ( 0.233786s |  1.76% |  1.76% )   ( 0.133013s |  0.67% |  0.67% )    	(1x)	│   << (FUNCTION): main.main.signal_storm 2> /dev/null >>
+.2.0:           ( 0.000002s |  0.00% |  0.00% )   ( 0.000002s |  0.00% |  0.00% )    	(2x)	│  ├─
+1.2.0:          ( 0.000077s |  0.00% |  0.03% )   ( 0.000091s |  0.00% |  0.06% )    	(1x)	│  │   signal_storm 2> /dev/null
+24.2.0:         ( 0.028813s |  0.21% | 12.32% )   ( 0.028741s |  0.14% | 21.60% )    	(1x)	│  │   trap 'echo "USR1_HANDLER"; trap "echo USR1_NESTED" USR1' USR1
+25.2.0:         ( 0.029506s |  0.22% | 12.62% )   ( 0.029436s |  0.14% | 22.13% )    	(1x)	│  │   trap 'echo "USR2_HANDLER"' USR2 (&)
+29.2.0:         ( 0.036096s |  0.27% | 15.43% )   ( 0.006360s |  0.03% |  4.78% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+29.3.0:         ( 0.000452s |  0.00% |  0.41% )   ( 0.000532s |  0.00% |  2.78% )    	(3x)	│  │  ├─  for i in {1..3}
+30.3.0:         ( 0.000247s |  0.00% |  0.22% )   ( 0.000291s |  0.00% |  1.52% )    	(3x)	│  │  │   kill -USR1 $$
+31.3.0:         ( 0.035151s |  0.26% | 32.46% )   ( 0.005246s |  0.02% | 27.49% )    	(3x)	│  │  │   sleep 0.01
+32.3.0:         ( 0.000246s |  0.00% |  0.22% )   ( 0.000291s |  0.00% |  1.52% )    	(3x)	│  │  └─  kill -USR2 $$
+37.2.0:         ( 0.103031s |  0.77% | 44.07% )   ( 0.025842s |  0.13% | 19.42% )    	(1x)	│  │   sleep 0.1
+-37.2.0:        ( 0.031420s |  0.23% | 13.43% )   ( 0.031348s |  0.15% | 23.56% )    	(1x)	│  │   @TRAP (USR1): echo "USR1_HANDLER"\; trap "echo USR1_NESTED" USR1; @TRAP (RETURN): echo NESTED_RETURN 0
+-259.2.0:       ( 0.000074s |  0.00% |  0.03% )   ( 0.000088s |  0.00% |  0.06% )    	(1x)	│  │   sleep 0.1 (?)
+--259.2.0:       	( 0.002023s |  0.01% |  0.86% )   ( 0.002034s |  0.01% |  1.52% )    	(1x)	│  │   -@TRAP (USR2): echo "USR2_HANDLER"
+39.2.0:         ( 0.000232s |  0.00% |  0.09% )   ( 0.000248s |  0.00% |  0.18% )    	(1x)	│  │   wait 2> /dev/null
+-39.2.0:        ( 0.002448s |  0.01% |  1.04% )   ( 0.002463s |  0.01% |  1.85% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+61.1.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│   echo "11. Array Chaos..."
+62.1.0:         ( 0.023159s |  0.17% |  0.17% )   ( 0.016680s |  0.08% |  0.08% )    	(1x)	│   << (FUNCTION): main.main.array_chaos >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+1.2.0:          ( 0.000107s |  0.00% |  0.46% )   ( 0.000130s |  0.00% |  0.77% )    	(1x)	│  │   array_chaos
+24.2.0:         ( 0.000123s |  0.00% |  0.53% )   ( 0.000145s |  0.00% |  0.86% )    	(1x)	│  │   local -a arr=()
+27.2.0:         ( 0.002438s |  0.01% |  2.10% )   ( 0.002535s |  0.01% |  3.03% )    	(5x)	│  │   for i in {1..5} (&)
+29.2.0:         ( 0.002157s |  0.01% |  1.86% )   ( 0.002511s |  0.01% |  3.01% )    	(5x)	│  │   << (BACKGROUND FORK) >>
+29.3.0:         ( 0.001150s |  0.00% | 53.31% )   ( 0.001334s |  0.00% | 53.12% )    	(5x)	│  │  ├─  arr[$i]="VAL_$i"
+30.3.0:         ( 0.001007s |  0.00% | 46.68% )   ( 0.001177s |  0.00% | 46.87% )    	(5x)	│  │  └─  echo "${arr[@]}"
+34.2.0:         ( 0.007780s |  0.05% | 33.59% )   ( 0.000426s |  0.00% |  2.55% )    	(1x)	│  │   wait
+40.2.0:         ( 0.000515s |  0.00% |  2.22% )   ( 0.000344s |  0.00% |  2.06% )    	(1x)	│  │   $'result=$(arr2=($(cat <(echo {1..5})))\necho "${arr2[@]}")
+40.2.1:         ( 0.002562s |  0.01% | 11.06% )   ( 0.002434s |  0.01% | 14.59% )    	(1x)	│  │   << (SUBSHELL) >>
+40.3.0:         ( 0.000596s |  0.00% | 23.26% )   ( 0.000435s |  0.00% | 17.87% )    	(1x)	│  │  ├─  arr2=($(cat <(echo {1..5})))
+40.3.1:         ( 0.001876s |  0.01% | 73.22% )   ( 0.001893s |  0.00% | 77.77% )    	(1x)	│  │  │   << (SUBSHELL) >>
+40.4.0:         ( 0.001772s |  0.01% | 94.45% )   ( 0.001773s |  0.00% | 93.66% )    	(1x)	│  │  │  ├─  cat <(echo {1..5})
+40.4.1:         ( 0.000104s |  0.00% |  5.54% )   ( 0.000120s |  0.00% |  6.33% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+40.5.0:         ( 0.000104s |  0.00% |100.00% )   ( 0.000120s |  0.00% |100.00% )    	(1x)	│  │  │  └─ └─  echo {1..5}
+41.3.0:         ( 0.000090s |  0.00% |  3.51% )   ( 0.000106s |  0.00% |  4.35% )    	(1x)	│  │  └─  echo "${arr2[@]}"
+-40.2.0:        ( 0.005642s |  0.04% | 24.36% )   ( 0.005643s |  0.02% | 33.83% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+64.1.0:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000093s |  0.00% |  0.00% )    	(1x)	│   echo "12. Job Control Chaos..."
+65.1.0:         ( 0.212572s |  1.60% |  1.60% )   ( 0.010873s |  0.05% |  0.05% )    	(1x)	│   << (FUNCTION): main.main.job_control_chaos >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+1.2.0:          ( 0.000074s |  0.00% |  0.03% )   ( 0.000089s |  0.00% |  0.81% )    	(1x)	│  │   job_control_chaos
+24.2.0:         ( 0.000429s |  0.00% |  0.20% )   ( 0.000433s |  0.00% |  3.98% )    	(1x)	│  │   sleep 0.1 (&)
+25.2.0:         ( 0.000475s |  0.00% |  0.22% )   ( 0.000495s |  0.00% |  4.55% )    	(1x)	│  │   local pid1=$! (&)
+27.2.0:         ( 0.102102s |  0.77% | 48.03% )   ( 0.002057s |  0.01% | 18.91% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+27.3.0:         ( 0.102102s |  0.77% |100.00% )   ( 0.002057s |  0.01% |100.00% )    	(1x)	│  │  └─  sleep 0.1
+28.2.0:         ( 0.000458s |  0.00% |  0.21% )   ( 0.000473s |  0.00% |  4.35% )    	(1x)	│  │   local pid2=$! (&)
+30.2.0:         ( 0.000847s |  0.00% |  0.39% )   ( 0.000848s |  0.00% |  7.79% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+30.3.0:         ( 0.000847s |  0.00% |100.00% )   ( 0.000848s |  0.00% |100.00% )    	(1x)	│  │  └─  sleep 0.1
+31.2.0:         ( 0.000083s |  0.00% |  0.03% )   ( 0.000094s |  0.00% |  0.86% )    	(1x)	│  │   local pid3=$!
+34.2.0:         ( 0.103951s |  0.78% | 48.90% )   ( 0.000895s |  0.00% |  8.23% )    	(1x)	│  │   wait $pid2
+35.2.0:         ( 0.000300s |  0.00% |  0.14% )   ( 0.000341s |  0.00% |  3.13% )    	(1x)	│  │   wait -n
+36.2.0:         ( 0.000212s |  0.00% |  0.09% )   ( 0.000238s |  0.00% |  2.18% )    	(1x)	│  │   wait $pid1 $pid3 2> /dev/null
+-36.2.0:        ( 0.001994s |  0.01% |  0.93% )   ( 0.002004s |  0.01% | 18.43% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+67.1.0:         ( 0.000067s |  0.00% |  0.00% )   ( 0.000082s |  0.00% |  0.00% )    	(1x)	│   echo "13. Redirection Chaos..."
+68.1.0:         ( 0.029897s |  0.22% |  0.22% )   ( 0.034869s |  0.17% |  0.17% )    	(1x)	│   << (FUNCTION): main.main.redirection_chaos >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+1.2.0:          ( 0.000062s |  0.00% |  0.20% )   ( 0.000077s |  0.00% |  0.22% )    	(1x)	│  │   redirection_chaos
+24.2.0:         ( 0.000564s |  0.00% |  1.88% )   ( 0.000587s |  0.00% |  1.68% )    	(1x)	│  │   exec 3>&1 4>&2 (&)
+27.2.0:         ( 0.012161s |  0.09% | 40.67% )   ( 0.014392s |  0.07% | 41.27% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+27.3.0:         ( 0.000100s |  0.00% |  0.82% )   ( 0.000114s |  0.00% |  0.79% )    	(1x)	│  │  ├─  echo "FD3" 1>&3
+28.3.0:         ( 0.000108s |  0.00% |  0.88% )   ( 0.000112s |  0.00% |  0.77% )    	(1x)	│  │  │   echo "FD4" 1>&4
+32.3.0:         ( 0.005481s |  0.04% | 45.07% )   ( 0.007692s |  0.03% | 53.44% )    	(1x)	│  │  │   cat <<< "DATA" | tee >(cat 1>&3) >(cat 1>&4) > /dev/null
+32.3.1:         ( 0.000497s |  0.00% |  4.08% )   ( 0.000498s |  0.00% |  3.46% )    	(1x)	│  │  │   << (SUBSHELL) >>
+32.4.0:         ( 0.000497s |  0.00% |100.00% )   ( 0.000498s |  0.00% |100.00% )    	(1x)	│  │  │  └─  cat 1>&3
+32.3.2:         ( 0.005975s |  0.04% | 49.13% )   ( 0.005976s |  0.03% | 41.52% )    	(1x)	│  │  │   << (SUBSHELL) >>
+32.4.0:         ( 0.005975s |  0.04% |100.00% )   ( 0.005976s |  0.03% |100.00% )    	(1x)	│  │  └─ └─  cat 1>&4
+37.2.0:         ( 0.010764s |  0.08% | 36.00% )   ( 0.000396s |  0.00% |  1.13% )    	(1x)	│  │   wait
+39.2.0:         ( 0.000321s |  0.00% |  1.07% )   ( 0.000369s |  0.00% |  1.05% )    	(1x)	│  │   exec 3>&- 4>&-
+-39.2.0:        ( 0.004670s |  0.03% | 15.62% )   ( 0.004655s |  0.02% | 13.34% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+70.1.0:         ( 0.000076s |  0.00% |  0.00% )   ( 0.000090s |  0.00% |  0.00% )    	(1x)	│   echo "14. Kitchen Sink..."
+71.1.0:         ( 4.729106s | 35.72% | 35.79% )   ( 5.102331s | 25.72% | 25.76% )    	(1x)	│   << (FUNCTION): main.main.kitchen_sink >>
+.2.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  ├─
+1.2.0:          ( 0.000071s |  0.00% |  0.00% )   ( 0.000086s |  0.00% |  0.00% )    	(1x)	│  │   kitchen_sink
+24.2.0:         ( 0.033749s |  0.25% |  0.71% )   ( 0.033635s |  0.16% |  0.65% )    	(1x)	│  │   trap 'echo "SINK_EXIT"' EXIT (&)
+36.2.0:         ( 1.005633s |  7.59% | 21.26% )   ( 0.204617s |  1.03% |  4.01% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+36.3.0:         ( 0.001472s |  0.01% |  0.14% )   ( 0.001058s |  0.00% |  0.51% )    	(1x)	│  │  ├─  $'eval "$(cat <<-\'EVAL_HEREDOC\'\n{\n    for i in {1..2}; do\n        ( recursive_bg 2 ) &\n    done\n} | tee >(cat >&2) >/dev/null &\nEVAL_HEREDOC\n)" (&)
+36.3.1:         ( 0.002710s |  0.02% |  0.26% )   ( 0.002919s |  0.01% |  1.42% )    	(1x)	│  │  │   << (SUBSHELL) >>
+36.4.0:         ( 0.002710s |  0.02% |100.00% )   ( 0.002919s |  0.01% |100.00% )    	(1x)	│  │  │  └─  $'cat <<-\'EVAL_HEREDOC\'\n{\n    for i in {1..2}; do\n        ( recursive_bg 2 ) &\n    done\n} | tee >(cat >&2) >/dev/null &\nEVAL_HEREDOC\n
+37.3.0:         ( 0.369690s |  2.79% | 36.76% )   ( 0.130532s |  0.65% | 63.79% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+37.4.0:         ( 0.000664s |  0.00% |  0.17% )   ( 0.000695s |  0.00% |  0.53% )    	(1x)	│  │  │  ├─  for i in {1..2} (&)
+38.4.0:         ( 0.173342s |  1.30% | 46.88% )   ( 0.065458s |  0.33% | 50.14% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+38.5.0:         ( 0.173342s |  1.30% |100.00% )   ( 0.065458s |  0.33% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg 2 >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000072s |  0.00% |  0.04% )   ( 0.000087s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │   recursive_bg 2
+24.6.0:         ( 0.000081s |  0.00% |  0.04% )   ( 0.000090s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000881s |  0.00% |  0.50% )   ( 0.000907s |  0.00% |  1.38% )    	(1x)	│  │  │  │  │  │   (( n <= 0 )) (&)
+31.6.0:         ( 0.036652s |  0.27% | 21.14% )   ( 0.020307s |  0.10% | 31.02% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.7.0:         ( 0.036652s |  0.27% |100.00% )   ( 0.020307s |  0.10% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000124s |  0.00% |  0.33% )   ( 0.000149s |  0.00% |  0.73% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000128s |  0.00% |  0.34% )   ( 0.000152s |  0.00% |  0.74% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000832s |  0.00% |  2.26% )   ( 0.000627s |  0.00% |  3.08% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 )) (&)
+31.8.0:         ( 0.004625s |  0.03% | 12.61% )   ( 0.004661s |  0.02% | 22.95% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.004625s |  0.03% |100.00% )   ( 0.004661s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000126s |  0.00% |  2.72% )   ( 0.000151s |  0.00% |  3.23% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000131s |  0.00% |  2.83% )   ( 0.000153s |  0.00% |  3.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000131s |  0.00% |  2.83% )   ( 0.000157s |  0.00% |  3.36% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000154s |  0.00% |  3.32% )   ( 0.000179s |  0.00% |  3.84% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.004082s |  0.03% | 88.25% )   ( 0.004020s |  0.02% | 86.24% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.8.0:         ( 0.010661s |  0.08% | 29.08% )   ( 0.004872s |  0.02% | 23.99% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.9.0:         ( 0.010661s |  0.08% |100.00% )   ( 0.004872s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000148s |  0.00% |  1.38% )   ( 0.000173s |  0.00% |  3.55% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000153s |  0.00% |  1.43% )   ( 0.000173s |  0.00% |  3.55% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000165s |  0.00% |  1.54% )   ( 0.000189s |  0.00% |  3.87% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000168s |  0.00% |  1.57% )   ( 0.000195s |  0.00% |  4.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.010026s |  0.07% | 94.04% )   ( 0.004141s |  0.02% | 84.99% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.8.0:         ( 0.005922s |  0.04% | 16.15% )   ( 0.005002s |  0.02% | 24.63% )    	(1x)	│  │  │  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000144s |  0.00% |  2.43% )   ( 0.000175s |  0.00% |  3.49% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000229s |  0.00% |  3.86% )   ( 0.000255s |  0.00% |  5.09% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000166s |  0.00% |  2.80% )   ( 0.000193s |  0.00% |  3.85% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000179s |  0.00% |  3.02% )   ( 0.000205s |  0.00% |  4.09% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.005203s |  0.03% | 87.85% )   ( 0.004173s |  0.02% | 83.42% )    	(1x)	│  │  │  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.8.0:         ( 0.010165s |  0.07% | 27.73% )   ( 0.000718s |  0.00% |  3.53% )    	(1x)	│  │  │  │  │  │  │  │   wait 2> /dev/null
+-35.8.0:        ( 0.004194s |  0.03% | 11.44% )   ( 0.004125s |  0.02% | 20.31% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.6.0:         ( 0.059303s |  0.44% | 34.21% )   ( 0.020153s |  0.10% | 30.78% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.7.0:         ( 0.059303s |  0.44% |100.00% )   ( 0.020153s |  0.10% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000067s |  0.00% |  0.11% )   ( 0.000082s |  0.00% |  0.40% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000071s |  0.00% |  0.11% )   ( 0.000086s |  0.00% |  0.42% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000786s |  0.00% |  1.32% )   ( 0.000819s |  0.00% |  4.06% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 )) (&)
+31.8.0:         ( 0.004421s |  0.03% |  7.45% )   ( 0.004528s |  0.02% | 22.46% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.004421s |  0.03% |100.00% )   ( 0.004528s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000128s |  0.00% |  2.89% )   ( 0.000153s |  0.00% |  3.37% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000134s |  0.00% |  3.03% )   ( 0.000157s |  0.00% |  3.46% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000126s |  0.00% |  2.85% )   ( 0.000151s |  0.00% |  3.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000167s |  0.00% |  3.77% )   ( 0.000193s |  0.00% |  4.26% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.003865s |  0.02% | 87.42% )   ( 0.003873s |  0.01% | 85.53% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.8.0:         ( 0.004790s |  0.03% |  8.07% )   ( 0.004870s |  0.02% | 24.16% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.9.0:         ( 0.004790s |  0.03% |100.00% )   ( 0.004870s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000141s |  0.00% |  2.94% )   ( 0.000168s |  0.00% |  3.44% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000161s |  0.00% |  3.36% )   ( 0.000187s |  0.00% |  3.83% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000162s |  0.00% |  3.38% )   ( 0.000183s |  0.00% |  3.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000171s |  0.00% |  3.56% )   ( 0.000197s |  0.00% |  4.04% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.004154s |  0.03% | 86.72% )   ( 0.004134s |  0.02% | 84.88% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.8.0:         ( 0.004684s |  0.03% |  7.89% )   ( 0.004564s |  0.02% | 22.64% )    	(1x)	│  │  │  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000136s |  0.00% |  2.90% )   ( 0.000164s |  0.00% |  3.59% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000140s |  0.00% |  2.98% )   ( 0.000169s |  0.00% |  3.70% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000136s |  0.00% |  2.90% )   ( 0.000162s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000406s |  0.00% |  8.66% )   ( 0.000228s |  0.00% |  4.99% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.003865s |  0.02% | 82.51% )   ( 0.003840s |  0.01% | 84.13% )    	(1x)	│  │  │  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.8.0:         ( 0.035548s |  0.26% | 59.94% )   ( 0.000771s |  0.00% |  3.82% )    	(1x)	│  │  │  │  │  │  │  │   wait 2> /dev/null
+-35.8.0:        ( 0.008935s |  0.06% | 15.06% )   ( 0.004432s |  0.02% | 21.99% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.6.0:         ( 0.072302s |  0.54% | 41.71% )   ( 0.019871s |  0.10% | 30.35% )    	(1x)	│  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.000142s |  0.00% |  0.19% )   ( 0.000171s |  0.00% |  0.86% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000141s |  0.00% |  0.19% )   ( 0.000168s |  0.00% |  0.84% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.000846s |  0.00% |  1.17% )   ( 0.000635s |  0.00% |  3.19% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 )) (&)
+31.7.0:         ( 0.004485s |  0.03% |  6.20% )   ( 0.004539s |  0.02% | 22.84% )    	(1x)	│  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.8.0:         ( 0.004485s |  0.03% |100.00% )   ( 0.004539s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000129s |  0.00% |  2.87% )   ( 0.000154s |  0.00% |  3.39% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000140s |  0.00% |  3.12% )   ( 0.000165s |  0.00% |  3.63% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000145s |  0.00% |  3.23% )   ( 0.000165s |  0.00% |  3.63% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000184s |  0.00% |  4.10% )   ( 0.000203s |  0.00% |  4.47% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.003886s |  0.02% | 86.64% )   ( 0.003851s |  0.01% | 84.84% )    	(1x)	│  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.7.0:         ( 0.004557s |  0.03% |  6.30% )   ( 0.004641s |  0.02% | 23.35% )    	(1x)	│  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.8.0:         ( 0.004557s |  0.03% |100.00% )   ( 0.004641s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000166s |  0.00% |  3.64% )   ( 0.000198s |  0.00% |  4.26% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000143s |  0.00% |  3.13% )   ( 0.000167s |  0.00% |  3.59% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000155s |  0.00% |  3.40% )   ( 0.000190s |  0.00% |  4.09% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000164s |  0.00% |  3.59% )   ( 0.000189s |  0.00% |  4.07% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.003928s |  0.02% | 86.19% )   ( 0.003896s |  0.01% | 83.94% )    	(1x)	│  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.7.0:         ( 0.004727s |  0.03% |  6.53% )   ( 0.004841s |  0.02% | 24.36% )    	(1x)	│  │  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.02% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000133s |  0.00% |  2.81% )   ( 0.000158s |  0.00% |  3.26% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000181s |  0.00% |  3.82% )   ( 0.000211s |  0.00% |  4.35% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000175s |  0.00% |  3.70% )   ( 0.000207s |  0.00% |  4.27% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000174s |  0.00% |  3.68% )   ( 0.000205s |  0.00% |  4.23% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.004063s |  0.03% | 85.95% )   ( 0.004059s |  0.02% | 83.84% )    	(1x)	│  │  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.7.0:         ( 0.053284s |  0.40% | 73.69% )   ( 0.000780s |  0.00% |  3.92% )    	(1x)	│  │  │  │  │  │  │   wait 2> /dev/null
+-35.7.0:        ( 0.004119s |  0.03% |  5.69% )   ( 0.004095s |  0.02% | 20.60% )    	(1x)	│  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.6.0:         ( 0.000155s |  0.00% |  0.08% )   ( 0.000180s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │   wait 2> /dev/null
+-35.6.0:        ( 0.003895s |  0.02% |  2.24% )   ( 0.003862s |  0.01% |  5.89% )    	(1x)	│  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+38.4.1:         ( 0.195684s |  1.47% | 52.93% )   ( 0.064379s |  0.32% | 49.32% )    	(1x)	│  │  │  │   << (SUBSHELL) >>
+38.5.0:         ( 0.195684s |  1.47% |100.00% )   ( 0.064379s |  0.32% |100.00% )    	(1x)	│  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg 2 >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+1.6.0:          ( 0.000139s |  0.00% |  0.07% )   ( 0.000164s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │   recursive_bg 2
+24.6.0:         ( 0.000155s |  0.00% |  0.07% )   ( 0.000176s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │   local n="${1:-3}"
+26.6.0:         ( 0.000809s |  0.00% |  0.41% )   ( 0.000586s |  0.00% |  0.91% )    	(1x)	│  │  │  │  │  │   (( n <= 0 )) (&)
+31.6.0:         ( 0.068723s |  0.51% | 35.11% )   ( 0.020961s |  0.10% | 32.55% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.7.0:         ( 0.068723s |  0.51% |100.00% )   ( 0.020961s |  0.10% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000131s |  0.00% |  0.19% )   ( 0.000156s |  0.00% |  0.74% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000149s |  0.00% |  0.21% )   ( 0.000168s |  0.00% |  0.80% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000991s |  0.00% |  1.44% )   ( 0.000612s |  0.00% |  2.91% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 )) (&)
+31.8.0:         ( 0.008920s |  0.06% | 12.97% )   ( 0.005201s |  0.02% | 24.81% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.008920s |  0.06% |100.00% )   ( 0.005201s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000269s |  0.00% |  3.01% )   ( 0.000314s |  0.00% |  6.03% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000161s |  0.00% |  1.80% )   ( 0.000187s |  0.00% |  3.59% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000267s |  0.00% |  2.99% )   ( 0.000288s |  0.00% |  5.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000222s |  0.00% |  2.48% )   ( 0.000251s |  0.00% |  4.82% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.008000s |  0.06% | 89.68% )   ( 0.004160s |  0.02% | 79.98% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.8.0:         ( 0.005047s |  0.03% |  7.34% )   ( 0.004743s |  0.02% | 22.62% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.9.0:         ( 0.005047s |  0.03% |100.00% )   ( 0.004743s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000156s |  0.00% |  3.09% )   ( 0.000173s |  0.00% |  3.64% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000251s |  0.00% |  4.97% )   ( 0.000279s |  0.00% |  5.88% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000153s |  0.00% |  3.03% )   ( 0.000179s |  0.00% |  3.77% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000193s |  0.00% |  3.82% )   ( 0.000226s |  0.00% |  4.76% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.004293s |  0.03% | 85.06% )   ( 0.003885s |  0.01% | 81.91% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.8.0:         ( 0.009162s |  0.06% | 13.33% )   ( 0.005257s |  0.02% | 25.07% )    	(1x)	│  │  │  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000248s |  0.00% |  2.70% )   ( 0.000273s |  0.00% |  5.19% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000167s |  0.00% |  1.82% )   ( 0.000189s |  0.00% |  3.59% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000212s |  0.00% |  2.31% )   ( 0.000239s |  0.00% |  4.54% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000164s |  0.00% |  1.79% )   ( 0.000181s |  0.00% |  3.44% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.008370s |  0.06% | 91.35% )   ( 0.004374s |  0.02% | 83.20% )    	(1x)	│  │  │  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.8.0:         ( 0.033969s |  0.25% | 49.42% )   ( 0.000742s |  0.00% |  3.53% )    	(1x)	│  │  │  │  │  │  │  │   wait 2> /dev/null
+-35.8.0:        ( 0.010353s |  0.07% | 15.06% )   ( 0.004081s |  0.02% | 19.46% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.6.0:         ( 0.030652s |  0.23% | 15.66% )   ( 0.020630s |  0.10% | 32.04% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.7.0:         ( 0.030652s |  0.23% |100.00% )   ( 0.020630s |  0.10% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000139s |  0.00% |  0.45% )   ( 0.000165s |  0.00% |  0.79% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000147s |  0.00% |  0.47% )   ( 0.000172s |  0.00% |  0.83% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000884s |  0.00% |  2.88% )   ( 0.000914s |  0.00% |  4.43% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 )) (&)
+31.8.0:         ( 0.010558s |  0.07% | 34.44% )   ( 0.005099s |  0.02% | 24.71% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.010558s |  0.07% |100.00% )   ( 0.005099s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000152s |  0.00% |  1.43% )   ( 0.000181s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000169s |  0.00% |  1.60% )   ( 0.000190s |  0.00% |  3.72% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000197s |  0.00% |  1.86% )   ( 0.000230s |  0.00% |  4.51% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000166s |  0.00% |  1.57% )   ( 0.000192s |  0.00% |  3.76% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.009873s |  0.07% | 93.51% )   ( 0.004305s |  0.02% | 84.42% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.8.0:         ( 0.006871s |  0.05% | 22.41% )   ( 0.004590s |  0.02% | 22.24% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.9.0:         ( 0.006871s |  0.05% |100.00% )   ( 0.004590s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.10.0:          ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─
+1.10.0:         ( 0.000191s |  0.00% |  2.77% )   ( 0.000218s |  0.00% |  4.74% )    	(1x)	│  │  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.10.0:        ( 0.000148s |  0.00% |  2.15% )   ( 0.000173s |  0.00% |  3.76% )    	(1x)	│  │  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.10.0:        ( 0.000136s |  0.00% |  1.97% )   ( 0.000162s |  0.00% |  3.52% )    	(1x)	│  │  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.10.0:        ( 0.000156s |  0.00% |  2.27% )   ( 0.000180s |  0.00% |  3.92% )    	(1x)	│  │  │  │  │  │  │  │  │  │   return
+-27.10.0:       ( 0.006239s |  0.04% | 90.80% )   ( 0.003856s |  0.01% | 84.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.8.0:         ( 0.005276s |  0.03% | 17.21% )   ( 0.004918s |  0.02% | 23.83% )    	(1x)	│  │  │  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000175s |  0.00% |  3.31% )   ( 0.000201s |  0.00% |  4.08% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000226s |  0.00% |  4.28% )   ( 0.000253s |  0.00% |  5.14% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000146s |  0.00% |  2.76% )   ( 0.000173s |  0.00% |  3.51% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000191s |  0.00% |  3.62% )   ( 0.000216s |  0.00% |  4.39% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.004537s |  0.03% | 85.99% )   ( 0.004074s |  0.02% | 82.83% )    	(1x)	│  │  │  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.8.0:         ( 0.000613s |  0.00% |  1.99% )   ( 0.000662s |  0.00% |  3.20% )    	(1x)	│  │  │  │  │  │  │  │   wait 2> /dev/null
+-35.8.0:        ( 0.006163s |  0.04% | 20.10% )   ( 0.004109s |  0.02% | 19.91% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.6.0:         ( 0.093012s |  0.70% | 47.53% )   ( 0.019677s |  0.09% | 30.56% )    	(1x)	│  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg $((n-1)) >>
+.7.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  ├─
+1.7.0:          ( 0.001185s |  0.00% |  1.27% )   ( 0.000184s |  0.00% |  0.93% )    	(1x)	│  │  │  │  │  │  │   recursive_bg $((n-1))
+24.7.0:         ( 0.000259s |  0.00% |  0.27% )   ( 0.000289s |  0.00% |  1.46% )    	(1x)	│  │  │  │  │  │  │   local n="${1:-3}"
+26.7.0:         ( 0.001020s |  0.00% |  1.09% )   ( 0.000966s |  0.00% |  4.90% )    	(1x)	│  │  │  │  │  │  │   (( n <= 0 )) (&)
+31.7.0:         ( 0.009933s |  0.07% | 10.67% )   ( 0.005055s |  0.02% | 25.68% )    	(1x)	│  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.8.0:         ( 0.009933s |  0.07% |100.00% )   ( 0.005055s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000271s |  0.00% |  2.72% )   ( 0.000314s |  0.00% |  6.21% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000209s |  0.00% |  2.10% )   ( 0.000234s |  0.00% |  4.62% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000153s |  0.00% |  1.54% )   ( 0.000179s |  0.00% |  3.54% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000188s |  0.00% |  1.89% )   ( 0.000221s |  0.00% |  4.37% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.009111s |  0.06% | 91.72% )   ( 0.004106s |  0.02% | 81.22% )    	(1x)	│  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+32.7.0:         ( 0.008108s |  0.06% |  8.71% )   ( 0.004933s |  0.02% | 25.06% )    	(1x)	│  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+32.8.0:         ( 0.008108s |  0.06% |100.00% )   ( 0.004933s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.9.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │  ├─
+1.9.0:          ( 0.000254s |  0.00% |  3.13% )   ( 0.000322s |  0.00% |  6.52% )    	(1x)	│  │  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.9.0:         ( 0.000171s |  0.00% |  2.10% )   ( 0.000199s |  0.00% |  4.03% )    	(1x)	│  │  │  │  │  │  │  │  │   local n="${1:-3}"
+26.9.0:         ( 0.000232s |  0.00% |  2.86% )   ( 0.000252s |  0.00% |  5.10% )    	(1x)	│  │  │  │  │  │  │  │  │   (( n <= 0 ))
+27.9.0:         ( 0.000174s |  0.00% |  2.14% )   ( 0.000193s |  0.00% |  3.91% )    	(1x)	│  │  │  │  │  │  │  │  │   return
+-27.9.0:        ( 0.007276s |  0.05% | 89.73% )   ( 0.003966s |  0.01% | 80.39% )    	(1x)	│  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+33.7.0:         ( 0.009118s |  0.06% |  9.80% )   ( 0.005494s |  0.02% | 27.92% )    	(1x)	│  │  │  │  │  │  │   << (FUNCTION): main.main.kitchen_sink.recursive_bg.recursive_bg.recursive_bg $((n-1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.01% )   ( 0.000001s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000465s |  0.00% |  5.09% )   ( 0.000292s |  0.00% |  5.31% )    	(1x)	│  │  │  │  │  │  │  │   recursive_bg $((n-1))
+24.8.0:         ( 0.000210s |  0.00% |  2.30% )   ( 0.000236s |  0.00% |  4.29% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-3}"
+26.8.0:         ( 0.000172s |  0.00% |  1.88% )   ( 0.000198s |  0.00% |  3.60% )    	(1x)	│  │  │  │  │  │  │  │   (( n <= 0 ))
+27.8.0:         ( 0.000261s |  0.00% |  2.86% )   ( 0.000293s |  0.00% |  5.33% )    	(1x)	│  │  │  │  │  │  │  │   return
+-27.8.0:        ( 0.008009s |  0.06% | 87.83% )   ( 0.004474s |  0.02% | 81.43% )    	(1x)	│  │  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.7.0:         ( 0.061297s |  0.46% | 65.90% )   ( 0.000690s |  0.00% |  3.50% )    	(1x)	│  │  │  │  │  │  │   wait 2> /dev/null
+-35.7.0:        ( 0.002091s |  0.01% |  2.24% )   ( 0.002065s |  0.01% | 10.49% )    	(1x)	│  │  │  │  │  │  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+35.6.0:         ( 0.000100s |  0.00% |  0.05% )   ( 0.000116s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │  │   wait 2> /dev/null
+-35.6.0:        ( 0.002093s |  0.01% |  1.06% )   ( 0.002068s |  0.01% |  3.21% )    	(1x)	│  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+40.3.0:         ( 0.000434s |  0.00% |  0.04% )   ( 0.000459s |  0.00% |  0.22% )    	(1x)	│  │  │   tee >(cat 1>&2) > /dev/null (&)
+40.3.1:         ( 0.000305s |  0.00% |  0.03% )   ( 0.000306s |  0.00% |  0.14% )    	(1x)	│  │  │   << (SUBSHELL) >>
+40.4.0:         ( 0.000305s |  0.00% |100.00% )   ( 0.000306s |  0.00% |100.00% )    	(1x)	│  │  │  ├─  << (SUBSHELL) >>
+40.5.0:         ( 0.000305s |  0.00% |100.00% )   ( 0.000306s |  0.00% |100.00% )    	(1x)	│  │  │  └─ └─  cat 1>&2
+46.3.0:         ( 0.227504s |  1.71% | 22.62% )   ( 0.001081s |  0.00% |  0.52% )    	(1x)	│  │  │   wait
+1.3.0:          ( 0.402311s |  3.03% | 40.00% )   ( 0.066901s |  0.33% | 32.69% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+38.4.0:         ( 0.402311s |  3.03% |100.00% )   ( 0.066901s |  0.33% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.pipeline_chaos >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.001568s |  0.01% |  0.38% )   ( 0.001017s |  0.00% |  1.52% )    	(1x)	│  │  │  │  │   pipeline_chaos
+24.5.0:         ( 0.035491s |  0.26% |  8.82% )   ( 0.004190s |  0.02% |  6.26% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+24.6.0:         ( 0.000382s |  0.00% |  1.07% )   ( 0.000409s |  0.00% |  9.76% )    	(1x)	│  │  │  │  │  ├─  echo "START"
+24.6.1:         ( 0.035109s |  0.26% | 98.92% )   ( 0.003781s |  0.01% | 90.23% )    	(1x)	│  │  │  │  │  │   tee >(sleep 0.01; cat 1>&2) | << (BACKGROUND FORK): 1124543 >> | cat
+24.7.0:         ( 0.015799s |  0.11% | 71.45% )   ( 0.001299s |  0.00% | 46.98% )    	(1x)	│  │  │  │  │  │  ├─  sleep 0.01
+24.7.1:         ( 0.006310s |  0.04% | 28.54% )   ( 0.001466s |  0.00% | 53.01% )    	(1x)	│  │  │  │  │  └─ └─  cat 1>&2
+24.5.1:         ( 0.073997s |  0.55% | 18.39% )   ( 0.042083s |  0.21% | 62.90% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+24.6.0:         ( 0.035073s |  0.26% | 23.69% )   ( 0.002586s |  0.01% |  3.07% )    	(2x)	│  │  │  │  │  ├─  read -r line
+25.6.0:         ( 0.000493s |  0.00% |  0.66% )   ( 0.000534s |  0.00% |  1.26% )    	(1x)	│  │  │  │  │  │   echo "$line" (&)
+25.6.1:         ( 0.000521s |  0.00% |  0.70% )   ( 0.001023s |  0.00% |  2.43% )    	(1x)	│  │  │  │  │  │   tee >(cat) >(cat) >(cat) > /dev/null (&)
+25.6.2:         ( 0.037618s |  0.28% | 50.83% )   ( 0.037621s |  0.18% | 89.39% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+25.7.0:         ( 0.001216s |  0.00% |  1.61% )   ( 0.001218s |  0.00% |  1.61% )    	(2x)	│  │  │  │  │  │  ├─  << (SUBSHELL) >>
+25.8.0:         ( 0.001216s |  0.00% |100.00% )   ( 0.001218s |  0.00% |100.00% )    	(2x)	│  │  │  │  │  │  │  └─  cat
+25.7.1:         ( 0.036402s |  0.27% | 96.76% )   ( 0.036403s |  0.18% | 96.76% )    	(1x)	│  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+25.8.0:         ( 0.036402s |  0.27% |100.00% )   ( 0.036403s |  0.18% |100.00% )    	(1x)	│  │  │  │  │  │  └─ └─  cat
+27.6.0:         ( 0.000292s |  0.00% |  0.39% )   ( 0.000319s |  0.00% |  0.75% )    	(1x)	│  │  │  │  │  └─  wait
+24.5.2:         ( 0.058053s |  0.43% | 14.42% )   ( 0.009773s |  0.04% | 14.60% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >> | : | :
+24.6.0:         ( 0.003214s |  0.02% |  5.53% )   ( 0.000410s |  0.00% |  4.19% )    	(1x)	│  │  │  │  │  ├─  cat | $'tee >(while read -r x; do\n    ( echo "SUB1: $x" ) &\ndone\nwait)
+29.6.0:         ( 0.054839s |  0.41% | 94.46% )   ( 0.009363s |  0.04% | 95.80% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+29.7.0:         ( 0.018753s |  0.14% | 11.39% )   ( 0.002060s |  0.01% |  7.33% )    	(3x)	│  │  │  │  │  │  ├─  read -r x (&)
+30.7.0:         ( 0.000804s |  0.00% |  0.48% )   ( 0.000853s |  0.00% |  3.03% )    	(3x)	│  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.8.0:         ( 0.000804s |  0.00% |100.00% )   ( 0.000853s |  0.00% |100.00% )    	(3x)	│  │  │  │  │  │  │  └─  echo "SUB1: $x"
+29.7.0:         ( 0.024813s |  0.18% | 45.24% )   ( 0.005726s |  0.02% | 61.15% )    	(1x)	│  │  │  │  │  │  │   read -r x
+32.7.0:         ( 0.010469s |  0.07% | 19.09% )   ( 0.000724s |  0.00% |  7.73% )    	(1x)	│  │  │  │  │  └─ └─  wait
+24.5.3:         ( 0.104612s |  0.79% | 26.00% )   ( 0.001675s |  0.00% |  2.50% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+24.6.0:         ( 0.104612s |  0.79% |100.00% )   ( 0.001675s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  └─  sleep 0.1
+24.5.4:         ( 0.004942s |  0.03% |  1.22% )   ( 0.004537s |  0.02% |  6.78% )    	(1x)	│  │  │  │  │   : (&) | << (BACKGROUND FORK): 1124814 >> | :
+24.6.0:         ( 0.052441s |  0.39% |100.00% )   ( 0.001576s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  └─  sleep 0.05
+25.5.0:         ( 0.120870s |  0.91% | 30.04% )   ( 0.000836s |  0.00% |  1.24% )    	(1x)	│  │  │  │  │   wait
+-25.5.0:        ( 0.002777s |  0.02% |  0.69% )   ( 0.002789s |  0.01% |  4.16% )    	(1x)	│  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+42.3.0:         ( 0.001207s |  0.00% |  0.12% )   ( 0.001361s |  0.00% |  0.66% )    	(1x)	│  │  │   << (SUBSHELL) >>
+42.4.0:         ( 0.000100s |  0.00% |  8.28% )   ( 0.000116s |  0.00% |  8.52% )    	(1x)	│  │  │  ├─  echo "SINK_DATA" >&${SINK[1]}
+41.4.0:         ( 0.001016s |  0.00% | 84.17% )   ( 0.001138s |  0.00% | 83.61% )    	(1x)	│  │  │  │   << (BACKGROUND FORK) >>
+41.5.0:         ( 0.001016s |  0.00% |100.00% )   ( 0.001138s |  0.00% |100.00% )    	(1x)	│  │  │  │  └─  cat
+43.4.0:         ( 0.000091s |  0.00% |  7.53% )   ( 0.000107s |  0.00% |  7.86% )    	(1x)	│  │  └─ └─  exec {SINK[0]}>&- {SINK[1]}>&-
+50.2.0:         ( 3.433754s | 25.94% | 72.60% )   ( 2.327472s | 11.73% | 45.61% )    	(1x)	│  │   << (BACKGROUND FORK) >>
+52.3.0:         ( 0.159565s |  1.20% |  4.64% )   ( 0.000642s |  0.00% |  0.02% )    	(1x)	│  │  ├─  wait
+1.3.0:          ( 0.265471s |  2.00% |  7.73% )   ( 0.184958s |  0.93% |  7.94% )    	(1x)	│  │  │   << (BACKGROUND FORK) >>
+50.4.0:         ( 0.265471s |  2.00% |100.00% )   ( 0.184958s |  0.93% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.subshell_spiral >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+391.5.0:        ( 0.000002s |  0.00% |  0.00% )   ( 0.002320s |  0.01% |  1.25% )    	(1x)	│  │  │  │  │   wait
+24.5.0:         ( 0.000864s |  0.00% |  0.32% )   ( 0.000326s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │   echo "DEEP" (&)
+24.5.1:         ( 0.000100s |  0.00% |  0.03% )   ( 0.000119s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+24.6.0:         ( 0.000100s |  0.00% |100.00% )   ( 0.000119s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  └─  wait
+24.5.2:         ( 0.145965s |  1.10% | 54.98% )   ( 0.063562s |  0.32% | 34.36% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+.6.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  ├─
+24.6.0:         ( 0.053490s |  0.40% | 36.64% )   ( 0.050865s |  0.25% | 80.02% )    	(1x)	│  │  │  │  │  │   trap 'echo "SUB_EXIT"' EXIT
+25.6.0:         ( 0.002158s |  0.01% |  0.49% )   ( 0.002236s |  0.01% |  1.17% )    	(3x)	│  │  │  │  │  │   for i in {1..3} (&)
+26.6.0:         ( 0.044428s |  0.33% | 10.14% )   ( 0.005659s |  0.02% |  2.96% )    	(3x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+26.7.0:         ( 0.043657s |  0.32% | 98.26% )   ( 0.004810s |  0.02% | 84.99% )    	(3x)	│  │  │  │  │  │  ├─  sleep 0.01
+26.7.1:         ( 0.000771s |  0.00% |  1.73% )   ( 0.000849s |  0.00% | 15.00% )    	(3x)	│  │  │  │  │  │  └─  echo "BG $i"
+28.6.0:         ( 0.039773s |  0.30% | 27.24% )   ( 0.000757s |  0.00% |  1.19% )    	(1x)	│  │  │  │  │  │   wait
+-28.6.0:        ( 0.006115s |  0.04% |  4.18% )   ( 0.004044s |  0.02% |  6.36% )    	(1x)	│  │  │  │  │  └─  @TRAP (EXIT): echo "SUB_EXIT"
+25.5.0:         ( 0.114231s |  0.86% | 43.02% )   ( 0.114293s |  0.57% | 61.79% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+25.6.0:         ( 0.002331s |  0.01% |  2.04% )   ( 0.002332s |  0.01% |  2.04% )    	(1x)	│  │  │  │  │  ├─  cat
+26.6.0:         ( 0.111900s |  0.84% | 97.95% )   ( 0.111961s |  0.56% | 97.95% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+26.7.0:         ( 0.000712s |  0.00% |  0.63% )   ( 0.000771s |  0.00% |  0.68% )    	(1x)	│  │  │  │  │  │  ├─  tee >(cat 1>&2) (&)
+26.7.1:         ( 0.111016s |  0.83% | 99.21% )   ( 0.111017s |  0.55% | 99.15% )    	(1x)	│  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+26.8.0:         ( 0.111016s |  0.83% |100.00% )   ( 0.111017s |  0.55% |100.00% )    	(1x)	│  │  │  │  │  │  │  ├─  << (SUBSHELL) >>
+26.9.0:         ( 0.111016s |  0.83% |100.00% )   ( 0.111017s |  0.55% |100.00% )    	(1x)	│  │  │  │  │  │  │  └─ └─  cat 1>&2
+27.7.0:         ( 0.000172s |  0.00% |  0.15% )   ( 0.000173s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │   << (SUBSHELL) >>
+27.8.0:         ( 0.000172s |  0.00% |100.00% )   ( 0.000173s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  └─ └─ └─  cat > /dev/null
+24.5.0:         ( 0.000270s |  0.00% |  0.10% )   ( 0.000312s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+24.6.0:         ( 0.000270s |  0.00% |100.00% )   ( 0.000312s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  └─  wait
+-24.5.0:        ( 0.004038s |  0.03% |  1.52% )   ( 0.004025s |  0.02% |  2.17% )    	(1x)	│  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+1.3.1:          ( 3.008718s | 22.73% | 87.62% )   ( 2.141872s | 10.79% | 92.02% )    	(1x)	│  │  │   << (SUBSHELL) >>
+51.4.0:         ( 3.008718s | 22.73% |100.00% )   ( 2.141872s | 10.79% |100.00% )    	(1x)	│  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade 3 0 >>
+.5.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  ├─
+1.5.0:          ( 0.000312s |  0.00% |  0.01% )   ( 0.000354s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   fork_cascade 3 0
+24.5.0:         ( 0.000079s |  0.00% |  0.00% )   ( 0.000094s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   local n="${1:-5}"
+25.5.0:         ( 0.000072s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   local depth="${2:-0}"
+27.5.0:         ( 0.000069s |  0.00% |  0.00% )   ( 0.000083s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   (( depth < 3 ))
+28.5.0:         ( 0.000089s |  0.00% |  0.00% )   ( 0.000106s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ((i=0))
+28.5.1:         ( 0.001615s |  0.01% |  0.01% )   ( 0.001684s |  0.00% |  0.02% )    	(3x)	│  │  │  │  │   ((i<n)) (&)
+31.5.0:         ( 1.103919s |  8.34% | 36.69% )   ( 0.744820s |  3.75% | 34.77% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.733085s |  5.53% | 66.40% )   ( 0.493615s |  2.48% | 66.27% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.733085s |  5.53% |100.00% )   ( 0.493615s |  2.48% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000122s |  0.00% |  0.01% )   ( 0.000141s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000077s |  0.00% |  0.01% )   ( 0.000093s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000077s |  0.00% |  0.01% )   ( 0.000087s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000125s |  0.00% |  0.01% )   ( 0.000150s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000130s |  0.00% |  0.01% )   ( 0.000155s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.003200s |  0.02% |  0.21% )   ( 0.001536s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+30.8.0:         ( 0.397230s |  3.00% | 54.18% )   ( 0.280095s |  1.41% | 56.74% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.316858s |  2.39% | 79.76% )   ( 0.219461s |  1.10% | 78.35% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.316858s |  2.39% |100.00% )   ( 0.219461s |  1.10% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000255s |  0.00% |  0.08% )   ( 0.000283s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000158s |  0.00% |  0.04% )   ( 0.000183s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000150s |  0.00% |  0.04% )   ( 0.000180s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000126s |  0.00% |  0.03% )   ( 0.000151s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000148s |  0.00% |  0.04% )   ( 0.000174s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000722s |  0.00% |  0.22% )   ( 0.000758s |  0.00% |  0.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n)) (&)
+30.11.0:        ( 0.218677s |  1.65% | 69.01% )   ( 0.144960s |  0.73% | 66.05% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.12.0:        ( 0.134582s |  1.01% | 61.54% )   ( 0.088034s |  0.44% | 60.72% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.13.0:        ( 0.134582s |  1.01% |100.00% )   ( 0.088034s |  0.44% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000260s |  0.00% |  0.19% )   ( 0.000294s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.14.0:        ( 0.000151s |  0.00% |  0.11% )   ( 0.000178s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000168s |  0.00% |  0.12% )   ( 0.000193s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000129s |  0.00% |  0.09% )   ( 0.000154s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.000956s |  0.00% |  0.71% )   ( 0.000630s |  0.00% |  0.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.058785s |  0.44% | 43.67% )   ( 0.035339s |  0.17% | 40.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.023836s |  0.18% | 40.54% )   ( 0.000388s |  0.00% |  1.09% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.034949s |  0.26% | 29.72% )   ( 0.034951s |  0.17% | 49.45% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.034949s |  0.26% |100.00% )   ( 0.034951s |  0.17% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.062578s |  0.47% | 46.49% )   ( 0.046751s |  0.23% | 53.10% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.016231s |  0.12% | 25.93% )   ( 0.000402s |  0.00% |  0.85% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.046347s |  0.35% | 37.03% )   ( 0.046349s |  0.23% | 49.57% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.046347s |  0.35% |100.00% )   ( 0.046349s |  0.23% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.011554s |  0.08% |  8.58% )   ( 0.004494s |  0.02% |  5.10% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.12.0:        ( 0.084095s |  0.63% | 38.45% )   ( 0.056926s |  0.28% | 39.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.13.0:        ( 0.084095s |  0.63% |100.00% )   ( 0.056926s |  0.28% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000212s |  0.00% |  0.25% )   ( 0.000232s |  0.00% |  0.40% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.14.0:        ( 0.000223s |  0.00% |  0.26% )   ( 0.000249s |  0.00% |  0.43% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000161s |  0.00% |  0.19% )   ( 0.000182s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000152s |  0.00% |  0.18% )   ( 0.000178s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.001351s |  0.01% |  1.60% )   ( 0.000641s |  0.00% |  1.12% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.063902s |  0.48% | 75.98% )   ( 0.042792s |  0.21% | 75.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.021489s |  0.16% | 33.62% )   ( 0.000377s |  0.00% |  0.88% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.042413s |  0.32% | 33.18% )   ( 0.042415s |  0.21% | 49.55% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.042413s |  0.32% |100.00% )   ( 0.042415s |  0.21% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.010970s |  0.08% | 13.04% )   ( 0.008590s |  0.04% | 15.08% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.007814s |  0.05% | 71.23% )   ( 0.005433s |  0.02% | 63.24% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.003156s |  0.02% | 14.38% )   ( 0.003157s |  0.01% | 18.37% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.003156s |  0.02% |100.00% )   ( 0.003157s |  0.01% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.007123s |  0.05% |  8.47% )   ( 0.004061s |  0.02% |  7.13% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.11.0:        ( 0.000130s |  0.00% |  0.04% )   ( 0.000155s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i++))
+28.11.1:        ( 0.000133s |  0.00% |  0.04% )   ( 0.000158s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000133s |  0.00% |  0.04% )   ( 0.000158s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.004212s |  0.03% |  1.32% )   ( 0.000626s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.009561s |  0.07% |  3.01% )   ( 0.001109s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.008859s |  0.06% | 92.65% )   ( 0.000405s |  0.00% | 36.51% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.000395s |  0.00% |  4.13% )   ( 0.000396s |  0.00% | 35.70% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.000395s |  0.00% |100.00% )   ( 0.000396s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000307s |  0.00% |  3.21% )   ( 0.000308s |  0.00% | 27.77% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000307s |  0.00% |100.00% )   ( 0.000308s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.078414s |  0.59% | 24.74% )   ( 0.066571s |  0.33% | 30.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.012235s |  0.09% | 15.60% )   ( 0.000390s |  0.00% |  0.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.066179s |  0.49% | 42.19% )   ( 0.066181s |  0.33% | 49.70% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.066179s |  0.49% |100.00% )   ( 0.066181s |  0.33% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004038s |  0.03% |  1.27% )   ( 0.003994s |  0.02% |  1.81% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.080372s |  0.60% | 20.23% )   ( 0.060634s |  0.30% | 21.64% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.080372s |  0.60% |100.00% )   ( 0.060634s |  0.30% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000211s |  0.00% |  0.26% )   ( 0.000236s |  0.00% |  0.38% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000173s |  0.00% |  0.21% )   ( 0.000202s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000177s |  0.00% |  0.22% )   ( 0.000203s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000144s |  0.00% |  0.17% )   ( 0.000164s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000136s |  0.00% |  0.16% )   ( 0.000162s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000215s |  0.00% |  0.26% )   ( 0.000248s |  0.00% |  0.40% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000188s |  0.00% |  0.23% )   ( 0.000220s |  0.00% |  0.36% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001234s |  0.00% |  1.53% )   ( 0.000600s |  0.00% |  0.98% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.033667s |  0.25% | 41.88% )   ( 0.028077s |  0.14% | 46.30% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.011169s |  0.08% | 33.17% )   ( 0.005577s |  0.02% | 19.86% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.022498s |  0.16% | 33.41% )   ( 0.022500s |  0.11% | 40.06% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.022498s |  0.16% |100.00% )   ( 0.022500s |  0.11% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.032092s |  0.24% | 39.92% )   ( 0.026022s |  0.13% | 42.91% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.006453s |  0.04% | 20.10% )   ( 0.000381s |  0.00% |  1.46% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.025639s |  0.19% | 39.94% )   ( 0.025641s |  0.12% | 49.26% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.025639s |  0.19% |100.00% )   ( 0.025641s |  0.12% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.012134s |  0.09% | 15.09% )   ( 0.004499s |  0.02% |  7.41% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000315s |  0.00% |  0.02% )   ( 0.000367s |  0.00% |  0.03% )    	(2x)	│  │  │  │  │  │  │  │   ((i++))
+30.8.0:         ( 0.251099s |  1.89% | 34.25% )   ( 0.172085s |  0.86% | 34.86% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.149525s |  1.12% | 59.54% )   ( 0.106231s |  0.53% | 61.73% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.149525s |  1.12% |100.00% )   ( 0.106231s |  0.53% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000204s |  0.00% |  0.13% )   ( 0.000231s |  0.00% |  0.21% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000275s |  0.00% |  0.18% )   ( 0.000298s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000145s |  0.00% |  0.09% )   ( 0.000171s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000249s |  0.00% |  0.16% )   ( 0.000275s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000145s |  0.00% |  0.09% )   ( 0.000170s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000774s |  0.00% |  0.51% )   ( 0.000802s |  0.00% |  0.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n)) (&)
+31.11.0:        ( 0.089541s |  0.67% | 59.88% )   ( 0.062858s |  0.31% | 59.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.12.0:        ( 0.036733s |  0.27% | 41.02% )   ( 0.027346s |  0.13% | 43.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.13.0:        ( 0.036733s |  0.27% |100.00% )   ( 0.027346s |  0.13% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000171s |  0.00% |  0.46% )   ( 0.000196s |  0.00% |  0.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.14.0:        ( 0.000171s |  0.00% |  0.46% )   ( 0.000197s |  0.00% |  0.72% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000150s |  0.00% |  0.40% )   ( 0.000170s |  0.00% |  0.62% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000173s |  0.00% |  0.47% )   ( 0.000215s |  0.00% |  0.78% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.001586s |  0.01% |  4.31% )   ( 0.000622s |  0.00% |  2.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.015799s |  0.11% | 43.01% )   ( 0.015030s |  0.07% | 54.96% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.006174s |  0.04% | 39.07% )   ( 0.005403s |  0.02% | 35.94% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.009625s |  0.07% | 30.46% )   ( 0.009627s |  0.04% | 32.02% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.009625s |  0.07% |100.00% )   ( 0.009627s |  0.04% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.014556s |  0.10% | 39.62% )   ( 0.006939s |  0.03% | 25.37% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.008021s |  0.06% | 55.10% )   ( 0.000402s |  0.00% |  5.79% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.006535s |  0.04% | 22.44% )   ( 0.006537s |  0.03% | 47.10% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.006535s |  0.04% |100.00% )   ( 0.006537s |  0.03% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.004126s |  0.03% | 11.23% )   ( 0.003976s |  0.02% | 14.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.12.0:        ( 0.052808s |  0.39% | 58.97% )   ( 0.035512s |  0.17% | 56.49% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.13.0:        ( 0.052808s |  0.39% |100.00% )   ( 0.035512s |  0.17% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000136s |  0.00% |  0.25% )   ( 0.000162s |  0.00% |  0.45% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.14.0:        ( 0.000136s |  0.00% |  0.25% )   ( 0.000161s |  0.00% |  0.45% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000746s |  0.00% |  1.41% )   ( 0.000204s |  0.00% |  0.57% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000153s |  0.00% |  0.28% )   ( 0.000184s |  0.00% |  0.51% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.004854s |  0.03% |  9.19% )   ( 0.000689s |  0.00% |  1.94% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.023376s |  0.17% | 44.26% )   ( 0.019579s |  0.09% | 55.13% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.009489s |  0.07% | 40.59% )   ( 0.005690s |  0.02% | 29.06% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.013887s |  0.10% | 29.70% )   ( 0.013889s |  0.07% | 35.46% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.013887s |  0.10% |100.00% )   ( 0.013889s |  0.07% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.019483s |  0.14% | 36.89% )   ( 0.010624s |  0.05% | 29.91% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.009256s |  0.06% | 47.50% )   ( 0.000395s |  0.00% |  3.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.010227s |  0.07% | 26.24% )   ( 0.010229s |  0.05% | 48.14% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.010227s |  0.07% |100.00% )   ( 0.010229s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.003923s |  0.02% |  7.42% )   ( 0.003908s |  0.01% | 11.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.11.0:        ( 0.000151s |  0.00% |  0.10% )   ( 0.000180s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i++))
+28.11.1:        ( 0.000141s |  0.00% |  0.09% )   ( 0.000166s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000134s |  0.00% |  0.08% )   ( 0.000159s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.000944s |  0.00% |  0.63% )   ( 0.000643s |  0.00% |  0.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.020939s |  0.15% | 14.00% )   ( 0.017037s |  0.08% | 16.03% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.004319s |  0.03% | 20.62% )   ( 0.000415s |  0.00% |  2.43% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.014115s |  0.10% | 67.41% )   ( 0.014116s |  0.07% | 82.85% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.014115s |  0.10% |100.00% )   ( 0.014116s |  0.07% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.002505s |  0.01% | 11.96% )   ( 0.002506s |  0.01% | 14.70% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.002505s |  0.01% |100.00% )   ( 0.002506s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.018861s |  0.14% | 12.61% )   ( 0.018628s |  0.09% | 17.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.006052s |  0.04% | 32.08% )   ( 0.005817s |  0.02% | 31.22% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.012809s |  0.09% | 33.95% )   ( 0.012811s |  0.06% | 34.38% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.012809s |  0.09% |100.00% )   ( 0.012811s |  0.06% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.017021s |  0.12% | 11.38% )   ( 0.004612s |  0.02% |  4.34% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.101574s |  0.76% | 40.45% )   ( 0.065854s |  0.33% | 38.26% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.101574s |  0.76% |100.00% )   ( 0.065854s |  0.33% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000161s |  0.00% |  0.15% )   ( 0.000188s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000235s |  0.00% |  0.23% )   ( 0.000263s |  0.00% |  0.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000292s |  0.00% |  0.28% )   ( 0.000323s |  0.00% |  0.49% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000153s |  0.00% |  0.15% )   ( 0.000178s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000349s |  0.00% |  0.34% )   ( 0.000305s |  0.00% |  0.46% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000181s |  0.00% |  0.17% )   ( 0.000208s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000156s |  0.00% |  0.15% )   ( 0.000182s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.003001s |  0.02% |  2.95% )   ( 0.000634s |  0.00% |  0.96% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.051004s |  0.38% | 50.21% )   ( 0.047139s |  0.23% | 71.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.004270s |  0.03% |  8.37% )   ( 0.000403s |  0.00% |  0.85% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.046734s |  0.35% | 45.81% )   ( 0.046736s |  0.23% | 49.57% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.046734s |  0.35% |100.00% )   ( 0.046736s |  0.23% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.039760s |  0.30% | 39.14% )   ( 0.012243s |  0.06% | 18.59% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.027927s |  0.21% | 70.23% )   ( 0.000408s |  0.00% |  3.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.011833s |  0.08% | 14.88% )   ( 0.011835s |  0.05% | 48.33% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.011833s |  0.08% |100.00% )   ( 0.011835s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.006281s |  0.04% |  6.18% )   ( 0.004190s |  0.02% |  6.36% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.1:         ( 0.000182s |  0.00% |  0.02% )   ( 0.000974s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000532s |  0.00% |  0.07% )   ( 0.000555s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.000893s |  0.00% |  0.12% )   ( 0.000621s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.034023s |  0.25% |  4.64% )   ( 0.017140s |  0.08% |  3.47% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.017266s |  0.13% | 50.74% )   ( 0.000381s |  0.00% |  2.22% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.016190s |  0.12% | 47.58% )   ( 0.016191s |  0.08% | 94.46% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.016190s |  0.12% |100.00% )   ( 0.016191s |  0.08% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.000567s |  0.00% |  1.66% )   ( 0.000568s |  0.00% |  3.31% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.000567s |  0.00% |100.00% )   ( 0.000568s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.031047s |  0.23% |  4.23% )   ( 0.015479s |  0.07% |  3.13% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.015944s |  0.12% | 51.35% )   ( 0.000374s |  0.00% |  2.41% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.014278s |  0.10% | 45.98% )   ( 0.014279s |  0.07% | 92.24% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.014278s |  0.10% |100.00% )   ( 0.014279s |  0.07% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.000825s |  0.00% |  2.65% )   ( 0.000826s |  0.00% |  5.33% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.000825s |  0.00% |100.00% )   ( 0.000826s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.014032s |  0.10% |  1.91% )   ( 0.004136s |  0.02% |  0.83% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.370834s |  2.80% | 33.59% )   ( 0.251205s |  1.26% | 33.72% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.370834s |  2.80% |100.00% )   ( 0.251205s |  1.26% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000071s |  0.00% |  0.01% )   ( 0.000087s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000072s |  0.00% |  0.01% )   ( 0.000089s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000162s |  0.00% |  0.04% )   ( 0.000186s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000145s |  0.00% |  0.03% )   ( 0.000176s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000130s |  0.00% |  0.03% )   ( 0.000154s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000671s |  0.00% |  0.18% )   ( 0.000701s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+31.8.0:         ( 0.305781s |  2.31% | 82.45% )   ( 0.201740s |  1.01% | 80.30% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.132699s |  1.00% | 43.39% )   ( 0.105044s |  0.52% | 52.06% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.132699s |  1.00% |100.00% )   ( 0.105044s |  0.52% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000153s |  0.00% |  0.11% )   ( 0.000179s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000178s |  0.00% |  0.13% )   ( 0.000209s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000181s |  0.00% |  0.13% )   ( 0.000216s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000149s |  0.00% |  0.11% )   ( 0.000175s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000131s |  0.00% |  0.09% )   ( 0.000154s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000140s |  0.00% |  0.10% )   ( 0.000166s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000135s |  0.00% |  0.10% )   ( 0.000160s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.000935s |  0.00% |  0.70% )   ( 0.000672s |  0.00% |  0.63% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.053723s |  0.40% | 40.48% )   ( 0.039272s |  0.19% | 37.38% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.014830s |  0.11% | 27.60% )   ( 0.000377s |  0.00% |  0.95% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.038772s |  0.29% | 72.17% )   ( 0.038773s |  0.19% | 98.72% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.038772s |  0.29% |100.00% )   ( 0.038773s |  0.19% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000121s |  0.00% |  0.22% )   ( 0.000122s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000121s |  0.00% |100.00% )   ( 0.000122s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.072933s |  0.55% | 54.96% )   ( 0.059820s |  0.30% | 56.94% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.013522s |  0.10% | 18.54% )   ( 0.000407s |  0.00% |  0.68% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.059411s |  0.44% | 40.72% )   ( 0.059413s |  0.29% | 49.65% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.059411s |  0.44% |100.00% )   ( 0.059413s |  0.29% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004040s |  0.03% |  3.04% )   ( 0.004020s |  0.02% |  3.82% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.173082s |  1.30% | 56.60% )   ( 0.096696s |  0.48% | 47.93% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.173082s |  1.30% |100.00% )   ( 0.096696s |  0.48% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000129s |  0.00% |  0.07% )   ( 0.000153s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000137s |  0.00% |  0.07% )   ( 0.000162s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000133s |  0.00% |  0.07% )   ( 0.000157s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000132s |  0.00% |  0.07% )   ( 0.000160s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000131s |  0.00% |  0.07% )   ( 0.000157s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000132s |  0.00% |  0.07% )   ( 0.000160s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000134s |  0.00% |  0.07% )   ( 0.000161s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.000967s |  0.00% |  0.55% )   ( 0.000579s |  0.00% |  0.59% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.084896s |  0.64% | 49.04% )   ( 0.057436s |  0.28% | 59.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.033025s |  0.24% | 38.90% )   ( 0.005563s |  0.02% |  9.68% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.051871s |  0.39% | 30.54% )   ( 0.051873s |  0.26% | 45.15% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.051871s |  0.39% |100.00% )   ( 0.051873s |  0.26% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.082159s |  0.62% | 47.46% )   ( 0.033466s |  0.16% | 34.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.049076s |  0.37% | 59.73% )   ( 0.000381s |  0.00% |  1.13% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.033083s |  0.24% | 20.13% )   ( 0.033085s |  0.16% | 49.43% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.033083s |  0.24% |100.00% )   ( 0.033085s |  0.16% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004131s |  0.03% |  2.38% )   ( 0.004104s |  0.02% |  4.24% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000131s |  0.00% |  0.03% )   ( 0.000156s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.000129s |  0.00% |  0.03% )   ( 0.000153s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000156s |  0.00% |  0.04% )   ( 0.000174s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.000984s |  0.00% |  0.26% )   ( 0.000693s |  0.00% |  0.27% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.010638s |  0.08% |  2.86% )   ( 0.006067s |  0.03% |  2.41% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004927s |  0.03% | 46.31% )   ( 0.000354s |  0.00% |  5.83% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.005711s |  0.04% | 26.84% )   ( 0.005713s |  0.02% | 47.08% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.005711s |  0.04% |100.00% )   ( 0.005713s |  0.02% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.047825s |  0.36% | 12.89% )   ( 0.036883s |  0.18% | 14.68% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.011349s |  0.08% | 23.73% )   ( 0.000405s |  0.00% |  1.09% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.032522s |  0.24% | 68.00% )   ( 0.032523s |  0.16% | 88.17% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.032522s |  0.24% |100.00% )   ( 0.032523s |  0.16% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.003954s |  0.02% |  8.26% )   ( 0.003955s |  0.01% | 10.72% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.003954s |  0.02% |100.00% )   ( 0.003955s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.003938s |  0.02% |  1.06% )   ( 0.003945s |  0.01% |  1.57% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.0:         ( 0.000256s |  0.00% |  0.00% )   ( 0.000294s |  0.00% |  0.00% )    	(3x)	│  │  │  │  │   ((i++))
+30.5.0:         ( 0.942795s |  7.12% | 31.33% )   ( 0.659382s |  3.32% | 30.78% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.752744s |  5.68% | 79.84% )   ( 0.535926s |  2.70% | 81.27% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.752744s |  5.68% |100.00% )   ( 0.535926s |  2.70% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000156s |  0.00% |  0.02% )   ( 0.000184s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000149s |  0.00% |  0.01% )   ( 0.000177s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000137s |  0.00% |  0.01% )   ( 0.000161s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000126s |  0.00% |  0.01% )   ( 0.000150s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000123s |  0.00% |  0.01% )   ( 0.000148s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.002337s |  0.01% |  0.15% )   ( 0.001390s |  0.00% |  0.12% )    	(2x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+30.8.0:         ( 0.244528s |  1.84% | 32.48% )   ( 0.158632s |  0.79% | 29.59% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.171319s |  1.29% | 70.06% )   ( 0.101717s |  0.51% | 64.12% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.171319s |  1.29% |100.00% )   ( 0.101717s |  0.51% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000159s |  0.00% |  0.09% )   ( 0.000184s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000128s |  0.00% |  0.07% )   ( 0.000152s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000186s |  0.00% |  0.10% )   ( 0.000211s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000145s |  0.00% |  0.08% )   ( 0.000172s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000182s |  0.00% |  0.10% )   ( 0.000207s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000706s |  0.00% |  0.41% )   ( 0.000736s |  0.00% |  0.72% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n)) (&)
+30.11.0:        ( 0.093444s |  0.70% | 54.54% )   ( 0.042267s |  0.21% | 41.55% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.12.0:        ( 0.056777s |  0.42% | 60.76% )   ( 0.022870s |  0.11% | 54.10% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.13.0:        ( 0.056777s |  0.42% |100.00% )   ( 0.022870s |  0.11% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000182s |  0.00% |  0.32% )   ( 0.000217s |  0.00% |  0.94% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.14.0:        ( 0.000144s |  0.00% |  0.25% )   ( 0.000164s |  0.00% |  0.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000139s |  0.00% |  0.24% )   ( 0.000164s |  0.00% |  0.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000130s |  0.00% |  0.22% )   ( 0.000157s |  0.00% |  0.68% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.003072s |  0.02% |  5.41% )   ( 0.000641s |  0.00% |  2.80% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.035059s |  0.26% | 61.74% )   ( 0.009650s |  0.04% | 42.19% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.031456s |  0.23% | 89.72% )   ( 0.006045s |  0.03% | 62.64% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.003603s |  0.02% |  5.13% )   ( 0.003605s |  0.01% | 18.67% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.003603s |  0.02% |100.00% )   ( 0.003605s |  0.01% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.013987s |  0.10% | 24.63% )   ( 0.007856s |  0.03% | 34.35% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.011943s |  0.09% | 85.38% )   ( 0.005810s |  0.02% | 73.95% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.002044s |  0.01% |  7.30% )   ( 0.002046s |  0.01% | 13.02% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.002044s |  0.01% |100.00% )   ( 0.002046s |  0.01% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.004063s |  0.03% |  7.15% )   ( 0.004020s |  0.02% | 17.57% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.12.0:        ( 0.036667s |  0.27% | 39.23% )   ( 0.019397s |  0.09% | 45.89% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.13.0:        ( 0.036667s |  0.27% |100.00% )   ( 0.019397s |  0.09% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000248s |  0.00% |  0.67% )   ( 0.000275s |  0.00% |  1.41% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.14.0:        ( 0.000161s |  0.00% |  0.43% )   ( 0.000187s |  0.00% |  0.96% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000234s |  0.00% |  0.63% )   ( 0.000252s |  0.00% |  1.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000165s |  0.00% |  0.44% )   ( 0.000192s |  0.00% |  0.98% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.003031s |  0.02% |  8.26% )   ( 0.000626s |  0.00% |  3.22% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.010288s |  0.07% | 28.05% )   ( 0.002201s |  0.01% | 11.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.008475s |  0.06% | 82.37% )   ( 0.000386s |  0.00% | 17.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.001813s |  0.01% |  8.81% )   ( 0.001815s |  0.00% | 41.23% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.001813s |  0.01% |100.00% )   ( 0.001815s |  0.00% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.018471s |  0.13% | 50.37% )   ( 0.011618s |  0.05% | 59.89% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.007274s |  0.05% | 39.38% )   ( 0.000419s |  0.00% |  3.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.011197s |  0.08% | 30.30% )   ( 0.011199s |  0.05% | 48.19% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.011197s |  0.08% |100.00% )   ( 0.011199s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.004068s |  0.03% | 11.09% )   ( 0.004045s |  0.02% | 20.85% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.11.0:        ( 0.000142s |  0.00% |  0.08% )   ( 0.000167s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i++))
+28.11.1:        ( 0.000136s |  0.00% |  0.07% )   ( 0.000163s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000147s |  0.00% |  0.08% )   ( 0.000176s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.000877s |  0.00% |  0.51% )   ( 0.000635s |  0.00% |  0.62% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.033400s |  0.25% | 19.49% )   ( 0.028230s |  0.14% | 27.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.011001s |  0.08% | 32.93% )   ( 0.005829s |  0.02% | 20.64% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.019245s |  0.14% | 57.61% )   ( 0.019246s |  0.09% | 68.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.019245s |  0.14% |100.00% )   ( 0.019246s |  0.09% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.003154s |  0.02% |  9.44% )   ( 0.003155s |  0.01% | 11.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.003154s |  0.02% |100.00% )   ( 0.003155s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.032065s |  0.24% | 18.71% )   ( 0.024228s |  0.12% | 23.81% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.008222s |  0.06% | 25.64% )   ( 0.000383s |  0.00% |  1.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.023843s |  0.18% | 37.17% )   ( 0.023845s |  0.12% | 49.20% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.023843s |  0.18% |100.00% )   ( 0.023845s |  0.12% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.009601s |  0.07% |  5.60% )   ( 0.004188s |  0.02% |  4.11% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.073209s |  0.55% | 29.93% )   ( 0.056915s |  0.28% | 35.87% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.073209s |  0.55% |100.00% )   ( 0.056915s |  0.28% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000213s |  0.00% |  0.29% )   ( 0.000239s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000275s |  0.00% |  0.37% )   ( 0.000304s |  0.00% |  0.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000179s |  0.00% |  0.24% )   ( 0.000205s |  0.00% |  0.36% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000257s |  0.00% |  0.35% )   ( 0.000284s |  0.00% |  0.49% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000173s |  0.00% |  0.23% )   ( 0.000201s |  0.00% |  0.35% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000215s |  0.00% |  0.29% )   ( 0.000235s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000173s |  0.00% |  0.23% )   ( 0.000199s |  0.00% |  0.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.003379s |  0.02% |  4.61% )   ( 0.000561s |  0.00% |  0.98% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.027702s |  0.20% | 37.83% )   ( 0.024643s |  0.12% | 43.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.008671s |  0.06% | 31.30% )   ( 0.005610s |  0.02% | 22.76% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.019031s |  0.14% | 34.34% )   ( 0.019033s |  0.09% | 38.61% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.019031s |  0.14% |100.00% )   ( 0.019033s |  0.09% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.032669s |  0.24% | 44.62% )   ( 0.025936s |  0.13% | 45.56% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.007112s |  0.05% | 21.76% )   ( 0.000377s |  0.00% |  1.45% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.025408s |  0.19% | 77.77% )   ( 0.025409s |  0.12% | 97.96% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.025408s |  0.19% |100.00% )   ( 0.025409s |  0.12% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000149s |  0.00% |  0.45% )   ( 0.000150s |  0.00% |  0.57% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000149s |  0.00% |100.00% )   ( 0.000150s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.007973s |  0.06% | 10.89% )   ( 0.004107s |  0.02% |  7.21% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000356s |  0.00% |  0.02% )   ( 0.000406s |  0.00% |  0.03% )    	(2x)	│  │  │  │  │  │  │  │   ((i++))
+31.8.0:         ( 0.116623s |  0.88% | 15.49% )   ( 0.100886s |  0.50% | 18.82% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+31.9.0:         ( 0.116623s |  0.88% |100.00% )   ( 0.100886s |  0.50% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (SUBSHELL) >>
+31.10.0:        ( 0.116623s |  0.88% |100.00% )   ( 0.100886s |  0.50% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000147s |  0.00% |  0.12% )   ( 0.000180s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000303s |  0.00% |  0.25% )   ( 0.000296s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000158s |  0.00% |  0.13% )   ( 0.000185s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000135s |  0.00% |  0.11% )   ( 0.000161s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000147s |  0.00% |  0.12% )   ( 0.000161s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000163s |  0.00% |  0.13% )   ( 0.000187s |  0.00% |  0.18% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000147s |  0.00% |  0.12% )   ( 0.000172s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001625s |  0.01% |  1.39% )   ( 0.000627s |  0.00% |  0.62% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.052186s |  0.39% | 44.74% )   ( 0.046355s |  0.23% | 45.94% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.011581s |  0.08% | 22.19% )   ( 0.005748s |  0.02% | 12.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.038745s |  0.29% | 74.24% )   ( 0.038746s |  0.19% | 83.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.038745s |  0.29% |100.00% )   ( 0.038746s |  0.19% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.001860s |  0.01% |  3.56% )   ( 0.001861s |  0.00% |  4.01% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.001860s |  0.01% |100.00% )   ( 0.001861s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.057529s |  0.43% | 49.32% )   ( 0.048475s |  0.24% | 48.04% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.009462s |  0.07% | 16.44% )   ( 0.000406s |  0.00% |  0.83% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.047112s |  0.35% | 81.89% )   ( 0.047113s |  0.23% | 97.19% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.047112s |  0.35% |100.00% )   ( 0.047113s |  0.23% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000955s |  0.00% |  1.66% )   ( 0.000956s |  0.00% |  1.97% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000955s |  0.00% |100.00% )   ( 0.000956s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004082s |  0.03% |  3.50% )   ( 0.004086s |  0.02% |  4.05% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+30.8.0:         ( 0.272113s |  2.05% | 36.14% )   ( 0.192182s |  0.96% | 35.85% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.272113s |  2.05% |100.00% )   ( 0.192182s |  0.96% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (SUBSHELL) >>
+30.10.0:        ( 0.272113s |  2.05% |100.00% )   ( 0.192182s |  0.96% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000197s |  0.00% |  0.07% )   ( 0.000223s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000261s |  0.00% |  0.09% )   ( 0.000287s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000245s |  0.00% |  0.09% )   ( 0.000269s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000183s |  0.00% |  0.06% )   ( 0.000216s |  0.00% |  0.11% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000227s |  0.00% |  0.08% )   ( 0.000265s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000826s |  0.00% |  0.30% )   ( 0.000860s |  0.00% |  0.44% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n)) (&)
+31.11.0:        ( 0.163390s |  1.23% | 60.04% )   ( 0.130745s |  0.65% | 68.03% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.12.0:        ( 0.081081s |  0.61% | 49.62% )   ( 0.059341s |  0.29% | 45.38% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.13.0:        ( 0.081081s |  0.61% |100.00% )   ( 0.059341s |  0.29% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000157s |  0.00% |  0.19% )   ( 0.000183s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.14.0:        ( 0.000200s |  0.00% |  0.24% )   ( 0.000234s |  0.00% |  0.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000160s |  0.00% |  0.19% )   ( 0.000183s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000153s |  0.00% |  0.18% )   ( 0.000178s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.000995s |  0.00% |  1.22% )   ( 0.000674s |  0.00% |  1.13% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.039104s |  0.29% | 48.22% )   ( 0.035843s |  0.18% | 60.40% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.009150s |  0.06% | 23.39% )   ( 0.005887s |  0.02% | 16.42% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.029954s |  0.22% | 38.30% )   ( 0.029956s |  0.15% | 41.78% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.029954s |  0.22% |100.00% )   ( 0.029956s |  0.15% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.021961s |  0.16% | 27.08% )   ( 0.017799s |  0.08% | 29.99% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.004531s |  0.03% | 20.63% )   ( 0.000367s |  0.00% |  2.06% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.017430s |  0.13% | 39.68% )   ( 0.017432s |  0.08% | 48.96% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.017430s |  0.13% |100.00% )   ( 0.017432s |  0.08% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.018350s |  0.13% | 22.63% )   ( 0.004246s |  0.02% |  7.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.12.0:        ( 0.082309s |  0.62% | 50.37% )   ( 0.071404s |  0.36% | 54.61% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.13.0:        ( 0.082309s |  0.62% |100.00% )   ( 0.071404s |  0.36% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000187s |  0.00% |  0.22% )   ( 0.000209s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.14.0:        ( 0.000179s |  0.00% |  0.21% )   ( 0.000214s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000189s |  0.00% |  0.22% )   ( 0.000222s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000161s |  0.00% |  0.19% )   ( 0.000188s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.001384s |  0.01% |  1.68% )   ( 0.000654s |  0.00% |  0.91% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.038067s |  0.28% | 46.24% )   ( 0.031933s |  0.16% | 44.72% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.006524s |  0.04% | 17.13% )   ( 0.000388s |  0.00% |  1.21% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.031543s |  0.23% | 41.43% )   ( 0.031545s |  0.15% | 49.39% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.031543s |  0.23% |100.00% )   ( 0.031545s |  0.15% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.037639s |  0.28% | 45.72% )   ( 0.033842s |  0.17% | 47.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.004217s |  0.03% | 11.20% )   ( 0.000418s |  0.00% |  1.23% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.033422s |  0.25% | 44.39% )   ( 0.033424s |  0.16% | 49.38% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.033422s |  0.25% |100.00% )   ( 0.033424s |  0.16% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.004502s |  0.03% |  5.46% )   ( 0.004141s |  0.02% |  5.79% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.11.0:        ( 0.000215s |  0.00% |  0.07% )   ( 0.000243s |  0.00% |  0.12% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i++))
+28.11.1:        ( 0.001269s |  0.00% |  0.46% )   ( 0.000260s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000242s |  0.00% |  0.08% )   ( 0.000280s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.002262s |  0.01% |  0.83% )   ( 0.000596s |  0.00% |  0.31% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.031674s |  0.23% | 11.64% )   ( 0.016512s |  0.08% |  8.59% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.015576s |  0.11% | 49.17% )   ( 0.000412s |  0.00% |  2.49% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.016098s |  0.12% | 25.41% )   ( 0.016100s |  0.08% | 48.75% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.016098s |  0.12% |100.00% )   ( 0.016100s |  0.08% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.065390s |  0.49% | 24.03% )   ( 0.037602s |  0.18% | 19.56% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.028174s |  0.21% | 43.08% )   ( 0.000384s |  0.00% |  1.02% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.037216s |  0.28% | 28.45% )   ( 0.037218s |  0.18% | 49.48% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.037216s |  0.28% |100.00% )   ( 0.037218s |  0.18% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.005731s |  0.04% |  2.10% )   ( 0.003823s |  0.01% |  1.98% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.1:         ( 0.000134s |  0.00% |  0.01% )   ( 0.000159s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000524s |  0.00% |  0.06% )   ( 0.000547s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.002528s |  0.01% |  0.33% )   ( 0.000589s |  0.00% |  0.10% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.051893s |  0.39% |  6.89% )   ( 0.026445s |  0.13% |  4.93% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.025857s |  0.19% | 49.82% )   ( 0.000407s |  0.00% |  1.53% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.020233s |  0.15% | 38.98% )   ( 0.020234s |  0.10% | 76.51% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.020233s |  0.15% |100.00% )   ( 0.020234s |  0.10% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.005803s |  0.04% | 11.18% )   ( 0.005804s |  0.02% | 21.94% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.005803s |  0.04% |100.00% )   ( 0.005804s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.056850s |  0.42% |  7.55% )   ( 0.049696s |  0.25% |  9.27% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.007551s |  0.05% | 13.28% )   ( 0.000395s |  0.00% |  0.79% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.045224s |  0.34% | 79.54% )   ( 0.045225s |  0.22% | 91.00% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.045224s |  0.34% |100.00% )   ( 0.045225s |  0.22% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.004075s |  0.03% |  7.16% )   ( 0.004076s |  0.02% |  8.20% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.004075s |  0.03% |100.00% )   ( 0.004076s |  0.02% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004166s |  0.03% |  0.55% )   ( 0.004173s |  0.02% |  0.77% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.190051s |  1.43% | 20.15% )   ( 0.123456s |  0.62% | 18.72% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.190051s |  1.43% |100.00% )   ( 0.123456s |  0.62% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000077s |  0.00% |  0.04% )   ( 0.000093s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000071s |  0.00% |  0.03% )   ( 0.000086s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000081s |  0.00% |  0.04% )   ( 0.000091s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000069s |  0.00% |  0.03% )   ( 0.000084s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000087s |  0.00% |  0.04% )   ( 0.000103s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.000642s |  0.00% |  0.33% )   ( 0.000674s |  0.00% |  0.54% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+31.8.0:         ( 0.099589s |  0.75% | 52.40% )   ( 0.066394s |  0.33% | 53.77% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.051281s |  0.38% | 51.49% )   ( 0.039874s |  0.20% | 60.05% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.051281s |  0.38% |100.00% )   ( 0.039874s |  0.20% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000138s |  0.00% |  0.26% )   ( 0.000165s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000165s |  0.00% |  0.32% )   ( 0.000181s |  0.00% |  0.45% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000228s |  0.00% |  0.44% )   ( 0.000256s |  0.00% |  0.64% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000155s |  0.00% |  0.30% )   ( 0.000184s |  0.00% |  0.46% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000155s |  0.00% |  0.30% )   ( 0.000168s |  0.00% |  0.42% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000142s |  0.00% |  0.27% )   ( 0.000168s |  0.00% |  0.42% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000141s |  0.00% |  0.27% )   ( 0.000167s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001456s |  0.01% |  2.83% )   ( 0.000618s |  0.00% |  1.54% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.021421s |  0.16% | 41.77% )   ( 0.020152s |  0.10% | 50.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.006639s |  0.05% | 30.99% )   ( 0.005368s |  0.02% | 26.63% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.014782s |  0.11% | 34.50% )   ( 0.014784s |  0.07% | 36.68% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.014782s |  0.11% |100.00% )   ( 0.014784s |  0.07% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.018533s |  0.14% | 36.14% )   ( 0.013507s |  0.06% | 33.87% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.010432s |  0.07% | 56.28% )   ( 0.005404s |  0.02% | 40.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.008101s |  0.06% | 21.85% )   ( 0.008103s |  0.04% | 29.99% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.008101s |  0.06% |100.00% )   ( 0.008103s |  0.04% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.008746s |  0.06% | 17.05% )   ( 0.004307s |  0.02% | 10.80% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.048308s |  0.36% | 48.50% )   ( 0.026520s |  0.13% | 39.94% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.048308s |  0.36% |100.00% )   ( 0.026520s |  0.13% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000138s |  0.00% |  0.28% )   ( 0.000164s |  0.00% |  0.61% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000259s |  0.00% |  0.53% )   ( 0.000285s |  0.00% |  1.07% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000287s |  0.00% |  0.59% )   ( 0.000330s |  0.00% |  1.24% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000171s |  0.00% |  0.35% )   ( 0.000200s |  0.00% |  0.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000141s |  0.00% |  0.29% )   ( 0.000169s |  0.00% |  0.63% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000148s |  0.00% |  0.30% )   ( 0.000178s |  0.00% |  0.67% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000194s |  0.00% |  0.40% )   ( 0.000200s |  0.00% |  0.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001693s |  0.01% |  3.50% )   ( 0.000618s |  0.00% |  2.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.010094s |  0.07% | 20.89% )   ( 0.003740s |  0.01% | 14.10% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.006761s |  0.05% | 66.98% )   ( 0.000405s |  0.00% | 10.82% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.001161s |  0.00% | 11.50% )   ( 0.001162s |  0.00% | 31.06% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.001161s |  0.00% |100.00% )   ( 0.001162s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.002172s |  0.01% | 21.51% )   ( 0.002173s |  0.01% | 58.10% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.002172s |  0.01% |100.00% )   ( 0.002173s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.024604s |  0.18% | 50.93% )   ( 0.016314s |  0.08% | 61.51% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.008711s |  0.06% | 35.40% )   ( 0.000419s |  0.00% |  2.56% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.013535s |  0.10% | 55.01% )   ( 0.013536s |  0.06% | 82.97% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.013535s |  0.10% |100.00% )   ( 0.013536s |  0.06% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.002358s |  0.01% |  9.58% )   ( 0.002359s |  0.01% | 14.45% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.002358s |  0.01% |100.00% )   ( 0.002359s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.010578s |  0.07% | 21.89% )   ( 0.004321s |  0.02% | 16.29% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000176s |  0.00% |  0.09% )   ( 0.000210s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.000142s |  0.00% |  0.07% )   ( 0.000167s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000154s |  0.00% |  0.08% )   ( 0.000174s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.002010s |  0.01% |  1.05% )   ( 0.000654s |  0.00% |  0.52% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.036641s |  0.27% | 19.27% )   ( 0.026935s |  0.13% | 21.81% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.015488s |  0.11% | 42.26% )   ( 0.005780s |  0.02% | 21.45% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.021153s |  0.15% | 28.86% )   ( 0.021155s |  0.10% | 39.27% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.021153s |  0.15% |100.00% )   ( 0.021155s |  0.10% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.031843s |  0.24% | 16.75% )   ( 0.023204s |  0.11% | 18.79% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.014055s |  0.10% | 44.13% )   ( 0.005414s |  0.02% | 23.33% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.017643s |  0.13% | 55.40% )   ( 0.017644s |  0.08% | 76.03% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.017643s |  0.13% |100.00% )   ( 0.017644s |  0.08% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.000145s |  0.00% |  0.45% )   ( 0.000146s |  0.00% |  0.62% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.000145s |  0.00% |100.00% )   ( 0.000146s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.018468s |  0.13% |  9.71% )   ( 0.004586s |  0.02% |  3.71% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.5.0:         ( 0.903394s |  6.82% | 30.02% )   ( 0.692883s |  3.49% | 32.34% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+30.6.0:         ( 0.561897s |  4.24% | 62.19% )   ( 0.436013s |  2.19% | 62.92% )    	(1x)	│  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.7.0:         ( 0.561897s |  4.24% |100.00% )   ( 0.436013s |  2.19% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000131s |  0.00% |  0.02% )   ( 0.000154s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.8.0:         ( 0.000138s |  0.00% |  0.02% )   ( 0.000162s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000184s |  0.00% |  0.03% )   ( 0.000212s |  0.00% |  0.04% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000133s |  0.00% |  0.02% )   ( 0.000157s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000133s |  0.00% |  0.02% )   ( 0.000158s |  0.00% |  0.03% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.002629s |  0.01% |  0.23% )   ( 0.001346s |  0.00% |  0.15% )    	(2x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+31.8.0:         ( 0.241878s |  1.82% | 43.04% )   ( 0.170223s |  0.85% | 39.04% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.170505s |  1.28% | 70.49% )   ( 0.115721s |  0.58% | 67.98% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.170505s |  1.28% |100.00% )   ( 0.115721s |  0.58% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000254s |  0.00% |  0.14% )   ( 0.000292s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000154s |  0.00% |  0.09% )   ( 0.000182s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000230s |  0.00% |  0.13% )   ( 0.000261s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000145s |  0.00% |  0.08% )   ( 0.000170s |  0.00% |  0.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000226s |  0.00% |  0.13% )   ( 0.000259s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.005785s |  0.04% |  3.39% )   ( 0.000674s |  0.00% |  0.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n)) (&)
+30.11.0:        ( 0.086335s |  0.65% | 50.63% )   ( 0.062276s |  0.31% | 53.81% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.12.0:        ( 0.039189s |  0.29% | 45.39% )   ( 0.029647s |  0.14% | 47.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.13.0:        ( 0.039189s |  0.29% |100.00% )   ( 0.029647s |  0.14% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000168s |  0.00% |  0.42% )   ( 0.000200s |  0.00% |  0.67% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.14.0:        ( 0.000165s |  0.00% |  0.42% )   ( 0.000186s |  0.00% |  0.62% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000172s |  0.00% |  0.43% )   ( 0.000198s |  0.00% |  0.66% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000149s |  0.00% |  0.38% )   ( 0.000169s |  0.00% |  0.57% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.000945s |  0.00% |  2.41% )   ( 0.000657s |  0.00% |  2.21% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.014466s |  0.10% | 36.91% )   ( 0.007263s |  0.03% | 24.49% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.007611s |  0.05% | 52.61% )   ( 0.000406s |  0.00% |  5.58% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.006855s |  0.05% | 23.69% )   ( 0.006857s |  0.03% | 47.20% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.006855s |  0.05% |100.00% )   ( 0.006857s |  0.03% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.019157s |  0.14% | 48.88% )   ( 0.017000s |  0.08% | 57.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.007558s |  0.05% | 39.45% )   ( 0.005399s |  0.02% | 31.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.011599s |  0.08% | 30.27% )   ( 0.011601s |  0.05% | 34.12% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.011599s |  0.08% |100.00% )   ( 0.011601s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.003966s |  0.02% | 10.12% )   ( 0.003973s |  0.02% | 13.40% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.12.0:        ( 0.047146s |  0.35% | 54.60% )   ( 0.032629s |  0.16% | 52.39% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.13.0:        ( 0.047146s |  0.35% |100.00% )   ( 0.032629s |  0.16% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000186s |  0.00% |  0.39% )   ( 0.000212s |  0.00% |  0.64% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.14.0:        ( 0.000171s |  0.00% |  0.36% )   ( 0.000197s |  0.00% |  0.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000207s |  0.00% |  0.43% )   ( 0.000240s |  0.00% |  0.73% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000153s |  0.00% |  0.32% )   ( 0.000179s |  0.00% |  0.54% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.001003s |  0.00% |  2.12% )   ( 0.000708s |  0.00% |  2.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.021847s |  0.16% | 46.33% )   ( 0.015743s |  0.07% | 48.24% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.006493s |  0.04% | 29.72% )   ( 0.000388s |  0.00% |  2.46% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.015354s |  0.11% | 35.13% )   ( 0.015355s |  0.07% | 48.76% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.015354s |  0.11% |100.00% )   ( 0.015355s |  0.07% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.020634s |  0.15% | 43.76% )   ( 0.012397s |  0.06% | 37.99% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.008651s |  0.06% | 41.92% )   ( 0.000412s |  0.00% |  3.32% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.011983s |  0.09% | 29.03% )   ( 0.011985s |  0.06% | 48.33% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.011983s |  0.09% |100.00% )   ( 0.011985s |  0.06% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.002944s |  0.02% |  6.24% )   ( 0.002952s |  0.01% |  9.04% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.11.0:        ( 0.000232s |  0.00% |  0.13% )   ( 0.000271s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i++))
+28.11.1:        ( 0.000204s |  0.00% |  0.11% )   ( 0.000240s |  0.00% |  0.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000152s |  0.00% |  0.08% )   ( 0.000181s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001108s |  0.00% |  0.64% )   ( 0.000605s |  0.00% |  0.52% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.041585s |  0.31% | 24.38% )   ( 0.034487s |  0.17% | 29.80% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.007495s |  0.05% | 18.02% )   ( 0.000395s |  0.00% |  1.14% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.034090s |  0.25% | 40.98% )   ( 0.034092s |  0.17% | 49.42% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.034090s |  0.25% |100.00% )   ( 0.034092s |  0.17% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.017047s |  0.12% |  9.99% )   ( 0.011595s |  0.05% | 10.01% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.005852s |  0.04% | 34.32% )   ( 0.000398s |  0.00% |  3.43% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.011195s |  0.08% | 32.83% )   ( 0.011197s |  0.05% | 48.28% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.011195s |  0.08% |100.00% )   ( 0.011197s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.017047s |  0.12% |  9.99% )   ( 0.004227s |  0.02% |  3.65% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.071373s |  0.53% | 29.50% )   ( 0.054502s |  0.27% | 32.01% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.071373s |  0.53% |100.00% )   ( 0.054502s |  0.27% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000235s |  0.00% |  0.32% )   ( 0.000269s |  0.00% |  0.49% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000141s |  0.00% |  0.19% )   ( 0.000166s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000252s |  0.00% |  0.35% )   ( 0.000287s |  0.00% |  0.52% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000132s |  0.00% |  0.18% )   ( 0.000157s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000259s |  0.00% |  0.36% )   ( 0.000293s |  0.00% |  0.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000286s |  0.00% |  0.40% )   ( 0.000330s |  0.00% |  0.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000176s |  0.00% |  0.24% )   ( 0.000202s |  0.00% |  0.37% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001118s |  0.00% |  1.56% )   ( 0.000689s |  0.00% |  1.26% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.025568s |  0.19% | 35.82% )   ( 0.018866s |  0.09% | 34.61% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.007152s |  0.05% | 27.97% )   ( 0.000448s |  0.00% |  2.37% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.018416s |  0.13% | 36.01% )   ( 0.018418s |  0.09% | 48.81% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.018416s |  0.13% |100.00% )   ( 0.018418s |  0.09% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.038794s |  0.29% | 54.35% )   ( 0.028999s |  0.14% | 53.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.010225s |  0.07% | 26.35% )   ( 0.000428s |  0.00% |  1.47% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.028569s |  0.21% | 36.82% )   ( 0.028571s |  0.14% | 49.26% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.028569s |  0.21% |100.00% )   ( 0.028571s |  0.14% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004411s |  0.03% |  6.18% )   ( 0.004243s |  0.02% |  7.78% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000500s |  0.00% |  0.04% )   ( 0.000558s |  0.00% |  0.06% )    	(2x)	│  │  │  │  │  │  │  │   ((i++))
+31.8.0:         ( 0.186702s |  1.41% | 33.22% )   ( 0.146470s |  0.73% | 33.59% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.132383s |  1.00% | 70.90% )   ( 0.096593s |  0.48% | 65.94% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.132383s |  1.00% |100.00% )   ( 0.096593s |  0.48% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000160s |  0.00% |  0.12% )   ( 0.000186s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000262s |  0.00% |  0.19% )   ( 0.000290s |  0.00% |  0.30% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000164s |  0.00% |  0.12% )   ( 0.000184s |  0.00% |  0.19% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000211s |  0.00% |  0.15% )   ( 0.000250s |  0.00% |  0.25% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000139s |  0.00% |  0.10% )   ( 0.000165s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000711s |  0.00% |  0.53% )   ( 0.000740s |  0.00% |  0.76% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n)) (&)
+30.11.0:        ( 0.089125s |  0.67% | 67.32% )   ( 0.069634s |  0.35% | 72.09% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.12.0:        ( 0.046409s |  0.35% | 52.07% )   ( 0.034114s |  0.17% | 48.99% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.13.0:        ( 0.046409s |  0.35% |100.00% )   ( 0.034114s |  0.17% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000145s |  0.00% |  0.31% )   ( 0.000172s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.14.0:        ( 0.000242s |  0.00% |  0.52% )   ( 0.000269s |  0.00% |  0.78% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000159s |  0.00% |  0.34% )   ( 0.000186s |  0.00% |  0.54% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000151s |  0.00% |  0.32% )   ( 0.000177s |  0.00% |  0.51% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.001340s |  0.01% |  2.88% )   ( 0.000600s |  0.00% |  1.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.019885s |  0.15% | 42.84% )   ( 0.011299s |  0.05% | 33.12% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.008969s |  0.06% | 45.10% )   ( 0.000381s |  0.00% |  3.37% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.010916s |  0.08% | 27.44% )   ( 0.010918s |  0.05% | 48.31% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.010916s |  0.08% |100.00% )   ( 0.010918s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.021929s |  0.16% | 47.25% )   ( 0.018848s |  0.09% | 55.25% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.008312s |  0.06% | 37.90% )   ( 0.005229s |  0.02% | 27.74% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.013617s |  0.10% | 31.04% )   ( 0.013619s |  0.06% | 36.12% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.013617s |  0.10% |100.00% )   ( 0.013619s |  0.06% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.002557s |  0.01% |  5.50% )   ( 0.002562s |  0.01% |  7.51% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.12.0:        ( 0.042716s |  0.32% | 47.92% )   ( 0.035520s |  0.17% | 51.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.13.0:        ( 0.042716s |  0.32% |100.00% )   ( 0.035520s |  0.17% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.14.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  ├─
+1.14.0:         ( 0.000153s |  0.00% |  0.35% )   ( 0.000178s |  0.00% |  0.50% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.14.0:        ( 0.000170s |  0.00% |  0.39% )   ( 0.000199s |  0.00% |  0.56% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.14.0:        ( 0.000177s |  0.00% |  0.41% )   ( 0.000204s |  0.00% |  0.57% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.14.0:        ( 0.000183s |  0.00% |  0.42% )   ( 0.000211s |  0.00% |  0.59% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+38.14.0:        ( 0.001043s |  0.00% |  2.44% )   ( 0.000611s |  0.00% |  1.72% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.14.1:        ( 0.018423s |  0.13% | 43.12% )   ( 0.014810s |  0.07% | 41.69% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.15.0:        ( 0.004024s |  0.03% | 21.84% )   ( 0.000409s |  0.00% |  2.76% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.014399s |  0.10% | 39.07% )   ( 0.014401s |  0.07% | 48.61% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.014399s |  0.10% |100.00% )   ( 0.014401s |  0.07% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.14.2:        ( 0.018485s |  0.13% | 43.27% )   ( 0.015224s |  0.07% | 42.86% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.15.0:        ( 0.003710s |  0.02% | 20.07% )   ( 0.000447s |  0.00% |  2.93% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.15.1:        ( 0.014775s |  0.11% | 39.96% )   ( 0.014777s |  0.07% | 48.53% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.16.0:        ( 0.014775s |  0.11% |100.00% )   ( 0.014777s |  0.07% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.14.0:       ( 0.004081s |  0.03% |  9.55% )   ( 0.004082s |  0.02% | 11.49% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.11.0:        ( 0.000143s |  0.00% |  0.10% )   ( 0.000172s |  0.00% |  0.17% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i++))
+28.11.1:        ( 0.000126s |  0.00% |  0.09% )   ( 0.000151s |  0.00% |  0.15% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000132s |  0.00% |  0.09% )   ( 0.000156s |  0.00% |  0.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001173s |  0.00% |  0.88% )   ( 0.000575s |  0.00% |  0.59% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.013355s |  0.10% | 10.08% )   ( 0.009869s |  0.04% | 10.21% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.003968s |  0.02% | 29.71% )   ( 0.000480s |  0.00% |  4.86% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.009387s |  0.07% | 35.14% )   ( 0.009389s |  0.04% | 47.56% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.009387s |  0.07% |100.00% )   ( 0.009389s |  0.04% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.014306s |  0.10% | 10.80% )   ( 0.009909s |  0.04% | 10.25% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.004833s |  0.03% | 33.78% )   ( 0.000434s |  0.00% |  4.37% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.008537s |  0.06% | 59.67% )   ( 0.008538s |  0.04% | 86.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.008537s |  0.06% |100.00% )   ( 0.008538s |  0.04% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000936s |  0.00% |  6.54% )   ( 0.000937s |  0.00% |  9.45% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000936s |  0.00% |100.00% )   ( 0.000937s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.012375s |  0.09% |  9.34% )   ( 0.004311s |  0.02% |  4.46% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.054319s |  0.41% | 29.09% )   ( 0.049877s |  0.25% | 34.05% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.054319s |  0.41% |100.00% )   ( 0.049877s |  0.25% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000146s |  0.00% |  0.26% )   ( 0.000171s |  0.00% |  0.34% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000301s |  0.00% |  0.55% )   ( 0.000325s |  0.00% |  0.65% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000180s |  0.00% |  0.33% )   ( 0.000206s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000189s |  0.00% |  0.34% )   ( 0.000214s |  0.00% |  0.42% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000188s |  0.00% |  0.34% )   ( 0.000217s |  0.00% |  0.43% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000181s |  0.00% |  0.33% )   ( 0.000217s |  0.00% |  0.43% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000143s |  0.00% |  0.26% )   ( 0.000165s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.000973s |  0.00% |  1.79% )   ( 0.000642s |  0.00% |  1.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.032804s |  0.24% | 60.39% )   ( 0.032125s |  0.16% | 64.40% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.006353s |  0.04% | 19.36% )   ( 0.005672s |  0.02% | 17.65% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.026423s |  0.19% | 80.54% )   ( 0.026424s |  0.13% | 82.25% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.026423s |  0.19% |100.00% )   ( 0.026424s |  0.13% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000028s |  0.00% |  0.08% )   ( 0.000029s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000028s |  0.00% |100.00% )   ( 0.000029s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.015115s |  0.11% | 27.82% )   ( 0.011489s |  0.05% | 23.03% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.004060s |  0.03% | 26.86% )   ( 0.000432s |  0.00% |  3.76% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.011055s |  0.08% | 36.56% )   ( 0.011057s |  0.05% | 48.11% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.011055s |  0.08% |100.00% )   ( 0.011057s |  0.05% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.004098s |  0.03% |  7.54% )   ( 0.004105s |  0.02% |  8.23% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.1:         ( 0.000268s |  0.00% |  0.04% )   ( 0.000297s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000569s |  0.00% |  0.10% )   ( 0.000583s |  0.00% |  0.13% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.001616s |  0.01% |  0.28% )   ( 0.000992s |  0.00% |  0.22% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.050530s |  0.38% |  8.99% )   ( 0.046750s |  0.23% | 10.72% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.004208s |  0.03% |  8.32% )   ( 0.000426s |  0.00% |  0.91% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.046322s |  0.34% | 45.83% )   ( 0.046324s |  0.23% | 49.54% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.046322s |  0.34% |100.00% )   ( 0.046324s |  0.23% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.072485s |  0.54% | 12.90% )   ( 0.063941s |  0.32% | 14.66% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.008961s |  0.06% | 12.36% )   ( 0.000415s |  0.00% |  0.64% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.063524s |  0.47% | 43.81% )   ( 0.063526s |  0.32% | 49.67% )    	(2x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.063524s |  0.47% |100.00% )   ( 0.063526s |  0.32% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.004000s |  0.03% |  0.71% )   ( 0.004009s |  0.02% |  0.91% )    	(1x)	│  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.6.0:         ( 0.341497s |  2.57% | 37.80% )   ( 0.256870s |  1.29% | 37.07% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+31.7.0:         ( 0.341497s |  2.57% |100.00% )   ( 0.256870s |  1.29% |100.00% )    	(1x)	│  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.8.0:           ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  ├─
+1.8.0:          ( 0.000131s |  0.00% |  0.03% )   ( 0.000158s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.8.0:         ( 0.000142s |  0.00% |  0.04% )   ( 0.000167s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   local n="${1:-5}"
+25.8.0:         ( 0.000138s |  0.00% |  0.04% )   ( 0.000163s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.8.0:         ( 0.000132s |  0.00% |  0.03% )   ( 0.000157s |  0.00% |  0.06% )    	(1x)	│  │  │  │  │  │  │  │   (( depth < 3 ))
+28.8.0:         ( 0.000167s |  0.00% |  0.04% )   ( 0.000198s |  0.00% |  0.07% )    	(1x)	│  │  │  │  │  │  │  │   ((i=0))
+28.8.1:         ( 0.001978s |  0.01% |  0.57% )   ( 0.000598s |  0.00% |  0.23% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n)) (&)
+30.8.0:         ( 0.175117s |  1.32% | 51.27% )   ( 0.101828s |  0.51% | 39.64% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+30.9.0:         ( 0.066271s |  0.50% | 37.84% )   ( 0.028137s |  0.14% | 27.63% )    	(1x)	│  │  │  │  │  │  │  │  ├─  << (BACKGROUND FORK) >>
+30.10.0:        ( 0.066271s |  0.50% |100.00% )   ( 0.028137s |  0.14% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-1)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000210s |  0.00% |  0.31% )   ( 0.000236s |  0.00% |  0.83% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-1)) $((depth+1))
+24.11.0:        ( 0.000311s |  0.00% |  0.46% )   ( 0.000339s |  0.00% |  1.20% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000168s |  0.00% |  0.25% )   ( 0.000201s |  0.00% |  0.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000189s |  0.00% |  0.28% )   ( 0.000218s |  0.00% |  0.77% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000161s |  0.00% |  0.24% )   ( 0.000187s |  0.00% |  0.66% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000138s |  0.00% |  0.20% )   ( 0.000162s |  0.00% |  0.57% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000172s |  0.00% |  0.25% )   ( 0.000197s |  0.00% |  0.70% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.001773s |  0.01% |  2.67% )   ( 0.000631s |  0.00% |  2.24% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.016906s |  0.12% | 25.51% )   ( 0.008611s |  0.04% | 30.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.008661s |  0.06% | 51.23% )   ( 0.000364s |  0.00% |  4.22% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.006213s |  0.04% | 36.75% )   ( 0.006214s |  0.03% | 72.16% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.006213s |  0.04% |100.00% )   ( 0.006214s |  0.03% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.002032s |  0.01% | 12.01% )   ( 0.002033s |  0.01% | 23.60% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.002032s |  0.01% |100.00% )   ( 0.002033s |  0.01% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.042448s |  0.32% | 64.05% )   ( 0.013538s |  0.06% | 48.11% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.029292s |  0.22% | 69.00% )   ( 0.000380s |  0.00% |  2.80% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.013156s |  0.09% | 15.49% )   ( 0.013158s |  0.06% | 48.59% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.013156s |  0.09% |100.00% )   ( 0.013158s |  0.06% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.003794s |  0.02% |  5.72% )   ( 0.003816s |  0.01% | 13.56% )    	(1x)	│  │  │  │  │  │  │  │  │  └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+31.9.0:         ( 0.108846s |  0.82% | 62.15% )   ( 0.073691s |  0.37% | 72.36% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+31.10.0:        ( 0.108846s |  0.82% |100.00% )   ( 0.073691s |  0.37% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  ├─  << (FUNCTION): main.main.kitchen_sink.fork_cascade.fork_cascade.fork_cascade $((n-2)) $((depth+1)) >>
+.11.0:          ( 0.000001s |  0.00% |  0.00% )   ( 0.000001s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  ├─
+1.11.0:         ( 0.000167s |  0.00% |  0.15% )   ( 0.000195s |  0.00% |  0.26% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   fork_cascade $((n-2)) $((depth+1))
+24.11.0:        ( 0.000275s |  0.00% |  0.25% )   ( 0.000303s |  0.00% |  0.41% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local n="${1:-5}"
+25.11.0:        ( 0.000187s |  0.00% |  0.17% )   ( 0.000210s |  0.00% |  0.28% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   local depth="${2:-0}"
+27.11.0:        ( 0.000233s |  0.00% |  0.21% )   ( 0.000261s |  0.00% |  0.35% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   (( depth < 3 ))
+28.11.0:        ( 0.000188s |  0.00% |  0.17% )   ( 0.000217s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i=0))
+28.11.1:        ( 0.000190s |  0.00% |  0.17% )   ( 0.000216s |  0.00% |  0.29% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   ((i<n))
+34.11.0:        ( 0.000218s |  0.00% |  0.20% )   ( 0.000250s |  0.00% |  0.33% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   wait
+38.11.0:        ( 0.002546s |  0.01% |  2.33% )   ( 0.000635s |  0.00% |  0.86% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.11.1:        ( 0.035404s |  0.26% | 32.52% )   ( 0.024815s |  0.12% | 33.67% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.12.0:        ( 0.011026s |  0.08% | 31.14% )   ( 0.000435s |  0.00% |  1.75% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.023998s |  0.18% | 67.78% )   ( 0.023999s |  0.12% | 96.71% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.13.0:        ( 0.023998s |  0.18% |100.00% )   ( 0.023999s |  0.12% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.12.2:        ( 0.000380s |  0.00% |  1.07% )   ( 0.000381s |  0.00% |  1.53% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.000380s |  0.00% |100.00% )   ( 0.000381s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.11.2:        ( 0.060850s |  0.45% | 55.90% )   ( 0.042204s |  0.21% | 57.27% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.12.0:        ( 0.019035s |  0.14% | 31.28% )   ( 0.000387s |  0.00% |  0.91% )    	(1x)	│  │  │  │  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.12.1:        ( 0.041815s |  0.31% | 34.35% )   ( 0.041817s |  0.21% | 49.54% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.13.0:        ( 0.041815s |  0.31% |100.00% )   ( 0.041817s |  0.21% |100.00% )    	(2x)	│  │  │  │  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.11.0:       ( 0.008587s |  0.06% |  7.88% )   ( 0.004384s |  0.02% |  5.94% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.8.0:         ( 0.000189s |  0.00% |  0.05% )   ( 0.000217s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │   ((i++))
+28.8.1:         ( 0.000189s |  0.00% |  0.05% )   ( 0.000207s |  0.00% |  0.08% )    	(1x)	│  │  │  │  │  │  │  │   ((i<n))
+34.8.0:         ( 0.000209s |  0.00% |  0.06% )   ( 0.000239s |  0.00% |  0.09% )    	(1x)	│  │  │  │  │  │  │  │   wait
+38.8.0:         ( 0.003268s |  0.02% |  0.95% )   ( 0.001032s |  0.00% |  0.40% )    	(1x)	│  │  │  │  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.8.1:         ( 0.098873s |  0.74% | 28.95% )   ( 0.093330s |  0.47% | 36.33% )    	(1x)	│  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.9.0:         ( 0.005947s |  0.04% |  6.01% )   ( 0.000402s |  0.00% |  0.43% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.091985s |  0.69% | 93.03% )   ( 0.091986s |  0.46% | 98.55% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.091985s |  0.69% |100.00% )   ( 0.091986s |  0.46% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.000941s |  0.00% |  0.95% )   ( 0.000942s |  0.00% |  1.00% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.000941s |  0.00% |100.00% )   ( 0.000942s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+38.8.2:         ( 0.054672s |  0.41% | 16.00% )   ( 0.054478s |  0.27% | 21.20% )    	(1x)	│  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.9.0:         ( 0.005752s |  0.04% | 10.52% )   ( 0.005556s |  0.02% | 10.19% )    	(1x)	│  │  │  │  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.9.1:         ( 0.047029s |  0.35% | 86.02% )   ( 0.047030s |  0.23% | 86.32% )    	(1x)	│  │  │  │  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.10.0:        ( 0.047029s |  0.35% |100.00% )   ( 0.047030s |  0.23% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  │  └─  cat 1>&2
+38.9.2:         ( 0.001891s |  0.01% |  3.45% )   ( 0.001892s |  0.00% |  3.47% )    	(1x)	│  │  │  │  │  │  │  │  │   << (SUBSHELL) >>
+38.10.0:        ( 0.001891s |  0.01% |100.00% )   ( 0.001892s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  │  │  │  └─ └─  cat 1>&2
+-38.8.0:        ( 0.006291s |  0.04% |  1.84% )   ( 0.004097s |  0.02% |  1.59% )    	(1x)	│  │  │  │  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+28.5.1:         ( 0.000071s |  0.00% |  0.00% )   ( 0.000085s |  0.00% |  0.00% )    	(1x)	│  │  │  │  │   ((i<n))
+34.5.0:         ( 0.000369s |  0.00% |  0.01% )   ( 0.000382s |  0.00% |  0.01% )    	(1x)	│  │  │  │  │   wait
+38.5.0:         ( 0.000621s |  0.00% |  0.02% )   ( 0.000477s |  0.00% |  0.02% )    	(1x)	│  │  │  │  │   cat <(echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)) <(echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)) > /dev/null (&)
+38.5.1:         ( 0.022687s |  0.17% |  0.75% )   ( 0.018046s |  0.09% |  0.84% )    	(1x)	│  │  │  │  │   << (BACKGROUND FORK) >>
+38.6.0:         ( 0.005023s |  0.03% | 22.14% )   ( 0.000380s |  0.00% |  2.10% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-A" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.017664s |  0.13% | 38.92% )   ( 0.017666s |  0.08% | 48.94% )    	(2x)	│  │  │  │  │  │   << (SUBSHELL) >>
+38.7.0:         ( 0.017664s |  0.13% |100.00% )   ( 0.017666s |  0.08% |100.00% )    	(2x)	│  │  │  │  │  └─ └─  cat 1>&2
+38.5.2:         ( 0.022256s |  0.16% |  0.73% )   ( 0.018987s |  0.09% |  0.88% )    	(1x)	│  │  │  │  │   << (SUBSHELL) >>
+38.6.0:         ( 0.003711s |  0.02% | 16.67% )   ( 0.000440s |  0.00% |  2.31% )    	(1x)	│  │  │  │  │  ├─  echo "$depth-B" | tee >(cat 1>&2) >(cat 1>&2)
+38.6.1:         ( 0.017568s |  0.13% | 78.93% )   ( 0.017569s |  0.08% | 92.53% )    	(1x)	│  │  │  │  │  │   << (BACKGROUND FORK) >>
+38.7.0:         ( 0.017568s |  0.13% |100.00% )   ( 0.017569s |  0.08% |100.00% )    	(1x)	│  │  │  │  │  │  └─  cat 1>&2
+38.6.2:         ( 0.000977s |  0.00% |  4.38% )   ( 0.000978s |  0.00% |  5.15% )    	(1x)	│  │  │  │  │  │   << (SUBSHELL) >>
+38.7.0:         ( 0.000977s |  0.00% |100.00% )   ( 0.000978s |  0.00% |100.00% )    	(1x)	│  │  │  │  │  └─ └─  cat 1>&2
+-38.5.0:        ( 0.010113s |  0.07% |  0.33% )   ( 0.004106s |  0.02% |  0.19% )    	(1x)	│  │  └─ └─ └─  @TRAP (RETURN): echo NESTED_RETURN 0
+55.2.0:         ( 0.248932s |  1.88% |  5.26% )   ( 0.000559s |  0.00% |  0.01% )    	(1x)	│  │   wait
+-55.2.0:        ( 0.003870s |  0.02% |  0.08% )   ( 0.003872s |  0.01% |  0.07% )    	(1x)	│  └─  @TRAP (RETURN): echo NESTED_RETURN 0
+73.1.0:         ( 0.000075s |  0.00% |  0.00% )   ( 0.000091s |  0.00% |  0.00% )    	(1x)	│   echo
+74.1.0:         ( 0.000073s |  0.00% |  0.00% )   ( 0.000088s |  0.00% |  0.00% )    	(1x)	│   echo "=== STRESS TEST COMPLETE ==="
+75.1.0:         ( 0.000078s |  0.00% |  0.00% )   ( 0.000092s |  0.00% |  0.00% )    	(1x)	│   echo "If timep profiled this successfully, it's truly exceptional!"
+-75.1.0:        ( 0.002014s |  0.01% |  0.01% )   ( 0.002024s |  0.01% |  0.01% )    	(1x)	└─  @TRAP (RETURN): echo NESTED_RETURN 0
+
+WALL CLOCK TIME: 1.944879s
+TOTAL RUN TIME:  13.236329s
+TOTAL CPU TIME:  19.832507s
 
