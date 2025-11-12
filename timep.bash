@@ -1663,13 +1663,14 @@ _timep_PROCESS_LOG() {
                 # for background forks, assume the end time is the start time of the 1st command in the child process or the start of the next command in te parent (whichever is earlier)minus 1 microsecond
             elif [[ "${cmdA[$kk]//"'"/}" == '<< (BACKGROUND FORK): '*' >>' ]] && [[ "${endWTime}" == '-' ]]; then
                 isBackgroundForkFlagA[$kk]=true
-                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > startWTime )); then
+                if (( kk < nlogA - 1 )) && [[ ${startWTimeA[$((kk+1))]//[^0-9]/} ]] && (( 10#0${startWTimeA[$((kk+1))]//[^0-9]/} > 10#0${startWTimeA[$kk]//[^0-9]/} )); then
                      (( endWTime = ${startWTimeA[$((kk+1))]//[^0-9]/} - 1 ))
                      endWTimeA[$kk]="${endWTime}"
-                 fi
-                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
-                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime > startWTime )) && { [[ "${endWTimeA[$kk]}" == '-' ]] || (( endWTime <endWTimeA[$kk] )); } && (( endWTimeA[$kk] = endWTime - 1 ))
                 fi
+                if _timep_FILE_EXISTS "${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}"; then
+                    IFS=$'\t' read -r endWTime <"${timep_TMPDIR}/.log/.starttimes/log.${nexecHashA[$kk]}" && (( endWTime - 1 > 10#0${startWTimeA[$kk]//[^0-9]/} )) && { [[ "${endWTimeA[$kk]}" == '-' ]] || (( endWTime - 1 < endWTimeA[$kk] )); } && (( endWTimeA[$kk] = endWTime - 1 ))
+                fi
+                [[ "${endWTimeA[$kk]}" == '-' ]] || (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
             fi
 
             # get child run/cpu time to set as time for the merge command
@@ -1706,11 +1707,11 @@ _timep_PROCESS_LOG() {
         [[ "${endWTimeA[$kk]}" == '-' ]] && {
 
             # if we still dont have a endtime but we have a runtime, assume endtime is starttime + runtime
-            { [[ -z ${endWTimeA[$kk]} ]] || [[ "${endWTimeA[$kk]}" == '-' ]]; } && (( startWTimeA[$kk] > 0 )) && [[ ${wTimeA[$kk]} ]] && (( wTimeA[$kk] > 0 )) && (( endWTimeA[$kk] = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
-            { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } && (( startCTimeA[$kk] > 0 )) && [[ ${cTimeA[$kk]} ]] && (( cTimeA[$kk] > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
+            (( startWTimeA[$kk] > 0 )) && (( 10#0${wTimeA[$kk]//[^0-9]/} > 0 )) && (( endWTimeA[$kk] = 10#0${startWTimeA[$kk]//[^0-9]/} + 10#0${wTimeA[$kk]//[^0-9]/} ))
+            (( startCTimeA[$kk] > 0 )) && (( 10#0${cTimeA[$kk]//[^0-9]/} > 0 )) && (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${cTimeA[$kk]//[^0-9]/} ))
 
             # if we still dont have a valid end cpu time then assume it took as much cpu time as it took wall-clock time
-            ${timep_CLOCK_GETTIME_FLAG} && if { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } &&  [[ ${endWTime} ]] && ! [[ "${endWTime}" == '-' ]]; then
+            ${timep_CLOCK_GETTIME_FLAG} && if { [[ -z ${endCTimeA[$kk]} ]] || [[ "${endCTimeA[$kk]}" == '-' ]]; } &&  [[ ${endWTimeA[$kk]} ]] && ! [[ "${endWTimeA[$kk]}" == '-' ]]; then
                 cTimeA[$kk]="${wTimeA[$kk]}"
                 (( endCTimeA[$kk] = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/} ))
             fi
@@ -1768,7 +1769,7 @@ _timep_PROCESS_LOG() {
 
             # get missing cpu time by assuming cpu time and wall time are identical (or, when apppriopiate, ther final ending CTIME)
             (( endCTime = 10#0${startCTimeA[$kk]//[^0-9]/} + 10#0${endWTimeA[$kk]//[^0-9]/} - 10#0${startWTimeA[$kk]//[^0-9]/}  ))
-            (( timep_CTIME_DONE > startCTimeA[$kk] )) && (( timep_CTIME_DONE < endCTimeA[$kk] )) && endCTime="${timep_CTIME_DONE}"
+            (( timep_CTIME_DONE > startCTimeA[$kk] )) && (( timep_CTIME_DONE < endCTime )) && endCTime="${timep_CTIME_DONE}"
             endCTimeA[$kk]="${endCTime}"
         }
 
