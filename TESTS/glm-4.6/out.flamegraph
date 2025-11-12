@@ -1,607 +1,607 @@
-SUBSHELL (2589158)_[s];'set -eEuo pipefail'	68:1	81:1
-SUBSHELL (2589158)_[s];'echo "--- Stage 1: Trap Subversion & Re-setting ---"'	81:9	90:5
-SUBSHELL (2589158)_[s];'trap - DEBUG'	43124:727	43014:1034
-SUBSHELL (2589158)_[s];'echo "INFO: Attempted to disable DEBUG trap."'	73:2	87:3
-SUBSHELL (2589158)_[s];'echo "INFO: A command after the trap was disabled."'	71:1	86:3
-SUBSHELL (2589158)_[s];'trap '\''echo "CUSTOM TRAP: $BASH_COMMAND"'\'' DEBUG'	24119:617	24061:949
-SUBSHELL (2589158)_[s];'echo "INFO: A command with our own DEBUG trap active."'	70:1	83:2
-SUBSHELL (2589158)_[s];'echo "INFO: Trap disabled again. The profiler should be in control now."'	77:3	90:5
-SUBSHELL (2589158)_[s];'echo "--- Stage 2: Labyrinth of Built-ins & Expansion ---"'	98:21	107:29
-SUBSHELL (2589158)_[s];'for i in {1..100}'	7599:575	9034:883
-SUBSHELL (2589158)_[s];': $(( (RANDOM % 10) ** 2 ))'	7789:585	9221:901
-SUBSHELL (2589158)_[s];'echo "Line $i: ${!i}" &> /dev/null'	42196:671	44287:1122
-SUBSHELL (2589158)_[s];'nested_var=$(echo $(basename "$(echo /some/long/path/to/a/file.txt)"))'	60296:806	46047:1214
-SUBSHELL (2589158)_[s];'echo "INFO: Labyrinth stage complete."'	80:8	94:15
-SUBSHELL (2589158)_[s];'echo "--- Stage 3: Targeted Concurrency ---"'	82:10	95:17
-SUBSHELL (2589158)_[s];'disowned_pid=$!'	70:1	85:3
-SUBSHELL (2589158)_[s];'disown'	85:12	94:15
-SUBSHELL (2589158)_[s];'echo "INFO: Waiting for ALL remaining known jobs..."'	73:2	87:3
-SUBSHELL (2589158)_[s];'wait'	136235:1204	242:80
-SUBSHELL (2589158)_[s];'echo "INFO: Trying to wait for the disowned PID ($disowned_pid). This should fail."'	83:11	97:19
-SUBSHELL (2589158)_[s];'wait "$disowned_pid"'	173:39	181:64
-SUBSHELL (2589158)_[s];'echo "WARN: Could not wait for disowned PID $disowned_pid, as expected."'	98:21	116:40
-SUBSHELL (2589158)_[s];'echo "INFO: Concurrency stage complete."'	96:19	113:38
-SUBSHELL (2589158)_[s];'echo "--- Stage 4: Dynamic Code & Scope Hell ---"'	94:17	111:37
-SUBSHELL (2589158)_[s];'temp_script=$(mktemp)'	505:90	318:118
-SUBSHELL (2589158)_[s];'$'\''cat <<\'\''EOF\'\'' > "$temp_script"\n# This script defines a function that modifies a variable.\n# A good profiler should know this code came from a file.\nsourced_var="initial_value"\nsourced_func() {\n    echo "INFO: Inside a function from a sourced file."\'	1455:160	1530:229
-SUBSHELL (2589158)_[s];'source "$temp_script"'	4657:469	4671:705
-SUBSHELL (2589158)_[s];'sourced_var="initial_value"'	90:13	104:24
-SUBSHELL (2589158)_[s];'eval '\''sourced_func, echo "INFO: The sourced_var is now: $sourced_var"'\'''	80:8	97:19
-SUBSHELL (2589158)_[s];'echo "INFO: The sourced_var is now: $sourced_var"'	207:44	232:77
-SUBSHELL (2589158)_[s];'rm -f "$temp_script"'	1387:156	1530:229
-SUBSHELL (2589158)_[s];'echo "INFO: Dynamic execution stage complete."'	162:36	180:62
-SUBSHELL (2589158)_[s];'echo "--- Stage 5: State & Control Flow Obfuscation ---"'	145:33	169:59
-SUBSHELL (2589158)_[s];'declare -n ref_to_var=original_var'	140:32	163:58
-SUBSHELL (2589158)_[s];'original_var="I am the original"'	134:31	157:55
-SUBSHELL (2589158)_[s];'echo "INFO: Value after nameref update: $original_var"'	79:6	92:9
-SUBSHELL (2589158)_[s];'echo "INFO: State obfuscation stage complete."'	74:2	86:3
-SUBSHELL (2589158)_[s];'echo "--- Stage 6: Redirection and File Descriptor Madness ---"'	88:13	119:40
-SUBSHELL (2589158)_[s];'exec 3<> /dev/null'	76:2	90:5
-SUBSHELL (2589158)_[s];'echo "to stdout"'	66:0	78:0
-SUBSHELL (2589158)_[s];'echo "to stderr" 1>&2'	75:2	89:4
-SUBSHELL (2589158)_[s];'exec 3>&-'	71:1	84:2
-SUBSHELL (2589158)_[s];'diff <(seq 1 5) <(echo -e "1\n2\n3\n4\n5") > /dev/null (&)'	1451:158	1380:220
-SUBSHELL (2589158)_[s];'echo "INFO: Redirection stage complete."'	267:50	291:98
-SUBSHELL (2589158)_[s];'echo "--- Stress Test v2 Complete ---"'	179:40	200:71
-SUBSHELL (2589158)_[s];'echo "If timep profiled all of this accurately, it is truly excellent."'	214:45	238:79
-SUBSHELL (2589158)_[s];SUBSHELL (2589609)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	454:73	292:100
-SUBSHELL (2589158)_[s];SUBSHELL (2589444)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	659:105	514:165
-SUBSHELL (2589158)_[s];SUBSHELL (2589629)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	793:118	665:173
-SUBSHELL (2589158)_[s];SUBSHELL (2589419)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	595:98	306:110
-SUBSHELL (2589158)_[s];SUBSHELL (2589188)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	452:72	277:86
-SUBSHELL (2589158)_[s];SUBSHELL (2589602)_[s];'read'	164:37	181:64
-SUBSHELL (2589158)_[s];SUBSHELL (2589602)_[s];'echo $REPLY'	77:3	90:5
-SUBSHELL (2589158)_[s];SUBSHELL (2589289)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	711:110	505:164
-SUBSHELL (2589158)_[s];SUBSHELL (2589619)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	906:127	321:120
-SUBSHELL (2589158)_[s];SUBSHELL (2589267)_[s];'read'	97:20	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589644)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	730:113	316:117
-SUBSHELL (2589158)_[s];SUBSHELL (2589272)_[s];'read'	92:15	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589267)_[s];'echo $REPLY'	80:8	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589272)_[s];'echo $REPLY'	79:6	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589344)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	530:94	382:144
-SUBSHELL (2589158)_[s];SUBSHELL (2589422)_[s];'read'	336:60	374:139
-SUBSHELL (2589158)_[s];SUBSHELL (2589422)_[s];'echo $REPLY'	294:52	333:123
-SUBSHELL (2589158)_[s];SUBSHELL (2589319)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	497:88	287:94
-SUBSHELL (2589158)_[s];SUBSHELL (2589277)_[s];'read'	93:16	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589277)_[s];'echo $REPLY'	78:4	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589322)_[s];'read'	102:22	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589322)_[s];'echo $REPLY'	79:6	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589309)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	458:74	289:95
-SUBSHELL (2589158)_[s];SUBSHELL (2589402)_[s];'read'	93:16	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589409)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	459:75	298:104
-SUBSHELL (2589158)_[s];SUBSHELL (2589402)_[s];'echo $REPLY'	78:4	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589374)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	449:71	284:92
-SUBSHELL (2589158)_[s];SUBSHELL (2589302)_[s];'read'	179:40	204:71
-SUBSHELL (2589158)_[s];SUBSHELL (2589302)_[s];'echo $REPLY'	78:4	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589599)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	898:125	775:182
-SUBSHELL (2589158)_[s];SUBSHELL (2589362)_[s];'read'	249:48	283:90
-SUBSHELL (2589158)_[s];SUBSHELL (2589362)_[s];'echo $REPLY'	82:10	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589637)_[s];'read'	142:32	162:57
-SUBSHELL (2589158)_[s];SUBSHELL (2589637)_[s];'echo $REPLY'	121:26	142:47
-SUBSHELL (2589158)_[s];SUBSHELL (2589572)_[s];'read'	92:15	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589572)_[s];'echo $REPLY'	75:2	90:5
-SUBSHELL (2589158)_[s];SUBSHELL (2589534)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1275:152	1120:215
-SUBSHELL (2589158)_[s];SUBSHELL (2589514)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1156:146	1035:206
-SUBSHELL (2589158)_[s];SUBSHELL (2589567)_[s];'read'	127:28	146:50
-SUBSHELL (2589158)_[s];SUBSHELL (2589567)_[s];'echo $REPLY'	75:2	89:4
-SUBSHELL (2589158)_[s];SUBSHELL (2589582)_[s];'read'	133:30	152:53
-SUBSHELL (2589158)_[s];SUBSHELL (2589582)_[s];'echo $REPLY'	113:24	133:44
-SUBSHELL (2589158)_[s];SUBSHELL (2589224)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	695:106	301:107
-SUBSHELL (2589158)_[s];SUBSHELL (2589387)_[s];'read'	92:15	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589387)_[s];'echo $REPLY'	77:3	90:5
-SUBSHELL (2589158)_[s];SUBSHELL (2589557)_[s];'read'	180:40	206:73
-SUBSHELL (2589158)_[s];SUBSHELL (2589557)_[s];'echo $REPLY'	156:35	183:65
-SUBSHELL (2589158)_[s];SUBSHELL (2589337)_[s];'read'	95:18	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589337)_[s];'echo $REPLY'	79:6	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589173)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	492:88	309:113
-SUBSHELL (2589158)_[s];SUBSHELL (2589437)_[s];'read'	115:25	132:44
-SUBSHELL (2589158)_[s];SUBSHELL (2589494)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	569:95	403:153
-SUBSHELL (2589158)_[s];SUBSHELL (2589437)_[s];'echo $REPLY'	98:21	115:39
-SUBSHELL (2589158)_[s];SUBSHELL (2589577)_[s];'read'	280:51	319:119
-SUBSHELL (2589158)_[s];SUBSHELL (2589547)_[s];'read'	97:20	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589577)_[s];'echo $REPLY'	260:49	289:95
-SUBSHELL (2589158)_[s];SUBSHELL (2589547)_[s];'echo $REPLY'	81:9	96:18
-SUBSHELL (2589158)_[s];SUBSHELL (2589464)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	614:102	401:149
-SUBSHELL (2589158)_[s];SUBSHELL (2589242)_[s];'read'	93:16	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589242)_[s];'echo $REPLY'	79:6	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589647)_[s];'read'	181:41	205:72
-SUBSHELL (2589158)_[s];SUBSHELL (2589647)_[s];'echo $REPLY'	164:37	185:65
-SUBSHELL (2589158)_[s];SUBSHELL (2589183)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	449:71	280:88
-SUBSHELL (2589158)_[s];SUBSHELL (2589404)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	448:69	281:88
-SUBSHELL (2589158)_[s];SUBSHELL (2589372)_[s];'read'	147:33	168:59
-SUBSHELL (2589158)_[s];SUBSHELL (2589372)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589304)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	732:114	593:170
-SUBSHELL (2589158)_[s];SUBSHELL (2589389)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1111:139	1017:198
-SUBSHELL (2589158)_[s];SUBSHELL (2589649)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	650:104	360:133
-SUBSHELL (2589158)_[s];SUBSHELL (2589622)_[s];'read'	128:29	147:50
-SUBSHELL (2589158)_[s];SUBSHELL (2589642)_[s];'read'	95:18	109:32
-SUBSHELL (2589158)_[s];SUBSHELL (2589622)_[s];'echo $REPLY'	108:24	126:42
-SUBSHELL (2589158)_[s];SUBSHELL (2589642)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589424)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1068:136	970:192
-SUBSHELL (2589158)_[s];SUBSHELL (2589324)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1142:144	1052:208
-SUBSHELL (2589158)_[s];SUBSHELL (2589367)_[s];'read'	94:17	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589392)_[s];'read'	127:28	145:49
-SUBSHELL (2589158)_[s];SUBSHELL (2589367)_[s];'echo $REPLY'	79:6	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589392)_[s];'echo $REPLY'	107:23	125:42
-SUBSHELL (2589158)_[s];SUBSHELL (2589652)_[s];'read'	97:20	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589652)_[s];'echo $REPLY'	81:9	96:18
-SUBSHELL (2589158)_[s];SUBSHELL (2589334)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	453:72	290:96
-SUBSHELL (2589158)_[s];SUBSHELL (2589369)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	505:90	341:125
-SUBSHELL (2589158)_[s];SUBSHELL (2589347)_[s];'read'	127:28	145:49
-SUBSHELL (2589158)_[s];SUBSHELL (2589347)_[s];'echo $REPLY'	109:24	127:43
-SUBSHELL (2589158)_[s];SUBSHELL (2589239)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1123:141	1020:202
-SUBSHELL (2589158)_[s];SUBSHELL (2589384)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	460:76	296:101
-SUBSHELL (2589158)_[s];SUBSHELL (2589634)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	611:100	407:156
-SUBSHELL (2589158)_[s];SUBSHELL (2589352)_[s];'read'	324:58	348:128
-SUBSHELL (2589158)_[s];SUBSHELL (2589352)_[s];'echo $REPLY'	80:8	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589379)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	601:100	298:104
-SUBSHELL (2589158)_[s];SUBSHELL (2589499)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	475:84	313:115
-SUBSHELL (2589158)_[s];SUBSHELL (2589657)_[s];'read'	97:20	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589657)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589329)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	779:117	415:158
-SUBSHELL (2589158)_[s];SUBSHELL (2589254)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1115:140	1035:206
-SUBSHELL (2589158)_[s];SUBSHELL (2589204)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1110:137	981:194
-SUBSHELL (2589158)_[s];SUBSHELL (2589692)_[s];'mktemp'	3315:385	3315:585
-SUBSHELL (2589158)_[s];SUBSHELL (2589519)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	768:116	680:174
-SUBSHELL (2589158)_[s];SUBSHELL (2589197)_[s];'read'	93:16	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589197)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589664)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	931:129	786:183
-SUBSHELL (2589158)_[s];SUBSHELL (2589207)_[s];'read'	93:16	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589207)_[s];'echo $REPLY'	78:4	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589502)_[s];'read'	95:18	109:32
-SUBSHELL (2589158)_[s];SUBSHELL (2589502)_[s];'echo $REPLY'	79:6	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589232)_[s];'read'	220:45	250:81
-SUBSHELL (2589158)_[s];SUBSHELL (2589232)_[s];'echo $REPLY'	193:43	223:76
-SUBSHELL (2589158)_[s];SUBSHELL (2589249)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	444:68	282:89
-SUBSHELL (2589158)_[s];SUBSHELL (2589552)_[s];'read'	100:22	112:38
-SUBSHELL (2589158)_[s];SUBSHELL (2589552)_[s];'echo $REPLY'	81:9	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589509)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	726:112	500:163
-SUBSHELL (2589158)_[s];SUBSHELL (2589522)_[s];'read'	243:48	270:84
-SUBSHELL (2589158)_[s];SUBSHELL (2589522)_[s];'echo $REPLY'	202:44	234:77
-SUBSHELL (2589158)_[s];SUBSHELL (2589227)_[s];'read'	96:19	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589227)_[s];'echo $REPLY'	81:9	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589667)_[s];'read'	353:64	402:150
-SUBSHELL (2589158)_[s];SUBSHELL (2589667)_[s];'echo $REPLY'	328:59	365:137
-SUBSHELL (2589158)_[s];SUBSHELL (2589607)_[s];'read'	92:15	105:25
-SUBSHELL (2589158)_[s];SUBSHELL (2589607)_[s];'echo $REPLY'	75:2	89:4
-SUBSHELL (2589158)_[s];SUBSHELL (2589632)_[s];'read'	182:41	208:75
-SUBSHELL (2589158)_[s];SUBSHELL (2589632)_[s];'echo $REPLY'	156:35	182:64
-SUBSHELL (2589158)_[s];SUBSHELL (2589354)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	459:75	291:98
-SUBSHELL (2589158)_[s];SUBSHELL (2589282)_[s];'read'	92:15	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589282)_[s];'echo $REPLY'	78:4	91:7
-SUBSHELL (2589158)_[s];SUBSHELL (2589627)_[s];'read'	97:20	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589627)_[s];'echo $REPLY'	80:8	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589382)_[s];'read'	95:18	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589382)_[s];'echo $REPLY'	78:4	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589434)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	698:108	310:113
-SUBSHELL (2589158)_[s];SUBSHELL (2589614)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	462:77	297:103
-SUBSHELL (2589158)_[s];SUBSHELL (2589537)_[s];'read'	181:41	206:73
-SUBSHELL (2589158)_[s];SUBSHELL (2589537)_[s];'echo $REPLY'	156:35	181:64
-SUBSHELL (2589158)_[s];SUBSHELL (2589176)_[s];'read'	93:16	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589429)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	828:119	711:176
-SUBSHELL (2589158)_[s];SUBSHELL (2589176)_[s];'echo $REPLY'	79:6	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589171)_[s];'read'	336:60	371:138
-SUBSHELL (2589158)_[s];SUBSHELL (2589171)_[s];'echo $REPLY'	80:8	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589544)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1035:133	909:188
-SUBSHELL (2589158)_[s];SUBSHELL (2589457)_[s];'read'	96:19	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589457)_[s];'echo $REPLY'	80:8	104:24
-SUBSHELL (2589158)_[s];SUBSHELL (2589292)_[s];'read'	130:29	149:51
-SUBSHELL (2589158)_[s];SUBSHELL (2589564)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	490:87	314:116
-SUBSHELL (2589158)_[s];SUBSHELL (2589292)_[s];'echo $REPLY'	113:24	132:44
-SUBSHELL (2589158)_[s];SUBSHELL (2589417)_[s];'read'	97:20	112:38
-SUBSHELL (2589158)_[s];SUBSHELL (2589186)_[s];'read'	126:27	143:47
-SUBSHELL (2589158)_[s];SUBSHELL (2589417)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589186)_[s];'echo $REPLY'	107:23	126:42
-SUBSHELL (2589158)_[s];FUNCTION (sourced_func)_[f];'sourced_func'	73:2	87:3
-SUBSHELL (2589158)_[s];FUNCTION (sourced_func)_[f];'echo "INFO: Inside a function from a sourced file."'	80:8	93:12
-SUBSHELL (2589158)_[s];FUNCTION (sourced_func)_[f];'sourced_var="modified_by_sourced_func"'	72:1	85:3
-SUBSHELL (2589158)_[s];FUNCTION (sourced_func)_[f];'seq 1 3 | rev | cat > /dev/null'	3912:424	6501:865
-SUBSHELL (2589158)_[s];SUBSHELL (2589287)_[s];'read'	364:65	405:155
-SUBSHELL (2589158)_[s];SUBSHELL (2589287)_[s];'echo $REPLY'	85:12	100:22
-SUBSHELL (2589158)_[s];SUBSHELL (2589317)_[s];'read'	127:28	145:49
-SUBSHELL (2589158)_[s];SUBSHELL (2589317)_[s];'echo $REPLY'	108:24	126:42
-SUBSHELL (2589158)_[s];SUBSHELL (2589612)_[s];'read'	94:17	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589612)_[s];'echo $REPLY'	82:10	91:7
-SUBSHELL (2589158)_[s];SUBSHELL (2589264)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	919:128	725:177
-SUBSHELL (2589158)_[s];SUBSHELL (2589452)_[s];'read'	91:14	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589452)_[s];'echo $REPLY'	80:8	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589414)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	991:132	409:156
-SUBSHELL (2589158)_[s];SUBSHELL (2589594)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	840:121	574:167
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];'recursive_func 5'	64:0	78:0
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];'local depth=$1'	68:1	82:1
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	65:0	79:1
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	79:6	92:9
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];'((depth--))'	67:0	80:1
-SUBSHELL (2589158)_[s];SUBSHELL (2589447)_[s];'read'	353:64	401:149
-SUBSHELL (2589158)_[s];SUBSHELL (2589447)_[s];'echo $REPLY'	310:54	357:130
-SUBSHELL (2589158)_[s];SUBSHELL (2589314)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1142:144	886:187
-SUBSHELL (2589158)_[s];SUBSHELL (2589698)_[s];'seq 1 5 (^)'	47:0	47:0
-SUBSHELL (2589158)_[s];SUBSHELL (2589217)_[s];'read'	98:21	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589217)_[s];'echo $REPLY'	82:10	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589589)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1502:161	1079:213
-SUBSHELL (2589158)_[s];SUBSHELL (2589181)_[s];'read'	110:24	124:41
-SUBSHELL (2589158)_[s];SUBSHELL (2589181)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589529)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	473:84	296:101
-SUBSHELL (2589158)_[s];SUBSHELL (2589299)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	530:94	380:142
-SUBSHELL (2589158)_[s];SUBSHELL (2589397)_[s];'read'	98:21	113:38
-SUBSHELL (2589158)_[s];SUBSHELL (2589397)_[s];'echo $REPLY'	82:10	97:19
-SUBSHELL (2589158)_[s];SUBSHELL (2589212)_[s];'read'	93:16	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589212)_[s];'echo $REPLY'	77:3	90:5
-SUBSHELL (2589158)_[s];SUBSHELL (2589359)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	466:79	292:100
-SUBSHELL (2589158)_[s];SUBSHELL (2589294)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	594:97	301:107
-SUBSHELL (2589158)_[s];SUBSHELL (2589472)_[s];'read'	105:23	119:40
-SUBSHELL (2589158)_[s];SUBSHELL (2589472)_[s];'echo $REPLY'	78:4	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589489)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	483:86	318:118
-SUBSHELL (2589158)_[s];SUBSHELL (2589467)_[s];'read'	346:63	388:146
-SUBSHELL (2589158)_[s];SUBSHELL (2589467)_[s];'echo $REPLY'	77:3	91:7
-SUBSHELL (2589158)_[s];SUBSHELL (2589477)_[s];'read'	118:26	135:46
-SUBSHELL (2589158)_[s];SUBSHELL (2589477)_[s];'echo $REPLY'	93:16	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589257)_[s];'read'	94:17	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589257)_[s];'echo $REPLY'	83:11	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589262)_[s];'read'	172:39	196:70
-SUBSHELL (2589158)_[s];SUBSHELL (2589262)_[s];'echo $REPLY'	149:34	173:60
-SUBSHELL (2589158)_[s];SUBSHELL (2589454)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	468:80	322:120
-SUBSHELL (2589158)_[s];SUBSHELL (2589269)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	768:116	651:172
-SUBSHELL (2589158)_[s];SUBSHELL (2589482)_[s];'read'	97:20	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589482)_[s];'echo $REPLY'	81:9	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589394)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	508:92	344:126
-SUBSHELL (2589158)_[s];SUBSHELL (2589654)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	472:83	303:108
-SUBSHELL (2589158)_[s];SUBSHELL (2589332)_[s];'read'	96:19	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589332)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589307)_[s];'read'	97:20	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589307)_[s];'echo $REPLY'	87:12	96:18
-SUBSHELL (2589158)_[s];SUBSHELL (2589357)_[s];'read'	96:19	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589357)_[s];'echo $REPLY'	82:10	96:18
-SUBSHELL (2589158)_[s];SUBSHELL (2589279)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	458:74	296:101
-SUBSHELL (2589158)_[s];SUBSHELL (2589432)_[s];'read'	354:65	403:153
-SUBSHELL (2589158)_[s];SUBSHELL (2589432)_[s];'echo $REPLY'	324:58	363:135
-SUBSHELL (2589158)_[s];SUBSHELL (2589407)_[s];'read'	94:17	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589407)_[s];'echo $REPLY'	79:6	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589617)_[s];'read'	98:21	112:38
-SUBSHELL (2589158)_[s];SUBSHELL (2589617)_[s];'echo $REPLY'	79:6	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589274)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	439:67	278:87
-SUBSHELL (2589158)_[s];SUBSHELL (2589449)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	601:100	394:148
-SUBSHELL (2589158)_[s];SUBSHELL (2589349)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	452:72	284:92
-SUBSHELL (2589158)_[s];SUBSHELL (2589237)_[s];'read'	100:22	114:39
-SUBSHELL (2589158)_[s];SUBSHELL (2589237)_[s];'echo $REPLY'	81:9	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589327)_[s];'read'	174:39	199:70
-SUBSHELL (2589158)_[s];SUBSHELL (2589327)_[s];'echo $REPLY'	79:6	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589604)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	463:77	298:104
-SUBSHELL (2589158)_[s];SUBSHELL (2589364)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	467:80	307:110
-SUBSHELL (2589158)_[s];SUBSHELL (2589597)_[s];'read'	94:17	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589597)_[s];'echo $REPLY'	76:2	89:4
-SUBSHELL (2589158)_[s];SUBSHELL (2589624)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1159:147	1019:200
-SUBSHELL (2589158)_[s];SUBSHELL (2589539)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	829:120	411:157
-SUBSHELL (2589158)_[s];SUBSHELL (2589178)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	448:69	273:85
-SUBSHELL (2589158)_[s];SUBSHELL (2589427)_[s];'read'	94:17	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589427)_[s];'echo $REPLY'	98:21	109:32
-SUBSHELL (2589158)_[s];SUBSHELL (2589284)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	508:92	360:133
-SUBSHELL (2589158)_[s];SUBSHELL (2589259)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	879:123	277:86
-SUBSHELL (2589158)_[s];SUBSHELL (2589412)_[s];'read'	93:16	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589412)_[s];'echo $REPLY'	78:4	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589674)_[s];'sleep 0.2'	201635:1204	1694:232
-SUBSHELL (2589158)_[s];SUBSHELL (2589312)_[s];'read'	249:48	283:90
-SUBSHELL (2589158)_[s];SUBSHELL (2589674)_[s];'echo "INFO: Disowned job finished."'	343:62	392:147
-SUBSHELL (2589158)_[s];SUBSHELL (2589312)_[s];'echo $REPLY'	231:46	244:80
-SUBSHELL (2589158)_[s];SUBSHELL (2589497)_[s];'read'	131:29	150:52
-SUBSHELL (2589158)_[s];SUBSHELL (2589497)_[s];'echo $REPLY'	79:6	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589377)_[s];'read'	101:22	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589377)_[s];'echo $REPLY'	80:8	94:15
-SUBSHELL (2589158)_[s];SUBSHELL (2589442)_[s];'read'	181:41	206:73
-SUBSHELL (2589158)_[s];SUBSHELL (2589442)_[s];'echo $REPLY'	154:34	179:62
-SUBSHELL (2589158)_[s];SUBSHELL (2589699)_[s];'echo -e "1\n2\n3\n4\n5"'	331:60	382:144
-SUBSHELL (2589158)_[s];SUBSHELL (2589342)_[s];'read'	96:19	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589342)_[s];'echo $REPLY'	80:8	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589639)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	445:68	287:94
-SUBSHELL (2589158)_[s];SUBSHELL (2589524)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	593:96	384:145
-SUBSHELL (2589158)_[s];SUBSHELL (2589562)_[s];'read'	158:36	175:61
-SUBSHELL (2589158)_[s];SUBSHELL (2589562)_[s];'echo $REPLY'	133:30	154:54
-SUBSHELL (2589158)_[s];SUBSHELL (2589214)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	642:104	487:162
-SUBSHELL (2589158)_[s];SUBSHELL (2589587)_[s];'read'	139:32	158:56
-SUBSHELL (2589158)_[s];SUBSHELL (2589587)_[s];'echo $REPLY'	118:26	138:46
-SUBSHELL (2589158)_[s];SUBSHELL (2589487)_[s];'read'	98:21	111:37
-SUBSHELL (2589158)_[s];SUBSHELL (2589487)_[s];'echo $REPLY'	82:10	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589462)_[s];'read'	93:16	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589462)_[s];'echo $REPLY'	78:4	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589659)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	720:111	575:168
-SUBSHELL (2589158)_[s];SUBSHELL (2589219)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	949:130	313:115
-SUBSHELL (2589158)_[s];SUBSHELL (2589244)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	514:93	280:88
-SUBSHELL (2589158)_[s];SUBSHELL (2589504)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	612:101	291:98
-SUBSHELL (2589158)_[s];SUBSHELL (2589234)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	696:107	527:166
-SUBSHELL (2589158)_[s];SUBSHELL (2589517)_[s];'read'	354:65	403:153
-SUBSHELL (2589158)_[s];SUBSHELL (2589517)_[s];'echo $REPLY'	78:4	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589554)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1527:163	982:196
-SUBSHELL (2589158)_[s];SUBSHELL (2589469)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	845:122	403:153
-SUBSHELL (2589158)_[s];SUBSHELL (2589191)_[s];'read'	94:17	108:31
-SUBSHELL (2589158)_[s];SUBSHELL (2589191)_[s];'echo $REPLY'	85:12	96:18
-SUBSHELL (2589158)_[s];SUBSHELL (2589592)_[s];'read'	164:37	179:62
-SUBSHELL (2589158)_[s];SUBSHELL (2589592)_[s];'echo $REPLY'	139:32	161:57
-SUBSHELL (2589158)_[s];SUBSHELL (2589569)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	476:85	308:111
-SUBSHELL (2589158)_[s];SUBSHELL (2589492)_[s];'read'	242:47	264:83
-SUBSHELL (2589158)_[s];SUBSHELL (2589492)_[s];'echo $REPLY'	78:4	92:9
-SUBSHELL (2589158)_[s];SUBSHELL (2589199)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	469:81	306:110
-SUBSHELL (2589158)_[s];SUBSHELL (2589297)_[s];'read'	356:65	405:155
-SUBSHELL (2589158)_[s];SUBSHELL (2589297)_[s];'echo $REPLY'	312:55	362:133
-SUBSHELL (2589158)_[s];SUBSHELL (2589247)_[s];'read'	233:47	265:83
-SUBSHELL (2589158)_[s];SUBSHELL (2589247)_[s];'echo $REPLY'	101:22	120:41
-SUBSHELL (2589158)_[s];SUBSHELL (2589662)_[s];'read'	183:42	208:75
-SUBSHELL (2589158)_[s];SUBSHELL (2589662)_[s];'echo $REPLY'	157:35	184:65
-SUBSHELL (2589158)_[s];SUBSHELL (2589339)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	618:103	309:113
-SUBSHELL (2589158)_[s];SUBSHELL (2589542)_[s];'read'	233:47	266:84
-SUBSHELL (2589158)_[s];SUBSHELL (2589542)_[s];'echo $REPLY'	201:43	235:78
-SUBSHELL (2589158)_[s];SUBSHELL (2589559)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1176:149	1065:210
-SUBSHELL (2589158)_[s];SUBSHELL (2589484)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	464:78	314:116
-SUBSHELL (2589158)_[s];SUBSHELL (2589512)_[s];'read'	189:43	209:75
-SUBSHELL (2589158)_[s];SUBSHELL (2589439)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	511:92	346:126
-SUBSHELL (2589158)_[s];SUBSHELL (2589512)_[s];'echo $REPLY'	155:34	180:62
-SUBSHELL (2589158)_[s];SUBSHELL (2589209)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1064:134	969:190
-SUBSHELL (2589158)_[s];FUNCTION (update_ref)_[f];'update_ref'	133:30	156:55
-SUBSHELL (2589158)_[s];FUNCTION (update_ref)_[f];'ref_to_var="I have been updated via a nameref."'	185:42	207:74
-SUBSHELL (2589158)_[s];SUBSHELL (2589584)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	591:96	309:113
-SUBSHELL (2589158)_[s];SUBSHELL (2589459)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	470:82	292:100
-SUBSHELL (2589158)_[s];SUBSHELL (2589527)_[s];'read'	303:53	341:125
-SUBSHELL (2589158)_[s];SUBSHELL (2589527)_[s];'echo $REPLY'	254:49	286:93
-SUBSHELL (2589158)_[s];SUBSHELL (2589222)_[s];'read'	93:16	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589222)_[s];'echo $REPLY'	77:3	91:7
-SUBSHELL (2589158)_[s];SUBSHELL (2589252)_[s];'read'	126:27	146:50
-SUBSHELL (2589158)_[s];SUBSHELL (2589252)_[s];'echo $REPLY'	82:10	93:12
-SUBSHELL (2589158)_[s];SUBSHELL (2589549)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	469:81	299:105
-SUBSHELL (2589158)_[s];SUBSHELL (2589193)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	506:90	305:109
-SUBSHELL (2589158)_[s];SUBSHELL (2589202)_[s];'read'	95:18	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589202)_[s];'echo $REPLY'	83:11	97:19
-SUBSHELL (2589158)_[s];SUBSHELL (2589507)_[s];'read'	261:49	297:103
-SUBSHELL (2589158)_[s];SUBSHELL (2589507)_[s];'echo $REPLY'	78:4	91:7
-SUBSHELL (2589158)_[s];SUBSHELL (2589474)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	710:109	580:169
-SUBSHELL (2589158)_[s];SUBSHELL (2589399)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	471:83	301:107
-SUBSHELL (2589158)_[s];SUBSHELL (2589479)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	486:86	286:93
-SUBSHELL (2589158)_[s];SUBSHELL (2589579)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1211:151	841:185
-SUBSHELL (2589158)_[s];SUBSHELL (2589532)_[s];'read'	165:38	189:68
-SUBSHELL (2589158)_[s];SUBSHELL (2589532)_[s];'echo $REPLY'	143:32	165:58
-SUBSHELL (2589158)_[s];SUBSHELL (2589574)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	464:78	290:96
-SUBSHELL (2589158)_[s];SUBSHELL (2589229)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	892:124	731:178
-SUBSHELL (2589158)_[s];SUBSHELL (2589669)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1324:154	757:180
-SUBSHELL (2589158)_[s];SUBSHELL (2589399)_[s];SUBSHELL (2589400)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1774:197	1774:284
-SUBSHELL (2589158)_[s];SUBSHELL (2589424)_[s];SUBSHELL (2589425)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5129:482	5129:724
-SUBSHELL (2589158)_[s];SUBSHELL (2589414)_[s];SUBSHELL (2589415)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2821:365	2821:548
-SUBSHELL (2589158)_[s];SUBSHELL (2589444)_[s];SUBSHELL (2589445)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2014:244	2014:355
-SUBSHELL (2589158)_[s];SUBSHELL (2589549)_[s];SUBSHELL (2589550)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1903:228	1903:331
-SUBSHELL (2589158)_[s];SUBSHELL (2589564)_[s];SUBSHELL (2589565)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2402:308	2402:467
-SUBSHELL (2589158)_[s];SUBSHELL (2589494)_[s];SUBSHELL (2589495)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2484:337	2484:511
-SUBSHELL (2589158)_[s];SUBSHELL (2589254)_[s];SUBSHELL (2589255)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5668:518	5668:780
-SUBSHELL (2589158)_[s];SUBSHELL (2589314)_[s];SUBSHELL (2589315)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4154:439	4154:660
-SUBSHELL (2589158)_[s];SUBSHELL (2589394)_[s];SUBSHELL (2589395)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2342:287	2342:429
-SUBSHELL (2589158)_[s];SUBSHELL (2589589)_[s];SUBSHELL (2589590)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	6160:549	6160:828
-SUBSHELL (2589158)_[s];SUBSHELL (2589604)_[s];SUBSHELL (2589605)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1880:219	1880:316
-SUBSHELL (2589158)_[s];SUBSHELL (2589634)_[s];SUBSHELL (2589635)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2657:351	2657:531
-SUBSHELL (2589158)_[s];SUBSHELL (2589639)_[s];SUBSHELL (2589640)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2401:305	2401:462
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	64:0	78:0
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	66:0	81:1
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	66:0	81:1
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	79:6	94:15
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	134:31	156:55
-SUBSHELL (2589158)_[s];SUBSHELL (2589389)_[s];SUBSHELL (2589390)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5980:525	5980:791
-SUBSHELL (2589158)_[s];SUBSHELL (2589324)_[s];SUBSHELL (2589325)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5998:533	5998:803
-SUBSHELL (2589158)_[s];SUBSHELL (2589309)_[s];SUBSHELL (2589310)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1778:200	1778:287
-SUBSHELL (2589158)_[s];SUBSHELL (2589594)_[s];SUBSHELL (2589595)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3223:381	3223:578
-SUBSHELL (2589158)_[s];SUBSHELL (2589183)_[s];SUBSHELL (2589184)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2112:255	2112:376
-SUBSHELL (2589158)_[s];SUBSHELL (2589669)_[s];SUBSHELL (2589670)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2970:373	2970:566
-SUBSHELL (2589158)_[s];SUBSHELL (2589619)_[s];SUBSHELL (2589620)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2295:281	2295:420
-SUBSHELL (2589158)_[s];SUBSHELL (2589364)_[s];SUBSHELL (2589365)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1856:216	1856:313
-SUBSHELL (2589158)_[s];SUBSHELL (2589289)_[s];SUBSHELL (2589290)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3656:399	3656:606
-SUBSHELL (2589158)_[s];SUBSHELL (2589509)_[s];SUBSHELL (2589510)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3543:394	3543:599
-SUBSHELL (2589158)_[s];SUBSHELL (2589599)_[s];SUBSHELL (2589600)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4642:463	4642:695
-SUBSHELL (2589158)_[s];SUBSHELL (2589629)_[s];SUBSHELL (2589630)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3942:429	3942:644
-SUBSHELL (2589158)_[s];SUBSHELL (2589449)_[s];SUBSHELL (2589450)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2279:278	2279:416
-SUBSHELL (2589158)_[s];SUBSHELL (2589539)_[s];SUBSHELL (2589540)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2403:312	2403:472
-SUBSHELL (2589158)_[s];SUBSHELL (2589269)_[s];SUBSHELL (2589270)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4334:445	4334:668
-SUBSHELL (2589158)_[s];SUBSHELL (2589234)_[s];SUBSHELL (2589235)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1976:236	1976:339
-SUBSHELL (2589158)_[s];SUBSHELL (2589259)_[s];SUBSHELL (2589260)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1975:233	1975:335
-SUBSHELL (2589158)_[s];SUBSHELL (2589204)_[s];SUBSHELL (2589205)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5538:496	5538:746
-SUBSHELL (2589158)_[s];SUBSHELL (2589504)_[s];SUBSHELL (2589505)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1889:223	1889:324
-SUBSHELL (2589158)_[s];SUBSHELL (2589654)_[s];SUBSHELL (2589655)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2163:260	2163:384
-SUBSHELL (2589158)_[s];SUBSHELL (2589249)_[s];SUBSHELL (2589250)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2431:318	2431:482
-SUBSHELL (2589158)_[s];SUBSHELL (2589239)_[s];SUBSHELL (2589240)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5396:489	5396:735
-SUBSHELL (2589158)_[s];SUBSHELL (2589534)_[s];SUBSHELL (2589535)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3687:404	3687:613
-SUBSHELL (2589158)_[s];SUBSHELL (2589439)_[s];SUBSHELL (2589440)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2379:299	2379:448
-SUBSHELL (2589158)_[s];SUBSHELL (2589474)_[s];SUBSHELL (2589475)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3718:414	3718:628
-SUBSHELL (2589158)_[s];SUBSHELL (2589529)_[s];SUBSHELL (2589530)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2456:324	2456:491
-SUBSHELL (2589158)_[s];SUBSHELL (2589284)_[s];SUBSHELL (2589285)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2211:263	2211:389
-SUBSHELL (2589158)_[s];SUBSHELL (2589359)_[s];SUBSHELL (2589360)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1798:204	1798:295
-SUBSHELL (2589158)_[s];SUBSHELL (2589659)_[s];SUBSHELL (2589660)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3538:390	3538:592
-SUBSHELL (2589158)_[s];SUBSHELL (2589624)_[s];SUBSHELL (2589625)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5600:503	5600:757
-SUBSHELL (2589158)_[s];SUBSHELL (2589334)_[s];SUBSHELL (2589335)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1718:177	1718:249
-SUBSHELL (2589158)_[s];SUBSHELL (2589649)_[s];SUBSHELL (2589650)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2787:358	2787:537
-SUBSHELL (2589158)_[s];SUBSHELL (2589464)_[s];SUBSHELL (2589465)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2226:266	2226:393
-SUBSHELL (2589158)_[s];SUBSHELL (2589219)_[s];SUBSHELL (2589220)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1745:183	1745:259
-SUBSHELL (2589158)_[s];SUBSHELL (2589229)_[s];SUBSHELL (2589230)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3705:409	3705:621
-SUBSHELL (2589158)_[s];SUBSHELL (2589178)_[s];SUBSHELL (2589179)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1701:172	1701:242
-SUBSHELL (2589158)_[s];SUBSHELL (2589409)_[s];SUBSHELL (2589410)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1780:202	1780:291
-SUBSHELL (2589158)_[s];SUBSHELL (2589404)_[s];SUBSHELL (2589405)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2254:269	2254:402
-SUBSHELL (2589158)_[s];SUBSHELL (2589519)_[s];SUBSHELL (2589520)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3846:419	3846:636
-SUBSHELL (2589158)_[s];SUBSHELL (2589299)_[s];SUBSHELL (2589300)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2307:284	2307:425
-SUBSHELL (2589158)_[s];SUBSHELL (2589479)_[s];SUBSHELL (2589480)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1770:193	1770:277
-SUBSHELL (2589158)_[s];SUBSHELL (2589274)_[s];SUBSHELL (2589275)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2103:249	2103:372
-SUBSHELL (2589158)_[s];SUBSHELL (2589569)_[s];SUBSHELL (2589570)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2508:340	2508:516
-SUBSHELL (2589158)_[s];SUBSHELL (2589319)_[s];SUBSHELL (2589320)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2443:321	2443:486
-SUBSHELL (2589158)_[s];SUBSHELL (2589279)_[s];SUBSHELL (2589280)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1701:172	1701:242
-SUBSHELL (2589158)_[s];SUBSHELL (2589489)_[s];SUBSHELL (2589490)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1740:181	1740:256
-SUBSHELL (2589158)_[s];SUBSHELL (2589554)_[s];SUBSHELL (2589555)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	6158:541	6158:815
-SUBSHELL (2589158)_[s];SUBSHELL (2589459)_[s];SUBSHELL (2589460)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1746:186	1746:263
-SUBSHELL (2589158)_[s];SUBSHELL (2589344)_[s];SUBSHELL (2589345)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2465:331	2465:501
-SUBSHELL (2589158)_[s];SUBSHELL (2589544)_[s];SUBSHELL (2589545)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4450:451	4450:677
-SUBSHELL (2589158)_[s];SUBSHELL (2589374)_[s];SUBSHELL (2589375)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2359:293	2359:439
-SUBSHELL (2589158)_[s];SUBSHELL (2589429)_[s];SUBSHELL (2589430)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3185:377	3185:572
-SUBSHELL (2589158)_[s];SUBSHELL (2589264)_[s];SUBSHELL (2589265)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3994:434	3994:652
-SUBSHELL (2589158)_[s];SUBSHELL (2589644)_[s];SUBSHELL (2589645)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2372:296	2372:443
-SUBSHELL (2589158)_[s];SUBSHELL (2589214)_[s];SUBSHELL (2589215)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2811:361	2811:543
-SUBSHELL (2589158)_[s];SUBSHELL (2589499)_[s];SUBSHELL (2589500)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1847:214	1847:309
-SUBSHELL (2589158)_[s];SUBSHELL (2589354)_[s];SUBSHELL (2589355)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2070:246	2070:363
-SUBSHELL (2589158)_[s];SUBSHELL (2589379)_[s];SUBSHELL (2589380)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1772:195	1772:280
-SUBSHELL (2589158)_[s];SUBSHELL (2589524)_[s];SUBSHELL (2589525)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2279:278	2279:416
-SUBSHELL (2589158)_[s];SUBSHELL (2589329)_[s];SUBSHELL (2589330)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2274:272	2274:407
-SUBSHELL (2589158)_[s];SUBSHELL (2589609)_[s];SUBSHELL (2589610)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1977:239	1977:343
-SUBSHELL (2589158)_[s];SUBSHELL (2589584)_[s];SUBSHELL (2589585)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2347:290	2347:434
-SUBSHELL (2589158)_[s];SUBSHELL (2589579)_[s];SUBSHELL (2589580)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4540:457	4540:686
-SUBSHELL (2589158)_[s];SUBSHELL (2589188)_[s];SUBSHELL (2589189)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1696:168	1696:235
-SUBSHELL (2589158)_[s];SUBSHELL (2589384)_[s];SUBSHELL (2589385)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2396:302	2396:458
-SUBSHELL (2589158)_[s];SUBSHELL (2589294)_[s];SUBSHELL (2589295)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1828:209	1828:302
-SUBSHELL (2589158)_[s];SUBSHELL (2589419)_[s];SUBSHELL (2589420)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1808:207	1808:298
-SUBSHELL (2589158)_[s];SUBSHELL (2589469)_[s];SUBSHELL (2589470)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2414:315	2414:477
-SUBSHELL (2589158)_[s];SUBSHELL (2589224)_[s];SUBSHELL (2589225)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1733:179	1733:252
-SUBSHELL (2589158)_[s];SUBSHELL (2589199)_[s];SUBSHELL (2589200)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1892:226	1892:328
-SUBSHELL (2589158)_[s];SUBSHELL (2589434)_[s];SUBSHELL (2589435)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2014:244	2014:355
-SUBSHELL (2589158)_[s];SUBSHELL (2589193)_[s];SUBSHELL (2589195)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1886:221	1886:320
-SUBSHELL (2589158)_[s];SUBSHELL (2589369)_[s];SUBSHELL (2589370)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2135:257	2135:380
-SUBSHELL (2589158)_[s];SUBSHELL (2589514)_[s];SUBSHELL (2589515)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	6163:557	6163:840
-SUBSHELL (2589158)_[s];SUBSHELL (2589454)_[s];SUBSHELL (2589455)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1761:188	1761:270
-SUBSHELL (2589158)_[s];SUBSHELL (2589574)_[s];SUBSHELL (2589575)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2478:334	2478:506
-SUBSHELL (2589158)_[s];SUBSHELL (2589339)_[s];SUBSHELL (2589340)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1763:190	1763:273
-SUBSHELL (2589158)_[s];SUBSHELL (2589484)_[s];SUBSHELL (2589485)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2626:347	2626:526
-SUBSHELL (2589158)_[s];SUBSHELL (2589304)_[s];SUBSHELL (2589305)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2940:369	2940:560
-SUBSHELL (2589158)_[s];SUBSHELL (2589244)_[s];SUBSHELL (2589245)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1713:174	1713:246
-SUBSHELL (2589158)_[s];SUBSHELL (2589664)_[s];SUBSHELL (2589665)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4751:475	4751:714
-SUBSHELL (2589158)_[s];SUBSHELL (2589209)_[s];SUBSHELL (2589210)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5639:510	5639:768
-SUBSHELL (2589158)_[s];SUBSHELL (2589173)_[s];SUBSHELL (2589174)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2552:344	2552:521
-SUBSHELL (2589158)_[s];SUBSHELL (2589614)_[s];SUBSHELL (2589615)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2457:327	2457:496
-SUBSHELL (2589158)_[s];SUBSHELL (2589349)_[s];SUBSHELL (2589350)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1841:211	1841:305
-SUBSHELL (2589158)_[s];SUBSHELL (2589559)_[s];SUBSHELL (2589560)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	6180:565	6180:852
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];'spawner "Beta"'	159:36	187:67
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];'local name=$1'	158:36	186:66
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' starting."'	182:41	205:72
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];'paste <(sleep 0.1, seq 1 3) <(sleep 0.1, seq 4 6) > /dev/null (&)'	305:53	338:124
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];'local spawner_job=$! (&)'	400:66	416:159
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' finished launching jobs. Waiting for its own job ($spawner_job)."'	82:10	96:18
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];'wait "$spawner_job"'	112552:1204	1141:217
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];'spawner "Alpha"'	284:52	333:123
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];'local name=$1'	283:51	332:122
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' starting."'	75:2	89:4
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];'paste <(sleep 0.1, seq 1 3) <(sleep 0.1, seq 4 6) > /dev/null (&)'	329:59	352:128
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];'local spawner_job=$! (&)'	404:67	424:160
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' finished launching jobs. Waiting for its own job ($spawner_job)."'	80:8	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];'wait "$spawner_job"'	110316:1204	457:161
-SUBSHELL (2589158)_[s];SUBSHELL (2589324)_[s];SUBSHELL (2589325)_[s];SUBSHELL (2589326)_[s];'echo /some/long/path/to/a/file.txt'	314:56	363:135
-SUBSHELL (2589158)_[s];SUBSHELL (2589624)_[s];SUBSHELL (2589625)_[s];SUBSHELL (2589626)_[s];'echo /some/long/path/to/a/file.txt'	114:25	134:45
-SUBSHELL (2589158)_[s];SUBSHELL (2589204)_[s];SUBSHELL (2589205)_[s];SUBSHELL (2589206)_[s];'echo /some/long/path/to/a/file.txt'	91:14	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589374)_[s];SUBSHELL (2589375)_[s];SUBSHELL (2589376)_[s];'echo /some/long/path/to/a/file.txt'	92:15	104:24
-SUBSHELL (2589158)_[s];SUBSHELL (2589399)_[s];SUBSHELL (2589400)_[s];SUBSHELL (2589401)_[s];'echo /some/long/path/to/a/file.txt'	94:17	104:24
-SUBSHELL (2589158)_[s];SUBSHELL (2589279)_[s];SUBSHELL (2589280)_[s];SUBSHELL (2589281)_[s];'echo /some/long/path/to/a/file.txt'	81:9	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589454)_[s];SUBSHELL (2589455)_[s];SUBSHELL (2589456)_[s];'echo /some/long/path/to/a/file.txt'	83:11	98:20
-SUBSHELL (2589158)_[s];SUBSHELL (2589424)_[s];SUBSHELL (2589425)_[s];SUBSHELL (2589426)_[s];'echo /some/long/path/to/a/file.txt'	165:38	190:68
-SUBSHELL (2589158)_[s];SUBSHELL (2589469)_[s];SUBSHELL (2589470)_[s];SUBSHELL (2589471)_[s];'echo /some/long/path/to/a/file.txt'	152:34	176:61
-SUBSHELL (2589158)_[s];SUBSHELL (2589589)_[s];SUBSHELL (2589590)_[s];SUBSHELL (2589591)_[s];'echo /some/long/path/to/a/file.txt'	312:55	360:133
-SUBSHELL (2589158)_[s];SUBSHELL (2589299)_[s];SUBSHELL (2589300)_[s];SUBSHELL (2589301)_[s];'echo /some/long/path/to/a/file.txt'	115:25	134:45
-SUBSHELL (2589158)_[s];SUBSHELL (2589669)_[s];SUBSHELL (2589670)_[s];SUBSHELL (2589671)_[s];'echo /some/long/path/to/a/file.txt'	161:36	186:66
-SUBSHELL (2589158)_[s];SUBSHELL (2589504)_[s];SUBSHELL (2589505)_[s];SUBSHELL (2589506)_[s];'echo /some/long/path/to/a/file.txt'	125:27	144:48
-SUBSHELL (2589158)_[s];SUBSHELL (2589594)_[s];SUBSHELL (2589595)_[s];SUBSHELL (2589596)_[s];'echo /some/long/path/to/a/file.txt'	320:57	360:133
-SUBSHELL (2589158)_[s];SUBSHELL (2589474)_[s];SUBSHELL (2589475)_[s];SUBSHELL (2589476)_[s];'echo /some/long/path/to/a/file.txt'	339:61	379:141
-SUBSHELL (2589158)_[s];SUBSHELL (2589449)_[s];SUBSHELL (2589450)_[s];SUBSHELL (2589451)_[s];'echo /some/long/path/to/a/file.txt'	125:27	144:48
-SUBSHELL (2589158)_[s];SUBSHELL (2589659)_[s];SUBSHELL (2589660)_[s];SUBSHELL (2589661)_[s];'echo /some/long/path/to/a/file.txt'	207:44	240:79
-SUBSHELL (2589158)_[s];SUBSHELL (2589459)_[s];SUBSHELL (2589460)_[s];SUBSHELL (2589461)_[s];'echo /some/long/path/to/a/file.txt'	95:18	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589649)_[s];SUBSHELL (2589650)_[s];SUBSHELL (2589651)_[s];'echo /some/long/path/to/a/file.txt'	262:50	301:107
-SUBSHELL (2589158)_[s];SUBSHELL (2589484)_[s];SUBSHELL (2589485)_[s];SUBSHELL (2589486)_[s];'echo /some/long/path/to/a/file.txt'	96:19	112:38
-SUBSHELL (2589158)_[s];SUBSHELL (2589564)_[s];SUBSHELL (2589565)_[s];SUBSHELL (2589566)_[s];'echo /some/long/path/to/a/file.txt'	308:54	357:130
-SUBSHELL (2589158)_[s];SUBSHELL (2589584)_[s];SUBSHELL (2589585)_[s];SUBSHELL (2589586)_[s];'echo /some/long/path/to/a/file.txt'	115:25	134:45
-SUBSHELL (2589158)_[s];SUBSHELL (2589439)_[s];SUBSHELL (2589440)_[s];SUBSHELL (2589441)_[s];'echo /some/long/path/to/a/file.txt'	169:38	194:69
-SUBSHELL (2589158)_[s];SUBSHELL (2589464)_[s];SUBSHELL (2589465)_[s];SUBSHELL (2589466)_[s];'echo /some/long/path/to/a/file.txt'	105:23	119:40
-SUBSHELL (2589158)_[s];SUBSHELL (2589514)_[s];SUBSHELL (2589515)_[s];SUBSHELL (2589516)_[s];'echo /some/long/path/to/a/file.txt'	243:48	282:89
-SUBSHELL (2589158)_[s];SUBSHELL (2589349)_[s];SUBSHELL (2589350)_[s];SUBSHELL (2589351)_[s];'echo /some/long/path/to/a/file.txt'	116:25	136:46
-SUBSHELL (2589158)_[s];SUBSHELL (2589539)_[s];SUBSHELL (2589540)_[s];SUBSHELL (2589541)_[s];'echo /some/long/path/to/a/file.txt'	137:31	159:56
-SUBSHELL (2589158)_[s];SUBSHELL (2589254)_[s];SUBSHELL (2589255)_[s];SUBSHELL (2589256)_[s];'echo /some/long/path/to/a/file.txt'	325:58	376:140
-SUBSHELL (2589158)_[s];SUBSHELL (2589379)_[s];SUBSHELL (2589380)_[s];SUBSHELL (2589381)_[s];'echo /some/long/path/to/a/file.txt'	87:12	101:23
-SUBSHELL (2589158)_[s];SUBSHELL (2589224)_[s];SUBSHELL (2589225)_[s];SUBSHELL (2589226)_[s];'echo /some/long/path/to/a/file.txt'	84:11	99:21
-SUBSHELL (2589158)_[s];SUBSHELL (2589304)_[s];SUBSHELL (2589305)_[s];SUBSHELL (2589306)_[s];'echo /some/long/path/to/a/file.txt'	89:13	101:23
-SUBSHELL (2589158)_[s];SUBSHELL (2589429)_[s];SUBSHELL (2589430)_[s];SUBSHELL (2589431)_[s];'echo /some/long/path/to/a/file.txt'	83:11	98:20
-SUBSHELL (2589158)_[s];SUBSHELL (2589274)_[s];SUBSHELL (2589275)_[s];SUBSHELL (2589276)_[s];'echo /some/long/path/to/a/file.txt'	87:12	102:23
-SUBSHELL (2589158)_[s];SUBSHELL (2589654)_[s];SUBSHELL (2589655)_[s];SUBSHELL (2589656)_[s];'echo /some/long/path/to/a/file.txt'	91:14	105:25
-SUBSHELL (2589158)_[s];SUBSHELL (2589193)_[s];SUBSHELL (2589195)_[s];SUBSHELL (2589196)_[s];'echo /some/long/path/to/a/file.txt'	84:11	100:22
-SUBSHELL (2589158)_[s];SUBSHELL (2589209)_[s];SUBSHELL (2589210)_[s];SUBSHELL (2589211)_[s];'echo /some/long/path/to/a/file.txt'	130:29	150:52
-SUBSHELL (2589158)_[s];SUBSHELL (2589329)_[s];SUBSHELL (2589330)_[s];SUBSHELL (2589331)_[s];'echo /some/long/path/to/a/file.txt'	130:29	150:52
-SUBSHELL (2589158)_[s];SUBSHELL (2589384)_[s];SUBSHELL (2589385)_[s];SUBSHELL (2589386)_[s];'echo /some/long/path/to/a/file.txt'	83:11	98:20
-SUBSHELL (2589158)_[s];SUBSHELL (2589173)_[s];SUBSHELL (2589174)_[s];SUBSHELL (2589175)_[s];'echo /some/long/path/to/a/file.txt'	91:14	105:25
-SUBSHELL (2589158)_[s];SUBSHELL (2589344)_[s];SUBSHELL (2589345)_[s];SUBSHELL (2589346)_[s];'echo /some/long/path/to/a/file.txt'	176:39	202:71
-SUBSHELL (2589158)_[s];SUBSHELL (2589339)_[s];SUBSHELL (2589340)_[s];SUBSHELL (2589341)_[s];'echo /some/long/path/to/a/file.txt'	84:11	98:20
-SUBSHELL (2589158)_[s];SUBSHELL (2589178)_[s];SUBSHELL (2589179)_[s];SUBSHELL (2589180)_[s];'echo /some/long/path/to/a/file.txt'	84:11	97:19
-SUBSHELL (2589158)_[s];SUBSHELL (2589444)_[s];SUBSHELL (2589445)_[s];SUBSHELL (2589446)_[s];'echo /some/long/path/to/a/file.txt'	132:30	152:53
-SUBSHELL (2589158)_[s];SUBSHELL (2589364)_[s];SUBSHELL (2589365)_[s];SUBSHELL (2589366)_[s];'echo /some/long/path/to/a/file.txt'	82:10	97:19
-SUBSHELL (2589158)_[s];SUBSHELL (2589369)_[s];SUBSHELL (2589370)_[s];SUBSHELL (2589371)_[s];'echo /some/long/path/to/a/file.txt'	138:31	149:51
-SUBSHELL (2589158)_[s];SUBSHELL (2589619)_[s];SUBSHELL (2589620)_[s];SUBSHELL (2589621)_[s];'echo /some/long/path/to/a/file.txt'	113:24	130:43
-SUBSHELL (2589158)_[s];SUBSHELL (2589354)_[s];SUBSHELL (2589355)_[s];SUBSHELL (2589356)_[s];'echo /some/long/path/to/a/file.txt'	183:42	212:76
-SUBSHELL (2589158)_[s];SUBSHELL (2589359)_[s];SUBSHELL (2589360)_[s];SUBSHELL (2589361)_[s];'echo /some/long/path/to/a/file.txt'	125:27	141:47
-SUBSHELL (2589158)_[s];SUBSHELL (2589544)_[s];SUBSHELL (2589545)_[s];SUBSHELL (2589546)_[s];'echo /some/long/path/to/a/file.txt'	125:27	144:48
-SUBSHELL (2589158)_[s];SUBSHELL (2589609)_[s];SUBSHELL (2589610)_[s];SUBSHELL (2589611)_[s];'echo /some/long/path/to/a/file.txt'	160:36	186:66
-SUBSHELL (2589158)_[s];SUBSHELL (2589664)_[s];SUBSHELL (2589665)_[s];SUBSHELL (2589666)_[s];'echo /some/long/path/to/a/file.txt'	300:53	347:127
-SUBSHELL (2589158)_[s];SUBSHELL (2589569)_[s];SUBSHELL (2589570)_[s];SUBSHELL (2589571)_[s];'echo /some/long/path/to/a/file.txt'	91:14	107:29
-SUBSHELL (2589158)_[s];SUBSHELL (2589489)_[s];SUBSHELL (2589490)_[s];SUBSHELL (2589491)_[s];'echo /some/long/path/to/a/file.txt'	93:16	109:32
-SUBSHELL (2589158)_[s];SUBSHELL (2589634)_[s];SUBSHELL (2589635)_[s];SUBSHELL (2589636)_[s];'echo /some/long/path/to/a/file.txt'	225:45	252:81
-SUBSHELL (2589158)_[s];SUBSHELL (2589183)_[s];SUBSHELL (2589184)_[s];SUBSHELL (2589185)_[s];'echo /some/long/path/to/a/file.txt'	213:44	235:78
-SUBSHELL (2589158)_[s];SUBSHELL (2589639)_[s];SUBSHELL (2589640)_[s];SUBSHELL (2589641)_[s];'echo /some/long/path/to/a/file.txt'	339:61	380:142
-SUBSHELL (2589158)_[s];SUBSHELL (2589289)_[s];SUBSHELL (2589290)_[s];SUBSHELL (2589291)_[s];'echo /some/long/path/to/a/file.txt'	146:33	170:60
-SUBSHELL (2589158)_[s];SUBSHELL (2589409)_[s];SUBSHELL (2589410)_[s];SUBSHELL (2589411)_[s];'echo /some/long/path/to/a/file.txt'	82:10	96:18
-SUBSHELL (2589158)_[s];SUBSHELL (2589644)_[s];SUBSHELL (2589645)_[s];SUBSHELL (2589646)_[s];'echo /some/long/path/to/a/file.txt'	101:22	113:38
-SUBSHELL (2589158)_[s];SUBSHELL (2589519)_[s];SUBSHELL (2589520)_[s];SUBSHELL (2589521)_[s];'echo /some/long/path/to/a/file.txt'	140:32	163:58
-SUBSHELL (2589158)_[s];SUBSHELL (2589574)_[s];SUBSHELL (2589575)_[s];SUBSHELL (2589576)_[s];'echo /some/long/path/to/a/file.txt'	104:23	121:41
-SUBSHELL (2589158)_[s];SUBSHELL (2589334)_[s];SUBSHELL (2589335)_[s];SUBSHELL (2589336)_[s];'echo /some/long/path/to/a/file.txt'	89:13	103:24
-SUBSHELL (2589158)_[s];SUBSHELL (2589559)_[s];SUBSHELL (2589560)_[s];SUBSHELL (2589561)_[s];'echo /some/long/path/to/a/file.txt'	91:14	106:27
-SUBSHELL (2589158)_[s];SUBSHELL (2589199)_[s];SUBSHELL (2589200)_[s];SUBSHELL (2589201)_[s];'echo /some/long/path/to/a/file.txt'	134:31	157:55
-SUBSHELL (2589158)_[s];SUBSHELL (2589629)_[s];SUBSHELL (2589630)_[s];SUBSHELL (2589631)_[s];'echo /some/long/path/to/a/file.txt'	227:46	261:82
-SUBSHELL (2589158)_[s];SUBSHELL (2589394)_[s];SUBSHELL (2589395)_[s];SUBSHELL (2589396)_[s];'echo /some/long/path/to/a/file.txt'	104:23	123:41
-SUBSHELL (2589158)_[s];SUBSHELL (2589534)_[s];SUBSHELL (2589535)_[s];SUBSHELL (2589536)_[s];'echo /some/long/path/to/a/file.txt'	166:38	193:69
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	166:38	191:68
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	140:32	160:56
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	127:28	152:53
-SUBSHELL (2589158)_[s];SUBSHELL (2589494)_[s];SUBSHELL (2589495)_[s];SUBSHELL (2589496)_[s];'echo /some/long/path/to/a/file.txt'	85:12	99:21
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	149:34	174:60
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	127:28	153:53
-SUBSHELL (2589158)_[s];SUBSHELL (2589389)_[s];SUBSHELL (2589390)_[s];SUBSHELL (2589391)_[s];'echo /some/long/path/to/a/file.txt'	321:57	364:136
-SUBSHELL (2589158)_[s];SUBSHELL (2589259)_[s];SUBSHELL (2589260)_[s];SUBSHELL (2589261)_[s];'echo /some/long/path/to/a/file.txt'	164:37	183:65
-SUBSHELL (2589158)_[s];SUBSHELL (2589319)_[s];SUBSHELL (2589320)_[s];SUBSHELL (2589321)_[s];'echo /some/long/path/to/a/file.txt'	344:62	383:144
-SUBSHELL (2589158)_[s];SUBSHELL (2589214)_[s];SUBSHELL (2589215)_[s];SUBSHELL (2589216)_[s];'echo /some/long/path/to/a/file.txt'	84:11	98:20
-SUBSHELL (2589158)_[s];SUBSHELL (2589434)_[s];SUBSHELL (2589435)_[s];SUBSHELL (2589436)_[s];'echo /some/long/path/to/a/file.txt'	99:22	114:39
-SUBSHELL (2589158)_[s];SUBSHELL (2589509)_[s];SUBSHELL (2589510)_[s];SUBSHELL (2589511)_[s];'echo /some/long/path/to/a/file.txt'	276:50	318:118
-SUBSHELL (2589158)_[s];SUBSHELL (2589419)_[s];SUBSHELL (2589420)_[s];SUBSHELL (2589421)_[s];'echo /some/long/path/to/a/file.txt'	99:22	114:39
-SUBSHELL (2589158)_[s];SUBSHELL (2589309)_[s];SUBSHELL (2589310)_[s];SUBSHELL (2589311)_[s];'echo /some/long/path/to/a/file.txt'	89:13	105:25
-SUBSHELL (2589158)_[s];SUBSHELL (2589229)_[s];SUBSHELL (2589230)_[s];SUBSHELL (2589231)_[s];'echo /some/long/path/to/a/file.txt'	83:11	98:20
-SUBSHELL (2589158)_[s];SUBSHELL (2589579)_[s];SUBSHELL (2589580)_[s];SUBSHELL (2589581)_[s];'echo /some/long/path/to/a/file.txt'	189:43	189:68
-SUBSHELL (2589158)_[s];SUBSHELL (2589549)_[s];SUBSHELL (2589550)_[s];SUBSHELL (2589551)_[s];'echo /some/long/path/to/a/file.txt'	116:25	136:46
-SUBSHELL (2589158)_[s];SUBSHELL (2589284)_[s];SUBSHELL (2589285)_[s];SUBSHELL (2589286)_[s];'echo /some/long/path/to/a/file.txt'	82:10	97:19
-SUBSHELL (2589158)_[s];SUBSHELL (2589404)_[s];SUBSHELL (2589405)_[s];SUBSHELL (2589406)_[s];'echo /some/long/path/to/a/file.txt'	284:52	329:121
-SUBSHELL (2589158)_[s];SUBSHELL (2589604)_[s];SUBSHELL (2589605)_[s];SUBSHELL (2589606)_[s];'echo /some/long/path/to/a/file.txt'	112:24	130:43
-SUBSHELL (2589158)_[s];SUBSHELL (2589219)_[s];SUBSHELL (2589220)_[s];SUBSHELL (2589221)_[s];'echo /some/long/path/to/a/file.txt'	117:26	135:46
-SUBSHELL (2589158)_[s];SUBSHELL (2589479)_[s];SUBSHELL (2589480)_[s];SUBSHELL (2589481)_[s];'echo /some/long/path/to/a/file.txt'	95:18	110:34
-SUBSHELL (2589158)_[s];SUBSHELL (2589314)_[s];SUBSHELL (2589315)_[s];SUBSHELL (2589316)_[s];'echo /some/long/path/to/a/file.txt'	134:31	156:55
-SUBSHELL (2589158)_[s];SUBSHELL (2589264)_[s];SUBSHELL (2589265)_[s];SUBSHELL (2589266)_[s];'echo /some/long/path/to/a/file.txt'	195:43	214:76
-SUBSHELL (2589158)_[s];SUBSHELL (2589524)_[s];SUBSHELL (2589525)_[s];SUBSHELL (2589526)_[s];'echo /some/long/path/to/a/file.txt'	93:16	102:23
-SUBSHELL (2589158)_[s];SUBSHELL (2589234)_[s];SUBSHELL (2589235)_[s];SUBSHELL (2589236)_[s];'echo /some/long/path/to/a/file.txt'	172:39	193:69
-SUBSHELL (2589158)_[s];SUBSHELL (2589244)_[s];SUBSHELL (2589245)_[s];SUBSHELL (2589246)_[s];'echo /some/long/path/to/a/file.txt'	86:12	99:21
-SUBSHELL (2589158)_[s];SUBSHELL (2589554)_[s];SUBSHELL (2589555)_[s];SUBSHELL (2589556)_[s];'echo /some/long/path/to/a/file.txt'	85:12	99:21
-SUBSHELL (2589158)_[s];SUBSHELL (2589239)_[s];SUBSHELL (2589240)_[s];SUBSHELL (2589241)_[s];'echo /some/long/path/to/a/file.txt'	85:12	99:21
-SUBSHELL (2589158)_[s];SUBSHELL (2589529)_[s];SUBSHELL (2589530)_[s];SUBSHELL (2589531)_[s];'echo /some/long/path/to/a/file.txt'	89:13	103:24
-SUBSHELL (2589158)_[s];SUBSHELL (2589269)_[s];SUBSHELL (2589270)_[s];SUBSHELL (2589271)_[s];'echo /some/long/path/to/a/file.txt'	99:22	116:40
-SUBSHELL (2589158)_[s];SUBSHELL (2589249)_[s];SUBSHELL (2589250)_[s];SUBSHELL (2589251)_[s];'echo /some/long/path/to/a/file.txt'	86:12	100:22
-SUBSHELL (2589158)_[s];SUBSHELL (2589599)_[s];SUBSHELL (2589600)_[s];SUBSHELL (2589601)_[s];'echo /some/long/path/to/a/file.txt'	314:56	364:136
-SUBSHELL (2589158)_[s];SUBSHELL (2589499)_[s];SUBSHELL (2589500)_[s];SUBSHELL (2589501)_[s];'echo /some/long/path/to/a/file.txt'	81:9	95:17
-SUBSHELL (2589158)_[s];SUBSHELL (2589414)_[s];SUBSHELL (2589415)_[s];SUBSHELL (2589416)_[s];'echo /some/long/path/to/a/file.txt'	227:46	263:82
-SUBSHELL (2589158)_[s];SUBSHELL (2589614)_[s];SUBSHELL (2589615)_[s];SUBSHELL (2589616)_[s];'echo /some/long/path/to/a/file.txt'	316:56	366:138
-SUBSHELL (2589158)_[s];SUBSHELL (2589294)_[s];SUBSHELL (2589295)_[s];SUBSHELL (2589296)_[s];'echo /some/long/path/to/a/file.txt'	114:25	134:45
-SUBSHELL (2589158)_[s];SUBSHELL (2589188)_[s];SUBSHELL (2589189)_[s];SUBSHELL (2589190)_[s];'echo /some/long/path/to/a/file.txt'	87:12	101:23
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589680)_[s];SUBSHELL (2589681)_[s];'sleep 0.1'	101488:806	1468:223
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589680)_[s];SUBSHELL (2589681)_[s];'seq 1 3'	2107:252	2253:398
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589680)_[s];SUBSHELL (2589683)_[s];'sleep 0.1'	102428:1204	2389:453
-SUBSHELL (2589158)_[s];SUBSHELL (2589672)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589680)_[s];SUBSHELL (2589683)_[s];'seq 4 6'	2689:354	2883:554
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589676)_[s];SUBSHELL (2589677)_[s];'sleep 0.1'	101976:938	2045:359
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589676)_[s];SUBSHELL (2589677)_[s];'seq 1 3'	1670:166	1759:266
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589676)_[s];SUBSHELL (2589678)_[s];'sleep 0.1'	101990:1071	2089:367
-SUBSHELL (2589158)_[s];SUBSHELL (2589673)_[s];FUNCTION (spawner)_[f];SUBSHELL (2589676)_[s];SUBSHELL (2589678)_[s];'seq 4 6'	1931:231	2010:347
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	145:33	166:58
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	132:30	156:55
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	127:28	150:52
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	145:33	170:60
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	127:28	154:54
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	105:23	127:43
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	71:1	85:3
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	65:0	79:1
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	76:2	91:7
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	65:0	79:1
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	68:1	83:2
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	71:1	85:3
-SUBSHELL (2589158)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	91:14	102:23
+SUBSHELL (3342390)_[s];'set -eEuo pipefail'	68:1	82:1
+SUBSHELL (3342390)_[s];'echo "--- Stage 1: Trap Subversion & Re-setting ---"'	75:4	89:6
+SUBSHELL (3342390)_[s];'trap - DEBUG'	43120:943	43009:1039
+SUBSHELL (3342390)_[s];'echo "INFO: Attempted to disable DEBUG trap."'	77:5	91:9
+SUBSHELL (3342390)_[s];'echo "INFO: A command after the trap was disabled."'	73:3	87:4
+SUBSHELL (3342390)_[s];'trap '\''echo "CUSTOM TRAP: $BASH_COMMAND"'\'' DEBUG'	24204:813	24143:962
+SUBSHELL (3342390)_[s];'echo "INFO: A command with our own DEBUG trap active."'	72:2	86:3
+SUBSHELL (3342390)_[s];'echo "INFO: Trap disabled again. The profiler should be in control now."'	78:7	92:11
+SUBSHELL (3342390)_[s];'echo "--- Stage 2: Labyrinth of Built-ins & Expansion ---"'	96:24	109:33
+SUBSHELL (3342390)_[s];'for i in {1..100}'	7864:752	9319:902
+SUBSHELL (3342390)_[s];': $(( (RANDOM % 10) ** 2 ))'	7957:776	9378:919
+SUBSHELL (3342390)_[s];'echo "Line $i: ${!i}" &> /dev/null'	42621:877	44688:1119
+SUBSHELL (3342390)_[s];'nested_var=$(echo $(basename "$(echo /some/long/path/to/a/file.txt)"))'	65957:1043	53161:1214
+SUBSHELL (3342390)_[s];'echo "INFO: Labyrinth stage complete."'	79:9	93:12
+SUBSHELL (3342390)_[s];'echo "--- Stage 3: Targeted Concurrency ---"'	78:7	92:11
+SUBSHELL (3342390)_[s];'disowned_pid=$!'	66:0	80:0
+SUBSHELL (3342390)_[s];'disown'	76:4	89:6
+SUBSHELL (3342390)_[s];'echo "INFO: Waiting for ALL remaining known jobs..."'	71:2	86:3
+SUBSHELL (3342390)_[s];'wait'	139175:1200	260:73
+SUBSHELL (3342390)_[s];'echo "INFO: Trying to wait for the disowned PID ($disowned_pid). This should fail."'	113:30	132:41
+SUBSHELL (3342390)_[s];'wait "$disowned_pid"'	167:46	187:61
+SUBSHELL (3342390)_[s];'echo "WARN: Could not wait for disowned PID $disowned_pid, as expected."'	104:27	122:38
+SUBSHELL (3342390)_[s];'echo "INFO: Concurrency stage complete."'	106:27	125:39
+SUBSHELL (3342390)_[s];'echo "--- Stage 4: Dynamic Code & Scope Hell ---"'	100:26	118:37
+SUBSHELL (3342390)_[s];'temp_script=$(mktemp)'	489:90	302:85
+SUBSHELL (3342390)_[s];'$'\''cat <<\'\''EOF\'\'' > "$temp_script"\n# This script defines a function that modifies a variable.\n# A good profiler should know this code came from a file.\nsourced_var="initial_value"\nsourced_func() {\n    echo "INFO: Inside a function from a sourced file."\'	1851:234	1895:257
+SUBSHELL (3342390)_[s];'source "$temp_script"'	4666:616	4669:719
+SUBSHELL (3342390)_[s];'sourced_var="initial_value"'	89:16	103:22
+SUBSHELL (3342390)_[s];'eval '\''sourced_func, echo "INFO: The sourced_var is now: $sourced_var"'\'''	77:5	91:9
+SUBSHELL (3342390)_[s];'echo "INFO: The sourced_var is now: $sourced_var"'	94:22	110:34
+SUBSHELL (3342390)_[s];'rm -f "$temp_script"'	1220:177	1343:216
+SUBSHELL (3342390)_[s];'echo "INFO: Dynamic execution stage complete."'	87:15	102:22
+SUBSHELL (3342390)_[s];'echo "--- Stage 5: State & Control Flow Obfuscation ---"'	76:4	89:6
+SUBSHELL (3342390)_[s];'declare -n ref_to_var=original_var'	74:3	87:4
+SUBSHELL (3342390)_[s];'original_var="I am the original"'	71:2	85:3
+SUBSHELL (3342390)_[s];'echo "INFO: Value after nameref update: $original_var"'	89:16	100:20
+SUBSHELL (3342390)_[s];'echo "INFO: State obfuscation stage complete."'	72:2	85:3
+SUBSHELL (3342390)_[s];'echo "--- Stage 6: Redirection and File Descriptor Madness ---"'	74:3	87:4
+SUBSHELL (3342390)_[s];'exec 3<> /dev/null'	75:4	88:5
+SUBSHELL (3342390)_[s];'echo "to stdout"'	65:0	78:0
+SUBSHELL (3342390)_[s];'echo "to stderr" 1>&2'	79:9	105:25
+SUBSHELL (3342390)_[s];'exec 3>&-'	69:1	82:1
+SUBSHELL (3342390)_[s];'diff <(seq 1 5) <(echo -e "1\n2\n3\n4\n5") > /dev/null (&)'	1294:187	1004:173
+SUBSHELL (3342390)_[s];'echo "INFO: Redirection stage complete."'	82:12	95:17
+SUBSHELL (3342390)_[s];'echo "--- Stress Test v2 Complete ---"'	80:10	89:6
+SUBSHELL (3342390)_[s];'echo "If timep profiled all of this accurately, it is truly excellent."'	122:35	137:44
+SUBSHELL (3342390)_[s];SUBSHELL (3342544)_[s];'read'	93:21	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342544)_[s];'echo $REPLY'	78:7	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342739)_[s];'read'	127:37	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342849)_[s];'read'	94:22	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342739)_[s];'echo $REPLY'	115:31	130:40
+SUBSHELL (3342390)_[s];SUBSHELL (3342849)_[s];'echo $REPLY'	77:5	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342669)_[s];'read'	116:32	140:46
+SUBSHELL (3342390)_[s];SUBSHELL (3342841)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	472:86	305:87
+SUBSHELL (3342390)_[s];SUBSHELL (3342526)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	721:113	400:121
+SUBSHELL (3342390)_[s];SUBSHELL (3342669)_[s];'echo $REPLY'	97:25	115:36
+SUBSHELL (3342390)_[s];SUBSHELL (3342564)_[s];'read'	102:27	116:36
+SUBSHELL (3342390)_[s];SUBSHELL (3342649)_[s];'read'	128:38	146:52
+SUBSHELL (3342390)_[s];SUBSHELL (3342506)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	487:88	325:92
+SUBSHELL (3342390)_[s];SUBSHELL (3342564)_[s];'echo $REPLY'	85:14	99:19
+SUBSHELL (3342390)_[s];SUBSHELL (3342676)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	553:96	399:121
+SUBSHELL (3342390)_[s];SUBSHELL (3342649)_[s];'echo $REPLY'	109:28	126:39
+SUBSHELL (3342390)_[s];SUBSHELL (3342869)_[s];'read'	226:53	258:72
+SUBSHELL (3342390)_[s];SUBSHELL (3342869)_[s];'echo $REPLY'	194:50	226:69
+SUBSHELL (3342390)_[s];SUBSHELL (3342591)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	706:110	321:91
+SUBSHELL (3342390)_[s];SUBSHELL (3342876)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	558:97	415:126
+SUBSHELL (3342390)_[s];SUBSHELL (3342859)_[s];'read'	133:41	152:56
+SUBSHELL (3342390)_[s];SUBSHELL (3342859)_[s];'echo $REPLY'	114:30	134:43
+SUBSHELL (3342390)_[s];SUBSHELL (3342659)_[s];'read'	121:34	139:46
+SUBSHELL (3342390)_[s];SUBSHELL (3342659)_[s];'echo $REPLY'	103:27	120:37
+SUBSHELL (3342390)_[s];SUBSHELL (3342781)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1061:150	974:169
+SUBSHELL (3342390)_[s];SUBSHELL (3342801)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	453:77	292:78
+SUBSHELL (3342390)_[s];SUBSHELL (3342451)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1161:162	1056:178
+SUBSHELL (3342390)_[s];SUBSHELL (3342601)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	464:83	310:88
+SUBSHELL (3342390)_[s];SUBSHELL (3342699)_[s];'read'	131:40	150:55
+SUBSHELL (3342390)_[s];SUBSHELL (3342699)_[s];'echo $REPLY'	79:9	93:12
+SUBSHELL (3342390)_[s];SUBSHELL (3342899)_[s];'read'	91:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342899)_[s];'echo $REPLY'	75:4	89:6
+SUBSHELL (3342390)_[s];SUBSHELL (3342516)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	519:94	310:88
+SUBSHELL (3342390)_[s];SUBSHELL (3342554)_[s];'read'	128:38	146:52
+SUBSHELL (3342390)_[s];SUBSHELL (3342426)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	766:116	580:139
+SUBSHELL (3342390)_[s];SUBSHELL (3342554)_[s];'echo $REPLY'	127:37	137:44
+SUBSHELL (3342390)_[s];SUBSHELL (3342464)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342464)_[s];'echo $REPLY'	81:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342444)_[s];'read'	246:55	280:76
+SUBSHELL (3342390)_[s];SUBSHELL (3342444)_[s];'echo $REPLY'	81:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342719)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342496)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	935:138	716:152
+SUBSHELL (3342390)_[s];SUBSHELL (3342719)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342491)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1569:202	1057:180
+SUBSHELL (3342390)_[s];FUNCTION (update_ref)_[f];'update_ref'	74:3	88:5
+SUBSHELL (3342390)_[s];FUNCTION (update_ref)_[f];'ref_to_var="I have been updated via a nameref."'	73:3	87:4
+SUBSHELL (3342390)_[s];SUBSHELL (3342741)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1337:189	992:171
+SUBSHELL (3342390)_[s];SUBSHELL (3342774)_[s];'read'	191:50	217:68
+SUBSHELL (3342390)_[s];SUBSHELL (3342729)_[s];'read'	93:21	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342774)_[s];'echo $REPLY'	156:44	181:60
+SUBSHELL (3342390)_[s];SUBSHELL (3342729)_[s];'echo $REPLY'	76:4	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342584)_[s];'read'	262:56	299:84
+SUBSHELL (3342390)_[s];SUBSHELL (3342584)_[s];'echo $REPLY'	85:14	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342486)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	460:82	298:83
+SUBSHELL (3342390)_[s];SUBSHELL (3342416)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	455:79	289:78
+SUBSHELL (3342390)_[s];SUBSHELL (3342929)_[s];'mktemp'	3453:459	3453:534
+SUBSHELL (3342390)_[s];SUBSHELL (3342454)_[s];'read'	93:21	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342454)_[s];'echo $REPLY'	77:5	90:7
+SUBSHELL (3342390)_[s];SUBSHELL (3342709)_[s];'read'	92:20	106:26
+SUBSHELL (3342390)_[s];SUBSHELL (3342709)_[s];'echo $REPLY'	78:7	93:12
+SUBSHELL (3342390)_[s];SUBSHELL (3342889)_[s];'read'	351:70	391:118
+SUBSHELL (3342390)_[s];SUBSHELL (3342889)_[s];'echo $REPLY'	299:57	347:99
+SUBSHELL (3342390)_[s];SUBSHELL (3342689)_[s];'read'	97:25	111:35
+SUBSHELL (3342390)_[s];SUBSHELL (3342689)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342571)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	457:81	297:83
+SUBSHELL (3342390)_[s];SUBSHELL (3342536)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	834:125	717:153
+SUBSHELL (3342390)_[s];SUBSHELL (3342459)_[s];'read'	126:36	146:52
+SUBSHELL (3342390)_[s];SUBSHELL (3342459)_[s];'echo $REPLY'	108:28	126:39
+SUBSHELL (3342390)_[s];SUBSHELL (3342904)_[s];'read'	91:18	106:26
+SUBSHELL (3342390)_[s];SUBSHELL (3342904)_[s];'echo $REPLY'	92:20	97:19
+SUBSHELL (3342390)_[s];SUBSHELL (3342704)_[s];'read'	184:49	210:67
+SUBSHELL (3342390)_[s];SUBSHELL (3342704)_[s];'echo $REPLY'	155:43	181:60
+SUBSHELL (3342390)_[s];SUBSHELL (3342746)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	934:137	336:96
+SUBSHELL (3342390)_[s];SUBSHELL (3342884)_[s];'read'	342:68	390:116
+SUBSHELL (3342390)_[s];SUBSHELL (3342884)_[s];'echo $REPLY'	313:59	353:100
+SUBSHELL (3342390)_[s];SUBSHELL (3342684)_[s];'read'	142:43	162:58
+SUBSHELL (3342390)_[s];SUBSHELL (3342684)_[s];'echo $REPLY'	129:38	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342724)_[s];'read'	131:40	150:55
+SUBSHELL (3342390)_[s];SUBSHELL (3342724)_[s];'echo $REPLY'	77:5	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342766)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	937:141	334:95
+SUBSHELL (3342390)_[s];SUBSHELL (3342779)_[s];'read'	96:24	111:35
+SUBSHELL (3342390)_[s];SUBSHELL (3342779)_[s];'echo $REPLY'	83:13	97:19
+SUBSHELL (3342390)_[s];SUBSHELL (3342421)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	471:86	293:80
+SUBSHELL (3342390)_[s];SUBSHELL (3342836)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	936:140	687:149
+SUBSHELL (3342390)_[s];SUBSHELL (3342871)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1214:173	1082:194
+SUBSHELL (3342390)_[s];SUBSHELL (3342636)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1044:147	618:143
+SUBSHELL (3342390)_[s];SUBSHELL (3342556)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	831:122	727:154
+SUBSHELL (3342390)_[s];SUBSHELL (3342671)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	469:85	311:89
+SUBSHELL (3342390)_[s];SUBSHELL (3342589)_[s];'read'	246:55	268:74
+SUBSHELL (3342390)_[s];SUBSHELL (3342589)_[s];'echo $REPLY'	205:51	237:69
+SUBSHELL (3342390)_[s];SUBSHELL (3342514)_[s];'read'	107:28	121:38
+SUBSHELL (3342390)_[s];SUBSHELL (3342514)_[s];'echo $REPLY'	81:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342809)_[s];'read'	92:20	108:30
+SUBSHELL (3342390)_[s];SUBSHELL (3342809)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342546)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1089:154	523:134
+SUBSHELL (3342390)_[s];SUBSHELL (3342799)_[s];'read'	180:48	205:66
+SUBSHELL (3342390)_[s];SUBSHELL (3342504)_[s];'read'	128:38	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342504)_[s];'echo $REPLY'	79:9	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342799)_[s];'echo $REPLY'	84:13	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342829)_[s];'read'	179:48	193:63
+SUBSHELL (3342390)_[s];SUBSHELL (3342829)_[s];'echo $REPLY'	76:4	89:6
+SUBSHELL (3342390)_[s];SUBSHELL (3342674)_[s];'read'	190:50	217:68
+SUBSHELL (3342390)_[s];SUBSHELL (3342674)_[s];'echo $REPLY'	177:47	204:65
+SUBSHELL (3342390)_[s];SUBSHELL (3342619)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342619)_[s];'echo $REPLY'	78:7	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342436)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	881:130	748:157
+SUBSHELL (3342390)_[s];SUBSHELL (3342639)_[s];'read'	138:42	153:57
+SUBSHELL (3342390)_[s];SUBSHELL (3342639)_[s];'echo $REPLY'	113:30	132:41
+SUBSHELL (3342390)_[s];SUBSHELL (3342776)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	596:102	397:120
+SUBSHELL (3342390)_[s];SUBSHELL (3342761)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1057:149	603:140
+SUBSHELL (3342390)_[s];SUBSHELL (3342551)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	541:95	391:118
+SUBSHELL (3342390)_[s];SUBSHELL (3342424)_[s];'read'	366:71	405:123
+SUBSHELL (3342390)_[s];SUBSHELL (3342466)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	916:135	328:93
+SUBSHELL (3342390)_[s];SUBSHELL (3342424)_[s];'echo $REPLY'	85:14	97:19
+SUBSHELL (3342390)_[s];SUBSHELL (3342901)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	771:117	666:146
+SUBSHELL (3342390)_[s];SUBSHELL (3342446)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	511:93	362:101
+SUBSHELL (3342390)_[s];SUBSHELL (3342494)_[s];'read'	367:73	407:125
+SUBSHELL (3342390)_[s];SUBSHELL (3342494)_[s];'echo $REPLY'	79:9	93:12
+SUBSHELL (3342390)_[s];SUBSHELL (3342499)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342499)_[s];'echo $REPLY'	79:9	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342851)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1167:164	610:142
+SUBSHELL (3342390)_[s];SUBSHELL (3342581)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	737:115	540:135
+SUBSHELL (3342390)_[s];SUBSHELL (3342429)_[s];'read'	382:73	422:127
+SUBSHELL (3342390)_[s];SUBSHELL (3342429)_[s];'echo $REPLY'	310:58	334:95
+SUBSHELL (3342390)_[s];SUBSHELL (3342431)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	898:133	313:89
+SUBSHELL (3342390)_[s];SUBSHELL (3342411)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1417:193	1089:203
+SUBSHELL (3342390)_[s];SUBSHELL (3342524)_[s];'read'	102:27	111:35
+SUBSHELL (3342390)_[s];SUBSHELL (3342524)_[s];'echo $REPLY'	86:14	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342621)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	457:81	297:83
+SUBSHELL (3342390)_[s];SUBSHELL (3342874)_[s];'read'	92:20	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342874)_[s];'echo $REPLY'	79:9	93:12
+SUBSHELL (3342390)_[s];SUBSHELL (3342414)_[s];'read'	96:24	110:34
+SUBSHELL (3342390)_[s];SUBSHELL (3342839)_[s];'read'	126:36	143:48
+SUBSHELL (3342390)_[s];SUBSHELL (3342414)_[s];'echo $REPLY'	81:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342839)_[s];'echo $REPLY'	110:29	129:40
+SUBSHELL (3342390)_[s];SUBSHELL (3342749)_[s];'read'	131:40	150:55
+SUBSHELL (3342390)_[s];SUBSHELL (3342749)_[s];'echo $REPLY'	79:9	93:12
+SUBSHELL (3342390)_[s];SUBSHELL (3342701)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1113:155	1007:175
+SUBSHELL (3342390)_[s];SUBSHELL (3342716)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1531:200	1063:184
+SUBSHELL (3342390)_[s];SUBSHELL (3342881)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	637:106	485:130
+SUBSHELL (3342390)_[s];SUBSHELL (3342641)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1184:170	1085:200
+SUBSHELL (3342390)_[s];SUBSHELL (3342661)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	489:90	328:93
+SUBSHELL (3342390)_[s];SUBSHELL (3342861)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	562:98	392:118
+SUBSHELL (3342390)_[s];SUBSHELL (3342566)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	457:81	296:81
+SUBSHELL (3342390)_[s];SUBSHELL (3342629)_[s];'read'	93:21	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342629)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342821)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	966:143	605:141
+SUBSHELL (3342390)_[s];SUBSHELL (3342534)_[s];'read'	356:71	404:123
+SUBSHELL (3342390)_[s];SUBSHELL (3342471)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	783:118	653:145
+SUBSHELL (3342390)_[s];SUBSHELL (3342534)_[s];'echo $REPLY'	81:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342759)_[s];'read'	102:27	116:36
+SUBSHELL (3342390)_[s];SUBSHELL (3342759)_[s];'echo $REPLY'	82:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342531)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1527:197	1065:186
+SUBSHELL (3342390)_[s];SUBSHELL (3342409)_[s];'read'	138:42	159:58
+SUBSHELL (3342390)_[s];SUBSHELL (3342409)_[s];'echo $REPLY'	121:34	141:47
+SUBSHELL (3342390)_[s];SUBSHELL (3342651)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	703:109	565:137
+SUBSHELL (3342390)_[s];SUBSHELL (3342474)_[s];'read'	94:22	109:33
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];'recursive_func 5'	68:1	81:1
+SUBSHELL (3342390)_[s];SUBSHELL (3342474)_[s];'echo $REPLY'	79:9	93:12
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];'local depth=$1'	69:1	83:2
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	68:1	81:1
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	81:12	95:17
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];'((depth--))'	68:1	82:1
+SUBSHELL (3342390)_[s];SUBSHELL (3342484)_[s];'read'	180:48	205:66
+SUBSHELL (3342390)_[s];SUBSHELL (3342484)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342769)_[s];'read'	103:27	116:36
+SUBSHELL (3342390)_[s];SUBSHELL (3342769)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342456)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	443:76	289:78
+SUBSHELL (3342390)_[s];SUBSHELL (3342681)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1155:159	1062:182
+SUBSHELL (3342390)_[s];SUBSHELL (3342434)_[s];'read'	92:20	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342434)_[s];'echo $REPLY'	81:12	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342789)_[s];'read'	100:26	110:34
+SUBSHELL (3342390)_[s];SUBSHELL (3342579)_[s];'read'	247:55	281:76
+SUBSHELL (3342390)_[s];SUBSHELL (3342789)_[s];'echo $REPLY'	79:9	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342579)_[s];'echo $REPLY'	217:51	251:70
+SUBSHELL (3342390)_[s];SUBSHELL (3342936)_[s];'echo -e "1\n2\n3\n4\n5"'	222:52	257:72
+SUBSHELL (3342390)_[s];SUBSHELL (3342754)_[s];'read'	134:41	151:56
+SUBSHELL (3342390)_[s];SUBSHELL (3342754)_[s];'echo $REPLY'	115:31	146:52
+SUBSHELL (3342390)_[s];SUBSHELL (3342819)_[s];'read'	96:24	110:34
+SUBSHELL (3342390)_[s];SUBSHELL (3342819)_[s];'echo $REPLY'	83:13	97:19
+SUBSHELL (3342390)_[s];SUBSHELL (3342586)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1174:166	1085:200
+SUBSHELL (3342390)_[s];SUBSHELL (3342599)_[s];'read'	92:20	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342599)_[s];'echo $REPLY'	77:5	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342609)_[s];'read'	96:24	110:34
+SUBSHELL (3342390)_[s];SUBSHELL (3342609)_[s];'echo $REPLY'	85:14	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342479)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342511)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	624:103	493:131
+SUBSHELL (3342390)_[s];SUBSHELL (3342479)_[s];'echo $REPLY'	77:5	90:7
+SUBSHELL (3342390)_[s];SUBSHELL (3342721)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	854:126	736:156
+SUBSHELL (3342390)_[s];SUBSHELL (3342911)_[s];'sleep 0.2'	202417:1200	2354:334
+SUBSHELL (3342390)_[s];SUBSHELL (3342911)_[s];'echo "INFO: Disowned job finished."'	131:40	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342906)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	657:107	376:110
+SUBSHELL (3342390)_[s];SUBSHELL (3342419)_[s];'read'	99:26	108:30
+SUBSHELL (3342390)_[s];SUBSHELL (3342886)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	914:134	342:98
+SUBSHELL (3342390)_[s];SUBSHELL (3342419)_[s];'echo $REPLY'	77:5	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342611)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1365:191	1110:209
+SUBSHELL (3342390)_[s];SUBSHELL (3342441)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	834:125	565:137
+SUBSHELL (3342390)_[s];SUBSHELL (3342811)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	469:85	304:86
+SUBSHELL (3342390)_[s];SUBSHELL (3342686)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1226:179	1073:188
+SUBSHELL (3342390)_[s];SUBSHELL (3342539)_[s];'read'	190:50	218:69
+SUBSHELL (3342390)_[s];SUBSHELL (3342539)_[s];'echo $REPLY'	79:9	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342744)_[s];'read'	139:42	153:57
+SUBSHELL (3342390)_[s];SUBSHELL (3342744)_[s];'echo $REPLY'	79:9	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342706)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	861:127	572:138
+SUBSHELL (3342390)_[s];SUBSHELL (3342791)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	491:91	332:93
+SUBSHELL (3342390)_[s];SUBSHELL (3342449)_[s];'read'	133:41	153:57
+SUBSHELL (3342390)_[s];SUBSHELL (3342449)_[s];'echo $REPLY'	77:5	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342756)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	510:92	340:98
+SUBSHELL (3342390)_[s];SUBSHELL (3342714)_[s];'read'	94:22	108:30
+SUBSHELL (3342390)_[s];SUBSHELL (3342714)_[s];'echo $REPLY'	84:13	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342461)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	530:95	294:80
+SUBSHELL (3342390)_[s];SUBSHELL (3342631)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	724:114	310:88
+SUBSHELL (3342390)_[s];SUBSHELL (3342834)_[s];'read'	107:28	122:38
+SUBSHELL (3342390)_[s];SUBSHELL (3342834)_[s];'echo $REPLY'	91:18	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342831)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1188:171	1097:205
+SUBSHELL (3342390)_[s];SUBSHELL (3342726)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	879:129	767:160
+SUBSHELL (3342390)_[s];SUBSHELL (3342764)_[s];'read'	97:25	111:35
+SUBSHELL (3342390)_[s];SUBSHELL (3342764)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342476)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1144:157	1054:177
+SUBSHELL (3342390)_[s];SUBSHELL (3342634)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342634)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342469)_[s];'read'	131:40	150:55
+SUBSHELL (3342390)_[s];SUBSHELL (3342469)_[s];'echo $REPLY'	114:30	134:43
+SUBSHELL (3342390)_[s];SUBSHELL (3342736)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1157:161	790:161
+SUBSHELL (3342390)_[s];SUBSHELL (3342509)_[s];'read'	92:20	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342509)_[s];'echo $REPLY'	78:7	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342679)_[s];'read'	95:23	108:30
+SUBSHELL (3342390)_[s];SUBSHELL (3342679)_[s];'echo $REPLY'	78:7	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342866)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1237:181	1081:192
+SUBSHELL (3342390)_[s];SUBSHELL (3342824)_[s];'read'	175:47	201:64
+SUBSHELL (3342390)_[s];SUBSHELL (3342824)_[s];'echo $REPLY'	163:45	190:63
+SUBSHELL (3342390)_[s];SUBSHELL (3342879)_[s];'read'	164:46	187:61
+SUBSHELL (3342390)_[s];SUBSHELL (3342879)_[s];'echo $REPLY'	150:43	168:58
+SUBSHELL (3342390)_[s];SUBSHELL (3342624)_[s];'read'	94:22	108:30
+SUBSHELL (3342390)_[s];SUBSHELL (3342624)_[s];'echo $REPLY'	77:5	90:7
+SUBSHELL (3342390)_[s];SUBSHELL (3342771)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1217:175	818:163
+SUBSHELL (3342390)_[s];SUBSHELL (3342694)_[s];'read'	139:42	158:57
+SUBSHELL (3342390)_[s];SUBSHELL (3342666)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1249:183	754:158
+SUBSHELL (3342390)_[s];SUBSHELL (3342694)_[s];'echo $REPLY'	115:31	136:44
+SUBSHELL (3342390)_[s];SUBSHELL (3342794)_[s];'read'	96:24	111:35
+SUBSHELL (3342390)_[s];SUBSHELL (3342794)_[s];'echo $REPLY'	78:7	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342894)_[s];'read'	142:43	163:58
+SUBSHELL (3342390)_[s];FUNCTION (sourced_func)_[f];'sourced_func'	70:2	84:2
+SUBSHELL (3342390)_[s];SUBSHELL (3342894)_[s];'echo $REPLY'	121:34	141:47
+SUBSHELL (3342390)_[s];FUNCTION (sourced_func)_[f];'echo "INFO: Inside a function from a sourced file."'	78:7	108:30
+SUBSHELL (3342390)_[s];FUNCTION (sourced_func)_[f];'sourced_var="modified_by_sourced_func"'	72:2	86:3
+SUBSHELL (3342390)_[s];FUNCTION (sourced_func)_[f];'seq 1 3 | rev | cat > /dev/null'	5105:646	8886:885
+SUBSHELL (3342390)_[s];SUBSHELL (3342596)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	475:87	297:83
+SUBSHELL (3342390)_[s];SUBSHELL (3342559)_[s];'read'	93:21	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342559)_[s];'echo $REPLY'	78:7	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342481)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	464:83	296:81
+SUBSHELL (3342390)_[s];SUBSHELL (3342501)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1073:152	971:168
+SUBSHELL (3342390)_[s];SUBSHELL (3342529)_[s];'read'	131:40	150:55
+SUBSHELL (3342390)_[s];SUBSHELL (3342529)_[s];'echo $REPLY'	114:30	133:42
+SUBSHELL (3342390)_[s];SUBSHELL (3342784)_[s];'read'	93:21	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342751)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	482:88	320:90
+SUBSHELL (3342390)_[s];SUBSHELL (3342784)_[s];'echo $REPLY'	78:7	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342646)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1490:195	1084:196
+SUBSHELL (3342390)_[s];SUBSHELL (3342804)_[s];'read'	94:22	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342804)_[s];'echo $REPLY'	78:7	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342604)_[s];'read'	94:22	108:30
+SUBSHELL (3342390)_[s];SUBSHELL (3342521)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	443:76	286:77
+SUBSHELL (3342390)_[s];SUBSHELL (3342604)_[s];'echo $REPLY'	79:9	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342846)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	811:120	683:148
+SUBSHELL (3342390)_[s];SUBSHELL (3342574)_[s];'read'	97:25	111:35
+SUBSHELL (3342390)_[s];SUBSHELL (3342854)_[s];'read'	119:33	136:44
+SUBSHELL (3342390)_[s];SUBSHELL (3342854)_[s];'echo $REPLY'	111:29	122:38
+SUBSHELL (3342390)_[s];SUBSHELL (3342574)_[s];'echo $REPLY'	82:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342489)_[s];'read'	92:20	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342489)_[s];'echo $REPLY'	79:9	92:11
+SUBSHELL (3342390)_[s];SUBSHELL (3342816)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	988:146	878:166
+SUBSHELL (3342390)_[s];SUBSHELL (3342519)_[s];'read'	128:38	147:53
+SUBSHELL (3342390)_[s];SUBSHELL (3342519)_[s];'echo $REPLY'	113:30	129:40
+SUBSHELL (3342390)_[s];SUBSHELL (3342654)_[s];'read'	182:48	207:66
+SUBSHELL (3342390)_[s];SUBSHELL (3342654)_[s];'echo $REPLY'	164:46	186:61
+SUBSHELL (3342390)_[s];SUBSHELL (3342616)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	829:121	682:147
+SUBSHELL (3342390)_[s];SUBSHELL (3342896)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1278:185	1124:213
+SUBSHELL (3342390)_[s];SUBSHELL (3342696)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	595:101	381:111
+SUBSHELL (3342390)_[s];SUBSHELL (3342594)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342594)_[s];'echo $REPLY'	80:10	93:12
+SUBSHELL (3342390)_[s];SUBSHELL (3342541)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	452:76	293:80
+SUBSHELL (3342390)_[s];SUBSHELL (3342439)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342439)_[s];'echo $REPLY'	81:12	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342826)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	496:91	337:96
+SUBSHELL (3342390)_[s];SUBSHELL (3342664)_[s];'read'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342864)_[s];'read'	135:41	150:55
+SUBSHELL (3342390)_[s];SUBSHELL (3342664)_[s];'echo $REPLY'	80:10	94:15
+SUBSHELL (3342390)_[s];SUBSHELL (3342864)_[s];'echo $REPLY'	110:29	129:40
+SUBSHELL (3342390)_[s];SUBSHELL (3342626)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	974:144	876:164
+SUBSHELL (3342390)_[s];SUBSHELL (3342549)_[s];'read'	367:73	406:124
+SUBSHELL (3342390)_[s];SUBSHELL (3342549)_[s];'echo $REPLY'	325:64	366:103
+SUBSHELL (3342390)_[s];SUBSHELL (3342734)_[s];'read'	199:51	217:68
+SUBSHELL (3342390)_[s];SUBSHELL (3342734)_[s];'echo $REPLY'	164:46	190:63
+SUBSHELL (3342390)_[s];SUBSHELL (3342731)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1632:205	1089:203
+SUBSHELL (3342390)_[s];SUBSHELL (3342796)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	710:112	425:128
+SUBSHELL (3342390)_[s];SUBSHELL (3342856)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	593:100	403:122
+SUBSHELL (3342390)_[s];SUBSHELL (3342814)_[s];'read'	127:37	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342814)_[s];'echo $REPLY'	112:29	130:40
+SUBSHELL (3342390)_[s];SUBSHELL (3342561)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	629:105	495:132
+SUBSHELL (3342390)_[s];SUBSHELL (3342614)_[s];'read'	114:30	132:41
+SUBSHELL (3342390)_[s];SUBSHELL (3342614)_[s];'echo $REPLY'	98:25	115:36
+SUBSHELL (3342390)_[s];SUBSHELL (3342656)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	627:104	324:91
+SUBSHELL (3342390)_[s];SUBSHELL (3342711)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	886:131	702:151
+SUBSHELL (3342390)_[s];SUBSHELL (3342576)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	1179:168	1080:190
+SUBSHELL (3342390)_[s];SUBSHELL (3342891)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	604:102	390:116
+SUBSHELL (3342390)_[s];SUBSHELL (3342691)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	565:99	409:126
+SUBSHELL (3342390)_[s];SUBSHELL (3342569)_[s];'read'	97:25	110:34
+SUBSHELL (3342390)_[s];SUBSHELL (3342569)_[s];'echo $REPLY'	81:12	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342606)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	457:81	299:84
+SUBSHELL (3342390)_[s];SUBSHELL (3342644)_[s];'read'	132:40	150:55
+SUBSHELL (3342390)_[s];SUBSHELL (3342644)_[s];'echo $REPLY'	78:7	91:9
+SUBSHELL (3342390)_[s];SUBSHELL (3342844)_[s];'read'	128:38	146:52
+SUBSHELL (3342390)_[s];SUBSHELL (3342844)_[s];'echo $REPLY'	80:10	95:17
+SUBSHELL (3342390)_[s];SUBSHELL (3342806)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	660:108	523:134
+SUBSHELL (3342390)_[s];SUBSHELL (3342786)_[s];'echo $(basename "$(echo /some/long/path/to/a/file.txt)")'	455:79	293:80
+SUBSHELL (3342390)_[s];SUBSHELL (3342935)_[s];'seq 1 5 (^)'	7922:764	7922:869
+SUBSHELL (3342390)_[s];SUBSHELL (3342741)_[s];SUBSHELL (3342742)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5581:687	5581:793
+SUBSHELL (3342390)_[s];SUBSHELL (3342456)_[s];SUBSHELL (3342457)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2145:268	2145:301
+SUBSHELL (3342390)_[s];SUBSHELL (3342431)_[s];SUBSHELL (3342432)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2376:296	2376:339
+SUBSHELL (3342390)_[s];SUBSHELL (3342686)_[s];SUBSHELL (3342687)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3770:486	3770:567
+SUBSHELL (3342390)_[s];SUBSHELL (3342731)_[s];SUBSHELL (3342732)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3801:498	3801:581
+SUBSHELL (3342390)_[s];SUBSHELL (3342876)_[s];SUBSHELL (3342877)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2959:401	2959:461
+SUBSHELL (3342390)_[s];SUBSHELL (3342841)_[s];SUBSHELL (3342842)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2479:337	2479:382
+SUBSHELL (3342390)_[s];SUBSHELL (3342546)_[s];SUBSHELL (3342547)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2522:345	2522:396
+SUBSHELL (3342390)_[s];SUBSHELL (3342746)_[s];SUBSHELL (3342747)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2751:361	2751:415
+SUBSHELL (3342390)_[s];SUBSHELL (3342571)_[s];SUBSHELL (3342572)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2217:272	2217:305
+SUBSHELL (3342390)_[s];SUBSHELL (3342541)_[s];SUBSHELL (3342542)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2320:286	2320:322
+SUBSHELL (3342390)_[s];SUBSHELL (3342756)_[s];SUBSHELL (3342757)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2062:259	2062:286
+SUBSHELL (3342390)_[s];SUBSHELL (3342806)_[s];SUBSHELL (3342807)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2914:387	2914:445
+SUBSHELL (3342390)_[s];SUBSHELL (3342871)_[s];SUBSHELL (3342872)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5974:730	5974:844
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	70:2	84:2
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	70:2	85:3
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	106:27	110:34
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	82:12	96:18
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	84:13	98:19
+SUBSHELL (3342390)_[s];SUBSHELL (3342446)_[s];SUBSHELL (3342447)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2476:334	2476:378
+SUBSHELL (3342390)_[s];SUBSHELL (3342576)_[s];SUBSHELL (3342577)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4613:609	4613:711
+SUBSHELL (3342390)_[s];SUBSHELL (3342511)_[s];SUBSHELL (3342512)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2886:378	2886:435
+SUBSHELL (3342390)_[s];SUBSHELL (3342701)_[s];SUBSHELL (3342702)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4921:638	4921:745
+SUBSHELL (3342390)_[s];SUBSHELL (3342451)_[s];SUBSHELL (3342452)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5193:653	5193:754
+SUBSHELL (3342390)_[s];SUBSHELL (3342491)_[s];SUBSHELL (3342492)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4191:534	4191:624
+SUBSHELL (3342390)_[s];SUBSHELL (3342816)_[s];SUBSHELL (3342817)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4526:595	4526:694
+SUBSHELL (3342390)_[s];SUBSHELL (3342626)_[s];SUBSHELL (3342627)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4407:561	4407:655
+SUBSHELL (3342390)_[s];SUBSHELL (3342821)_[s];SUBSHELL (3342822)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3357:448	3357:522
+SUBSHELL (3342390)_[s];SUBSHELL (3342471)_[s];SUBSHELL (3342472)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4597:602	4597:702
+SUBSHELL (3342390)_[s];SUBSHELL (3342891)_[s];SUBSHELL (3342892)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2990:405	2990:466
+SUBSHELL (3342390)_[s];SUBSHELL (3342476)_[s];SUBSHELL (3342477)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4413:574	4413:670
+SUBSHELL (3342390)_[s];SUBSHELL (3342531)_[s];SUBSHELL (3342532)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4086:528	4086:616
+SUBSHELL (3342390)_[s];SUBSHELL (3342506)_[s];SUBSHELL (3342507)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2439:319	2439:360
+SUBSHELL (3342390)_[s];SUBSHELL (3342896)_[s];SUBSHELL (3342897)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3837:504	3837:587
+SUBSHELL (3342390)_[s];SUBSHELL (3342501)_[s];SUBSHELL (3342502)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4431:588	4431:686
+SUBSHELL (3342390)_[s];SUBSHELL (3342496)_[s];SUBSHELL (3342497)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4381:554	4381:647
+SUBSHELL (3342390)_[s];SUBSHELL (3342831)_[s];SUBSHELL (3342832)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5374:662	5374:764
+SUBSHELL (3342390)_[s];SUBSHELL (3342631)_[s];SUBSHELL (3342632)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1799:229	1799:247
+SUBSHELL (3342390)_[s];SUBSHELL (3342591)_[s];SUBSHELL (3342592)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1774:218	1774:231
+SUBSHELL (3342390)_[s];SUBSHELL (3342706)_[s];SUBSHELL (3342707)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2895:383	2895:440
+SUBSHELL (3342390)_[s];SUBSHELL (3342556)_[s];SUBSHELL (3342557)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3735:475	3735:554
+SUBSHELL (3342390)_[s];SUBSHELL (3342636)_[s];SUBSHELL (3342637)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3038:423	3038:488
+SUBSHELL (3342390)_[s];SUBSHELL (3342771)_[s];SUBSHELL (3342772)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5643:713	5643:824
+SUBSHELL (3342390)_[s];SUBSHELL (3342641)_[s];SUBSHELL (3342642)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3774:492	3774:574
+SUBSHELL (3342390)_[s];SUBSHELL (3342611)_[s];SUBSHELL (3342612)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5594:695	5594:803
+SUBSHELL (3342390)_[s];SUBSHELL (3342906)_[s];SUBSHELL (3342907)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2769:365	2769:424
+SUBSHELL (3342390)_[s];SUBSHELL (3342421)_[s];SUBSHELL (3342422)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1793:223	1793:241
+SUBSHELL (3342390)_[s];SUBSHELL (3342766)_[s];SUBSHELL (3342767)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1808:232	1808:251
+SUBSHELL (3342390)_[s];SUBSHELL (3342666)_[s];SUBSHELL (3342667)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5531:670	5531:774
+SUBSHELL (3342390)_[s];SUBSHELL (3342661)_[s];SUBSHELL (3342662)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3002:414	3002:477
+SUBSHELL (3342390)_[s];SUBSHELL (3342856)_[s];SUBSHELL (3342857)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2438:315	2438:356
+SUBSHELL (3342390)_[s];SUBSHELL (3342781)_[s];SUBSHELL (3342782)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2061:255	2061:282
+SUBSHELL (3342390)_[s];SUBSHELL (3342586)_[s];SUBSHELL (3342587)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4811:630	4811:736
+SUBSHELL (3342390)_[s];SUBSHELL (3342621)_[s];SUBSHELL (3342622)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1948:240	1948:261
+SUBSHELL (3342390)_[s];SUBSHELL (3342561)_[s];SUBSHELL (3342562)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3030:419	3030:482
+SUBSHELL (3342390)_[s];SUBSHELL (3342651)_[s];SUBSHELL (3342652)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3994:516	3994:602
+SUBSHELL (3342390)_[s];SUBSHELL (3342851)_[s];SUBSHELL (3342852)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3423:453	3423:528
+SUBSHELL (3342390)_[s];SUBSHELL (3342776)_[s];SUBSHELL (3342777)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2340:293	2340:330
+SUBSHELL (3342390)_[s];SUBSHELL (3342716)_[s];SUBSHELL (3342717)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5540:678	5540:783
+SUBSHELL (3342390)_[s];SUBSHELL (3342801)_[s];SUBSHELL (3342802)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2136:265	2136:297
+SUBSHELL (3342390)_[s];SUBSHELL (3342416)_[s];SUBSHELL (3342417)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1732:207	1732:219
+SUBSHELL (3342390)_[s];SUBSHELL (3342516)_[s];SUBSHELL (3342517)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1963:243	1963:264
+SUBSHELL (3342390)_[s];SUBSHELL (3342846)_[s];SUBSHELL (3342847)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3747:481	3747:560
+SUBSHELL (3342390)_[s];SUBSHELL (3342441)_[s];SUBSHELL (3342442)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2994:410	2994:471
+SUBSHELL (3342390)_[s];SUBSHELL (3342681)_[s];SUBSHELL (3342682)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5608:704	5608:813
+SUBSHELL (3342390)_[s];SUBSHELL (3342791)_[s];SUBSHELL (3342792)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2451:322	2451:365
+SUBSHELL (3342390)_[s];SUBSHELL (3342711)_[s];SUBSHELL (3342712)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4281:548	4281:639
+SUBSHELL (3342390)_[s];SUBSHELL (3342596)_[s];SUBSHELL (3342597)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2105:262	2105:294
+SUBSHELL (3342390)_[s];SUBSHELL (3342581)_[s];SUBSHELL (3342582)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2945:396	2945:456
+SUBSHELL (3342390)_[s];SUBSHELL (3342616)_[s];SUBSHELL (3342617)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3486:464	3486:541
+SUBSHELL (3342390)_[s];SUBSHELL (3342426)_[s];SUBSHELL (3342427)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3525:469	3525:547
+SUBSHELL (3342390)_[s];SUBSHELL (3342836)_[s];SUBSHELL (3342837)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3203:433	3203:504
+SUBSHELL (3342390)_[s];SUBSHELL (3342786)_[s];SUBSHELL (3342787)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2012:252	2012:275
+SUBSHELL (3342390)_[s];SUBSHELL (3342901)_[s];SUBSHELL (3342902)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4268:541	4268:631
+SUBSHELL (3342390)_[s];SUBSHELL (3342566)_[s];SUBSHELL (3342567)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2486:341	2486:387
+SUBSHELL (3342390)_[s];SUBSHELL (3342436)_[s];SUBSHELL (3342437)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3893:510	3893:594
+SUBSHELL (3342390)_[s];SUBSHELL (3342606)_[s];SUBSHELL (3342607)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1995:249	1995:272
+SUBSHELL (3342390)_[s];SUBSHELL (3342646)_[s];SUBSHELL (3342647)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3354:443	3354:516
+SUBSHELL (3342390)_[s];SUBSHELL (3342696)_[s];SUBSHELL (3342697)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2941:392	2941:450
+SUBSHELL (3342390)_[s];SUBSHELL (3342826)_[s];SUBSHELL (3342827)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2607:353	2607:405
+SUBSHELL (3342390)_[s];SUBSHELL (3342761)_[s];SUBSHELL (3342762)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3252:438	3252:510
+SUBSHELL (3342390)_[s];SUBSHELL (3342481)_[s];SUBSHELL (3342482)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1734:210	1734:222
+SUBSHELL (3342390)_[s];SUBSHELL (3342721)_[s];SUBSHELL (3342722)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4426:581	4426:678
+SUBSHELL (3342390)_[s];SUBSHELL (3342526)_[s];SUBSHELL (3342527)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2315:282	2315:318
+SUBSHELL (3342390)_[s];SUBSHELL (3342691)_[s];SUBSHELL (3342692)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2322:289	2322:326
+SUBSHELL (3342390)_[s];SUBSHELL (3342866)_[s];SUBSHELL (3342867)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	5646:721	5646:834
+SUBSHELL (3342390)_[s];SUBSHELL (3342536)_[s];SUBSHELL (3342537)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4411:568	4411:662
+SUBSHELL (3342390)_[s];SUBSHELL (3342466)_[s];SUBSHELL (3342467)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2307:279	2307:313
+SUBSHELL (3342390)_[s];SUBSHELL (3342751)_[s];SUBSHELL (3342752)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1789:221	1789:238
+SUBSHELL (3342390)_[s];SUBSHELL (3342656)_[s];SUBSHELL (3342657)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2394:300	2394:343
+SUBSHELL (3342390)_[s];SUBSHELL (3342676)_[s];SUBSHELL (3342677)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	3048:428	3048:493
+SUBSHELL (3342390)_[s];SUBSHELL (3342881)_[s];SUBSHELL (3342882)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2463:330	2463:373
+SUBSHELL (3342390)_[s];SUBSHELL (3342411)_[s];SUBSHELL (3342412)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	6113:740	6113:855
+SUBSHELL (3342390)_[s];SUBSHELL (3342861)_[s];SUBSHELL (3342862)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2409:304	2409:347
+SUBSHELL (3342390)_[s];SUBSHELL (3342601)_[s];SUBSHELL (3342602)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2411:307	2411:351
+SUBSHELL (3342390)_[s];SUBSHELL (3342726)_[s];SUBSHELL (3342727)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4021:522	4021:609
+SUBSHELL (3342390)_[s];SUBSHELL (3342796)_[s];SUBSHELL (3342797)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2802:370	2802:429
+SUBSHELL (3342390)_[s];SUBSHELL (3342486)_[s];SUBSHELL (3342487)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1798:226	1798:244
+SUBSHELL (3342390)_[s];SUBSHELL (3342521)_[s];SUBSHELL (3342522)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1872:237	1872:254
+SUBSHELL (3342390)_[s];SUBSHELL (3342671)_[s];SUBSHELL (3342672)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2452:326	2452:369
+SUBSHELL (3342390)_[s];SUBSHELL (3342736)_[s];SUBSHELL (3342737)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	4683:623	4683:727
+SUBSHELL (3342390)_[s];SUBSHELL (3342461)_[s];SUBSHELL (3342462)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1764:213	1764:225
+SUBSHELL (3342390)_[s];SUBSHELL (3342551)_[s];SUBSHELL (3342552)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	2282:275	2282:309
+SUBSHELL (3342390)_[s];SUBSHELL (3342811)_[s];SUBSHELL (3342812)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1765:215	1765:228
+SUBSHELL (3342390)_[s];SUBSHELL (3342886)_[s];SUBSHELL (3342887)_[s];'basename "$(echo /some/long/path/to/a/file.txt)"'	1988:246	1988:268
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];'spawner "Beta"'	76:4	90:7
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];'local name=$1'	69:1	84:2
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' starting."'	75:4	89:6
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];'paste <(sleep 0.1, seq 1 3) <(sleep 0.1, seq 4 6) > /dev/null (&)'	326:64	358:100
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];'local spawner_job=$! (&)'	437:74	454:129
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' finished launching jobs. Waiting for its own job ($spawner_job)."'	90:18	100:20
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];'wait "$spawner_job"'	110287:1200	1099:207
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];'spawner "Alpha"'	121:34	137:44
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];'local name=$1'	69:1	83:2
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' starting."'	74:3	89:6
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];'paste <(sleep 0.1, seq 1 3) <(sleep 0.1, seq 4 6) > /dev/null (&)'	313:59	339:97
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];'local spawner_job=$! (&)'	419:74	443:129
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];'echo "INFO: Spawner '\''$name'\'' finished launching jobs. Waiting for its own job ($spawner_job)."'	82:12	96:18
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];'wait "$spawner_job"'	116947:1200	1124:213
+SUBSHELL (3342390)_[s];SUBSHELL (3342761)_[s];SUBSHELL (3342762)_[s];SUBSHELL (3342763)_[s];'echo /some/long/path/to/a/file.txt'	91:18	106:26
+SUBSHELL (3342390)_[s];SUBSHELL (3342681)_[s];SUBSHELL (3342682)_[s];SUBSHELL (3342683)_[s];'echo /some/long/path/to/a/file.txt'	325:64	373:107
+SUBSHELL (3342390)_[s];SUBSHELL (3342756)_[s];SUBSHELL (3342757)_[s];SUBSHELL (3342758)_[s];'echo /some/long/path/to/a/file.txt'	128:38	148:53
+SUBSHELL (3342390)_[s];SUBSHELL (3342486)_[s];SUBSHELL (3342487)_[s];SUBSHELL (3342488)_[s];'echo /some/long/path/to/a/file.txt'	87:15	100:20
+SUBSHELL (3342390)_[s];SUBSHELL (3342716)_[s];SUBSHELL (3342717)_[s];SUBSHELL (3342718)_[s];'echo /some/long/path/to/a/file.txt'	130:39	149:53
+SUBSHELL (3342390)_[s];SUBSHELL (3342636)_[s];SUBSHELL (3342637)_[s];SUBSHELL (3342638)_[s];'echo /some/long/path/to/a/file.txt'	122:35	141:47
+SUBSHELL (3342390)_[s];SUBSHELL (3342766)_[s];SUBSHELL (3342767)_[s];SUBSHELL (3342768)_[s];'echo /some/long/path/to/a/file.txt'	90:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342806)_[s];SUBSHELL (3342807)_[s];SUBSHELL (3342808)_[s];'echo /some/long/path/to/a/file.txt'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342536)_[s];SUBSHELL (3342537)_[s];SUBSHELL (3342538)_[s];'echo /some/long/path/to/a/file.txt'	322:62	371:105
+SUBSHELL (3342390)_[s];SUBSHELL (3342891)_[s];SUBSHELL (3342892)_[s];SUBSHELL (3342893)_[s];'echo /some/long/path/to/a/file.txt'	86:14	101:21
+SUBSHELL (3342390)_[s];SUBSHELL (3342501)_[s];SUBSHELL (3342502)_[s];SUBSHELL (3342503)_[s];'echo /some/long/path/to/a/file.txt'	336:67	387:114
+SUBSHELL (3342390)_[s];SUBSHELL (3342591)_[s];SUBSHELL (3342592)_[s];SUBSHELL (3342593)_[s];'echo /some/long/path/to/a/file.txt'	90:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342411)_[s];SUBSHELL (3342412)_[s];SUBSHELL (3342413)_[s];'echo /some/long/path/to/a/file.txt'	101:26	118:37
+SUBSHELL (3342390)_[s];SUBSHELL (3342436)_[s];SUBSHELL (3342437)_[s];SUBSHELL (3342438)_[s];'echo /some/long/path/to/a/file.txt'	87:15	101:21
+SUBSHELL (3342390)_[s];SUBSHELL (3342696)_[s];SUBSHELL (3342697)_[s];SUBSHELL (3342698)_[s];'echo /some/long/path/to/a/file.txt'	228:53	252:70
+SUBSHELL (3342390)_[s];SUBSHELL (3342731)_[s];SUBSHELL (3342732)_[s];SUBSHELL (3342733)_[s];'echo /some/long/path/to/a/file.txt'	124:35	143:48
+SUBSHELL (3342390)_[s];SUBSHELL (3342851)_[s];SUBSHELL (3342852)_[s];SUBSHELL (3342853)_[s];'echo /some/long/path/to/a/file.txt'	348:69	388:114
+SUBSHELL (3342390)_[s];SUBSHELL (3342641)_[s];SUBSHELL (3342642)_[s];SUBSHELL (3342643)_[s];'echo /some/long/path/to/a/file.txt'	226:53	266:73
+SUBSHELL (3342390)_[s];SUBSHELL (3342446)_[s];SUBSHELL (3342447)_[s];SUBSHELL (3342448)_[s];'echo /some/long/path/to/a/file.txt'	91:18	106:26
+SUBSHELL (3342390)_[s];SUBSHELL (3342686)_[s];SUBSHELL (3342687)_[s];SUBSHELL (3342688)_[s];'echo /some/long/path/to/a/file.txt'	244:54	279:75
+SUBSHELL (3342390)_[s];SUBSHELL (3342481)_[s];SUBSHELL (3342482)_[s];SUBSHELL (3342483)_[s];'echo /some/long/path/to/a/file.txt'	87:15	101:21
+SUBSHELL (3342390)_[s];SUBSHELL (3342526)_[s];SUBSHELL (3342527)_[s];SUBSHELL (3342528)_[s];'echo /some/long/path/to/a/file.txt'	90:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342741)_[s];SUBSHELL (3342742)_[s];SUBSHELL (3342743)_[s];'echo /some/long/path/to/a/file.txt'	124:35	144:49
+SUBSHELL (3342390)_[s];SUBSHELL (3342581)_[s];SUBSHELL (3342582)_[s];SUBSHELL (3342583)_[s];'echo /some/long/path/to/a/file.txt'	88:15	103:22
+SUBSHELL (3342390)_[s];SUBSHELL (3342646)_[s];SUBSHELL (3342647)_[s];SUBSHELL (3342648)_[s];'echo /some/long/path/to/a/file.txt'	126:36	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342821)_[s];SUBSHELL (3342822)_[s];SUBSHELL (3342823)_[s];'echo /some/long/path/to/a/file.txt'	221:52	256:71
+SUBSHELL (3342390)_[s];SUBSHELL (3342631)_[s];SUBSHELL (3342632)_[s];SUBSHELL (3342633)_[s];'echo /some/long/path/to/a/file.txt'	87:15	102:22
+SUBSHELL (3342390)_[s];SUBSHELL (3342551)_[s];SUBSHELL (3342552)_[s];SUBSHELL (3342553)_[s];'echo /some/long/path/to/a/file.txt'	121:34	140:46
+SUBSHELL (3342390)_[s];SUBSHELL (3342721)_[s];SUBSHELL (3342722)_[s];SUBSHELL (3342723)_[s];'echo /some/long/path/to/a/file.txt'	315:59	365:102
+SUBSHELL (3342390)_[s];SUBSHELL (3342596)_[s];SUBSHELL (3342597)_[s];SUBSHELL (3342598)_[s];'echo /some/long/path/to/a/file.txt'	222:52	255:71
+SUBSHELL (3342390)_[s];SUBSHELL (3342811)_[s];SUBSHELL (3342812)_[s];SUBSHELL (3342813)_[s];'echo /some/long/path/to/a/file.txt'	93:21	107:29
+SUBSHELL (3342390)_[s];SUBSHELL (3342776)_[s];SUBSHELL (3342777)_[s];SUBSHELL (3342778)_[s];'echo /some/long/path/to/a/file.txt'	122:35	140:46
+SUBSHELL (3342390)_[s];SUBSHELL (3342846)_[s];SUBSHELL (3342847)_[s];SUBSHELL (3342848)_[s];'echo /some/long/path/to/a/file.txt'	95:23	110:34
+SUBSHELL (3342390)_[s];SUBSHELL (3342726)_[s];SUBSHELL (3342727)_[s];SUBSHELL (3342728)_[s];'echo /some/long/path/to/a/file.txt'	90:18	100:20
+SUBSHELL (3342390)_[s];SUBSHELL (3342451)_[s];SUBSHELL (3342452)_[s];SUBSHELL (3342453)_[s];'echo /some/long/path/to/a/file.txt'	90:18	104:23
+SUBSHELL (3342390)_[s];SUBSHELL (3342876)_[s];SUBSHELL (3342877)_[s];SUBSHELL (3342878)_[s];'echo /some/long/path/to/a/file.txt'	291:57	335:95
+SUBSHELL (3342390)_[s];SUBSHELL (3342456)_[s];SUBSHELL (3342457)_[s];SUBSHELL (3342458)_[s];'echo /some/long/path/to/a/file.txt'	90:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342691)_[s];SUBSHELL (3342692)_[s];SUBSHELL (3342693)_[s];'echo /some/long/path/to/a/file.txt'	108:28	125:39
+SUBSHELL (3342390)_[s];SUBSHELL (3342586)_[s];SUBSHELL (3342587)_[s];SUBSHELL (3342588)_[s];'echo /some/long/path/to/a/file.txt'	157:44	182:60
+SUBSHELL (3342390)_[s];SUBSHELL (3342601)_[s];SUBSHELL (3342602)_[s];SUBSHELL (3342603)_[s];'echo /some/long/path/to/a/file.txt'	340:67	382:111
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	68:1	83:2
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	79:9	95:17
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	72:2	87:4
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	81:12	96:18
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	67:0	81:1
+SUBSHELL (3342390)_[s];SUBSHELL (3342836)_[s];SUBSHELL (3342837)_[s];SUBSHELL (3342838)_[s];'echo /some/long/path/to/a/file.txt'	128:38	149:53
+SUBSHELL (3342390)_[s];SUBSHELL (3342541)_[s];SUBSHELL (3342542)_[s];SUBSHELL (3342543)_[s];'echo /some/long/path/to/a/file.txt'	107:28	118:37
+SUBSHELL (3342390)_[s];SUBSHELL (3342506)_[s];SUBSHELL (3342507)_[s];SUBSHELL (3342508)_[s];'echo /some/long/path/to/a/file.txt'	89:16	103:22
+SUBSHELL (3342390)_[s];SUBSHELL (3342441)_[s];SUBSHELL (3342442)_[s];SUBSHELL (3342443)_[s];'echo /some/long/path/to/a/file.txt'	90:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342881)_[s];SUBSHELL (3342882)_[s];SUBSHELL (3342883)_[s];'echo /some/long/path/to/a/file.txt'	120:33	139:46
+SUBSHELL (3342390)_[s];SUBSHELL (3342511)_[s];SUBSHELL (3342512)_[s];SUBSHELL (3342513)_[s];'echo /some/long/path/to/a/file.txt'	90:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342841)_[s];SUBSHELL (3342842)_[s];SUBSHELL (3342843)_[s];'echo /some/long/path/to/a/file.txt'	319:61	368:104
+SUBSHELL (3342390)_[s];SUBSHELL (3342626)_[s];SUBSHELL (3342627)_[s];SUBSHELL (3342628)_[s];'echo /some/long/path/to/a/file.txt'	101:26	117:37
+SUBSHELL (3342390)_[s];SUBSHELL (3342491)_[s];SUBSHELL (3342492)_[s];SUBSHELL (3342493)_[s];'echo /some/long/path/to/a/file.txt'	150:43	173:59
+SUBSHELL (3342390)_[s];SUBSHELL (3342801)_[s];SUBSHELL (3342802)_[s];SUBSHELL (3342803)_[s];'echo /some/long/path/to/a/file.txt'	86:14	100:20
+SUBSHELL (3342390)_[s];SUBSHELL (3342896)_[s];SUBSHELL (3342897)_[s];SUBSHELL (3342898)_[s];'echo /some/long/path/to/a/file.txt'	115:31	134:43
+SUBSHELL (3342390)_[s];SUBSHELL (3342531)_[s];SUBSHELL (3342532)_[s];SUBSHELL (3342533)_[s];'echo /some/long/path/to/a/file.txt'	238:54	278:75
+SUBSHELL (3342390)_[s];SUBSHELL (3342856)_[s];SUBSHELL (3342857)_[s];SUBSHELL (3342858)_[s];'echo /some/long/path/to/a/file.txt'	128:38	146:52
+SUBSHELL (3342390)_[s];SUBSHELL (3342886)_[s];SUBSHELL (3342887)_[s];SUBSHELL (3342888)_[s];'echo /some/long/path/to/a/file.txt'	163:45	188:62
+SUBSHELL (3342390)_[s];SUBSHELL (3342421)_[s];SUBSHELL (3342422)_[s];SUBSHELL (3342423)_[s];'echo /some/long/path/to/a/file.txt'	90:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342606)_[s];SUBSHELL (3342607)_[s];SUBSHELL (3342608)_[s];'echo /some/long/path/to/a/file.txt'	170:46	196:64
+SUBSHELL (3342390)_[s];SUBSHELL (3342611)_[s];SUBSHELL (3342612)_[s];SUBSHELL (3342613)_[s];'echo /some/long/path/to/a/file.txt'	319:61	368:104
+SUBSHELL (3342390)_[s];SUBSHELL (3342546)_[s];SUBSHELL (3342547)_[s];SUBSHELL (3342548)_[s];'echo /some/long/path/to/a/file.txt'	116:32	135:43
+SUBSHELL (3342390)_[s];SUBSHELL (3342476)_[s];SUBSHELL (3342477)_[s];SUBSHELL (3342478)_[s];'echo /some/long/path/to/a/file.txt'	119:33	138:45
+SUBSHELL (3342390)_[s];SUBSHELL (3342796)_[s];SUBSHELL (3342797)_[s];SUBSHELL (3342798)_[s];'echo /some/long/path/to/a/file.txt'	317:60	365:102
+SUBSHELL (3342390)_[s];SUBSHELL (3342771)_[s];SUBSHELL (3342772)_[s];SUBSHELL (3342773)_[s];'echo /some/long/path/to/a/file.txt'	250:56	275:74
+SUBSHELL (3342390)_[s];SUBSHELL (3342651)_[s];SUBSHELL (3342652)_[s];SUBSHELL (3342653)_[s];'echo /some/long/path/to/a/file.txt'	325:64	374:108
+SUBSHELL (3342390)_[s];SUBSHELL (3342566)_[s];SUBSHELL (3342567)_[s];SUBSHELL (3342568)_[s];'echo /some/long/path/to/a/file.txt'	91:18	105:25
+SUBSHELL (3342390)_[s];SUBSHELL (3342416)_[s];SUBSHELL (3342417)_[s];SUBSHELL (3342418)_[s];'echo /some/long/path/to/a/file.txt'	95:23	109:33
+SUBSHELL (3342390)_[s];SUBSHELL (3342671)_[s];SUBSHELL (3342672)_[s];SUBSHELL (3342673)_[s];'echo /some/long/path/to/a/file.txt'	185:49	205:66
+SUBSHELL (3342390)_[s];SUBSHELL (3342861)_[s];SUBSHELL (3342862)_[s];SUBSHELL (3342863)_[s];'echo /some/long/path/to/a/file.txt'	127:37	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342701)_[s];SUBSHELL (3342702)_[s];SUBSHELL (3342703)_[s];'echo /some/long/path/to/a/file.txt'	122:35	141:47
+SUBSHELL (3342390)_[s];SUBSHELL (3342816)_[s];SUBSHELL (3342817)_[s];SUBSHELL (3342818)_[s];'echo /some/long/path/to/a/file.txt'	115:31	134:43
+SUBSHELL (3342390)_[s];SUBSHELL (3342786)_[s];SUBSHELL (3342787)_[s];SUBSHELL (3342788)_[s];'echo /some/long/path/to/a/file.txt'	159:44	184:60
+SUBSHELL (3342390)_[s];SUBSHELL (3342571)_[s];SUBSHELL (3342572)_[s];SUBSHELL (3342573)_[s];'echo /some/long/path/to/a/file.txt'	88:15	103:22
+SUBSHELL (3342390)_[s];SUBSHELL (3342791)_[s];SUBSHELL (3342792)_[s];SUBSHELL (3342793)_[s];'echo /some/long/path/to/a/file.txt'	336:67	385:113
+SUBSHELL (3342390)_[s];SUBSHELL (3342496)_[s];SUBSHELL (3342497)_[s];SUBSHELL (3342498)_[s];'echo /some/long/path/to/a/file.txt'	172:47	198:64
+SUBSHELL (3342390)_[s];SUBSHELL (3342906)_[s];SUBSHELL (3342907)_[s];SUBSHELL (3342908)_[s];'echo /some/long/path/to/a/file.txt'	85:14	99:19
+SUBSHELL (3342390)_[s];SUBSHELL (3342461)_[s];SUBSHELL (3342462)_[s];SUBSHELL (3342463)_[s];'echo /some/long/path/to/a/file.txt'	130:39	145:51
+SUBSHELL (3342390)_[s];SUBSHELL (3342676)_[s];SUBSHELL (3342677)_[s];SUBSHELL (3342678)_[s];'echo /some/long/path/to/a/file.txt'	343:68	393:119
+SUBSHELL (3342390)_[s];SUBSHELL (3342666)_[s];SUBSHELL (3342667)_[s];SUBSHELL (3342668)_[s];'echo /some/long/path/to/a/file.txt'	137:41	157:57
+SUBSHELL (3342390)_[s];SUBSHELL (3342556)_[s];SUBSHELL (3342557)_[s];SUBSHELL (3342558)_[s];'echo /some/long/path/to/a/file.txt'	98:25	106:26
+SUBSHELL (3342390)_[s];SUBSHELL (3342621)_[s];SUBSHELL (3342622)_[s];SUBSHELL (3342623)_[s];'echo /some/long/path/to/a/file.txt'	89:16	104:23
+SUBSHELL (3342390)_[s];SUBSHELL (3342831)_[s];SUBSHELL (3342832)_[s];SUBSHELL (3342833)_[s];'echo /some/long/path/to/a/file.txt'	332:65	373:107
+SUBSHELL (3342390)_[s];SUBSHELL (3342426)_[s];SUBSHELL (3342427)_[s];SUBSHELL (3342428)_[s];'echo /some/long/path/to/a/file.txt'	263:56	303:86
+SUBSHELL (3342390)_[s];SUBSHELL (3342751)_[s];SUBSHELL (3342752)_[s];SUBSHELL (3342753)_[s];'echo /some/long/path/to/a/file.txt'	90:18	104:23
+SUBSHELL (3342390)_[s];SUBSHELL (3342826)_[s];SUBSHELL (3342827)_[s];SUBSHELL (3342828)_[s];'echo /some/long/path/to/a/file.txt'	335:66	375:109
+SUBSHELL (3342390)_[s];SUBSHELL (3342521)_[s];SUBSHELL (3342522)_[s];SUBSHELL (3342523)_[s];'echo /some/long/path/to/a/file.txt'	86:14	100:20
+SUBSHELL (3342390)_[s];SUBSHELL (3342656)_[s];SUBSHELL (3342657)_[s];SUBSHELL (3342658)_[s];'echo /some/long/path/to/a/file.txt'	121:34	139:46
+SUBSHELL (3342390)_[s];SUBSHELL (3342431)_[s];SUBSHELL (3342432)_[s];SUBSHELL (3342433)_[s];'echo /some/long/path/to/a/file.txt'	332:65	374:108
+SUBSHELL (3342390)_[s];SUBSHELL (3342576)_[s];SUBSHELL (3342577)_[s];SUBSHELL (3342578)_[s];'echo /some/long/path/to/a/file.txt'	118:32	138:45
+SUBSHELL (3342390)_[s];SUBSHELL (3342746)_[s];SUBSHELL (3342747)_[s];SUBSHELL (3342748)_[s];'echo /some/long/path/to/a/file.txt'	317:60	371:105
+SUBSHELL (3342390)_[s];SUBSHELL (3342466)_[s];SUBSHELL (3342467)_[s];SUBSHELL (3342468)_[s];'echo /some/long/path/to/a/file.txt'	122:35	143:48
+SUBSHELL (3342390)_[s];SUBSHELL (3342871)_[s];SUBSHELL (3342872)_[s];SUBSHELL (3342873)_[s];'echo /some/long/path/to/a/file.txt'	148:43	171:59
+SUBSHELL (3342390)_[s];SUBSHELL (3342661)_[s];SUBSHELL (3342662)_[s];SUBSHELL (3342663)_[s];'echo /some/long/path/to/a/file.txt'	323:62	376:110
+SUBSHELL (3342390)_[s];SUBSHELL (3342516)_[s];SUBSHELL (3342517)_[s];SUBSHELL (3342518)_[s];'echo /some/long/path/to/a/file.txt'	190:50	212:67
+SUBSHELL (3342390)_[s];SUBSHELL (3342736)_[s];SUBSHELL (3342737)_[s];SUBSHELL (3342738)_[s];'echo /some/long/path/to/a/file.txt'	350:69	389:115
+SUBSHELL (3342390)_[s];SUBSHELL (3342901)_[s];SUBSHELL (3342902)_[s];SUBSHELL (3342903)_[s];'echo /some/long/path/to/a/file.txt'	115:31	133:42
+SUBSHELL (3342390)_[s];SUBSHELL (3342711)_[s];SUBSHELL (3342712)_[s];SUBSHELL (3342713)_[s];'echo /some/long/path/to/a/file.txt'	117:32	134:43
+SUBSHELL (3342390)_[s];SUBSHELL (3342561)_[s];SUBSHELL (3342562)_[s];SUBSHELL (3342563)_[s];'echo /some/long/path/to/a/file.txt'	167:46	192:63
+SUBSHELL (3342390)_[s];SUBSHELL (3342471)_[s];SUBSHELL (3342472)_[s];SUBSHELL (3342473)_[s];'echo /some/long/path/to/a/file.txt'	351:70	383:112
+SUBSHELL (3342390)_[s];SUBSHELL (3342866)_[s];SUBSHELL (3342867)_[s];SUBSHELL (3342868)_[s];'echo /some/long/path/to/a/file.txt'	162:44	188:62
+SUBSHELL (3342390)_[s];SUBSHELL (3342706)_[s];SUBSHELL (3342707)_[s];SUBSHELL (3342708)_[s];'echo /some/long/path/to/a/file.txt'	88:15	102:22
+SUBSHELL (3342390)_[s];SUBSHELL (3342616)_[s];SUBSHELL (3342617)_[s];SUBSHELL (3342618)_[s];'echo /some/long/path/to/a/file.txt'	124:35	144:49
+SUBSHELL (3342390)_[s];SUBSHELL (3342781)_[s];SUBSHELL (3342782)_[s];SUBSHELL (3342783)_[s];'echo /some/long/path/to/a/file.txt'	115:31	134:43
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342913)_[s];SUBSHELL (3342915)_[s];'sleep 0.1'	101990:1043	2048:279
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342913)_[s];SUBSHELL (3342915)_[s];'seq 1 3'	2849:374	3089:499
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342913)_[s];SUBSHELL (3342917)_[s];'sleep 0.1'	101831:1043	1775:235
+SUBSHELL (3342390)_[s];SUBSHELL (3342909)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342913)_[s];SUBSHELL (3342917)_[s];'seq 4 6'	2602:349	2765:419
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342914)_[s];SUBSHELL (3342919)_[s];'sleep 0.1'	102076:1043	2078:290
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342914)_[s];SUBSHELL (3342919)_[s];'seq 4 6'	2647:357	2718:410
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342914)_[s];SUBSHELL (3342916)_[s];'sleep 0.1'	102591:1200	2535:400
+SUBSHELL (3342390)_[s];SUBSHELL (3342910)_[s];FUNCTION (spawner)_[f];SUBSHELL (3342914)_[s];SUBSHELL (3342916)_[s];'seq 1 3'	2413:311	2516:391
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	65:0	80:0
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	70:2	84:2
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	69:1	80:0
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	78:7	92:11
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	65:0	78:0
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	71:2	85:3
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	89:16	104:23
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	74:3	89:6
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'echo "INFO: Recursing at depth $depth" > /dev/null'	82:12	96:18
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'((depth--))'	69:1	84:2
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'recursive_func $depth'	72:2	88:5
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'local depth=$1'	81:12	94:15
+SUBSHELL (3342390)_[s];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];FUNCTION (recursive_func)_[f];'(( depth > 0 ))'	83:13	98:19
