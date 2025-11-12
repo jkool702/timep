@@ -3,10 +3,11 @@
 
 **CURRENT TIMEP VERSION**: timep v1.10
 
-timep v1.10: This release is a smaller "quality of life" release that incorporates the foillowing changes:
-1. `/dev/shm` is no longer a hard dependency. The loadable builtin timep.so file and the flamegraph generation perl script now follow he same logic that choosing the timep tmpdir uses(`/dev/shm` is preffered, but if unavailable `$TMPDIR`, `/tmp`, and `$PWD` will be tried with decreasing prefferance)
-2. The way `timep` aggregates the compined time totals (shown atthe botoim of the profiles) has been overhauled. Three times are now shown (all have timep's instrumentation overhead removed):
-* "SELF RUN TIME": the "wall-clock" time that it actually took the command to run
+The timep v1.10 release is a smaller "quality of life" release that incorporates the following changes:
+1. `/dev/shm` is no longer a hard dependency. The loadable builtin timep.so file and the flamegraph generation perl script now follow he same logic that choosing the timep tmpdir uses (`/dev/shm` is preffered, but if unavailable `$TMPDIR`, `/tmp`, and `$PWD` will be tried with decreasing prefferance)
+2. The flamegraph generation workflow has been pareallelized. After the parallel primary log processing finishes, flamegraph generation runs in parallel with final output profile generation (resulting in a much shorted time until the output profile is printed to the screen). Additionally, when the dual-stack and quad-stack flamegraphs are created the 4x dual stack ones are made in parallel and the 2x quad-stack ones also are made in parallel.
+3. The way `timep` aggregates the compined time totals (shown at the bottom of the profiles) has been overhauled, making them more accurately describe the actual runtime (without instrumentation overhead). Three times are now shown:
+* "SELF RUN TIME": the "wall-clock" time that it actually took the command to run (this is new)
 * "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed together
 * "TOTAL CPU TIME": the "CPU time" from all parallel branches of the code summed together
 
@@ -51,9 +52,9 @@ if `--flame` is passed as a flag:
 * The "TOTAL CPU TIME" is equivalent to the combined sys+user time from other timing tools.
 * NOTE: timep's overhead has been removed/corrected for in all 3 of these times. each should be very close to the time you would have gotten if you ran the command without using `timep`.
 
-The big difference between these is that:
+The big difference between the two "TOTAL" times is that:
 1. TOTAL RUN TIME includes time spent idling and waiting (via `wait`, a blocking read, waiting on I/O, etc), when cpu usage was basically zero but the process was still running, and
-2. if you call a binary (not a shell script) that is inherently multithreaded, TOTAL RUN TIME adds th time it waited for the binary to finish, and TOTAL CPU TIME adds the total cpu time used the binary used.
+2. if you call a binary (not a shell script) that is inherently multithreaded, TOTAL RUN TIME adds the time it waited for the binary to finish, and TOTAL CPU TIME adds the total cpu time used the binary used.
 
 **EXAMPLE**
 

@@ -1,82 +1,82 @@
-SUBSHELL (648266)_[s];'set -eu -o pipefail'	68:0	82:1
-SUBSHELL (648266)_[s];'trap '\''echo "Clean exit", exit 0'\'' EXIT INT TERM'	40667:57	40550:164
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];'main "$@"'	63:0	76:0
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];'echo "Starting Safe Stress Test..."'	74:0	88:3
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];'echo "All tests completed successfully!"'	79:0	92:4
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'safe_process_subs'	69:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'local result'	70:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'result=$(cat <(echo "Sub1") <(echo "Sub2") <(echo "Sub3"))'	542:2	370:8
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'safe_job_control'	71:0	84:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'set -m (&)'	441:2	459:13
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'local job_pid=$!'	71:0	85:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'sleep 0.05'	51633:93	1583:33
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'wait $job_pid 2> /dev/null'	54142:93	471:14
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'set +m'	327:1	368:8
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'echo "$result"'	334:1	375:9
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test 1 5'	65:0	79:0
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	66:0	80:0
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	65:0	78:0
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	85:0	109:5
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	64:0	79:0
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	380:2	400:11
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	68:0	82:1
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	112529:160	264:7
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	608:2	1252:29
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	781:3	915:20
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	12832:26	1160:23
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	775:3	894:19
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'exec {SAFE_CP[1]}>&-'	75:0	88:3
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'wait ${SAFE_CP_PID} 2> /dev/null'	2342:5	144:6
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'safe_memory_test'	98:1	113:5
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	6660:12	7953:60
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	7729:18	9039:86
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	7069:15	8376:72
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'safe_signal_test'	68:0	81:0
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'local child_pid (&)'	427:2	447:12
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'child_pid=$!'	70:0	84:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'sleep 0.01'	11198:22	1244:27
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'kill -TERM $child_pid 2> /dev/null'	87:1	101:4
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'wait $child_pid 2> /dev/null'	676:3	120:5
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'true'	84:0	94:4
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];SUBSHELL (648302)_[s];'sleep 0.1'	101506:160	1558:31
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];SUBSHELL (648302)_[s];'echo "Job completed"'	321:1	359:7
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];'sleep 0.001'	3780:10	2902:48
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (648298)_[s];'cat <(echo "Sub1") <(echo "Sub2") <(echo "Sub3")'	2360:6	2360:44
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (648287)_[s];'read -r line'	869:4	1015:22
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (648287)_[s];'echo "CP: $((line * 2))"'	717:3	846:16
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (648287)_[s];'sleep 0.001'	22210:42	12351:104
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (648298)_[s];SUBSHELL (648301)_[s];'echo "Sub3"'	81:0	96:4
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (648298)_[s];SUBSHELL (648299)_[s];'echo "Sub1"'	204:1	244:6
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (648298)_[s];SUBSHELL (648300)_[s];'echo "Sub2"'	121:1	142:6
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	71:0	85:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	76:0	87:3
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	70:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	73:0	87:3
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	68:0	82:1
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	357:1	376:9
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	69:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	81719:123	828:15
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];'sleep 0.001'	3296:7	2307:37
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	66:0	80:0
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	68:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	68:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	77:0	87:3
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	68:0	82:1
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	375:1	390:10
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	77:0	86:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	48554:75	867:18
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];'sleep 0.001'	2127:5	1178:25
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	94:1	112:5
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	99:1	117:5
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	97:1	115:5
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	79:0	90:3
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	69:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	388:2	403:11
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	69:0	83:2
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	22130:34	452:12
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648285)_[s];'sleep 0.001'	3333:9	2360:44
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648285)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	88:1	106:4
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648285)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	75:0	89:3
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648285)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	87:1	102:4
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648285)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	77:0	92:4
-SUBSHELL (648266)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648279)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648281)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648283)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (648285)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	75:0	89:3
+SUBSHELL (3333423)_[s];'set -eu -o pipefail'	71:0	85:2
+SUBSHELL (3333423)_[s];'trap '\''echo "Clean exit", exit 0'\'' EXIT INT TERM'	40633:58	40380:164
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];'main "$@"'	138:1	113:5
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];'echo "Starting Safe Stress Test..."'	84:0	99:4
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];'echo "All tests completed successfully!"'	75:0	89:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'safe_process_subs'	74:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'local result'	70:0	83:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'result=$(cat <(echo "Sub1") <(echo "Sub2") <(echo "Sub3"))'	505:2	311:8
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];'echo "$result"'	114:1	123:5
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'safe_job_control'	83:0	97:4
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'set -m (&)'	403:2	422:11
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test 1 5'	67:0	81:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	99:0	86:2
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'local job_pid=$!'	70:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	127:1	97:4
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'sleep 0.05'	51626:76	1549:29
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	112:1	104:4
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	84:0	85:2
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'wait $job_pid 2> /dev/null'	53128:95	379:9
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];'set +m'	314:1	364:9
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	415:2	432:12
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'for i in {1..10}'	691:2	820:17
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	67:0	81:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "$i" >&${SAFE_CP[1]}'	811:3	936:21
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	115268:160	239:7
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'read -r -t 1 -u ${SAFE_CP[0]} result'	13662:27	1280:25
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'echo "Result: $result"'	776:3	903:20
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'exec {SAFE_CP[1]}>&-'	75:0	89:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];'wait ${SAFE_CP_PID} 2> /dev/null'	2214:5	148:6
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'safe_memory_test'	97:0	112:5
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'for i in {1..100}'	6418:12	7698:60
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'declare -a small_array=("a" "b" "c")'	7461:18	8763:85
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_memory_test)_[f];'unset small_array'	6822:15	8091:72
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'safe_signal_test'	69:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'local child_pid (&)'	435:2	466:13
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'child_pid=$!'	71:0	85:2
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'sleep 0.01'	12382:22	2418:44
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'kill -TERM $child_pid 2> /dev/null'	97:0	111:5
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'wait $child_pid 2> /dev/null'	1735:4	140:5
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_signal_test)_[f];'true'	76:0	91:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];'sleep 0.001'	3837:10	2934:49
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];SUBSHELL (3333471)_[s];'sleep 0.1'	101638:160	1630:31
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_job_control)_[f];SUBSHELL (3333471)_[s];'echo "Job completed"'	207:1	237:7
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (3333467)_[s];'cat <(echo "Sub1") <(echo "Sub2") <(echo "Sub3")'	2326:6	2326:41
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (3333453)_[s];'read -r line'	1409:4	1111:23
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (3333453)_[s];'echo "CP: $((line * 2))"'	752:3	883:18
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_coprocess_test)_[f];SUBSHELL (3333453)_[s];'sleep 0.001'	23437:35	13590:104
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (3333467)_[s];SUBSHELL (3333468)_[s];'echo "Sub1"'	118:1	138:5
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (3333467)_[s];SUBSHELL (3333470)_[s];'echo "Sub3"'	146:1	170:6
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_process_subs)_[f];SUBSHELL (3333467)_[s];SUBSHELL (3333469)_[s];'echo "Sub2"'	88:0	103:4
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	67:0	80:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	69:0	83:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	68:0	81:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	71:0	85:2
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	67:0	80:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	373:1	400:10
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	75:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	82560:124	759:16
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];'sleep 0.001'	2606:8	1836:34
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	70:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	70:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	68:0	81:0
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	76:0	91:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	70:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	377:1	398:10
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	69:0	84:1
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	52098:95	627:15
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];'sleep 0.001'	3259:9	2274:37
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	72:0	87:2
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	72:0	87:2
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	74:0	89:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	89:0	107:4
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	101:1	91:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'local bg_pid (&)'	443:2	461:12
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'bg_pid=$!'	76:0	91:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];'wait $bg_pid 2> /dev/null'	25827:44	503:14
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333442)_[s];'sleep 0.001'	2327:7	1481:27
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333442)_[s];FUNCTION (safe_recursive_test)_[f];'safe_recursive_test $((depth + 1)) $max_depth'	175:1	207:6
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333442)_[s];FUNCTION (safe_recursive_test)_[f];'local depth=$1'	289:1	338:8
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333442)_[s];FUNCTION (safe_recursive_test)_[f];'local max_depth=$2'	182:1	214:7
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333442)_[s];FUNCTION (safe_recursive_test)_[f];'echo "Depth: $depth"'	80:0	94:3
+SUBSHELL (3333423)_[s];FUNCTION (main)_[f];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333436)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333438)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333440)_[s];FUNCTION (safe_recursive_test)_[f];SUBSHELL (3333442)_[s];FUNCTION (safe_recursive_test)_[f];'(( depth < max_depth ))'	88:0	103:4
