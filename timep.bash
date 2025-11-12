@@ -3055,6 +3055,7 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
                 printf '...DONE!\n' >&2
             }
         } &
+        timep_flamegraphPID="$!"
     }
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
@@ -3262,8 +3263,6 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     # If there are corrections add the .corrections.pid file into the profiles folder
     [[ -s "${timep_TMPDIR}/.corrections.pid" ]] && \cp "${timep_TMPDIR}/.corrections.pid" "${timep_TMPDIR}/profiles"
 
-    ${timep_flameGraphFlag} && wait
-
     [[ "${timep_outType}" == *' ff '* ]] && {
         printf '\n\nFLAMEGRAPH FULL STACK TRACE:\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.flamegraph.full"
@@ -3282,6 +3281,12 @@ pAll_PID+=("${p'"${nWorker}"'_PID}")'
     [[ "${timep_outType}" == *' p '* ]] && {
         printf '\n\nOUTPUT PROFILE (COMBINED):\n\n' >&2
         cat "${timep_TMPDIR}/profiles/out.profile"
+    }
+
+    # wait for flamegraphs to finish being created (if needed)
+    ${timep_flameGraphFlag} && {
+        [[ -d "/proc/${timep_flamegraphPID}" ]] && printf '\n\nTHE TIME PROFILES FOR THE PROFILED CODE HAVE BEEN CREATED SUCESSFULLY!!!!\nWAITING FOR THE PROCESS THAT CREATES THE FLAMEGRAPHS TO FINISH RUNNING...\n\n' >&2
+        wait "${timep_flamegraphPID}"
     }
 
     read -r -u "${fd_sleep}" -t 0.01 _ || :
