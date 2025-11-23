@@ -1,15 +1,15 @@
 # timep
 `timep` is an efficient and state-of-the-art trap-based **time p**rofiler for bash code. `timep` generates a per-command execution time profile for the bash code being profiled. As it generates this profile, `timep` logs command runtimes+metadata hierarchically based on both function and subshell nesting depth, mapping and recreating the complete full call-stack tree for the bash code being profiled. 
 
-**CURRENT TIMEP VERSION**: timep v1.10
+**CURRENT TIMEP VERSION**: timep v1.10.1
 
 The timep v1.10 release is a smaller "quality of life" release that incorporates the following changes:
 1. `/dev/shm` is no longer a hard dependency. The loadable builtin timep.so file and the flamegraph generation perl script now follow he same logic that choosing the timep tmpdir uses (`/dev/shm` is preffered, but if unavailable `$TMPDIR`, `/tmp`, and `$PWD` will be tried with decreasing prefferance)
 2. The flamegraph generation workflow has been pareallelized. After the parallel primary log processing finishes, flamegraph generation runs in parallel with final output profile generation (resulting in a much shorted time until the output profile is printed to the screen). Additionally, when the dual-stack and quad-stack flamegraphs are created the 4x dual stack ones are made in parallel and the 2x quad-stack ones also are made in parallel.
 3. The way `timep` aggregates the compined time totals (shown at the bottom of the profiles) has been overhauled, making them more accurately describe the actual runtime (without instrumentation overhead). Three times are now shown:
 * "SELF RUN TIME": the "wall-clock" time that it actually took the command to run (this is new)
-* "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed together
-* "TOTAL CPU TIME": the "CPU time" from all parallel branches of the code summed together
+* "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed tog
+* timep v1.10.1: added a guard for BASH_ENV and a new stress test
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
@@ -171,11 +171,19 @@ FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can
                  This is useful to compare how much overhead timep's instrumentartion adds to running the code (in my testing this is usually <10% for most "real" codes)
 
 `-o <type>`: Use this flag to control which outputs are printed to stdout after timep is finished. `<type>` is a comma-seperated list of `p`, `pf`, `f` and `ff`. use `-o ''` to not print any of these to stdout.
-   `<type>`: p --> out.profile (DEFAULT)........pf --> out.profile.full.......f --> out.flamegraph.......ff -> out.flamegraph.full
+             `<type>`: p --> out.profile (DEFAULT)........pf --> out.profile.full.......f --> out.flamegraph.......ff -> out.flamegraph.full
 
  `-F` or `--flame`: Use this flag to have `timep` automatically generate flamegraphs (both with and without folding/merging commands)
 
  `--`: Use this flag to prevent cmdline args after this from being interpreted as `timep` flags.
+
+***
+
+**EXCLUDING PART OF THE CODE FROM INSTRUMENTATION**
+
+`timep` will NOT profile commands run inside of an `env -i` call. If a part of the code being profiled needs to run without being instrumented (e.g., because it requires job control to be off to work properly), you can run that section with `env -i` and it will not be instrumented. 
+
+NOTE: you will still get a single line in the profile showing the time for the entire `env -i` call.
 
 ***
 
