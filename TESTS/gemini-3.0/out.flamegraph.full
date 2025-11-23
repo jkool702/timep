@@ -1,0 +1,640 @@
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'main'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo "=== Entering The Event Horizon v2 ==="'	74:56	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'export -f workload'	68:36	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 1: The Inheritance Sever (env -i)"'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'$'\''env -i PATH="$PATH" bash -c \'\''\n        echo "    [Clean Room] BASH_ENV is: $BASH_ENV"\n        # We have to redefine workload because functions were wiped\n        workload() { echo "    [Clean Room] Workload running (invisible?)", sleep 0.1, }\n       '	299:64	320:694
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'wait $!'	104302:1061	572:771
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 2: The Trap Bypass" (&)'	861:74	867:802
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'wait $!'	163550:1274	356:713
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 3: Exec Amnesia" (&)'	726:71	364:718
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'wait $!'	101886:585	477:742
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 4: Sensory Deprivation (Closing FDs 3-255)" (&)'	772:72	809:790
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'wait $!'	627317:1274	475:735
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 5: Readonly BASH_ENV" (&)'	1054:75	1104:846
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'wait $!'	137803:1274	486:755
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 6: The Eval Bomb"'	308:65	344:704
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'$'\''code="\n        my_dynamic_func() {\n            workload \\"dynamic-eval\\"\n        }\n        my_dynamic_func\n    "'	76:58	89:622
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo "$code" (&)'	303:64	323:699
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'eval "$(cat)" (&)'	282:63	309:690
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'wait $!'	140570:1274	296:682
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo "=== Event Horizon Complete ==="'	327:66	365:723
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77016)_[s];'echo "    [Pre-Exec] PID: $BASHPID"'	82:61	96:654
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];'export BASH_ENV=""'	144:63	167:670
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];'readonly BASH_ENV'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];'echo "    [Locked] BASH_ENV is readonly. Attempting fork..."'	391:67	293:677
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];'echo "    [Bypass] Disabling DEBUG trap via builtin..."'	313:65	352:708
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];'trap '\'''\'' DEBUG'	23681:115	23623:1280
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];'echo "    [Bypass] Re-enabling to see if timep notices..."'	85:61	99:658
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'echo "    [Silence] Closing all upper FDs..."'	508:69	557:763
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	244:63	257:673
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	74:56	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 3>&-'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 4>&-'	69:42	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	74:56	89:622
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 5>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 6>&-'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 7>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 8>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 9>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	65:24	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 10>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	75:57	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 11>&-'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 12>&-'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 13>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	81:60	94:644
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 14>&-'	73:55	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 15>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 16>&-'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 17>&-'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	83:61	96:654
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 18>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	76:58	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 19>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 20>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	92:62	100:660
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 21>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 22>&-'	79:60	91:629
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	76:58	90:627
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	76:58	89:622
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 23>&-'	75:57	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	74:56	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 24>&-'	71:49	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 25>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 26>&-'	64:20	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 27>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 28>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	80:60	92:633
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 29>&-'	81:60	94:644
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 30>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 31>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	65:24	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 32>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 33>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 34>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 35>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	85:61	98:657
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 36>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 37>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	68:36	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 38>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 39>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	67:29	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 40>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 41>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 42>&-'	76:58	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 43>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 44>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 45>&-'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	87:62	94:644
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 46>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 47>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	75:57	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 48>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 49>&-'	83:61	96:654
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 50>&-'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 51>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 52>&-'	71:49	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 53>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 54>&-'	68:36	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 55>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	74:56	87:606
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 56>&-'	74:56	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	74:56	89:622
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 57>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 58>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 59>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 60>&-'	68:36	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 61>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	82:61	95:646
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 62>&-'	68:36	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 63>&-'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 64>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 65>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 66>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 67>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 68>&-'	71:49	93:637
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 69>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 70>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 71>&-'	65:24	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 72>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	68:36	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 73>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 74>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 75>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 76>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 77>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	80:60	92:633
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 78>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	65:24	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 79>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 80>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 81>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 82>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	82:61	95:646
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 83>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 84>&-'	77:59	90:627
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	96:654
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 85>&-'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 86>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 87>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 88>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	66:27	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 89>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 90>&-'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	77:59	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 91>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 92>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 93>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	93:637
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 94>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 95>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 96>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	79:60	92:633
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 97>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	79:60	91:629
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 98>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 99>&-'	65:24	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 100>&-'	66:27	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 101>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 102>&-'	66:27	94:644
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 103>&-'	79:60	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 104>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 105>&-'	68:36	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 106>&-'	80:60	93:637
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 107>&-'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 108>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 109>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 110>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 111>&-'	71:49	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 112>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 113>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 114>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	75:57	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 115>&-'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 116>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 117>&-'	67:29	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 118>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 119>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 120>&-'	65:24	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 121>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 122>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	78:59	87:606
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 123>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 124>&-'	75:57	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	77:59	90:627
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 125>&-'	72:53	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 126>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 127>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 128>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	75:57	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 129>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 130>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 131>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 132>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 133>&-'	69:42	94:644
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 134>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 135>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 136>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 137>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 138>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 139>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 140>&-'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 141>&-'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	70:46	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 142>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	89:62	102:661
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 143>&-'	67:29	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	76:58	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 144>&-'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 145>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 146>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 147>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 148>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 149>&-'	74:56	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 150>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 151>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 152>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 153>&-'	69:42	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 154>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 155>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 156>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 157>&-'	75:57	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 158>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 159>&-'	71:49	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 160>&-'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 161>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 162>&-'	75:57	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 163>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 164>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 165>&-'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 166>&-'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 167>&-'	72:53	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 168>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	85:61	97:656
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 169>&-'	72:53	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 170>&-'	69:42	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 171>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 172>&-'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 173>&-'	70:46	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 174>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 175>&-'	68:36	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	75:57	87:606
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 176>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 177>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 178>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 179>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 180>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 181>&-'	63:17	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 182>&-'	83:61	96:654
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	73:55	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 183>&-'	75:57	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	62:13	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 184>&-'	76:58	89:622
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 185>&-'	64:20	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 186>&-'	65:24	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 187>&-'	64:20	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 188>&-'	66:27	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 189>&-'	67:29	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 190>&-'	67:29	96:654
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	85:61	113:666
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 191>&-'	68:36	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 192>&-'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	75:57	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 193>&-'	63:17	76:210
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	57:0	69:0
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 194>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	70:46	82:470
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	69:42	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 195>&-'	76:58	88:616
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	59:6	70:19
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	72:53	85:576
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 196>&-'	65:24	78:285
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	73:115
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	77:59	86:603
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 197>&-'	67:29	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	61:11	75:171
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	71:49	84:539
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 198>&-'	68:36	81:428
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	60:9	72:86
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 199>&-'	66:27	79:311
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	58:1	71:60
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	70:46	83:518
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 200>&-'	78:59	90:627
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];'my_dynamic_func'	62:13	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];SUBSHELL (77027)_[s];'cat'	484:68	484:748
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];'workload "fd-closed"'	64:20	77:256
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];'local id="$1"'	676:70	583:779
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];'sleep 0.1'	102427:901	2355:920
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];'workload "trap-disabled"'	66:27	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];'local id="$1"'	1080:77	1031:816
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];'sleep 0.1'	101771:428	1660:888
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];SUBSHELL (77014)_[s];'echo "  [Workload $id] Running..."'	333:66	374:729
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];'workload "readonly-env-child"'	61:11	74:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];SUBSHELL (77019)_[s];'echo "  [Workload $id] Running..."'	128:62	149:668
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];'local id="$1"'	1090:79	1037:830
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];'workload "dynamic-eval"'	66:27	80:343
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];'local id="$1"'	411:68	303:686
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];'sleep 0.1'	101490:271	1416:865
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];'sleep 0.1'	102393:743	2405:954
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];SUBSHELL (77028)_[s];'echo "  [Workload $id] Running..."'	91:62	106:662
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];SUBSHELL (77023)_[s];'echo "  [Workload $id] Running..."'	93:62	109:664
