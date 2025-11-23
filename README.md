@@ -9,7 +9,8 @@ The timep v1.10 release is a smaller "quality of life" release that incorporates
 3. The way `timep` aggregates the compined time totals (shown at the bottom of the profiles) has been overhauled, making them more accurately describe the actual runtime (without instrumentation overhead). Three times are now shown:
 * "SELF RUN TIME": the "wall-clock" time that it actually took the command to run (this is new)
 * "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed tog
-* timep v1.10.1: added a guard for BASH_ENV and a new stress test
+
+**timep v1.10.1**: added a guard for BASH_ENV and a new stress test
 
 See `CHANGELOG.md` for the changes introduced in previous `timep` updates. To use one of the older versions of timep, download its release or use it via its tag.
 
