@@ -1,0 +1,241 @@
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'main'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo "=== Entering The Event Horizon v2 ==="'	74:12	88:80
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'export -f workload'	68:9	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 1: The Inheritance Sever (env -i)"'	71:12	84:77
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'$'\''env -i PATH="$PATH" bash -c \'\''\n        echo "    [Clean Room] BASH_ENV is: $BASH_ENV"\n        # We have to redefine workload because functions were wiped\n        workload() { echo "    [Clean Room] Workload running (invisible?)", sleep 0.1, }\n       '	299:15	320:97
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'wait $!'	1275428:480	2662:196
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 2: The Trap Bypass" (&)'	861:21	867:125
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 3: Exec Amnesia" (&)'	726:19	364:104
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 4: Sensory Deprivation (Closing FDs 3-255)" (&)'	772:20	809:120
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 5: Readonly BASH_ENV" (&)'	1054:22	1104:141
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo ">> Attack 6: The Eval Bomb"'	308:15	344:100
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'$'\''code="\n        my_dynamic_func() {\n            workload \\"dynamic-eval\\"\n        }\n        my_dynamic_func\n    "'	76:13	89:81
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo "$code" (&)'	303:15	323:98
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'eval "$(cat)" (&)'	282:14	309:95
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];'echo "=== Event Horizon Complete ==="'	327:16	365:106
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77016)_[s];'echo "    [Pre-Exec] PID: $BASHPID"'	82:13	96:87
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];'export BASH_ENV=""'	144:14	167:90
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];'readonly BASH_ENV'	71:12	84:77
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];'echo "    [Locked] BASH_ENV is readonly. Attempting fork..."'	391:17	293:92
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];'echo "    [Bypass] Disabling DEBUG trap via builtin..."'	313:16	352:102
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];'trap '\'''\'' DEBUG'	23681:74	23623:482
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];'echo "    [Bypass] Re-enabling to see if timep notices..."'	85:14	99:87
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'echo "    [Silence] Closing all upper FDs..."'	508:18	557:113
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'for fd in {3..200}'	12293:37	14724:272
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'eval "exec $fd>&-" 2> /dev/null'	14163:51	16669:359
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 3>&-'	68:9	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 4>&-'	69:11	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 5>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 6>&-'	71:12	84:77
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 7>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 8>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 9>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 10>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 11>&-'	72:12	85:77
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 12>&-'	70:11	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 13>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 14>&-'	73:12	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 15>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 16>&-'	71:12	84:77
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 17>&-'	71:12	84:77
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 18>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 19>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 20>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 21>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 22>&-'	79:13	91:83
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 23>&-'	75:13	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 24>&-'	71:12	85:77
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 25>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 26>&-'	64:2	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 27>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 28>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 29>&-'	81:13	94:85
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 30>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 31>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 32>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 33>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 34>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 35>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 36>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 37>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 38>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 39>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 40>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 41>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 42>&-'	76:13	88:80
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 43>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 44>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 45>&-'	70:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 46>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 47>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 48>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 49>&-'	83:14	96:87
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 50>&-'	68:9	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 51>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 52>&-'	71:12	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 53>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 54>&-'	68:9	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 55>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 56>&-'	74:12	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 57>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 58>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 59>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 60>&-'	68:9	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 61>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 62>&-'	68:9	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 63>&-'	70:11	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 64>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 65>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 66>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 67>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 68>&-'	71:12	93:83
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 69>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 70>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 71>&-'	65:4	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 72>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 73>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 74>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 75>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 76>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 77>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 78>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 79>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 80>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 81>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 82>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 83>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 84>&-'	77:13	90:82
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 85>&-'	68:9	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 86>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 87>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 88>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 89>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 90>&-'	70:11	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 91>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 92>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 93>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 94>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 95>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 96>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 97>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 98>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 99>&-'	65:4	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 100>&-'	66:6	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 101>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 102>&-'	66:6	94:85
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 103>&-'	79:13	86:78
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 104>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 105>&-'	68:9	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 106>&-'	80:13	93:83
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 107>&-'	63:0	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 108>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 109>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 110>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 111>&-'	71:12	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 112>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 113>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 114>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 115>&-'	63:0	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 116>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 117>&-'	67:7	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 118>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 119>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 120>&-'	65:4	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 121>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 122>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 123>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 124>&-'	75:13	88:80
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 125>&-'	72:12	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 126>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 127>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 128>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 129>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 130>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 131>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 132>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 133>&-'	69:11	94:85
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 134>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 135>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 136>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 137>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 138>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 139>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 140>&-'	70:11	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 141>&-'	69:11	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 142>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 143>&-'	67:7	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 144>&-'	63:0	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 145>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 146>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 147>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 148>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 149>&-'	74:12	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 150>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 151>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 152>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 153>&-'	69:11	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 154>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 155>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 156>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 157>&-'	75:13	82:71
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 158>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 159>&-'	71:12	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 160>&-'	63:0	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 161>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 162>&-'	75:13	88:80
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 163>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 164>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 165>&-'	63:0	75:1
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 166>&-'	63:0	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 167>&-'	72:12	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 168>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 169>&-'	72:12	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 170>&-'	69:11	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 171>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 172>&-'	63:0	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 173>&-'	70:11	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 174>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 175>&-'	68:9	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 176>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 177>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 178>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 179>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 180>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 181>&-'	63:0	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 182>&-'	83:14	96:87
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 183>&-'	75:13	83:74
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 184>&-'	76:13	89:81
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 185>&-'	64:2	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 186>&-'	65:4	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 187>&-'	64:2	75:1
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 188>&-'	66:6	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 189>&-'	67:7	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 190>&-'	67:7	96:87
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 191>&-'	68:9	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 192>&-'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 193>&-'	63:0	76:11
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 194>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 195>&-'	76:13	88:80
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 196>&-'	65:4	78:35
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 197>&-'	67:7	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 198>&-'	68:9	81:64
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 199>&-'	66:6	79:45
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];'exec 200>&-'	78:13	90:82
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];'my_dynamic_func'	62:0	74:0
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];SUBSHELL (77027)_[s];'cat'	484:18	484:110
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];'workload "fd-closed"'	64:2	77:26
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];'local id="$1"'	676:19	583:116
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];'sleep 0.1'	102427:480	2355:169
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];'workload "trap-disabled"'	66:6	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];'local id="$1"'	1080:23	1031:130
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];'sleep 0.1'	101771:276	1660:157
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77013)_[s];FUNCTION (workload)_[f];SUBSHELL (77014)_[s];'echo "  [Workload $id] Running..."'	333:16	374:108
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];'workload "readonly-env-child"'	61:0	74:0
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77018)_[s];FUNCTION (workload)_[f];SUBSHELL (77019)_[s];'echo "  [Workload $id] Running..."'	128:14	149:89
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];'local id="$1"'	1090:24	1037:135
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];'workload "dynamic-eval"'	66:6	80:53
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];'local id="$1"'	411:17	303:93
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];'sleep 0.1'	101490:175	1416:149
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];'sleep 0.1'	102393:378	2405:182
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77026)_[s];FUNCTION (my_dynamic_func)_[f];FUNCTION (workload)_[f];SUBSHELL (77028)_[s];'echo "  [Workload $id] Running..."'	91:14	106:88
+SUBSHELL (76998)_[s];FUNCTION (main)_[f];SUBSHELL (77021)_[s];SUBSHELL (77022)_[s];FUNCTION (workload)_[f];SUBSHELL (77023)_[s];'echo "  [Workload $id] Running..."'	93:14	109:89

@@ -1,12 +1,13 @@
-CURRENT VERSION: timep v1.10
+CURRENT VERSION: timep v1.10.1
 
 timep v1.10: This release is a smaller "quality of life" release that incorporates the following changes:
-1. `/dev/shm` is no longer a hard dependency. The loadable builtin timep.so file and the flamegraph generation perl script now follow he same logic that choosing the timep tmpdir uses (`/dev/shm` is preffered, but if unavailable `$TMPDIR`, `/tmp`, and `$PWD` will be tried with decreasing prefferance)
+1. `/dev/shm` is no longer a hard dependency. The loadable builtin timep.so file and the flamegraph generation perl script now follow the same logic that choosing the timep tmpdir uses (`/dev/shm` is preferred, but if unavailable `$TMPDIR`, `/tmp`, and `$PWD` will be tried with decreasing preference)
 2. The flamegraph generation workflow has been pareallelized. After the parallel primary log processing finishes, flamegraph generation runs in parallel with final output profile generation (resulting in a much shorted time until the output profile is printed to the screen). Additionally, when the dual-stack and quad-stack flamegraphs are created the 4x dual stack ones are made in parallel and the 2x quad-stack ones also are made in parallel.
 3. The way `timep` aggregates the compined time totals (shown at the bottom of the profiles) has been overhauled, making them more accurately describe the actual runtime (without instrumentation overhead). Three times are now shown:
 * "SELF RUN TIME": the "wall-clock" time that it actually took the command to run (this is new)
 * "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed together
 * "TOTAL CPU TIME": the "CPU time" from all parallel branches of the code summed together
+* timep v1.10.1: added a guard for BASH_ENV and a new stress test
 
 timep v1.9:  In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
 * a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed

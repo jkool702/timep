@@ -1,0 +1,1544 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="4096" height="272" onload="init(evt)" viewBox="0 0 4096 272" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+        <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+                <stop stop-color="#f8f8f8" offset="5%" />
+                <stop stop-color="#e8e8e8" offset="95%" />
+        </linearGradient>
+</defs>
+<style type="text/css">
+        text { font-family:Verdana; font-size:10px; fill:rgb(0,0,0); }
+        .hide { display:none; }
+        .parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+        "use strict";
+        var details, searchbtn, unzoombtn, matchedtxt, svg, searching, currentSearchTerm, ignorecase, ignorecaseBtn;
+        function init(evt) {
+                details = document.getElementById("details").firstChild;
+                searchbtn = document.getElementById("search");
+                ignorecaseBtn = document.getElementById("ignorecase");
+                unzoombtn = document.getElementById("unzoom");
+                matchedtxt = document.getElementById("matched");
+                svg = document.getElementsByTagName("svg")[0];
+                searching = 0;
+                currentSearchTerm = null;
+
+                // use GET parameters to restore a flamegraphs state.
+                var params = get_params();
+                if (params.x && params.y)
+                        zoom(find_group(document.querySelector('[x="' + params.x + '"][y="' + params.y + '"]')));
+                if (params.s) search(params.s);
+        }
+
+        // event listeners
+        window.addEventListener("click", function(e) {
+                var target = find_group(e.target);
+                if (target) {
+                        if (target.nodeName == "a") {
+                                if (e.ctrlKey === false) return;
+                                e.preventDefault();
+                        }
+                        if (target.classList.contains("parent")) unzoom(true);
+                        zoom(target);
+                        if (!document.querySelector('.parent')) {
+                                // we have basically done a clearzoom so clear the url
+                                var params = get_params();
+                                if (params.x) delete params.x;
+                                if (params.y) delete params.y;
+                                history.replaceState(null, null, parse_params(params));
+                                unzoombtn.classList.add("hide");
+                                return;
+                        }
+
+                        // set parameters for zoom state
+                        var el = target.querySelector("rect");
+                        if (el && el.attributes && el.attributes.y && el.attributes._orig_x) {
+                                var params = get_params()
+                                params.x = el.attributes._orig_x.value;
+                                params.y = el.attributes.y.value;
+                                history.replaceState(null, null, parse_params(params));
+                        }
+                }
+                else if (e.target.id == "unzoom") clearzoom();
+                else if (e.target.id == "search") search_prompt();
+                else if (e.target.id == "ignorecase") toggle_ignorecase();
+        }, false)
+
+        // mouse-over for info
+        // show
+        window.addEventListener("mouseover", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = "Function: " + g_to_text(target);
+        }, false)
+
+        // clear
+        window.addEventListener("mouseout", function(e) {
+                var target = find_group(e.target);
+                if (target) details.nodeValue = ' ';
+        }, false)
+
+        // ctrl-F for search
+        // ctrl-I to toggle case-sensitive search
+        window.addEventListener("keydown",function (e) {
+                if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+                        e.preventDefault();
+                        search_prompt();
+                }
+                else if (e.ctrlKey && e.keyCode === 73) {
+                        e.preventDefault();
+                        toggle_ignorecase();
+                }
+        }, false)
+
+        // functions
+        function get_params() {
+                var params = {};
+                var paramsarr = window.location.search.substr(1).split('&');
+                for (var i = 0; i < paramsarr.length; ++i) {
+                        var tmp = paramsarr[i].split("=");
+                        if (!tmp[0] || !tmp[1]) continue;
+                        params[tmp[0]]  = decodeURIComponent(tmp[1]);
+                }
+                return params;
+        }
+        function parse_params(params) {
+                var uri = "?";
+                for (var key in params) {
+                        uri += key + '=' + encodeURIComponent(params[key]) + '&';
+                }
+                if (uri.slice(-1) == "&")
+                        uri = uri.substring(0, uri.length - 1);
+                if (uri == '?')
+                        uri = window.location.href.split('?')[0];
+                return uri;
+        }
+        function find_child(node, selector) {
+                var children = node.querySelectorAll(selector);
+                if (children.length) return children[0];
+        }
+        function find_group(node) {
+                var parent = node.parentElement;
+                if (!parent) return;
+                if (parent.id == "frames") return node;
+                return find_group(parent);
+        }
+        function orig_save(e, attr, val) {
+                if (e.attributes["_orig_" + attr] != undefined) return;
+                if (e.attributes[attr] == undefined) return;
+                if (val == undefined) val = e.attributes[attr].value;
+                e.setAttribute("_orig_" + attr, val);
+        }
+        function orig_load(e, attr) {
+                if (e.attributes["_orig_"+attr] == undefined) return;
+                e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+                e.removeAttribute("_orig_"+attr);
+        }
+        function g_to_text(e) {
+                var text = find_child(e, "title").firstChild.nodeValue;
+                return (text)
+        }
+        function g_to_func(e) {
+                var func = g_to_text(e);
+                // if there's any manipulation we want to do to the function
+                // name before it's searched, do it here before returning.
+                return (func);
+        }
+        function update_text(e) {
+                var r = find_child(e, "rect");
+                var t = find_child(e, "text");
+                var w = parseFloat(r.attributes.width.value) -3;
+                var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+                t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+                // Smaller than this size won't fit anything
+                if (w < 2 * 10 * 0.59) {
+                        t.textContent = "";
+                        return;
+                }
+
+                t.textContent = txt;
+                var sl = t.getSubStringLength(0, txt.length);
+                // check if only whitespace or if we can fit the entire string into width w
+                if (/^ *$/.test(txt) || sl < w)
+                        return;
+
+                // this isn't perfect, but gives a good starting point
+                // and avoids calling getSubStringLength too often
+                var start = Math.floor((w/sl) * txt.length);
+                for (var x = start; x > 0; x = x-2) {
+                        if (t.getSubStringLength(0, x + 2) <= w) {
+                                t.textContent = txt.substring(0, x) + "..";
+                                return;
+                        }
+                }
+                t.textContent = "";
+        }
+
+        // zoom
+        function zoom_reset(e) {
+                if (e.attributes != undefined) {
+                        orig_load(e, "x");
+                        orig_load(e, "width");
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_reset(c[i]);
+                }
+        }
+        function zoom_child(e, x, ratio) {
+                if (e.attributes != undefined) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+                                if (e.tagName == "text")
+                                        e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+                        }
+                }
+
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_child(c[i], x - 10, ratio);
+                }
+        }
+        function zoom_parent(e) {
+                if (e.attributes) {
+                        if (e.attributes.x != undefined) {
+                                orig_save(e, "x");
+                                e.attributes.x.value = 10;
+                        }
+                        if (e.attributes.width != undefined) {
+                                orig_save(e, "width");
+                                e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+                        }
+                }
+                if (e.childNodes == undefined) return;
+                for (var i = 0, c = e.childNodes; i < c.length; i++) {
+                        zoom_parent(c[i]);
+                }
+        }
+        function zoom(node) {
+                var attr = find_child(node, "rect").attributes;
+                var width = parseFloat(attr.width.value);
+                var xmin = parseFloat(attr.x.value);
+                var xmax = parseFloat(xmin + width);
+                var ymin = parseFloat(attr.y.value);
+                var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+                // XXX: Workaround for JavaScript float issues (fix me)
+                var fudge = 0.0001;
+
+                unzoombtn.classList.remove("hide");
+
+                var el = document.getElementById("frames").children;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var a = find_child(e, "rect").attributes;
+                        var ex = parseFloat(a.x.value);
+                        var ew = parseFloat(a.width.value);
+                        var upstack;
+                        // Is it an ancestor
+                        if (0 == 0) {
+                                upstack = parseFloat(a.y.value) > ymin;
+                        } else {
+                                upstack = parseFloat(a.y.value) < ymin;
+                        }
+                        if (upstack) {
+                                // Direct ancestor
+                                if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+                                        e.classList.add("parent");
+                                        zoom_parent(e);
+                                        update_text(e);
+                                }
+                                // not in current path
+                                else
+                                        e.classList.add("hide");
+                        }
+                        // Children maybe
+                        else {
+                                // no common path
+                                if (ex < xmin || ex + fudge >= xmax) {
+                                        e.classList.add("hide");
+                                }
+                                else {
+                                        zoom_child(e, xmin, ratio);
+                                        update_text(e);
+                                }
+                        }
+                }
+                search();
+        }
+        function unzoom(dont_update_text) {
+                unzoombtn.classList.add("hide");
+                var el = document.getElementById("frames").children;
+                for(var i = 0; i < el.length; i++) {
+                        el[i].classList.remove("parent");
+                        el[i].classList.remove("hide");
+                        zoom_reset(el[i]);
+                        if(!dont_update_text) update_text(el[i]);
+                }
+                search();
+        }
+        function clearzoom() {
+                unzoom();
+
+                // remove zoom state
+                var params = get_params();
+                if (params.x) delete params.x;
+                if (params.y) delete params.y;
+                history.replaceState(null, null, parse_params(params));
+        }
+
+        // search
+        function toggle_ignorecase() {
+                ignorecase = !ignorecase;
+                if (ignorecase) {
+                        ignorecaseBtn.classList.add("show");
+                } else {
+                        ignorecaseBtn.classList.remove("show");
+                }
+                reset_search();
+                search();
+        }
+        function reset_search() {
+                var el = document.querySelectorAll("#frames rect");
+                for (var i = 0; i < el.length; i++) {
+                        orig_load(el[i], "fill")
+                }
+                var params = get_params();
+                delete params.s;
+                history.replaceState(null, null, parse_params(params));
+        }
+        function search_prompt() {
+                if (!searching) {
+                        var term = prompt("Enter a search term (regexp " +
+                            "allowed, eg: ^ext4_)"
+                            + (ignorecase ? ", ignoring case" : "")
+                            + "\nPress Ctrl-i to toggle case sensitivity", "");
+                        if (term != null) search(term);
+                } else {
+                        reset_search();
+                        searching = 0;
+                        currentSearchTerm = null;
+                        searchbtn.classList.remove("show");
+                        searchbtn.firstChild.nodeValue = "Search"
+                        matchedtxt.classList.add("hide");
+                        matchedtxt.firstChild.nodeValue = ""
+                }
+        }
+        function search(term) {
+                if (term) currentSearchTerm = term;
+                if (currentSearchTerm === null) return;
+
+                var re = new RegExp(currentSearchTerm, ignorecase ? 'i' : '');
+                var el = document.getElementById("frames").children;
+                var matches = new Object();
+                var maxwidth = 0;
+                for (var i = 0; i < el.length; i++) {
+                        var e = el[i];
+                        var func = g_to_func(e);
+                        var rect = find_child(e, "rect");
+                        if (func == null || rect == null)
+                                continue;
+
+                        // Save max width. Only works as we have a root frame
+                        var w = parseFloat(rect.attributes.width.value);
+                        if (w > maxwidth)
+                                maxwidth = w;
+
+                        if (func.match(re)) {
+                                // highlight
+                                var x = parseFloat(rect.attributes.x.value);
+                                orig_save(rect, "fill");
+                                rect.attributes.fill.value = "rgb(230,0,230)";
+
+                                // remember matches
+                                if (matches[x] == undefined) {
+                                        matches[x] = w;
+                                } else {
+                                        if (w > matches[x]) {
+                                                // overwrite with parent
+                                                matches[x] = w;
+                                        }
+                                }
+                                searching = 1;
+                        }
+                }
+                if (!searching)
+                        return;
+                var params = get_params();
+                params.s = currentSearchTerm;
+                history.replaceState(null, null, parse_params(params));
+
+                searchbtn.classList.add("show");
+                searchbtn.firstChild.nodeValue = "Reset Search";
+
+                // calculate percent matched, excluding vertical overlap
+                var count = 0;
+                var lastx = -1;
+                var lastw = 0;
+                var keys = Array();
+                for (k in matches) {
+                        if (matches.hasOwnProperty(k))
+                                keys.push(k);
+                }
+                // sort the matched frames by their x location
+                // ascending, then width descending
+                keys.sort(function(a, b){
+                        return a - b;
+                });
+                // Step through frames saving only the biggest bottom-up frames
+                // thanks to the sort order. This relies on the tree property
+                // where children are always smaller than their parents.
+                var fudge = 0.0001;     // JavaScript floating point
+                for (var k in keys) {
+                        var x = parseFloat(keys[k]);
+                        var w = matches[keys[k]];
+                        if (x >= lastx + lastw - fudge) {
+                                count += w;
+                                lastx = x;
+                                lastw = w;
+                        }
+                }
+                // display matched percent
+                matchedtxt.classList.remove("hide");
+                var pct = 100 * count / maxwidth;
+                if (pct != 100) pct = pct.toFixed(1)
+                matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+        }
+]]>
+</script>
+<rect x="0.0" y="0" width="4096.0" height="272.0" fill="url(#background)"  />
+<text id="title" x="2048.00" y="20" >FlameGraph: /mnt/ramdisk/timep/TESTS/gemini-3.0/test.gemini-3.0.bash</text>
+<text id="details" x="10.00" y="257" > </text>
+<text id="unzoom" x="10.00" y="20" class="hide">Reset Zoom</text>
+<text id="search" x="3986.00" y="20" >Search</text>
+<text id="ignorecase" x="4070.00" y="20" >ic</text>
+<text id="matched" x="3986.00" y="257" > </text>
+<g id="frames">
+<g >
+<title>'exec 161&gt;&amp;-' (76 us, 0.08%)</title><rect x="3400.6" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3403.64" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 66&gt;&amp;-' (78 us, 0.08%)</title><rect x="3068.9" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3071.86" y="137.5" ></text>
+</g>
+<g >
+<title>'eval &quot;exec $fd&gt;&amp;-&quot; 2&gt; /dev/null' (16,669 us, 17.96%)</title><rect x="2112.9" y="123" width="732.1" height="23.0" fill="rgb(205,97,17)" rx="2" ry="2" />
+<text  x="2115.85" y="137.5" >'eval "exec $fd&gt;&amp;-" 2&gt; /dev/null'</text>
+</g>
+<g >
+<title>'exec 119&gt;&amp;-' (78 us, 0.08%)</title><rect x="3254.5" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3257.51" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 5&gt;&amp;-' (81 us, 0.09%)</title><rect x="2852.1" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="2855.14" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77021)_[s] (74 us, 0.08%)</title><rect x="3836.6" y="147" width="3.2" height="23.0" fill="rgb(222.937598827117,138.409450280424,196.704725140212)" rx="2" ry="2" />
+<text  x="3839.57" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;&gt;&gt; Attack 1: The Inheritance Sever (env -i)&quot;' (84 us, 0.09%)</title><rect x="20.6" y="147" width="3.7" height="23.0" fill="rgb(71,148,207)" rx="2" ry="2" />
+<text  x="23.63" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 169&gt;&amp;-' (81 us, 0.09%)</title><rect x="3428.4" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3431.36" y="137.5" ></text>
+</g>
+<g >
+<title>'wait $!' (2,662 us, 2.87%)</title><rect x="38.4" y="147" width="116.9" height="23.0" fill="rgb(133,206,117)" rx="2" ry="2" />
+<text  x="41.37" y="161.5" >'wait $!'</text>
+</g>
+<g >
+<title>'local id=&quot;$1&quot;' (1,037 us, 1.12%)</title><rect x="3846.4" y="75" width="45.5" height="23.0" fill="rgb(103,194,165)" rx="2" ry="2" />
+<text  x="3849.36" y="89.5" >'loca..</text>
+</g>
+<g >
+<title>SUBSHELL (77026)_[s] (2,511 us, 2.71%)</title><rect x="3970.9" y="147" width="110.3" height="23.0" fill="rgb(234.597735102582,143.661925845521,208.366251663046)" rx="2" ry="2" />
+<text  x="3973.92" y="161.5" >SUBSHELL (77026)..</text>
+</g>
+<g >
+<title>'exec 134&gt;&amp;-' (76 us, 0.08%)</title><rect x="3307.4" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3310.40" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 82&gt;&amp;-' (78 us, 0.08%)</title><rect x="3124.9" y="123" width="3.5" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3127.94" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 175&gt;&amp;-' (77 us, 0.08%)</title><rect x="3449.0" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3452.04" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (109 us, 0.12%)</title><rect x="4081.2" y="99" width="4.8" height="23.0" fill="rgb(202.534252626191,140.741261274815,228.767126313095)" rx="2" ry="2" />
+<text  x="4084.21" y="113.5" ></text>
+</g>
+<g >
+<title>'exec 47&gt;&amp;-' (78 us, 0.08%)</title><rect x="3002.0" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3005.01" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 200&gt;&amp;-' (90 us, 0.10%)</title><rect x="3537.5" y="123" width="4.0" height="23.0" fill="rgb(74,154,204)" rx="2" ry="2" />
+<text  x="3540.55" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 108&gt;&amp;-' (76 us, 0.08%)</title><rect x="3216.7" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3219.74" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 77&gt;&amp;-' (81 us, 0.09%)</title><rect x="3107.8" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3110.77" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 87&gt;&amp;-' (77 us, 0.08%)</title><rect x="3142.8" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3145.78" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 65&gt;&amp;-' (77 us, 0.08%)</title><rect x="3065.5" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3068.47" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (1,416 us, 1.53%)</title><rect x="3908.7" y="99" width="62.2" height="23.0" fill="rgb(206.614921866376,142.490119520609,232.84779555328)" rx="2" ry="2" />
+<text  x="3911.73" y="113.5" >FUNCTION..</text>
+</g>
+<g >
+<title>'exec 18&gt;&amp;-' (82 us, 0.09%)</title><rect x="2899.2" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2902.19" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 185&gt;&amp;-' (76 us, 0.08%)</title><rect x="3484.9" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3487.88" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 124&gt;&amp;-' (88 us, 0.09%)</title><rect x="3271.6" y="123" width="3.9" height="23.0" fill="rgb(73,151,205)" rx="2" ry="2" />
+<text  x="3274.64" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 80&gt;&amp;-' (77 us, 0.08%)</title><rect x="3118.2" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3121.18" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 8&gt;&amp;-' (82 us, 0.09%)</title><rect x="2862.9" y="123" width="3.7" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2865.95" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 46&gt;&amp;-' (77 us, 0.08%)</title><rect x="2998.6" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3001.62" y="137.5" ></text>
+</g>
+<g >
+<title>'export -f workload' (77 us, 0.08%)</title><rect x="17.2" y="147" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="20.25" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 177&gt;&amp;-' (81 us, 0.09%)</title><rect x="3455.9" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3458.90" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 23&gt;&amp;-' (83 us, 0.09%)</title><rect x="2917.3" y="123" width="3.7" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="2920.33" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 14&gt;&amp;-' (82 us, 0.09%)</title><rect x="2884.6" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2887.60" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 178&gt;&amp;-' (79 us, 0.09%)</title><rect x="3459.5" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3462.45" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 37&gt;&amp;-' (82 us, 0.09%)</title><rect x="2966.8" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2969.83" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 61&gt;&amp;-' (80 us, 0.09%)</title><rect x="3051.3" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3054.29" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 187&gt;&amp;-' (75 us, 0.08%)</title><rect x="3491.6" y="123" width="3.3" height="23.0" fill="rgb(6,6,254)" rx="2" ry="2" />
+<text  x="3494.60" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 129&gt;&amp;-' (81 us, 0.09%)</title><rect x="3289.3" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3292.30" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 180&gt;&amp;-' (76 us, 0.08%)</title><rect x="3466.4" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3469.39" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (3,015 us, 3.25%)</title><rect x="3566.0" y="123" width="132.4" height="23.0" fill="rgb(200.941807740697,145.22877286121,225.764447043438)" rx="2" ry="2" />
+<text  x="3569.01" y="137.5" >FUNCTION (workload)_..</text>
+</g>
+<g >
+<title>'exec 153&gt;&amp;-' (78 us, 0.08%)</title><rect x="3373.0" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3376.02" y="137.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (2,355 us, 2.54%)</title><rect x="3595.0" y="99" width="103.4" height="23.0" fill="rgb(120,205,139)" rx="2" ry="2" />
+<text  x="3598.00" y="113.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'exec 33&gt;&amp;-' (77 us, 0.08%)</title><rect x="2953.0" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="2955.99" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 181&gt;&amp;-' (77 us, 0.08%)</title><rect x="3469.7" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3472.73" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 147&gt;&amp;-' (77 us, 0.08%)</title><rect x="3352.3" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3355.28" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 43&gt;&amp;-' (80 us, 0.09%)</title><rect x="2987.9" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="2990.91" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77021)_[s] (109 us, 0.12%)</title><rect x="4081.2" y="147" width="4.8" height="23.0" fill="rgb(228.767126313095,140.741261274815,202.534252626191)" rx="2" ry="2" />
+<text  x="4084.21" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 154&gt;&amp;-' (77 us, 0.08%)</title><rect x="3376.4" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3379.44" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 94&gt;&amp;-' (76 us, 0.08%)</title><rect x="3167.0" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3169.98" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 192&gt;&amp;-' (77 us, 0.08%)</title><rect x="3509.6" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3512.57" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 3&gt;&amp;-' (80 us, 0.09%)</title><rect x="2845.0" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="2847.99" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;$code&quot; (&amp;)' (323 us, 0.35%)</title><rect x="312.4" y="147" width="14.2" height="23.0" fill="rgb(83,169,193)" rx="2" ry="2" />
+<text  x="315.40" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 172&gt;&amp;-' (76 us, 0.08%)</title><rect x="3438.9" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3441.90" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 40&gt;&amp;-' (77 us, 0.08%)</title><rect x="2977.3" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="2980.28" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 98&gt;&amp;-' (79 us, 0.09%)</title><rect x="3180.9" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3183.90" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 163&gt;&amp;-' (79 us, 0.09%)</title><rect x="3407.8" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3410.85" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 189&gt;&amp;-' (80 us, 0.09%)</title><rect x="3498.3" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3501.32" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 22&gt;&amp;-' (91 us, 0.10%)</title><rect x="2913.3" y="123" width="4.0" height="23.0" fill="rgb(75,155,203)" rx="2" ry="2" />
+<text  x="2916.33" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 24&gt;&amp;-' (85 us, 0.09%)</title><rect x="2921.0" y="123" width="3.7" height="23.0" fill="rgb(71,148,207)" rx="2" ry="2" />
+<text  x="2923.97" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;&gt;&gt; Attack 4: Sensory Deprivation (Closing FDs 3-255)&quot; (&amp;)' (809 us, 0.87%)</title><rect x="209.4" y="147" width="35.5" height="23.0" fill="rgb(95,186,176)" rx="2" ry="2" />
+<text  x="212.36" y="161.5" >'ech..</text>
+</g>
+<g >
+<title>'exec 31&gt;&amp;-' (79 us, 0.09%)</title><rect x="2946.0" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="2949.05" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 190&gt;&amp;-' (96 us, 0.10%)</title><rect x="3501.8" y="123" width="4.3" height="23.0" fill="rgb(77,159,200)" rx="2" ry="2" />
+<text  x="3504.84" y="137.5" ></text>
+</g>
+<g >
+<title>'trap '\'''\'' DEBUG' (23,623 us, 25.46%)</title><rect x="399.8" y="123" width="1037.5" height="23.0" fill="rgb(254,0,0)" rx="2" ry="2" />
+<text  x="402.76" y="137.5" >'trap '\'''\'' DEBUG'</text>
+</g>
+<g >
+<title>'exec 30&gt;&amp;-' (81 us, 0.09%)</title><rect x="2942.5" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="2945.49" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 109&gt;&amp;-' (80 us, 0.09%)</title><rect x="3220.1" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3223.08" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 121&gt;&amp;-' (78 us, 0.08%)</title><rect x="3261.3" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3264.28" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;    [Bypass] Re-enabling to see if timep notices...&quot;' (99 us, 0.11%)</title><rect x="1437.3" y="123" width="4.4" height="23.0" fill="rgb(77,159,200)" rx="2" ry="2" />
+<text  x="1440.33" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77016)_[s] (96 us, 0.10%)</title><rect x="356.2" y="147" width="4.2" height="23.0" fill="rgb(228.184173564497,140.741261274815,201.951299877593)" rx="2" ry="2" />
+<text  x="359.19" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 186&gt;&amp;-' (77 us, 0.08%)</title><rect x="3488.2" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3491.22" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 155&gt;&amp;-' (76 us, 0.08%)</title><rect x="3379.8" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3382.82" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;    [Bypass] Disabling DEBUG trap via builtin...&quot;' (352 us, 0.38%)</title><rect x="384.3" y="123" width="15.5" height="23.0" fill="rgb(85,173,190)" rx="2" ry="2" />
+<text  x="387.30" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 57&gt;&amp;-' (82 us, 0.09%)</title><rect x="3037.5" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3040.45" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77027)_[s] (484 us, 0.52%)</title><rect x="3544.7" y="123" width="21.3" height="23.0" fill="rgb(229.933031810291,141.324214023413,203.700158123386)" rx="2" ry="2" />
+<text  x="3547.75" y="137.5" >S..</text>
+</g>
+<g >
+<title>'exec 195&gt;&amp;-' (88 us, 0.09%)</title><rect x="3519.8" y="123" width="3.8" height="23.0" fill="rgb(73,151,205)" rx="2" ry="2" />
+<text  x="3522.76" y="137.5" ></text>
+</g>
+<g >
+<title>'local id=&quot;$1&quot;' (1,031 us, 1.11%)</title><rect x="3701.9" y="99" width="45.3" height="23.0" fill="rgb(100,192,169)" rx="2" ry="2" />
+<text  x="3704.95" y="113.5" >'loca..</text>
+</g>
+<g >
+<title>'exec 60&gt;&amp;-' (77 us, 0.08%)</title><rect x="3047.9" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3050.90" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 19&gt;&amp;-' (81 us, 0.09%)</title><rect x="2902.8" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="2905.79" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 27&gt;&amp;-' (78 us, 0.08%)</title><rect x="2931.6" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="2934.56" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;  [Workload $id] Running...&quot;' (149 us, 0.16%)</title><rect x="3839.8" y="75" width="6.6" height="23.0" fill="rgb(78,161,199)" rx="2" ry="2" />
+<text  x="3842.82" y="89.5" ></text>
+</g>
+<g >
+<title>'local id=&quot;$1&quot;' (583 us, 0.63%)</title><rect x="3569.4" y="99" width="25.6" height="23.0" fill="rgb(93,183,179)" rx="2" ry="2" />
+<text  x="3572.39" y="113.5" >'l..</text>
+</g>
+<g >
+<title>'exec 84&gt;&amp;-' (90 us, 0.10%)</title><rect x="3131.9" y="123" width="4.0" height="23.0" fill="rgb(74,154,204)" rx="2" ry="2" />
+<text  x="3134.93" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 63&gt;&amp;-' (83 us, 0.09%)</title><rect x="3058.2" y="123" width="3.7" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="3061.23" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 89&gt;&amp;-' (81 us, 0.09%)</title><rect x="3149.5" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3152.54" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 165&gt;&amp;-' (75 us, 0.08%)</title><rect x="3414.8" y="123" width="3.3" height="23.0" fill="rgb(6,6,254)" rx="2" ry="2" />
+<text  x="3417.83" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 111&gt;&amp;-' (80 us, 0.09%)</title><rect x="3227.2" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3230.15" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 36&gt;&amp;-' (82 us, 0.09%)</title><rect x="2963.2" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2966.22" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 4&gt;&amp;-' (83 us, 0.09%)</title><rect x="2848.5" y="123" width="3.6" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="2851.50" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (my_dynamic_func)_[f] (74 us, 0.08%)</title><rect x="3541.5" y="123" width="3.2" height="23.0" fill="rgb(196.704725140212,138.409450280424,222.937598827117)" rx="2" ry="2" />
+<text  x="3544.50" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 110&gt;&amp;-' (81 us, 0.09%)</title><rect x="3223.6" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3226.59" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 160&gt;&amp;-' (76 us, 0.08%)</title><rect x="3397.3" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3400.30" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 101&gt;&amp;-' (76 us, 0.08%)</title><rect x="3191.2" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3194.22" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 92&gt;&amp;-' (76 us, 0.08%)</title><rect x="3160.2" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3163.21" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77022)_[s] (74 us, 0.08%)</title><rect x="3836.6" y="123" width="3.2" height="23.0" fill="rgb(222.937598827117,138.409450280424,196.704725140212)" rx="2" ry="2" />
+<text  x="3839.57" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 170&gt;&amp;-' (81 us, 0.09%)</title><rect x="3431.9" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3434.91" y="137.5" ></text>
+</g>
+<g >
+<title>'workload &quot;dynamic-eval&quot;' (80 us, 0.09%)</title><rect x="3891.9" y="75" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3894.91" y="89.5" ></text>
+</g>
+<g >
+<title>'exec 137&gt;&amp;-' (81 us, 0.09%)</title><rect x="3317.6" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3320.63" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 38&gt;&amp;-' (79 us, 0.09%)</title><rect x="2970.4" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="2973.43" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 13&gt;&amp;-' (82 us, 0.09%)</title><rect x="2881.0" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2884.00" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 96&gt;&amp;-' (79 us, 0.09%)</title><rect x="3173.9" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3176.87" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 138&gt;&amp;-' (76 us, 0.08%)</title><rect x="3321.2" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3324.19" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (2,511 us, 2.71%)</title><rect x="3970.9" y="99" width="110.3" height="23.0" fill="rgb(208.366251663046,143.661925845521,234.597735102582)" rx="2" ry="2" />
+<text  x="3973.92" y="113.5" >FUNCTION (worklo..</text>
+</g>
+<g >
+<title>'exec 191&gt;&amp;-' (80 us, 0.09%)</title><rect x="3506.1" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3509.05" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 184&gt;&amp;-' (89 us, 0.10%)</title><rect x="3481.0" y="123" width="3.9" height="23.0" fill="rgb(73,153,205)" rx="2" ry="2" />
+<text  x="3483.98" y="137.5" ></text>
+</g>
+<g >
+<title>'local id=&quot;$1&quot;' (303 us, 0.33%)</title><rect x="3895.4" y="75" width="13.3" height="23.0" fill="rgb(80,165,196)" rx="2" ry="2" />
+<text  x="3898.42" y="89.5" ></text>
+</g>
+<g >
+<title>'exec 58&gt;&amp;-' (80 us, 0.09%)</title><rect x="3041.1" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3044.05" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 97&gt;&amp;-' (81 us, 0.09%)</title><rect x="3177.3" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3180.34" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 54&gt;&amp;-' (78 us, 0.08%)</title><rect x="3026.9" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3029.87" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 125&gt;&amp;-' (80 us, 0.09%)</title><rect x="3275.5" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3278.51" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 174&gt;&amp;-' (78 us, 0.08%)</title><rect x="3445.6" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3448.62" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 116&gt;&amp;-' (78 us, 0.08%)</title><rect x="3244.1" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3247.10" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;=== Entering The Event Horizon v2 ===&quot;' (88 us, 0.09%)</title><rect x="13.4" y="147" width="3.8" height="23.0" fill="rgb(73,151,205)" rx="2" ry="2" />
+<text  x="16.38" y="161.5" ></text>
+</g>
+<g >
+<title>'$'\''env -i PATH=&quot;$PATH&quot; bash -c \'\''\n        echo &quot;    [Clean Room] BASH_ENV is: $BASH_ENV&quot;\n        # We have to redefine workload because functions were wiped\n        workload() { echo &quot;    [Clean Room] Workload running (invisible?)&quot;, sleep 0.1, }\n       ' (320 us, 0.34%)</title><rect x="24.3" y="147" width="14.1" height="23.0" fill="rgb(83,168,193)" rx="2" ry="2" />
+<text  x="27.32" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 120&gt;&amp;-' (76 us, 0.08%)</title><rect x="3257.9" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3260.94" y="137.5" ></text>
+</g>
+<g >
+<title>'workload &quot;fd-closed&quot;' (77 us, 0.08%)</title><rect x="3566.0" y="99" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3569.01" y="113.5" ></text>
+</g>
+<g >
+<title>'exec 64&gt;&amp;-' (82 us, 0.09%)</title><rect x="3061.9" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3064.87" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77022)_[s] (1,416 us, 1.53%)</title><rect x="3908.7" y="123" width="62.2" height="23.0" fill="rgb(232.84779555328,142.490119520609,206.614921866376)" rx="2" ry="2" />
+<text  x="3911.73" y="137.5" >SUBSHELL..</text>
+</g>
+<g >
+<title>'echo &quot;    [Locked] BASH_ENV is readonly. Attempting fork...&quot;' (293 us, 0.32%)</title><rect x="371.4" y="123" width="12.9" height="23.0" fill="rgb(80,164,197)" rx="2" ry="2" />
+<text  x="374.43" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 194&gt;&amp;-' (79 us, 0.09%)</title><rect x="3516.3" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3519.29" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (my_dynamic_func)_[f] (2,511 us, 2.71%)</title><rect x="3970.9" y="123" width="110.3" height="23.0" fill="rgb(208.366251663046,143.661925845521,234.597735102582)" rx="2" ry="2" />
+<text  x="3973.92" y="137.5" >FUNCTION (my_dyn..</text>
+</g>
+<g >
+<title>'exec 10&gt;&amp;-' (82 us, 0.09%)</title><rect x="2870.0" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2873.02" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 140&gt;&amp;-' (83 us, 0.09%)</title><rect x="3327.9" y="123" width="3.6" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="3330.86" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 74&gt;&amp;-' (77 us, 0.08%)</title><rect x="3097.3" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3100.32" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (76998)_[s] (92,801 us, 100.00%)</title><rect x="10.0" y="195" width="4076.0" height="23.0" fill="rgb(226.849117758196,149.301404412851,202.947425288741)" rx="2" ry="2" />
+<text  x="13.00" y="209.5" >SUBSHELL (76998)_[s]</text>
+</g>
+<g >
+<title>'exec 52&gt;&amp;-' (78 us, 0.08%)</title><rect x="3019.9" y="123" width="3.5" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3022.93" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 104&gt;&amp;-' (79 us, 0.09%)</title><rect x="3202.5" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3205.47" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 93&gt;&amp;-' (78 us, 0.08%)</title><rect x="3163.6" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3166.55" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 12&gt;&amp;-' (83 us, 0.09%)</title><rect x="2877.4" y="123" width="3.6" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="2880.36" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 136&gt;&amp;-' (79 us, 0.09%)</title><rect x="3314.2" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3317.16" y="137.5" ></text>
+</g>
+<g >
+<title>'readonly BASH_ENV' (84 us, 0.09%)</title><rect x="367.7" y="123" width="3.7" height="23.0" fill="rgb(71,148,207)" rx="2" ry="2" />
+<text  x="370.74" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;  [Workload $id] Running...&quot;' (109 us, 0.12%)</title><rect x="4081.2" y="51" width="4.8" height="23.0" fill="rgb(78,161,199)" rx="2" ry="2" />
+<text  x="4084.21" y="65.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77018)_[s] (3,015 us, 3.25%)</title><rect x="3566.0" y="147" width="132.4" height="23.0" fill="rgb(225.764447043438,145.22877286121,200.941807740697)" rx="2" ry="2" />
+<text  x="3569.01" y="161.5" >SUBSHELL (77018)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (77026)_[s] (558 us, 0.60%)</title><rect x="3541.5" y="147" width="24.5" height="23.0" fill="rgb(223.38933838928,140.052139597383,197.526069798692)" rx="2" ry="2" />
+<text  x="3544.50" y="161.5" >SU..</text>
+</g>
+<g >
+<title>'workload &quot;readonly-env-child&quot;' (74 us, 0.08%)</title><rect x="3836.6" y="75" width="3.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3839.57" y="89.5" ></text>
+</g>
+<g >
+<title>'exec 41&gt;&amp;-' (77 us, 0.08%)</title><rect x="2980.7" y="123" width="3.3" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="2983.66" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 159&gt;&amp;-' (80 us, 0.09%)</title><rect x="3393.8" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3396.79" y="137.5" ></text>
+</g>
+<g >
+<title>'my_dynamic_func' (74 us, 0.08%)</title><rect x="3541.5" y="99" width="3.2" height="23.0" fill="rgb(0,0,254)" rx="2" ry="2" />
+<text  x="3544.50" y="113.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (1,416 us, 1.53%)</title><rect x="3908.7" y="75" width="62.2" height="23.0" fill="rgb(110,200,154)" rx="2" ry="2" />
+<text  x="3911.73" y="89.5" >'sleep 0..</text>
+</g>
+<g >
+<title>'exec 145&gt;&amp;-' (77 us, 0.08%)</title><rect x="3345.6" y="123" width="3.3" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3348.56" y="137.5" ></text>
+</g>
+<g >
+<title>'cat' (484 us, 0.52%)</title><rect x="3544.7" y="99" width="21.3" height="23.0" fill="rgb(90,179,184)" rx="2" ry="2" />
+<text  x="3547.75" y="113.5" >'..</text>
+</g>
+<g >
+<title>'exec 198&gt;&amp;-' (81 us, 0.09%)</title><rect x="3530.5" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3533.52" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 70&gt;&amp;-' (82 us, 0.09%)</title><rect x="3083.3" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3086.26" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77021)_[s] (544 us, 0.59%)</title><rect x="360.4" y="147" width="23.9" height="23.0" fill="rgb(228.874747004318,141.210009174363,202.749494008636)" rx="2" ry="2" />
+<text  x="363.41" y="161.5" >SU..</text>
+</g>
+<g >
+<title>'exec 128&gt;&amp;-' (79 us, 0.09%)</title><rect x="3285.8" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3288.83" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 9&gt;&amp;-' (79 us, 0.09%)</title><rect x="2866.6" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="2869.55" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 11&gt;&amp;-' (85 us, 0.09%)</title><rect x="2873.6" y="123" width="3.8" height="23.0" fill="rgb(71,148,207)" rx="2" ry="2" />
+<text  x="2876.62" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 51&gt;&amp;-' (77 us, 0.08%)</title><rect x="3016.5" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3019.54" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 42&gt;&amp;-' (88 us, 0.09%)</title><rect x="2984.0" y="123" width="3.9" height="23.0" fill="rgb(73,151,205)" rx="2" ry="2" />
+<text  x="2987.04" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 20&gt;&amp;-' (78 us, 0.08%)</title><rect x="2906.3" y="123" width="3.5" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="2909.34" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 59&gt;&amp;-' (76 us, 0.08%)</title><rect x="3044.6" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3047.57" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;  [Workload $id] Running...&quot;' (106 us, 0.11%)</title><rect x="4076.6" y="51" width="4.6" height="23.0" fill="rgb(77,160,200)" rx="2" ry="2" />
+<text  x="4079.56" y="65.5" ></text>
+</g>
+<g >
+<title>'echo &quot;  [Workload $id] Running...&quot;' (374 us, 0.40%)</title><rect x="3820.1" y="75" width="16.5" height="23.0" fill="rgb(89,177,185)" rx="2" ry="2" />
+<text  x="3823.14" y="89.5" ></text>
+</g>
+<g >
+<title>'exec 26&gt;&amp;-' (78 us, 0.08%)</title><rect x="2928.1" y="123" width="3.5" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="2931.13" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 114&gt;&amp;-' (77 us, 0.08%)</title><rect x="3237.4" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3240.38" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 131&gt;&amp;-' (79 us, 0.09%)</title><rect x="3296.4" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3299.42" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 127&gt;&amp;-' (76 us, 0.08%)</title><rect x="3282.5" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3285.49" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 68&gt;&amp;-' (93 us, 0.10%)</title><rect x="3075.6" y="123" width="4.1" height="23.0" fill="rgb(75,155,203)" rx="2" ry="2" />
+<text  x="3078.62" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 133&gt;&amp;-' (94 us, 0.10%)</title><rect x="3303.3" y="123" width="4.1" height="23.0" fill="rgb(76,157,202)" rx="2" ry="2" />
+<text  x="3306.27" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 56&gt;&amp;-' (83 us, 0.09%)</title><rect x="3033.8" y="123" width="3.7" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="3036.81" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 162&gt;&amp;-' (88 us, 0.09%)</title><rect x="3404.0" y="123" width="3.8" height="23.0" fill="rgb(73,151,205)" rx="2" ry="2" />
+<text  x="3406.98" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 146&gt;&amp;-' (76 us, 0.08%)</title><rect x="3348.9" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3351.95" y="137.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (2,405 us, 2.59%)</title><rect x="3970.9" y="75" width="105.7" height="23.0" fill="rgb(126,206,128)" rx="2" ry="2" />
+<text  x="3973.92" y="89.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'exec 29&gt;&amp;-' (94 us, 0.10%)</title><rect x="2938.4" y="123" width="4.1" height="23.0" fill="rgb(76,157,202)" rx="2" ry="2" />
+<text  x="2941.36" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77026)_[s] (383 us, 0.41%)</title><rect x="3891.9" y="147" width="16.8" height="23.0" fill="rgb(226.653273621985,140.456085248019,200.620565723807)" rx="2" ry="2" />
+<text  x="3894.91" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 17&gt;&amp;-' (84 us, 0.09%)</title><rect x="2895.5" y="123" width="3.7" height="23.0" fill="rgb(71,148,207)" rx="2" ry="2" />
+<text  x="2898.50" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77019)_[s] (149 us, 0.16%)</title><rect x="3839.8" y="99" width="6.6" height="23.0" fill="rgb(228.767126313095,140.741261274815,202.534252626191)" rx="2" ry="2" />
+<text  x="3842.82" y="113.5" ></text>
+</g>
+<g >
+<title>'main' (77 us, 0.08%)</title><rect x="10.0" y="147" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="13.00" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;    [Pre-Exec] PID: $BASHPID&quot;' (96 us, 0.10%)</title><rect x="356.2" y="123" width="4.2" height="23.0" fill="rgb(77,159,200)" rx="2" ry="2" />
+<text  x="359.19" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 117&gt;&amp;-' (81 us, 0.09%)</title><rect x="3247.5" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3250.53" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 122&gt;&amp;-' (77 us, 0.08%)</title><rect x="3264.7" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3267.70" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 88&gt;&amp;-' (77 us, 0.08%)</title><rect x="3146.2" y="123" width="3.3" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3149.16" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 85&gt;&amp;-' (80 us, 0.09%)</title><rect x="3135.9" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3138.88" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 157&gt;&amp;-' (82 us, 0.09%)</title><rect x="3386.7" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3389.72" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77013)_[s] (3,145 us, 3.39%)</title><rect x="3698.4" y="147" width="138.2" height="23.0" fill="rgb(227.973701545559,145.791691959605,203.153631536378)" rx="2" ry="2" />
+<text  x="3701.43" y="161.5" >SUBSHELL (77013)_[s]</text>
+</g>
+<g >
+<title>'exec 7&gt;&amp;-' (81 us, 0.09%)</title><rect x="2859.4" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="2862.39" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 193&gt;&amp;-' (76 us, 0.08%)</title><rect x="3513.0" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3515.95" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 15&gt;&amp;-' (82 us, 0.09%)</title><rect x="2888.2" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2891.20" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 100&gt;&amp;-' (80 us, 0.09%)</title><rect x="3187.7" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3190.71" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 171&gt;&amp;-' (78 us, 0.08%)</title><rect x="3435.5" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3438.47" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 150&gt;&amp;-' (81 us, 0.09%)</title><rect x="3362.7" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3365.69" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;=== Event Horizon Complete ===&quot;' (365 us, 0.39%)</title><rect x="340.2" y="147" width="16.0" height="23.0" fill="rgb(88,176,187)" rx="2" ry="2" />
+<text  x="343.16" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 90&gt;&amp;-' (83 us, 0.09%)</title><rect x="3153.1" y="123" width="3.6" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="3156.10" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 126&gt;&amp;-' (79 us, 0.09%)</title><rect x="3279.0" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3282.02" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 35&gt;&amp;-' (79 us, 0.09%)</title><rect x="2959.8" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="2962.75" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77013)_[s] (24,074 us, 25.94%)</title><rect x="384.3" y="147" width="1057.4" height="23.0" fill="rgb(231.044249269274,148.832468352462,206.544049658303)" rx="2" ry="2" />
+<text  x="387.30" y="161.5" >SUBSHELL (77013)_[s]</text>
+</g>
+<g >
+<title>'workload &quot;trap-disabled&quot;' (80 us, 0.09%)</title><rect x="3698.4" y="99" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3701.43" y="113.5" ></text>
+</g>
+<g >
+<title>'export BASH_ENV=&quot;&quot;' (167 us, 0.18%)</title><rect x="360.4" y="123" width="7.3" height="23.0" fill="rgb(79,162,198)" rx="2" ry="2" />
+<text  x="363.41" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 99&gt;&amp;-' (76 us, 0.08%)</title><rect x="3184.4" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3187.37" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 112&gt;&amp;-' (77 us, 0.08%)</title><rect x="3230.7" y="123" width="3.3" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3233.66" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77018)_[s] (149 us, 0.16%)</title><rect x="3839.8" y="147" width="6.6" height="23.0" fill="rgb(228.767126313095,140.741261274815,202.534252626191)" rx="2" ry="2" />
+<text  x="3842.82" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 197&gt;&amp;-' (79 us, 0.09%)</title><rect x="3527.0" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3530.05" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 103&gt;&amp;-' (86 us, 0.09%)</title><rect x="3198.7" y="123" width="3.8" height="23.0" fill="rgb(72,149,207)" rx="2" ry="2" />
+<text  x="3201.69" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 166&gt;&amp;-' (76 us, 0.08%)</title><rect x="3418.1" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3421.12" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 78&gt;&amp;-' (77 us, 0.08%)</title><rect x="3111.3" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3114.33" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 183&gt;&amp;-' (83 us, 0.09%)</title><rect x="3477.3" y="123" width="3.7" height="23.0" fill="rgb(69,145,210)" rx="2" ry="2" />
+<text  x="3480.33" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 149&gt;&amp;-' (82 us, 0.09%)</title><rect x="3359.1" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3362.09" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 86&gt;&amp;-' (77 us, 0.08%)</title><rect x="3139.4" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3142.39" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 25&gt;&amp;-' (78 us, 0.08%)</title><rect x="2924.7" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="2927.70" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 113&gt;&amp;-' (76 us, 0.08%)</title><rect x="3234.0" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3237.05" y="137.5" ></text>
+</g>
+<g >
+<title>'for fd in {3..200}' (14,724 us, 15.87%)</title><rect x="1466.1" y="123" width="646.8" height="23.0" fill="rgb(167,178,62)" rx="2" ry="2" />
+<text  x="1469.14" y="137.5" >'for fd in {3..200}'</text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (149 us, 0.16%)</title><rect x="3839.8" y="123" width="6.6" height="23.0" fill="rgb(202.534252626191,140.741261274815,228.767126313095)" rx="2" ry="2" />
+<text  x="3842.82" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 115&gt;&amp;-' (76 us, 0.08%)</title><rect x="3240.8" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3243.77" y="137.5" ></text>
+</g>
+<g >
+<title>'sleep 0.1' (1,660 us, 1.79%)</title><rect x="3747.2" y="99" width="72.9" height="23.0" fill="rgb(114,202,148)" rx="2" ry="2" />
+<text  x="3750.23" y="113.5" >'sleep 0.1'</text>
+</g>
+<g >
+<title>'exec 95&gt;&amp;-' (81 us, 0.09%)</title><rect x="3170.3" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3173.32" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 188&gt;&amp;-' (78 us, 0.08%)</title><rect x="3494.9" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3497.90" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (383 us, 0.41%)</title><rect x="3891.9" y="99" width="16.8" height="23.0" fill="rgb(200.620565723807,140.456085248019,226.653273621985)" rx="2" ry="2" />
+<text  x="3894.91" y="113.5" ></text>
+</g>
+<g >
+<title>'exec 6&gt;&amp;-' (84 us, 0.09%)</title><rect x="2855.7" y="123" width="3.7" height="23.0" fill="rgb(71,148,207)" rx="2" ry="2" />
+<text  x="2858.70" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 132&gt;&amp;-' (77 us, 0.08%)</title><rect x="3299.9" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3302.89" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 44&gt;&amp;-' (82 us, 0.09%)</title><rect x="2991.4" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2994.42" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 168&gt;&amp;-' (78 us, 0.08%)</title><rect x="3424.9" y="123" width="3.5" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3427.93" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 144&gt;&amp;-' (76 us, 0.08%)</title><rect x="3342.2" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3345.23" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 102&gt;&amp;-' (94 us, 0.10%)</title><rect x="3194.6" y="123" width="4.1" height="23.0" fill="rgb(76,157,202)" rx="2" ry="2" />
+<text  x="3197.56" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (1,037 us, 1.12%)</title><rect x="3846.4" y="99" width="45.5" height="23.0" fill="rgb(205.44901636918,142.490119520609,231.681890056085)" rx="2" ry="2" />
+<text  x="3849.36" y="113.5" >FUNCT..</text>
+</g>
+<g >
+<title>'exec 48&gt;&amp;-' (77 us, 0.08%)</title><rect x="3005.4" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3008.43" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 91&gt;&amp;-' (79 us, 0.09%)</title><rect x="3156.7" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3159.74" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77023)_[s] (109 us, 0.12%)</title><rect x="4081.2" y="75" width="4.8" height="23.0" fill="rgb(228.767126313095,140.741261274815,202.534252626191)" rx="2" ry="2" />
+<text  x="4084.21" y="89.5" ></text>
+</g>
+<g >
+<title>'exec 130&gt;&amp;-' (81 us, 0.09%)</title><rect x="3292.9" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3295.86" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;&gt;&gt; Attack 5: Readonly BASH_ENV&quot; (&amp;)' (1,104 us, 1.19%)</title><rect x="244.9" y="147" width="48.5" height="23.0" fill="rgb(106,197,160)" rx="2" ry="2" />
+<text  x="247.89" y="161.5" >'echo ..</text>
+</g>
+<g >
+<title>'exec 167&gt;&amp;-' (79 us, 0.09%)</title><rect x="3421.5" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3424.46" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;    [Silence] Closing all upper FDs...&quot;' (557 us, 0.60%)</title><rect x="1441.7" y="123" width="24.4" height="23.0" fill="rgb(91,181,182)" rx="2" ry="2" />
+<text  x="1444.68" y="137.5" >'e..</text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (74 us, 0.08%)</title><rect x="3836.6" y="99" width="3.2" height="23.0" fill="rgb(196.704725140212,138.409450280424,222.937598827117)" rx="2" ry="2" />
+<text  x="3839.57" y="113.5" ></text>
+</g>
+<g >
+<title>'exec 53&gt;&amp;-' (80 us, 0.09%)</title><rect x="3023.4" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3026.35" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 196&gt;&amp;-' (78 us, 0.08%)</title><rect x="3523.6" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3526.62" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (main)_[f] (92,801 us, 100.00%)</title><rect x="10.0" y="171" width="4076.0" height="23.0" fill="rgb(202.947425288741,149.301404412851,226.849117758196)" rx="2" ry="2" />
+<text  x="13.00" y="185.5" >FUNCTION (main)_[f]</text>
+</g>
+<g >
+<title>'exec 148&gt;&amp;-' (78 us, 0.08%)</title><rect x="3355.7" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3358.67" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 55&gt;&amp;-' (80 us, 0.09%)</title><rect x="3030.3" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3033.29" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 81&gt;&amp;-' (77 us, 0.08%)</title><rect x="3121.6" y="123" width="3.3" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3124.56" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77021)_[s] (1,416 us, 1.53%)</title><rect x="3908.7" y="147" width="62.2" height="23.0" fill="rgb(232.84779555328,142.490119520609,206.614921866376)" rx="2" ry="2" />
+<text  x="3911.73" y="161.5" >SUBSHELL..</text>
+</g>
+<g >
+<title>'exec 151&gt;&amp;-' (77 us, 0.08%)</title><rect x="3366.3" y="123" width="3.3" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3369.25" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 143&gt;&amp;-' (81 us, 0.09%)</title><rect x="3338.7" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3341.67" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 67&gt;&amp;-' (76 us, 0.08%)</title><rect x="3072.3" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3075.28" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (workload)_[f] (3,145 us, 3.39%)</title><rect x="3698.4" y="123" width="138.2" height="23.0" fill="rgb(203.153631536378,145.791691959605,227.973701545559)" rx="2" ry="2" />
+<text  x="3701.43" y="137.5" >FUNCTION (workload)_[f]</text>
+</g>
+<g >
+<title>'exec 72&gt;&amp;-' (82 us, 0.09%)</title><rect x="3090.3" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3093.33" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 106&gt;&amp;-' (93 us, 0.10%)</title><rect x="3209.3" y="123" width="4.1" height="23.0" fill="rgb(75,155,203)" rx="2" ry="2" />
+<text  x="3212.32" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 79&gt;&amp;-' (79 us, 0.09%)</title><rect x="3114.7" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3117.71" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 142&gt;&amp;-' (81 us, 0.09%)</title><rect x="3335.1" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3338.11" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 135&gt;&amp;-' (78 us, 0.08%)</title><rect x="3310.7" y="123" width="3.5" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3313.73" y="137.5" ></text>
+</g>
+<g >
+<title>FUNCTION (my_dynamic_func)_[f] (383 us, 0.41%)</title><rect x="3891.9" y="123" width="16.8" height="23.0" fill="rgb(200.620565723807,140.456085248019,226.653273621985)" rx="2" ry="2" />
+<text  x="3894.91" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 73&gt;&amp;-' (77 us, 0.08%)</title><rect x="3093.9" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3096.94" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 69&gt;&amp;-' (81 us, 0.09%)</title><rect x="3079.7" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3082.70" y="137.5" ></text>
+</g>
+<g >
+<title>'$'\''code=&quot;\n        my_dynamic_func() {\n            workload \\&quot;dynamic-eval\\&quot;\n        }\n        my_dynamic_func\n    &quot;' (89 us, 0.10%)</title><rect x="308.5" y="147" width="3.9" height="23.0" fill="rgb(73,153,205)" rx="2" ry="2" />
+<text  x="311.49" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 28&gt;&amp;-' (77 us, 0.08%)</title><rect x="2935.0" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="2937.98" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 118&gt;&amp;-' (78 us, 0.08%)</title><rect x="3251.1" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3254.09" y="137.5" ></text>
+</g>
+<g >
+<title>all (92,801 us, 100%)</title><rect x="10.0" y="219" width="4076.0" height="23.0" fill="rgb(16,23,251)" rx="2" ry="2" />
+<text  x="13.00" y="233.5" ></text>
+</g>
+<g >
+<title>'exec 83&gt;&amp;-' (81 us, 0.09%)</title><rect x="3128.4" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3131.37" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 21&gt;&amp;-' (81 us, 0.09%)</title><rect x="2909.8" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="2912.77" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 199&gt;&amp;-' (79 us, 0.09%)</title><rect x="3534.1" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3537.08" y="137.5" ></text>
+</g>
+<g >
+<title>'eval &quot;$(cat)&quot; (&amp;)' (309 us, 0.33%)</title><rect x="326.6" y="147" width="13.6" height="23.0" fill="rgb(81,166,195)" rx="2" ry="2" />
+<text  x="329.59" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 45&gt;&amp;-' (82 us, 0.09%)</title><rect x="2995.0" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="2998.02" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 62&gt;&amp;-' (78 us, 0.08%)</title><rect x="3054.8" y="123" width="3.4" height="23.0" fill="rgb(43,87,235)" rx="2" ry="2" />
+<text  x="3057.80" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 123&gt;&amp;-' (81 us, 0.09%)</title><rect x="3268.1" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3271.09" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 182&gt;&amp;-' (96 us, 0.10%)</title><rect x="3473.1" y="123" width="4.2" height="23.0" fill="rgb(77,159,200)" rx="2" ry="2" />
+<text  x="3476.11" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77028)_[s] (106 us, 0.11%)</title><rect x="4076.6" y="75" width="4.6" height="23.0" fill="rgb(228.767126313095,140.741261274815,202.534252626191)" rx="2" ry="2" />
+<text  x="4079.56" y="89.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77018)_[s] (47,808 us, 51.52%)</title><rect x="1441.7" y="147" width="2099.8" height="23.0" fill="rgb(231.691286776214,149.297695845622,207.298447355973)" rx="2" ry="2" />
+<text  x="1444.68" y="161.5" >SUBSHELL (77018)_[s]</text>
+</g>
+<g >
+<title>SUBSHELL (77021)_[s] (1,037 us, 1.12%)</title><rect x="3846.4" y="147" width="45.5" height="23.0" fill="rgb(231.681890056085,142.490119520609,205.44901636918)" rx="2" ry="2" />
+<text  x="3849.36" y="161.5" >SUBSH..</text>
+</g>
+<g >
+<title>'echo &quot;&gt;&gt; Attack 6: The Eval Bomb&quot;' (344 us, 0.37%)</title><rect x="293.4" y="147" width="15.1" height="23.0" fill="rgb(84,171,191)" rx="2" ry="2" />
+<text  x="296.38" y="161.5" ></text>
+</g>
+<g >
+<title>'echo &quot;&gt;&gt; Attack 3: Exec Amnesia&quot; (&amp;)' (364 us, 0.39%)</title><rect x="193.4" y="147" width="16.0" height="23.0" fill="rgb(86,174,188)" rx="2" ry="2" />
+<text  x="196.37" y="161.5" ></text>
+</g>
+<g >
+<title>'exec 34&gt;&amp;-' (77 us, 0.08%)</title><rect x="2956.4" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="2959.37" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 32&gt;&amp;-' (79 us, 0.09%)</title><rect x="2949.5" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="2952.52" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 39&gt;&amp;-' (77 us, 0.08%)</title><rect x="2973.9" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="2976.90" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 173&gt;&amp;-' (77 us, 0.08%)</title><rect x="3442.2" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3445.24" y="137.5" ></text>
+</g>
+<g >
+<title>'echo &quot;&gt;&gt; Attack 2: The Trap Bypass&quot; (&amp;)' (867 us, 0.93%)</title><rect x="155.3" y="147" width="38.1" height="23.0" fill="rgb(98,189,173)" rx="2" ry="2" />
+<text  x="158.29" y="161.5" >'ech..</text>
+</g>
+<g >
+<title>'exec 158&gt;&amp;-' (79 us, 0.09%)</title><rect x="3390.3" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3393.32" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 156&gt;&amp;-' (81 us, 0.09%)</title><rect x="3383.2" y="123" width="3.5" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3386.16" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 76&gt;&amp;-' (81 us, 0.09%)</title><rect x="3104.2" y="123" width="3.6" height="23.0" fill="rgb(63,132,216)" rx="2" ry="2" />
+<text  x="3107.21" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 16&gt;&amp;-' (84 us, 0.09%)</title><rect x="2891.8" y="123" width="3.7" height="23.0" fill="rgb(71,148,207)" rx="2" ry="2" />
+<text  x="2894.81" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 176&gt;&amp;-' (79 us, 0.09%)</title><rect x="3452.4" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3455.43" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77022)_[s] (109 us, 0.12%)</title><rect x="4081.2" y="123" width="4.8" height="23.0" fill="rgb(228.767126313095,140.741261274815,202.534252626191)" rx="2" ry="2" />
+<text  x="4084.21" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77022)_[s] (1,037 us, 1.12%)</title><rect x="3846.4" y="123" width="45.5" height="23.0" fill="rgb(231.681890056085,142.490119520609,205.44901636918)" rx="2" ry="2" />
+<text  x="3849.36" y="137.5" >SUBSH..</text>
+</g>
+<g >
+<title>'exec 152&gt;&amp;-' (77 us, 0.08%)</title><rect x="3369.6" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3372.63" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 71&gt;&amp;-' (79 us, 0.09%)</title><rect x="3086.9" y="123" width="3.4" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3089.86" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 139&gt;&amp;-' (76 us, 0.08%)</title><rect x="3324.5" y="123" width="3.4" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3327.53" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 107&gt;&amp;-' (76 us, 0.08%)</title><rect x="3213.4" y="123" width="3.3" height="23.0" fill="rgb(22,35,248)" rx="2" ry="2" />
+<text  x="3216.40" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 50&gt;&amp;-' (80 us, 0.09%)</title><rect x="3013.0" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3016.03" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 179&gt;&amp;-' (79 us, 0.09%)</title><rect x="3462.9" y="123" width="3.5" height="23.0" fill="rgb(51,105,228)" rx="2" ry="2" />
+<text  x="3465.92" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 75&gt;&amp;-' (80 us, 0.09%)</title><rect x="3100.7" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3103.70" y="137.5" ></text>
+</g>
+<g >
+<title>SUBSHELL (77014)_[s] (374 us, 0.40%)</title><rect x="3820.1" y="99" width="16.5" height="23.0" fill="rgb(229.933031810291,141.324214023413,203.700158123386)" rx="2" ry="2" />
+<text  x="3823.14" y="113.5" ></text>
+</g>
+<g >
+<title>'exec 164&gt;&amp;-' (80 us, 0.09%)</title><rect x="3411.3" y="123" width="3.5" height="23.0" fill="rgb(56,117,223)" rx="2" ry="2" />
+<text  x="3414.32" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 49&gt;&amp;-' (96 us, 0.10%)</title><rect x="3008.8" y="123" width="4.2" height="23.0" fill="rgb(77,159,200)" rx="2" ry="2" />
+<text  x="3011.81" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 141&gt;&amp;-' (82 us, 0.09%)</title><rect x="3331.5" y="123" width="3.6" height="23.0" fill="rgb(67,141,212)" rx="2" ry="2" />
+<text  x="3334.51" y="137.5" ></text>
+</g>
+<g >
+<title>'exec 105&gt;&amp;-' (77 us, 0.08%)</title><rect x="3205.9" y="123" width="3.4" height="23.0" fill="rgb(36,70,240)" rx="2" ry="2" />
+<text  x="3208.94" y="137.5" ></text>
+</g>
+</g>
+</svg>
