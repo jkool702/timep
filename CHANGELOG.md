@@ -7,7 +7,8 @@ timep v1.10: This release is a smaller "quality of life" release that incorporat
 * "SELF RUN TIME": the "wall-clock" time that it actually took the command to run (this is new)
 * "TOTAL RUN TIME": the "wall-clock time" from all parallel branches of the code summed together
 * "TOTAL CPU TIME": the "CPU time" from all parallel branches of the code summed together
-* timep v1.10.1: added a guard for BASH_ENV and a new stress test
+  
+**timep v1.10.1**: added a guard for BASH_ENV and a new stress test
 
 timep v1.9:  In this release, the  instrumented DEBUG trap has been further refactored. In particular, accuracy is improved in:
 * a few pathological cases involving nested subshells and background forks where bash lies about the BASHPID have been fixed
