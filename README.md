@@ -170,7 +170,7 @@ FLAGS: flags can fine-tune `timep`'s behavior. All flags are optional. Flags can
 `-t` | `--time`: When profiling the code (running it with timep's trap-based timing instrumentation), run it through the `time` shell builtin (in addition to generating the time profiles and flamegraph outputs). 
                  This is useful to compare how much overhead timep's instrumentation adds to running the code (in my testing this is usually <10% for most "real" codes)
 
-`-o <type>`: Use this flag to control which outputs are printed to stdout after timep is finished. `<type>` is a comma-seperated list of `p`, `pf`, `f` and `ff`. use `-o ''` to not print any of these to stdout.
+`-o <type>`: Use this flag to control which outputs are printed to stdout after timep is finished. `<type>` is a comma-separated list of `p`, `pf`, `f` and `ff`. Use `-o ''` to not print any of these to stdout.
              `<type>`: p --> out.profile (DEFAULT)........pf --> out.profile.full.......f --> out.flamegraph.......ff -> out.flamegraph.full
 
  `-F` or `--flame`: Use this flag to have `timep` automatically generate flamegraphs (both with and without folding/merging commands)
